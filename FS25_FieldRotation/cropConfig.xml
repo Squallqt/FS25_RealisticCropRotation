@@ -82,8 +82,8 @@
     <!-- PF handles nitrogen for isCatchCrop=true entries.         -->
     <!-- ======================================================== -->
     <crop name="OILSEEDRADISH"      family="COVER" cover="true" />
-    <crop name="VETCHRYE"           family="COVER" cover="true" />
-    <crop name="GREENRYE"           family="COVER" cover="true" />
+    <crop name="VETCHRYE" family="LEGUME" n1="10" />
+    <crop name="GREENRYE" family="CEREAL" />
     <crop name="FLOWERINGCATCHCROP" family="COVER" cover="true" />
 
 </fieldRotationCrops>
