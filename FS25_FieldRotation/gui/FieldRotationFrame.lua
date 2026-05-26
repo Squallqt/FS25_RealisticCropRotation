@@ -7,50 +7,58 @@ FieldRotationFrame.TAB = { HISTORY = 1, PLANNING = 2 }
 
 -- Crop family classification (uppercase fruit names as stored in history)
 FieldRotationFrame.CROP_FAMILY = {
-    -- Legumes
-    ALFALFA = "LEGUME",   CLOVER = "LEGUME",     PEA       = "LEGUME",
-    SOYBEAN = "LEGUME",   GREENBEAN = "LEGUME",
     -- Cereals
-    WHEAT        = "CEREAL",  BARLEY       = "CEREAL",  OAT          = "CEREAL",
-    RYE          = "CEREAL",  TRITICALE    = "CEREAL",  MAIZE        = "CEREAL",
+    WHEAT        = "CEREAL",  BARLEY       = "CEREAL",  OAT           = "CEREAL",
+    RYE          = "CEREAL",  TRITICALE    = "CEREAL",  MAIZE         = "CEREAL",
     SORGHUM      = "CEREAL",  SPELT        = "CEREAL",  RICELONGGRAIN = "CEREAL",
-    WINTERWHEAT  = "CEREAL",  WINTERBARLEY = "CEREAL",  SILAGEMAIZE  = "CEREAL",
-    -- Oilseeds / Brassicas
-    CANOLA = "BRASSICA",  OILSEEDRADISH = "BRASSICA",  MUSTARD   = "BRASSICA",
-    SUNFLOWER = "BRASSICA",
-    -- Root / vegetable
-    SUGARBEET = "ROOT",  POTATO = "ROOT",   CARROT   = "ROOT",
-    PARSNIP   = "ROOT",  ONION  = "ROOT",   BEETROOT = "ROOT",
-    SPINACH   = "ROOT",
+    WINTERWHEAT  = "CEREAL",  WINTERBARLEY = "CEREAL",  SILAGEMAIZE   = "CEREAL",
+    -- Oilseeds
+    CANOLA    = "OILSEED",  SUNFLOWER = "OILSEED",  MUSTARD = "OILSEED",
+    -- Legumes
+    SOYBEAN   = "LEGUME",  ALFALFA   = "LEGUME",  CLOVER    = "LEGUME",
+    PEA       = "LEGUME",  GREENBEAN = "LEGUME",
+    -- Root vegetables
+    SUGARBEET = "ROOT",  POTATO  = "ROOT",  CARROT  = "ROOT",
+    PARSNIP   = "ROOT",  BEETROOT = "ROOT",
+    -- Leaf / bulb vegetables
+    SPINACH = "VEGETABLE",  ONION = "VEGETABLE",
     -- Forage / grass
     GRASS = "FORAGE",  FIELDGRASS = "FORAGE",
+    -- Cover crops
+    OILSEEDRADISH      = "COVER",  VETCHRYE           = "COVER",
+    GREENRYE           = "COVER",  FLOWERINGCATCHCROP = "COVER",
 }
 
 -- Advice: N-1 family drives the recommendation
+-- COVER never appears as N-1 (excluded from history), no entry needed.
 FieldRotationFrame.ADVICE_KEY = {
-    CEREAL   = "fr_advice_afterCereal",
-    LEGUME   = "fr_advice_afterLegume",
-    BRASSICA = "fr_advice_afterBrassica",
-    ROOT     = "fr_advice_afterRoot",
-    FORAGE   = "fr_advice_afterForage",
+    CEREAL    = "fr_advice_afterCereal",
+    LEGUME    = "fr_advice_afterLegume",
+    OILSEED   = "fr_advice_afterOilseed",
+    ROOT      = "fr_advice_afterRoot",
+    VEGETABLE = "fr_advice_afterVegetable",
+    FORAGE    = "fr_advice_afterForage",
 }
 
 -- Recommended family for the conseil slot, keyed by N-1 family
 FieldRotationFrame.ADVICE_FAMILY = {
-    CEREAL   = "LEGUME",
-    LEGUME   = "CEREAL",
-    BRASSICA = "CEREAL",
-    ROOT     = "CEREAL",
-    FORAGE   = "CEREAL",
+    CEREAL    = "LEGUME",
+    LEGUME    = "CEREAL",
+    OILSEED   = "CEREAL",
+    ROOT      = "CEREAL",
+    VEGETABLE = "CEREAL",
+    FORAGE    = "CEREAL",
 }
 
 -- Family badge RGBA — Lua-only (XML constraint does not apply)
 FieldRotationFrame.FAMILY_RGBA = {
-    LEGUME   = {0.325, 0.565, 0.071, 1.0},
-    CEREAL   = {0.761, 0.365, 0.000, 1.0},
-    BRASSICA = {0.400, 0.400, 0.400, 1.0},
-    ROOT     = {0.400, 0.400, 0.400, 1.0},
-    FORAGE   = {0.200, 0.480, 0.280, 1.0},
+    CEREAL    = {0.761, 0.365, 0.000, 1.0},  -- amber
+    LEGUME    = {0.325, 0.565, 0.071, 1.0},  -- green
+    OILSEED   = {0.800, 0.700, 0.000, 1.0},  -- golden yellow
+    ROOT      = {0.600, 0.180, 0.100, 1.0},  -- dark red
+    VEGETABLE = {0.180, 0.580, 0.380, 1.0},  -- teal green
+    FORAGE    = {0.200, 0.480, 0.280, 1.0},  -- grass green
+    COVER     = {0.420, 0.300, 0.100, 1.0},  -- earthy brown
 }
 
 -- slot index 1..4 maps to history newest-first (history[1] = N-1)

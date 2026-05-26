@@ -45,11 +45,13 @@
         <e k="fr_slot_next"            v="Empfehlung" />
 
         <!-- Crop family badge labels -->
-        <e k="fr_family_legume"        v="Hülsenfrucht" />
         <e k="fr_family_cereal"        v="Getreide" />
-        <e k="fr_family_brassica"      v="Kreuzblüter" />
-        <e k="fr_family_root"          v="Wurzelfrucht" />
+        <e k="fr_family_legume"        v="Hülsenfrucht" />
+        <e k="fr_family_oilseed"       v="Ölsaat" />
+        <e k="fr_family_root"          v="Wurzelgemüse" />
+        <e k="fr_family_vegetable"     v="Gemüse" />
         <e k="fr_family_forage"        v="Futter" />
+        <e k="fr_family_cover"         v="Zwischenfrucht" />
 
         <!-- Nitrogen gauge -->
         <e k="fr_n_none"               v="Kein Dünger" />
@@ -64,12 +66,13 @@
         <e k="fr_lime_average_pf"      v="Durchschnitt pH" />
 
         <!-- Agronomic advice -->
-        <e k="fr_advice_afterCereal"   v="Hülsenfrüchte oder Kreuzblüter fördern die Stickstoffversorgung" />
-        <e k="fr_advice_afterLegume"   v="Getreide oder Wurzelfrüchte nutzen den Stickstoffrückstand" />
-        <e k="fr_advice_afterBrassica" v="Getreide erzielt beste Ergebnisse nach einem Kreuzblüter-Vorfrüchte" />
-        <e k="fr_advice_afterRoot"     v="Getreide oder Hülsenfrüchte verbessern die Bodenstruktur" />
-        <e k="fr_advice_afterForage"   v="Getreide profitiert von der Bodenstruktur nach einem Gras- oder Futteranbau" />
-        <e k="fr_advice_insufficient"  v="Zu wenig Anbaugeschichte, mehr Saisons für Empfehlungen" />
+        <e k="fr_advice_afterCereal"    v="Hülsenfrüchte oder Ölsaaten fördern die Stickstoffversorgung" />
+        <e k="fr_advice_afterLegume"    v="Getreide oder Wurzelgemüse nutzen den Stickstoffrückstand" />
+        <e k="fr_advice_afterOilseed"   v="Getreide erzielt beste Ergebnisse nach einer Ölsaat als Vorfrucht" />
+        <e k="fr_advice_afterRoot"      v="Getreide oder Hülsenfrüchte verbessern die Bodenstruktur" />
+        <e k="fr_advice_afterVegetable" v="Getreide oder Hülsenfrüchte nach Gemüse empfohlen" />
+        <e k="fr_advice_afterForage"    v="Getreide profitiert von der Bodenstruktur nach einem Gras- oder Futteranbau" />
+        <e k="fr_advice_insufficient"   v="Zu wenig Anbaugeschichte, mehr Saisons für Empfehlungen" />
 
         <!-- Yield card -->
         <e k="fr_yield_harvest"        v="Gesamternte" />

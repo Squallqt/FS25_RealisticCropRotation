@@ -45,11 +45,13 @@
         <e k="fr_slot_next"            v="Conseil" />
 
         <!-- Crop family badge labels -->
-        <e k="fr_family_legume"        v="Légumineuse" />
         <e k="fr_family_cereal"        v="Céréale" />
-        <e k="fr_family_brassica"      v="Oléagineux" />
-        <e k="fr_family_root"          v="Racine" />
+        <e k="fr_family_legume"        v="Légumineuse" />
+        <e k="fr_family_oilseed"       v="Oléagineux" />
+        <e k="fr_family_root"          v="Légumes-racines" />
+        <e k="fr_family_vegetable"     v="Légumes" />
         <e k="fr_family_forage"        v="Fourrage" />
+        <e k="fr_family_cover"         v="Couvert végétal" />
 
         <!-- Nitrogen gauge -->
         <e k="fr_n_none"               v="Non fertilisé" />
@@ -64,12 +66,13 @@
         <e k="fr_lime_average_pf"      v="Moyenne du pH" />
 
         <!-- Agronomic advice -->
-        <e k="fr_advice_afterCereal"   v="Favorisez légumineuse ou crucifère pour recharger l'azote du sol" />
-        <e k="fr_advice_afterLegume"   v="Une céréale ou une racine valorise le reliquat azoté de la légumineuse" />
-        <e k="fr_advice_afterBrassica" v="Une céréale tire le meilleur parti d'une crucifère en précédent cultural" />
-        <e k="fr_advice_afterRoot"     v="Céréale ou légumineuse pour restaurer la structure du sol" />
-        <e k="fr_advice_afterForage"   v="Une céréale valorise bien la structure du sol après une prairie ou un fourrage" />
-        <e k="fr_advice_insufficient"  v="Historique insuffisant, cultivez davantage pour obtenir des conseils" />
+        <e k="fr_advice_afterCereal"    v="Favorisez légumineuse ou oléagineux pour recharger l'azote du sol" />
+        <e k="fr_advice_afterLegume"    v="Une céréale ou un légume-racine valorise le reliquat azoté de la légumineuse" />
+        <e k="fr_advice_afterOilseed"   v="Une céréale tire le meilleur parti d'un oléagineux en précédent cultural" />
+        <e k="fr_advice_afterRoot"      v="Céréale ou légumineuse pour restaurer la structure du sol" />
+        <e k="fr_advice_afterVegetable" v="Céréale ou légumineuse recommandée après un légume" />
+        <e k="fr_advice_afterForage"    v="Une céréale valorise bien la structure du sol après une prairie ou un fourrage" />
+        <e k="fr_advice_insufficient"   v="Historique insuffisant, cultivez davantage pour obtenir des conseils" />
 
         <!-- Yield card -->
         <e k="fr_yield_harvest"        v="Récolte Totale" />

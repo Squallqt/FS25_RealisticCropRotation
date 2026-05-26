@@ -45,11 +45,13 @@
         <e k="fr_slot_next"            v="Advice" />
 
         <!-- Crop family badge labels -->
-        <e k="fr_family_legume"        v="Legume" />
         <e k="fr_family_cereal"        v="Cereal" />
-        <e k="fr_family_brassica"      v="Brassica" />
-        <e k="fr_family_root"          v="Root" />
+        <e k="fr_family_legume"        v="Legume" />
+        <e k="fr_family_oilseed"       v="Oilseed" />
+        <e k="fr_family_root"          v="Root vegetable" />
+        <e k="fr_family_vegetable"     v="Vegetable" />
         <e k="fr_family_forage"        v="Forage" />
+        <e k="fr_family_cover"         v="Cover crop" />
 
         <!-- Nitrogen gauge -->
         <e k="fr_n_none"               v="No Fertilizer" />
@@ -64,12 +66,13 @@
         <e k="fr_lime_average_pf"      v="Average pH" />
 
         <!-- Agronomic advice -->
-        <e k="fr_advice_afterCereal"   v="Grow legume or brassica to restore nitrogen for next season" />
-        <e k="fr_advice_afterLegume"   v="Grow cereal or root to make use of the nitrogen legacy" />
-        <e k="fr_advice_afterBrassica" v="Grow cereal for best results after a brassica break crop" />
-        <e k="fr_advice_afterRoot"     v="Grow cereal or legume to restore soil structure" />
-        <e k="fr_advice_afterForage"   v="Cereal crops benefit well from the soil structure left by a grass or forage crop" />
-        <e k="fr_advice_insufficient"  v="Not enough crop history yet, plant more seasons to get advice" />
+        <e k="fr_advice_afterCereal"    v="Grow legume or oilseed to restore nitrogen for next season" />
+        <e k="fr_advice_afterLegume"    v="Grow cereal or root vegetable to make use of the nitrogen legacy" />
+        <e k="fr_advice_afterOilseed"   v="Grow cereal for best results after an oilseed break crop" />
+        <e k="fr_advice_afterRoot"      v="Grow cereal or legume to restore soil structure" />
+        <e k="fr_advice_afterVegetable" v="Grow cereal or legume after a vegetable crop" />
+        <e k="fr_advice_afterForage"    v="Cereal crops benefit well from the soil structure left by a grass or forage crop" />
+        <e k="fr_advice_insufficient"   v="Not enough crop history yet, plant more seasons to get advice" />
 
         <!-- Yield card -->
         <e k="fr_yield_harvest"        v="Total Harvest" />
