@@ -66,12 +66,12 @@
         <e k="fr_lime_average_pf"      v="Durchschnitt pH" />
 
         <!-- Agronomic advice -->
-        <e k="fr_advice_afterCereal"    v="Hülsenfrüchte oder Ölsaaten empfohlen. Getreidefolgen begünstigen Fußkrankheiten und Ertragsrückgang." />
-        <e k="fr_advice_afterLegume"    v="Getreide nutzt den Reststickstoff optimal. Mindestens 4 Jahre Pause vor gleicher Hülsenfrucht empfohlen." />
-        <e k="fr_advice_afterOilseed"   v="Getreide empfohlen. Mindestens 5 Jahre vor erneuter Ölsaat zum Schutz vor Sklerotinia und Kohlhernie." />
-        <e k="fr_advice_afterRoot"      v="Getreide oder Hülsenfrüchte nach Tiefenbearbeitung. Anbaupausen für Rübe und Kartoffel beachten." />
-        <e k="fr_advice_afterVegetable" v="Getreide oder Hülsenfrüchte empfohlen. Gleiche Gemüsearten nicht wiederholen: Nematoden- und Bodenkrankheitsaufbau." />
-        <e k="fr_advice_afterForage"    v="Getreide profitiert stark von der organischen Masse nach Grünland. In der Regel hohe Erträge." />
+        <e k="fr_advice_afterCereal"    v="Wechseln Sie zu Hülsenfrüchten oder Ölsaaten. Vermeiden Sie Getreide zwei Jahre in Folge." />
+        <e k="fr_advice_afterLegume"    v="Getreide nutzt den Stickstoff der Hülsenfrucht am besten." />
+        <e k="fr_advice_afterOilseed"   v="Getreide folgt gut auf Ölsaaten. Vermeiden Sie zwei Ölsaaten hintereinander." />
+        <e k="fr_advice_afterRoot"      v="Getreide oder Hülsenfrüchte empfohlen. Warten Sie mehrere Jahre vor Rübe oder Kartoffel." />
+        <e k="fr_advice_afterVegetable" v="Getreide oder Hülsenfrüchte empfohlen. Vermeiden Sie dasselbe Gemüse jedes Jahr." />
+        <e k="fr_advice_afterForage"    v="Gute Gelegenheit für Getreide. Durch Grünland angereicherter Boden bringt gute Erträge." />
         <e k="fr_advice_insufficient"   v="Zu wenig Anbaugeschichte, mehr Saisons für Empfehlungen." />
 
         <!-- Yield card -->

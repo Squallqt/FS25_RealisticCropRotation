@@ -66,12 +66,12 @@
         <e k="fr_lime_average_pf"      v="Moyenne du pH" />
 
         <!-- Agronomic advice -->
-        <e k="fr_advice_afterCereal"    v="Légumineuse ou oléagineux recommandés. Évitez les successions céréalières : piétin, helminthosporiose et réduction des rendements." />
-        <e k="fr_advice_afterLegume"    v="La céréale valorise au mieux le reliquat azoté. Respectez 4 ans minimum avant de revenir à la même légumineuse." />
-        <e k="fr_advice_afterOilseed"   v="Céréale recommandée. Minimum 5 ans avant de revenir à un oléagineux pour éviter sclérotinia et hernie du chou." />
-        <e k="fr_advice_afterRoot"      v="Céréale ou légumineuse pour valoriser le sol travaillé en profondeur. Respectez les intervalles de retour betterave et pomme de terre." />
-        <e k="fr_advice_afterVegetable" v="Céréale ou légumineuse recommandée. Ne répétez pas le même légume : accumulation de nématodes et maladies du sol." />
-        <e k="fr_advice_afterForage"    v="La céréale profite pleinement de la richesse en matière organique laissée par la prairie. Rendements généralement élevés." />
+        <e k="fr_advice_afterCereal"    v="Alternez avec une légumineuse ou un oléagineux. Ne faites pas de céréales deux années de suite." />
+        <e k="fr_advice_afterLegume"    v="Une céréale tire le meilleur parti de l'azote laissé par la légumineuse." />
+        <e k="fr_advice_afterOilseed"   v="La céréale suit bien un oléagineux. Évitez deux oléagineux consécutifs." />
+        <e k="fr_advice_afterRoot"      v="Céréale ou légumineuse recommandée. Attendez plusieurs années avant de replanter betterave ou pomme de terre." />
+        <e k="fr_advice_afterVegetable" v="Céréale ou légumineuse recommandée. Évitez de répéter le même légume chaque année." />
+        <e k="fr_advice_afterForage"    v="Excellente opportunité pour une céréale. Le sol enrichi après prairie donne de bons rendements." />
         <e k="fr_advice_insufficient"   v="Historique insuffisant, cultivez davantage pour obtenir des conseils." />
 
         <!-- Yield card -->

@@ -66,12 +66,12 @@
         <e k="fr_lime_average_pf"      v="Average pH" />
 
         <!-- Agronomic advice -->
-        <e k="fr_advice_afterCereal"    v="Legume or oilseed recommended. Avoid cereal succession: eyespot, helminthosporium and yield decline." />
-        <e k="fr_advice_afterLegume"    v="Cereal makes best use of residual nitrogen. Allow at least 4 years before returning to the same legume." />
-        <e k="fr_advice_afterOilseed"   v="Cereal recommended. Minimum 5 years before returning to oilseed to prevent sclerotinia and clubroot." />
-        <e k="fr_advice_afterRoot"      v="Cereal or legume to benefit from deep tillage. Respect return intervals for beet and potato." />
-        <e k="fr_advice_afterVegetable" v="Cereal or legume recommended. Avoid repeating the same vegetable: nematode and soil disease buildup." />
-        <e k="fr_advice_afterForage"    v="Cereal benefits fully from organic matter left by the grass crop. Typically high yields." />
+        <e k="fr_advice_afterCereal"    v="Rotate with a legume or oilseed. Avoid growing cereals two years in a row." />
+        <e k="fr_advice_afterLegume"    v="A cereal makes best use of the nitrogen left by the legume." />
+        <e k="fr_advice_afterOilseed"   v="Cereal follows oilseed well. Avoid two consecutive oilseed crops." />
+        <e k="fr_advice_afterRoot"      v="Cereal or legume recommended. Wait several years before replanting beet or potato." />
+        <e k="fr_advice_afterVegetable" v="Cereal or legume recommended. Avoid growing the same vegetable every year." />
+        <e k="fr_advice_afterForage"    v="Great opportunity for a cereal. Soil enriched by grass gives good yields." />
         <e k="fr_advice_insufficient"   v="Not enough crop history yet, plant more seasons to get advice." />
 
         <!-- Yield card -->
