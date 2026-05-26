@@ -25,44 +25,10 @@
 FieldRotationService = {}
 local FieldRotationService_mt = Class(FieldRotationService)
 
--- Legume nitrogen restitution table.
--- Values agronomically backed: 1 PF state = 5 kg N/ha
--- (PrecisionFarming.xml nitrogenValues amountPerState=5, confirmed in PF runtime dump).
--- n1 = bonus when crop is the N-1 history entry.
--- n2 = residual bonus when crop is the N-2 history entry.
--- Fruit type names are uppercase as stored in history.
-FieldRotationService.LEGUMES = {
-    ALFALFA   = { n1 = 16, n2 = 4 },   -- 80 kg/ha N-1, 20 kg/ha N-2
-    CLOVER    = { n1 = 14, n2 = 3 },   -- 70 kg/ha N-1, 15 kg/ha N-2
-    PEA       = { n1 = 12, n2 = 3 },   -- 60 kg/ha N-1, 15 kg/ha N-2
-    SOYBEAN   = { n1 = 16, n2 = 3 },   -- 80 kg/ha N-1, 15 kg/ha N-2
-    GREENBEAN = { n1 =  6, n2 = 1 },   -- 30 kg/ha N-1,  5 kg/ha N-2
-}
-
+-- Crop data (families, nitrogen, cover flags) is driven by cropConfig.xml.
+-- FieldRotation.cropConfig is loaded once at mod init by main.lua.
+-- 1 PF state = 5 kg N/ha (source: PrecisionFarming.xml amountPerState=5).
 FieldRotationService.PF_STATE_PER_UNIT = 5
-FieldRotationService.CATCH_CROP_STATE_CHANGE = 5
-
--- Crops the mod treats as cover crops in addition to fruitType.isCatchCrop.
--- MUSTARD is a map-specific cover crop that lacks the isCatchCrop flag in
--- the base game but is intended as a cover crop by mod authors.
-FieldRotationService.COVER_CROP_OVERRIDES = {
-    MUSTARD = true,
-}
-
--- Cover crops that should never grant a mod-side bonus (already covered
--- elsewhere or specifically excluded by authors).
-FieldRotationService.COVER_CROP_BONUS_EXCLUSIONS = {
-    VETCHRYE = true,
-}
-
--- Crops treated as interculture/cover crops for rotation history.
--- They are not pushed as the previous crop (N-1) of the parcel.
-FieldRotationService.COVER_CROP_HISTORY_EXCLUSIONS = {
-    MUSTARD       = true,
-    OILSEEDRADISH = true,
-    VETCHRYE      = true,
-    GREENRYE      = true,
-}
 
 FieldRotationService.NITROGEN_DIAGNOSTICS_ENABLED = false
 
@@ -162,9 +128,13 @@ function FieldRotationService:getCropNameByFruitTypeIndex(fruitTypeIndex)
     return cropName
 end
 
-function FieldRotationService:getLegumeEntry(cropName)
+function FieldRotationService:getResidueEntry(cropName)
     if cropName == nil then return nil end
-    return FieldRotationService.LEGUMES[cropName]
+    local config = FieldRotation ~= nil and FieldRotation.cropConfig or nil
+    if config == nil or config.nitrogen == nil then return nil end
+    local entry = config.nitrogen[cropName]
+    if entry ~= nil and ((entry.n1 or 0) > 0 or (entry.n2 or 0) > 0) then return entry end
+    return nil
 end
 
 function FieldRotationService:getFruitTypeByCropName(cropName)
@@ -195,41 +165,25 @@ function FieldRotationService:isCoverCropForRotationHistory(fruitTypeIndex, crop
     if normalizedName ~= nil then
         normalizedName = string.upper(tostring(normalizedName))
     end
-    if normalizedName ~= nil and FieldRotationService.COVER_CROP_HISTORY_EXCLUSIONS[normalizedName] == true then
+    -- XML config: cover="true" crops are excluded from rotation history
+    local config = FieldRotation ~= nil and FieldRotation.cropConfig or nil
+    if config ~= nil and config.coverCrops ~= nil
+        and normalizedName ~= nil and config.coverCrops[normalizedName] then
         return true
     end
+    -- Runtime fallback: isCatchCrop=true crops are always cover crops
     if self:isFruitTypeCatchCrop(fruitTypeIndex, normalizedName) then
         return true
     end
-    if normalizedName ~= nil and FieldRotationService.COVER_CROP_OVERRIDES[normalizedName] == true then
-        return true
-    end
     return false
-end
-
-function FieldRotationService:getResidueEntry(cropName)
-    local legume = self:getLegumeEntry(cropName)
-    if legume ~= nil then return legume end
-
-    local fruitType = self:getFruitTypeByCropName(cropName)
-    local isCatchCrop = fruitType ~= nil and fruitType.isCatchCrop == true
-    local isOverride = cropName ~= nil and FieldRotationService.COVER_CROP_OVERRIDES[cropName] == true
-    if isCatchCrop or isOverride then
-        return { n1 = FieldRotationService.CATCH_CROP_STATE_CHANGE, n2 = 0 }
-    end
-    return nil
 end
 
 function FieldRotationService:getCoverCropTerminationStateChange(fruitTypeIndex)
     local cropName = self:getCropNameByFruitTypeIndex(fruitTypeIndex)
     if cropName == nil then return 0 end
     if not self:isCoverCropForRotationHistory(fruitTypeIndex, cropName) then return 0 end
-    if FieldRotationService.COVER_CROP_BONUS_EXCLUSIONS[cropName] == true then return 0 end
-
-    -- PF natively applies catchCropsStateChange (~25 kg N/ha) on destruction of
-    -- any fruit with isCatchCrop=true. Do NOT duplicate it here.
+    -- PF natively applies +25 kg N/ha on isCatchCrop=true crops. Do NOT duplicate.
     if self:isFruitTypeCatchCrop(fruitTypeIndex, cropName) then return 0 end
-
     local entry = self:getResidueEntry(cropName)
     if entry == nil then return 0 end
     return entry.n1 or 0
@@ -282,7 +236,9 @@ function FieldRotationService:hasRecordedThisPeriod(farmlandId, currentPeriod, c
     return self.lastRecordedPeriod[farmlandId] == currentPeriod
 end
 
-function FieldRotationService:recordCropNameForYear(farmlandId, cropName, period, year)
+-- skipCoverCheck: when true, bypass cover crop exclusion (used for dual-use crops
+-- harvested by combine/mower — e.g. MUSTARD harvested for grain).
+function FieldRotationService:recordCropNameForYear(farmlandId, cropName, period, year, skipCoverCheck)
     if farmlandId == nil or farmlandId == 0 then return false end
     if cropName == nil or cropName == "" then return false end
 
@@ -292,7 +248,7 @@ function FieldRotationService:recordCropNameForYear(farmlandId, cropName, period
     if currentYear == nil or currentYear == 0 then return false end
 
     local normalizedCropName = string.upper(tostring(cropName))
-    if self:isCoverCropForRotationHistory(nil, normalizedCropName) then
+    if not skipCoverCheck and self:isCoverCropForRotationHistory(nil, normalizedCropName) then
         return false
     end
 
@@ -309,7 +265,11 @@ function FieldRotationService:onCropHarvested(farmlandId, fruitTypeIndex)
     if farmlandId == nil or farmlandId == 0 then return false end
     local cropName = self:getCropNameByFruitTypeIndex(fruitTypeIndex)
     if cropName == nil then return false end
-    return self:recordCropNameForYear(farmlandId, cropName, self:getCurrentPeriod(), self:getCurrentYear())
+    -- Dual-use crops (e.g. MUSTARD): bypass cover exclusion when harvested by combine/mower.
+    local config = FieldRotation ~= nil and FieldRotation.cropConfig or nil
+    local isDualUse = config ~= nil and config.dualUse ~= nil and config.dualUse[cropName] == true
+    return self:recordCropNameForYear(farmlandId, cropName,
+        self:getCurrentPeriod(), self:getCurrentYear(), isDualUse)
 end
 
 function FieldRotationService:onCropTerminated(farmlandId, fruitTypeIndex, sourceName, activeCropNameBeforeTermination)

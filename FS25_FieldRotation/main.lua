@@ -20,6 +20,49 @@ FieldRotation.manager = nil
 FieldRotation.frame = nil
 FieldRotation.pendingSyncData = nil
 FieldRotation.isEnabled = true
+FieldRotation.cropConfig = nil
+
+-- Loads cropConfig.xml once at mod init.
+-- Returns a config table: { families, nitrogen, coverCrops, dualUse }
+local function loadCropConfig()
+    local filePath = modDirectory .. "cropConfig.xml"
+    local xmlFile = loadXMLFile("FieldRotationCropConfig", filePath)
+    if xmlFile == nil or xmlFile == 0 then
+        Logging.error("[FieldRotation] Failed to load cropConfig.xml at %s", tostring(filePath))
+        return nil
+    end
+
+    local config = { families = {}, nitrogen = {}, coverCrops = {}, dualUse = {} }
+    local i = 0
+    while true do
+        local key = string.format("fieldRotationCrops.crop(%d)", i)
+        if not hasXMLProperty(xmlFile, key) then break end
+
+        local name    = getXMLString(xmlFile, key .. "#name")
+        local family  = getXMLString(xmlFile, key .. "#family")
+        local n1      = getXMLInt(xmlFile,    key .. "#n1") or 0
+        local n2      = getXMLInt(xmlFile,    key .. "#n2") or 0
+        local cover   = getXMLBool(xmlFile,   key .. "#cover") or false
+        local dualUse = getXMLBool(xmlFile,   key .. "#dualUse") or false
+
+        if name ~= nil and name ~= "" then
+            name = string.upper(name)
+            if family ~= nil and family ~= "" then
+                config.families[name] = string.upper(family)
+            end
+            if n1 > 0 or n2 > 0 then
+                config.nitrogen[name] = { n1 = n1, n2 = n2 }
+            end
+            if cover   then config.coverCrops[name] = true end
+            if dualUse then config.dualUse[name]    = true end
+        end
+        i = i + 1
+    end
+
+    delete(xmlFile)
+    Logging.info("[FieldRotation] cropConfig.xml loaded: %d crops", i)
+    return config
+end
 
 -- Broadcast coalescing: hooks request a broadcast instead of emitting one
 -- per density-map change. Period changes are handled through GIANTS' message
@@ -578,6 +621,8 @@ end
 -- =========================================================================
 
 local function initFieldRotation()
+    FieldRotation.cropConfig = loadCropConfig()
+
     Mission00.loadMission00Finished = Utils.appendedFunction(Mission00.loadMission00Finished, loadedMission)
     FSBaseMission.saveSavegame = Utils.appendedFunction(FSBaseMission.saveSavegame, onSaveToXMLFile)
     FSBaseMission.sendInitialClientState = Utils.appendedFunction(FSBaseMission.sendInitialClientState, sendInitialClientState)

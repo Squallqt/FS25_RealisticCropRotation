@@ -5,29 +5,8 @@ local FieldRotationFrame_mt = Class(FieldRotationFrame, TabbedMenuFrameElement)
 -- Internal tab indices
 FieldRotationFrame.TAB = { HISTORY = 1, PLANNING = 2 }
 
--- Crop family classification (uppercase fruit names as stored in history)
-FieldRotationFrame.CROP_FAMILY = {
-    -- Cereals
-    WHEAT        = "CEREAL",  BARLEY       = "CEREAL",  OAT           = "CEREAL",
-    RYE          = "CEREAL",  TRITICALE    = "CEREAL",  MAIZE         = "CEREAL",
-    SORGHUM      = "CEREAL",  SPELT        = "CEREAL",  RICELONGGRAIN = "CEREAL",
-    WINTERWHEAT  = "CEREAL",  WINTERBARLEY = "CEREAL",  SILAGEMAIZE   = "CEREAL",
-    -- Oilseeds
-    CANOLA    = "OILSEED",  SUNFLOWER = "OILSEED",  MUSTARD = "OILSEED",
-    -- Legumes
-    SOYBEAN   = "LEGUME",  ALFALFA   = "LEGUME",  CLOVER    = "LEGUME",
-    PEA       = "LEGUME",  GREENBEAN = "LEGUME",
-    -- Root vegetables
-    SUGARBEET = "ROOT",  POTATO  = "ROOT",  CARROT  = "ROOT",
-    PARSNIP   = "ROOT",  BEETROOT = "ROOT",
-    -- Leaf / bulb vegetables
-    SPINACH = "VEGETABLE",  ONION = "VEGETABLE",
-    -- Forage / grass
-    GRASS = "FORAGE",  FIELDGRASS = "FORAGE",
-    -- Cover crops
-    OILSEEDRADISH      = "COVER",  VETCHRYE           = "COVER",
-    GREENRYE           = "COVER",  FLOWERINGCATCHCROP = "COVER",
-}
+-- Crop family classification is driven by cropConfig.xml.
+-- FieldRotation.cropConfig is loaded once at mod init by main.lua.
 
 -- Advice: N-1 family drives the recommendation
 -- COVER never appears as N-1 (excluded from history), no entry needed.
@@ -249,7 +228,9 @@ end
 
 function FieldRotationFrame:getCropFamily(cropName)
     if cropName == nil or cropName == "" then return "UNKNOWN" end
-    return FieldRotationFrame.CROP_FAMILY[string.upper(cropName)] or "UNKNOWN"
+    local config = FieldRotation ~= nil and FieldRotation.cropConfig or nil
+    if config == nil or config.families == nil then return "UNKNOWN" end
+    return config.families[string.upper(cropName)] or "UNKNOWN"
 end
 
 function FieldRotationFrame:getCropDisplayName(cropName)
