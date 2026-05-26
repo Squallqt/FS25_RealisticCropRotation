@@ -8,14 +8,13 @@ FieldRotationFrame.TAB = { HISTORY = 1, PLANNING = 2 }
 -- Crop family classification (uppercase fruit names as stored in history)
 FieldRotationFrame.CROP_FAMILY = {
     -- Legumes
-    ALFALFA = "LEGUME",   CLOVER = "LEGUME",     PEA      = "LEGUME",
-    SOYBEAN = "LEGUME",   GREENBEAN = "LEGUME",  LUPIN    = "LEGUME",
-    BEANS   = "LEGUME",
+    ALFALFA = "LEGUME",   CLOVER = "LEGUME",     PEA       = "LEGUME",
+    SOYBEAN = "LEGUME",   GREENBEAN = "LEGUME",
     -- Cereals
-    WHEAT        = "CEREAL",  BARLEY       = "CEREAL",  OAT       = "CEREAL",
-    RYE          = "CEREAL",  TRITICALE    = "CEREAL",  MAIZE     = "CEREAL",
-    SORGHUM      = "CEREAL",  SPELT        = "CEREAL",
-    WINTERWHEAT  = "CEREAL",  WINTERBARLEY = "CEREAL",
+    WHEAT        = "CEREAL",  BARLEY       = "CEREAL",  OAT          = "CEREAL",
+    RYE          = "CEREAL",  TRITICALE    = "CEREAL",  MAIZE        = "CEREAL",
+    SORGHUM      = "CEREAL",  SPELT        = "CEREAL",  RICELONGGRAIN = "CEREAL",
+    WINTERWHEAT  = "CEREAL",  WINTERBARLEY = "CEREAL",  SILAGEMAIZE  = "CEREAL",
     -- Oilseeds / Brassicas
     CANOLA = "BRASSICA",  OILSEEDRADISH = "BRASSICA",  MUSTARD   = "BRASSICA",
     SUNFLOWER = "BRASSICA",

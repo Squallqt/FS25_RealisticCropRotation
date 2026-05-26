@@ -61,6 +61,7 @@ FieldRotationService.COVER_CROP_HISTORY_EXCLUSIONS = {
     MUSTARD       = true,
     OILSEEDRADISH = true,
     VETCHRYE      = true,
+    GREENRYE      = true,
 }
 
 FieldRotationService.NITROGEN_DIAGNOSTICS_ENABLED = false
