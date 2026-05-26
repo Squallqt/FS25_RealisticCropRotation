@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="fieldRotation_menu_title" v="Fruchtfolge" />
+
+        <!-- Sidebar -->
+        <e k="fr_field_prefix"         v="Feld" />
+        <e k="fr_sidebar_last"            v="Letzter:" />
+        <e k="fr_sidebar_no_active_crop"  v="Keine aktive Kultur" />
+
+        <!-- Tabs -->
+        <e k="fr_tab_history"          v="Fruchtfolge" />
+        <e k="fr_tab_planning"         v="Planung" />
+
+        <!-- Hero card -->
+        <e k="fr_season_label"         v="Saison" />
+        <e k="fr_season_spring"        v="Frühling" />
+        <e k="fr_season_summer"        v="Sommer" />
+        <e k="fr_season_autumn"        v="Herbst" />
+        <e k="fr_season_winter"        v="Winter" />
+        <e k="fr_status_bonus"         v="N-Rückstand" />
+        <e k="fr_status_no_bonus"      v="Kein N-Rückstand" />
+        <e k="fr_hud_previous_n1"      v="Vorfrucht (N-1):" />
+        <e k="fr_hud_previous_n2"      v="Vor-Vorfrucht (N-2):" />
+        <e k="fr_hud_cover_crop"       v="Zwischenfrucht:" />
+        <e k="fr_hud_none"             v="Keine" />
+
+        <!-- Section bars -->
+        <e k="fr_section_history"      v="Anbaugeschichte" />
+        <e k="fr_section_nitrogen"     v="Stickstoffstatus" />
+        <e k="fr_section_advice"       v="Agronomische Empfehlung" />
+        <e k="fr_section_yield"        v="Geschätzter Ertrag" />
+        <e k="fr_section_lime"         v="Kalk-/pH-Status" />
+        <e k="fr_section_plan"         v="Rotationsplan" />
+        <e k="fr_section_score"        v="Rotationsqualität" />
+        <e k="fr_section_overview"     v="Gesamtübersicht" />
+
+        <!-- Timeline slot labels and empty state -->
+        <e k="fr_slot_empty"           v="Nicht bebaut" />
+        <e k="fr_slot_n4"              v="N-4" />
+        <e k="fr_slot_n3"              v="N-3" />
+        <e k="fr_slot_n2"              v="N-2" />
+        <e k="fr_slot_n1"              v="N-1" />
+        <e k="fr_slot_next"            v="Empfehlung" />
+
+        <!-- Crop family badge labels -->
+        <e k="fr_family_legume"        v="Hülsenfrucht" />
+        <e k="fr_family_cereal"        v="Getreide" />
+        <e k="fr_family_brassica"      v="Kreuzblüter" />
+        <e k="fr_family_root"          v="Wurzelfrucht" />
+        <e k="fr_family_forage"        v="Futter" />
+
+        <!-- Nitrogen gauge -->
+        <e k="fr_n_none"               v="Kein Dünger" />
+        <e k="fr_n_partial"            v="Teilweise" />
+        <e k="fr_n_full"               v="Vollständig" />
+        <e k="fr_n_available"          v="Verfügbarer Stickstoff" />
+        <e k="fr_n_crop_need"          v="Kulturbedarf: %.0f kg/ha" />
+        <e k="fr_n_average_pf"         v="Stickstoff / Pflanzenbedarf" />
+        <e k="fr_lime_none"            v="Kein Kalk" />
+        <e k="fr_lime_partial"         v="Teilweise Kalk" />
+        <e k="fr_lime_full"            v="Kalk korrekt" />
+        <e k="fr_lime_average_pf"      v="Durchschnitt pH" />
+
+        <!-- Agronomic advice -->
+        <e k="fr_advice_afterCereal"   v="Hülsenfrüchte oder Kreuzblüter fördern die Stickstoffversorgung" />
+        <e k="fr_advice_afterLegume"   v="Getreide oder Wurzelfrüchte nutzen den Stickstoffrückstand" />
+        <e k="fr_advice_afterBrassica" v="Getreide erzielt beste Ergebnisse nach einem Kreuzblüter-Vorfrüchte" />
+        <e k="fr_advice_afterRoot"     v="Getreide oder Hülsenfrüchte verbessern die Bodenstruktur" />
+        <e k="fr_advice_afterForage"   v="Getreide profitiert von der Bodenstruktur nach einem Gras- oder Futteranbau" />
+        <e k="fr_advice_insufficient"  v="Zu wenig Anbaugeschichte, mehr Saisons für Empfehlungen" />
+
+        <!-- Yield card -->
+        <e k="fr_yield_harvest"        v="Gesamternte" />
+        <e k="fr_yield_perha"          v="Ertrag" />
+
+        <!-- Planning tab — year slots -->
+        <e k="fr_plan_year1"           v="N+1" />
+        <e k="fr_plan_year2"           v="N+2" />
+        <e k="fr_plan_year3"           v="N+3" />
+        <e k="fr_plan_year4"           v="N+4" />
+        <e k="fr_plan_none"            v="Nicht geplant" />
+
+        <!-- Planning tab — score -->
+        <e k="fr_score_incomplete"     v="Unvollständiger Plan" />
+        <e k="fr_score_excellent"      v="Ausgezeichnete Rotation" />
+        <e k="fr_score_good"           v="Gute Rotation" />
+        <e k="fr_score_fair"           v="Angemessene Rotation" />
+        <e k="fr_score_poor"           v="Schlechte Rotation" />
+        <e k="fr_score_label_low"      v="Niedrige Bewertung" />
+        <e k="fr_score_label_optimal"  v="Optimale Bewertung" />
+
+        <!-- Empty state -->
+        <e k="fr_empty_no_fields"      v="Keine eigenen Felder anzuzeigen." />
+    </elements>
+</l10n>

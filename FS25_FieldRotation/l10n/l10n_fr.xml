@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="fieldRotation_menu_title" v="Assolement" />
+
+        <!-- Sidebar -->
+        <e k="fr_field_prefix"         v="Parcelle" />
+        <e k="fr_sidebar_last"            v="Dernier :" />
+        <e k="fr_sidebar_no_active_crop"  v="Aucune culture" />
+
+        <!-- Tabs -->
+        <e k="fr_tab_history"          v="Assolement" />
+        <e k="fr_tab_planning"         v="Planification" />
+
+        <!-- Hero card -->
+        <e k="fr_season_label"         v="Saison" />
+        <e k="fr_season_spring"        v="Printemps" />
+        <e k="fr_season_summer"        v="Été" />
+        <e k="fr_season_autumn"        v="Automne" />
+        <e k="fr_season_winter"        v="Hiver" />
+        <e k="fr_status_bonus"         v="Reliquat Azoté" />
+        <e k="fr_status_no_bonus"      v="Aucun Reliquat" />
+        <e k="fr_hud_previous_n1"      v="Précédent cultural (N-1) :" />
+        <e k="fr_hud_previous_n2"      v="Anté-précédent (N-2) :" />
+        <e k="fr_hud_cover_crop"       v="Couvert végétal :" />
+        <e k="fr_hud_none"             v="Aucun" />
+
+        <!-- Section bars -->
+        <e k="fr_section_history"      v="Historique des Cultures" />
+        <e k="fr_section_nitrogen"     v="Statut Azoté" />
+        <e k="fr_section_advice"       v="Conseil Agronomique" />
+        <e k="fr_section_yield"        v="Rendement Estimé" />
+        <e k="fr_section_lime"         v="Statut Chaux / pH" />
+        <e k="fr_section_plan"         v="Plan de Rotation" />
+        <e k="fr_section_score"        v="Qualité de Rotation" />
+        <e k="fr_section_overview"     v="Aperçu Global" />
+
+        <!-- Timeline slot labels and empty state -->
+        <e k="fr_slot_empty"           v="Non cultivé" />
+        <e k="fr_slot_n4"              v="N-4" />
+        <e k="fr_slot_n3"              v="N-3" />
+        <e k="fr_slot_n2"              v="N-2" />
+        <e k="fr_slot_n1"              v="N-1" />
+        <e k="fr_slot_next"            v="Conseil" />
+
+        <!-- Crop family badge labels -->
+        <e k="fr_family_legume"        v="Légumineuse" />
+        <e k="fr_family_cereal"        v="Céréale" />
+        <e k="fr_family_brassica"      v="Oléagineux" />
+        <e k="fr_family_root"          v="Racine" />
+        <e k="fr_family_forage"        v="Fourrage" />
+
+        <!-- Nitrogen gauge -->
+        <e k="fr_n_none"               v="Non fertilisé" />
+        <e k="fr_n_partial"            v="Partiel" />
+        <e k="fr_n_full"               v="Complet" />
+        <e k="fr_n_available"          v="Azote disponible" />
+        <e k="fr_n_crop_need"          v="Besoin de la culture : %.0f kg/ha" />
+        <e k="fr_n_average_pf"         v="Azote / besoin culture" />
+        <e k="fr_lime_none"            v="Chaux absente" />
+        <e k="fr_lime_partial"         v="Chaux partielle" />
+        <e k="fr_lime_full"            v="Chaux correcte" />
+        <e k="fr_lime_average_pf"      v="Moyenne du pH" />
+
+        <!-- Agronomic advice -->
+        <e k="fr_advice_afterCereal"   v="Favorisez légumineuse ou crucifère pour recharger l'azote du sol" />
+        <e k="fr_advice_afterLegume"   v="Une céréale ou une racine valorise le reliquat azoté de la légumineuse" />
+        <e k="fr_advice_afterBrassica" v="Une céréale tire le meilleur parti d'une crucifère en précédent cultural" />
+        <e k="fr_advice_afterRoot"     v="Céréale ou légumineuse pour restaurer la structure du sol" />
+        <e k="fr_advice_afterForage"   v="Une céréale valorise bien la structure du sol après une prairie ou un fourrage" />
+        <e k="fr_advice_insufficient"  v="Historique insuffisant, cultivez davantage pour obtenir des conseils" />
+
+        <!-- Yield card -->
+        <e k="fr_yield_harvest"        v="Récolte Totale" />
+        <e k="fr_yield_perha"          v="Rendement" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="fr_plan_year1"           v="N+1" />
+        <e k="fr_plan_year2"           v="N+2" />
+        <e k="fr_plan_year3"           v="N+3" />
+        <e k="fr_plan_year4"           v="N+4" />
+        <e k="fr_plan_none"            v="Non planifié" />
+
+        <!-- Planning tab — score -->
+        <e k="fr_score_incomplete"     v="Plan incomplet" />
+        <e k="fr_score_excellent"      v="Excellente rotation" />
+        <e k="fr_score_good"           v="Bonne rotation" />
+        <e k="fr_score_fair"           v="Rotation correcte" />
+        <e k="fr_score_poor"           v="Rotation à améliorer" />
+        <e k="fr_score_label_low"      v="Score faible" />
+        <e k="fr_score_label_optimal"  v="Score optimal" />
+
+        <!-- Empty state -->
+        <e k="fr_empty_no_fields"      v="Aucune parcelle possédée à afficher." />
+    </elements>
+</l10n>
