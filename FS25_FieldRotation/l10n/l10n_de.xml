@@ -53,7 +53,7 @@
         <e k="fr_family_root"          v="Wurzeln" />
         <e k="fr_family_vegetable"     v="Gemüse" />
         <e k="fr_family_forage"        v="Futter" />
-        <e k="fr_family_cover"         v="Zwischenfrucht" />
+        <e k="fr_family_cover"         v="Zwischenfr." />
 
         <!-- Nitrogen gauge -->
         <e k="fr_n_none"               v="Kein Dünger" />

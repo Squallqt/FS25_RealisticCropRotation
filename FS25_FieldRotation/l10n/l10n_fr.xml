@@ -53,7 +53,7 @@
         <e k="fr_family_root"          v="Racines" />
         <e k="fr_family_vegetable"     v="Légumes" />
         <e k="fr_family_forage"        v="Fourrage" />
-        <e k="fr_family_cover"         v="Couvert végétal" />
+        <e k="fr_family_cover"         v="Couvert" />
 
         <!-- Nitrogen gauge -->
         <e k="fr_n_none"               v="Non fertilisé" />

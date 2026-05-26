@@ -366,9 +366,16 @@ function FieldRotationFrame:buildPlanCropList()
                     and fruitType.fillType ~= nil
                     and fruitType.fillType.hudOverlayFilename ~= nil then
                     local name = string.upper(fruitType.name)
-                    if not nameSet[name] then
-                        nameSet[name] = true
-                        table.insert(self.planCropList, name)
+                    -- Exclude pure cover crops from the rotation plan.
+                    -- Exception: dualUse crops (e.g. MUSTARD = crop + cover).
+                    local cfg = FieldRotation ~= nil and FieldRotation.cropConfig or nil
+                    local family = cfg ~= nil and cfg.families ~= nil and cfg.families[name] or nil
+                    local isDualUse = cfg ~= nil and cfg.dualUse ~= nil and cfg.dualUse[name] == true
+                    if family ~= "COVER" or isDualUse then
+                        if not nameSet[name] then
+                            nameSet[name] = true
+                            table.insert(self.planCropList, name)
+                        end
                     end
                 end
             end
@@ -678,8 +685,8 @@ function FieldRotationFrame:updateTimelineSlot(slotId, cropName, family, isFutur
         badgeBg:setVisible(showBadge)
         if showBadge then
             local c = FieldRotationFrame.FAMILY_RGBA[family]
-            if c ~= nil and badgeBg.setColor ~= nil then
-                badgeBg:setColor(c[1], c[2], c[3], c[4])
+            if c ~= nil then
+                badgeBg.color = {c[1], c[2], c[3], c[4]}
             end
         end
     end
@@ -1040,8 +1047,8 @@ function FieldRotationFrame:applySlotBadge(badgeBg, badgeTxt, family)
         badgeBg:setVisible(showBadge)
         if showBadge then
             local c = FieldRotationFrame.FAMILY_RGBA[family]
-            if c ~= nil and badgeBg.setColor ~= nil then
-                badgeBg:setColor(c[1], c[2], c[3], c[4])
+            if c ~= nil then
+                badgeBg.color = {c[1], c[2], c[3], c[4]}
             end
         end
     end
@@ -1137,13 +1144,13 @@ function FieldRotationFrame:updateScoreCard(plan)
     end
 
     -- Cursor color matches score zone (Lua-only, XML constraint does not apply)
-    if self.scoreCursor ~= nil and self.scoreCursor.setColor ~= nil then
+    if self.scoreCursor ~= nil then
         if score >= 80 then
-            self.scoreCursor:setColor(0.325, 0.565, 0.071, 1.0)
+            self.scoreCursor.color = {0.325, 0.565, 0.071, 1.0}
         elseif score >= 50 then
-            self.scoreCursor:setColor(0.95, 0.85, 0.05, 1.0)
+            self.scoreCursor.color = {0.95, 0.85, 0.05, 1.0}
         else
-            self.scoreCursor:setColor(0.75, 0.20, 0.05, 1.0)
+            self.scoreCursor.color = {0.75, 0.20, 0.05, 1.0}
         end
     end
 end
@@ -1319,14 +1326,14 @@ function FieldRotationFrame:populateGroupCell(index, cell)
 
     -- Card accent color = family of first filled slot
     local accentEl = cell:getAttribute("gCardAccent")
-    if accentEl ~= nil and accentEl.setColor ~= nil then
+    if accentEl ~= nil then
         local firstCrop = ""
         for i = 1, 4 do
             if (group.plan[i] or "") ~= "" then firstCrop = group.plan[i]; break end
         end
         local c = FieldRotationFrame.FAMILY_RGBA[self:getCropFamily(firstCrop)]
             or {0.20, 0.20, 0.20, 0.60}
-        accentEl:setColor(c[1], c[2], c[3], 1.0)
+        accentEl:setImageColor(nil, c[1], c[2], c[3], 1.0)
     end
 
     local summaryEl = cell:getAttribute("gPlanSummary")
@@ -1348,7 +1355,7 @@ function FieldRotationFrame:populateGroupCell(index, cell)
             badgeEl:setVisible(show)
             if show then
                 local c = FieldRotationFrame.FAMILY_RGBA[family] or {0.20, 0.20, 0.20, 0.60}
-                if badgeEl.setColor ~= nil then badgeEl:setColor(c[1], c[2], c[3], 0.55) end
+                badgeEl.color = {c[1], c[2], c[3], 0.55}
             end
         end
 
@@ -1393,7 +1400,7 @@ function FieldRotationFrame:populateGroupCell(index, cell)
         if stars == "-" then stars = "" end
         scoreEl:setText(stars)
         if scoreEl.setVisible ~= nil then scoreEl:setVisible(stars ~= "") end
-        if scoreEl.setColor ~= nil then scoreEl:setColor(r, g, b, 1.0) end
+        scoreEl.textColor = {r, g, b, 1.0}
     end
 
     -- Field names — bottom strip, uses TextElement scrolling for long lists.
