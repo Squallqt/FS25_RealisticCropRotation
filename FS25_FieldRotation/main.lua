@@ -519,7 +519,7 @@ local function wrapDensityMapSowingHook(sourceName)
 end
 
 -- =========================================================================
--- Cutter / Mower hooks (real harvest).
+-- Cutter hooks (real harvest).
 -- =========================================================================
 
 local function onCutterProcessCutterArea(self, superFunc, workArea, dt)
@@ -555,57 +555,6 @@ local function onCutterEndWorkAreaProcessing(self, _dt, hasProcessed)
     if FieldRotation.manager == nil then return end
 
     local spec = self.spec_cutter
-    if spec == nil then return end
-    local farmlandId = spec.fieldRotationLastFarmlandId
-    local fruitTypeIndex = spec.fieldRotationLastFruitType
-    spec.fieldRotationLastFarmlandId = nil
-    spec.fieldRotationLastFruitType = nil
-
-    if hasProcessed == false then return end
-    if farmlandId == nil or farmlandId == 0 then return end
-    if fruitTypeIndex == nil or fruitTypeIndex == FruitType.UNKNOWN then return end
-
-    local changed = FieldRotation.manager.service:onCropHarvested(farmlandId, fruitTypeIndex)
-    if changed then
-        FieldRotation.manager:invalidateActiveCropCache(farmlandId)
-        refreshFieldRotationFrame()
-        FieldRotation.requestBroadcast()
-    end
-end
-
-local function onMowerProcessMowerArea(self, superFunc, workArea, dt)
-    local changedArea, totalArea = superFunc(self, workArea, dt)
-    if not FieldRotation.isEnabled or (changedArea or 0) <= 0 then return changedArea, totalArea end
-    if g_currentMission == nil or not g_currentMission:getIsServer() then return changedArea, totalArea end
-    if FieldRotation.manager == nil then return changedArea, totalArea end
-
-    local spec = self.spec_mower
-    if spec == nil or spec.workAreaParameters == nil then return changedArea, totalArea end
-
-    local fruitTypeIndex = spec.workAreaParameters.lastInputFruitType
-    if fruitTypeIndex == nil or fruitTypeIndex == FruitType.UNKNOWN then return changedArea, totalArea end
-    if workArea == nil or workArea.start == nil then return changedArea, totalArea end
-    if getWorldTranslation == nil then return changedArea, totalArea end
-    if g_farmlandManager == nil or type(g_farmlandManager.getFarmlandIdAtWorldPosition) ~= "function" then
-        return changedArea, totalArea
-    end
-
-    local xs, _, zs = getWorldTranslation(workArea.start)
-    if xs == nil or zs == nil then return changedArea, totalArea end
-    local farmlandId = g_farmlandManager:getFarmlandIdAtWorldPosition(xs, zs)
-    if farmlandId == nil or farmlandId == 0 then return changedArea, totalArea end
-
-    spec.fieldRotationLastFarmlandId = farmlandId
-    spec.fieldRotationLastFruitType = fruitTypeIndex
-    return changedArea, totalArea
-end
-
-local function onMowerEndWorkAreaProcessing(self, _dt, hasProcessed)
-    if not FieldRotation.isEnabled then return end
-    if g_currentMission == nil or not g_currentMission:getIsServer() then return end
-    if FieldRotation.manager == nil then return end
-
-    local spec = self.spec_mower
     if spec == nil then return end
     local farmlandId = spec.fieldRotationLastFarmlandId
     local fruitTypeIndex = spec.fieldRotationLastFruitType
@@ -665,11 +614,6 @@ local function initFieldRotation()
     end
     if Cutter ~= nil and Cutter.onEndWorkAreaProcessing ~= nil then
         Cutter.onEndWorkAreaProcessing = Utils.appendedFunction(Cutter.onEndWorkAreaProcessing, onCutterEndWorkAreaProcessing)
-    end
-
-    if Mower ~= nil and Mower.processMowerArea ~= nil and Mower.onEndWorkAreaProcessing ~= nil then
-        Mower.processMowerArea = Utils.overwrittenFunction(Mower.processMowerArea, onMowerProcessMowerArea)
-        Mower.onEndWorkAreaProcessing = Utils.appendedFunction(Mower.onEndWorkAreaProcessing, onMowerEndWorkAreaProcessing)
     end
 
     BaseMission.delete = Utils.appendedFunction(BaseMission.delete, function()

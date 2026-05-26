@@ -37,6 +37,7 @@
         <e k="fr_section_plan"         v="Rotationsplan" />
         <e k="fr_section_score"        v="Rotationsqualität" />
         <e k="fr_section_overview"     v="Gesamtübersicht" />
+        <e k="fr_overview_total_area"  v="Bewirtschaftete Fläche: %.1f ha" />
 
         <!-- Timeline slot labels and empty state -->
         <e k="fr_slot_empty"           v="Nicht bebaut" />
@@ -95,6 +96,10 @@
         <e k="fr_score_poor"           v="Schlechte Rotation" />
         <e k="fr_score_label_low"      v="Niedrige Bewertung" />
         <e k="fr_score_label_optimal"  v="Optimale Bewertung" />
+        <e k="fr_score_short_optimal"  v="OPTIMAL" />
+        <e k="fr_score_short_good"     v="GUT" />
+        <e k="fr_score_short_fair"     v="OK" />
+        <e k="fr_score_short_poor"     v="SCHWACH" />
 
         <!-- Empty state -->
         <e k="fr_empty_no_fields"      v="Keine eigenen Felder anzuzeigen." />

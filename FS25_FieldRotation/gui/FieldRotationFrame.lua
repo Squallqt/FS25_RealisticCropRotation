@@ -79,6 +79,7 @@ function FieldRotationFrame.new(i18n, messageCenter)
     self.selectedId    = nil
     self.planCropList  = {""}  -- index 1 = no crop; populated in initialize()
     self.rotationGroups = {}   -- rebuilt when plans change
+    self.totalAreaHa   = 0
     self.isSubscribedToFarmlandChanges = false
     return self
 end
@@ -87,6 +88,7 @@ function FieldRotationFrame:copyAttributes(src)
     FieldRotationFrame:superClass().copyAttributes(self, src)
     self.i18n          = src.i18n
     self.messageCenter = src.messageCenter
+    self.totalAreaHa   = src.totalAreaHa or 0
     self.isSubscribedToFarmlandChanges = false
 end
 
@@ -226,6 +228,17 @@ function FieldRotationFrame:getActiveNitrogenResidueText(farmlandId)
     return string.format("+%d kg/ha", math.floor(residueKgHa + 0.5))
 end
 
+function FieldRotationFrame:updateResiduePill(pillBg, pillText, farmlandId)
+    local residueText = self:getActiveNitrogenResidueText(farmlandId)
+    local hasBonus = residueText ~= nil
+    if pillBg ~= nil then
+        pillBg:applyProfile(hasBonus and "frStatusPillBgBonus" or "frStatusPillBg")
+    end
+    if pillText ~= nil then
+        pillText:setText(hasBonus and residueText or self.i18n:getText("fr_status_no_bonus"))
+    end
+end
+
 function FieldRotationFrame:getCropFamily(cropName)
     if cropName == nil or cropName == "" then return "UNKNOWN" end
     local config = FieldRotation ~= nil and FieldRotation.cropConfig or nil
@@ -265,6 +278,24 @@ function FieldRotationFrame:buildFarmlandList()
     local mgr = self:getManager()
     if mgr == nil or mgr.getOwnedFarmlands == nil then return {} end
     return mgr:getOwnedFarmlands() or {}
+end
+
+function FieldRotationFrame:formatAreaHa(areaHa)
+    return string.format("%.1f ha", tonumber(areaHa) or 0)
+end
+
+function FieldRotationFrame:calculateTotalAreaHa(farmlandList)
+    local total = 0
+    for _, entry in ipairs(farmlandList or {}) do
+        total = total + (tonumber(entry.areaHa) or 0)
+    end
+    return total
+end
+
+function FieldRotationFrame:updateOverviewTotalArea()
+    if self.overviewTotalArea == nil then return end
+    local label = self.i18n:getText("fr_overview_total_area")
+    self.overviewTotalArea:setText(string.format(label, self.totalAreaHa or 0))
 end
 
 function FieldRotationFrame:subscribeFarmlandChanges()
@@ -413,6 +444,7 @@ end
 function FieldRotationFrame:populateSidebar()
     local previousSelectedId = self.selectedId
     self.farmlandList = self:buildFarmlandList()
+    self.totalAreaHa = self:calculateTotalAreaHa(self.farmlandList)
     self:buildPlanCropList()
     self.selectedId = nil
     if self.listFields ~= nil then
@@ -434,6 +466,7 @@ function FieldRotationFrame:populateSidebar()
         end
     end
     self:buildRotationGroups()
+    self:updateOverviewTotalArea()
     if self.listPlanOverview ~= nil then
         self.listPlanOverview:reloadData()
     end
@@ -568,6 +601,7 @@ function FieldRotationFrame:onViewChanged()
     if self:isHistoryTab() then
         self:updateDetailPanel(self.selectedId)
     else
+        self:updateOverviewTotalArea()
         self:updatePlanningPanel(self.selectedId)
     end
     self:linkFocusNavigation()
@@ -609,16 +643,7 @@ function FieldRotationFrame:updateDetailPanel(farmlandId)
         )
     end
 
-    local residueText = self:getActiveNitrogenResidueText(farmlandId)
-    local hasBonus = residueText ~= nil
-    if self.statusPillBg ~= nil then
-        self.statusPillBg:applyProfile(hasBonus and "frStatusPillBgBonus" or "frStatusPillBg")
-    end
-    if self.statusPillText ~= nil then
-        self.statusPillText:setText(
-            hasBonus and residueText or self.i18n:getText("fr_status_no_bonus")
-        )
-    end
+    self:updateResiduePill(self.statusPillBg, self.statusPillText, farmlandId)
 
     local mgr = self:getManager()
     local history = (mgr ~= nil) and (mgr:getHistory(farmlandId) or {}) or {}
@@ -936,6 +961,7 @@ function FieldRotationFrame:updatePlanningPanel(farmlandId)
     self:updatePlanSlots(farmlandId)
     local plan = self:getPlanForFarmland(farmlandId)
     self:updateScoreCard(plan)
+    self:updateResiduePill(self.planStatusPillBg, self.planStatusPillText, farmlandId)
 end
 
 -- ---------------------------------------------------------------------------
@@ -1201,12 +1227,12 @@ function FieldRotationFrame:getScoreTextKey(score, plan)
     return "fr_score_poor"
 end
 
-function FieldRotationFrame:getScoreStars(score)
-    if score >= 80 then return "★★★★", 0.325, 0.565, 0.071
-    elseif score >= 60 then return "★★★",  0.95,  0.85, 0.05
-    elseif score >= 30 then return "★★",   0.75,  0.45, 0.05
-    elseif score >  0  then return "★",    0.75,  0.20, 0.05
-    else                    return "-",    0.30,  0.30, 0.30
+function FieldRotationFrame:getScoreLabel(score)
+    if score >= 80 then return "fr_score_short_optimal", 0.325, 0.565, 0.071
+    elseif score >= 60 then return "fr_score_short_good",  0.95,  0.85, 0.05
+    elseif score >= 30 then return "fr_score_short_fair",  0.75,  0.45, 0.05
+    elseif score >  0  then return "fr_score_short_poor",  0.75,  0.20, 0.05
+    else                    return nil,                    0.30,  0.30, 0.30
     end
 end
 
@@ -1229,11 +1255,14 @@ function FieldRotationFrame:buildRotationGroups()
                 key        = key,
                 plan       = plan,
                 fieldNames = {},
+                areaHa     = 0,
                 score      = self:calcRotationScore(plan),
             })
             groupMap[key] = #groups
         end
-        table.insert(groups[groupMap[key]].fieldNames, entry.name)
+        local group = groups[groupMap[key]]
+        table.insert(group.fieldNames, entry.name)
+        group.areaHa = (group.areaHa or 0) + (tonumber(entry.areaHa) or 0)
     end
 
     -- Sort: non-empty plans first, then by field count (desc), then by score (desc)
@@ -1324,18 +1353,6 @@ function FieldRotationFrame:populateGroupCell(index, cell)
     if group == nil then return end
     local isEmptyGroup = group.key == "|||"
 
-    -- Card accent color = family of first filled slot
-    local accentEl = cell:getAttribute("gCardAccent")
-    if accentEl ~= nil then
-        local firstCrop = ""
-        for i = 1, 4 do
-            if (group.plan[i] or "") ~= "" then firstCrop = group.plan[i]; break end
-        end
-        local c = FieldRotationFrame.FAMILY_RGBA[self:getCropFamily(firstCrop)]
-            or {0.20, 0.20, 0.20, 0.60}
-        accentEl:setImageColor(nil, c[1], c[2], c[3], 1.0)
-    end
-
     local summaryEl = cell:getAttribute("gPlanSummary")
     if summaryEl ~= nil then
         summaryEl:setVisible(isEmptyGroup)
@@ -1392,14 +1409,18 @@ function FieldRotationFrame:populateGroupCell(index, cell)
     if countEl ~= nil then
         countEl:setText("x " .. #group.fieldNames)
     end
+    local areaEl = cell:getAttribute("gArea")
+    if areaEl ~= nil then
+        areaEl:setText(self:formatAreaHa(group.areaHa))
+    end
 
-    -- Score stars
+    -- Score label
     local scoreEl = cell:getAttribute("gScore")
     if scoreEl ~= nil then
-        local stars, r, g, b = self:getScoreStars(group.score)
-        if stars == "-" then stars = "" end
-        scoreEl:setText(stars)
-        if scoreEl.setVisible ~= nil then scoreEl:setVisible(stars ~= "") end
+        local scoreLabelKey, r, g, b = self:getScoreLabel(group.score)
+        local scoreLabel = scoreLabelKey ~= nil and self.i18n:getText(scoreLabelKey) or ""
+        scoreEl:setText(scoreLabel)
+        if scoreEl.setVisible ~= nil then scoreEl:setVisible(scoreLabel ~= "") end
         scoreEl.textColor = {r, g, b, 1.0}
     end
 

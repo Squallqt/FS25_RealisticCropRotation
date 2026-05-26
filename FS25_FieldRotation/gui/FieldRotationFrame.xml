@@ -267,6 +267,8 @@
                 <ThreePartBitmap profile="frHeroAccent"/>
                 <Text profile="frHeroTitle" id="planTitle"  text="-"/>
                 <Text profile="frHeroMeta"  id="planSeason" text=""/>
+                <RoundCorner profile="frStatusPillBg"   id="planStatusPillBg"/>
+                <Text        profile="frStatusPillText" id="planStatusPillText" text=""/>
             </GuiElement>
 
             <!-- == SECTION: PLAN DE ROTATION (y=-98) == -->
@@ -368,6 +370,7 @@
                 <RoundCorner profile="frSectionBarBg"/>
                 <RoundCorner profile="frSectionAccent" position="14px 0px"/>
                 <Text profile="frSectionTitle" text="$l10n_fr_section_overview"/>
+                <Text profile="frOverviewTotalArea" id="overviewTotalArea" text=""/>
             </GuiElement>
 
             <!-- == GLOBAL OVERVIEW LIST (y=-520..790) == -->
@@ -392,7 +395,8 @@
                         <ThreePartBitmap profile="frGroupCardAccent" name="gCardAccent"/>
 
                         <!-- Field count -->
-                        <Text profile="frGroupCount" name="gCount" position="9px -24px" text=""/>
+                        <Text profile="frGroupCount" name="gCount" position="9px -14px" text=""/>
+                        <Text profile="frGroupArea"  name="gArea"  position="9px -50px" text=""/>
 
                         <!-- Empty-group summary -->
                         <Text profile="frGroupPlanSummary" name="gPlanSummary" position="132px -18px" text="" visible="false"/>

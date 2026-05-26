@@ -5,9 +5,7 @@
     <!--  SIDEBAR                                                      -->
     <!-- ============================================================ -->
 
-    <Profile name="frSidebarList" extends="emptyPanel">
-        <width value="340px"/>
-    </Profile>
+    <Profile name="frSidebarList" extends="emptyPanel"/>
 
     <!-- ============================================================ -->
     <!--  SIDEBAR CELL                                               -->
@@ -30,7 +28,7 @@
         <width value="84px"/>
         <position value="-46px -18px"/>
         <textSize value="15px"/>
-        <textBold value="false"/>
+        <textBold value="true"/>
         <textAlignment value="right"/>
         <textColor value="$preset_fs25_colorMainHighlight"/>
         <textSelectedColor value="$preset_fs25_colorMainDark"/>
@@ -179,6 +177,18 @@
 
     <Profile name="frSectionTitleYield" extends="frSectionTitle">
         <textColor value="$preset_fs25_colorOrangeDark"/>
+    </Profile>
+
+    <Profile name="frOverviewTotalArea" extends="fs25_textDefault" with="anchorMiddleRight">
+        <position value="-26px 0px"/>
+        <size value="420px 28px"/>
+        <textSize value="14px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_fs25_colorMainHighlight"/>
+        <textAlignment value="right"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
     </Profile>
 
     <!-- ============================================================ -->
@@ -769,7 +779,18 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Score stars — right-aligned, y=18 aligns with badge/summary line -->
+    <Profile name="frGroupArea" extends="fs25_textDefault" with="anchorTopLeft">
+        <size value="86px 18px"/>
+        <textSize value="12px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_colorWhite_50"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <!-- Score label — right-aligned, y=18 aligns with badge/summary line -->
     <Profile name="frOverviewScore" extends="fs25_textDefault" with="anchorTopRight">
         <position value="-26px -18px"/>
         <size value="120px 22px"/>
