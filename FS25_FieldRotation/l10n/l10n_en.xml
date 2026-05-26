@@ -66,13 +66,13 @@
         <e k="fr_lime_average_pf"      v="Average pH" />
 
         <!-- Agronomic advice -->
-        <e k="fr_advice_afterCereal"    v="Grow legume or oilseed to restore nitrogen for next season" />
-        <e k="fr_advice_afterLegume"    v="Grow cereal or root vegetable to make use of the nitrogen legacy" />
-        <e k="fr_advice_afterOilseed"   v="Grow cereal for best results after an oilseed break crop" />
-        <e k="fr_advice_afterRoot"      v="Grow cereal or legume to restore soil structure" />
-        <e k="fr_advice_afterVegetable" v="Grow cereal or legume after a vegetable crop" />
-        <e k="fr_advice_afterForage"    v="Cereal crops benefit well from the soil structure left by a grass or forage crop" />
-        <e k="fr_advice_insufficient"   v="Not enough crop history yet, plant more seasons to get advice" />
+        <e k="fr_advice_afterCereal"    v="Legume or oilseed recommended. Avoid cereal succession: eyespot, helminthosporium and yield decline." />
+        <e k="fr_advice_afterLegume"    v="Cereal makes best use of residual nitrogen. Allow at least 4 years before returning to the same legume." />
+        <e k="fr_advice_afterOilseed"   v="Cereal recommended. Minimum 5 years before returning to oilseed to prevent sclerotinia and clubroot." />
+        <e k="fr_advice_afterRoot"      v="Cereal or legume to benefit from deep tillage. Respect return intervals for beet and potato." />
+        <e k="fr_advice_afterVegetable" v="Cereal or legume recommended. Avoid repeating the same vegetable: nematode and soil disease buildup." />
+        <e k="fr_advice_afterForage"    v="Cereal benefits fully from organic matter left by the grass crop. Typically high yields." />
+        <e k="fr_advice_insufficient"   v="Not enough crop history yet, plant more seasons to get advice." />
 
         <!-- Yield card -->
         <e k="fr_yield_harvest"        v="Total Harvest" />

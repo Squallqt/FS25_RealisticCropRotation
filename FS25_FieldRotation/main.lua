@@ -111,17 +111,8 @@ local function checkPeriodChange()
 
     if currentYear > 0 and FieldRotation.lastObservedYear > 0
         and currentYear ~= FieldRotation.lastObservedYear then
-        if currentYear == FieldRotation.lastObservedYear + 1 then
-            if FieldRotation.manager ~= nil
-                and type(FieldRotation.manager.recordActiveCropSnapshotForYear) == "function" then
-                local changed = FieldRotation.manager:recordActiveCropSnapshotForYear(FieldRotation.lastObservedYear)
-                if changed then
-                    refreshFieldRotationFrame()
-                    FieldRotation.requestBroadcast()
-                end
-            end
-        else
-            Logging.warning("[FieldRotation] Year jump detected from %d to %d; annual history snapshot skipped",
+        if currentYear ~= FieldRotation.lastObservedYear + 1 then
+            Logging.warning("[FieldRotation] Year jump detected from %d to %d",
                 FieldRotation.lastObservedYear, currentYear)
         end
         FieldRotation.lastObservedYear = currentYear
@@ -148,10 +139,22 @@ end
 
 function refreshFieldRotationFrame()
     if FieldRotation.frame == nil then return end
-    if FieldRotation.frame.populateSidebar ~= nil then
-        FieldRotation.frame:populateSidebar()
-    elseif FieldRotation.frame.updateDetailPanel ~= nil then
-        FieldRotation.frame:updateDetailPanel(FieldRotation.frame.selectedId)
+    local frame = FieldRotation.frame
+    -- Planning tab active (MP): only rebuild overview, never reset plan selectors.
+    if type(frame.isHistoryTab) == "function" and not frame:isHistoryTab() then
+        if type(frame.buildRotationGroups) == "function" then
+            frame:buildRotationGroups()
+        end
+        if frame.listPlanOverview ~= nil then
+            frame.listPlanOverview:reloadData()
+        end
+        if type(frame.updatePlanSlotVisualsFromSelectors) == "function" then
+            frame:updatePlanSlotVisualsFromSelectors()
+        end
+    elseif frame.populateSidebar ~= nil then
+        frame:populateSidebar()
+    elseif frame.updateDetailPanel ~= nil then
+        frame:updateDetailPanel(frame.selectedId)
     end
 end
 

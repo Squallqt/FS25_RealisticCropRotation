@@ -66,13 +66,13 @@
         <e k="fr_lime_average_pf"      v="Moyenne du pH" />
 
         <!-- Agronomic advice -->
-        <e k="fr_advice_afterCereal"    v="Favorisez légumineuse ou oléagineux pour recharger l'azote du sol" />
-        <e k="fr_advice_afterLegume"    v="Une céréale ou un légume-racine valorise le reliquat azoté de la légumineuse" />
-        <e k="fr_advice_afterOilseed"   v="Une céréale tire le meilleur parti d'un oléagineux en précédent cultural" />
-        <e k="fr_advice_afterRoot"      v="Céréale ou légumineuse pour restaurer la structure du sol" />
-        <e k="fr_advice_afterVegetable" v="Céréale ou légumineuse recommandée après un légume" />
-        <e k="fr_advice_afterForage"    v="Une céréale valorise bien la structure du sol après une prairie ou un fourrage" />
-        <e k="fr_advice_insufficient"   v="Historique insuffisant, cultivez davantage pour obtenir des conseils" />
+        <e k="fr_advice_afterCereal"    v="Légumineuse ou oléagineux recommandés. Évitez les successions céréalières : piétin, helminthosporiose et réduction des rendements." />
+        <e k="fr_advice_afterLegume"    v="La céréale valorise au mieux le reliquat azoté. Respectez 4 ans minimum avant de revenir à la même légumineuse." />
+        <e k="fr_advice_afterOilseed"   v="Céréale recommandée. Minimum 5 ans avant de revenir à un oléagineux pour éviter sclérotinia et hernie du chou." />
+        <e k="fr_advice_afterRoot"      v="Céréale ou légumineuse pour valoriser le sol travaillé en profondeur. Respectez les intervalles de retour betterave et pomme de terre." />
+        <e k="fr_advice_afterVegetable" v="Céréale ou légumineuse recommandée. Ne répétez pas le même légume : accumulation de nématodes et maladies du sol." />
+        <e k="fr_advice_afterForage"    v="La céréale profite pleinement de la richesse en matière organique laissée par la prairie. Rendements généralement élevés." />
+        <e k="fr_advice_insufficient"   v="Historique insuffisant, cultivez davantage pour obtenir des conseils." />
 
         <!-- Yield card -->
         <e k="fr_yield_harvest"        v="Récolte Totale" />

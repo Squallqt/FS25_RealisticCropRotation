@@ -66,13 +66,13 @@
         <e k="fr_lime_average_pf"      v="Durchschnitt pH" />
 
         <!-- Agronomic advice -->
-        <e k="fr_advice_afterCereal"    v="Hülsenfrüchte oder Ölsaaten fördern die Stickstoffversorgung" />
-        <e k="fr_advice_afterLegume"    v="Getreide oder Wurzelgemüse nutzen den Stickstoffrückstand" />
-        <e k="fr_advice_afterOilseed"   v="Getreide erzielt beste Ergebnisse nach einer Ölsaat als Vorfrucht" />
-        <e k="fr_advice_afterRoot"      v="Getreide oder Hülsenfrüchte verbessern die Bodenstruktur" />
-        <e k="fr_advice_afterVegetable" v="Getreide oder Hülsenfrüchte nach Gemüse empfohlen" />
-        <e k="fr_advice_afterForage"    v="Getreide profitiert von der Bodenstruktur nach einem Gras- oder Futteranbau" />
-        <e k="fr_advice_insufficient"   v="Zu wenig Anbaugeschichte, mehr Saisons für Empfehlungen" />
+        <e k="fr_advice_afterCereal"    v="Hülsenfrüchte oder Ölsaaten empfohlen. Getreidefolgen begünstigen Fußkrankheiten und Ertragsrückgang." />
+        <e k="fr_advice_afterLegume"    v="Getreide nutzt den Reststickstoff optimal. Mindestens 4 Jahre Pause vor gleicher Hülsenfrucht empfohlen." />
+        <e k="fr_advice_afterOilseed"   v="Getreide empfohlen. Mindestens 5 Jahre vor erneuter Ölsaat zum Schutz vor Sklerotinia und Kohlhernie." />
+        <e k="fr_advice_afterRoot"      v="Getreide oder Hülsenfrüchte nach Tiefenbearbeitung. Anbaupausen für Rübe und Kartoffel beachten." />
+        <e k="fr_advice_afterVegetable" v="Getreide oder Hülsenfrüchte empfohlen. Gleiche Gemüsearten nicht wiederholen: Nematoden- und Bodenkrankheitsaufbau." />
+        <e k="fr_advice_afterForage"    v="Getreide profitiert stark von der organischen Masse nach Grünland. In der Regel hohe Erträge." />
+        <e k="fr_advice_insufficient"   v="Zu wenig Anbaugeschichte, mehr Saisons für Empfehlungen." />
 
         <!-- Yield card -->
         <e k="fr_yield_harvest"        v="Gesamternte" />
