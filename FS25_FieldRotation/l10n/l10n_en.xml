@@ -24,6 +24,8 @@
         <e k="fr_hud_previous_n1"      v="Previous crop (N-1):" />
         <e k="fr_hud_previous_n2"      v="Crop before (N-2):" />
         <e k="fr_hud_cover_crop"       v="Cover crop:" />
+        <e k="fr_hud_yes"              v="Yes" />
+        <e k="fr_hud_no"               v="No" />
         <e k="fr_hud_none"             v="None" />
 
         <!-- Section bars -->
@@ -48,7 +50,7 @@
         <e k="fr_family_cereal"        v="Cereal" />
         <e k="fr_family_legume"        v="Legume" />
         <e k="fr_family_oilseed"       v="Oilseed" />
-        <e k="fr_family_root"          v="Root vegetable" />
+        <e k="fr_family_root"          v="Root" />
         <e k="fr_family_vegetable"     v="Vegetable" />
         <e k="fr_family_forage"        v="Forage" />
         <e k="fr_family_cover"         v="Cover crop" />

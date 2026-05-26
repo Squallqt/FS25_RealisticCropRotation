@@ -24,6 +24,8 @@
         <e k="fr_hud_previous_n1"      v="Précédent cultural (N-1) :" />
         <e k="fr_hud_previous_n2"      v="Anté-précédent (N-2) :" />
         <e k="fr_hud_cover_crop"       v="Couvert végétal :" />
+        <e k="fr_hud_yes"              v="Oui" />
+        <e k="fr_hud_no"               v="Non" />
         <e k="fr_hud_none"             v="Aucun" />
 
         <!-- Section bars -->
@@ -48,7 +50,7 @@
         <e k="fr_family_cereal"        v="Céréale" />
         <e k="fr_family_legume"        v="Légumineuse" />
         <e k="fr_family_oilseed"       v="Oléagineux" />
-        <e k="fr_family_root"          v="Légumes-racines" />
+        <e k="fr_family_root"          v="Racines" />
         <e k="fr_family_vegetable"     v="Légumes" />
         <e k="fr_family_forage"        v="Fourrage" />
         <e k="fr_family_cover"         v="Couvert végétal" />

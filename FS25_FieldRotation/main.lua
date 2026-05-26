@@ -250,6 +250,11 @@ local function resolveSavegameFolderPath()
 end
 
 local function loadedMission()
+    -- Reload crop config here to guarantee the engine XML API is fully ready.
+    if FieldRotation.cropConfig == nil then
+        FieldRotation.cropConfig = loadCropConfig()
+    end
+
     FieldRotation.manager = FieldRotationManager.new()
     FieldRotation.manager:initialize()
 

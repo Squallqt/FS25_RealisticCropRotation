@@ -7,9 +7,6 @@ FieldRotationHud.HISTORY_LABEL_KEYS = {
     "fr_hud_previous_n2",
 }
 
-FieldRotationHud.COVER_CROP_OVERRIDES = {
-    MUSTARD = true,
-}
 
 function FieldRotationHud.getFruitTypeDisplayName(fruitType)
     if fruitType == nil then
@@ -136,25 +133,26 @@ function FieldRotationHud.addHistoryLines(fieldBox, farmlandId)
 end
 
 function FieldRotationHud.addCatchCropLine(fieldBox, data)
-    if fieldBox == nil or fieldBox.addLine == nil then
-        return
-    end
+    if fieldBox == nil or fieldBox.addLine == nil then return end
 
     local fruitType = FieldRotationHud.getActiveFruitType(data)
-    if fruitType == nil then
-        return
+    if fruitType == nil then return end
+
+    local fruitName = fruitType.name ~= nil and string.upper(tostring(fruitType.name)) or nil
+
+    -- Check cover status: isCatchCrop (base game) or cover=true in cropConfig.xml
+    local isCover = fruitType.isCatchCrop == true
+    if not isCover and fruitName ~= nil then
+        local config = FieldRotation ~= nil and FieldRotation.cropConfig or nil
+        if config ~= nil and config.coverCrops ~= nil then
+            isCover = config.coverCrops[fruitName] == true
+        end
     end
 
     local label = FieldRotationHud.getText("fr_hud_cover_crop")
-    local value = FieldRotationHud.getText("fr_hud_none")
-    local fruitName = fruitType.name ~= nil and string.upper(tostring(fruitType.name)) or nil
-    local isCoverOverride = fruitName ~= nil and FieldRotationHud.COVER_CROP_OVERRIDES[fruitName] == true
-    if fruitType.isCatchCrop or isCoverOverride then
-        local title = FieldRotationHud.getFruitTypeDisplayName(fruitType)
-        if title ~= "" then
-            value = title
-        end
-    end
+    local value = isCover
+        and FieldRotationHud.getText("fr_hud_yes")
+        or  FieldRotationHud.getText("fr_hud_no")
 
     fieldBox:addLine(label, value)
 end

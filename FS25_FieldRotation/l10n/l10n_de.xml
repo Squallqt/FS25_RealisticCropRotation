@@ -24,6 +24,8 @@
         <e k="fr_hud_previous_n1"      v="Vorfrucht (N-1):" />
         <e k="fr_hud_previous_n2"      v="Vor-Vorfrucht (N-2):" />
         <e k="fr_hud_cover_crop"       v="Zwischenfrucht:" />
+        <e k="fr_hud_yes"              v="Ja" />
+        <e k="fr_hud_no"               v="Nein" />
         <e k="fr_hud_none"             v="Keine" />
 
         <!-- Section bars -->
@@ -48,7 +50,7 @@
         <e k="fr_family_cereal"        v="Getreide" />
         <e k="fr_family_legume"        v="Hülsenfrucht" />
         <e k="fr_family_oilseed"       v="Ölsaat" />
-        <e k="fr_family_root"          v="Wurzelgemüse" />
+        <e k="fr_family_root"          v="Wurzeln" />
         <e k="fr_family_vegetable"     v="Gemüse" />
         <e k="fr_family_forage"        v="Futter" />
         <e k="fr_family_cover"         v="Zwischenfrucht" />
