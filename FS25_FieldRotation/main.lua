@@ -135,6 +135,17 @@ function FieldRotation.consoleCommandToggle()
     print("[FieldRotation] " .. state)
 end
 
+-- Engine passes the addConsoleCommand target as the first argument (Giants
+-- console commands are defined with ':'), so farmlandId is the user arg here.
+function FieldRotation:consoleCommandYieldDebug(farmlandId)
+    if FieldRotation.manager == nil or type(FieldRotation.manager.debugYieldSource) ~= "function" then
+        Logging.warning("[FieldRotation] Yield debug unavailable: manager is not initialized")
+        print("[FieldRotation] Yield debug unavailable: manager is not initialized")
+        return
+    end
+    FieldRotation.manager:debugYieldSource(farmlandId)
+end
+
 function refreshFieldRotationFrame()
     if FieldRotation.frame == nil then return end
     local frame = FieldRotation.frame
@@ -576,6 +587,7 @@ local function initFieldRotation()
     end)
 
     addConsoleCommand("assolementToggle", "Enable / disable FieldRotation mod at runtime", "consoleCommandToggle", FieldRotation)
+    addConsoleCommand("assolementYieldDebug", "Log FieldRotation/PF yield sources for a farmland id", "consoleCommandYieldDebug", FieldRotation)
 end
 
 initFieldRotation()
