@@ -83,8 +83,14 @@
 
         <!-- Yield card -->
         <e k="fr_yield_harvest"        v="Gesamternte" />
-        <e k="fr_yield_perha"          v="Ertrag" />
+        <e k="fr_yield_weed"           v="Unkraut" />
         <e k="fr_yield_stage"          v="Wachstum" />
+
+        <!-- Yield card — weed size + recommended removal tool (PF HUD wording) -->
+        <e k="fr_weed_none"            v="Keines" />
+        <e k="fr_weed_small"           v="Klein · Striegel" />
+        <e k="fr_weed_medium"          v="Mittel · Rollhacke" />
+        <e k="fr_weed_large"           v="Groß · Herbizid" />
 
         <!-- Planning tab — year slots -->
         <e k="fr_plan_year1"           v="N+1" />

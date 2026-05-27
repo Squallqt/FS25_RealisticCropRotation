@@ -44,15 +44,14 @@ FieldRotationFrame.N_BAR_HEIGHT        = 14
 FieldRotationFrame.SCORE_BAR_MAX_WIDTH = 280
 
 -- Global overview crop badge layout (pixel values, converted at runtime)
--- Goal: center the whole pair [crop icon + 5px gap + crop text] inside each 170x30 badge.
-FieldRotationFrame.GROUP_BADGE_X          = {132, 334, 536, 738}
+-- Goal: center the whole pair [crop icon + 5px gap + crop text] inside each crop badge.
 FieldRotationFrame.GROUP_BADGE_Y          = 18
 FieldRotationFrame.GROUP_BADGE_W          = 170
 FieldRotationFrame.GROUP_BADGE_H          = 30
 FieldRotationFrame.GROUP_ICON_W           = 20
 FieldRotationFrame.GROUP_ICON_H           = 20
 FieldRotationFrame.GROUP_ICON_TEXT_GAP    = 5
-FieldRotationFrame.GROUP_TEXT_SIZE_PX     = 11
+FieldRotationFrame.GROUP_BADGE_PADDING_X  = 20
 
 -- Season name l10n keys indexed by currentSeason (0-based)
 FieldRotationFrame.SEASON_KEY = {
@@ -364,6 +363,14 @@ function FieldRotationFrame:getElementOriginalSize(element)
     return element._frOriginalSize
 end
 
+function FieldRotationFrame:getElementOriginalPosition(element)
+    if element == nil or element.position == nil then return nil end
+    if element._frOriginalPosition == nil then
+        element._frOriginalPosition = {element.position[1], element.position[2]}
+    end
+    return element._frOriginalPosition
+end
+
 function FieldRotationFrame:getTextRenderWidth(textElement, text)
     if textElement == nil or getTextWidth == nil then return nil end
 
@@ -379,7 +386,7 @@ function FieldRotationFrame:getTextRenderWidth(textElement, text)
     if setTextBold ~= nil then
         setTextBold(textElement.textBold == true)
     end
-    local width = getTextWidth(textElement.textSize, value)
+    local width = getTextWidth(textElement.defaultTextSize or textElement.textSize, value)
     if setTextBold ~= nil then
         setTextBold(false)
     end
@@ -1014,23 +1021,35 @@ function FieldRotationFrame:updateYieldCard(farmlandId)
     end
 
     local totalText = "-"
-    local yieldText = "-"
+    local weedText = "-"
     local stageText = "-"
-    local hasYield = info ~= nil and info.totalLiters ~= nil and info.yieldPerArea ~= nil
+    local hasYield = info ~= nil and info.totalLiters ~= nil
     local hasStage = info ~= nil and info.growthState ~= nil and info.maxStage ~= nil
+    local hasWeed = info ~= nil and info.weedState ~= nil
 
     if hasYield then
         local totalLiters = tonumber(info.totalLiters) or 0
-        local yieldPerArea = tonumber(info.yieldPerArea) or 0
-        local areaUnit = tostring(info.areaUnit or "ha")
-
         if g_i18n ~= nil and g_i18n.formatVolume ~= nil then
             totalText = g_i18n:formatVolume(totalLiters, 0)
         else
             totalText = string.format("%d L", math.floor(totalLiters + 0.5))
         end
+    end
 
-        yieldText = string.format("%.2f T/%s", yieldPerArea, areaUnit)
+    -- Weed size → PF-style label (size + recommended removal tool). Thresholds
+    -- band the engine weed state (1..9, FieldManager weed range) into the three
+    -- actionable tiers PF surfaces on its HUD: weeder / rotary hoe / herbicide.
+    if hasWeed then
+        local weed = tonumber(info.weedState) or 0
+        local key = "fr_weed_none"
+        if weed >= 7 then
+            key = "fr_weed_large"
+        elseif weed >= 4 then
+            key = "fr_weed_medium"
+        elseif weed >= 1 then
+            key = "fr_weed_small"
+        end
+        weedText = self.i18n:getText(key)
     end
 
     if hasStage then
@@ -1044,11 +1063,14 @@ function FieldRotationFrame:updateYieldCard(farmlandId)
         self.yieldTotalValue:setText(totalText)
     end
 
+    -- yieldPerHaValue element now shows the field weed status (T/ha removed).
+    -- The weed label carries "size · tool" so it uses a smaller dedicated
+    -- profile to fit one line; the NA dash keeps the standard grey profile.
     if self.yieldPerHaValue ~= nil then
         if self.yieldPerHaValue.applyProfile ~= nil then
-            self.yieldPerHaValue:applyProfile(hasYield and "frYieldKpiValue" or "frYieldKpiValueNA")
+            self.yieldPerHaValue:applyProfile(hasWeed and "frYieldKpiValueWeed" or "frYieldKpiValueNA")
         end
-        self.yieldPerHaValue:setText(yieldText)
+        self.yieldPerHaValue:setText(weedText)
     end
 
     if self.yieldStageValue ~= nil then
@@ -1435,28 +1457,29 @@ function FieldRotationFrame:getCompactGroupFieldNames(fieldNames)
     return table.concat(parts, "  |  ")
 end
 
-function FieldRotationFrame:layoutGroupBadgeContent(cell, slotIndex, displayText)
+function FieldRotationFrame:layoutGroupBadgeContent(cell, slotIndex, displayText, badgeX)
     if cell == nil or cell.getAttribute == nil then return end
     if GuiUtils == nil or GuiUtils.getNormalizedScreenValues == nil then return end
     if getTextWidth == nil then return end
 
     local iconEl  = cell:getAttribute("gCropIcon" .. slotIndex)
     local labelEl = cell:getAttribute("gLabel" .. slotIndex)
+    local badgeEl = cell:getAttribute("gBadge" .. slotIndex)
+    local yearLabelEl = cell:getAttribute("gYearLabel" .. slotIndex)
     if iconEl == nil or labelEl == nil then return end
 
-    local badgeXpx = FieldRotationFrame.GROUP_BADGE_X[slotIndex]
-    if badgeXpx == nil then return end
+    local originalBadgePos = self:getElementOriginalPosition(badgeEl)
+    if originalBadgePos == nil then return end
 
     local badgeSize = GuiUtils.getNormalizedScreenValues(string.format(
         "%dpx %dpx",
         FieldRotationFrame.GROUP_BADGE_W,
         FieldRotationFrame.GROUP_BADGE_H
     ))
-    local badgePos = GuiUtils.getNormalizedScreenValues(string.format(
-        "%dpx -%dpx",
-        badgeXpx,
-        FieldRotationFrame.GROUP_BADGE_Y
-    ))
+    local badgePos = {
+        badgeX or originalBadgePos[1],
+        originalBadgePos[2],
+    }
     local iconSize = GuiUtils.getNormalizedScreenValues(string.format(
         "%dpx %dpx",
         FieldRotationFrame.GROUP_ICON_W,
@@ -1466,32 +1489,118 @@ function FieldRotationFrame:layoutGroupBadgeContent(cell, slotIndex, displayText
         "%dpx 0px",
         FieldRotationFrame.GROUP_ICON_TEXT_GAP
     ))
+    local paddingSize = GuiUtils.getNormalizedScreenValues(string.format(
+        "%dpx 0px",
+        FieldRotationFrame.GROUP_BADGE_PADDING_X
+    ))
 
-    -- The label profile uppercases text, so measure the rendered form.
-    local measuredText = string.upper(tostring(displayText or ""))
-    local textSize = labelEl.textSize
-    if textSize == nil then
-        textSize = GuiUtils.getNormalizedScreenValues(string.format(
-            "0px %dpx",
-            FieldRotationFrame.GROUP_TEXT_SIZE_PX
-        ))[2]
-    end
+    local textWidth = self:getTextRenderWidth(labelEl, displayText)
+    if textWidth == nil then return end
 
-    local textWidth = getTextWidth(textSize, measuredText)
-    local totalWidth = iconSize[1] + gapSize[1] + textWidth
-    local startX = badgePos[1] + (badgeSize[1] - totalWidth) * 0.5
+    local badgeWidth = math.min(
+        badgeSize[1],
+        math.max(iconSize[1] + gapSize[1] + paddingSize[1], iconSize[1] + gapSize[1] + textWidth + paddingSize[1])
+    )
+    local textBoxWidth = math.max(0, badgeWidth - iconSize[1] - gapSize[1] - paddingSize[1])
+    local renderedTextWidth = math.min(textWidth, textBoxWidth)
+    local totalWidth = iconSize[1] + gapSize[1] + renderedTextWidth
+    local startX = badgePos[1] + (badgeWidth - totalWidth) * 0.5
 
     local iconYpx = FieldRotationFrame.GROUP_BADGE_Y
         + math.floor((FieldRotationFrame.GROUP_BADGE_H - FieldRotationFrame.GROUP_ICON_H) * 0.5)
     local iconPosY = GuiUtils.getNormalizedScreenValues(string.format("0px -%dpx", iconYpx))[2]
 
+    if badgeEl ~= nil and badgeEl.setPosition ~= nil and badgeEl.setSize ~= nil then
+        badgeEl:setPosition(badgePos[1], badgePos[2])
+        badgeEl:setSize(badgeWidth, badgeSize[2])
+    end
+    if yearLabelEl ~= nil and yearLabelEl.setPosition ~= nil and yearLabelEl.setSize ~= nil then
+        yearLabelEl:setPosition(badgePos[1], yearLabelEl.position[2])
+        yearLabelEl:setSize(badgeWidth, yearLabelEl.size[2])
+    end
+
     iconEl:setPosition(startX, iconPosY)
     labelEl:setPosition(startX + iconSize[1] + gapSize[1], badgePos[2])
-
-    -- Keep the text element wide enough to avoid clipping/truncation.
-    -- Its position is computed from textWidth, but the rendered box must not be reduced to textWidth.
     if labelEl.setSize ~= nil then
-        labelEl:setSize(badgeSize[1], badgeSize[2])
+        labelEl:setSize(textBoxWidth, badgeSize[2])
+    end
+    if labelEl.setText ~= nil then
+        labelEl:setText(displayText or "")
+    end
+
+    return badgeWidth
+end
+
+function FieldRotationFrame:getGroupConnectorGaps(cell, slotIndex)
+    if cell == nil or cell.getAttribute == nil then return 0, 0 end
+
+    local badgeEl = cell:getAttribute("gBadge" .. slotIndex)
+    local arrowEl = cell:getAttribute("gArrow" .. slotIndex)
+    local nextBadgeEl = cell:getAttribute("gBadge" .. tostring(slotIndex + 1))
+    local badgePos = self:getElementOriginalPosition(badgeEl)
+    local arrowPos = self:getElementOriginalPosition(arrowEl)
+    local nextBadgePos = self:getElementOriginalPosition(nextBadgeEl)
+    local badgeSize = self:getElementOriginalSize(badgeEl)
+    local arrowSize = self:getElementOriginalSize(arrowEl)
+
+    if badgePos == nil or arrowPos == nil or nextBadgePos == nil
+        or badgeSize == nil or arrowSize == nil then
+        return 0, 0
+    end
+
+    local gapBeforeArrow = math.max(0, arrowPos[1] - (badgePos[1] + badgeSize[1]))
+    local gapAfterArrow = math.max(0, nextBadgePos[1] - (arrowPos[1] + arrowSize[1]))
+    return gapBeforeArrow, gapAfterArrow
+end
+
+function FieldRotationFrame:layoutGroupRow(cell, group)
+    if cell == nil or cell.getAttribute == nil or group == nil then return end
+
+    local currentX = nil
+    for i = 1, 4 do
+        local cropName = group.plan[i] or ""
+        local isFilled = cropName ~= ""
+
+        if isFilled then
+            local badgeEl = cell:getAttribute("gBadge" .. i)
+            local originalBadgePos = self:getElementOriginalPosition(badgeEl)
+            currentX = currentX or (originalBadgePos ~= nil and originalBadgePos[1] or nil)
+
+            local displayName = self:getCropDisplayName(cropName)
+            local badgeWidth = self:layoutGroupBadgeContent(cell, i, displayName, currentX)
+
+            if badgeWidth ~= nil and currentX ~= nil and i < 4 then
+                local nextFilled = (group.plan[i + 1] or "") ~= ""
+                local arrowEl = cell:getAttribute("gArrow" .. i)
+                if arrowEl ~= nil then
+                    arrowEl:setVisible(nextFilled)
+                    if nextFilled then
+                        local arrowPos = self:getElementOriginalPosition(arrowEl)
+                        local arrowSize = self:getElementOriginalSize(arrowEl)
+                        local gapBeforeArrow, gapAfterArrow = self:getGroupConnectorGaps(cell, i)
+                        if arrowPos ~= nil and arrowSize ~= nil then
+                            local arrowX = currentX + badgeWidth + gapBeforeArrow
+                            arrowEl:setPosition(arrowX, arrowPos[2])
+                            currentX = arrowX + arrowSize[1] + gapAfterArrow
+                        else
+                            currentX = nil
+                        end
+                    else
+                        currentX = nil
+                    end
+                else
+                    currentX = nil
+                end
+            else
+                currentX = nil
+            end
+        else
+            currentX = nil
+            local arrowEl = cell:getAttribute("gArrow" .. i)
+            if arrowEl ~= nil then
+                arrowEl:setVisible(false)
+            end
+        end
     end
 end
 
@@ -1535,7 +1644,6 @@ function FieldRotationFrame:populateGroupCell(index, cell)
             if show then
                 local displayName = self:getCropDisplayName(cropName)
                 labelEl:setText(displayName)
-                self:layoutGroupBadgeContent(cell, i, displayName)
             end
         end
 
@@ -1543,14 +1651,7 @@ function FieldRotationFrame:populateGroupCell(index, cell)
         if yearLabelEl ~= nil then yearLabelEl:setVisible(show and not isEmptyGroup) end
     end
 
-    -- Arrows: show only between two filled adjacent slots
-    for i = 1, 3 do
-        local arrowEl = cell:getAttribute("gArrow" .. i)
-        if arrowEl ~= nil then
-            local bothFilled = (group.plan[i] or "") ~= "" and (group.plan[i+1] or "") ~= ""
-            arrowEl:setVisible(bothFilled)
-        end
-    end
+    self:layoutGroupRow(cell, group)
 
     -- Count
     local countEl = cell:getAttribute("gCount")

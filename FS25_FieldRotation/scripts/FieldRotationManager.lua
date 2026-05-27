@@ -39,43 +39,6 @@ local function getFarmlandById(farmlandId)
     return nil
 end
 
--- Precision Farming soil yield potential factor for a farmland.
--- PF multiplies the base crop yield by this factor, which reflects soil quality
--- (AdditionalFieldBuyInfo.lua:414-421: weighted soilMap:getYieldPotentialBy
--- SoilTypeIndex over the farmland soil distribution, clamped to [0, 1.25]).
--- Returns 1.0 when PF is inactive — vanilla yield, no soil bonus.
-local function getSoilYieldPotential(farmland)
-    if type(farmland) ~= "table" then return 1.0 end
-
-    -- PF caches the computed factor on the farmland (= the "~120%" PF shows).
-    local cached = tonumber(farmland.yieldPotential)
-    if cached ~= nil and cached > 0 then return math.min(cached, 1.25) end
-
-    -- Fallback: recompute from the soil map with PF's own formula.
-    local precisionFarming = getPrecisionFarmingInstance()
-    local soilMap = precisionFarming ~= nil and precisionFarming.soilMap or nil
-    if soilMap == nil or type(soilMap.getYieldPotentialBySoilTypeIndex) ~= "function"
-        or type(farmland.soilDistribution) ~= "table" then
-        return 1.0
-    end
-
-    local weightSum = 0
-    for _, weight in pairs(farmland.soilDistribution) do
-        weightSum = weightSum + (tonumber(weight) or 0)
-    end
-    if weightSum <= 0 then return 1.0 end
-
-    local potential = 0
-    for soilTypeIndex, weight in pairs(farmland.soilDistribution) do
-        local ok, value = pcall(soilMap.getYieldPotentialBySoilTypeIndex, soilMap, soilTypeIndex)
-        if ok and type(value) == "number" then
-            potential = potential + value * (tonumber(weight) or 0) / weightSum
-        end
-    end
-    if potential <= 0 then return 1.0 end
-    return math.min(potential, 1.25)
-end
-
 local function getUsableFieldFromFarmland(farmland)
     if type(farmland) ~= "table" then return nil end
     if type(farmland.field) == "table" then return farmland.field end
@@ -128,52 +91,6 @@ local function getTerrainDetailPixelToSqm()
 
     local metersPerPixel = terrainSize / terrainDetailMapSize
     return metersPerPixel * metersPerPixel
-end
-
--- =========================================================================
--- Yield debug helpers (assolementYieldDebug console command). Read-only.
--- =========================================================================
-
-local function formatDebugValue(value, decimals)
-    value = tonumber(value)
-    if value == nil then return "nil" end
-    return string.format("%." .. tostring(decimals or 3) .. "f", value)
-end
-
-local function getFillTypeByIndex(fillTypeIndex)
-    fillTypeIndex = tonumber(fillTypeIndex)
-    if fillTypeIndex == nil or g_fillTypeManager == nil
-        or type(g_fillTypeManager.getFillTypeByIndex) ~= "function" then
-        return nil
-    end
-    return g_fillTypeManager:getFillTypeByIndex(fillTypeIndex)
-end
-
-local function getFillTypeName(fillType)
-    if type(fillType) ~= "table" then return "nil" end
-    if fillType.name ~= nil and fillType.name ~= "" then return tostring(fillType.name) end
-    if fillType.title ~= nil and fillType.title ~= "" then return tostring(fillType.title) end
-    if fillType.index ~= nil then return "#" .. tostring(fillType.index) end
-    return "unknown"
-end
-
-local function getFruitConverterName(converterIndex)
-    if g_fruitTypeManager ~= nil and type(g_fruitTypeManager.converterNameToIndex) == "table" then
-        for name, index in pairs(g_fruitTypeManager.converterNameToIndex) do
-            if index == converterIndex then return tostring(name) end
-        end
-    end
-    return "#" .. tostring(converterIndex)
-end
-
-local function logYieldDebug(fmt, ...)
-    local ok, text = pcall(string.format, fmt, ...)
-    if not ok then text = tostring(fmt) end
-    local message = "[FieldRotation][YieldDebug] " .. text
-    if Logging ~= nil and type(Logging.info) == "function" then
-        Logging.info(message)
-    end
-    print(message)
 end
 
 local function getPermanentGrasslandFallbackCropName()
@@ -873,6 +790,7 @@ function FieldRotationManager:getFieldCropInfo(farmlandId)
     local info = {
         growthState = hasDisplayGrowthStage and growthState or nil,
         maxStage = hasDisplayGrowthStage and maxStage or nil,
+        weedState = tonumber(fieldState.weedState),
     }
 
     local minHarvest = tonumber(fruitType.minHarvestingGrowthState) or 0
@@ -892,242 +810,29 @@ function FieldRotationManager:getFieldCropInfo(farmlandId)
     local areaHa = tonumber(field.areaHa) or 0
     if areaHa <= 0 then return info end
 
-    local fillType = g_fruitTypeManager:getFillTypeByFruitTypeIndex(fruitType.index)
+    -- Base density: windrow litres when foraging only (silage/mowing), grain
+    -- litres otherwise. literPerSqm is the engine's per-sqm yield for the crop.
+    local useForage = isForageReady and not isHarvestReady and fruitType.windrowFillType ~= nil
     local literPerSqm = tonumber(fruitType.literPerSqm) or 0
-    if isForageReady and fruitType.windrowFillType ~= nil then
-        fillType = fruitType.windrowFillType
+    if useForage then
         literPerSqm = tonumber(fruitType.windrowLiterPerSqm) or literPerSqm
     end
+    if literPerSqm <= 0 then return info end
 
-    local massPerLiter = fillType ~= nil and tonumber(fillType.massPerLiter) or nil
-    if literPerSqm <= 0 or massPerLiter == nil or massPerLiter <= 0 then return info end
+    -- Per-growth-state yield scale (FruitTypeDesc.lua:296, XML #yieldScale).
+    -- This is why the same crop yields different litres at green-plant vs full
+    -- maturity. Defaults to 1 when the state defines no scale.
+    local yieldScale = 1
+    if type(fruitType.yieldScales) == "table"
+        and type(fruitType.yieldScales[growthState]) == "number" then
+        yieldScale = fruitType.yieldScales[growthState]
+    end
 
-    -- Apply the Precision Farming soil yield potential so the result matches PF's
-    -- expected yield: mod 8.85 T/ha * soil 1.2075 = PF 10.7 T/ha. 1.0 without PF.
-    local soilYieldFactor = getSoilYieldPotential(getFarmlandById(numericFarmlandId))
-
-    local totalLiters = literPerSqm * areaHa * harvestMultiplier * 10000 * soilYieldFactor
+    local totalLiters = literPerSqm * areaHa * 10000 * harvestMultiplier * yieldScale
     if totalLiters <= 0 then return info end
 
-    local displayArea = areaHa
-    local areaUnit = "ha"
-    if g_i18n ~= nil then
-        if type(g_i18n.getArea) == "function" then
-            local areaOk, convertedArea = pcall(g_i18n.getArea, g_i18n, areaHa)
-            if areaOk and type(convertedArea) == "number" and convertedArea > 0 then
-                displayArea = convertedArea
-            end
-        end
-        if type(g_i18n.getAreaUnit) == "function" then
-            local unitOk, convertedUnit = pcall(g_i18n.getAreaUnit, g_i18n)
-            if unitOk and convertedUnit ~= nil and convertedUnit ~= "" then
-                areaUnit = tostring(convertedUnit)
-            end
-        end
-    end
-
     info.totalLiters = totalLiters
-    info.yieldPerArea = (totalLiters * massPerLiter) / displayArea
-    info.areaUnit = areaUnit
     return info
-end
-
--- Console debug: logs every yield source for a farmland so the in-game numbers
--- can be cross-checked against Precision Farming. Read-only, no gameplay effect.
-function FieldRotationManager:debugYieldSource(farmlandId)
-    local numericFarmlandId = tonumber(farmlandId)
-    if numericFarmlandId == nil or numericFarmlandId <= 0 then
-        logYieldDebug("Usage: assolementYieldDebug <farmlandId>")
-        return
-    end
-
-    local farmland = getFarmlandById(numericFarmlandId)
-    local field = self:getFieldByFarmlandId(numericFarmlandId)
-    logYieldDebug("farmland=%s field=%s fieldId=%s fieldAreaHa=%s farmlandTotalFieldArea=%s farmlandAreaInHa=%s pfYieldPotential=%s",
-        tostring(numericFarmlandId),
-        tostring(field ~= nil),
-        tostring(field ~= nil and field.fieldId or nil),
-        formatDebugValue(getFieldAreaHa(field), 4),
-        formatDebugValue(getFarmlandFieldAreaHa(farmland), 4),
-        formatDebugValue(farmland ~= nil and farmland.areaInHa or nil, 4),
-        formatDebugValue(farmland ~= nil and farmland.yieldPotential or nil, 4))
-
-    local precisionFarming = getPrecisionFarmingInstance()
-    logYieldDebug("PF instances: g_precisionFarming=%s resolved=%s fieldInfoDisplayExtension=%s additionalFieldBuyInfo=%s harvestExtension=%s yieldMap=%s",
-        tostring(g_precisionFarming ~= nil),
-        tostring(precisionFarming ~= nil),
-        tostring(precisionFarming ~= nil and precisionFarming.fieldInfoDisplayExtension ~= nil),
-        tostring(precisionFarming ~= nil and precisionFarming.additionalFieldBuyInfo ~= nil),
-        tostring(precisionFarming ~= nil and precisionFarming.harvestExtension ~= nil),
-        tostring(precisionFarming ~= nil and precisionFarming.yieldMap ~= nil))
-
-    if field == nil or FieldState == nil or g_fruitTypeManager == nil then
-        logYieldDebug("STOP: missing field=%s FieldState=%s g_fruitTypeManager=%s",
-            tostring(field ~= nil), tostring(FieldState ~= nil), tostring(g_fruitTypeManager ~= nil))
-        return
-    end
-    if type(field.posX) ~= "number" or type(field.posZ) ~= "number" then
-        logYieldDebug("STOP: field has no numeric center position posX=%s posZ=%s",
-            tostring(field.posX), tostring(field.posZ))
-        return
-    end
-
-    local fieldState = FieldState.new()
-    if type(fieldState.update) ~= "function" then
-        logYieldDebug("STOP: FieldState.update missing")
-        return
-    end
-    fieldState:update(field.posX, field.posZ)
-    logYieldDebug("FieldState: valid=%s fruitTypeIndex=%s growthState=%s lastGrowthState=%s spray=%s plow=%s lime=%s weed=%s stubble=%s roller=%s",
-        tostring(fieldState.isValid),
-        tostring(fieldState.fruitTypeIndex),
-        tostring(fieldState.growthState),
-        tostring(fieldState.lastGrowthState),
-        tostring(fieldState.sprayLevel),
-        tostring(fieldState.plowLevel),
-        tostring(fieldState.limeLevel),
-        tostring(fieldState.weedFactor),
-        tostring(fieldState.stubbleShredLevel),
-        tostring(fieldState.rollerLevel))
-    if not fieldState.isValid then return end
-
-    local fruitTypeIndex = normalizeFruitTypeIndex(fieldState.fruitTypeIndex)
-    if fruitTypeIndex == nil then
-        logYieldDebug("STOP: no fruit type at field sample")
-        return
-    end
-
-    local fruitType = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
-    if fruitType == nil then
-        logYieldDebug("STOP: fruitType not found for index=%s", tostring(fruitTypeIndex))
-        return
-    end
-
-    local growthState = tonumber(fieldState.growthState or fieldState.lastGrowthState) or 0
-    local growthStateName = type(fruitType.growthStateToName) == "table"
-        and fruitType.growthStateToName[growthState] or nil
-    logYieldDebug("Fruit: index=%s name=%s growth=%s stateName=%s numGrowthStates=%s harvest=%s-%s forage=%s-%s literPerSqm=%s windrowLiterPerSqm=%s",
-        tostring(fruitType.index),
-        tostring(fruitType.name),
-        tostring(growthState),
-        tostring(growthStateName),
-        tostring(fruitType.numGrowthStates),
-        tostring(fruitType.minHarvestingGrowthState),
-        tostring(fruitType.maxHarvestingGrowthState),
-        tostring(fruitType.minForageGrowthState),
-        tostring(fruitType.maxForageGrowthState),
-        formatDebugValue(fruitType.literPerSqm, 6),
-        formatDebugValue(fruitType.windrowLiterPerSqm, 6))
-
-    local directFillType = g_fruitTypeManager:getFillTypeByFruitTypeIndex(fruitType.index)
-    local windrowFillType = fruitType.windrowFillType
-    logYieldDebug("Fill direct: name=%s index=%s massPerLiter=%s",
-        getFillTypeName(directFillType),
-        tostring(directFillType ~= nil and directFillType.index or nil),
-        formatDebugValue(directFillType ~= nil and directFillType.massPerLiter or nil, 6))
-    logYieldDebug("Fill windrow: name=%s index=%s massPerLiter=%s",
-        getFillTypeName(windrowFillType),
-        tostring(windrowFillType ~= nil and windrowFillType.index or nil),
-        formatDebugValue(windrowFillType ~= nil and windrowFillType.massPerLiter or nil, 6))
-
-    local harvestMultiplier = nil
-    if type(fieldState.getHarvestScaleMultiplier) == "function" then
-        local ok, value = pcall(fieldState.getHarvestScaleMultiplier, fieldState)
-        harvestMultiplier = ok and tonumber(value) or nil
-        logYieldDebug("FieldState.getHarvestScaleMultiplier=%s ok=%s",
-            formatDebugValue(harvestMultiplier, 6), tostring(ok))
-    else
-        logYieldDebug("FieldState.getHarvestScaleMultiplier=missing")
-    end
-
-    local baseLiterPerSqm = tonumber(fruitType.literPerSqm) or 0
-    local harvestLitersHa = baseLiterPerSqm * 10000
-    local forageLitersHa = (tonumber(fruitType.windrowLiterPerSqm) or baseLiterPerSqm) * 10000
-    if type(g_fruitTypeManager.getFruitTypeAreaLiters) == "function" then
-        local harvestOk, value = pcall(g_fruitTypeManager.getFruitTypeAreaLiters,
-            g_fruitTypeManager, fruitType.index, 10000, false)
-        if harvestOk and tonumber(value) ~= nil then harvestLitersHa = tonumber(value) end
-        local forageOk, forageValue = pcall(g_fruitTypeManager.getFruitTypeAreaLiters,
-            g_fruitTypeManager, fruitType.index, 10000, true)
-        if forageOk and tonumber(forageValue) ~= nil then forageLitersHa = tonumber(forageValue) end
-    end
-    logYieldDebug("Engine area liters per ha: harvest(false)=%s forage(true)=%s",
-        formatDebugValue(harvestLitersHa, 1),
-        formatDebugValue(forageLitersHa, 1))
-
-    local areaHa = getRotationAreaHa(farmland, field)
-    if harvestMultiplier ~= nil and harvestMultiplier >= 0 and harvestLitersHa > 0 and areaHa > 0 then
-        local directMass = directFillType ~= nil and tonumber(directFillType.massPerLiter) or nil
-        local directLiters = harvestLitersHa * areaHa * harvestMultiplier
-        logYieldDebug("Estimate direct: litersTotal=%s litersHa=%s tonsHa=%s",
-            formatDebugValue(directLiters, 1),
-            formatDebugValue(directLiters / areaHa, 1),
-            formatDebugValue(directMass ~= nil and (directLiters / areaHa * directMass) or nil, 3))
-    else
-        logYieldDebug("Estimate direct: skipped multiplier=%s harvestLitersHa=%s areaHa=%s",
-            formatDebugValue(harvestMultiplier, 6),
-            formatDebugValue(harvestLitersHa, 1),
-            formatDebugValue(areaHa, 4))
-    end
-
-    if type(g_fruitTypeManager.fruitTypeConverters) == "table" then
-        local converterCount = 0
-        for converterIndex, converter in pairs(g_fruitTypeManager.fruitTypeConverters) do
-            local converterData = type(converter) == "table" and converter[fruitType.index] or nil
-            if type(converterData) == "table" then
-                converterCount = converterCount + 1
-                local outputFillType = getFillTypeByIndex(converterData.fillTypeIndex)
-                local conversionFactor = tonumber(converterData.conversionFactor) or 1
-                local outputMass = outputFillType ~= nil and tonumber(outputFillType.massPerLiter) or nil
-                local converterName = getFruitConverterName(converterIndex)
-                local sourceLitersHa = converterName == "MOWER" and forageLitersHa or harvestLitersHa
-                local litersHa, tonsHa = nil, nil
-                if harvestMultiplier ~= nil and sourceLitersHa > 0 then
-                    litersHa = sourceLitersHa * harvestMultiplier * conversionFactor
-                    if outputMass ~= nil then tonsHa = litersHa * outputMass end
-                end
-                logYieldDebug("Converter[%s]: sourceLitersHa=%s to=%s fillTypeIndex=%s factor=%s litersHa=%s tonsHa=%s massPerLiter=%s",
-                    converterName,
-                    formatDebugValue(sourceLitersHa, 1),
-                    getFillTypeName(outputFillType),
-                    tostring(converterData.fillTypeIndex),
-                    formatDebugValue(conversionFactor, 6),
-                    formatDebugValue(litersHa, 1),
-                    formatDebugValue(tonsHa, 3),
-                    formatDebugValue(outputMass, 6))
-            end
-        end
-        if converterCount == 0 then
-            logYieldDebug("Converters: none for fruit=%s", tostring(fruitType.name))
-        end
-    end
-
-    -- PF harvest yield-factor decomposition. Populated during harvest, so to see
-    -- real values: harvest a few metres of the field, then run this command.
-    local harvestExtension = precisionFarming ~= nil and precisionFarming.harvestExtension or nil
-    if harvestExtension ~= nil and type(harvestExtension.debugValues) == "table" then
-        local d = harvestExtension.debugValues
-        logYieldDebug("PF debugValues: yieldFactor=%s yieldFactorRegular=%s yieldPotential=%s nFactor=%s regularNFactor=%s pHFactor=%s regularPHFactor=%s weedFactor=%s stubbleFactor=%s rollerFactor=%s plowFactor=%s seedRate=%s nActual=%s nTarget=%s pHActual=%s pHTarget=%s",
-            formatDebugValue(d.yieldFactor, 4), formatDebugValue(d.yieldFactorRegular, 4),
-            formatDebugValue(d.yieldPotential, 4), formatDebugValue(d.nFactor, 4),
-            formatDebugValue(d.regularNFactor, 4), formatDebugValue(d.pHFactor, 4),
-            formatDebugValue(d.regularPHFactor, 4), formatDebugValue(d.weedFactor, 4),
-            formatDebugValue(d.stubbleFactor, 4), formatDebugValue(d.rollerFactor, 4),
-            formatDebugValue(d.plowFactor, 4), formatDebugValue(d.seedRateYieldFactor, 4),
-            formatDebugValue(d.nActualValue, 2), formatDebugValue(d.nTargetValue, 2),
-            formatDebugValue(d.pHActualValue, 3), formatDebugValue(d.pHTargetValue, 3))
-    else
-        logYieldDebug("PF debugValues: unavailable (harvestExtension=%s)",
-            tostring(harvestExtension ~= nil))
-    end
-
-    local info = self:getFieldCropInfo(numericFarmlandId)
-    logYieldDebug("Current UI info: growth=%s/%s totalLiters=%s yieldPerArea=%s areaUnit=%s",
-        tostring(info ~= nil and info.growthState or nil),
-        tostring(info ~= nil and info.maxStage or nil),
-        formatDebugValue(info ~= nil and info.totalLiters or nil, 1),
-        formatDebugValue(info ~= nil and info.yieldPerArea or nil, 3),
-        tostring(info ~= nil and info.areaUnit or nil))
 end
 
 -- Returns:

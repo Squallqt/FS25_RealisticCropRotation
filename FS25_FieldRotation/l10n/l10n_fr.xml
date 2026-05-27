@@ -83,8 +83,14 @@
 
         <!-- Yield card -->
         <e k="fr_yield_harvest"        v="Récolte Totale" />
-        <e k="fr_yield_perha"          v="Rendement" />
+        <e k="fr_yield_weed"           v="Mauvaises herbes" />
         <e k="fr_yield_stage"          v="Croissance" />
+
+        <!-- Yield card — weed size + recommended removal tool (PF HUD wording) -->
+        <e k="fr_weed_none"            v="Aucune" />
+        <e k="fr_weed_small"           v="Petite · Sarcleuse" />
+        <e k="fr_weed_medium"          v="Moyenne · Houe rotative" />
+        <e k="fr_weed_large"           v="Grande · Herbicide" />
 
         <!-- Planning tab — year slots (relative to current year, never stale) -->
         <e k="fr_plan_year1"           v="N+1" />
