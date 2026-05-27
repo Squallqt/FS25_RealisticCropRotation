@@ -24,6 +24,7 @@
         <e k="fr_hud_previous_n1"      v="Précédent cultural (N-1) :" />
         <e k="fr_hud_previous_n2"      v="Anté-précédent (N-2) :" />
         <e k="fr_hud_cover_crop"       v="Couvert végétal :" />
+        <e k="fr_hud_growth_stage"     v="Stade de croissance :" />
         <e k="fr_hud_yes"              v="Oui" />
         <e k="fr_hud_no"               v="Non" />
         <e k="fr_hud_none"             v="Aucun" />
@@ -32,7 +33,7 @@
         <e k="fr_section_history"      v="Historique des Cultures" />
         <e k="fr_section_nitrogen"     v="Statut Azoté" />
         <e k="fr_section_advice"       v="Conseil Agronomique" />
-        <e k="fr_section_yield"        v="Rendement Estimé" />
+        <e k="fr_section_yield"        v="Croissance et rendement" />
         <e k="fr_section_lime"         v="Statut Chaux / pH" />
         <e k="fr_section_plan"         v="Plan de Rotation" />
         <e k="fr_section_score"        v="Qualité de Rotation" />
@@ -69,17 +70,18 @@
         <e k="fr_lime_average_pf"      v="Moyenne du pH" />
 
         <!-- Agronomic advice -->
-        <e k="fr_advice_afterCereal"    v="Alternez avec une légumineuse ou un oléagineux. Ne faites pas de céréales deux années de suite." />
-        <e k="fr_advice_afterLegume"    v="Une céréale tire le meilleur parti de l'azote laissé par la légumineuse." />
-        <e k="fr_advice_afterOilseed"   v="La céréale suit bien un oléagineux. Évitez deux oléagineux consécutifs." />
-        <e k="fr_advice_afterRoot"      v="Céréale ou légumineuse recommandée. Attendez plusieurs années avant de replanter betterave ou pomme de terre." />
-        <e k="fr_advice_afterVegetable" v="Céréale ou légumineuse recommandée. Évitez de répéter le même légume chaque année." />
-        <e k="fr_advice_afterForage"    v="Excellente opportunité pour une céréale. Le sol enrichi après prairie donne de bons rendements." />
-        <e k="fr_advice_insufficient"   v="Historique insuffisant, cultivez davantage pour obtenir des conseils." />
+        <e k="fr_advice_afterCereal"    v="Après céréale : légumineuse recommandée pour casser le cycle et limiter céréale sur céréale." />
+        <e k="fr_advice_afterLegume"    v="Après légumineuse : céréale recommandée pour valoriser l'azote restitué." />
+        <e k="fr_advice_afterOilseed"   v="Après oléagineux : céréale recommandée; évitez deux oléagineux de suite." />
+        <e k="fr_advice_afterRoot"      v="Après racine : céréale recommandée; espacez le retour des cultures racines." />
+        <e k="fr_advice_afterVegetable" v="Après légume feuille ou bulbe : céréale recommandée; évitez les répétitions." />
+        <e k="fr_advice_afterForage"    v="Après prairie ou fourrage : céréale adaptée, sol structuré et reliquats disponibles." />
+        <e k="fr_advice_insufficient"   v="Historique insuffisant : conseil disponible après une culture enregistrée." />
 
         <!-- Yield card -->
         <e k="fr_yield_harvest"        v="Récolte Totale" />
         <e k="fr_yield_perha"          v="Rendement" />
+        <e k="fr_yield_stage"          v="Croissance" />
 
         <!-- Planning tab — year slots (relative to current year, never stale) -->
         <e k="fr_plan_year1"           v="N+1" />

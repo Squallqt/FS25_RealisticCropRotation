@@ -464,15 +464,15 @@
         <imageColor value="$preset_fs25_colorOrangeDark"/>
     </Profile>
 
-    <!-- Half-width KPI container -->
+    <!-- Third-width KPI container (3 columns across the 1240px card) -->
     <Profile name="frYieldKpi" extends="emptyPanel" with="anchorTopLeft">
-        <size value="580px 82px"/>
+        <size value="413px 82px"/>
     </Profile>
 
     <!-- Label at top, closer to value -->
     <Profile name="frYieldKpiLabel" extends="fs25_textDefault" with="anchorTopCenter">
         <position value="0px -10px"/>
-        <size value="540px 18px"/>
+        <size value="393px 18px"/>
         <textSize value="12px"/>
         <textBold value="true"/>
         <textUpperCase value="true"/>
@@ -485,7 +485,7 @@
     <!-- Value pulled up toward label -->
     <Profile name="frYieldKpiValue" extends="fs25_textDefault" with="anchorBottomCenter">
         <position value="0px 12px"/>
-        <size value="540px 38px"/>
+        <size value="393px 38px"/>
         <textSize value="26px"/>
         <textBold value="true"/>
         <textColor value="$preset_fs25_colorOrangeDark"/>

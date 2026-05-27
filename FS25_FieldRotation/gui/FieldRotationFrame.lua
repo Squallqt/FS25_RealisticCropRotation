@@ -397,12 +397,9 @@ function FieldRotationFrame:buildPlanCropList()
                     and fruitType.fillType ~= nil
                     and fruitType.fillType.hudOverlayFilename ~= nil then
                     local name = string.upper(fruitType.name)
-                    -- Exclude pure cover crops from the rotation plan.
-                    -- Exception: dualUse crops (e.g. MUSTARD = crop + cover).
                     local cfg = FieldRotation ~= nil and FieldRotation.cropConfig or nil
                     local family = cfg ~= nil and cfg.families ~= nil and cfg.families[name] or nil
-                    local isDualUse = cfg ~= nil and cfg.dualUse ~= nil and cfg.dualUse[name] == true
-                    if family ~= "COVER" or isDualUse then
+                    if family ~= "COVER" then
                         if not nameSet[name] then
                             nameSet[name] = true
                             table.insert(self.planCropList, name)
@@ -874,19 +871,21 @@ end
 
 function FieldRotationFrame:updateYieldCard(farmlandId)
     local mgr = self:getManager()
-    local estimate = nil
-    if mgr ~= nil and mgr.getYieldEstimate ~= nil then
-        estimate = mgr:getYieldEstimate(farmlandId)
+    local info = nil
+    if mgr ~= nil and mgr.getFieldCropInfo ~= nil then
+        info = mgr:getFieldCropInfo(farmlandId)
     end
 
     local totalText = "-"
     local yieldText = "-"
-    local hasEstimate = estimate ~= nil
+    local stageText = "-"
+    local hasYield = info ~= nil and info.totalLiters ~= nil and info.yieldPerArea ~= nil
+    local hasStage = info ~= nil and info.growthState ~= nil and info.maxStage ~= nil
 
-    if hasEstimate then
-        local totalLiters = tonumber(estimate.totalLiters) or 0
-        local yieldPerArea = tonumber(estimate.yieldPerArea) or 0
-        local areaUnit = tostring(estimate.areaUnit or "ha")
+    if hasYield then
+        local totalLiters = tonumber(info.totalLiters) or 0
+        local yieldPerArea = tonumber(info.yieldPerArea) or 0
+        local areaUnit = tostring(info.areaUnit or "ha")
 
         if g_i18n ~= nil and g_i18n.formatVolume ~= nil then
             totalText = g_i18n:formatVolume(totalLiters, 0)
@@ -897,18 +896,29 @@ function FieldRotationFrame:updateYieldCard(farmlandId)
         yieldText = string.format("%.2f T/%s", yieldPerArea, areaUnit)
     end
 
+    if hasStage then
+        stageText = string.format("%d/%d", info.growthState, info.maxStage)
+    end
+
     if self.yieldTotalValue ~= nil then
         if self.yieldTotalValue.applyProfile ~= nil then
-            self.yieldTotalValue:applyProfile(hasEstimate and "frYieldKpiValue" or "frYieldKpiValueNA")
+            self.yieldTotalValue:applyProfile(hasYield and "frYieldKpiValue" or "frYieldKpiValueNA")
         end
         self.yieldTotalValue:setText(totalText)
     end
 
     if self.yieldPerHaValue ~= nil then
         if self.yieldPerHaValue.applyProfile ~= nil then
-            self.yieldPerHaValue:applyProfile(hasEstimate and "frYieldKpiValue" or "frYieldKpiValueNA")
+            self.yieldPerHaValue:applyProfile(hasYield and "frYieldKpiValue" or "frYieldKpiValueNA")
         end
         self.yieldPerHaValue:setText(yieldText)
+    end
+
+    if self.yieldStageValue ~= nil then
+        if self.yieldStageValue.applyProfile ~= nil then
+            self.yieldStageValue:applyProfile(hasStage and "frYieldKpiValue" or "frYieldKpiValueNA")
+        end
+        self.yieldStageValue:setText(stageText)
     end
 end
 

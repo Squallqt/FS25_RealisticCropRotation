@@ -11,6 +11,12 @@ local FieldRotationManager_mt = Class(FieldRotationManager)
 -- second scale, so a stale read up to TTL is harmless.
 local ACTIVE_CROP_CACHE_TTL_MS = 10000
 
+local function isPureClient()
+    return g_currentMission ~= nil
+        and g_currentMission.getIsServer ~= nil
+        and not g_currentMission:getIsServer()
+end
+
 local function getPrecisionFarmingInstance()
     if g_precisionFarming ~= nil then return g_precisionFarming end
     if FS25_precisionFarming ~= nil and FS25_precisionFarming.g_precisionFarming ~= nil then
@@ -216,6 +222,7 @@ end
 local function getFieldFruitTypeIndex(field)
     local fruitTypeIndex, sampledDensityMap = getFieldFruitTypeIndexFromDensityMap(field)
     if sampledDensityMap then return fruitTypeIndex end
+    if isPureClient() then return nil end
     return getFieldFruitTypeIndexFromFieldState(field)
 end
 
@@ -427,8 +434,6 @@ function FieldRotationManager.new()
     self.repository = FieldRotationRepository.new()
     self.service = FieldRotationService.new(self.repository)
     self.activeCropNameCache = {}
-    self.syncedActiveCrops = {}
-    self.hasSyncedActiveCropSnapshot = false
     self.isInitialized = false
     return self
 end
@@ -438,8 +443,6 @@ function FieldRotationManager:initialize()
     self.repository:clear()
     self.service:reset()
     self.activeCropNameCache = {}
-    self.syncedActiveCrops = {}
-    self.hasSyncedActiveCropSnapshot = false
     self.isInitialized = true
 end
 
@@ -447,8 +450,6 @@ function FieldRotationManager:cleanup()
     self.repository:clear()
     self.service:reset()
     self.activeCropNameCache = {}
-    self.syncedActiveCrops = {}
-    self.hasSyncedActiveCropSnapshot = false
     self.isInitialized = false
 end
 
@@ -536,15 +537,10 @@ function FieldRotationManager:getFieldByFarmlandId(farmlandId)
 end
 
 -- Returns the currently active crop name on a farmland.
--- Clients prefer the server-pushed snapshot. The server resolves from the fruit
--- density map first, then fieldState as fallback.
+-- Pure clients use density-map sampling only; fieldState fallback is server-only.
 function FieldRotationManager:getActiveCropName(farmlandId)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil then return nil end
-
-    if self.hasSyncedActiveCropSnapshot then
-        return self:getSyncedActiveCropName(numericFarmlandId)
-    end
 
     local cache = self.activeCropNameCache
     local nowMs = tonumber(g_time) or 0
@@ -573,98 +569,7 @@ function FieldRotationManager:getActiveCropName(farmlandId)
     return resolved
 end
 
-function FieldRotationManager:getCurrentActiveCropSnapshot()
-    local result = {}
-    if g_fieldManager == nil then return result end
-
-    local fields = nil
-    if type(g_fieldManager.getFields) == "function" then
-        fields = g_fieldManager:getFields()
-    else
-        fields = g_fieldManager.fields
-    end
-
-    if fields ~= nil then
-        for _, field in pairs(fields) do
-            local farmlandId = field ~= nil and field.farmland ~= nil and field.farmland.id or nil
-            local cropName = getActiveCropNameFromField(field)
-            local numericFarmlandId = tonumber(farmlandId)
-            if numericFarmlandId ~= nil and numericFarmlandId > 0
-                and cropName ~= nil and cropName ~= "" then
-                result[numericFarmlandId] = cropName
-            end
-        end
-    end
-
-    if g_farmlandManager ~= nil and type(g_farmlandManager.getFarmlands) == "function" then
-        local fallbackCropName = getPermanentGrasslandFallbackCropName()
-        if fallbackCropName ~= nil then
-            for farmlandId, farmland in pairs(g_farmlandManager:getFarmlands() or {}) do
-                local numericFarmlandId = tonumber(farmlandId)
-                if numericFarmlandId == nil and farmland ~= nil then
-                    numericFarmlandId = tonumber(farmland.id)
-                end
-                if numericFarmlandId ~= nil and numericFarmlandId > 0
-                    and result[numericFarmlandId] == nil
-                    and self:getFieldByFarmlandId(numericFarmlandId) == nil
-                    and getFarmlandFieldAreaHa(farmland) > 0 then
-                    result[numericFarmlandId] = fallbackCropName
-                end
-            end
-        end
-    end
-
-    return result
-end
-
-function FieldRotationManager:recordActiveCropSnapshotForYear(year)
-    if self.service == nil or type(self.service.recordCropNameForYear) ~= "function" then return false end
-    local numericYear = tonumber(year) or 0
-    if numericYear <= 0 then return false end
-
-    local changed = false
-    local currentPeriod = self.service:getCurrentPeriod()
-    local activeCrops = self:getCurrentActiveCropSnapshot()
-    for farmlandId, cropName in pairs(activeCrops) do
-        local numericFarmlandId = tonumber(farmlandId)
-        if numericFarmlandId ~= nil and numericFarmlandId > 0
-            and cropName ~= nil and cropName ~= "" then
-            local recorded = self.service:recordCropNameForYear(
-                numericFarmlandId, cropName, currentPeriod, numericYear)
-            if recorded then
-                self:invalidateActiveCropCache(numericFarmlandId)
-                changed = true
-            end
-        end
-    end
-
-    return changed
-end
-
-function FieldRotationManager:setSyncedActiveCrops(activeCrops)
-    self.syncedActiveCrops = activeCrops or {}
-    self.hasSyncedActiveCropSnapshot = true
-    self.activeCropNameCache = {}
-end
-
-function FieldRotationManager:getSyncedActiveCropName(farmlandId)
-    local numericFarmlandId = tonumber(farmlandId)
-    if numericFarmlandId == nil or numericFarmlandId <= 0 then return nil end
-
-    local activeCrops = self.syncedActiveCrops or {}
-    return activeCrops[numericFarmlandId] or activeCrops[tostring(numericFarmlandId)]
-end
-
 function FieldRotationManager:getActiveCropFruitTypeIndex(farmlandId)
-    if self.hasSyncedActiveCropSnapshot and g_fruitTypeManager ~= nil
-        and type(g_fruitTypeManager.getFruitTypeByName) == "function" then
-        local cropName = self:getSyncedActiveCropName(farmlandId)
-        if cropName ~= nil and cropName ~= "" then
-            local fruitType = g_fruitTypeManager:getFruitTypeByName(cropName)
-            if fruitType ~= nil then return normalizeFruitTypeIndex(fruitType.index) end
-        end
-    end
-
     return getFieldFruitTypeIndex(self:getFieldByFarmlandId(farmlandId))
 end
 
@@ -679,7 +584,7 @@ end
 -- when no active crop is growing on the farmland. nil when there IS a crop
 -- (caller should display the crop) or when the ground is in NONE state.
 function FieldRotationManager:getCurrentGroundStateLabel(farmlandId)
-    if self.hasSyncedActiveCropSnapshot then return nil end
+    if isPureClient() then return nil end
     local field = self:getFieldByFarmlandId(farmlandId)
     return getNativeGroundStateLabel(field)
 end
@@ -765,10 +670,31 @@ function FieldRotationManager:getCurrentLimeLevel(farmlandId)
     return math.min(limeLevel, maxLevel), maxLevel
 end
 
-function FieldRotationManager:getYieldEstimate(farmlandId)
+-- Returns crop info for a farmland in a single density-map sample:
+--   { growthState, maxStage }                      -- crop present, not harvestable
+--   { growthState, maxStage, totalLiters,          -- crop present and harvestable
+--     yieldPerArea, areaUnit }
+--   nil                                            -- no crop / not resolvable
+-- growthState/maxStage are nil when the engine reports no usable stage.
+function FieldRotationManager:getFieldCropInfo(farmlandId)
+    local numericFarmlandId = tonumber(farmlandId)
+    if numericFarmlandId == nil or numericFarmlandId <= 0 then return nil end
+
     local field = self:getFieldByFarmlandId(farmlandId)
-    local fieldState = field ~= nil and field.fieldState or nil
-    if field == nil or fieldState == nil or g_fruitTypeManager == nil then return nil end
+    if field == nil or g_fruitTypeManager == nil or FieldState == nil then return nil end
+    if type(field.posX) ~= "number" or type(field.posZ) ~= "number" then return nil end
+
+    -- field.fieldState is forced to groundType=CULTIVATED/fruitTypeIndex=UNKNOWN
+    -- on MP clients by the engine (FieldManager.lua:292-302). Build a fresh
+    -- FieldState and sample density maps at the field center — this is the
+    -- engine pattern used in FieldManager.lua:327-343 (debug overlay path,
+    -- proven client-safe). The same shape of FieldState is what
+    -- PlayerHUDUpdater.fieldAddFarmland receives as 'data'. One sample feeds
+    -- both the growth stage and the yield estimate.
+    local fieldState = FieldState.new()
+    if type(fieldState.update) ~= "function" then return nil end
+    fieldState:update(field.posX, field.posZ)
+    if not fieldState.isValid then return nil end
 
     local fruitTypeIndex = normalizeFruitTypeIndex(fieldState.fruitTypeIndex)
     if fruitTypeIndex == nil then return nil end
@@ -777,6 +703,13 @@ function FieldRotationManager:getYieldEstimate(farmlandId)
     if fruitType == nil then return nil end
 
     local growthState = tonumber(fieldState.growthState or fieldState.lastGrowthState) or 0
+    local maxStage = tonumber(fruitType.numGrowthStates) or 0
+
+    local info = {
+        growthState = growthState > 0 and growthState or nil,
+        maxStage = maxStage > 0 and maxStage or nil,
+    }
+
     local minHarvest = tonumber(fruitType.minHarvestingGrowthState) or 0
     local maxHarvest = tonumber(fruitType.maxHarvestingGrowthState) or 0
     local minForage = tonumber(fruitType.minForageGrowthState) or 0
@@ -784,15 +717,15 @@ function FieldRotationManager:getYieldEstimate(farmlandId)
 
     local isHarvestReady = minHarvest > 0 and growthState >= minHarvest and growthState <= maxHarvest
     local isForageReady = minForage > 0 and growthState >= minForage and growthState <= maxForage
-    if not isHarvestReady and not isForageReady then return nil end
+    if not isHarvestReady and not isForageReady then return info end
 
-    if type(fieldState.getHarvestScaleMultiplier) ~= "function" then return nil end
+    if type(fieldState.getHarvestScaleMultiplier) ~= "function" then return info end
     local ok, harvestMultiplier = pcall(fieldState.getHarvestScaleMultiplier, fieldState)
     harvestMultiplier = ok and tonumber(harvestMultiplier) or nil
-    if harvestMultiplier == nil or harvestMultiplier < 0 then return nil end
+    if harvestMultiplier == nil or harvestMultiplier < 0 then return info end
 
     local areaHa = tonumber(field.areaHa) or 0
-    if areaHa <= 0 then return nil end
+    if areaHa <= 0 then return info end
 
     local fillType = g_fruitTypeManager:getFillTypeByFruitTypeIndex(fruitType.index)
     local literPerSqm = tonumber(fruitType.literPerSqm) or 0
@@ -802,10 +735,10 @@ function FieldRotationManager:getYieldEstimate(farmlandId)
     end
 
     local massPerLiter = fillType ~= nil and tonumber(fillType.massPerLiter) or nil
-    if literPerSqm <= 0 or massPerLiter == nil or massPerLiter <= 0 then return nil end
+    if literPerSqm <= 0 or massPerLiter == nil or massPerLiter <= 0 then return info end
 
     local totalLiters = literPerSqm * areaHa * harvestMultiplier * 10000
-    if totalLiters <= 0 then return nil end
+    if totalLiters <= 0 then return info end
 
     local displayArea = areaHa
     local areaUnit = "ha"
@@ -824,11 +757,10 @@ function FieldRotationManager:getYieldEstimate(farmlandId)
         end
     end
 
-    return {
-        totalLiters = totalLiters,
-        yieldPerArea = (totalLiters * massPerLiter) / displayArea,
-        areaUnit = areaUnit,
-    }
+    info.totalLiters = totalLiters
+    info.yieldPerArea = (totalLiters * massPerLiter) / displayArea
+    info.areaUnit = areaUnit
+    return info
 end
 
 -- Returns:

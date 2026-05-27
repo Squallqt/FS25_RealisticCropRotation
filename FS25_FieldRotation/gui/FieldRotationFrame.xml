@@ -232,16 +232,23 @@
                 <RoundCorner     profile="frYieldCardBg"/>
                 <ThreePartBitmap profile="frYieldAccent"/>
 
-                <GuiElement profile="frYieldKpi" position="20px 0px">
+                <GuiElement profile="frYieldKpi" position="0px 0px">
                     <Text profile="frYieldKpiLabel" text="$l10n_fr_yield_harvest"/>
                     <Text profile="frYieldKpiValueNA" id="yieldTotalValue" text="-"/>
                 </GuiElement>
 
-                <RoundCorner profile="frYieldDivider"/>
+                <RoundCorner profile="frYieldDivider" position="-207px -18px"/>
 
-                <GuiElement profile="frYieldKpi" position="640px 0px">
+                <GuiElement profile="frYieldKpi" position="413px 0px">
                     <Text profile="frYieldKpiLabel" text="$l10n_fr_yield_perha"/>
                     <Text profile="frYieldKpiValueNA" id="yieldPerHaValue" text="-"/>
+                </GuiElement>
+
+                <RoundCorner profile="frYieldDivider" position="207px -18px"/>
+
+                <GuiElement profile="frYieldKpi" position="827px 0px">
+                    <Text profile="frYieldKpiLabel" text="$l10n_fr_yield_stage"/>
+                    <Text profile="frYieldKpiValueNA" id="yieldStageValue" text="-"/>
                 </GuiElement>
             </GuiElement>
 

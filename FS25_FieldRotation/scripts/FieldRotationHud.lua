@@ -157,8 +157,31 @@ function FieldRotationHud.addCatchCropLine(fieldBox, data)
     fieldBox:addLine(label, value)
 end
 
+-- Adds the current growth stage line (e.g. "5/9"). data is the engine-populated
+-- FieldState handed to PlayerHUDUpdater.fieldAddFarmland, so lastFruitTypeIndex /
+-- lastGrowthState are valid on MP clients without any extra sampling.
+function FieldRotationHud.addGrowthStageLine(fieldBox, data)
+    if fieldBox == nil or fieldBox.addLine == nil then return end
+    if data == nil or g_fruitTypeManager == nil then return end
+
+    local fruitTypeIndex = tonumber(data.lastFruitTypeIndex)
+    local unknownFruitType = (FruitType ~= nil and FruitType.UNKNOWN) or 0
+    if fruitTypeIndex == nil or fruitTypeIndex == unknownFruitType then return end
+
+    local fruitType = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
+    if fruitType == nil then return end
+
+    local growthState = tonumber(data.lastGrowthState) or 0
+    local maxStage = tonumber(fruitType.numGrowthStates) or 0
+    if growthState <= 0 or maxStage <= 0 then return end
+
+    local label = FieldRotationHud.getText("fr_hud_growth_stage")
+    fieldBox:addLine(label, string.format("%d/%d", growthState, maxStage))
+end
+
 function FieldRotationHud.fieldAddFarmland(self, data, fieldBox)
     local farmlandId = data ~= nil and data.farmlandId or nil
+    FieldRotationHud.addGrowthStageLine(fieldBox, data)
     FieldRotationHud.addHistoryLines(fieldBox, farmlandId)
     FieldRotationHud.addCatchCropLine(fieldBox, data)
 end

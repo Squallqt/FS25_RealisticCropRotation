@@ -1,6 +1,6 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
 -- Mod bootstrap: source loading, mission lifecycle hooks, density-map hooks,
--- harvest hooks, broadcast coalescing, period-change reset.
+-- broadcast coalescing, period-change reset.
 local modDirectory = g_currentModDirectory
 local modName = g_currentModName
 
@@ -23,7 +23,7 @@ FieldRotation.isEnabled = true
 FieldRotation.cropConfig = nil
 
 -- Loads cropConfig.xml once at mod init.
--- Returns a config table: { families, nitrogen, coverCrops, dualUse }
+-- Returns a config table: { families, nitrogen, coverCrops }
 local function loadCropConfig()
     local filePath = modDirectory .. "cropConfig.xml"
     local xmlFile = loadXMLFile("FieldRotationCropConfig", filePath)
@@ -32,7 +32,7 @@ local function loadCropConfig()
         return nil
     end
 
-    local config = { families = {}, nitrogen = {}, coverCrops = {}, dualUse = {} }
+    local config = { families = {}, nitrogen = {}, coverCrops = {} }
     local i = 0
     while true do
         local key = string.format("fieldRotationCrops.crop(%d)", i)
@@ -43,7 +43,6 @@ local function loadCropConfig()
         local n1      = getXMLInt(xmlFile,    key .. "#n1") or 0
         local n2      = getXMLInt(xmlFile,    key .. "#n2") or 0
         local cover   = getXMLBool(xmlFile,   key .. "#cover") or false
-        local dualUse = getXMLBool(xmlFile,   key .. "#dualUse") or false
 
         if name ~= nil and name ~= "" then
             name = string.upper(name)
@@ -54,7 +53,6 @@ local function loadCropConfig()
                 config.nitrogen[name] = { n1 = n1, n2 = n2 }
             end
             if cover   then config.coverCrops[name] = true end
-            if dualUse then config.dualUse[name]    = true end
         end
         i = i + 1
     end
@@ -304,9 +302,6 @@ local function loadedMission()
         if FieldRotation.pendingSyncData ~= nil then
             local pending = FieldRotation.pendingSyncData
             FieldRotation.manager.service:applySyncData(pending.history or {}, pending.plans or {})
-            if pending.activeCrops ~= nil and type(FieldRotation.manager.setSyncedActiveCrops) == "function" then
-                FieldRotation.manager:setSyncedActiveCrops(pending.activeCrops)
-            end
             FieldRotation.pendingSyncData = nil
         end
         FieldRotation.requestServerSync("loadedMission")
@@ -519,61 +514,6 @@ local function wrapDensityMapSowingHook(sourceName)
 end
 
 -- =========================================================================
--- Cutter hooks (real harvest).
--- =========================================================================
-
-local function onCutterProcessCutterArea(self, superFunc, workArea, dt)
-    local changedArea, totalArea = superFunc(self, workArea, dt)
-    if not FieldRotation.isEnabled or (changedArea or 0) <= 0 then return changedArea, totalArea end
-    if g_currentMission == nil or not g_currentMission:getIsServer() then return changedArea, totalArea end
-    if FieldRotation.manager == nil then return changedArea, totalArea end
-
-    local spec = self.spec_cutter
-    if spec == nil or spec.workAreaParameters == nil then return changedArea, totalArea end
-
-    local fruitTypeIndex = spec.workAreaParameters.lastFruitType
-    if fruitTypeIndex == nil or fruitTypeIndex == FruitType.UNKNOWN then return changedArea, totalArea end
-    if workArea == nil or workArea.start == nil then return changedArea, totalArea end
-    if getWorldTranslation == nil then return changedArea, totalArea end
-    if g_farmlandManager == nil or type(g_farmlandManager.getFarmlandIdAtWorldPosition) ~= "function" then
-        return changedArea, totalArea
-    end
-
-    local xs, _, zs = getWorldTranslation(workArea.start)
-    if xs == nil or zs == nil then return changedArea, totalArea end
-    local farmlandId = g_farmlandManager:getFarmlandIdAtWorldPosition(xs, zs)
-    if farmlandId == nil or farmlandId == 0 then return changedArea, totalArea end
-
-    spec.fieldRotationLastFarmlandId = farmlandId
-    spec.fieldRotationLastFruitType = fruitTypeIndex
-    return changedArea, totalArea
-end
-
-local function onCutterEndWorkAreaProcessing(self, _dt, hasProcessed)
-    if not FieldRotation.isEnabled then return end
-    if g_currentMission == nil or not g_currentMission:getIsServer() then return end
-    if FieldRotation.manager == nil then return end
-
-    local spec = self.spec_cutter
-    if spec == nil then return end
-    local farmlandId = spec.fieldRotationLastFarmlandId
-    local fruitTypeIndex = spec.fieldRotationLastFruitType
-    spec.fieldRotationLastFarmlandId = nil
-    spec.fieldRotationLastFruitType = nil
-
-    if hasProcessed == false then return end
-    if farmlandId == nil or farmlandId == 0 then return end
-    if fruitTypeIndex == nil or fruitTypeIndex == FruitType.UNKNOWN then return end
-
-    local changed = FieldRotation.manager.service:onCropHarvested(farmlandId, fruitTypeIndex)
-    if changed then
-        FieldRotation.manager:invalidateActiveCropCache(farmlandId)
-        refreshFieldRotationFrame()
-        FieldRotation.requestBroadcast()
-    end
-end
-
--- =========================================================================
 -- Init.
 -- =========================================================================
 
@@ -607,13 +547,6 @@ local function initFieldRotation()
     if FSDensityMapUtil ~= nil and FSDensityMapUtil.updateDirectSowingArea ~= nil then
         FSDensityMapUtil.updateDirectSowingArea = Utils.overwrittenFunction(
             FSDensityMapUtil.updateDirectSowingArea, wrapDensityMapSowingHook("DIRECT_SOWING"))
-    end
-
-    if Cutter ~= nil and Cutter.processCutterArea ~= nil then
-        Cutter.processCutterArea = Utils.overwrittenFunction(Cutter.processCutterArea, onCutterProcessCutterArea)
-    end
-    if Cutter ~= nil and Cutter.onEndWorkAreaProcessing ~= nil then
-        Cutter.onEndWorkAreaProcessing = Utils.appendedFunction(Cutter.onEndWorkAreaProcessing, onCutterEndWorkAreaProcessing)
     end
 
     BaseMission.delete = Utils.appendedFunction(BaseMission.delete, function()

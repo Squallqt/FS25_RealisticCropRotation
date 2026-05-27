@@ -236,9 +236,7 @@ function FieldRotationService:hasRecordedThisPeriod(farmlandId, currentPeriod, c
     return self.lastRecordedPeriod[farmlandId] == currentPeriod
 end
 
--- skipCoverCheck: when true, bypass cover crop exclusion (used for dual-use crops
--- harvested by combine/mower — e.g. MUSTARD harvested for grain).
-function FieldRotationService:recordCropNameForYear(farmlandId, cropName, period, year, skipCoverCheck)
+function FieldRotationService:recordCropNameForYear(farmlandId, cropName, period, year)
     if farmlandId == nil or farmlandId == 0 then return false end
     if cropName == nil or cropName == "" then return false end
 
@@ -248,7 +246,7 @@ function FieldRotationService:recordCropNameForYear(farmlandId, cropName, period
     if currentYear == nil or currentYear == 0 then return false end
 
     local normalizedCropName = string.upper(tostring(cropName))
-    if not skipCoverCheck and self:isCoverCropForRotationHistory(nil, normalizedCropName) then
+    if self:isCoverCropForRotationHistory(nil, normalizedCropName) then
         return false
     end
 
@@ -265,11 +263,8 @@ function FieldRotationService:onCropHarvested(farmlandId, fruitTypeIndex)
     if farmlandId == nil or farmlandId == 0 then return false end
     local cropName = self:getCropNameByFruitTypeIndex(fruitTypeIndex)
     if cropName == nil then return false end
-    -- Dual-use crops (e.g. MUSTARD): bypass cover exclusion when harvested by combine/mower.
-    local config = FieldRotation ~= nil and FieldRotation.cropConfig or nil
-    local isDualUse = config ~= nil and config.dualUse ~= nil and config.dualUse[cropName] == true
     return self:recordCropNameForYear(farmlandId, cropName,
-        self:getCurrentPeriod(), self:getCurrentYear(), isDualUse)
+        self:getCurrentPeriod(), self:getCurrentYear())
 end
 
 function FieldRotationService:onCropTerminated(farmlandId, fruitTypeIndex, sourceName, activeCropNameBeforeTermination)
