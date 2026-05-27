@@ -1566,6 +1566,11 @@ function FieldRotationFrame:layoutGroupRow(cell, group)
             local originalBadgePos = self:getElementOriginalPosition(badgeEl)
             currentX = currentX or (originalBadgePos ~= nil and originalBadgePos[1] or nil)
 
+            local gapBeforeArrow, gapAfterArrow = 0, 0
+            if i < 4 then
+                gapBeforeArrow, gapAfterArrow = self:getGroupConnectorGaps(cell, i)
+            end
+
             local displayName = self:getCropDisplayName(cropName)
             local badgeWidth = self:layoutGroupBadgeContent(cell, i, displayName, currentX)
 
@@ -1577,7 +1582,6 @@ function FieldRotationFrame:layoutGroupRow(cell, group)
                     if nextFilled then
                         local arrowPos = self:getElementOriginalPosition(arrowEl)
                         local arrowSize = self:getElementOriginalSize(arrowEl)
-                        local gapBeforeArrow, gapAfterArrow = self:getGroupConnectorGaps(cell, i)
                         if arrowPos ~= nil and arrowSize ~= nil then
                             local arrowX = currentX + badgeWidth + gapBeforeArrow
                             arrowEl:setPosition(arrowX, arrowPos[2])
