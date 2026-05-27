@@ -704,10 +704,13 @@ function FieldRotationManager:getFieldCropInfo(farmlandId)
 
     local growthState = tonumber(fieldState.growthState or fieldState.lastGrowthState) or 0
     local maxStage = tonumber(fruitType.numGrowthStates) or 0
+    -- States above numGrowthStates are terminal/track states (e.g. tireTracks),
+    -- not growth stages: don't surface values like 10/8.
+    local hasDisplayGrowthStage = growthState > 0 and maxStage > 0 and growthState <= maxStage
 
     local info = {
-        growthState = growthState > 0 and growthState or nil,
-        maxStage = maxStage > 0 and maxStage or nil,
+        growthState = hasDisplayGrowthStage and growthState or nil,
+        maxStage = hasDisplayGrowthStage and maxStage or nil,
     }
 
     local minHarvest = tonumber(fruitType.minHarvestingGrowthState) or 0

@@ -173,7 +173,9 @@ function FieldRotationHud.addGrowthStageLine(fieldBox, data)
 
     local growthState = tonumber(data.lastGrowthState) or 0
     local maxStage = tonumber(fruitType.numGrowthStates) or 0
-    if growthState <= 0 or maxStage <= 0 then return end
+    -- States above numGrowthStates are terminal/track states (e.g. tireTracks),
+    -- not growth stages: skip them so we never show values like 10/8.
+    if growthState <= 0 or maxStage <= 0 or growthState > maxStage then return end
 
     local label = FieldRotationHud.getText("fr_hud_growth_stage")
     fieldBox:addLine(label, string.format("%d/%d", growthState, maxStage))
