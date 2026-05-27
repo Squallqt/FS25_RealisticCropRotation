@@ -20,7 +20,10 @@
         <e k="fr_season_autumn"        v="Autumn" />
         <e k="fr_season_winter"        v="Winter" />
         <e k="fr_status_bonus"         v="N Residue" />
-        <e k="fr_status_no_bonus"      v="No N Residue" />
+        <e k="fr_status_current_residue" v="Current residue +%d kg/ha" />
+        <e k="fr_status_planned_residue" v="Planned residue +%d kg/ha" />
+        <e k="fr_status_current_no_residue" v="Current residue 0 kg/ha" />
+        <e k="fr_status_planned_no_residue" v="Planned residue 0 kg/ha" />
         <e k="fr_hud_previous_n1"      v="Previous crop (N-1):" />
         <e k="fr_hud_previous_n2"      v="Crop before (N-2):" />
         <e k="fr_hud_cover_crop"       v="Cover crop:" />
@@ -46,16 +49,16 @@
         <e k="fr_slot_n3"              v="N-3" />
         <e k="fr_slot_n2"              v="N-2" />
         <e k="fr_slot_n1"              v="N-1" />
-        <e k="fr_slot_next"            v="Advice" />
+        <e k="fr_slot_current"         v="Current" />
 
         <!-- Crop family badge labels -->
         <e k="fr_family_cereal"        v="Cereal" />
         <e k="fr_family_legume"        v="Legume" />
         <e k="fr_family_oilseed"       v="Oilseed" />
-        <e k="fr_family_root"          v="Root" />
+        <e k="fr_family_root"          v="Root vegetable" />
         <e k="fr_family_vegetable"     v="Vegetable" />
         <e k="fr_family_forage"        v="Forage" />
-        <e k="fr_family_cover"         v="Cover" />
+        <e k="fr_family_cover"         v="Cover crop" />
 
         <!-- Nitrogen gauge -->
         <e k="fr_n_none"               v="No Fertilizer" />
@@ -76,7 +79,7 @@
         <e k="fr_advice_afterRoot"      v="After root crop: cereal recommended; space root crops farther apart." />
         <e k="fr_advice_afterVegetable" v="After leaf or bulb vegetable: cereal recommended; avoid tight repeats." />
         <e k="fr_advice_afterForage"    v="After grassland or forage: cereal fits well, with structure and residues available." />
-        <e k="fr_advice_insufficient"   v="Insufficient history: advice available after one recorded crop." />
+        <e k="fr_advice_no_current_crop" v="No current main crop: advice available when a crop is detected." />
 
         <!-- Yield card -->
         <e k="fr_yield_harvest"        v="Total Harvest" />

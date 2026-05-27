@@ -8,8 +8,8 @@ FieldRotationFrame.TAB = { HISTORY = 1, PLANNING = 2 }
 -- Crop family classification is driven by cropConfig.xml.
 -- FieldRotation.cropConfig is loaded once at mod init by main.lua.
 
--- Advice: N-1 family drives the recommendation
--- COVER never appears as N-1 (excluded from history), no entry needed.
+-- Advice follows the current timeline card.
+-- COVER does not drive a recommendation because it is not a main crop.
 FieldRotationFrame.ADVICE_KEY = {
     CEREAL    = "fr_advice_afterCereal",
     LEGUME    = "fr_advice_afterLegume",
@@ -17,16 +17,6 @@ FieldRotationFrame.ADVICE_KEY = {
     ROOT      = "fr_advice_afterRoot",
     VEGETABLE = "fr_advice_afterVegetable",
     FORAGE    = "fr_advice_afterForage",
-}
-
--- Recommended family for the conseil slot, keyed by N-1 family
-FieldRotationFrame.ADVICE_FAMILY = {
-    CEREAL    = "LEGUME",
-    LEGUME    = "CEREAL",
-    OILSEED   = "CEREAL",
-    ROOT      = "CEREAL",
-    VEGETABLE = "CEREAL",
-    FORAGE    = "CEREAL",
 }
 
 -- Family badge RGBA — Lua-only (XML constraint does not apply)
@@ -225,18 +215,86 @@ function FieldRotationFrame:getActiveNitrogenResidueText(farmlandId)
         return nil
     end
 
-    return string.format("+%d kg/ha", math.floor(residueKgHa + 0.5))
+    return string.format(self.i18n:getText("fr_status_current_residue"), math.floor(residueKgHa + 0.5))
 end
 
 function FieldRotationFrame:updateResiduePill(pillBg, pillText, farmlandId)
     local residueText = self:getActiveNitrogenResidueText(farmlandId)
     local hasBonus = residueText ~= nil
+    local text = hasBonus and residueText or self.i18n:getText("fr_status_current_no_residue")
     if pillBg ~= nil then
         pillBg:applyProfile(hasBonus and "frStatusPillBgBonus" or "frStatusPillBg")
     end
     if pillText ~= nil then
-        pillText:setText(hasBonus and residueText or self.i18n:getText("fr_status_no_bonus"))
+        pillText:setText(text)
     end
+    self:resizePillToText(pillBg, pillText, text)
+end
+
+function FieldRotationFrame:getPlanNitrogenResidueKgHa(plan)
+    local mgr = self:getManager()
+    if mgr == nil or mgr.service == nil then return nil end
+
+    local service = mgr.service
+    if type(service.getResidueEntry) ~= "function"
+        or type(service.getNitrogenKgPerHaFromStateChange) ~= "function" then
+        return nil
+    end
+
+    local totalStateChange = 0
+    local previousPlannedCrop = nil
+
+    for i = 1, 4 do
+        local cropName = plan ~= nil and plan[i] or nil
+        if cropName ~= nil and cropName ~= "" then
+            cropName = string.upper(tostring(cropName))
+
+            local n1Entry = service:getResidueEntry(cropName)
+            if n1Entry ~= nil then
+                totalStateChange = totalStateChange + (tonumber(n1Entry.n1) or 0)
+            end
+
+            if previousPlannedCrop ~= nil then
+                local n2Entry = service:getResidueEntry(previousPlannedCrop)
+                if n2Entry ~= nil then
+                    totalStateChange = totalStateChange + (tonumber(n2Entry.n2) or 0)
+                end
+            end
+
+            previousPlannedCrop = cropName
+        end
+    end
+
+    if totalStateChange <= 0 then return nil end
+
+    local ok, residueKgHa = pcall(
+        service.getNitrogenKgPerHaFromStateChange,
+        service,
+        totalStateChange
+    )
+    if ok and type(residueKgHa) == "number" and residueKgHa > 0 then
+        return residueKgHa
+    end
+    return nil
+end
+
+function FieldRotationFrame:getPlanNitrogenResidueText(plan)
+    local residueKgHa = self:getPlanNitrogenResidueKgHa(plan)
+    if residueKgHa == nil then return nil end
+    return string.format(self.i18n:getText("fr_status_planned_residue"), math.floor(residueKgHa + 0.5))
+end
+
+function FieldRotationFrame:updatePlannedResiduePill(pillBg, pillText, plan)
+    local residueText = self:getPlanNitrogenResidueText(plan)
+    local hasBonus = residueText ~= nil
+    local text = hasBonus and residueText or self.i18n:getText("fr_status_planned_no_residue")
+    if pillBg ~= nil then
+        pillBg:applyProfile(hasBonus and "frStatusPillBgBonus" or "frStatusPillBg")
+    end
+    if pillText ~= nil then
+        pillText:setText(text)
+    end
+    self:resizePillToText(pillBg, pillText, text)
 end
 
 function FieldRotationFrame:getCropFamily(cropName)
@@ -298,6 +356,69 @@ function FieldRotationFrame:updateOverviewTotalArea()
     self.overviewTotalArea:setText(string.format(label, self.totalAreaHa or 0))
 end
 
+function FieldRotationFrame:getElementOriginalSize(element)
+    if element == nil or element.size == nil then return nil end
+    if element._frOriginalSize == nil then
+        element._frOriginalSize = {element.size[1], element.size[2]}
+    end
+    return element._frOriginalSize
+end
+
+function FieldRotationFrame:getTextRenderWidth(textElement, text)
+    if textElement == nil or getTextWidth == nil then return nil end
+
+    local value = tostring(text or "")
+    if textElement.textUpperCase then
+        if utf8ToUpper ~= nil then
+            value = utf8ToUpper(value)
+        else
+            value = string.upper(value)
+        end
+    end
+
+    if setTextBold ~= nil then
+        setTextBold(textElement.textBold == true)
+    end
+    local width = getTextWidth(textElement.textSize, value)
+    if setTextBold ~= nil then
+        setTextBold(false)
+    end
+
+    return width
+end
+
+function FieldRotationFrame:resizePillToText(pillBg, pillText, text)
+    if pillBg == nil or pillText == nil then return end
+    if pillBg.setSize == nil or pillText.setSize == nil then return end
+
+    local bgSize = self:getElementOriginalSize(pillBg)
+    local textSize = self:getElementOriginalSize(pillText)
+    if bgSize == nil or textSize == nil then return end
+
+    local textWidth = self:getTextRenderWidth(pillText, text)
+    if textWidth == nil then return end
+
+    local padding = 20 * (g_pixelSizeScaledX or g_pixelSizeX or 0)
+    local width = textWidth + padding
+    if pillBg.parent ~= nil and pillBg.parent.absSize ~= nil
+        and (pillBg.parent.absSize[1] or 0) > 0 then
+        width = math.min(width, pillBg.parent.absSize[1])
+    end
+
+    pillBg:setSize(width, bgSize[2])
+    pillText:setSize(width, textSize[2])
+
+    if pillBg.parent ~= nil and pillBg.parent.invalidateLayout ~= nil then
+        pillBg.parent:invalidateLayout()
+    end
+end
+
+function FieldRotationFrame:updateMainHeaderTitle()
+    if self.menuHeaderTitle == nil then return end
+    local key = self:isHistoryTab() and "fr_tab_history" or "fr_tab_planning"
+    self.menuHeaderTitle:setText(self.i18n:getText(key))
+end
+
 function FieldRotationFrame:subscribeFarmlandChanges()
     if self.isSubscribedToFarmlandChanges then return end
     if self.messageCenter ~= nil and self.messageCenter.subscribe ~= nil
@@ -331,6 +452,7 @@ function FieldRotationFrame:updateContainerVisibility()
     if self.emptyText        ~= nil then self.emptyText:setVisible(not hasFields) end
     if self.detailsContainer ~= nil then self.detailsContainer:setVisible(hasFields and isHistory) end
     if self.planningContainer ~= nil then self.planningContainer:setVisible(hasFields and not isHistory) end
+    self:updateMainHeaderTitle()
 end
 
 function FieldRotationFrame:linkFocusNavigation()
@@ -609,8 +731,30 @@ function FieldRotationFrame:onViewChanged()
 end
 
 -- ===========================================================================
---  DETAIL PANEL (tab 1 — history / nitrogen / advice / pH)
+--  DETAIL PANEL (tab 1 — history / current crop / nitrogen / advice / pH)
 -- ===========================================================================
+
+function FieldRotationFrame:getCurrentSlotData(farmlandId)
+    local mgr = self:getManager()
+    local activeCropName = nil
+    if mgr ~= nil and type(mgr.getActiveCropName) == "function" then
+        activeCropName = mgr:getActiveCropName(farmlandId)
+    end
+
+    if activeCropName ~= nil and activeCropName ~= "" then
+        return activeCropName, self:getCropFamily(activeCropName), nil
+    end
+
+    local groundLabel = nil
+    if mgr ~= nil and type(mgr.getCurrentGroundStateLabel) == "function" then
+        groundLabel = mgr:getCurrentGroundStateLabel(farmlandId)
+    end
+    if groundLabel ~= nil and groundLabel ~= "" then
+        return nil, "UNKNOWN", groundLabel
+    end
+
+    return nil, "UNKNOWN", self.i18n:getText("fr_sidebar_no_active_crop")
+end
 
 function FieldRotationFrame:updateDetailPanel(farmlandId)
     local farmlandList = self.farmlandList or {}
@@ -640,25 +784,31 @@ function FieldRotationFrame:updateDetailPanel(farmlandId)
         )
     end
 
+    local mgr = self:getManager()
+    if mgr ~= nil and type(mgr.reconcileActiveCropForFarmland) == "function" then
+        local changed = mgr:reconcileActiveCropForFarmland(farmlandId, "UI_RECONCILE")
+        if changed and FieldRotation ~= nil and type(FieldRotation.requestBroadcast) == "function" then
+            FieldRotation.requestBroadcast()
+        end
+    end
+
     self:updateResiduePill(self.statusPillBg, self.statusPillText, farmlandId)
 
-    local mgr = self:getManager()
     local history = (mgr ~= nil) and (mgr:getHistory(farmlandId) or {}) or {}
 
     for slotIdx = 1, 4 do
         local histIdx  = FieldRotationFrame.SLOT_HISTORY_IDX[slotIdx]
         local hEntry   = history[histIdx]
         local cropName = hEntry and hEntry.crop or nil
-        self:updateTimelineSlot(slotIdx, cropName, self:getCropFamily(cropName), false)
+        self:updateTimelineSlot(slotIdx, cropName, self:getCropFamily(cropName), nil)
     end
-    local n1crop = history[1] and history[1].crop or nil
-    local n1family = self:getCropFamily(n1crop)
-    local recommendedFamily = FieldRotationFrame.ADVICE_FAMILY[n1family] or "UNKNOWN"
-    self:updateTimelineSlot(5, nil, recommendedFamily, true)
+
+    local currentCropName, currentFamily, currentFallbackText = self:getCurrentSlotData(farmlandId)
+    self:updateTimelineSlot(5, currentCropName, currentFamily, currentFallbackText)
 
     self:updateNitrogenGauge(farmlandId)
     self:updateSoilPHGauge(farmlandId)
-    self:updateAdvice(history)
+    self:updateAdvice(currentFamily)
     self:updateYieldCard(farmlandId)
 end
 
@@ -666,7 +816,7 @@ end
 --  Timeline slot (slotId 1..5) — history tab
 -- ---------------------------------------------------------------------------
 
-function FieldRotationFrame:updateTimelineSlot(slotId, cropName, family, isFuture)
+function FieldRotationFrame:updateTimelineSlot(slotId, cropName, family, fallbackText)
     local pfx = "slot" .. tostring(slotId)
     local iconEl   = self[pfx .. "Icon"]
     local nameEl   = self[pfx .. "CropName"]
@@ -674,35 +824,20 @@ function FieldRotationFrame:updateTimelineSlot(slotId, cropName, family, isFutur
     local badgeTxt = self[pfx .. "BadgeText"]
 
     if iconEl ~= nil then
-        local loaded = false
-        if cropName ~= nil and not isFuture and g_fruitTypeManager ~= nil then
-            local fruitType = g_fruitTypeManager:getFruitTypeByName(cropName)
-            if fruitType ~= nil and fruitType.fillType ~= nil
-                and fruitType.fillType.hudOverlayFilename ~= nil then
-                if iconEl.setImageFilename ~= nil then
-                    iconEl:setImageFilename(fruitType.fillType.hudOverlayFilename)
-                end
-                if iconEl.setImageUVs ~= nil then
-                    iconEl:setImageUVs(nil, 0, 0, 0, 1, 1, 0, 1, 1)
-                end
-                iconEl:setVisible(true)
-                loaded = true
-            end
-        end
-        if not loaded then iconEl:setVisible(false) end
+        self:applySlotCropIcon(iconEl, cropName)
     end
 
     if nameEl ~= nil then
-        if cropName ~= nil and not isFuture then
+        if cropName ~= nil and cropName ~= "" then
             nameEl:setText(self:getCropDisplayName(cropName))
-        elseif isFuture then
-            nameEl:setText((family == nil or family == "UNKNOWN") and "?" or "")
+        elseif fallbackText ~= nil and fallbackText ~= "" then
+            nameEl:setText(fallbackText)
         else
             nameEl:setText(self.i18n:getText("fr_slot_empty"))
         end
     end
 
-    local showBadge = (family ~= nil) and (family ~= "UNKNOWN")
+    local showBadge = cropName ~= nil and cropName ~= "" and (family ~= nil) and (family ~= "UNKNOWN")
     if badgeBg ~= nil then
         badgeBg:setVisible(showBadge)
         if showBadge then
@@ -715,7 +850,9 @@ function FieldRotationFrame:updateTimelineSlot(slotId, cropName, family, isFutur
     if badgeTxt ~= nil then
         badgeTxt:setVisible(showBadge)
         if showBadge then
-            badgeTxt:setText(self.i18n:getText("fr_family_" .. string.lower(family)))
+            local familyText = self.i18n:getText("fr_family_" .. string.lower(family))
+            badgeTxt:setText(familyText)
+            self:resizePillToText(badgeBg, badgeTxt, familyText)
         end
     end
 end
@@ -926,15 +1063,12 @@ end
 --  Agronomic advice
 -- ---------------------------------------------------------------------------
 
-function FieldRotationFrame:updateAdvice(history)
+function FieldRotationFrame:updateAdvice(currentFamily)
     if self.adviceText == nil then return end
-    history = history or {}
-    local n1crop   = history[1] and history[1].crop or nil
-    local n1family = self:getCropFamily(n1crop)
-    local key      = FieldRotationFrame.ADVICE_KEY[n1family]
+    local key = FieldRotationFrame.ADVICE_KEY[currentFamily]
     self.adviceText:setText(
         key ~= nil and self.i18n:getText(key)
-                   or self.i18n:getText("fr_advice_insufficient"))
+                   or self.i18n:getText("fr_advice_no_current_crop"))
 end
 
 -- ===========================================================================
@@ -971,7 +1105,7 @@ function FieldRotationFrame:updatePlanningPanel(farmlandId)
     self:updatePlanSlots(farmlandId)
     local plan = self:getPlanForFarmland(farmlandId)
     self:updateScoreCard(plan)
-    self:updateResiduePill(self.planStatusPillBg, self.planStatusPillText, farmlandId)
+    self:updatePlannedResiduePill(self.planStatusPillBg, self.planStatusPillText, plan)
 end
 
 -- ---------------------------------------------------------------------------
@@ -1025,6 +1159,7 @@ function FieldRotationFrame:updatePlanSlotVisualsFromSelectors()
         self:applySlotBadge(badgeBg, badgeTxt, self:getCropFamily(cropName))
     end
     self:updateScoreCard(plan)
+    self:updatePlannedResiduePill(self.planStatusPillBg, self.planStatusPillText, plan)
 end
 
 function FieldRotationFrame:onServerSyncReceived()
@@ -1091,7 +1226,9 @@ function FieldRotationFrame:applySlotBadge(badgeBg, badgeTxt, family)
     if badgeTxt ~= nil then
         badgeTxt:setVisible(showBadge)
         if showBadge then
-            badgeTxt:setText(self.i18n:getText("fr_family_" .. string.lower(family)))
+            local familyText = self.i18n:getText("fr_family_" .. string.lower(family))
+            badgeTxt:setText(familyText)
+            self:resizePillToText(badgeBg, badgeTxt, familyText)
         end
     end
 end
@@ -1145,6 +1282,7 @@ function FieldRotationFrame:handlePlanSlotChange(slotIdx)
 
     local plan = self:getPlanFromSelectors()
     self:updateScoreCard(plan)
+    self:updatePlannedResiduePill(self.planStatusPillBg, self.planStatusPillText, plan)
 
     -- Keep the overview refreshed from the repository. On MP clients this may
     -- lag one server snapshot behind, but it avoids using local optimistic data

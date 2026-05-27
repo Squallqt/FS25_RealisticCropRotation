@@ -8,7 +8,7 @@
         <fr>Assolement</fr>
     </title>
     <description>
-        <en><![CDATA[Tracks crop history per farmland (up to 4 years) and applies a nitrogen restitution bonus to the harvested area when legumes return nitrogen to the soil.
+        <en><![CDATA[Tracks crop history per farmland (up to 4 completed main crops) and applies a nitrogen restitution bonus to the harvested area when legumes return nitrogen to the soil.
 
 Compatible with vanilla farming and with Precision Farming (PF).
 
@@ -25,7 +25,7 @@ Changelog:
 
 1.0.0.0:
 - Initial release]]></en>
-        <de><![CDATA[Speichert die Fruchtfolge pro Feld (bis zu 4 Jahre) und vergibt einen Stickstoffbonus auf die geerntete Fläche, wenn Leguminosen Stickstoff in den Boden zurückführen.
+        <de><![CDATA[Speichert die Fruchtfolge pro Feld (bis zu 4 abgeschlossene Hauptkulturen) und vergibt einen Stickstoffbonus auf die geerntete Fläche, wenn Leguminosen Stickstoff in den Boden zurückführen.
 
 Kompatibel mit der Standardlandwirtschaft und mit Precision Farming (PF).
 
@@ -42,7 +42,7 @@ Changelog:
 
 1.0.0.0:
 - Erstveröffentlichung]]></de>
-        <fr><![CDATA[Mémorise l'historique des cultures par parcelle (jusqu'à 4 années) et applique un bonus de restitution azotée sur la zone récoltée lorsque les légumineuses restituent de l'azote au sol.
+        <fr><![CDATA[Mémorise l'historique des cultures par parcelle (jusqu'à 4 cultures principales terminées) et applique un bonus de restitution azotée sur la zone récoltée lorsque les légumineuses restituent de l'azote au sol.
 
 Compatible avec l'agriculture vanilla et avec Precision Farming (PF).
 

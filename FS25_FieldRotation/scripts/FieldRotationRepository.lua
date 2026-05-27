@@ -1,13 +1,14 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
--- CRUD + XML persistence for per-farmland crop history, rotation plans, and
--- the period that validates the external nitrogen application mask.
+-- CRUD + XML persistence for per-farmland crop history, active crop state,
+-- rotation plans, and the period that validates the external nitrogen
+-- application mask.
 FieldRotationRepository = {}
 local FieldRotationRepository_mt = Class(FieldRotationRepository)
 
 FieldRotationRepository.SAVE_VERSION = 1
 FieldRotationRepository.MAX_HISTORY = 4
 
-local function getPersistenceCounts(history, plans)
+local function getPersistenceCounts(history, plans, lastKnownActiveCrop)
     local historyFarmlands = 0
     local historyEntries = 0
     for _, entries in pairs(history or {}) do
@@ -29,13 +30,21 @@ local function getPersistenceCounts(history, plans)
         end
     end
 
-    return historyFarmlands, historyEntries, planFarmlands
+    local activeCropFarmlands = 0
+    for _, cropName in pairs(lastKnownActiveCrop or {}) do
+        if cropName ~= nil and cropName ~= "" then
+            activeCropFarmlands = activeCropFarmlands + 1
+        end
+    end
+
+    return historyFarmlands, historyEntries, planFarmlands, activeCropFarmlands
 end
 
 function FieldRotationRepository.new()
     local self = setmetatable({}, FieldRotationRepository_mt)
     self.history = {}
     self.plans   = {}
+    self.lastKnownActiveCrop = {}
     self.nitrogenMaskPeriod = 0
     return self
 end
@@ -43,6 +52,7 @@ end
 function FieldRotationRepository:clear()
     self.history = {}
     self.plans   = {}
+    self.lastKnownActiveCrop = {}
     self.nitrogenMaskPeriod = 0
 end
 
@@ -60,25 +70,14 @@ function FieldRotationRepository:getAllHistory()
     return self.history
 end
 
-function FieldRotationRepository:pushEntry(farmlandId, cropName, period, year)
+function FieldRotationRepository:pushEntry(farmlandId, cropName)
     local entries = self.history[farmlandId]
     if entries == nil then
         entries = {}
         self.history[farmlandId] = entries
     end
 
-    local numericYear = tonumber(year) or 0
-    if numericYear > 0 and entries[1] ~= nil and tonumber(entries[1].year) == numericYear then
-        if entries[1].crop == cropName then
-            return false
-        end
-        entries[1].crop = cropName
-        entries[1].period = period
-        entries[1].year = numericYear
-        return true
-    end
-
-    table.insert(entries, 1, { crop = cropName, period = period, year = numericYear })
+    table.insert(entries, 1, { crop = cropName })
     while #entries > FieldRotationRepository.MAX_HISTORY do
         table.remove(entries, #entries)
     end
@@ -102,9 +101,49 @@ function FieldRotationRepository:setPlanYear(farmlandId, yearIdx, family)
     self.plans[farmlandId][yearIdx] = tostring(family or "")
 end
 
-function FieldRotationRepository:replaceAll(newHistory, newPlans)
+function FieldRotationRepository:clearPlan(farmlandId)
+    local numericFarmlandId = tonumber(farmlandId)
+    if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
+
+    local stringFarmlandId = tostring(numericFarmlandId)
+    local changed = self.plans[numericFarmlandId] ~= nil or self.plans[stringFarmlandId] ~= nil
+    self.plans[numericFarmlandId] = nil
+    self.plans[stringFarmlandId] = nil
+    return changed
+end
+
+function FieldRotationRepository:getLastKnownActiveCrop(farmlandId)
+    return self.lastKnownActiveCrop[farmlandId] or self.lastKnownActiveCrop[tostring(farmlandId)]
+end
+
+function FieldRotationRepository:getAllLastKnownActiveCrops()
+    return self.lastKnownActiveCrop
+end
+
+function FieldRotationRepository:setLastKnownActiveCrop(farmlandId, cropName)
+    local numericFarmlandId = tonumber(farmlandId)
+    if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
+
+    if cropName == nil or cropName == "" then
+        local stringFarmlandId = tostring(numericFarmlandId)
+        local changed = self.lastKnownActiveCrop[numericFarmlandId] ~= nil
+            or self.lastKnownActiveCrop[stringFarmlandId] ~= nil
+        self.lastKnownActiveCrop[numericFarmlandId] = nil
+        self.lastKnownActiveCrop[stringFarmlandId] = nil
+        return changed
+    end
+
+    local normalizedCropName = string.upper(tostring(cropName))
+    local changed = self.lastKnownActiveCrop[numericFarmlandId] ~= normalizedCropName
+    self.lastKnownActiveCrop[numericFarmlandId] = normalizedCropName
+    self.lastKnownActiveCrop[tostring(numericFarmlandId)] = nil
+    return changed
+end
+
+function FieldRotationRepository:replaceAll(newHistory, newPlans, newLastKnownActiveCrop)
     self.history = newHistory or {}
     self.plans   = newPlans or {}
+    self.lastKnownActiveCrop = newLastKnownActiveCrop or {}
 end
 
 function FieldRotationRepository:getNitrogenMaskPeriod()
@@ -143,6 +182,10 @@ function FieldRotationRepository:saveToXML(savegamePath)
         local n = tonumber(farmlandId)
         if n ~= nil and n > 0 and not seen[n] then seen[n] = true; table.insert(allIds, n) end
     end
+    for farmlandId in pairs(self.lastKnownActiveCrop) do
+        local n = tonumber(farmlandId)
+        if n ~= nil and n > 0 and not seen[n] then seen[n] = true; table.insert(allIds, n) end
+    end
     table.sort(allIds)
 
     local farmlandIndex = 0
@@ -154,10 +197,16 @@ function FieldRotationRepository:saveToXML(savegamePath)
         if plan ~= nil then
             for i = 1, 4 do if plan[i] ~= nil and plan[i] ~= "" then hasPlan = true; break end end
         end
+        local activeCrop = self.lastKnownActiveCrop[numericFarmlandId]
+            or self.lastKnownActiveCrop[tostring(numericFarmlandId)]
+        local hasActiveCrop = activeCrop ~= nil and activeCrop ~= ""
 
-        if hasHistory or hasPlan then
+        if hasHistory or hasPlan or hasActiveCrop then
             local farmlandKey = string.format("fieldRotation.farmland(%d)", farmlandIndex)
             setXMLInt(xmlFile, farmlandKey .. "#id", numericFarmlandId)
+            if hasActiveCrop then
+                setXMLString(xmlFile, farmlandKey .. "#lastKnownActiveCrop", tostring(activeCrop))
+            end
 
             if hasHistory then
                 for i, entry in ipairs(entries) do
@@ -165,11 +214,6 @@ function FieldRotationRepository:saveToXML(savegamePath)
                     if entry ~= nil then
                         local entryKey = string.format("%s.entry(%d)", farmlandKey, i - 1)
                         setXMLString(xmlFile, entryKey .. "#crop", tostring(entry.crop or ""))
-                        setXMLInt(xmlFile, entryKey .. "#period", tonumber(entry.period) or 0)
-                        local year = tonumber(entry.year) or 0
-                        if year > 0 then
-                            setXMLInt(xmlFile, entryKey .. "#year", year)
-                        end
                     end
                 end
             end
@@ -190,9 +234,10 @@ function FieldRotationRepository:saveToXML(savegamePath)
     saveXMLFile(xmlFile)
     delete(xmlFile)
 
-    local historyFarmlands, historyEntries, planFarmlands = getPersistenceCounts(self.history, self.plans)
-    Logging.info("[FieldRotation] Saved fieldRotation.xml historyFarmlands=%d entries=%d plans=%d path=%s",
-        historyFarmlands, historyEntries, planFarmlands, tostring(filePath))
+    local historyFarmlands, historyEntries, planFarmlands, activeCropFarmlands =
+        getPersistenceCounts(self.history, self.plans, self.lastKnownActiveCrop)
+    Logging.info("[FieldRotation] Saved fieldRotation.xml historyFarmlands=%d entries=%d plans=%d activeCrops=%d path=%s",
+        historyFarmlands, historyEntries, planFarmlands, activeCropFarmlands, tostring(filePath))
 end
 
 function FieldRotationRepository:loadFromXML(savegamePath)
@@ -221,6 +266,7 @@ function FieldRotationRepository:loadFromXML(savegamePath)
 
     self.history = {}
     self.plans   = {}
+    self.lastKnownActiveCrop = {}
     self.nitrogenMaskPeriod = getXMLInt(xmlFile, "fieldRotation#nitrogenMaskPeriod") or 0
 
     local farmlandIndex = 0
@@ -230,16 +276,19 @@ function FieldRotationRepository:loadFromXML(savegamePath)
 
         local farmlandId = getXMLInt(xmlFile, farmlandKey .. "#id")
         if farmlandId ~= nil and farmlandId > 0 then
+            local activeCrop = getXMLString(xmlFile, farmlandKey .. "#lastKnownActiveCrop")
+            if activeCrop ~= nil and activeCrop ~= "" then
+                self.lastKnownActiveCrop[farmlandId] = string.upper(tostring(activeCrop))
+            end
+
             local entries = {}
             local entryIndex = 0
             while true do
                 local entryKey = string.format("%s.entry(%d)", farmlandKey, entryIndex)
                 if not hasXMLProperty(xmlFile, entryKey) then break end
                 local crop = getXMLString(xmlFile, entryKey .. "#crop")
-                local period = getXMLInt(xmlFile, entryKey .. "#period")
-                local year = getXMLInt(xmlFile, entryKey .. "#year") or 0
-                if crop ~= nil and crop ~= "" and period ~= nil then
-                    table.insert(entries, { crop = crop, period = period, year = year })
+                if crop ~= nil and crop ~= "" then
+                    table.insert(entries, { crop = string.upper(tostring(crop)) })
                 end
                 entryIndex = entryIndex + 1
                 if entryIndex >= FieldRotationRepository.MAX_HISTORY then break end
@@ -266,8 +315,9 @@ function FieldRotationRepository:loadFromXML(savegamePath)
         farmlandIndex = farmlandIndex + 1
     end
 
-    local historyFarmlands, historyEntries, planFarmlands = getPersistenceCounts(self.history, self.plans)
-    Logging.info("[FieldRotation] Loaded fieldRotation.xml historyFarmlands=%d entries=%d plans=%d path=%s (format v%d)",
-        historyFarmlands, historyEntries, planFarmlands, tostring(filePath), version)
+    local historyFarmlands, historyEntries, planFarmlands, activeCropFarmlands =
+        getPersistenceCounts(self.history, self.plans, self.lastKnownActiveCrop)
+    Logging.info("[FieldRotation] Loaded fieldRotation.xml historyFarmlands=%d entries=%d plans=%d activeCrops=%d path=%s (format v%d)",
+        historyFarmlands, historyEntries, planFarmlands, activeCropFarmlands, tostring(filePath), version)
     delete(xmlFile)
 end

@@ -20,7 +20,10 @@
         <e k="fr_season_autumn"        v="Automne" />
         <e k="fr_season_winter"        v="Hiver" />
         <e k="fr_status_bonus"         v="Reliquat Azoté" />
-        <e k="fr_status_no_bonus"      v="Aucun Reliquat" />
+        <e k="fr_status_current_residue" v="Reliquat actuel +%d kg/ha" />
+        <e k="fr_status_planned_residue" v="Reliquat prévu +%d kg/ha" />
+        <e k="fr_status_current_no_residue" v="Reliquat actuel 0 kg/ha" />
+        <e k="fr_status_planned_no_residue" v="Reliquat prévu 0 kg/ha" />
         <e k="fr_hud_previous_n1"      v="Précédent cultural (N-1) :" />
         <e k="fr_hud_previous_n2"      v="Anté-précédent (N-2) :" />
         <e k="fr_hud_cover_crop"       v="Couvert végétal :" />
@@ -46,16 +49,16 @@
         <e k="fr_slot_n3"              v="N-3" />
         <e k="fr_slot_n2"              v="N-2" />
         <e k="fr_slot_n1"              v="N-1" />
-        <e k="fr_slot_next"            v="Conseil" />
+        <e k="fr_slot_current"         v="Actuel" />
 
         <!-- Crop family badge labels -->
         <e k="fr_family_cereal"        v="Céréale" />
         <e k="fr_family_legume"        v="Légumineuse" />
         <e k="fr_family_oilseed"       v="Oléagineux" />
-        <e k="fr_family_root"          v="Racines" />
+        <e k="fr_family_root"          v="Légumes-racines" />
         <e k="fr_family_vegetable"     v="Légumes" />
         <e k="fr_family_forage"        v="Fourrage" />
-        <e k="fr_family_cover"         v="Couvert" />
+        <e k="fr_family_cover"         v="Couvert végétal" />
 
         <!-- Nitrogen gauge -->
         <e k="fr_n_none"               v="Non fertilisé" />
@@ -76,7 +79,7 @@
         <e k="fr_advice_afterRoot"      v="Après racine : céréale recommandée; espacez le retour des cultures racines." />
         <e k="fr_advice_afterVegetable" v="Après légume feuille ou bulbe : céréale recommandée; évitez les répétitions." />
         <e k="fr_advice_afterForage"    v="Après prairie ou fourrage : céréale adaptée, sol structuré et reliquats disponibles." />
-        <e k="fr_advice_insufficient"   v="Historique insuffisant : conseil disponible après une culture enregistrée." />
+        <e k="fr_advice_no_current_crop" v="Aucune culture principale actuelle : conseil disponible quand une culture est détectée." />
 
         <!-- Yield card -->
         <e k="fr_yield_harvest"        v="Récolte Totale" />

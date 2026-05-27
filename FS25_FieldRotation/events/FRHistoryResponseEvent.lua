@@ -1,6 +1,6 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
 -- Server->client full rotation snapshot. Sent on late-join and on explicit
--- FRHistoryRequestEvent. Payload: history + plans.
+-- FRHistoryRequestEvent. Payload: history + plans + last known active crops.
 FRHistoryResponseEvent = {}
 local FRHistoryResponseEvent_mt = Class(FRHistoryResponseEvent, Event)
 
@@ -37,9 +37,7 @@ function FRHistoryResponseEvent:readStream(streamId, _connection)
         local entries = {}
         for _ = 1, entryCount do
             local crop = streamReadString(streamId)
-            local period = streamReadInt16(streamId)
-            local year = streamReadInt32(streamId)
-            table.insert(entries, { crop = crop, period = period, year = year })
+            table.insert(entries, { crop = crop })
         end
         if farmlandId > 0 and #entries > 0 then
             received[farmlandId] = entries
@@ -65,6 +63,16 @@ function FRHistoryResponseEvent:readStream(streamId, _connection)
         end
     end
 
+    local activeCropCount = streamReadInt16(streamId)
+    local receivedLastKnownActiveCrop = {}
+    for _ = 1, activeCropCount do
+        local farmlandId = streamReadInt32(streamId)
+        local cropName = streamReadString(streamId)
+        if farmlandId > 0 and cropName ~= nil and cropName ~= "" then
+            receivedLastKnownActiveCrop[farmlandId] = string.upper(tostring(cropName))
+        end
+    end
+
     -- A server replicating its own event back to itself: discard.
     if g_currentMission ~= nil and g_currentMission.getIsServer ~= nil and g_currentMission:getIsServer() then
         return
@@ -76,19 +84,20 @@ function FRHistoryResponseEvent:readStream(streamId, _connection)
             FieldRotation.pendingSyncData = {
                 history = received,
                 plans = receivedPlans,
+                lastKnownActiveCrop = receivedLastKnownActiveCrop,
             }
         end
-        Logging.warning("[FieldRotation] FRHistoryResponseEvent: manager not available, historyFarmlands=%d entries=%d plans=%d buffered",
-            farmlandCount, totalEntries, planCount)
+        Logging.warning("[FieldRotation] FRHistoryResponseEvent: manager not available, historyFarmlands=%d entries=%d plans=%d activeCrops=%d buffered",
+            farmlandCount, totalEntries, planCount, activeCropCount)
         return
     end
 
     if manager.service ~= nil and type(manager.service.applySyncData) == "function" then
-        manager.service:applySyncData(received, receivedPlans)
+        manager.service:applySyncData(received, receivedPlans, receivedLastKnownActiveCrop)
     end
 
-    Logging.info("[FieldRotation][MP] Sync received historyFarmlands=%d entries=%d plans=%d",
-        farmlandCount, totalEntries, planCount)
+    Logging.info("[FieldRotation][MP] Sync received historyFarmlands=%d entries=%d plans=%d activeCrops=%d",
+        farmlandCount, totalEntries, planCount, activeCropCount)
 
     if FieldRotation ~= nil and FieldRotation.frame ~= nil then
         if type(FieldRotation.frame.onServerSyncReceived) == "function" then
@@ -106,10 +115,13 @@ function FRHistoryResponseEvent:writeStream(streamId, _connection)
     if manager == nil or manager.service == nil or type(manager.service.getSyncData) ~= "function" then
         streamWriteInt16(streamId, 0)
         streamWriteInt16(streamId, 0)
+        streamWriteInt16(streamId, 0)
         return
     end
 
-    local history = manager.service:getSyncData() or {}
+    local history, lastKnownActiveCrop = manager.service:getSyncData()
+    history = history or {}
+    lastKnownActiveCrop = lastKnownActiveCrop or {}
     local plans = type(manager.getAllRotationPlans) == "function" and manager:getAllRotationPlans() or {}
 
     local farmlandIds = {}
@@ -128,8 +140,6 @@ function FRHistoryResponseEvent:writeStream(streamId, _connection)
         for i, entry in ipairs(entries) do
             if i > FieldRotationRepository.MAX_HISTORY then break end
             streamWriteString(streamId, tostring(entry.crop or ""))
-            streamWriteInt16(streamId, tonumber(entry.period) or 0)
-            streamWriteInt32(streamId, tonumber(entry.year) or 0)
         end
     end
 
@@ -154,7 +164,22 @@ function FRHistoryResponseEvent:writeStream(streamId, _connection)
         end
     end
 
+    local activeCropFarmlandIds = {}
+    for farmlandId, cropName in pairs(lastKnownActiveCrop) do
+        local n = tonumber(farmlandId)
+        if n ~= nil and n > 0 and cropName ~= nil and cropName ~= "" then
+            table.insert(activeCropFarmlandIds, n)
+        end
+    end
+
+    streamWriteInt16(streamId, #activeCropFarmlandIds)
+    for _, farmlandId in ipairs(activeCropFarmlandIds) do
+        local cropName = lastKnownActiveCrop[farmlandId] or lastKnownActiveCrop[tostring(farmlandId)] or ""
+        streamWriteInt32(streamId, farmlandId)
+        streamWriteString(streamId, tostring(cropName))
+    end
+
     local _, entryCount = countHistory(history)
-    Logging.info("[FieldRotation][MP] Sync sent historyFarmlands=%d entries=%d plans=%d",
-        #farmlandIds, entryCount, #planFarmlandIds)
+    Logging.info("[FieldRotation][MP] Sync sent historyFarmlands=%d entries=%d plans=%d activeCrops=%d",
+        #farmlandIds, entryCount, #planFarmlandIds, #activeCropFarmlandIds)
 end

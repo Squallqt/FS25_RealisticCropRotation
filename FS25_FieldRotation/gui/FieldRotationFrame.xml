@@ -144,10 +144,9 @@
                     <Text        profile="frTimelineArrowText" text=">"/>
                 </GuiElement>
 
-                <!-- == Slot 4: N-1 (most agronomically significant — distinct bg + green accent) == -->
+                <!-- == Slot 4: N-1 == -->
                 <GuiElement profile="frSlotCard" position="755px -4px">
                     <RoundCorner     profile="frSlotCardBgN1"/>
-                    <ThreePartBitmap profile="frSlotAccentN1"/>
                     <Text        profile="frSlotSeasonLabel"     id="slot4SeasonLabel" text="$l10n_fr_slot_n1"/>
                     <Bitmap      profile="frSlotIcon"            id="slot4Icon"        visible="false"/>
                     <Text        profile="frSlotCropName"        id="slot4CropName"    text=""/>
@@ -161,12 +160,13 @@
                     <Text        profile="frTimelineArrowText" text=">"/>
                 </GuiElement>
 
-                <!-- == Slot 5: NEXT (ghosted future slot) == -->
+                <!-- == Slot 5: CURRENT active crop / ground state == -->
                 <GuiElement profile="frSlotCard" position="1004px -4px">
-                    <RoundCorner profile="frSlotCardBgFuture"/>
-                    <Text        profile="frSlotSeasonLabel"     id="slot5SeasonLabel" text="$l10n_fr_slot_next"/>
+                    <RoundCorner profile="frSlotCardBgCurrent"/>
+                    <ThreePartBitmap profile="frSlotAccentCurrent"/>
+                    <Text        profile="frSlotSeasonLabel"     id="slot5SeasonLabel" text="$l10n_fr_slot_current"/>
                     <Bitmap      profile="frSlotIcon"            id="slot5Icon"        visible="false"/>
-                    <Text        profile="frSlotCropName"        id="slot5CropName"    text="?"/>
+                    <Text        profile="frSlotCropName"        id="slot5CropName"    text=""/>
                     <RoundCorner profile="frSlotFamilyBadgeBg"   id="slot5BadgeBg"     visible="false"/>
                     <Text        profile="frSlotFamilyBadgeText" id="slot5BadgeText"   text="" visible="false"/>
                 </GuiElement>

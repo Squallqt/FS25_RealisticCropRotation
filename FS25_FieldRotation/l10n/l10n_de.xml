@@ -20,7 +20,10 @@
         <e k="fr_season_autumn"        v="Herbst" />
         <e k="fr_season_winter"        v="Winter" />
         <e k="fr_status_bonus"         v="N-Rückstand" />
-        <e k="fr_status_no_bonus"      v="Kein N-Rückstand" />
+        <e k="fr_status_current_residue" v="Aktueller Rückstand +%d kg/ha" />
+        <e k="fr_status_planned_residue" v="Geplanter Rückstand +%d kg/ha" />
+        <e k="fr_status_current_no_residue" v="Aktueller Rückstand 0 kg/ha" />
+        <e k="fr_status_planned_no_residue" v="Geplanter Rückstand 0 kg/ha" />
         <e k="fr_hud_previous_n1"      v="Vorfrucht (N-1):" />
         <e k="fr_hud_previous_n2"      v="Vor-Vorfrucht (N-2):" />
         <e k="fr_hud_cover_crop"       v="Zwischenfrucht:" />
@@ -46,16 +49,16 @@
         <e k="fr_slot_n3"              v="N-3" />
         <e k="fr_slot_n2"              v="N-2" />
         <e k="fr_slot_n1"              v="N-1" />
-        <e k="fr_slot_next"            v="Empfehlung" />
+        <e k="fr_slot_current"         v="Aktuell" />
 
         <!-- Crop family badge labels -->
         <e k="fr_family_cereal"        v="Getreide" />
         <e k="fr_family_legume"        v="Hülsenfrucht" />
         <e k="fr_family_oilseed"       v="Ölsaat" />
-        <e k="fr_family_root"          v="Wurzeln" />
+        <e k="fr_family_root"          v="Wurzelgemüse" />
         <e k="fr_family_vegetable"     v="Gemüse" />
         <e k="fr_family_forage"        v="Futter" />
-        <e k="fr_family_cover"         v="Zwischenfr." />
+        <e k="fr_family_cover"         v="Zwischenfrucht" />
 
         <!-- Nitrogen gauge -->
         <e k="fr_n_none"               v="Kein Dünger" />
@@ -76,7 +79,7 @@
         <e k="fr_advice_afterRoot"      v="Nach Wurzelfrucht: Getreide empfohlen; Wurzelfrüchte mit Abstand planen." />
         <e k="fr_advice_afterVegetable" v="Nach Blatt- oder Zwiebelgemüse: Getreide empfohlen; enge Wiederholung vermeiden." />
         <e k="fr_advice_afterForage"    v="Nach Grünland oder Futterbau: Getreide passt gut zu Struktur und Rückständen." />
-        <e k="fr_advice_insufficient"   v="Zu wenig Historie: Empfehlung ab einer erfassten Kultur verfügbar." />
+        <e k="fr_advice_no_current_crop" v="Keine aktuelle Hauptkultur: Empfehlung verfügbar, sobald eine Kultur erkannt wird." />
 
         <!-- Yield card -->
         <e k="fr_yield_harvest"        v="Gesamternte" />

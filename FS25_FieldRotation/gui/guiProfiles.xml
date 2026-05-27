@@ -198,9 +198,9 @@
     <!--  plus 8 px left margin = 1228 px inside 1240 px container     -->
     <!--  Slot height: 148 px. No global rail: each card owns its bg.   -->
     <!--                                                               -->
-    <!--  Gradient de présence N-4 (faint) → N-1 (ancré) :            -->
-    <!--  frSlotCardBgN4 0.22 / N3 0.32 / N2 0.44 / N1 0.58           -->
-    <!--  Conseil 0.16 (ghosté)                                        -->
+    <!--  Gradient de présence N-4 (faint) -> ACTUEL (ancre) :        -->
+    <!--  frSlotCardBgN4 0.22 / N3 0.32 / N2 0.44 / N1 0.50           -->
+    <!--  Current crop 0.58                                             -->
     <!-- ============================================================ -->
 
     <Profile name="frTimeline" extends="emptyPanel" with="anchorTopLeft">
@@ -234,18 +234,18 @@
         <color value="0 0 0 0.44"/>
     </Profile>
 
-    <!-- N-1: most recent, most prominent + green accent line -->
+    <!-- N-1: most recent completed crop -->
     <Profile name="frSlotCardBgN1" extends="frSlotCardBg">
+        <color value="0 0 0 0.50"/>
+    </Profile>
+
+    <!-- Current crop / ground state slot: most prominent + green accent line -->
+    <Profile name="frSlotCardBgCurrent" extends="frSlotCardBg">
         <color value="0 0 0 0.58"/>
     </Profile>
 
-    <!-- Conseil slot: ghosted future -->
-    <Profile name="frSlotCardBgFuture" extends="frSlotCardBg">
-        <color value="0 0 0 0.16"/>
-    </Profile>
-
-    <!-- Green accent line at top of N-1 slot -->
-    <Profile name="frSlotAccentN1" extends="fs25_lineSeparatorTopHighlighted" with="anchorTopLeft">
+    <!-- Green accent line at top of current slot -->
+    <Profile name="frSlotAccentCurrent" extends="fs25_lineSeparatorTopHighlighted" with="anchorTopLeft">
         <size value="224px 3dp"/>
         <position value="0px 0px"/>
         <imageColor value="$preset_fs25_colorGreen"/>

@@ -117,6 +117,19 @@ local function hasUsableFieldRotationArea(farmland, field)
     return getRotationAreaHa(farmland, field) > 0
 end
 
+local function getTerrainDetailPixelToSqm()
+    if g_currentMission == nil then return nil end
+    local terrainSize = tonumber(g_currentMission.terrainSize)
+    local terrainDetailMapSize = tonumber(g_currentMission.terrainDetailMapSize)
+    if terrainSize == nil or terrainSize <= 0
+        or terrainDetailMapSize == nil or terrainDetailMapSize <= 0 then
+        return nil
+    end
+
+    local metersPerPixel = terrainSize / terrainDetailMapSize
+    return metersPerPixel * metersPerPixel
+end
+
 -- =========================================================================
 -- Yield debug helpers (assolementYieldDebug console command). Read-only.
 -- =========================================================================
@@ -517,6 +530,7 @@ function FieldRotationManager.new()
     self.repository = FieldRotationRepository.new()
     self.service = FieldRotationService.new(self.repository)
     self.activeCropNameCache = {}
+    self.warnedCropChangeAreaThreshold = {}
     self.isInitialized = false
     return self
 end
@@ -526,6 +540,7 @@ function FieldRotationManager:initialize()
     self.repository:clear()
     self.service:reset()
     self.activeCropNameCache = {}
+    self.warnedCropChangeAreaThreshold = {}
     self.isInitialized = true
 end
 
@@ -533,6 +548,7 @@ function FieldRotationManager:cleanup()
     self.repository:clear()
     self.service:reset()
     self.activeCropNameCache = {}
+    self.warnedCropChangeAreaThreshold = {}
     self.isInitialized = false
 end
 
@@ -580,6 +596,11 @@ function FieldRotationManager:setRotationPlanYear(farmlandId, yearIdx, family)
     if n == nil or n <= 0 or y == nil or y < 1 or y > 4 then return false end
     self.repository:setPlanYear(n, y, family)
     return true
+end
+
+function FieldRotationManager:clearRotationPlan(farmlandId)
+    if self.repository == nil or type(self.repository.clearPlan) ~= "function" then return false end
+    return self.repository:clearPlan(farmlandId)
 end
 
 function FieldRotationManager:getCurrentFarmId()
@@ -661,6 +682,64 @@ function FieldRotationManager:invalidateActiveCropCache(farmlandId)
     local n = tonumber(farmlandId)
     if n == nil then return end
     self.activeCropNameCache[n] = nil
+end
+
+function FieldRotationManager:getCropChangeRequiredAreaPixels(farmlandId)
+    local numericFarmlandId = tonumber(farmlandId)
+    if numericFarmlandId == nil or numericFarmlandId <= 0 then return nil end
+
+    local field = self:getFieldByFarmlandId(numericFarmlandId)
+    local farmland = getFarmlandById(numericFarmlandId)
+    local areaHa = getRotationAreaHa(farmland, field)
+    if areaHa <= 0 then return nil end
+
+    local pixelToSqm = getTerrainDetailPixelToSqm()
+    if pixelToSqm == nil or pixelToSqm <= 0 then return nil end
+
+    local threshold = FieldRotationService.CROP_CHANGE_AREA_THRESHOLD or 0.90
+    return (areaHa * 10000 / pixelToSqm) * threshold
+end
+
+function FieldRotationManager:recordCropChangeFromHook(sourceName, changedArea, cropCandidate, nextActiveCropName)
+    if self.service == nil or cropCandidate == nil then return false end
+
+    local farmlandId = tonumber(cropCandidate.farmlandId)
+    if farmlandId == nil or farmlandId <= 0 then return false end
+
+    local requiredArea = self:getCropChangeRequiredAreaPixels(farmlandId)
+    if requiredArea == nil or requiredArea <= 0 then
+        if not self.warnedCropChangeAreaThreshold[farmlandId] then
+            self.warnedCropChangeAreaThreshold[farmlandId] = true
+            Logging.warning("[FieldRotation] Crop history update skipped: reliable field area or terrain detail pixel scale unavailable for farmland=%s",
+                tostring(farmlandId))
+        end
+        return false
+    end
+
+    local changed = self.service:onCropChangeArea(
+        farmlandId,
+        cropCandidate.fruitTypeIndex,
+        sourceName,
+        cropCandidate.activeCropName,
+        changedArea,
+        requiredArea,
+        nextActiveCropName)
+    if changed then
+        self:invalidateActiveCropCache(farmlandId)
+    end
+    return changed
+end
+
+function FieldRotationManager:reconcileActiveCropForFarmland(farmlandId, sourceName)
+    if self.service == nil then return false end
+    if isPureClient() then return false end
+
+    local currentCropName = self:getActiveCropName(farmlandId)
+    local changed = self.service:reconcileActiveCrop(farmlandId, currentCropName, sourceName or "UI_RECONCILE")
+    if changed then
+        self:invalidateActiveCropCache(farmlandId)
+    end
+    return changed
 end
 
 -- Returns the native ground state label (Cultivé/Labouré/Lit de semences/...)

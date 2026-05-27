@@ -29,6 +29,7 @@ local FieldRotationService_mt = Class(FieldRotationService)
 -- FieldRotation.cropConfig is loaded once at mod init by main.lua.
 -- 1 PF state = 5 kg N/ha (source: PrecisionFarming.xml amountPerState=5).
 FieldRotationService.PF_STATE_PER_UNIT = 5
+FieldRotationService.CROP_CHANGE_AREA_THRESHOLD = 0.90
 
 FieldRotationService.NITROGEN_DIAGNOSTICS_ENABLED = false
 
@@ -56,8 +57,7 @@ function FieldRotationService.new(repository)
     local self = setmetatable({}, FieldRotationService_mt)
     self.repository = repository
     self.pendingBonus = {}            -- farmlandId -> { n1StateChange, n2StateChange }
-    self.lastRecordedYear = {}        -- farmlandId -> integer
-    self.lastRecordedPeriod = {}      -- fallback for legacy entries without year
+    self.cropChangeAreaAccumulator = {}
     self.cropNameByFruitTypeIndex = {}
     self.warnedNitrogenBackend = {}
     self.nitrogenApplicationMaskMap = nil
@@ -72,8 +72,7 @@ end
 function FieldRotationService:reset()
     self:releaseNitrogenApplicationMask()
     self.pendingBonus = {}
-    self.lastRecordedYear = {}
-    self.lastRecordedPeriod = {}
+    self.cropChangeAreaAccumulator = {}
     self.cropNameByFruitTypeIndex = {}
     self.warnedNitrogenBackend = {}
     self.nitrogenApplicationMaskPeriod = 0
@@ -126,6 +125,13 @@ function FieldRotationService:getCropNameByFruitTypeIndex(fruitTypeIndex)
     local cropName = string.upper(fruitType.name)
     self.cropNameByFruitTypeIndex[fruitTypeIndex] = cropName
     return cropName
+end
+
+function FieldRotationService:normalizeCropName(cropName)
+    if cropName == nil or cropName == "" then return nil end
+    local normalizedCropName = string.upper(tostring(cropName))
+    if normalizedCropName == "" then return nil end
+    return normalizedCropName
 end
 
 function FieldRotationService:getResidueEntry(cropName)
@@ -212,82 +218,89 @@ end
 
 function FieldRotationService:recomputeAllPendingBonuses()
     self.pendingBonus = {}
-    self.lastRecordedYear = {}
-    self.lastRecordedPeriod = {}
-    for farmlandId, entries in pairs(self.repository:getAllHistory()) do
+    for farmlandId in pairs(self.repository:getAllHistory()) do
         self:recomputePendingBonus(farmlandId)
-        if entries ~= nil and entries[1] ~= nil then
-            local year = tonumber(entries[1].year) or 0
-            if year > 0 then
-                self.lastRecordedYear[farmlandId] = year
-            elseif entries[1].period ~= nil then
-                self.lastRecordedPeriod[farmlandId] = entries[1].period
-            end
-        end
     end
 end
 
-function FieldRotationService:hasRecordedThisPeriod(farmlandId, currentPeriod, currentYear)
-    if farmlandId == nil or farmlandId == 0 then return false end
-    local year = tonumber(currentYear) or self:getCurrentYear()
-    if year ~= nil and year > 0 then
-        return self.lastRecordedYear[farmlandId] == year
-    end
-    return self.lastRecordedPeriod[farmlandId] == currentPeriod
-end
+function FieldRotationService:pushHistoryCrop(farmlandId, cropName, sourceName)
+    local numericFarmlandId = tonumber(farmlandId)
+    if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
 
-function FieldRotationService:recordCropNameForYear(farmlandId, cropName, period, year)
-    if farmlandId == nil or farmlandId == 0 then return false end
-    if cropName == nil or cropName == "" then return false end
-
-    local currentPeriod = tonumber(period) or self:getCurrentPeriod()
-    local currentYear = tonumber(year) or self:getCurrentYear()
-    if currentPeriod == nil or currentPeriod == 0 then return false end
-    if currentYear == nil or currentYear == 0 then return false end
-
-    local normalizedCropName = string.upper(tostring(cropName))
+    local normalizedCropName = self:normalizeCropName(cropName)
+    if normalizedCropName == nil then return false end
     if self:isCoverCropForRotationHistory(nil, normalizedCropName) then
         return false
     end
 
-    local changed = self.repository:pushEntry(farmlandId, normalizedCropName, currentPeriod, currentYear)
-    self.lastRecordedYear[farmlandId] = currentYear
-    self.lastRecordedPeriod[farmlandId] = currentPeriod
+    local changed = self.repository:pushEntry(numericFarmlandId, normalizedCropName)
     if changed then
-        self:recomputePendingBonus(farmlandId)
+        self:recomputePendingBonus(numericFarmlandId)
+        if FieldRotationService.NITROGEN_DIAGNOSTICS_ENABLED then
+            Logging.info("[FieldRotation][N-DIAG] history pushed farmland=%s crop=%s source=%s",
+                tostring(numericFarmlandId), tostring(normalizedCropName), tostring(sourceName))
+        end
     end
     return changed
 end
 
-function FieldRotationService:onCropHarvested(farmlandId, fruitTypeIndex)
-    if farmlandId == nil or farmlandId == 0 then return false end
-    local cropName = self:getCropNameByFruitTypeIndex(fruitTypeIndex)
-    if cropName == nil then return false end
-    return self:recordCropNameForYear(farmlandId, cropName,
-        self:getCurrentPeriod(), self:getCurrentYear())
+function FieldRotationService:setLastKnownActiveCrop(farmlandId, cropName)
+    local normalizedCropName = self:normalizeCropName(cropName)
+    return self.repository:setLastKnownActiveCrop(farmlandId, normalizedCropName)
 end
 
-function FieldRotationService:onCropTerminated(farmlandId, fruitTypeIndex, sourceName, activeCropNameBeforeTermination)
-    if farmlandId == nil or farmlandId == 0 then return false end
-    local cropName = self:getCropNameByFruitTypeIndex(fruitTypeIndex)
-    if cropName == nil then return false end
+function FieldRotationService:reconcileActiveCrop(farmlandId, currentCropName, sourceName)
+    local numericFarmlandId = tonumber(farmlandId)
+    if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
 
-    -- Soil-operation hooks sample the fruit density map before GIANTS mutates it
-    -- and only call this after the engine reports changedArea > 0. A nil active
-    -- crop is therefore not a reason to reject the sampled crop: cut/regrowth
-    -- stages can be destroyed by tillage/direct seeding and still count as the
-    -- previous crop for residue purposes.
+    local normalizedCurrentCrop = self:normalizeCropName(currentCropName)
+    local lastKnownCrop = self.repository:getLastKnownActiveCrop(numericFarmlandId)
+
+    if lastKnownCrop == nil or lastKnownCrop == "" then
+        return self.repository:setLastKnownActiveCrop(numericFarmlandId, normalizedCurrentCrop)
+    end
+
+    if lastKnownCrop == normalizedCurrentCrop then
+        return false
+    end
+
+    local pushed = self:pushHistoryCrop(numericFarmlandId, lastKnownCrop, sourceName or "UI_RECONCILE")
+    local activeChanged = self.repository:setLastKnownActiveCrop(numericFarmlandId, normalizedCurrentCrop)
+    return pushed or activeChanged
+end
+
+function FieldRotationService:onCropChangeArea(farmlandId, fruitTypeIndex, sourceName, activeCropNameBeforeTermination, changedArea, requiredArea, nextActiveCropName)
+    local numericFarmlandId = tonumber(farmlandId)
+    if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
+
+    local numericChangedArea = tonumber(changedArea) or 0
+    local numericRequiredArea = tonumber(requiredArea) or 0
+    if numericChangedArea <= 0 or numericRequiredArea <= 0 then return false end
+
+    local cropName = self:getCropNameByFruitTypeIndex(fruitTypeIndex)
+    local normalizedCropName = self:normalizeCropName(cropName)
+    if normalizedCropName == nil then return false end
+
     if activeCropNameBeforeTermination ~= nil and activeCropNameBeforeTermination ~= ""
         and self:isCoverCropForRotationHistory(nil, activeCropNameBeforeTermination) then
         return false
     end
 
-    -- Sampled crop itself is a cover crop: skip.
-    if self:isCoverCropForRotationHistory(fruitTypeIndex, cropName) then
+    if self:isCoverCropForRotationHistory(fruitTypeIndex, normalizedCropName) then
         return false
     end
 
-    return self:onCropHarvested(farmlandId, fruitTypeIndex)
+    local key = tostring(numericFarmlandId) .. ":" .. normalizedCropName
+    local accumulatedArea = (self.cropChangeAreaAccumulator[key] or 0) + numericChangedArea
+    if accumulatedArea < numericRequiredArea then
+        self.cropChangeAreaAccumulator[key] = accumulatedArea
+        return false
+    end
+
+    self.cropChangeAreaAccumulator[key] = nil
+    local pushed = self:pushHistoryCrop(numericFarmlandId, normalizedCropName, sourceName)
+    local activeChanged = self:setLastKnownActiveCrop(numericFarmlandId, nextActiveCropName)
+    return pushed or activeChanged
 end
 
 function FieldRotationService:getActiveBonusStateChange(farmlandId)
@@ -308,6 +321,37 @@ function FieldRotationService:getTerminationBonusStateChange(farmlandId)
         local entry = self:getResidueEntry(entries[2].crop)
         if entry ~= nil then total = total + (entry.n2 or 0) end
     end
+    return total
+end
+
+function FieldRotationService:getTerminationBonusStateChangeForCandidate(farmlandId, fruitTypeIndex, activeCropNameBeforeTermination)
+    if farmlandId == nil or farmlandId == 0 then return 0 end
+
+    local cropName = self:getCropNameByFruitTypeIndex(fruitTypeIndex)
+    if cropName == nil then return self:getTerminationBonusStateChange(farmlandId) end
+
+    if activeCropNameBeforeTermination ~= nil and activeCropNameBeforeTermination ~= ""
+        and self:isCoverCropForRotationHistory(nil, activeCropNameBeforeTermination) then
+        return self:getTerminationBonusStateChange(farmlandId)
+    end
+
+    if self:isCoverCropForRotationHistory(fruitTypeIndex, cropName) then
+        return self:getTerminationBonusStateChange(farmlandId)
+    end
+
+    -- Nitrogen still applies on every changed area, but history is now written
+    -- only after a significant area threshold. Compute the same N-1/N-2 state
+    -- that an immediate history push used to expose, without mutating history.
+    local total = 0
+    local candidateEntry = self:getResidueEntry(cropName)
+    if candidateEntry ~= nil then total = total + (candidateEntry.n1 or 0) end
+
+    local entries = self.repository:getHistoryNoAlloc(farmlandId)
+    if entries ~= nil and entries[1] ~= nil then
+        local previousEntry = self:getResidueEntry(entries[1].crop)
+        if previousEntry ~= nil then total = total + (previousEntry.n2 or 0) end
+    end
+
     return total
 end
 
@@ -645,11 +689,11 @@ end
 -- MP sync helpers (server-authoritative).
 -- =========================================================================
 
-function FieldRotationService:applySyncData(receivedHistory, receivedPlans)
-    self.repository:replaceAll(receivedHistory or {}, receivedPlans or {})
+function FieldRotationService:applySyncData(receivedHistory, receivedPlans, receivedLastKnownActiveCrop)
+    self.repository:replaceAll(receivedHistory or {}, receivedPlans or {}, receivedLastKnownActiveCrop or {})
     self:recomputeAllPendingBonuses()
 end
 
 function FieldRotationService:getSyncData()
-    return self.repository:getAllHistory()
+    return self.repository:getAllHistory(), self.repository:getAllLastKnownActiveCrops()
 end

@@ -70,6 +70,7 @@ FieldRotation.broadcastDirty = false
 FieldRotation.broadcastTimerMs = 0
 FieldRotation.broadcastUpdateable = nil
 FieldRotation.periodChangeListener = nil
+FieldRotation.farmlandOwnerChangeListener = nil
 FieldRotation.lastObservedPeriod = 0
 FieldRotation.lastObservedYear = 0
 
@@ -97,6 +98,19 @@ local function flushFieldRotationBroadcast()
 end
 
 local refreshFieldRotationFrame
+
+local function onFarmlandOwnerChanged(farmlandId, _farmId, loadFromSavegame)
+    if loadFromSavegame then return end
+    if FieldRotation.manager == nil or type(FieldRotation.manager.clearRotationPlan) ~= "function" then return end
+
+    local changed = FieldRotation.manager:clearRotationPlan(farmlandId)
+    if changed then
+        Logging.info("[FieldRotation] Rotation plan cleared after farmland owner change: farmland=%s",
+            tostring(farmlandId))
+        refreshFieldRotationFrame()
+        FieldRotation.requestBroadcast()
+    end
+end
 
 local function checkPeriodChange()
     if g_currentMission == nil or g_currentMission.environment == nil then return end
@@ -292,6 +306,18 @@ local function loadedMission()
         else
             Logging.warning("[FieldRotation] Period change listener unavailable; nitrogen mask period reset disabled")
         end
+        if g_messageCenter ~= nil and MessageType ~= nil and MessageType.FARMLAND_OWNER_CHANGED ~= nil then
+            FieldRotation.farmlandOwnerChangeListener = {
+                ownerChanged = function(_self, farmlandId, farmId, loadFromSavegame)
+                    onFarmlandOwnerChanged(farmlandId, farmId, loadFromSavegame)
+                end,
+            }
+            g_messageCenter:subscribe(MessageType.FARMLAND_OWNER_CHANGED,
+                FieldRotation.farmlandOwnerChangeListener.ownerChanged,
+                FieldRotation.farmlandOwnerChangeListener)
+        else
+            Logging.warning("[FieldRotation] Farmland owner listener unavailable; rotation plans cannot be cleared on sale")
+        end
     end
 
     g_currentMission.fieldRotationManager = FieldRotation.manager
@@ -312,7 +338,10 @@ local function loadedMission()
     if not g_currentMission:getIsServer() then
         if FieldRotation.pendingSyncData ~= nil then
             local pending = FieldRotation.pendingSyncData
-            FieldRotation.manager.service:applySyncData(pending.history or {}, pending.plans or {})
+            FieldRotation.manager.service:applySyncData(
+                pending.history or {},
+                pending.plans or {},
+                pending.lastKnownActiveCrop or {})
             FieldRotation.pendingSyncData = nil
         end
         FieldRotation.requestServerSync("loadedMission")
@@ -373,10 +402,9 @@ end
 -- One server-side path per hook:
 --   1. Cheap farmland lookup (1 call).
 --   2. Sample the pre-operation fruit type at the work area center.
---   3. Resolve active crop only when history can still change; cover-crop
---      nitrogen can still apply even after history was recorded this period.
+--   3. Resolve active crop before mutation for cover-crop filtering.
 --   4. Call the engine.
---   5. Push to history (server) if a real harvest/termination happened.
+--   5. Push to history only after cumulative significant field area changed.
 --   6. Apply the pending nitrogen residue inside the worked area.
 
 local function getFarmlandIdAtArea(xw, xh, zw, zh)
@@ -409,16 +437,12 @@ local function hasHookContext(farmlandId)
     return true
 end
 
-local function captureCropCandidate(farmlandId, currentPeriod, currentYear, xw, xh, zw, zh)
+local function captureCropCandidate(farmlandId, xw, xh, zw, zh)
     local fruitTypeIndex = getFruitTypeIndexAtArea(xw, xh, zw, zh)
     if fruitTypeIndex == nil then return nil end
 
     local service = FieldRotation.manager.service
     local shouldResolveActiveCrop = true
-    if type(service.hasRecordedThisPeriod) == "function"
-        and service:hasRecordedThisPeriod(farmlandId, currentPeriod, currentYear) then
-        shouldResolveActiveCrop = false
-    end
     if type(service.isCoverCropForRotationHistory) == "function"
         and service:isCoverCropForRotationHistory(fruitTypeIndex, nil) then
         shouldResolveActiveCrop = false
@@ -437,15 +461,15 @@ local function captureCropCandidate(farmlandId, currentPeriod, currentYear, xw, 
     }
 end
 
-local function recordTermination(sourceName, changedArea, cropCandidate)
+local function recordTermination(sourceName, changedArea, cropCandidate, nextActiveCropName)
     if cropCandidate == nil or changedArea == nil or changedArea <= 0 then return end
-    if FieldRotation.manager == nil or FieldRotation.manager.service == nil then return end
+    if FieldRotation.manager == nil then return end
 
-    local changed = FieldRotation.manager.service:onCropTerminated(
-        cropCandidate.farmlandId,
-        cropCandidate.fruitTypeIndex,
+    local changed = FieldRotation.manager:recordCropChangeFromHook(
         sourceName,
-        cropCandidate.activeCropName)
+        changedArea,
+        cropCandidate,
+        nextActiveCropName)
     if changed then
         FieldRotation.manager:invalidateActiveCropCache(cropCandidate.farmlandId)
         refreshFieldRotationFrame()
@@ -459,10 +483,17 @@ local function applyTerminationNitrogen(sourceName, changedArea, xs, zs, xw, zw,
     if farmlandId == nil or farmlandId == 0 then return end
 
     local totalStateChange = service:getTerminationBonusStateChange(farmlandId)
-    if cropCandidate ~= nil and cropCandidate.fruitTypeIndex ~= nil
-        and type(service.getCoverCropTerminationStateChange) == "function" then
-        totalStateChange = totalStateChange
-            + service:getCoverCropTerminationStateChange(cropCandidate.fruitTypeIndex)
+    if cropCandidate ~= nil and cropCandidate.fruitTypeIndex ~= nil then
+        if type(service.getTerminationBonusStateChangeForCandidate) == "function" then
+            totalStateChange = service:getTerminationBonusStateChangeForCandidate(
+                farmlandId,
+                cropCandidate.fruitTypeIndex,
+                cropCandidate.activeCropName)
+        end
+        if type(service.getCoverCropTerminationStateChange) == "function" then
+            totalStateChange = totalStateChange
+                + service:getCoverCropTerminationStateChange(cropCandidate.fruitTypeIndex)
+        end
     end
 
     if totalStateChange <= 0 then return end
@@ -472,22 +503,19 @@ end
 local function wrapDensityMapDestroyHook(sourceName)
     return function(startWorldX, superFunc, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, ...)
         -- Always call the engine. Skip the mod work on early-out.
-        local currentPeriod = (g_currentMission ~= nil and g_currentMission.environment ~= nil)
-            and (g_currentMission.environment.currentPeriod or 0) or 0
         local farmlandId = getFarmlandIdAtArea(widthWorldX, heightWorldX, widthWorldZ, heightWorldZ)
         local shouldProcess = hasHookContext(farmlandId)
-        local currentYear = shouldProcess and FieldRotation.manager.service:getCurrentYear() or 0
 
         local cropCandidate = nil
         if shouldProcess then
-            cropCandidate = captureCropCandidate(farmlandId, currentPeriod, currentYear, widthWorldX, heightWorldX, widthWorldZ, heightWorldZ)
+            cropCandidate = captureCropCandidate(farmlandId, widthWorldX, heightWorldX, widthWorldZ, heightWorldZ)
         end
 
         local changedArea, totalArea = superFunc(startWorldX, startWorldZ,
             widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, ...)
 
         if shouldProcess then
-            recordTermination(sourceName, changedArea or 0, cropCandidate)
+            recordTermination(sourceName, changedArea or 0, cropCandidate, nil)
             applyTerminationNitrogen(sourceName, changedArea or 0,
                 startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ,
                 farmlandId, cropCandidate)
@@ -499,22 +527,20 @@ end
 
 local function wrapDensityMapSowingHook(sourceName)
     return function(fruitIndex, superFunc, startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, ...)
-        local currentPeriod = (g_currentMission ~= nil and g_currentMission.environment ~= nil)
-            and (g_currentMission.environment.currentPeriod or 0) or 0
         local farmlandId = getFarmlandIdAtArea(widthWorldX, heightWorldX, widthWorldZ, heightWorldZ)
         local shouldProcess = hasHookContext(farmlandId)
-        local currentYear = shouldProcess and FieldRotation.manager.service:getCurrentYear() or 0
+        local nextActiveCropName = shouldProcess and FieldRotation.manager.service:getCropNameByFruitTypeIndex(fruitIndex) or nil
 
         local cropCandidate = nil
         if shouldProcess then
-            cropCandidate = captureCropCandidate(farmlandId, currentPeriod, currentYear, widthWorldX, heightWorldX, widthWorldZ, heightWorldZ)
+            cropCandidate = captureCropCandidate(farmlandId, widthWorldX, heightWorldX, widthWorldZ, heightWorldZ)
         end
 
         local changedArea, totalArea = superFunc(fruitIndex, startWorldX, startWorldZ,
             widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, ...)
 
         if shouldProcess then
-            recordTermination(sourceName, changedArea or 0, cropCandidate)
+            recordTermination(sourceName, changedArea or 0, cropCandidate, nextActiveCropName)
             applyTerminationNitrogen(sourceName, changedArea or 0,
                 startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ,
                 farmlandId, cropCandidate)
@@ -568,8 +594,12 @@ local function initFieldRotation()
         if g_messageCenter ~= nil and FieldRotation.periodChangeListener ~= nil then
             g_messageCenter:unsubscribeAll(FieldRotation.periodChangeListener)
         end
+        if g_messageCenter ~= nil and FieldRotation.farmlandOwnerChangeListener ~= nil then
+            g_messageCenter:unsubscribeAll(FieldRotation.farmlandOwnerChangeListener)
+        end
         FieldRotation.broadcastUpdateable = nil
         FieldRotation.periodChangeListener = nil
+        FieldRotation.farmlandOwnerChangeListener = nil
         FieldRotation.broadcastDirty = false
         FieldRotation.broadcastTimerMs = 0
         FieldRotation.lastObservedPeriod = 0
