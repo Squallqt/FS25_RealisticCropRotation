@@ -165,20 +165,61 @@ local function resolveGrowthOverride(data)
     if data == nil or g_fruitTypeManager == nil then return nil, nil end
     if FieldRotationManager == nil then return nil, nil end
 
-    local fruitTypeIndex = tonumber(data.lastFruitTypeIndex)
     local unknownFruitType = (FruitType ~= nil and FruitType.UNKNOWN) or 0
+
+    local fruitTypeIndex = tonumber(data.fruitTypeIndex)
+    if fruitTypeIndex == nil or fruitTypeIndex == unknownFruitType then
+        fruitTypeIndex = tonumber(data.lastFruitTypeIndex)
+    end
     if fruitTypeIndex == nil or fruitTypeIndex == unknownFruitType then return nil, nil end
+
+    local growthState = tonumber(data.growthState)
+    if growthState == nil or growthState <= 0 then
+        growthState = tonumber(data.lastGrowthState)
+    end
+    if growthState == nil or growthState <= 0 then return nil, nil end
 
     local fruitType = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
     if fruitType == nil then return nil, nil end
 
-    local numbers = FieldRotationManager.getGrowthStageNumbers(fruitType, data.lastGrowthState)
+    local numbers = FieldRotationManager.getGrowthStageNumbers(fruitType, growthState)
     if numbers == nil then return nil, nil end
 
-    local tierText = FieldRotationManager.getGrowthTierText(fruitType, data.lastGrowthState)
+    local tierText = FieldRotationManager.getGrowthTierText(fruitType, growthState)
     if tierText == nil then return nil, nil end
 
     return tierText, numbers
+end
+
+function FieldRotationHud.fieldAddField(hudSelf, superFunc, data, fieldBox, ...)
+    local hookData = data
+    local hookFieldBox = fieldBox
+
+    if (hookFieldBox == nil or hookFieldBox.addLine == nil)
+            and data ~= nil and data.addLine ~= nil then
+        hookFieldBox = data
+        hookData = fieldBox
+    end
+
+    local tierText, numbers = resolveGrowthOverride(hookData)
+    local originalAddLine = nil
+
+    if tierText ~= nil and numbers ~= nil
+            and hookFieldBox ~= nil and hookFieldBox.addLine ~= nil then
+        originalAddLine = hookFieldBox.addLine
+        hookFieldBox.addLine = function(boxSelf, label, value)
+            if value == tierText then
+                value = string.format("(%s) · %s", numbers, value)
+            end
+            return originalAddLine(boxSelf, label, value)
+        end
+    end
+
+    superFunc(hudSelf, data, fieldBox, ...)
+
+    if originalAddLine ~= nil then
+        hookFieldBox.addLine = originalAddLine
+    end
 end
 
 -- Overrides PlayerHUDUpdater.fieldAddFarmland to fold the mod's numeric
@@ -228,7 +269,12 @@ function FieldRotationHud.fieldAddFarmland(hudSelf, superFunc, data, fieldBox)
     FieldRotationHud.addCatchCropLine(fieldBox, data)
 end
 
-if PlayerHUDUpdater ~= nil and PlayerHUDUpdater.fieldAddFarmland ~= nil
-    and Utils ~= nil and Utils.overwrittenFunction ~= nil then
-    PlayerHUDUpdater.fieldAddFarmland = Utils.overwrittenFunction(PlayerHUDUpdater.fieldAddFarmland, FieldRotationHud.fieldAddFarmland)
+if PlayerHUDUpdater ~= nil and Utils ~= nil and Utils.overwrittenFunction ~= nil then
+    if PlayerHUDUpdater.fieldAddField ~= nil then
+        PlayerHUDUpdater.fieldAddField = Utils.overwrittenFunction(PlayerHUDUpdater.fieldAddField, FieldRotationHud.fieldAddField)
+    end
+
+    if PlayerHUDUpdater.fieldAddFarmland ~= nil then
+        PlayerHUDUpdater.fieldAddFarmland = Utils.overwrittenFunction(PlayerHUDUpdater.fieldAddFarmland, FieldRotationHud.fieldAddFarmland)
+    end
 end
