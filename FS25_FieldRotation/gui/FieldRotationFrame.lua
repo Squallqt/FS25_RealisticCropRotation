@@ -1074,8 +1074,8 @@ function FieldRotationFrame:updateYieldCard(farmlandId)
     local weedText = "-"
     local stageText = "-"
     local hasYield = info ~= nil and info.totalLiters ~= nil
-    local hasStage = info ~= nil and info.growthState ~= nil and info.maxStage ~= nil
-    local hasWeed = info ~= nil and info.weedState ~= nil
+    local hasStage = info ~= nil and info.growthStageKey ~= nil
+    local hasWeed = info ~= nil and info.weedActionKey ~= nil
 
     if hasYield then
         local totalLiters = tonumber(info.totalLiters) or 0
@@ -1086,24 +1086,12 @@ function FieldRotationFrame:updateYieldCard(farmlandId)
         end
     end
 
-    -- Weed size → PF-style label (size + recommended removal tool). Thresholds
-    -- band the engine weed state (1..9, FieldManager weed range) into the three
-    -- actionable tiers PF surfaces on its HUD: weeder / rotary hoe / herbicide.
     if hasWeed then
-        local weed = tonumber(info.weedState) or 0
-        local key = "fr_weed_none"
-        if weed >= 7 then
-            key = "fr_weed_large"
-        elseif weed >= 4 then
-            key = "fr_weed_medium"
-        elseif weed >= 1 then
-            key = "fr_weed_small"
-        end
-        weedText = self.i18n:getText(key)
+        weedText = self.i18n:getText(info.weedActionKey)
     end
 
     if hasStage then
-        stageText = string.format("%d/%d", info.growthState, info.maxStage)
+        stageText = self.i18n:getText(info.growthStageKey)
     end
 
     if self.yieldTotalValue ~= nil then
@@ -1113,12 +1101,9 @@ function FieldRotationFrame:updateYieldCard(farmlandId)
         self.yieldTotalValue:setText(totalText)
     end
 
-    -- yieldPerHaValue element now shows the field weed status (T/ha removed).
-    -- The weed label carries "size · tool" so it uses a smaller dedicated
-    -- profile to fit one line; the NA dash keeps the standard grey profile.
     if self.yieldPerHaValue ~= nil then
         if self.yieldPerHaValue.applyProfile ~= nil then
-            self.yieldPerHaValue:applyProfile(hasWeed and "frYieldKpiValueWeed" or "frYieldKpiValueNA")
+            self.yieldPerHaValue:applyProfile(hasWeed and "frYieldKpiValue" or "frYieldKpiValueNA")
         end
         self.yieldPerHaValue:setText(weedText)
     end

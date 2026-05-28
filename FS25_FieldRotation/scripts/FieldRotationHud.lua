@@ -157,12 +157,15 @@ function FieldRotationHud.addCatchCropLine(fieldBox, data)
     fieldBox:addLine(label, value)
 end
 
--- Adds the current growth stage line (e.g. "5/9"). data is the engine-populated
--- FieldState handed to PlayerHUDUpdater.fieldAddFarmland, so lastFruitTypeIndex /
--- lastGrowthState are valid on MP clients without any extra sampling.
+-- Adds the current growth tier line (e.g. "Growing"). data is the
+-- engine-populated FieldState handed to PlayerHUDUpdater.fieldAddFarmland, so
+-- lastFruitTypeIndex / lastGrowthState are valid on MP clients without any
+-- extra sampling. The tier classification lives on FieldRotationManager so
+-- the card and the HUD agree on the wording.
 function FieldRotationHud.addGrowthStageLine(fieldBox, data)
     if fieldBox == nil or fieldBox.addLine == nil then return end
     if data == nil or g_fruitTypeManager == nil then return end
+    if FieldRotationManager == nil or FieldRotationManager.classifyGrowthStage == nil then return end
 
     local fruitTypeIndex = tonumber(data.lastFruitTypeIndex)
     local unknownFruitType = (FruitType ~= nil and FruitType.UNKNOWN) or 0
@@ -171,14 +174,11 @@ function FieldRotationHud.addGrowthStageLine(fieldBox, data)
     local fruitType = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
     if fruitType == nil then return end
 
-    local growthState = tonumber(data.lastGrowthState) or 0
-    local maxStage = tonumber(fruitType.numGrowthStates) or 0
-    -- States above numGrowthStates are terminal/track states (e.g. tireTracks),
-    -- not growth stages: skip them so we never show values like 10/8.
-    if growthState <= 0 or maxStage <= 0 or growthState > maxStage then return end
+    local stageKey = FieldRotationManager.classifyGrowthStage(fruitType, data.lastGrowthState)
+    if stageKey == nil then return end
 
     local label = FieldRotationHud.getText("fr_hud_growth_stage")
-    fieldBox:addLine(label, string.format("%d/%d", growthState, maxStage))
+    fieldBox:addLine(label, FieldRotationHud.getText(stageKey))
 end
 
 function FieldRotationHud.fieldAddFarmland(self, data, fieldBox)

@@ -485,11 +485,6 @@
         <textColor value="$preset_fs25_colorGrey"/>
     </Profile>
 
-    <!-- Weed KPI value carries "size · tool": smaller text to fit one line -->
-    <Profile name="frYieldKpiValueWeed" extends="frYieldKpiValue">
-        <textSize value="18px"/>
-    </Profile>
-
     <!-- Thin vertical divider between the two KPIs -->
     <Profile name="frYieldDivider" extends="baseReference" with="anchorTopCenter">
         <position value="0px -18px"/>

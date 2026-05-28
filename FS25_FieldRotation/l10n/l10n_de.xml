@@ -89,11 +89,12 @@
         <e k="fr_yield_weed"           v="Unkraut" />
         <e k="fr_yield_stage"          v="Wachstum" />
 
-        <!-- Yield card — weed size + recommended removal tool (PF HUD wording) -->
+        <!-- Yield card — weed action: tool name derived from the crop's
+             allowsWeeding/allowsHoeing windows (Giant pattern in FruitTypeDesc) -->
         <e k="fr_weed_none"            v="Keines" />
-        <e k="fr_weed_small"           v="Klein · Striegel" />
-        <e k="fr_weed_medium"          v="Mittel · Rollhacke" />
-        <e k="fr_weed_large"           v="Groß · Herbizid" />
+        <e k="fr_weed_weeder"          v="Striegel" />
+        <e k="fr_weed_hoe"             v="Rollhacke" />
+        <e k="fr_weed_herbicide"       v="Herbizid" />
 
         <!-- Planning tab — year slots -->
         <e k="fr_plan_year1"           v="N+1" />
