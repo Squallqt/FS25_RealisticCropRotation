@@ -348,7 +348,7 @@
 
     <!-- State label — top left -->
     <Profile name="frNitrogenStateLabel" extends="fs25_textDefault" with="anchorTopLeft">
-        <position value="24px -6px"/>
+        <position value="24px -4px"/>
         <size value="300px 18px"/>
         <textSize value="12px"/>
         <textBold value="true"/>
@@ -363,23 +363,9 @@
         <textUpperCase value="false"/>
     </Profile>
 
-    <!-- Crop need note: centered above the nitrogen gauge.
-         The gauge follows the crop target when present, otherwise the nitrogen map capacity. -->
-    <Profile name="frNitrogenNeedLabel" extends="fs25_textDefault" with="anchorTopCenter">
-        <position value="0px -6px"/>
-        <size value="520px 16px"/>
-        <textSize value="11px"/>
-        <textBold value="false"/>
-        <textUpperCase value="false"/>
-        <textColor value="$preset_colorWhite_50"/>
-        <textAlignment value="center"/>
-        <textVerticalAlignment value="middle"/>
-        <textMaxNumLines value="1"/>
-    </Profile>
-
     <!-- kg/ha value (PF mode) — top right -->
     <Profile name="frNitrogenValueLabel" extends="fs25_textDefault" with="anchorTopRight">
-        <position value="-24px -6px"/>
+        <position value="-24px -4px"/>
         <size value="200px 18px"/>
         <textSize value="12px"/>
         <textBold value="true"/>
@@ -546,6 +532,11 @@
         <textAlignment value="center"/>
         <textVerticalAlignment value="middle"/>
         <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frPlanSlotYearResidue" extends="frPlanSlotYear">
+        <textColor value="$preset_fs25_colorMainHighlight"/>
+        <textLayoutMode value="resize"/>
     </Profile>
 
     <!-- Crop icon — below year label, above selector (filename set in Lua) -->

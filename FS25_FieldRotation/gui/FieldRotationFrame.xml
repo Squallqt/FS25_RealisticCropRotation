@@ -185,7 +185,6 @@
                 <RoundCorner profile="frNitrogenCardBg"/>
                 <Text        profile="frNitrogenStateLabel" id="nitrogenStateLabel" text=""/>
                 <Text        profile="frNitrogenValueLabel" id="nitrogenValueLabel" text="" visible="false"/>
-                <Text        profile="frNitrogenNeedLabel"  id="nitrogenNeedLabel"  text="" visible="false"/>
                 <RoundCorner profile="frNitrogenTrack"/>
                 <RoundCorner profile="frNitrogenFill"      id="nitrogenBarFill"    visible="false"/>
             </GuiElement>

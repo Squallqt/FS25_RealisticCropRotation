@@ -241,26 +241,13 @@ function FieldRotationFrame:getPlanNitrogenResidueKgHa(plan)
     end
 
     local totalStateChange = 0
-    local previousPlannedCrop = nil
-
     for i = 1, 4 do
         local cropName = plan ~= nil and plan[i] or nil
         if cropName ~= nil and cropName ~= "" then
-            cropName = string.upper(tostring(cropName))
-
-            local n1Entry = service:getResidueEntry(cropName)
-            if n1Entry ~= nil then
-                totalStateChange = totalStateChange + (tonumber(n1Entry.n1) or 0)
+            local entry = service:getResidueEntry(string.upper(tostring(cropName)))
+            if entry ~= nil then
+                totalStateChange = totalStateChange + (tonumber(entry.n1) or 0) + (tonumber(entry.n2) or 0)
             end
-
-            if previousPlannedCrop ~= nil then
-                local n2Entry = service:getResidueEntry(previousPlannedCrop)
-                if n2Entry ~= nil then
-                    totalStateChange = totalStateChange + (tonumber(n2Entry.n2) or 0)
-                end
-            end
-
-            previousPlannedCrop = cropName
         end
     end
 
@@ -294,6 +281,72 @@ function FieldRotationFrame:updatePlannedResiduePill(pillBg, pillText, plan)
         pillText:setText(text)
     end
     self:resizePillToText(pillBg, pillText, text)
+end
+
+function FieldRotationFrame:getPlanSlotNitrogenResidueKgHa(plan, slotIdx)
+    local mgr = self:getManager()
+    if mgr == nil or mgr.service == nil then return nil end
+
+    local service = mgr.service
+    if type(service.getResidueEntry) ~= "function"
+        or type(service.getNitrogenKgPerHaFromStateChange) ~= "function" then
+        return nil
+    end
+
+    slotIdx = tonumber(slotIdx)
+    if slotIdx == nil or slotIdx < 1 or slotIdx > 4 then return nil end
+
+    local totalStateChange = 0
+    local function addResidue(cropName, residueKey)
+        if cropName == nil or cropName == "" then return end
+        local entry = service:getResidueEntry(string.upper(tostring(cropName)))
+        if entry ~= nil then
+            totalStateChange = totalStateChange + (tonumber(entry[residueKey]) or 0)
+        end
+    end
+
+    local n1SourceIdx = ((slotIdx - 2) % 4) + 1
+    local n2SourceIdx = ((slotIdx - 3) % 4) + 1
+    addResidue(plan ~= nil and plan[n1SourceIdx] or nil, "n1")
+    addResidue(plan ~= nil and plan[n2SourceIdx] or nil, "n2")
+
+    if totalStateChange <= 0 then return nil end
+
+    local ok, residueKgHa = pcall(
+        service.getNitrogenKgPerHaFromStateChange,
+        service,
+        totalStateChange
+    )
+    if ok and type(residueKgHa) == "number" and residueKgHa > 0 then
+        return residueKgHa
+    end
+    return nil
+end
+
+function FieldRotationFrame:updatePlanSlotYearLabel(slotIdx, plan)
+    local yearEl = self.planSlotYear ~= nil and self.planSlotYear[slotIdx]
+    if yearEl == nil then return end
+
+    local baseText = self.i18n:getText("fr_plan_year" .. tostring(slotIdx))
+    local residueKgHa = self:getPlanSlotNitrogenResidueKgHa(plan, slotIdx)
+
+    if residueKgHa ~= nil then
+        if yearEl.applyProfile ~= nil then
+            yearEl:applyProfile("frPlanSlotYearResidue")
+        end
+        yearEl:setText(string.format("%s  \xc2\xb7  +%d kg/ha", baseText, math.floor(residueKgHa + 0.5)))
+    else
+        if yearEl.applyProfile ~= nil then
+            yearEl:applyProfile("frPlanSlotYear")
+        end
+        yearEl:setText(baseText)
+    end
+end
+
+function FieldRotationFrame:updatePlanSlotYearLabels(plan)
+    for i = 1, 4 do
+        self:updatePlanSlotYearLabel(i, plan)
+    end
 end
 
 function FieldRotationFrame:getCropFamily(cropName)
@@ -890,6 +943,7 @@ function FieldRotationFrame:updateNitrogenGauge(farmlandId)
     local mgr = self:getManager()
     local ratio = 0
     local labelKey = "fr_n_none"
+    local stateText = nil
     local valueText = nil
     local needText = nil
 
@@ -911,7 +965,7 @@ function FieldRotationFrame:updateNitrogenGauge(farmlandId)
             ratio = math.max(0, math.min(1, ratio))
 
             labelKey = "fr_n_available"
-            valueText = string.format("%.0f kg/ha", kgHa)
+            stateText = string.format(self.i18n:getText("fr_n_average_value"), kgHa)
 
             if targetKgHa > 0 then
                 needText = string.format(self.i18n:getText("fr_n_crop_need"), targetKgHa)
@@ -919,7 +973,7 @@ function FieldRotationFrame:updateNitrogenGauge(farmlandId)
         end
     end
 
-    if valueText == nil then
+    if stateText == nil then
         local sprayLevel = 0
         if mgr ~= nil and mgr.getCurrentSprayLevel ~= nil then
             sprayLevel = mgr:getCurrentSprayLevel(farmlandId) or 0
@@ -932,22 +986,16 @@ function FieldRotationFrame:updateNitrogenGauge(farmlandId)
     self:setStatusBarFill(self.nitrogenBarFill, ratio)
 
     if self.nitrogenStateLabel ~= nil then
-        self.nitrogenStateLabel:setText(self.i18n:getText(labelKey))
+        self.nitrogenStateLabel:setText(stateText or self.i18n:getText(labelKey))
     end
 
     if self.nitrogenValueLabel ~= nil then
-        if valueText ~= nil then
-            self.nitrogenValueLabel:setText(valueText)
+        if needText ~= nil then
+            self.nitrogenValueLabel:setText(needText)
         end
-        self.nitrogenValueLabel:setVisible(valueText ~= nil)
+        self.nitrogenValueLabel:setVisible(needText ~= nil)
     end
 
-    if self.nitrogenNeedLabel ~= nil then
-        if needText ~= nil then
-            self.nitrogenNeedLabel:setText(needText)
-        end
-        self.nitrogenNeedLabel:setVisible(needText ~= nil)
-    end
 end
 
 -- ---------------------------------------------------------------------------
@@ -958,6 +1006,7 @@ function FieldRotationFrame:updateSoilPHGauge(farmlandId)
     local mgr = self:getManager()
     local ratio = 0
     local labelKey = "fr_lime_none"
+    local stateText = nil
     local valueText = nil
 
     if mgr ~= nil and mgr.getPHLevel ~= nil then
@@ -968,15 +1017,16 @@ function FieldRotationFrame:updateSoilPHGauge(farmlandId)
             labelKey = "fr_lime_average_pf"
             if targetPH ~= nil then
                 ratio = targetPH > 0 and (actualPH / targetPH) or 0
-                valueText = string.format("%.2f / %.2f pH", actualPH, targetPH)
+                stateText = string.format(self.i18n:getText("fr_lime_average_value"), actualPH)
+                valueText = string.format(self.i18n:getText("fr_lime_target"), targetPH)
             else
                 ratio = maxPH > minPH and ((actualPH - minPH) / (maxPH - minPH)) or 0
-                valueText = string.format("%.2f pH", actualPH)
+                stateText = string.format(self.i18n:getText("fr_lime_average_value"), actualPH)
             end
         end
     end
 
-    if valueText == nil then
+    if stateText == nil then
         local limeLevel = 0
         local maxLevel = 1
         if mgr ~= nil and mgr.getCurrentLimeLevel ~= nil then
@@ -1000,7 +1050,7 @@ function FieldRotationFrame:updateSoilPHGauge(farmlandId)
     self:setStatusBarFill(self.limeBarFill, ratio)
 
     if self.limeStateLabel ~= nil then
-        self.limeStateLabel:setText(self.i18n:getText(labelKey))
+        self.limeStateLabel:setText(stateText or self.i18n:getText(labelKey))
     end
 
     if self.limeValueLabel ~= nil then
@@ -1136,6 +1186,7 @@ end
 
 function FieldRotationFrame:updatePlanSlots(farmlandId)
     local plan = self:getPlanForFarmland(farmlandId)
+    self:updatePlanSlotYearLabels(plan)
     for i = 1, 4 do
         local sel      = self.planSlotSelector  ~= nil and self.planSlotSelector[i]
         local iconEl   = self.planSlotIcon      ~= nil and self.planSlotIcon[i]
@@ -1172,6 +1223,7 @@ end
 
 function FieldRotationFrame:updatePlanSlotVisualsFromSelectors()
     local plan = self:getPlanFromSelectors()
+    self:updatePlanSlotYearLabels(plan)
     for i = 1, 4 do
         local cropName = plan[i] or ""
         local iconEl   = self.planSlotIcon      ~= nil and self.planSlotIcon[i]
@@ -1303,6 +1355,7 @@ function FieldRotationFrame:handlePlanSlotChange(slotIdx)
     self:applySlotBadge(badgeBg, badgeTxt, self:getCropFamily(cropName))
 
     local plan = self:getPlanFromSelectors()
+    self:updatePlanSlotYearLabels(plan)
     self:updateScoreCard(plan)
     self:updatePlannedResiduePill(self.planStatusPillBg, self.planStatusPillText, plan)
 

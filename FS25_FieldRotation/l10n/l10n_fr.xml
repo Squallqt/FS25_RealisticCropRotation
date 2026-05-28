@@ -21,9 +21,9 @@
         <e k="fr_season_winter"        v="Hiver" />
         <e k="fr_status_bonus"         v="Reliquat Azoté" />
         <e k="fr_status_current_residue" v="Reliquat actuel +%d kg/ha" />
-        <e k="fr_status_planned_residue" v="Reliquat prévu +%d kg/ha" />
+        <e k="fr_status_planned_residue" v="Reliquat total rotation +%d kg/ha" />
         <e k="fr_status_current_no_residue" v="Reliquat actuel 0 kg/ha" />
-        <e k="fr_status_planned_no_residue" v="Reliquat prévu 0 kg/ha" />
+        <e k="fr_status_planned_no_residue" v="Reliquat total rotation 0 kg/ha" />
         <e k="fr_hud_previous_n1"      v="Précédent cultural (N-1) :" />
         <e k="fr_hud_previous_n2"      v="Anté-précédent (N-2) :" />
         <e k="fr_hud_cover_crop"       v="Couvert végétal :" />
@@ -65,12 +65,15 @@
         <e k="fr_n_partial"            v="Partiel" />
         <e k="fr_n_full"               v="Complet" />
         <e k="fr_n_available"          v="Azote disponible" />
+        <e k="fr_n_average_value"      v="Moyenne d'azote : %.0f kg/ha" />
         <e k="fr_n_crop_need"          v="Besoin de la culture : %.0f kg/ha" />
         <e k="fr_n_average_pf"         v="Azote / besoin culture" />
         <e k="fr_lime_none"            v="Chaux absente" />
         <e k="fr_lime_partial"         v="Chaux partielle" />
         <e k="fr_lime_full"            v="Chaux correcte" />
         <e k="fr_lime_average_pf"      v="Moyenne du pH" />
+        <e k="fr_lime_average_value"   v="Moyenne du pH : %.2f pH" />
+        <e k="fr_lime_target"          v="Objectif : %.2f pH" />
 
         <!-- Agronomic advice -->
         <e k="fr_advice_afterCereal"    v="Après céréale : légumineuse recommandée pour casser le cycle et limiter céréale sur céréale." />

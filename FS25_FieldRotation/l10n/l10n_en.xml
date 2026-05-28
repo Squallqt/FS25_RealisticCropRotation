@@ -21,9 +21,9 @@
         <e k="fr_season_winter"        v="Winter" />
         <e k="fr_status_bonus"         v="N Residue" />
         <e k="fr_status_current_residue" v="Current residue +%d kg/ha" />
-        <e k="fr_status_planned_residue" v="Planned residue +%d kg/ha" />
+        <e k="fr_status_planned_residue" v="Total rotation residue +%d kg/ha" />
         <e k="fr_status_current_no_residue" v="Current residue 0 kg/ha" />
-        <e k="fr_status_planned_no_residue" v="Planned residue 0 kg/ha" />
+        <e k="fr_status_planned_no_residue" v="Total rotation residue 0 kg/ha" />
         <e k="fr_hud_previous_n1"      v="Previous crop (N-1):" />
         <e k="fr_hud_previous_n2"      v="Crop before (N-2):" />
         <e k="fr_hud_cover_crop"       v="Cover crop:" />
@@ -65,12 +65,15 @@
         <e k="fr_n_partial"            v="Partial" />
         <e k="fr_n_full"               v="Full" />
         <e k="fr_n_available"          v="Available nitrogen" />
+        <e k="fr_n_average_value"      v="Average nitrogen: %.0f kg/ha" />
         <e k="fr_n_crop_need"          v="Crop requirement: %.0f kg/ha" />
         <e k="fr_n_average_pf"         v="Nitrogen / crop need" />
         <e k="fr_lime_none"            v="No Lime" />
         <e k="fr_lime_partial"         v="Partial Lime" />
         <e k="fr_lime_full"            v="Correct Lime" />
         <e k="fr_lime_average_pf"      v="Average pH" />
+        <e k="fr_lime_average_value"   v="Average pH: %.2f pH" />
+        <e k="fr_lime_target"          v="Target: %.2f pH" />
 
         <!-- Agronomic advice -->
         <e k="fr_advice_afterCereal"    v="After cereal: legume recommended to break the cycle and avoid cereal-on-cereal." />

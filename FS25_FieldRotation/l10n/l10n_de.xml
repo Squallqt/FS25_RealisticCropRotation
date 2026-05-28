@@ -21,9 +21,9 @@
         <e k="fr_season_winter"        v="Winter" />
         <e k="fr_status_bonus"         v="N-Rückstand" />
         <e k="fr_status_current_residue" v="Aktueller Rückstand +%d kg/ha" />
-        <e k="fr_status_planned_residue" v="Geplanter Rückstand +%d kg/ha" />
+        <e k="fr_status_planned_residue" v="Rückstand Rotation gesamt +%d kg/ha" />
         <e k="fr_status_current_no_residue" v="Aktueller Rückstand 0 kg/ha" />
-        <e k="fr_status_planned_no_residue" v="Geplanter Rückstand 0 kg/ha" />
+        <e k="fr_status_planned_no_residue" v="Rückstand Rotation gesamt 0 kg/ha" />
         <e k="fr_hud_previous_n1"      v="Vorfrucht (N-1):" />
         <e k="fr_hud_previous_n2"      v="Vor-Vorfrucht (N-2):" />
         <e k="fr_hud_cover_crop"       v="Zwischenfrucht:" />
@@ -65,12 +65,15 @@
         <e k="fr_n_partial"            v="Teilweise" />
         <e k="fr_n_full"               v="Vollständig" />
         <e k="fr_n_available"          v="Verfügbarer Stickstoff" />
+        <e k="fr_n_average_value"      v="Durchschnitt Stickstoff: %.0f kg/ha" />
         <e k="fr_n_crop_need"          v="Kulturbedarf: %.0f kg/ha" />
         <e k="fr_n_average_pf"         v="Stickstoff / Pflanzenbedarf" />
         <e k="fr_lime_none"            v="Kein Kalk" />
         <e k="fr_lime_partial"         v="Teilweise Kalk" />
         <e k="fr_lime_full"            v="Kalk korrekt" />
         <e k="fr_lime_average_pf"      v="Durchschnitt pH" />
+        <e k="fr_lime_average_value"   v="Durchschnitt pH: %.2f pH" />
+        <e k="fr_lime_target"          v="Ziel: %.2f pH" />
 
         <!-- Agronomic advice -->
         <e k="fr_advice_afterCereal"    v="Nach Getreide: Leguminose empfohlen, um Getreide nach Getreide zu vermeiden." />
