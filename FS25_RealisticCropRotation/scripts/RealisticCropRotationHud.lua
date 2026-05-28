@@ -1,14 +1,14 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
 
-FieldRotationHud = {}
+RealisticCropRotationHud = {}
 
-FieldRotationHud.HISTORY_LABEL_KEYS = {
-    "fr_hud_previous_n1",
-    "fr_hud_previous_n2",
+RealisticCropRotationHud.HISTORY_LABEL_KEYS = {
+    "rcr_hud_previous_n1",
+    "rcr_hud_previous_n2",
 }
 
 
-function FieldRotationHud.getFruitTypeDisplayName(fruitType)
+function RealisticCropRotationHud.getFruitTypeDisplayName(fruitType)
     if fruitType == nil then
         return ""
     end
@@ -29,7 +29,7 @@ function FieldRotationHud.getFruitTypeDisplayName(fruitType)
     return ""
 end
 
-function FieldRotationHud.getText(key, fallback)
+function RealisticCropRotationHud.getText(key, fallback)
     if g_i18n ~= nil and g_i18n.getText ~= nil then
         local text = g_i18n:getText(key)
         if text ~= nil and text ~= "" and text ~= key then
@@ -40,7 +40,7 @@ function FieldRotationHud.getText(key, fallback)
     return fallback or key
 end
 
-function FieldRotationHud.getCropDisplayName(cropName)
+function RealisticCropRotationHud.getCropDisplayName(cropName)
     if cropName == nil or cropName == "" then
         return ""
     end
@@ -50,7 +50,7 @@ function FieldRotationHud.getCropDisplayName(cropName)
     if g_fruitTypeManager ~= nil and g_fruitTypeManager.getFruitTypeByName ~= nil then
         local fruitType = g_fruitTypeManager:getFruitTypeByName(normalizedName)
         if fruitType ~= nil then
-            local fruitTitle = FieldRotationHud.getFruitTypeDisplayName(fruitType)
+            local fruitTitle = RealisticCropRotationHud.getFruitTypeDisplayName(fruitType)
             if fruitTitle ~= "" then
                 return fruitTitle
             end
@@ -67,7 +67,7 @@ function FieldRotationHud.getCropDisplayName(cropName)
     return normalizedName:sub(1, 1) .. string.lower(normalizedName:sub(2))
 end
 
-function FieldRotationHud.getActiveFruitType(data)
+function RealisticCropRotationHud.getActiveFruitType(data)
     local fruitTypeIndex = data ~= nil and data.lastFruitTypeIndex or nil
     local unknownFruitType = FruitType ~= nil and FruitType.UNKNOWN or 0
     if fruitTypeIndex == nil or fruitTypeIndex == unknownFruitType then
@@ -103,12 +103,12 @@ function FieldRotationHud.getActiveFruitType(data)
     return fruitType
 end
 
-function FieldRotationHud.addHistoryLines(fieldBox, farmlandId)
+function RealisticCropRotationHud.addHistoryLines(fieldBox, farmlandId)
     if fieldBox == nil or fieldBox.addLine == nil then
         return
     end
 
-    local manager = g_currentMission ~= nil and g_currentMission.fieldRotationManager or nil
+    local manager = g_currentMission ~= nil and g_currentMission.realisticCropRotationManager or nil
     if manager == nil or manager.getHistory == nil then
         return
     end
@@ -119,12 +119,12 @@ function FieldRotationHud.addHistoryLines(fieldBox, farmlandId)
     end
 
     local history = manager:getHistory(farmlandId) or {}
-    for index, key in ipairs(FieldRotationHud.HISTORY_LABEL_KEYS) do
+    for index, key in ipairs(RealisticCropRotationHud.HISTORY_LABEL_KEYS) do
         local entry = history[index]
         local cropName = entry ~= nil and entry.crop or nil
         if cropName ~= nil and cropName ~= "" then
-            local label = FieldRotationHud.getText(key)
-            local value = FieldRotationHud.getCropDisplayName(cropName)
+            local label = RealisticCropRotationHud.getText(key)
+            local value = RealisticCropRotationHud.getCropDisplayName(cropName)
             if value ~= "" then
                 fieldBox:addLine(label, value)
             end
@@ -132,10 +132,10 @@ function FieldRotationHud.addHistoryLines(fieldBox, farmlandId)
     end
 end
 
-function FieldRotationHud.addCatchCropLine(fieldBox, data)
+function RealisticCropRotationHud.addCatchCropLine(fieldBox, data)
     if fieldBox == nil or fieldBox.addLine == nil then return end
 
-    local fruitType = FieldRotationHud.getActiveFruitType(data)
+    local fruitType = RealisticCropRotationHud.getActiveFruitType(data)
     if fruitType == nil then return end
 
     local fruitName = fruitType.name ~= nil and string.upper(tostring(fruitType.name)) or nil
@@ -143,16 +143,16 @@ function FieldRotationHud.addCatchCropLine(fieldBox, data)
     -- Check cover status: isCatchCrop (base game) or cover=true in cropConfig.xml
     local isCover = fruitType.isCatchCrop == true
     if not isCover and fruitName ~= nil then
-        local config = FieldRotation ~= nil and FieldRotation.cropConfig or nil
+        local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
         if config ~= nil and config.coverCrops ~= nil then
             isCover = config.coverCrops[fruitName] == true
         end
     end
 
-    local label = FieldRotationHud.getText("fr_hud_cover_crop")
+    local label = RealisticCropRotationHud.getText("rcr_hud_cover_crop")
     local value = isCover
-        and FieldRotationHud.getText("fr_hud_yes")
-        or  FieldRotationHud.getText("fr_hud_no")
+        and RealisticCropRotationHud.getText("rcr_hud_yes")
+        or  RealisticCropRotationHud.getText("rcr_hud_no")
 
     fieldBox:addLine(label, value)
 end
@@ -163,7 +163,7 @@ end
 -- no i18n). Resolving both here avoids paying the cost on every addLine call.
 local function resolveGrowthOverride(data)
     if data == nil or g_fruitTypeManager == nil then return nil, nil end
-    if FieldRotationManager == nil then return nil, nil end
+    if RealisticCropRotationManager == nil then return nil, nil end
 
     local unknownFruitType = (FruitType ~= nil and FruitType.UNKNOWN) or 0
 
@@ -182,16 +182,16 @@ local function resolveGrowthOverride(data)
     local fruitType = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
     if fruitType == nil then return nil, nil end
 
-    local numbers = FieldRotationManager.getGrowthStageNumbers(fruitType, growthState)
+    local numbers = RealisticCropRotationManager.getGrowthStageNumbers(fruitType, growthState)
     if numbers == nil then return nil, nil end
 
-    local tierText = FieldRotationManager.getGrowthTierText(fruitType, growthState)
+    local tierText = RealisticCropRotationManager.getGrowthTierText(fruitType, growthState)
     if tierText == nil then return nil, nil end
 
     return tierText, numbers
 end
 
-function FieldRotationHud.fieldAddField(hudSelf, superFunc, data, fieldBox, ...)
+function RealisticCropRotationHud.fieldAddField(hudSelf, superFunc, data, fieldBox, ...)
     local hookData = data
     local hookFieldBox = fieldBox
 
@@ -222,27 +222,27 @@ function FieldRotationHud.fieldAddField(hudSelf, superFunc, data, fieldBox, ...)
     end
 end
 
--- Extends PlayerHUDUpdater.fieldAddFarmland with FieldRotation-only complementary
+-- Extends PlayerHUDUpdater.fieldAddFarmland with RealisticCropRotation-only complementary
 -- rows. Growth replacement is handled exclusively in fieldAddField, which is
 -- the runtime function that actually emits the base-game crop/growth rows.
 -- Giants Utils.overwrittenFunction calling convention:
 --   function(self, superFunc, ...originalArgs)
 -- First arg = the object instance (self), second arg = original function.
-function FieldRotationHud.fieldAddFarmland(hudSelf, superFunc, data, fieldBox)
+function RealisticCropRotationHud.fieldAddFarmland(hudSelf, superFunc, data, fieldBox)
     local farmlandId = data ~= nil and data.farmlandId or nil
 
     superFunc(hudSelf, data, fieldBox)
 
-    FieldRotationHud.addHistoryLines(fieldBox, farmlandId)
-    FieldRotationHud.addCatchCropLine(fieldBox, data)
+    RealisticCropRotationHud.addHistoryLines(fieldBox, farmlandId)
+    RealisticCropRotationHud.addCatchCropLine(fieldBox, data)
 end
 
 if PlayerHUDUpdater ~= nil and Utils ~= nil and Utils.overwrittenFunction ~= nil then
     if PlayerHUDUpdater.fieldAddField ~= nil then
-        PlayerHUDUpdater.fieldAddField = Utils.overwrittenFunction(PlayerHUDUpdater.fieldAddField, FieldRotationHud.fieldAddField)
+        PlayerHUDUpdater.fieldAddField = Utils.overwrittenFunction(PlayerHUDUpdater.fieldAddField, RealisticCropRotationHud.fieldAddField)
     end
 
     if PlayerHUDUpdater.fieldAddFarmland ~= nil then
-        PlayerHUDUpdater.fieldAddFarmland = Utils.overwrittenFunction(PlayerHUDUpdater.fieldAddFarmland, FieldRotationHud.fieldAddFarmland)
+        PlayerHUDUpdater.fieldAddFarmland = Utils.overwrittenFunction(PlayerHUDUpdater.fieldAddFarmland, RealisticCropRotationHud.fieldAddFarmland)
     end
 end

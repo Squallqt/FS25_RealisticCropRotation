@@ -1,24 +1,24 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
 -- Client->server rotation plan update. Server remains authoritative for saved plans.
-FRPlanUpdateEvent = {}
-local FRPlanUpdateEvent_mt = Class(FRPlanUpdateEvent, Event)
+RCRPlanUpdateEvent = {}
+local RCRPlanUpdateEvent_mt = Class(RCRPlanUpdateEvent, Event)
 
-InitEventClass(FRPlanUpdateEvent, "FRPlanUpdateEvent")
+InitEventClass(RCRPlanUpdateEvent, "RCRPlanUpdateEvent")
 
-function FRPlanUpdateEvent.emptyNew()
-    local self = Event.new(FRPlanUpdateEvent_mt)
+function RCRPlanUpdateEvent.emptyNew()
+    local self = Event.new(RCRPlanUpdateEvent_mt)
     return self
 end
 
-function FRPlanUpdateEvent.new(farmlandId, yearIdx, cropName)
-    local self = FRPlanUpdateEvent.emptyNew()
+function RCRPlanUpdateEvent.new(farmlandId, yearIdx, cropName)
+    local self = RCRPlanUpdateEvent.emptyNew()
     self.farmlandId = tonumber(farmlandId) or 0
     self.yearIdx = tonumber(yearIdx) or 0
     self.cropName = tostring(cropName or "")
     return self
 end
 
-function FRPlanUpdateEvent:readStream(streamId, connection)
+function RCRPlanUpdateEvent:readStream(streamId, connection)
     self.farmlandId = streamReadInt32(streamId)
     self.yearIdx = streamReadInt8(streamId)
     self.cropName = streamReadString(streamId)
@@ -26,20 +26,20 @@ function FRPlanUpdateEvent:readStream(streamId, connection)
     self:run(connection)
 end
 
-function FRPlanUpdateEvent:writeStream(streamId, connection)
+function RCRPlanUpdateEvent:writeStream(streamId, connection)
     streamWriteInt32(streamId, tonumber(self.farmlandId) or 0)
     streamWriteInt8(streamId, tonumber(self.yearIdx) or 0)
     streamWriteString(streamId, tostring(self.cropName or ""))
 end
 
-function FRPlanUpdateEvent:run(connection)
+function RCRPlanUpdateEvent:run(connection)
     if g_currentMission == nil or not g_currentMission:getIsServer() then
         return
     end
 
-    local manager = g_currentMission.fieldRotationManager
+    local manager = g_currentMission.realisticCropRotationManager
     if manager == nil or manager.setRotationPlanYear == nil then
-        Logging.warning("[FieldRotation][MP] Plan update ignored: manager unavailable")
+        Logging.warning("[RealisticCropRotation][MP] Plan update ignored: manager unavailable")
         return
     end
 
@@ -64,7 +64,7 @@ function FRPlanUpdateEvent:run(connection)
     end
 
     if userFarmId == nil or farmlandOwnerId == nil or userFarmId ~= farmlandOwnerId then
-        Logging.warning("[FieldRotation][MP] Plan update rejected (auth): farmland=%s requesterFarm=%s ownerFarm=%s",
+        Logging.warning("[RealisticCropRotation][MP] Plan update rejected (auth): farmland=%s requesterFarm=%s ownerFarm=%s",
             tostring(self.farmlandId), tostring(userFarmId), tostring(farmlandOwnerId))
         return
     end
@@ -75,7 +75,7 @@ function FRPlanUpdateEvent:run(connection)
             and g_fruitTypeManager:getFruitTypeByName(self.cropName)
             or nil
         if fruitType == nil then
-            Logging.warning("[FieldRotation][MP] Plan update rejected (unknown crop): farmland=%s crop=%s",
+            Logging.warning("[RealisticCropRotation][MP] Plan update rejected (unknown crop): farmland=%s crop=%s",
                 tostring(self.farmlandId), tostring(self.cropName))
             return
         end
@@ -83,15 +83,15 @@ function FRPlanUpdateEvent:run(connection)
 
     local changed = manager:setRotationPlanYear(self.farmlandId, self.yearIdx, self.cropName)
     if not changed then
-        Logging.warning("[FieldRotation][MP] Plan update ignored: invalid payload farmland=%s year=%s crop=%s",
+        Logging.warning("[RealisticCropRotation][MP] Plan update ignored: invalid payload farmland=%s year=%s crop=%s",
             tostring(self.farmlandId), tostring(self.yearIdx), tostring(self.cropName))
         return
     end
 
-    Logging.info("[FieldRotation][MP] Plan update applied farmland=%s year=%s crop=%s",
+    Logging.info("[RealisticCropRotation][MP] Plan update applied farmland=%s year=%s crop=%s",
         tostring(self.farmlandId), tostring(self.yearIdx), tostring(self.cropName))
 
-    if FieldRotation ~= nil and FieldRotation.requestBroadcast ~= nil then
-        FieldRotation.requestBroadcast()
+    if RealisticCropRotation ~= nil and RealisticCropRotation.requestBroadcast ~= nil then
+        RealisticCropRotation.requestBroadcast()
     end
 end

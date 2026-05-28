@@ -2,11 +2,11 @@
 -- CRUD + XML persistence for per-farmland crop history, active crop state,
 -- rotation plans, and the period that validates the external nitrogen
 -- application mask.
-FieldRotationRepository = {}
-local FieldRotationRepository_mt = Class(FieldRotationRepository)
+RealisticCropRotationRepository = {}
+local RealisticCropRotationRepository_mt = Class(RealisticCropRotationRepository)
 
-FieldRotationRepository.SAVE_VERSION = 1
-FieldRotationRepository.MAX_HISTORY = 4
+RealisticCropRotationRepository.SAVE_VERSION = 1
+RealisticCropRotationRepository.MAX_HISTORY = 4
 
 local function getPersistenceCounts(history, plans, lastKnownActiveCrop)
     local historyFarmlands = 0
@@ -40,8 +40,8 @@ local function getPersistenceCounts(history, plans, lastKnownActiveCrop)
     return historyFarmlands, historyEntries, planFarmlands, activeCropFarmlands
 end
 
-function FieldRotationRepository.new()
-    local self = setmetatable({}, FieldRotationRepository_mt)
+function RealisticCropRotationRepository.new()
+    local self = setmetatable({}, RealisticCropRotationRepository_mt)
     self.history = {}
     self.plans   = {}
     self.lastKnownActiveCrop = {}
@@ -49,28 +49,28 @@ function FieldRotationRepository.new()
     return self
 end
 
-function FieldRotationRepository:clear()
+function RealisticCropRotationRepository:clear()
     self.history = {}
     self.plans   = {}
     self.lastKnownActiveCrop = {}
     self.nitrogenMaskPeriod = 0
 end
 
-function FieldRotationRepository:getHistory(farmlandId)
+function RealisticCropRotationRepository:getHistory(farmlandId)
     local entries = self.history[farmlandId]
     if entries == nil then return {} end
     return entries
 end
 
-function FieldRotationRepository:getHistoryNoAlloc(farmlandId)
+function RealisticCropRotationRepository:getHistoryNoAlloc(farmlandId)
     return self.history[farmlandId]
 end
 
-function FieldRotationRepository:getAllHistory()
+function RealisticCropRotationRepository:getAllHistory()
     return self.history
 end
 
-function FieldRotationRepository:pushEntry(farmlandId, cropName)
+function RealisticCropRotationRepository:pushEntry(farmlandId, cropName)
     local entries = self.history[farmlandId]
     if entries == nil then
         entries = {}
@@ -78,21 +78,21 @@ function FieldRotationRepository:pushEntry(farmlandId, cropName)
     end
 
     table.insert(entries, 1, { crop = cropName })
-    while #entries > FieldRotationRepository.MAX_HISTORY do
+    while #entries > RealisticCropRotationRepository.MAX_HISTORY do
         table.remove(entries, #entries)
     end
     return true
 end
 
-function FieldRotationRepository:getPlan(farmlandId)
+function RealisticCropRotationRepository:getPlan(farmlandId)
     return self.plans[farmlandId] or {"","","",""}
 end
 
-function FieldRotationRepository:getAllPlans()
+function RealisticCropRotationRepository:getAllPlans()
     return self.plans
 end
 
-function FieldRotationRepository:setPlanYear(farmlandId, yearIdx, family)
+function RealisticCropRotationRepository:setPlanYear(farmlandId, yearIdx, family)
     yearIdx = tonumber(yearIdx) or 0
     if yearIdx < 1 or yearIdx > 4 then return end
     if self.plans[farmlandId] == nil then
@@ -101,7 +101,7 @@ function FieldRotationRepository:setPlanYear(farmlandId, yearIdx, family)
     self.plans[farmlandId][yearIdx] = tostring(family or "")
 end
 
-function FieldRotationRepository:clearPlan(farmlandId)
+function RealisticCropRotationRepository:clearPlan(farmlandId)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
 
@@ -112,15 +112,15 @@ function FieldRotationRepository:clearPlan(farmlandId)
     return changed
 end
 
-function FieldRotationRepository:getLastKnownActiveCrop(farmlandId)
+function RealisticCropRotationRepository:getLastKnownActiveCrop(farmlandId)
     return self.lastKnownActiveCrop[farmlandId] or self.lastKnownActiveCrop[tostring(farmlandId)]
 end
 
-function FieldRotationRepository:getAllLastKnownActiveCrops()
+function RealisticCropRotationRepository:getAllLastKnownActiveCrops()
     return self.lastKnownActiveCrop
 end
 
-function FieldRotationRepository:setLastKnownActiveCrop(farmlandId, cropName)
+function RealisticCropRotationRepository:setLastKnownActiveCrop(farmlandId, cropName)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
 
@@ -140,36 +140,36 @@ function FieldRotationRepository:setLastKnownActiveCrop(farmlandId, cropName)
     return changed
 end
 
-function FieldRotationRepository:replaceAll(newHistory, newPlans, newLastKnownActiveCrop)
+function RealisticCropRotationRepository:replaceAll(newHistory, newPlans, newLastKnownActiveCrop)
     self.history = newHistory or {}
     self.plans   = newPlans or {}
     self.lastKnownActiveCrop = newLastKnownActiveCrop or {}
 end
 
-function FieldRotationRepository:getNitrogenMaskPeriod()
+function RealisticCropRotationRepository:getNitrogenMaskPeriod()
     return tonumber(self.nitrogenMaskPeriod) or 0
 end
 
-function FieldRotationRepository:setNitrogenMaskPeriod(period)
+function RealisticCropRotationRepository:setNitrogenMaskPeriod(period)
     self.nitrogenMaskPeriod = tonumber(period) or 0
 end
 
-function FieldRotationRepository:saveToXML(savegamePath)
+function RealisticCropRotationRepository:saveToXML(savegamePath)
     if savegamePath == nil or savegamePath == "" then
-        Logging.warning("[FieldRotation] Save skipped: savegame path unavailable")
+        Logging.warning("[RealisticCropRotation] Save skipped: savegame path unavailable")
         return
     end
 
-    local filePath = savegamePath .. "fieldRotation.xml"
-    local xmlFile = createXMLFile("fieldRotation", filePath, "fieldRotation")
+    local filePath = savegamePath .. "realisticCropRotation.xml"
+    local xmlFile = createXMLFile("realisticCropRotation", filePath, "realisticCropRotation")
     if xmlFile == nil or xmlFile == 0 then
-        Logging.error("[FieldRotation] Failed to create save file: %s", filePath)
+        Logging.error("[RealisticCropRotation] Failed to create save file: %s", filePath)
         return
     end
 
-    setXMLInt(xmlFile, "fieldRotation#version", FieldRotationRepository.SAVE_VERSION)
+    setXMLInt(xmlFile, "realisticCropRotation#version", RealisticCropRotationRepository.SAVE_VERSION)
     if self.nitrogenMaskPeriod ~= nil and self.nitrogenMaskPeriod > 0 then
-        setXMLInt(xmlFile, "fieldRotation#nitrogenMaskPeriod", self.nitrogenMaskPeriod)
+        setXMLInt(xmlFile, "realisticCropRotation#nitrogenMaskPeriod", self.nitrogenMaskPeriod)
     end
 
     local allIds = {}
@@ -202,7 +202,7 @@ function FieldRotationRepository:saveToXML(savegamePath)
         local hasActiveCrop = activeCrop ~= nil and activeCrop ~= ""
 
         if hasHistory or hasPlan or hasActiveCrop then
-            local farmlandKey = string.format("fieldRotation.farmland(%d)", farmlandIndex)
+            local farmlandKey = string.format("realisticCropRotation.farmland(%d)", farmlandIndex)
             setXMLInt(xmlFile, farmlandKey .. "#id", numericFarmlandId)
             if hasActiveCrop then
                 setXMLString(xmlFile, farmlandKey .. "#lastKnownActiveCrop", tostring(activeCrop))
@@ -210,7 +210,7 @@ function FieldRotationRepository:saveToXML(savegamePath)
 
             if hasHistory then
                 for i, entry in ipairs(entries) do
-                    if i > FieldRotationRepository.MAX_HISTORY then break end
+                    if i > RealisticCropRotationRepository.MAX_HISTORY then break end
                     if entry ~= nil then
                         local entryKey = string.format("%s.entry(%d)", farmlandKey, i - 1)
                         setXMLString(xmlFile, entryKey .. "#crop", tostring(entry.crop or ""))
@@ -236,42 +236,42 @@ function FieldRotationRepository:saveToXML(savegamePath)
 
     local historyFarmlands, historyEntries, planFarmlands, activeCropFarmlands =
         getPersistenceCounts(self.history, self.plans, self.lastKnownActiveCrop)
-    Logging.info("[FieldRotation] Saved fieldRotation.xml historyFarmlands=%d entries=%d plans=%d activeCrops=%d path=%s",
+    Logging.info("[RealisticCropRotation] Saved realisticCropRotation.xml historyFarmlands=%d entries=%d plans=%d activeCrops=%d path=%s",
         historyFarmlands, historyEntries, planFarmlands, activeCropFarmlands, tostring(filePath))
 end
 
-function FieldRotationRepository:loadFromXML(savegamePath)
+function RealisticCropRotationRepository:loadFromXML(savegamePath)
     if savegamePath == nil or savegamePath == "" then
-        Logging.warning("[FieldRotation] Load skipped: savegame path unavailable")
+        Logging.warning("[RealisticCropRotation] Load skipped: savegame path unavailable")
         return
     end
 
-    local filePath = savegamePath .. "fieldRotation.xml"
+    local filePath = savegamePath .. "realisticCropRotation.xml"
     if not fileExists(filePath) then
-        Logging.info("[FieldRotation] No fieldRotation.xml found at %s", tostring(filePath))
+        Logging.info("[RealisticCropRotation] No realisticCropRotation.xml found at %s", tostring(filePath))
         return
     end
 
-    local xmlFile = loadXMLFile("fieldRotation", filePath)
+    local xmlFile = loadXMLFile("realisticCropRotation", filePath)
     if xmlFile == nil or xmlFile == 0 then
-        Logging.warning("[FieldRotation] Failed to load save file: %s", filePath)
+        Logging.warning("[RealisticCropRotation] Failed to load save file: %s", filePath)
         return
     end
 
-    local version = getXMLInt(xmlFile, "fieldRotation#version") or 1
-    if version > FieldRotationRepository.SAVE_VERSION then
-        Logging.warning("[FieldRotation] Save file version %d is newer than supported %d. Some data may be ignored.",
-            version, FieldRotationRepository.SAVE_VERSION)
+    local version = getXMLInt(xmlFile, "realisticCropRotation#version") or 1
+    if version > RealisticCropRotationRepository.SAVE_VERSION then
+        Logging.warning("[RealisticCropRotation] Save file version %d is newer than supported %d. Some data may be ignored.",
+            version, RealisticCropRotationRepository.SAVE_VERSION)
     end
 
     self.history = {}
     self.plans   = {}
     self.lastKnownActiveCrop = {}
-    self.nitrogenMaskPeriod = getXMLInt(xmlFile, "fieldRotation#nitrogenMaskPeriod") or 0
+    self.nitrogenMaskPeriod = getXMLInt(xmlFile, "realisticCropRotation#nitrogenMaskPeriod") or 0
 
     local farmlandIndex = 0
     while true do
-        local farmlandKey = string.format("fieldRotation.farmland(%d)", farmlandIndex)
+        local farmlandKey = string.format("realisticCropRotation.farmland(%d)", farmlandIndex)
         if not hasXMLProperty(xmlFile, farmlandKey) then break end
 
         local farmlandId = getXMLInt(xmlFile, farmlandKey .. "#id")
@@ -291,7 +291,7 @@ function FieldRotationRepository:loadFromXML(savegamePath)
                     table.insert(entries, { crop = string.upper(tostring(crop)) })
                 end
                 entryIndex = entryIndex + 1
-                if entryIndex >= FieldRotationRepository.MAX_HISTORY then break end
+                if entryIndex >= RealisticCropRotationRepository.MAX_HISTORY then break end
             end
             if #entries > 0 then
                 self.history[farmlandId] = entries
@@ -317,7 +317,7 @@ function FieldRotationRepository:loadFromXML(savegamePath)
 
     local historyFarmlands, historyEntries, planFarmlands, activeCropFarmlands =
         getPersistenceCounts(self.history, self.plans, self.lastKnownActiveCrop)
-    Logging.info("[FieldRotation] Loaded fieldRotation.xml historyFarmlands=%d entries=%d plans=%d activeCrops=%d path=%s (format v%d)",
+    Logging.info("[RealisticCropRotation] Loaded realisticCropRotation.xml historyFarmlands=%d entries=%d plans=%d activeCrops=%d path=%s (format v%d)",
         historyFarmlands, historyEntries, planFarmlands, activeCropFarmlands, tostring(filePath), version)
     delete(xmlFile)
 end

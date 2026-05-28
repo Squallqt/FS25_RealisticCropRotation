@@ -2,126 +2,126 @@
 <l10n>
     <elements>
         <!-- General -->
-        <e k="fieldRotation_menu_title" v="Fruchtfolge" />
+        <e k="realisticCropRotation_menu_title" v="Fruchtfolge" />
 
         <!-- Sidebar -->
-        <e k="fr_field_prefix"         v="Feld" />
-        <e k="fr_sidebar_last"            v="Letzter:" />
-        <e k="fr_sidebar_no_active_crop"  v="Keine aktive Kultur" />
+        <e k="rcr_field_prefix"         v="Feld" />
+        <e k="rcr_sidebar_last"            v="Letzter:" />
+        <e k="rcr_sidebar_no_active_crop"  v="Keine aktive Kultur" />
 
         <!-- Tabs -->
-        <e k="fr_tab_history"          v="Fruchtfolge" />
-        <e k="fr_tab_planning"         v="Planung" />
+        <e k="rcr_tab_history"          v="Fruchtfolge" />
+        <e k="rcr_tab_planning"         v="Planung" />
 
         <!-- Hero card -->
-        <e k="fr_season_label"         v="Saison" />
-        <e k="fr_season_spring"        v="Frühling" />
-        <e k="fr_season_summer"        v="Sommer" />
-        <e k="fr_season_autumn"        v="Herbst" />
-        <e k="fr_season_winter"        v="Winter" />
-        <e k="fr_status_bonus"         v="N-Rückstand" />
-        <e k="fr_status_current_residue" v="Aktueller Rückstand +%d kg/ha" />
-        <e k="fr_status_planned_residue" v="Rückstand Rotation gesamt +%d kg/ha" />
-        <e k="fr_status_current_no_residue" v="Aktueller Rückstand 0 kg/ha" />
-        <e k="fr_status_planned_no_residue" v="Rückstand Rotation gesamt 0 kg/ha" />
-        <e k="fr_hud_previous_n1"      v="Vorfrucht (N-1):" />
-        <e k="fr_hud_previous_n2"      v="Vor-Vorfrucht (N-2):" />
-        <e k="fr_hud_cover_crop"       v="Zwischenfrucht:" />
-        <e k="fr_hud_yes"              v="Ja" />
-        <e k="fr_hud_no"               v="Nein" />
-        <e k="fr_hud_none"             v="Keine" />
+        <e k="rcr_season_label"         v="Saison" />
+        <e k="rcr_season_spring"        v="Frühling" />
+        <e k="rcr_season_summer"        v="Sommer" />
+        <e k="rcr_season_autumn"        v="Herbst" />
+        <e k="rcr_season_winter"        v="Winter" />
+        <e k="rcr_status_bonus"         v="N-Rückstand" />
+        <e k="rcr_status_current_residue" v="Aktueller Rückstand +%d kg/ha" />
+        <e k="rcr_status_planned_residue" v="Rückstand Rotation gesamt +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Aktueller Rückstand 0 kg/ha" />
+        <e k="rcr_status_planned_no_residue" v="Rückstand Rotation gesamt 0 kg/ha" />
+        <e k="rcr_hud_previous_n1"      v="Vorfrucht (N-1):" />
+        <e k="rcr_hud_previous_n2"      v="Vor-Vorfrucht (N-2):" />
+        <e k="rcr_hud_cover_crop"       v="Zwischenfrucht:" />
+        <e k="rcr_hud_yes"              v="Ja" />
+        <e k="rcr_hud_no"               v="Nein" />
+        <e k="rcr_hud_none"             v="Keine" />
 
         <!-- Section bars -->
-        <e k="fr_section_history"      v="Anbaugeschichte" />
-        <e k="fr_section_nitrogen"     v="Stickstoffstatus" />
-        <e k="fr_section_advice"       v="Agronomische Empfehlung" />
-        <e k="fr_section_yield"        v="Ertrag, Unkraut und Wachstum" />
-        <e k="fr_section_lime"         v="Kalk-/pH-Status" />
-        <e k="fr_section_plan"         v="Rotationsplan" />
-        <e k="fr_section_score"        v="Rotationsqualität" />
-        <e k="fr_section_overview"     v="Gesamtübersicht" />
-        <e k="fr_overview_total_area"  v="Bewirtschaftete Fläche: %.1f ha" />
+        <e k="rcr_section_history"      v="Anbaugeschichte" />
+        <e k="rcr_section_nitrogen"     v="Stickstoffstatus" />
+        <e k="rcr_section_advice"       v="Agronomische Empfehlung" />
+        <e k="rcr_section_yield"        v="Ertrag, Unkraut und Wachstum" />
+        <e k="rcr_section_lime"         v="Kalk-/pH-Status" />
+        <e k="rcr_section_plan"         v="Rotationsplan" />
+        <e k="rcr_section_score"        v="Rotationsqualität" />
+        <e k="rcr_section_overview"     v="Gesamtübersicht" />
+        <e k="rcr_overview_total_area"  v="Bewirtschaftete Fläche: %.1f ha" />
 
         <!-- Timeline slot labels and empty state -->
-        <e k="fr_slot_empty"           v="Nicht bebaut" />
-        <e k="fr_slot_n4"              v="N-4" />
-        <e k="fr_slot_n3"              v="N-3" />
-        <e k="fr_slot_n2"              v="N-2" />
-        <e k="fr_slot_n1"              v="N-1" />
-        <e k="fr_slot_current"         v="Aktuell" />
+        <e k="rcr_slot_empty"           v="Nicht bebaut" />
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Aktuell" />
 
         <!-- Crop family badge labels -->
-        <e k="fr_family_cereal"        v="Getreide" />
-        <e k="fr_family_legume"        v="Hülsenfrucht" />
-        <e k="fr_family_oilseed"       v="Ölsaat" />
-        <e k="fr_family_root"          v="Wurzelgemüse" />
-        <e k="fr_family_vegetable"     v="Gemüse" />
-        <e k="fr_family_forage"        v="Futter" />
-        <e k="fr_family_cover"         v="Zwischenfrucht" />
+        <e k="rcr_family_cereal"        v="Getreide" />
+        <e k="rcr_family_legume"        v="Hülsenfrucht" />
+        <e k="rcr_family_oilseed"       v="Ölsaat" />
+        <e k="rcr_family_root"          v="Wurzelgemüse" />
+        <e k="rcr_family_vegetable"     v="Gemüse" />
+        <e k="rcr_family_forage"        v="Futter" />
+        <e k="rcr_family_cover"         v="Zwischenfrucht" />
 
         <!-- Nitrogen gauge -->
-        <e k="fr_n_none"               v="Kein Dünger" />
-        <e k="fr_n_partial"            v="Teilweise" />
-        <e k="fr_n_full"               v="Vollständig" />
-        <e k="fr_n_available"          v="Verfügbarer Stickstoff" />
-        <e k="fr_n_average_value"      v="Durchschnitt Stickstoff: %.0f kg/ha" />
-        <e k="fr_n_crop_need"          v="Kulturbedarf: %.0f kg/ha" />
-        <e k="fr_n_average_pf"         v="Stickstoff / Pflanzenbedarf" />
-        <e k="fr_lime_none"            v="Kein Kalk" />
-        <e k="fr_lime_partial"         v="Teilweise Kalk" />
-        <e k="fr_lime_full"            v="Kalk korrekt" />
-        <e k="fr_lime_average_pf"      v="Durchschnitt pH" />
-        <e k="fr_lime_average_value"   v="Durchschnitt pH: %.2f pH" />
-        <e k="fr_lime_target"          v="Ziel: %.2f pH" />
+        <e k="rcr_n_none"               v="Kein Dünger" />
+        <e k="rcr_n_partial"            v="Teilweise" />
+        <e k="rcr_n_full"               v="Vollständig" />
+        <e k="rcr_n_available"          v="Verfügbarer Stickstoff" />
+        <e k="rcr_n_average_value"      v="Durchschnitt Stickstoff: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Kulturbedarf: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Stickstoff / Pflanzenbedarf" />
+        <e k="rcr_lime_none"            v="Kein Kalk" />
+        <e k="rcr_lime_partial"         v="Teilweise Kalk" />
+        <e k="rcr_lime_full"            v="Kalk korrekt" />
+        <e k="rcr_lime_average_pf"      v="Durchschnitt pH" />
+        <e k="rcr_lime_average_value"   v="Durchschnitt pH: %.2f pH" />
+        <e k="rcr_lime_target"          v="Ziel: %.2f pH" />
 
         <!-- Agronomic advice -->
-        <e k="fr_advice_afterCereal"    v="Nach Getreide: Leguminose empfohlen, um Getreide nach Getreide zu vermeiden." />
-        <e k="fr_advice_afterLegume"    v="Nach Leguminose: Getreide nutzt den zurückgeführten Stickstoff gut." />
-        <e k="fr_advice_afterOilseed"   v="Nach Ölsaat: Getreide empfohlen; zwei Ölsaaten nacheinander vermeiden." />
-        <e k="fr_advice_afterRoot"      v="Nach Wurzelfrucht: Getreide empfohlen; Wurzelfrüchte mit Abstand planen." />
-        <e k="fr_advice_afterVegetable" v="Nach Blatt- oder Zwiebelgemüse: Getreide empfohlen; enge Wiederholung vermeiden." />
-        <e k="fr_advice_afterForage"    v="Nach Grünland oder Futterbau: Getreide passt gut zu Struktur und Rückständen." />
-        <e k="fr_advice_no_current_crop" v="Keine aktuelle Hauptkultur: Empfehlung verfügbar, sobald eine Kultur erkannt wird." />
+        <e k="rcr_advice_afterCereal"    v="Nach Getreide: Leguminose empfohlen, um Getreide nach Getreide zu vermeiden." />
+        <e k="rcr_advice_afterLegume"    v="Nach Leguminose: Getreide nutzt den zurückgeführten Stickstoff gut." />
+        <e k="rcr_advice_afterOilseed"   v="Nach Ölsaat: Getreide empfohlen; zwei Ölsaaten nacheinander vermeiden." />
+        <e k="rcr_advice_afterRoot"      v="Nach Wurzelfrucht: Getreide empfohlen; Wurzelfrüchte mit Abstand planen." />
+        <e k="rcr_advice_afterVegetable" v="Nach Blatt- oder Zwiebelgemüse: Getreide empfohlen; enge Wiederholung vermeiden." />
+        <e k="rcr_advice_afterForage"    v="Nach Grünland oder Futterbau: Getreide passt gut zu Struktur und Rückständen." />
+        <e k="rcr_advice_no_current_crop" v="Keine aktuelle Hauptkultur: Empfehlung verfügbar, sobald eine Kultur erkannt wird." />
 
         <!-- Yield card -->
-        <e k="fr_yield_harvest"        v="Gesamternte" />
-        <e k="fr_yield_stage"          v="Wachstum" />
+        <e k="rcr_yield_harvest"        v="Gesamternte" />
+        <e k="rcr_yield_stage"          v="Wachstum" />
 
         <!-- Yield card — weed column header (singular, matching base game HUD) -->
-        <e k="fr_weed_header"          v="Unkraut" />
+        <e k="rcr_weed_header"          v="Unkraut" />
 
         <!-- Yield card — weed action fallback labels (used when the pedestrian
              HUD cache is empty; base game strings are preferred when available). -->
-        <e k="fr_weed_stage_sprout"    v="Keimling" />
-        <e k="fr_weed_stage_small"     v="klein" />
-        <e k="fr_weed_stage_medium"    v="mittel" />
-        <e k="fr_weed_stage_large"     v="groß" />
-        <e k="fr_weed_stage_partial"   v="teilweise" />
-        <e k="fr_weed_tool_weeder"     v="Striegel" />
-        <e k="fr_weed_tool_hoe"        v="Hacke" />
-        <e k="fr_weed_tool_herbicide"  v="Herbizid" />
+        <e k="rcr_weed_stage_sprout"    v="Keimling" />
+        <e k="rcr_weed_stage_small"     v="klein" />
+        <e k="rcr_weed_stage_medium"    v="mittel" />
+        <e k="rcr_weed_stage_large"     v="groß" />
+        <e k="rcr_weed_stage_partial"   v="teilweise" />
+        <e k="rcr_weed_tool_weeder"     v="Striegel" />
+        <e k="rcr_weed_tool_hoe"        v="Hacke" />
+        <e k="rcr_weed_tool_herbicide"  v="Herbizid" />
 
         <!-- Planning tab — year slots -->
-        <e k="fr_plan_year1"           v="N+1" />
-        <e k="fr_plan_year2"           v="N+2" />
-        <e k="fr_plan_year3"           v="N+3" />
-        <e k="fr_plan_year4"           v="N+4" />
-        <e k="fr_plan_none"            v="Nicht geplant" />
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Nicht geplant" />
 
         <!-- Planning tab — score -->
-        <e k="fr_score_incomplete"     v="Unvollständiger Plan" />
-        <e k="fr_score_excellent"      v="Ausgezeichnete Rotation" />
-        <e k="fr_score_good"           v="Gute Rotation" />
-        <e k="fr_score_fair"           v="Angemessene Rotation" />
-        <e k="fr_score_poor"           v="Schlechte Rotation" />
-        <e k="fr_score_label_low"      v="Niedrige Bewertung" />
-        <e k="fr_score_label_optimal"  v="Optimale Bewertung" />
-        <e k="fr_score_short_optimal"  v="OPTIMAL" />
-        <e k="fr_score_short_good"     v="GUT" />
-        <e k="fr_score_short_fair"     v="OK" />
-        <e k="fr_score_short_poor"     v="SCHWACH" />
+        <e k="rcr_score_incomplete"     v="Unvollständiger Plan" />
+        <e k="rcr_score_excellent"      v="Ausgezeichnete Rotation" />
+        <e k="rcr_score_good"           v="Gute Rotation" />
+        <e k="rcr_score_fair"           v="Angemessene Rotation" />
+        <e k="rcr_score_poor"           v="Schlechte Rotation" />
+        <e k="rcr_score_label_low"      v="Niedrige Bewertung" />
+        <e k="rcr_score_label_optimal"  v="Optimale Bewertung" />
+        <e k="rcr_score_short_optimal"  v="OPTIMAL" />
+        <e k="rcr_score_short_good"     v="GUT" />
+        <e k="rcr_score_short_fair"     v="OK" />
+        <e k="rcr_score_short_poor"     v="SCHWACH" />
 
         <!-- Empty state -->
-        <e k="fr_empty_no_fields"      v="Keine eigenen Felder anzuzeigen." />
+        <e k="rcr_empty_no_fields"      v="Keine eigenen Felder anzuzeigen." />
     </elements>
 </l10n>

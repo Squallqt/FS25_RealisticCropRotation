@@ -12,7 +12,7 @@
 -- nitrogenMap.bitVectorMap, gated by:
 --   1. PF's getIsLockedAtWorldPos() to honour any external lock state, and
 --   2. a dedicated 1-bit application mask persisted alongside the savegame
---      (fieldRotation_nitrogenAppliedMask.grle) that prevents re-applying the
+--      (realisticCropRotation_nitrogenAppliedMask.grle) that prevents re-applying the
 --      bonus on the same pixels within the same in-game period.
 -- The mask is created eagerly at mission load (like every other game density
 -- map), saved unconditionally on save (like PF's own maps), and reset on
@@ -22,16 +22,16 @@
 -- OILSEEDRADISH) are deliberately skipped here — see
 -- getCoverCropTerminationStateChange — so the mod never duplicates PF's own
 -- catchCrops increase.
-FieldRotationService = {}
-local FieldRotationService_mt = Class(FieldRotationService)
+RealisticCropRotationService = {}
+local RealisticCropRotationService_mt = Class(RealisticCropRotationService)
 
 -- Crop data (families, nitrogen, cover flags) is driven by cropConfig.xml.
--- FieldRotation.cropConfig is loaded once at mod init by main.lua.
+-- RealisticCropRotation.cropConfig is loaded once at mod init by main.lua.
 -- 1 PF state = 5 kg N/ha (source: PrecisionFarming.xml amountPerState=5).
-FieldRotationService.PF_STATE_PER_UNIT = 5
-FieldRotationService.CROP_CHANGE_AREA_THRESHOLD = 0.90
+RealisticCropRotationService.PF_STATE_PER_UNIT = 5
+RealisticCropRotationService.CROP_CHANGE_AREA_THRESHOLD = 0.90
 
-FieldRotationService.NITROGEN_DIAGNOSTICS_ENABLED = false
+RealisticCropRotationService.NITROGEN_DIAGNOSTICS_ENABLED = false
 
 local function getPrecisionFarmingInstance()
     if g_precisionFarming ~= nil then return g_precisionFarming end
@@ -50,11 +50,11 @@ local function getNitrogenApplicationMaskFilename(savegamePath)
     if lastChar ~= "/" and lastChar ~= "\\" then
         savegamePath = savegamePath .. "/"
     end
-    return savegamePath .. "fieldRotation_nitrogenAppliedMask.grle"
+    return savegamePath .. "realisticCropRotation_nitrogenAppliedMask.grle"
 end
 
-function FieldRotationService.new(repository)
-    local self = setmetatable({}, FieldRotationService_mt)
+function RealisticCropRotationService.new(repository)
+    local self = setmetatable({}, RealisticCropRotationService_mt)
     self.repository = repository
     self.pendingBonus = {}            -- farmlandId -> { n1StateChange, n2StateChange }
     self.cropChangeAreaAccumulator = {}
@@ -69,7 +69,7 @@ function FieldRotationService.new(repository)
     return self
 end
 
-function FieldRotationService:reset()
+function RealisticCropRotationService:reset()
     self:releaseNitrogenApplicationMask()
     self.pendingBonus = {}
     self.cropChangeAreaAccumulator = {}
@@ -80,16 +80,16 @@ function FieldRotationService:reset()
     self.nitrogenApplicationMaskDirty = false
 end
 
-function FieldRotationService:getNitrogenKgPerHaFromStateChange(stateChange)
-    return (stateChange or 0) * FieldRotationService.PF_STATE_PER_UNIT
+function RealisticCropRotationService:getNitrogenKgPerHaFromStateChange(stateChange)
+    return (stateChange or 0) * RealisticCropRotationService.PF_STATE_PER_UNIT
 end
 
-function FieldRotationService:getCurrentPeriod()
+function RealisticCropRotationService:getCurrentPeriod()
     if g_currentMission == nil or g_currentMission.environment == nil then return 0 end
     return g_currentMission.environment.currentPeriod or 0
 end
 
-function FieldRotationService:getCurrentYear()
+function RealisticCropRotationService:getCurrentYear()
     if g_currentMission == nil or g_currentMission.environment == nil then return 0 end
     local environment = g_currentMission.environment
 
@@ -110,7 +110,7 @@ function FieldRotationService:getCurrentYear()
     return 0
 end
 
-function FieldRotationService:getCropNameByFruitTypeIndex(fruitTypeIndex)
+function RealisticCropRotationService:getCropNameByFruitTypeIndex(fruitTypeIndex)
     if g_fruitTypeManager == nil or fruitTypeIndex == nil then return nil end
     local cached = self.cropNameByFruitTypeIndex[fruitTypeIndex]
     if cached ~= nil then
@@ -127,30 +127,30 @@ function FieldRotationService:getCropNameByFruitTypeIndex(fruitTypeIndex)
     return cropName
 end
 
-function FieldRotationService:normalizeCropName(cropName)
+function RealisticCropRotationService:normalizeCropName(cropName)
     if cropName == nil or cropName == "" then return nil end
     local normalizedCropName = string.upper(tostring(cropName))
     if normalizedCropName == "" then return nil end
     return normalizedCropName
 end
 
-function FieldRotationService:getResidueEntry(cropName)
+function RealisticCropRotationService:getResidueEntry(cropName)
     if cropName == nil then return nil end
-    local config = FieldRotation ~= nil and FieldRotation.cropConfig or nil
+    local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
     if config == nil or config.nitrogen == nil then return nil end
     local entry = config.nitrogen[cropName]
     if entry ~= nil and ((entry.n1 or 0) > 0 or (entry.n2 or 0) > 0) then return entry end
     return nil
 end
 
-function FieldRotationService:getFruitTypeByCropName(cropName)
+function RealisticCropRotationService:getFruitTypeByCropName(cropName)
     if cropName == nil or g_fruitTypeManager == nil or g_fruitTypeManager.getFruitTypeByName == nil then
         return nil
     end
     return g_fruitTypeManager:getFruitTypeByName(cropName)
 end
 
-function FieldRotationService:isFruitTypeCatchCrop(fruitTypeIndex, cropName)
+function RealisticCropRotationService:isFruitTypeCatchCrop(fruitTypeIndex, cropName)
     local fruitType = nil
     if fruitTypeIndex ~= nil and fruitTypeIndex ~= FruitType.UNKNOWN
         and g_fruitTypeManager ~= nil and g_fruitTypeManager.getFruitTypeByIndex ~= nil then
@@ -163,7 +163,7 @@ function FieldRotationService:isFruitTypeCatchCrop(fruitTypeIndex, cropName)
     return fruitType.isCatchCrop == true
 end
 
-function FieldRotationService:isCoverCropForRotationHistory(fruitTypeIndex, cropName)
+function RealisticCropRotationService:isCoverCropForRotationHistory(fruitTypeIndex, cropName)
     local normalizedName = cropName
     if normalizedName == nil and fruitTypeIndex ~= nil then
         normalizedName = self:getCropNameByFruitTypeIndex(fruitTypeIndex)
@@ -172,7 +172,7 @@ function FieldRotationService:isCoverCropForRotationHistory(fruitTypeIndex, crop
         normalizedName = string.upper(tostring(normalizedName))
     end
     -- XML config: cover="true" crops are excluded from rotation history
-    local config = FieldRotation ~= nil and FieldRotation.cropConfig or nil
+    local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
     if config ~= nil and config.coverCrops ~= nil
         and normalizedName ~= nil and config.coverCrops[normalizedName] then
         return true
@@ -184,7 +184,7 @@ function FieldRotationService:isCoverCropForRotationHistory(fruitTypeIndex, crop
     return false
 end
 
-function FieldRotationService:getCoverCropTerminationStateChange(fruitTypeIndex)
+function RealisticCropRotationService:getCoverCropTerminationStateChange(fruitTypeIndex)
     local cropName = self:getCropNameByFruitTypeIndex(fruitTypeIndex)
     if cropName == nil then return 0 end
     if not self:isCoverCropForRotationHistory(fruitTypeIndex, cropName) then return 0 end
@@ -195,7 +195,7 @@ function FieldRotationService:getCoverCropTerminationStateChange(fruitTypeIndex)
     return entry.n1 or 0
 end
 
-function FieldRotationService:recomputePendingBonus(farmlandId)
+function RealisticCropRotationService:recomputePendingBonus(farmlandId)
     local entries = self.repository:getHistory(farmlandId)
     local n1Change = 0
     local n2Change = 0
@@ -216,14 +216,14 @@ function FieldRotationService:recomputePendingBonus(farmlandId)
     end
 end
 
-function FieldRotationService:recomputeAllPendingBonuses()
+function RealisticCropRotationService:recomputeAllPendingBonuses()
     self.pendingBonus = {}
     for farmlandId in pairs(self.repository:getAllHistory()) do
         self:recomputePendingBonus(farmlandId)
     end
 end
 
-function FieldRotationService:pushHistoryCrop(farmlandId, cropName, sourceName)
+function RealisticCropRotationService:pushHistoryCrop(farmlandId, cropName, sourceName)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
 
@@ -236,20 +236,20 @@ function FieldRotationService:pushHistoryCrop(farmlandId, cropName, sourceName)
     local changed = self.repository:pushEntry(numericFarmlandId, normalizedCropName)
     if changed then
         self:recomputePendingBonus(numericFarmlandId)
-        if FieldRotationService.NITROGEN_DIAGNOSTICS_ENABLED then
-            Logging.info("[FieldRotation][N-DIAG] history pushed farmland=%s crop=%s source=%s",
+        if RealisticCropRotationService.NITROGEN_DIAGNOSTICS_ENABLED then
+            Logging.info("[RealisticCropRotation][N-DIAG] history pushed farmland=%s crop=%s source=%s",
                 tostring(numericFarmlandId), tostring(normalizedCropName), tostring(sourceName))
         end
     end
     return changed
 end
 
-function FieldRotationService:setLastKnownActiveCrop(farmlandId, cropName)
+function RealisticCropRotationService:setLastKnownActiveCrop(farmlandId, cropName)
     local normalizedCropName = self:normalizeCropName(cropName)
     return self.repository:setLastKnownActiveCrop(farmlandId, normalizedCropName)
 end
 
-function FieldRotationService:reconcileActiveCrop(farmlandId, currentCropName, sourceName)
+function RealisticCropRotationService:reconcileActiveCrop(farmlandId, currentCropName, sourceName)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
 
@@ -269,7 +269,7 @@ function FieldRotationService:reconcileActiveCrop(farmlandId, currentCropName, s
     return pushed or activeChanged
 end
 
-function FieldRotationService:onCropChangeArea(farmlandId, fruitTypeIndex, sourceName, activeCropNameBeforeTermination, changedArea, requiredArea, nextActiveCropName)
+function RealisticCropRotationService:onCropChangeArea(farmlandId, fruitTypeIndex, sourceName, activeCropNameBeforeTermination, changedArea, requiredArea, nextActiveCropName)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
 
@@ -303,13 +303,13 @@ function FieldRotationService:onCropChangeArea(farmlandId, fruitTypeIndex, sourc
     return pushed or activeChanged
 end
 
-function FieldRotationService:getActiveBonusStateChange(farmlandId)
+function RealisticCropRotationService:getActiveBonusStateChange(farmlandId)
     local bonus = self.pendingBonus[farmlandId]
     if bonus == nil then return 0 end
     return (bonus.n1StateChange or 0) + (bonus.n2StateChange or 0)
 end
 
-function FieldRotationService:getTerminationBonusStateChange(farmlandId)
+function RealisticCropRotationService:getTerminationBonusStateChange(farmlandId)
     if farmlandId == nil or farmlandId == 0 then return 0 end
     local entries = self.repository:getHistoryNoAlloc(farmlandId)
     local total = 0
@@ -324,7 +324,7 @@ function FieldRotationService:getTerminationBonusStateChange(farmlandId)
     return total
 end
 
-function FieldRotationService:getTerminationBonusStateChangeForCandidate(farmlandId, fruitTypeIndex, activeCropNameBeforeTermination)
+function RealisticCropRotationService:getTerminationBonusStateChangeForCandidate(farmlandId, fruitTypeIndex, activeCropNameBeforeTermination)
     if farmlandId == nil or farmlandId == 0 then return 0 end
 
     local cropName = self:getCropNameByFruitTypeIndex(fruitTypeIndex)
@@ -359,7 +359,7 @@ end
 -- Nitrogen application mask
 -- =========================================================================
 
-function FieldRotationService:releaseNitrogenApplicationMask()
+function RealisticCropRotationService:releaseNitrogenApplicationMask()
     if self.nitrogenApplicationMaskMap ~= nil then
         pcall(delete, self.nitrogenApplicationMaskMap)
     end
@@ -372,38 +372,38 @@ function FieldRotationService:releaseNitrogenApplicationMask()
 end
 
 -- Eager initialization called from manager:loadFromXML on the server.
--- Creates the mask once. A saved mask is loaded only when fieldRotation.xml
+-- Creates the mask once. A saved mask is loaded only when realisticCropRotation.xml
 -- proves it belongs to the current in-game period.
-function FieldRotationService:initializeNitrogenApplicationMask(savegamePath)
+function RealisticCropRotationService:initializeNitrogenApplicationMask(savegamePath)
     self:releaseNitrogenApplicationMask()
 
     local currentPeriod = self:getCurrentPeriod()
     if currentPeriod == 0 then
-        Logging.warning("[FieldRotation] Nitrogen application mask init skipped: current period unavailable")
+        Logging.warning("[RealisticCropRotation] Nitrogen application mask init skipped: current period unavailable")
         return false
     end
 
     local precisionFarming = getPrecisionFarmingInstance()
     local nitrogenMap = precisionFarming ~= nil and precisionFarming.nitrogenMap or nil
     if nitrogenMap == nil or nitrogenMap.bitVectorMap == nil then
-        Logging.info("[FieldRotation] Nitrogen application mask not initialized: PF nitrogenMap unavailable")
+        Logging.info("[RealisticCropRotation] Nitrogen application mask not initialized: PF nitrogenMap unavailable")
         return false
     end
 
     if createBitVectorMap == nil or loadBitVectorMapNew == nil or getBitVectorMapSize == nil then
-        Logging.warning("[FieldRotation] Nitrogen application mask init skipped: bit-vector map API unavailable")
+        Logging.warning("[RealisticCropRotation] Nitrogen application mask init skipped: bit-vector map API unavailable")
         return false
     end
 
     local sizeOk, mapWidth, mapHeight = pcall(getBitVectorMapSize, nitrogenMap.bitVectorMap)
     if not sizeOk or mapWidth == nil or mapHeight == nil then
-        Logging.warning("[FieldRotation] Nitrogen application mask init skipped: getBitVectorMapSize failed")
+        Logging.warning("[RealisticCropRotation] Nitrogen application mask init skipped: getBitVectorMapSize failed")
         return false
     end
 
-    local createOk, createdMap = pcall(createBitVectorMap, "FieldRotationNitrogenApplicationMask")
+    local createOk, createdMap = pcall(createBitVectorMap, "RealisticCropRotationNitrogenApplicationMask")
     if not createOk or createdMap == nil then
-        Logging.warning("[FieldRotation] Nitrogen application mask init failed: createBitVectorMap failed")
+        Logging.warning("[RealisticCropRotation] Nitrogen application mask init failed: createBitVectorMap failed")
         return false
     end
 
@@ -443,7 +443,7 @@ function FieldRotationService:initializeNitrogenApplicationMask(savegamePath)
         local newOk, newErr = pcall(loadBitVectorMapNew, createdMap, mapWidth, mapHeight, 1, false)
         if not newOk then
             pcall(delete, createdMap)
-            Logging.warning("[FieldRotation] Nitrogen application mask init failed: loadBitVectorMapNew error=%s",
+            Logging.warning("[RealisticCropRotation] Nitrogen application mask init failed: loadBitVectorMapNew error=%s",
                 tostring(newErr))
             return false
         end
@@ -458,14 +458,14 @@ function FieldRotationService:initializeNitrogenApplicationMask(savegamePath)
     if self.repository ~= nil and type(self.repository.setNitrogenMaskPeriod) == "function" then
         self.repository:setNitrogenMaskPeriod(currentPeriod)
     end
-    Logging.info("[FieldRotation] Nitrogen application mask ready: size=%dx%d period=%d loadedFromFile=%s reason=%s savedPeriod=%d",
+    Logging.info("[RealisticCropRotation] Nitrogen application mask ready: size=%dx%d period=%d loadedFromFile=%s reason=%s savedPeriod=%d",
         mapWidth, mapHeight, currentPeriod, tostring(loaded), tostring(loadReason), savedMaskPeriod)
     return true
 end
 
 -- Unconditional save aligned with PF's own save pattern (called from
 -- FSBaseMission.saveSavegame via manager:saveToXML).
-function FieldRotationService:saveNitrogenApplicationMask(savegamePath)
+function RealisticCropRotationService:saveNitrogenApplicationMask(savegamePath)
     if self.nitrogenApplicationMaskMap == nil then return false end
     if saveBitVectorMapToFile == nil then return false end
 
@@ -474,7 +474,7 @@ function FieldRotationService:saveNitrogenApplicationMask(savegamePath)
 
     local saveOk, saveResult = pcall(saveBitVectorMapToFile, self.nitrogenApplicationMaskMap, maskFilename)
     if not saveOk or saveResult == false then
-        Logging.warning("[FieldRotation] Nitrogen application mask save failed: filename=%s result=%s",
+        Logging.warning("[RealisticCropRotation] Nitrogen application mask save failed: filename=%s result=%s",
             tostring(maskFilename), tostring(saveResult))
         return false
     end
@@ -488,7 +488,7 @@ end
 
 -- Reset all bits to 0 when a new in-game period starts so the mask covers the
 -- current period only. Called from main.lua on currentPeriodChanged.
-function FieldRotationService:resetNitrogenApplicationMaskForNewPeriod()
+function RealisticCropRotationService:resetNitrogenApplicationMaskForNewPeriod()
     if self.nitrogenApplicationMaskMap == nil then return end
     if self.nitrogenApplicationMaskWidth == nil or self.nitrogenApplicationMaskHeight == nil then return end
     if loadBitVectorMapNew == nil then return end
@@ -499,7 +499,7 @@ function FieldRotationService:resetNitrogenApplicationMaskForNewPeriod()
     local ok, err = pcall(loadBitVectorMapNew, self.nitrogenApplicationMaskMap,
         self.nitrogenApplicationMaskWidth, self.nitrogenApplicationMaskHeight, 1, false)
     if not ok then
-        Logging.warning("[FieldRotation] Nitrogen application mask reset failed: %s", tostring(err))
+        Logging.warning("[RealisticCropRotation] Nitrogen application mask reset failed: %s", tostring(err))
         return
     end
     self.nitrogenApplicationMaskPeriod = currentPeriod
@@ -507,7 +507,7 @@ function FieldRotationService:resetNitrogenApplicationMaskForNewPeriod()
     if self.repository ~= nil and type(self.repository.setNitrogenMaskPeriod) == "function" then
         self.repository:setNitrogenMaskPeriod(currentPeriod)
     end
-    Logging.info("[FieldRotation] Nitrogen application mask reset for period=%d", currentPeriod)
+    Logging.info("[RealisticCropRotation] Nitrogen application mask reset for period=%d", currentPeriod)
 end
 
 -- =========================================================================
@@ -517,7 +517,7 @@ end
 -- the local source set. This density-map writer is the single accepted backend
 -- exception and must stay server-side, mask-gated, period-gated, and logged.
 
-function FieldRotationService:applyNitrogenStateChangeAtArea(totalStateChange, xs, zs, xw, zw, xh, zh, sourceName)
+function RealisticCropRotationService:applyNitrogenStateChangeAtArea(totalStateChange, xs, zs, xw, zw, xh, zh, sourceName)
     if totalStateChange == nil or totalStateChange <= 0 then return false end
     if xs == nil or zs == nil or xw == nil or zw == nil or xh == nil or zh == nil then return false end
 
@@ -526,7 +526,7 @@ function FieldRotationService:applyNitrogenStateChangeAtArea(totalStateChange, x
     if nitrogenMap == nil then
         if not self.warnedNitrogenBackend.pf then
             self.warnedNitrogenBackend.pf = true
-            Logging.warning("[FieldRotation] Nitrogen restitution skipped: PF nitrogenMap unavailable")
+            Logging.warning("[RealisticCropRotation] Nitrogen restitution skipped: PF nitrogenMap unavailable")
         end
         return false
     end
@@ -534,7 +534,7 @@ function FieldRotationService:applyNitrogenStateChangeAtArea(totalStateChange, x
     if self.nitrogenApplicationMaskMap == nil then
         if not self.warnedNitrogenBackend.mask then
             self.warnedNitrogenBackend.mask = true
-            Logging.warning("[FieldRotation] Nitrogen restitution skipped: application mask not initialized")
+            Logging.warning("[RealisticCropRotation] Nitrogen restitution skipped: application mask not initialized")
         end
         return false
     end
@@ -550,11 +550,11 @@ function FieldRotationService:applyNitrogenStateChangeAtArea(totalStateChange, x
     return self:writeNitrogenDensityMapStateChange(nitrogenMap, totalStateChange, xs, zs, xw, zw, xh, zh, sourceName)
 end
 
-function FieldRotationService:writeNitrogenDensityMapStateChange(nitrogenMap, totalStateChange, xs, zs, xw, zw, xh, zh, sourceName)
+function RealisticCropRotationService:writeNitrogenDensityMapStateChange(nitrogenMap, totalStateChange, xs, zs, xw, zw, xh, zh, sourceName)
     if DensityMapModifier == nil or DensityMapFilter == nil
         or DensityCoordType == nil or DensityValueCompareType == nil
         or g_terrainNode == nil then
-        Logging.warning("[FieldRotation] Nitrogen restitution failed: density map API unavailable source=%s", tostring(sourceName))
+        Logging.warning("[RealisticCropRotation] Nitrogen restitution failed: density map API unavailable source=%s", tostring(sourceName))
         return false
     end
 
@@ -563,7 +563,7 @@ function FieldRotationService:writeNitrogenDensityMapStateChange(nitrogenMap, to
     local numChannels = nitrogenMap.numChannels or nitrogenMap.NUM_BITS
     local maxValue = nitrogenMap.maxValue
     if bitVectorMap == nil or numChannels == nil or maxValue == nil then
-        Logging.warning("[FieldRotation] Nitrogen restitution failed: invalid PF nitrogen map source=%s", tostring(sourceName))
+        Logging.warning("[RealisticCropRotation] Nitrogen restitution failed: invalid PF nitrogen map source=%s", tostring(sourceName))
         return false
     end
 
@@ -574,14 +574,14 @@ function FieldRotationService:writeNitrogenDensityMapStateChange(nitrogenMap, to
     -- Main modifier targets the N density-map.
     local modOk, modifier = pcall(DensityMapModifier.new, bitVectorMap, firstChannel, numChannels, g_terrainNode)
     if not modOk or modifier == nil then
-        Logging.warning("[FieldRotation] Nitrogen restitution failed: DensityMapModifier.new error=%s source=%s",
+        Logging.warning("[RealisticCropRotation] Nitrogen restitution failed: DensityMapModifier.new error=%s source=%s",
             tostring(modifier), tostring(sourceName))
         return false
     end
 
     local valueFilterOk, valueFilter = pcall(DensityMapFilter.new, modifier)
     if not valueFilterOk or valueFilter == nil then
-        Logging.warning("[FieldRotation] Nitrogen restitution failed: DensityMapFilter.new error=%s source=%s",
+        Logging.warning("[RealisticCropRotation] Nitrogen restitution failed: DensityMapFilter.new error=%s source=%s",
             tostring(valueFilter), tostring(sourceName))
         return false
     end
@@ -590,7 +590,7 @@ function FieldRotationService:writeNitrogenDensityMapStateChange(nitrogenMap, to
         modifier:setParallelogramWorldCoords(xs, zs, xw, zw, xh, zh, pointPointPoint)
     end)
     if not areaOk then
-        Logging.warning("[FieldRotation] Nitrogen restitution failed: N area setup error=%s source=%s",
+        Logging.warning("[RealisticCropRotation] Nitrogen restitution failed: N area setup error=%s source=%s",
             tostring(areaErr), tostring(sourceName))
         return false
     end
@@ -599,13 +599,13 @@ function FieldRotationService:writeNitrogenDensityMapStateChange(nitrogenMap, to
     local maskMap = self.nitrogenApplicationMaskMap
     local maskModOk, maskModifier = pcall(DensityMapModifier.new, maskMap, 0, 1, g_terrainNode)
     if not maskModOk or maskModifier == nil then
-        Logging.warning("[FieldRotation] Nitrogen restitution failed: mask DensityMapModifier.new error=%s source=%s",
+        Logging.warning("[RealisticCropRotation] Nitrogen restitution failed: mask DensityMapModifier.new error=%s source=%s",
             tostring(maskModifier), tostring(sourceName))
         return false
     end
     local maskFilterOk, maskFilter = pcall(DensityMapFilter.new, maskMap, 0, 1)
     if not maskFilterOk or maskFilter == nil then
-        Logging.warning("[FieldRotation] Nitrogen restitution failed: mask DensityMapFilter.new error=%s source=%s",
+        Logging.warning("[RealisticCropRotation] Nitrogen restitution failed: mask DensityMapFilter.new error=%s source=%s",
             tostring(maskFilter), tostring(sourceName))
         return false
     end
@@ -615,7 +615,7 @@ function FieldRotationService:writeNitrogenDensityMapStateChange(nitrogenMap, to
         maskFilter:setValueCompareParams(equalCompare, 0)
     end)
     if not maskAreaOk then
-        Logging.warning("[FieldRotation] Nitrogen restitution failed: mask area setup error=%s source=%s",
+        Logging.warning("[RealisticCropRotation] Nitrogen restitution failed: mask area setup error=%s source=%s",
             tostring(maskAreaErr), tostring(sourceName))
         return false
     end
@@ -631,7 +631,7 @@ function FieldRotationService:writeNitrogenDensityMapStateChange(nitrogenMap, to
                 return modifier:executeSet(maxValue, valueFilter, maskFilter)
             end)
             if not capOk then
-                Logging.warning("[FieldRotation] Nitrogen restitution failed: executeSet cap error=%s source=%s",
+                Logging.warning("[RealisticCropRotation] Nitrogen restitution failed: executeSet cap error=%s source=%s",
                     tostring(capResult1), tostring(sourceName))
                 return false
             end
@@ -649,7 +649,7 @@ function FieldRotationService:writeNitrogenDensityMapStateChange(nitrogenMap, to
                 return modifier:executeSet(targetValue, valueFilter, maskFilter)
             end)
             if not setOk then
-                Logging.warning("[FieldRotation] Nitrogen restitution failed: executeSet sourceValue=%s targetValue=%s error=%s source=%s",
+                Logging.warning("[RealisticCropRotation] Nitrogen restitution failed: executeSet sourceValue=%s targetValue=%s error=%s source=%s",
                     tostring(sourceValue), tostring(targetValue), tostring(setResult1), tostring(sourceName))
                 return false
             end
@@ -663,7 +663,7 @@ function FieldRotationService:writeNitrogenDensityMapStateChange(nitrogenMap, to
         return maskModifier:executeSet(1, maskFilter)
     end)
     if not maskOk then
-        Logging.warning("[FieldRotation] Nitrogen restitution failed: mask executeSet error=%s source=%s",
+        Logging.warning("[RealisticCropRotation] Nitrogen restitution failed: mask executeSet error=%s source=%s",
             tostring(maskResult1), tostring(sourceName))
         return false
     end
@@ -677,8 +677,8 @@ function FieldRotationService:writeNitrogenDensityMapStateChange(nitrogenMap, to
         pcall(nitrogenMap.setMinimapRequiresUpdate, nitrogenMap, true)
     end
 
-    if FieldRotationService.NITROGEN_DIAGNOSTICS_ENABLED then
-        Logging.info("[FieldRotation][N-DIAG] applied state=%d kgHa=%d source=%s changedPixels=%d maskPixels=%d",
+    if RealisticCropRotationService.NITROGEN_DIAGNOSTICS_ENABLED then
+        Logging.info("[RealisticCropRotation][N-DIAG] applied state=%d kgHa=%d source=%s changedPixels=%d maskPixels=%d",
             totalStateChange, self:getNitrogenKgPerHaFromStateChange(totalStateChange), tostring(sourceName),
             changedPixels, maskPixels)
     end
@@ -689,11 +689,11 @@ end
 -- MP sync helpers (server-authoritative).
 -- =========================================================================
 
-function FieldRotationService:applySyncData(receivedHistory, receivedPlans, receivedLastKnownActiveCrop)
+function RealisticCropRotationService:applySyncData(receivedHistory, receivedPlans, receivedLastKnownActiveCrop)
     self.repository:replaceAll(receivedHistory or {}, receivedPlans or {}, receivedLastKnownActiveCrop or {})
     self:recomputeAllPendingBonuses()
 end
 
-function FieldRotationService:getSyncData()
+function RealisticCropRotationService:getSyncData()
     return self.repository:getAllHistory(), self.repository:getAllLastKnownActiveCrops()
 end

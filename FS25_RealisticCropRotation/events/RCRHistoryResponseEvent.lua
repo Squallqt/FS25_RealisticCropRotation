@@ -1,10 +1,10 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
 -- Server->client full rotation snapshot. Sent on late-join and on explicit
--- FRHistoryRequestEvent. Payload: history + plans + last known active crops.
-FRHistoryResponseEvent = {}
-local FRHistoryResponseEvent_mt = Class(FRHistoryResponseEvent, Event)
+-- RCRHistoryRequestEvent. Payload: history + plans + last known active crops.
+RCRHistoryResponseEvent = {}
+local RCRHistoryResponseEvent_mt = Class(RCRHistoryResponseEvent, Event)
 
-InitEventClass(FRHistoryResponseEvent, "FRHistoryResponseEvent")
+InitEventClass(RCRHistoryResponseEvent, "RCRHistoryResponseEvent")
 
 local function countHistory(history)
     local farmlandCount = 0
@@ -18,15 +18,15 @@ local function countHistory(history)
     return farmlandCount, entryCount
 end
 
-function FRHistoryResponseEvent.emptyNew()
-    return Event.new(FRHistoryResponseEvent_mt)
+function RCRHistoryResponseEvent.emptyNew()
+    return Event.new(RCRHistoryResponseEvent_mt)
 end
 
-function FRHistoryResponseEvent.new()
-    return FRHistoryResponseEvent.emptyNew()
+function RCRHistoryResponseEvent.new()
+    return RCRHistoryResponseEvent.emptyNew()
 end
 
-function FRHistoryResponseEvent:readStream(streamId, _connection)
+function RCRHistoryResponseEvent:readStream(streamId, _connection)
     local farmlandCount = streamReadInt16(streamId)
     local received = {}
     local totalEntries = 0
@@ -78,16 +78,16 @@ function FRHistoryResponseEvent:readStream(streamId, _connection)
         return
     end
 
-    local manager = g_currentMission ~= nil and g_currentMission.fieldRotationManager or nil
+    local manager = g_currentMission ~= nil and g_currentMission.realisticCropRotationManager or nil
     if manager == nil then
-        if FieldRotation ~= nil then
-            FieldRotation.pendingSyncData = {
+        if RealisticCropRotation ~= nil then
+            RealisticCropRotation.pendingSyncData = {
                 history = received,
                 plans = receivedPlans,
                 lastKnownActiveCrop = receivedLastKnownActiveCrop,
             }
         end
-        Logging.warning("[FieldRotation] FRHistoryResponseEvent: manager not available, historyFarmlands=%d entries=%d plans=%d activeCrops=%d buffered",
+        Logging.warning("[RealisticCropRotation] RCRHistoryResponseEvent: manager not available, historyFarmlands=%d entries=%d plans=%d activeCrops=%d buffered",
             farmlandCount, totalEntries, planCount, activeCropCount)
         return
     end
@@ -96,22 +96,22 @@ function FRHistoryResponseEvent:readStream(streamId, _connection)
         manager.service:applySyncData(received, receivedPlans, receivedLastKnownActiveCrop)
     end
 
-    Logging.info("[FieldRotation][MP] Sync received historyFarmlands=%d entries=%d plans=%d activeCrops=%d",
+    Logging.info("[RealisticCropRotation][MP] Sync received historyFarmlands=%d entries=%d plans=%d activeCrops=%d",
         farmlandCount, totalEntries, planCount, activeCropCount)
 
-    if FieldRotation ~= nil and FieldRotation.frame ~= nil then
-        if type(FieldRotation.frame.onServerSyncReceived) == "function" then
-            FieldRotation.frame:onServerSyncReceived()
-        elseif type(FieldRotation.frame.populateSidebar) == "function" then
-            FieldRotation.frame:populateSidebar()
-        elseif type(FieldRotation.frame.updateDetailPanel) == "function" then
-            FieldRotation.frame:updateDetailPanel(FieldRotation.frame.selectedId)
+    if RealisticCropRotation ~= nil and RealisticCropRotation.frame ~= nil then
+        if type(RealisticCropRotation.frame.onServerSyncReceived) == "function" then
+            RealisticCropRotation.frame:onServerSyncReceived()
+        elseif type(RealisticCropRotation.frame.populateSidebar) == "function" then
+            RealisticCropRotation.frame:populateSidebar()
+        elseif type(RealisticCropRotation.frame.updateDetailPanel) == "function" then
+            RealisticCropRotation.frame:updateDetailPanel(RealisticCropRotation.frame.selectedId)
         end
     end
 end
 
-function FRHistoryResponseEvent:writeStream(streamId, _connection)
-    local manager = g_currentMission ~= nil and g_currentMission.fieldRotationManager or nil
+function RCRHistoryResponseEvent:writeStream(streamId, _connection)
+    local manager = g_currentMission ~= nil and g_currentMission.realisticCropRotationManager or nil
     if manager == nil or manager.service == nil or type(manager.service.getSyncData) ~= "function" then
         streamWriteInt16(streamId, 0)
         streamWriteInt16(streamId, 0)
@@ -136,9 +136,9 @@ function FRHistoryResponseEvent:writeStream(streamId, _connection)
     for _, farmlandId in ipairs(farmlandIds) do
         local entries = history[farmlandId] or history[tostring(farmlandId)] or {}
         streamWriteInt32(streamId, farmlandId)
-        streamWriteInt8(streamId, math.min(#entries, FieldRotationRepository.MAX_HISTORY))
+        streamWriteInt8(streamId, math.min(#entries, RealisticCropRotationRepository.MAX_HISTORY))
         for i, entry in ipairs(entries) do
-            if i > FieldRotationRepository.MAX_HISTORY then break end
+            if i > RealisticCropRotationRepository.MAX_HISTORY then break end
             streamWriteString(streamId, tostring(entry.crop or ""))
         end
     end
@@ -180,6 +180,6 @@ function FRHistoryResponseEvent:writeStream(streamId, _connection)
     end
 
     local _, entryCount = countHistory(history)
-    Logging.info("[FieldRotation][MP] Sync sent historyFarmlands=%d entries=%d plans=%d activeCrops=%d",
+    Logging.info("[RealisticCropRotation][MP] Sync sent historyFarmlands=%d entries=%d plans=%d activeCrops=%d",
         #farmlandIds, entryCount, #planFarmlandIds, #activeCropFarmlandIds)
 end

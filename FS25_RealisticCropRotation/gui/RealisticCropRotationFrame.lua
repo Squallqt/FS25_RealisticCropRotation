@@ -1,26 +1,26 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
-FieldRotationFrame = {}
-local FieldRotationFrame_mt = Class(FieldRotationFrame, TabbedMenuFrameElement)
+RealisticCropRotationFrame = {}
+local RealisticCropRotationFrame_mt = Class(RealisticCropRotationFrame, TabbedMenuFrameElement)
 
 -- Internal tab indices
-FieldRotationFrame.TAB = { HISTORY = 1, PLANNING = 2 }
+RealisticCropRotationFrame.TAB = { HISTORY = 1, PLANNING = 2 }
 
 -- Crop family classification is driven by cropConfig.xml.
--- FieldRotation.cropConfig is loaded once at mod init by main.lua.
+-- RealisticCropRotation.cropConfig is loaded once at mod init by main.lua.
 
 -- Advice follows the current timeline card.
 -- COVER does not drive a recommendation because it is not a main crop.
-FieldRotationFrame.ADVICE_KEY = {
-    CEREAL    = "fr_advice_afterCereal",
-    LEGUME    = "fr_advice_afterLegume",
-    OILSEED   = "fr_advice_afterOilseed",
-    ROOT      = "fr_advice_afterRoot",
-    VEGETABLE = "fr_advice_afterVegetable",
-    FORAGE    = "fr_advice_afterForage",
+RealisticCropRotationFrame.ADVICE_KEY = {
+    CEREAL    = "rcr_advice_afterCereal",
+    LEGUME    = "rcr_advice_afterLegume",
+    OILSEED   = "rcr_advice_afterOilseed",
+    ROOT      = "rcr_advice_afterRoot",
+    VEGETABLE = "rcr_advice_afterVegetable",
+    FORAGE    = "rcr_advice_afterForage",
 }
 
 -- Family badge RGBA — Lua-only (XML constraint does not apply)
-FieldRotationFrame.FAMILY_RGBA = {
+RealisticCropRotationFrame.FAMILY_RGBA = {
     CEREAL    = {0.761, 0.365, 0.000, 1.0},  -- amber
     LEGUME    = {0.325, 0.565, 0.071, 1.0},  -- green
     OILSEED   = {0.800, 0.700, 0.000, 1.0},  -- golden yellow
@@ -31,37 +31,37 @@ FieldRotationFrame.FAMILY_RGBA = {
 }
 
 -- slot index 1..4 maps to history newest-first (history[1] = N-1)
-FieldRotationFrame.SLOT_HISTORY_IDX = { 4, 3, 2, 1 }
+RealisticCropRotationFrame.SLOT_HISTORY_IDX = { 4, 3, 2, 1 }
 
 -- Vanilla spray state labels
-FieldRotationFrame.SPRAY_LABEL_KEY = {
-    [0] = "fr_n_none", [1] = "fr_n_partial", [2] = "fr_n_full",
+RealisticCropRotationFrame.SPRAY_LABEL_KEY = {
+    [0] = "rcr_n_none", [1] = "rcr_n_partial", [2] = "rcr_n_full",
 }
 
 -- Max pixel widths (must match profile sizes)
-FieldRotationFrame.N_BAR_MAX_WIDTH     = 1192
-FieldRotationFrame.N_BAR_HEIGHT        = 14
-FieldRotationFrame.SCORE_BAR_MAX_WIDTH = 280
+RealisticCropRotationFrame.N_BAR_MAX_WIDTH     = 1192
+RealisticCropRotationFrame.N_BAR_HEIGHT        = 14
+RealisticCropRotationFrame.SCORE_BAR_MAX_WIDTH = 280
 
 -- Global overview crop badge layout (pixel values, converted at runtime)
 -- Goal: center the whole pair [crop icon + 5px gap + crop text] inside each crop badge.
-FieldRotationFrame.GROUP_BADGE_Y          = 18
-FieldRotationFrame.GROUP_BADGE_W          = 170
-FieldRotationFrame.GROUP_BADGE_H          = 30
-FieldRotationFrame.GROUP_ICON_W           = 20
-FieldRotationFrame.GROUP_ICON_H           = 20
-FieldRotationFrame.GROUP_ICON_TEXT_GAP    = 5
-FieldRotationFrame.GROUP_BADGE_PADDING_X  = 20
+RealisticCropRotationFrame.GROUP_BADGE_Y          = 18
+RealisticCropRotationFrame.GROUP_BADGE_W          = 170
+RealisticCropRotationFrame.GROUP_BADGE_H          = 30
+RealisticCropRotationFrame.GROUP_ICON_W           = 20
+RealisticCropRotationFrame.GROUP_ICON_H           = 20
+RealisticCropRotationFrame.GROUP_ICON_TEXT_GAP    = 5
+RealisticCropRotationFrame.GROUP_BADGE_PADDING_X  = 20
 
 -- Season name l10n keys indexed by currentSeason (0-based)
-FieldRotationFrame.SEASON_KEY = {
-    [0] = "fr_season_spring", [1] = "fr_season_summer",
-    [2] = "fr_season_autumn", [3] = "fr_season_winter",
+RealisticCropRotationFrame.SEASON_KEY = {
+    [0] = "rcr_season_spring", [1] = "rcr_season_summer",
+    [2] = "rcr_season_autumn", [3] = "rcr_season_winter",
 }
 
-function FieldRotationFrame.new(i18n, messageCenter)
-    local self = FieldRotationFrame:superClass().new(nil, FieldRotationFrame_mt)
-    self.name          = "FieldRotationFrame"
+function RealisticCropRotationFrame.new(i18n, messageCenter)
+    local self = RealisticCropRotationFrame:superClass().new(nil, RealisticCropRotationFrame_mt)
+    self.name          = "RealisticCropRotationFrame"
     self.i18n          = i18n or g_i18n
     self.messageCenter = messageCenter or g_messageCenter
     self.farmlandList  = {}
@@ -73,22 +73,22 @@ function FieldRotationFrame.new(i18n, messageCenter)
     return self
 end
 
-function FieldRotationFrame:copyAttributes(src)
-    FieldRotationFrame:superClass().copyAttributes(self, src)
+function RealisticCropRotationFrame:copyAttributes(src)
+    RealisticCropRotationFrame:superClass().copyAttributes(self, src)
     self.i18n          = src.i18n
     self.messageCenter = src.messageCenter
     self.totalAreaHa   = src.totalAreaHa or 0
     self.isSubscribedToFarmlandChanges = false
 end
 
-function FieldRotationFrame:delete()
+function RealisticCropRotationFrame:delete()
     self:unsubscribeFarmlandChanges()
     self.farmlandList = nil
-    FieldRotationFrame:superClass().delete(self)
+    RealisticCropRotationFrame:superClass().delete(self)
 end
 
-function FieldRotationFrame:onGuiSetupFinished()
-    FieldRotationFrame:superClass().onGuiSetupFinished(self)
+function RealisticCropRotationFrame:onGuiSetupFinished()
+    RealisticCropRotationFrame:superClass().onGuiSetupFinished(self)
     if self.listFields ~= nil then
         self.listFields:setDataSource(self)
         self.listFields:setDelegate(self)
@@ -100,16 +100,16 @@ function FieldRotationFrame:onGuiSetupFinished()
     self:linkFocusNavigation()
 end
 
-function FieldRotationFrame:initialize()
-    FieldRotationFrame:superClass().initialize(self)
+function RealisticCropRotationFrame:initialize()
+    RealisticCropRotationFrame:superClass().initialize(self)
 
     -- Setup sidebar view tab selector
     if self.viewSelector ~= nil then
         self.viewSelector:setTexts({
-            self.i18n:getText("fr_tab_history"),
-            self.i18n:getText("fr_tab_planning"),
+            self.i18n:getText("rcr_tab_history"),
+            self.i18n:getText("rcr_tab_planning"),
         })
-        self.viewSelector:setState(FieldRotationFrame.TAB.HISTORY, false)
+        self.viewSelector:setState(RealisticCropRotationFrame.TAB.HISTORY, false)
 
         if self.viewSelectorDotBox ~= nil then
             for i = 1, #self.viewSelectorDotBox.elements do
@@ -125,26 +125,26 @@ function FieldRotationFrame:initialize()
 end
 
 -- onCreate: entry point per spec; actual population deferred to onFrameOpen
-function FieldRotationFrame:onCreate()
+function RealisticCropRotationFrame:onCreate()
 end
 
-function FieldRotationFrame:onFrameOpen()
-    FieldRotationFrame:superClass().onFrameOpen(self)
+function RealisticCropRotationFrame:onFrameOpen()
+    RealisticCropRotationFrame:superClass().onFrameOpen(self)
     self:subscribeFarmlandChanges()
     self:populateSidebar()
-    if FieldRotation ~= nil and FieldRotation.requestServerSync ~= nil then
-        FieldRotation.requestServerSync("frameOpen")
+    if RealisticCropRotation ~= nil and RealisticCropRotation.requestServerSync ~= nil then
+        RealisticCropRotation.requestServerSync("frameOpen")
     end
     self:updateContainerVisibility()
     self:linkFocusNavigation()
 end
 
-function FieldRotationFrame:onFrameClose()
+function RealisticCropRotationFrame:onFrameClose()
     self:unsubscribeFarmlandChanges()
-    FieldRotationFrame:superClass().onFrameClose(self)
+    RealisticCropRotationFrame:superClass().onFrameClose(self)
 end
 
-function FieldRotationFrame:getMenuButtonInfo()
+function RealisticCropRotationFrame:getMenuButtonInfo()
     return {}
 end
 
@@ -152,7 +152,7 @@ end
 --  HELPERS
 -- ===========================================================================
 
-function FieldRotationFrame:getCurrentFarmId()
+function RealisticCropRotationFrame:getCurrentFarmId()
     if g_localPlayer ~= nil and g_localPlayer.farmId ~= nil then
         return g_localPlayer.farmId
     end
@@ -162,22 +162,22 @@ function FieldRotationFrame:getCurrentFarmId()
     return -1
 end
 
-function FieldRotationFrame:getManager()
+function RealisticCropRotationFrame:getManager()
     if g_currentMission == nil then return nil end
-    return g_currentMission.fieldRotationManager
+    return g_currentMission.realisticCropRotationManager
 end
 
-function FieldRotationFrame:checkBonus(farmlandId)
+function RealisticCropRotationFrame:checkBonus(farmlandId)
     return self:getActiveNitrogenResidueKgHa(farmlandId) ~= nil
 end
 
 ---Returns the currently active rotation nitrogen residue in kg/ha for the selected farmland.
 -- The service stores the residue as PF state changes; keep the conversion centralized
--- through FieldRotationService:getNitrogenKgPerHaFromStateChange instead of duplicating
+-- through RealisticCropRotationService:getNitrogenKgPerHaFromStateChange instead of duplicating
 -- PF constants in the UI.
 -- @param integer farmlandId Farmland identifier
 -- @return number|nil residueKgHa Active residue in kg/ha, or nil when no residue exists
-function FieldRotationFrame:getActiveNitrogenResidueKgHa(farmlandId)
+function RealisticCropRotationFrame:getActiveNitrogenResidueKgHa(farmlandId)
     local mgr = self:getManager()
     if mgr == nil or mgr.getPendingBonus == nil then
         return nil
@@ -208,19 +208,19 @@ function FieldRotationFrame:getActiveNitrogenResidueKgHa(farmlandId)
     return nil
 end
 
-function FieldRotationFrame:getActiveNitrogenResidueText(farmlandId)
+function RealisticCropRotationFrame:getActiveNitrogenResidueText(farmlandId)
     local residueKgHa = self:getActiveNitrogenResidueKgHa(farmlandId)
     if residueKgHa == nil then
         return nil
     end
 
-    return string.format(self.i18n:getText("fr_status_current_residue"), math.floor(residueKgHa + 0.5))
+    return string.format(self.i18n:getText("rcr_status_current_residue"), math.floor(residueKgHa + 0.5))
 end
 
-function FieldRotationFrame:updateResiduePill(pillBg, pillText, farmlandId)
+function RealisticCropRotationFrame:updateResiduePill(pillBg, pillText, farmlandId)
     local residueText = self:getActiveNitrogenResidueText(farmlandId)
     local hasBonus = residueText ~= nil
-    local text = hasBonus and residueText or self.i18n:getText("fr_status_current_no_residue")
+    local text = hasBonus and residueText or self.i18n:getText("rcr_status_current_no_residue")
     if pillBg ~= nil then
         pillBg:applyProfile(hasBonus and "frStatusPillBgBonus" or "frStatusPillBg")
     end
@@ -230,7 +230,7 @@ function FieldRotationFrame:updateResiduePill(pillBg, pillText, farmlandId)
     self:resizePillToText(pillBg, pillText, text)
 end
 
-function FieldRotationFrame:getPlanNitrogenResidueKgHa(plan)
+function RealisticCropRotationFrame:getPlanNitrogenResidueKgHa(plan)
     local mgr = self:getManager()
     if mgr == nil or mgr.service == nil then return nil end
 
@@ -264,16 +264,16 @@ function FieldRotationFrame:getPlanNitrogenResidueKgHa(plan)
     return nil
 end
 
-function FieldRotationFrame:getPlanNitrogenResidueText(plan)
+function RealisticCropRotationFrame:getPlanNitrogenResidueText(plan)
     local residueKgHa = self:getPlanNitrogenResidueKgHa(plan)
     if residueKgHa == nil then return nil end
-    return string.format(self.i18n:getText("fr_status_planned_residue"), math.floor(residueKgHa + 0.5))
+    return string.format(self.i18n:getText("rcr_status_planned_residue"), math.floor(residueKgHa + 0.5))
 end
 
-function FieldRotationFrame:updatePlannedResiduePill(pillBg, pillText, plan)
+function RealisticCropRotationFrame:updatePlannedResiduePill(pillBg, pillText, plan)
     local residueText = self:getPlanNitrogenResidueText(plan)
     local hasBonus = residueText ~= nil
-    local text = hasBonus and residueText or self.i18n:getText("fr_status_planned_no_residue")
+    local text = hasBonus and residueText or self.i18n:getText("rcr_status_planned_no_residue")
     if pillBg ~= nil then
         pillBg:applyProfile(hasBonus and "frStatusPillBgBonus" or "frStatusPillBg")
     end
@@ -283,7 +283,7 @@ function FieldRotationFrame:updatePlannedResiduePill(pillBg, pillText, plan)
     self:resizePillToText(pillBg, pillText, text)
 end
 
-function FieldRotationFrame:getPlanSlotNitrogenResidueKgHa(plan, slotIdx)
+function RealisticCropRotationFrame:getPlanSlotNitrogenResidueKgHa(plan, slotIdx)
     local mgr = self:getManager()
     if mgr == nil or mgr.service == nil then return nil end
 
@@ -323,11 +323,11 @@ function FieldRotationFrame:getPlanSlotNitrogenResidueKgHa(plan, slotIdx)
     return nil
 end
 
-function FieldRotationFrame:updatePlanSlotYearLabel(slotIdx, plan)
+function RealisticCropRotationFrame:updatePlanSlotYearLabel(slotIdx, plan)
     local yearEl = self.planSlotYear ~= nil and self.planSlotYear[slotIdx]
     if yearEl == nil then return end
 
-    local baseText = self.i18n:getText("fr_plan_year" .. tostring(slotIdx))
+    local baseText = self.i18n:getText("rcr_plan_year" .. tostring(slotIdx))
     local residueKgHa = self:getPlanSlotNitrogenResidueKgHa(plan, slotIdx)
 
     if residueKgHa ~= nil then
@@ -343,20 +343,20 @@ function FieldRotationFrame:updatePlanSlotYearLabel(slotIdx, plan)
     end
 end
 
-function FieldRotationFrame:updatePlanSlotYearLabels(plan)
+function RealisticCropRotationFrame:updatePlanSlotYearLabels(plan)
     for i = 1, 4 do
         self:updatePlanSlotYearLabel(i, plan)
     end
 end
 
-function FieldRotationFrame:getCropFamily(cropName)
+function RealisticCropRotationFrame:getCropFamily(cropName)
     if cropName == nil or cropName == "" then return "UNKNOWN" end
-    local config = FieldRotation ~= nil and FieldRotation.cropConfig or nil
+    local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
     if config == nil or config.families == nil then return "UNKNOWN" end
     return config.families[string.upper(cropName)] or "UNKNOWN"
 end
 
-function FieldRotationFrame:getCropDisplayName(cropName)
+function RealisticCropRotationFrame:getCropDisplayName(cropName)
     if cropName == nil or cropName == "" then return "" end
     local normalizedName = string.upper(tostring(cropName))
 
@@ -384,17 +384,17 @@ function FieldRotationFrame:getCropDisplayName(cropName)
     return normalizedName:sub(1, 1) .. string.lower(normalizedName:sub(2))
 end
 
-function FieldRotationFrame:buildFarmlandList()
+function RealisticCropRotationFrame:buildFarmlandList()
     local mgr = self:getManager()
     if mgr == nil or mgr.getOwnedFarmlands == nil then return {} end
     return mgr:getOwnedFarmlands() or {}
 end
 
-function FieldRotationFrame:formatAreaHa(areaHa)
+function RealisticCropRotationFrame:formatAreaHa(areaHa)
     return string.format("%.1f ha", tonumber(areaHa) or 0)
 end
 
-function FieldRotationFrame:calculateTotalAreaHa(farmlandList)
+function RealisticCropRotationFrame:calculateTotalAreaHa(farmlandList)
     local total = 0
     for _, entry in ipairs(farmlandList or {}) do
         total = total + (tonumber(entry.areaHa) or 0)
@@ -402,13 +402,13 @@ function FieldRotationFrame:calculateTotalAreaHa(farmlandList)
     return total
 end
 
-function FieldRotationFrame:updateOverviewTotalArea()
+function RealisticCropRotationFrame:updateOverviewTotalArea()
     if self.overviewTotalArea == nil then return end
-    local label = self.i18n:getText("fr_overview_total_area")
+    local label = self.i18n:getText("rcr_overview_total_area")
     self.overviewTotalArea:setText(string.format(label, self.totalAreaHa or 0))
 end
 
-function FieldRotationFrame:getElementOriginalSize(element)
+function RealisticCropRotationFrame:getElementOriginalSize(element)
     if element == nil or element.size == nil then return nil end
     if element._frOriginalSize == nil then
         element._frOriginalSize = {element.size[1], element.size[2]}
@@ -416,7 +416,7 @@ function FieldRotationFrame:getElementOriginalSize(element)
     return element._frOriginalSize
 end
 
-function FieldRotationFrame:getElementOriginalPosition(element)
+function RealisticCropRotationFrame:getElementOriginalPosition(element)
     if element == nil or element.position == nil then return nil end
     if element._frOriginalPosition == nil then
         element._frOriginalPosition = {element.position[1], element.position[2]}
@@ -424,7 +424,7 @@ function FieldRotationFrame:getElementOriginalPosition(element)
     return element._frOriginalPosition
 end
 
-function FieldRotationFrame:getTextRenderWidth(textElement, text)
+function RealisticCropRotationFrame:getTextRenderWidth(textElement, text)
     if textElement == nil or getTextWidth == nil then return nil end
 
     local value = tostring(text or "")
@@ -447,7 +447,7 @@ function FieldRotationFrame:getTextRenderWidth(textElement, text)
     return width
 end
 
-function FieldRotationFrame:resizePillToText(pillBg, pillText, text)
+function RealisticCropRotationFrame:resizePillToText(pillBg, pillText, text)
     if pillBg == nil or pillText == nil then return end
     if pillBg.setSize == nil or pillText.setSize == nil then return end
 
@@ -473,13 +473,13 @@ function FieldRotationFrame:resizePillToText(pillBg, pillText, text)
     end
 end
 
-function FieldRotationFrame:updateMainHeaderTitle()
+function RealisticCropRotationFrame:updateMainHeaderTitle()
     if self.menuHeaderTitle == nil then return end
-    local key = self:isHistoryTab() and "fr_tab_history" or "fr_tab_planning"
+    local key = self:isHistoryTab() and "rcr_tab_history" or "rcr_tab_planning"
     self.menuHeaderTitle:setText(self.i18n:getText(key))
 end
 
-function FieldRotationFrame:subscribeFarmlandChanges()
+function RealisticCropRotationFrame:subscribeFarmlandChanges()
     if self.isSubscribedToFarmlandChanges then return end
     if self.messageCenter ~= nil and self.messageCenter.subscribe ~= nil
         and MessageType ~= nil and MessageType.FARMLAND_OWNER_CHANGED ~= nil then
@@ -488,7 +488,7 @@ function FieldRotationFrame:subscribeFarmlandChanges()
     end
 end
 
-function FieldRotationFrame:unsubscribeFarmlandChanges()
+function RealisticCropRotationFrame:unsubscribeFarmlandChanges()
     if not self.isSubscribedToFarmlandChanges then return end
     if self.messageCenter ~= nil and self.messageCenter.unsubscribe ~= nil
         and MessageType ~= nil and MessageType.FARMLAND_OWNER_CHANGED ~= nil then
@@ -497,16 +497,16 @@ function FieldRotationFrame:unsubscribeFarmlandChanges()
     self.isSubscribedToFarmlandChanges = false
 end
 
-function FieldRotationFrame:onFarmlandOwnerChanged(_farmlandId, _farmId, _loadFromSavegame)
+function RealisticCropRotationFrame:onFarmlandOwnerChanged(_farmlandId, _farmId, _loadFromSavegame)
     self:populateSidebar()
 end
 
-function FieldRotationFrame:isHistoryTab()
+function RealisticCropRotationFrame:isHistoryTab()
     return self.viewSelector == nil
-        or self.viewSelector:getState() == FieldRotationFrame.TAB.HISTORY
+        or self.viewSelector:getState() == RealisticCropRotationFrame.TAB.HISTORY
 end
 
-function FieldRotationFrame:updateContainerVisibility()
+function RealisticCropRotationFrame:updateContainerVisibility()
     local hasFields = #(self.farmlandList or {}) > 0
     local isHistory = self:isHistoryTab()
     if self.emptyText        ~= nil then self.emptyText:setVisible(not hasFields) end
@@ -515,7 +515,7 @@ function FieldRotationFrame:updateContainerVisibility()
     self:updateMainHeaderTitle()
 end
 
-function FieldRotationFrame:linkFocusNavigation()
+function RealisticCropRotationFrame:linkFocusNavigation()
     if FocusManager == nil then return end
 
     local hasFields = #(self.farmlandList or {}) > 0
@@ -545,7 +545,7 @@ function FieldRotationFrame:linkFocusNavigation()
     end
 end
 
-function FieldRotationFrame:getPlanForFarmland(farmlandId)
+function RealisticCropRotationFrame:getPlanForFarmland(farmlandId)
     local mgr = self:getManager()
     if mgr ~= nil and mgr.getRotationPlan ~= nil then
         return mgr:getRotationPlan(farmlandId)
@@ -557,7 +557,7 @@ end
 --  CROP LIST (built once from fruitTypeManager; drives plan slot selectors)
 -- ===========================================================================
 
-function FieldRotationFrame:buildPlanCropList()
+function RealisticCropRotationFrame:buildPlanCropList()
     self.planCropList = {""}  -- index 1 = no crop
 
     -- Include all plantable crops on this map (including modded ones from any modhub map).
@@ -579,7 +579,7 @@ function FieldRotationFrame:buildPlanCropList()
                     and fruitType.fillType ~= nil
                     and fruitType.fillType.hudOverlayFilename ~= nil then
                     local name = string.upper(fruitType.name)
-                    local cfg = FieldRotation ~= nil and FieldRotation.cropConfig or nil
+                    local cfg = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
                     local family = cfg ~= nil and cfg.families ~= nil and cfg.families[name] or nil
                     if family ~= "COVER" then
                         if not nameSet[name] then
@@ -602,7 +602,7 @@ function FieldRotationFrame:buildPlanCropList()
     -- Wire selectors
     local cropTexts = {}
     for _, cropName in ipairs(self.planCropList) do
-        table.insert(cropTexts, cropName == "" and self.i18n:getText("fr_plan_none")
+        table.insert(cropTexts, cropName == "" and self.i18n:getText("rcr_plan_none")
                                                or self:getCropDisplayName(cropName))
     end
 
@@ -620,7 +620,7 @@ end
 --  SIDEBAR — SmoothList data source
 -- ===========================================================================
 
-function FieldRotationFrame:populateSidebar()
+function RealisticCropRotationFrame:populateSidebar()
     local previousSelectedId = self.selectedId
     self.farmlandList = self:buildFarmlandList()
     self.totalAreaHa = self:calculateTotalAreaHa(self.farmlandList)
@@ -657,31 +657,31 @@ function FieldRotationFrame:populateSidebar()
     end
 end
 
-function FieldRotationFrame:getNumberOfSections()
+function RealisticCropRotationFrame:getNumberOfSections()
     return 1
 end
 
-function FieldRotationFrame:getNumberOfItemsInSection(list, _section)
+function RealisticCropRotationFrame:getNumberOfItemsInSection(list, _section)
     if list == self.listPlanOverview then
         return #(self.rotationGroups or {})
     end
     return #(self.farmlandList or {})
 end
 
-function FieldRotationFrame:getCellTypeForItemInSection(list, _section, _index)
+function RealisticCropRotationFrame:getCellTypeForItemInSection(list, _section, _index)
     if list == self.listPlanOverview then return "groupRow" end
     return "field"
 end
 
-function FieldRotationFrame:getTitleForSectionHeader(_list, _section)
+function RealisticCropRotationFrame:getTitleForSectionHeader(_list, _section)
     return nil
 end
 
-function FieldRotationFrame:getSectionHeaderHeight(_list, _section)
+function RealisticCropRotationFrame:getSectionHeaderHeight(_list, _section)
     return 0
 end
 
-function FieldRotationFrame:populateCellForItemInSection(list, _section, index, cell)
+function RealisticCropRotationFrame:populateCellForItemInSection(list, _section, index, cell)
     if list == self.listPlanOverview then
         self:populateGroupCell(index, cell)
         return
@@ -740,7 +740,7 @@ function FieldRotationFrame:populateCellForItemInSection(list, _section, index, 
             local family = self:getCropFamily(activeCropName)
             local line   = self:getCropDisplayName(activeCropName)
             if family ~= "UNKNOWN" then
-                line = line .. "  \xc2\xb7  " .. self.i18n:getText("fr_family_" .. string.lower(family))
+                line = line .. "  \xc2\xb7  " .. self.i18n:getText("rcr_family_" .. string.lower(family))
             end
             cropLineEl:setText(line)
         else
@@ -751,13 +751,13 @@ function FieldRotationFrame:populateCellForItemInSection(list, _section, index, 
             if groundLabel ~= nil and groundLabel ~= "" then
                 cropLineEl:setText(groundLabel)
             else
-                cropLineEl:setText(self.i18n:getText("fr_sidebar_no_active_crop"))
+                cropLineEl:setText(self.i18n:getText("rcr_sidebar_no_active_crop"))
             end
         end
     end
 end
 
-function FieldRotationFrame:onListSelectionChanged(_list, _section, index, _cell)
+function RealisticCropRotationFrame:onListSelectionChanged(_list, _section, index, _cell)
     if _list ~= self.listFields then return end
     if self.farmlandList == nil then return end
     local entry = (self.farmlandList or {})[index]
@@ -775,7 +775,7 @@ end
 --  TAB SWITCHING
 -- ===========================================================================
 
-function FieldRotationFrame:onViewChanged()
+function RealisticCropRotationFrame:onViewChanged()
     self:updateContainerVisibility()
     if self:isHistoryTab() then
         self:updateDetailPanel(self.selectedId)
@@ -794,7 +794,7 @@ end
 --  DETAIL PANEL (tab 1 — history / current crop / nitrogen / advice / pH)
 -- ===========================================================================
 
-function FieldRotationFrame:getCurrentSlotData(farmlandId)
+function RealisticCropRotationFrame:getCurrentSlotData(farmlandId)
     local mgr = self:getManager()
     local activeCropName = nil
     if mgr ~= nil and type(mgr.getActiveCropName) == "function" then
@@ -813,10 +813,10 @@ function FieldRotationFrame:getCurrentSlotData(farmlandId)
         return nil, "UNKNOWN", groundLabel
     end
 
-    return nil, "UNKNOWN", self.i18n:getText("fr_sidebar_no_active_crop")
+    return nil, "UNKNOWN", self.i18n:getText("rcr_sidebar_no_active_crop")
 end
 
-function FieldRotationFrame:updateDetailPanel(farmlandId)
+function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
     local farmlandList = self.farmlandList or {}
     if #farmlandList == 0 then return end
 
@@ -837,9 +837,9 @@ function FieldRotationFrame:updateDetailPanel(farmlandId)
     if self.detailSeason ~= nil then
         local seasonIdx = (g_currentMission ~= nil and g_currentMission.environment ~= nil)
             and (g_currentMission.environment.currentSeason or 0) or 0
-        local seasonKey = FieldRotationFrame.SEASON_KEY[seasonIdx] or "fr_season_spring"
+        local seasonKey = RealisticCropRotationFrame.SEASON_KEY[seasonIdx] or "rcr_season_spring"
         self.detailSeason:setText(
-            "\xc2\xb7  " .. self.i18n:getText("fr_season_label") .. ": "
+            "\xc2\xb7  " .. self.i18n:getText("rcr_season_label") .. ": "
             .. string.upper(self.i18n:getText(seasonKey)) .. "  \xc2\xb7"
         )
     end
@@ -847,8 +847,8 @@ function FieldRotationFrame:updateDetailPanel(farmlandId)
     local mgr = self:getManager()
     if mgr ~= nil and type(mgr.reconcileActiveCropForFarmland) == "function" then
         local changed = mgr:reconcileActiveCropForFarmland(farmlandId, "UI_RECONCILE")
-        if changed and FieldRotation ~= nil and type(FieldRotation.requestBroadcast) == "function" then
-            FieldRotation.requestBroadcast()
+        if changed and RealisticCropRotation ~= nil and type(RealisticCropRotation.requestBroadcast) == "function" then
+            RealisticCropRotation.requestBroadcast()
         end
     end
 
@@ -857,7 +857,7 @@ function FieldRotationFrame:updateDetailPanel(farmlandId)
     local history = (mgr ~= nil) and (mgr:getHistory(farmlandId) or {}) or {}
 
     for slotIdx = 1, 4 do
-        local histIdx  = FieldRotationFrame.SLOT_HISTORY_IDX[slotIdx]
+        local histIdx  = RealisticCropRotationFrame.SLOT_HISTORY_IDX[slotIdx]
         local hEntry   = history[histIdx]
         local cropName = hEntry and hEntry.crop or nil
         self:updateTimelineSlot(slotIdx, cropName, self:getCropFamily(cropName), nil)
@@ -876,7 +876,7 @@ end
 --  Timeline slot (slotId 1..5) — history tab
 -- ---------------------------------------------------------------------------
 
-function FieldRotationFrame:updateTimelineSlot(slotId, cropName, family, fallbackText)
+function RealisticCropRotationFrame:updateTimelineSlot(slotId, cropName, family, fallbackText)
     local pfx = "slot" .. tostring(slotId)
     local iconEl   = self[pfx .. "Icon"]
     local nameEl   = self[pfx .. "CropName"]
@@ -893,7 +893,7 @@ function FieldRotationFrame:updateTimelineSlot(slotId, cropName, family, fallbac
         elseif fallbackText ~= nil and fallbackText ~= "" then
             nameEl:setText(fallbackText)
         else
-            nameEl:setText(self.i18n:getText("fr_slot_empty"))
+            nameEl:setText(self.i18n:getText("rcr_slot_empty"))
         end
     end
 
@@ -901,7 +901,7 @@ function FieldRotationFrame:updateTimelineSlot(slotId, cropName, family, fallbac
     if badgeBg ~= nil then
         badgeBg:setVisible(showBadge)
         if showBadge then
-            local c = FieldRotationFrame.FAMILY_RGBA[family]
+            local c = RealisticCropRotationFrame.FAMILY_RGBA[family]
             if c ~= nil then
                 badgeBg.color = {c[1], c[2], c[3], c[4]}
             end
@@ -910,7 +910,7 @@ function FieldRotationFrame:updateTimelineSlot(slotId, cropName, family, fallbac
     if badgeTxt ~= nil then
         badgeTxt:setVisible(showBadge)
         if showBadge then
-            local familyText = self.i18n:getText("fr_family_" .. string.lower(family))
+            local familyText = self.i18n:getText("rcr_family_" .. string.lower(family))
             badgeTxt:setText(familyText)
             self:resizePillToText(badgeBg, badgeTxt, familyText)
         end
@@ -921,15 +921,15 @@ end
 --  Nitrogen gauge
 -- ---------------------------------------------------------------------------
 
-function FieldRotationFrame:setStatusBarFill(barFill, ratio)
+function RealisticCropRotationFrame:setStatusBarFill(barFill, ratio)
     ratio = math.max(0, math.min(1, tonumber(ratio) or 0))
 
-    local fillW = math.floor(FieldRotationFrame.N_BAR_MAX_WIDTH * ratio)
+    local fillW = math.floor(RealisticCropRotationFrame.N_BAR_MAX_WIDTH * ratio)
     if barFill ~= nil then
         if barFill.setSize ~= nil then
             local fillSize = GuiUtils ~= nil and GuiUtils.getNormalizedScreenValues ~= nil
                 and GuiUtils.getNormalizedScreenValues(
-                    string.format("%dpx %dpx", fillW, FieldRotationFrame.N_BAR_HEIGHT)
+                    string.format("%dpx %dpx", fillW, RealisticCropRotationFrame.N_BAR_HEIGHT)
                 ) or nil
             if fillSize ~= nil then
                 barFill:setSize(fillSize[1], fillSize[2])
@@ -939,10 +939,10 @@ function FieldRotationFrame:setStatusBarFill(barFill, ratio)
     end
 end
 
-function FieldRotationFrame:updateNitrogenGauge(farmlandId)
+function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId)
     local mgr = self:getManager()
     local ratio = 0
-    local labelKey = "fr_n_none"
+    local labelKey = "rcr_n_none"
     local stateText = nil
     local valueText = nil
     local needText = nil
@@ -964,11 +964,11 @@ function FieldRotationFrame:updateNitrogenGauge(farmlandId)
             end
             ratio = math.max(0, math.min(1, ratio))
 
-            labelKey = "fr_n_available"
-            stateText = string.format(self.i18n:getText("fr_n_average_value"), kgHa)
+            labelKey = "rcr_n_available"
+            stateText = string.format(self.i18n:getText("rcr_n_average_value"), kgHa)
 
             if targetKgHa > 0 then
-                needText = string.format(self.i18n:getText("fr_n_crop_need"), targetKgHa)
+                needText = string.format(self.i18n:getText("rcr_n_crop_need"), targetKgHa)
             end
         end
     end
@@ -980,7 +980,7 @@ function FieldRotationFrame:updateNitrogenGauge(farmlandId)
         end
         sprayLevel = math.max(0, math.min(2, tonumber(sprayLevel) or 0))
         ratio = sprayLevel / 2.0
-        labelKey = FieldRotationFrame.SPRAY_LABEL_KEY[sprayLevel] or "fr_n_none"
+        labelKey = RealisticCropRotationFrame.SPRAY_LABEL_KEY[sprayLevel] or "rcr_n_none"
     end
 
     self:setStatusBarFill(self.nitrogenBarFill, ratio)
@@ -1002,10 +1002,10 @@ end
 --  Soil pH / lime gauge
 -- ---------------------------------------------------------------------------
 
-function FieldRotationFrame:updateSoilPHGauge(farmlandId)
+function RealisticCropRotationFrame:updateSoilPHGauge(farmlandId)
     local mgr = self:getManager()
     local ratio = 0
-    local labelKey = "fr_lime_none"
+    local labelKey = "rcr_lime_none"
     local stateText = nil
     local valueText = nil
 
@@ -1014,14 +1014,14 @@ function FieldRotationFrame:updateSoilPHGauge(farmlandId)
         if actualPH ~= nil then
             minPH = tonumber(minPH) or 0
             maxPH = tonumber(maxPH) or 0
-            labelKey = "fr_lime_average_pf"
+            labelKey = "rcr_lime_average_pf"
             if targetPH ~= nil then
                 ratio = targetPH > 0 and (actualPH / targetPH) or 0
-                stateText = string.format(self.i18n:getText("fr_lime_average_value"), actualPH)
-                valueText = string.format(self.i18n:getText("fr_lime_target"), targetPH)
+                stateText = string.format(self.i18n:getText("rcr_lime_average_value"), actualPH)
+                valueText = string.format(self.i18n:getText("rcr_lime_target"), targetPH)
             else
                 ratio = maxPH > minPH and ((actualPH - minPH) / (maxPH - minPH)) or 0
-                stateText = string.format(self.i18n:getText("fr_lime_average_value"), actualPH)
+                stateText = string.format(self.i18n:getText("rcr_lime_average_value"), actualPH)
             end
         end
     end
@@ -1039,11 +1039,11 @@ function FieldRotationFrame:updateSoilPHGauge(farmlandId)
         valueText = string.format("%d / %d", limeLevel, maxLevel)
 
         if limeLevel <= 0 then
-            labelKey = "fr_lime_none"
+            labelKey = "rcr_lime_none"
         elseif limeLevel >= maxLevel then
-            labelKey = "fr_lime_full"
+            labelKey = "rcr_lime_full"
         else
-            labelKey = "fr_lime_partial"
+            labelKey = "rcr_lime_partial"
         end
     end
 
@@ -1063,7 +1063,7 @@ end
 --  Yield card
 -- ---------------------------------------------------------------------------
 
-function FieldRotationFrame:updateYieldCard(farmlandId)
+function RealisticCropRotationFrame:updateYieldCard(farmlandId)
     local mgr = self:getManager()
     local info = nil
     if mgr ~= nil and mgr.getFieldCropInfo ~= nil then
@@ -1118,19 +1118,19 @@ end
 --  Agronomic advice
 -- ---------------------------------------------------------------------------
 
-function FieldRotationFrame:updateAdvice(currentFamily)
+function RealisticCropRotationFrame:updateAdvice(currentFamily)
     if self.adviceText == nil then return end
-    local key = FieldRotationFrame.ADVICE_KEY[currentFamily]
+    local key = RealisticCropRotationFrame.ADVICE_KEY[currentFamily]
     self.adviceText:setText(
         key ~= nil and self.i18n:getText(key)
-                   or self.i18n:getText("fr_advice_no_current_crop"))
+                   or self.i18n:getText("rcr_advice_no_current_crop"))
 end
 
 -- ===========================================================================
 --  PLANNING PANEL (tab 2)
 -- ===========================================================================
 
-function FieldRotationFrame:updatePlanningPanel(farmlandId)
+function RealisticCropRotationFrame:updatePlanningPanel(farmlandId)
     local farmlandList = self.farmlandList or {}
     if #farmlandList == 0 then return end
 
@@ -1150,9 +1150,9 @@ function FieldRotationFrame:updatePlanningPanel(farmlandId)
     if self.planSeason ~= nil then
         local seasonIdx = (g_currentMission ~= nil and g_currentMission.environment ~= nil)
             and (g_currentMission.environment.currentSeason or 0) or 0
-        local seasonKey = FieldRotationFrame.SEASON_KEY[seasonIdx] or "fr_season_spring"
+        local seasonKey = RealisticCropRotationFrame.SEASON_KEY[seasonIdx] or "rcr_season_spring"
         self.planSeason:setText(
-            "\xc2\xb7  " .. self.i18n:getText("fr_season_label") .. ": "
+            "\xc2\xb7  " .. self.i18n:getText("rcr_season_label") .. ": "
             .. string.upper(self.i18n:getText(seasonKey)) .. "  \xc2\xb7"
         )
     end
@@ -1167,7 +1167,7 @@ end
 --  Plan slots — crop selector + icon + family badge
 -- ---------------------------------------------------------------------------
 
-function FieldRotationFrame:updatePlanSlots(farmlandId)
+function RealisticCropRotationFrame:updatePlanSlots(farmlandId)
     local plan = self:getPlanForFarmland(farmlandId)
     self:updatePlanSlotYearLabels(plan)
     for i = 1, 4 do
@@ -1192,7 +1192,7 @@ function FieldRotationFrame:updatePlanSlots(farmlandId)
     end
 end
 
-function FieldRotationFrame:getPlanFromSelectors()
+function RealisticCropRotationFrame:getPlanFromSelectors()
     local plan = {"", "", "", ""}
     for i = 1, 4 do
         local sel = self.planSlotSelector ~= nil and self.planSlotSelector[i]
@@ -1204,7 +1204,7 @@ function FieldRotationFrame:getPlanFromSelectors()
     return plan
 end
 
-function FieldRotationFrame:updatePlanSlotVisualsFromSelectors()
+function RealisticCropRotationFrame:updatePlanSlotVisualsFromSelectors()
     local plan = self:getPlanFromSelectors()
     self:updatePlanSlotYearLabels(plan)
     for i = 1, 4 do
@@ -1219,7 +1219,7 @@ function FieldRotationFrame:updatePlanSlotVisualsFromSelectors()
     self:updatePlannedResiduePill(self.planStatusPillBg, self.planStatusPillText, plan)
 end
 
-function FieldRotationFrame:onServerSyncReceived()
+function RealisticCropRotationFrame:onServerSyncReceived()
     if self.isApplyingServerSync then
         return
     end
@@ -1245,7 +1245,7 @@ function FieldRotationFrame:onServerSyncReceived()
     self.isApplyingServerSync = false
 end
 
-function FieldRotationFrame:applySlotCropIcon(iconEl, cropName)
+function RealisticCropRotationFrame:applySlotCropIcon(iconEl, cropName)
     if iconEl == nil then return end
     if cropName == nil or cropName == "" then
         iconEl:setVisible(false)
@@ -1269,12 +1269,12 @@ function FieldRotationFrame:applySlotCropIcon(iconEl, cropName)
     if not loaded then iconEl:setVisible(false) end
 end
 
-function FieldRotationFrame:applySlotBadge(badgeBg, badgeTxt, family)
+function RealisticCropRotationFrame:applySlotBadge(badgeBg, badgeTxt, family)
     local showBadge = family ~= nil and family ~= "" and family ~= "UNKNOWN"
     if badgeBg ~= nil then
         badgeBg:setVisible(showBadge)
         if showBadge then
-            local c = FieldRotationFrame.FAMILY_RGBA[family]
+            local c = RealisticCropRotationFrame.FAMILY_RGBA[family]
             if c ~= nil then
                 badgeBg.color = {c[1], c[2], c[3], c[4]}
             end
@@ -1283,7 +1283,7 @@ function FieldRotationFrame:applySlotBadge(badgeBg, badgeTxt, family)
     if badgeTxt ~= nil then
         badgeTxt:setVisible(showBadge)
         if showBadge then
-            local familyText = self.i18n:getText("fr_family_" .. string.lower(family))
+            local familyText = self.i18n:getText("rcr_family_" .. string.lower(family))
             badgeTxt:setText(familyText)
             self:resizePillToText(badgeBg, badgeTxt, familyText)
         end
@@ -1294,12 +1294,12 @@ end
 --  Plan slot onClick handlers
 -- ---------------------------------------------------------------------------
 
-function FieldRotationFrame:onChangePlanSlot1() self:handlePlanSlotChange(1) end
-function FieldRotationFrame:onChangePlanSlot2() self:handlePlanSlotChange(2) end
-function FieldRotationFrame:onChangePlanSlot3() self:handlePlanSlotChange(3) end
-function FieldRotationFrame:onChangePlanSlot4() self:handlePlanSlotChange(4) end
+function RealisticCropRotationFrame:onChangePlanSlot1() self:handlePlanSlotChange(1) end
+function RealisticCropRotationFrame:onChangePlanSlot2() self:handlePlanSlotChange(2) end
+function RealisticCropRotationFrame:onChangePlanSlot3() self:handlePlanSlotChange(3) end
+function RealisticCropRotationFrame:onChangePlanSlot4() self:handlePlanSlotChange(4) end
 
-function FieldRotationFrame:handlePlanSlotChange(slotIdx)
+function RealisticCropRotationFrame:handlePlanSlotChange(slotIdx)
     if self.isApplyingServerSync then return end
     if self.selectedId == nil then return end
     local sel = self.planSlotSelector ~= nil and self.planSlotSelector[slotIdx]
@@ -1312,13 +1312,13 @@ function FieldRotationFrame:handlePlanSlotChange(slotIdx)
         and not g_currentMission:getIsServer()
 
     if isClientOnly then
-        if g_client ~= nil and g_client.getServerConnection ~= nil and FRPlanUpdateEvent ~= nil then
+        if g_client ~= nil and g_client.getServerConnection ~= nil and RCRPlanUpdateEvent ~= nil then
             local connection = g_client:getServerConnection()
             if connection ~= nil then
-                connection:sendEvent(FRPlanUpdateEvent.new(self.selectedId, slotIdx, cropName))
+                connection:sendEvent(RCRPlanUpdateEvent.new(self.selectedId, slotIdx, cropName))
             end
         else
-            Logging.warning("[FieldRotation][MP] Plan update not sent: client connection or event unavailable")
+            Logging.warning("[RealisticCropRotation][MP] Plan update not sent: client connection or event unavailable")
         end
     else
         local mgr = self:getManager()
@@ -1326,8 +1326,8 @@ function FieldRotationFrame:handlePlanSlotChange(slotIdx)
         if mgr ~= nil and mgr.setRotationPlanYear ~= nil then
             changed = mgr:setRotationPlanYear(self.selectedId, slotIdx, cropName)
         end
-        if changed and FieldRotation ~= nil and FieldRotation.requestBroadcast ~= nil then
-            FieldRotation.requestBroadcast()
+        if changed and RealisticCropRotation ~= nil and RealisticCropRotation.requestBroadcast ~= nil then
+            RealisticCropRotation.requestBroadcast()
         end
     end
 
@@ -1355,7 +1355,7 @@ end
 --  Score card
 -- ---------------------------------------------------------------------------
 
-function FieldRotationFrame:updateScoreCard(plan)
+function RealisticCropRotationFrame:updateScoreCard(plan)
     if self.scoreText == nil then return end
     plan = plan or {"","","",""}
 
@@ -1387,7 +1387,7 @@ function FieldRotationFrame:updateScoreCard(plan)
     end
 end
 
-function FieldRotationFrame:calcRotationScore(plan)
+function RealisticCropRotationFrame:calcRotationScore(plan)
     local families = {}
     local hasLegume = false
     for i = 1, 4 do
@@ -1422,22 +1422,22 @@ function FieldRotationFrame:calcRotationScore(plan)
     return math.max(0, math.min(100, score))
 end
 
-function FieldRotationFrame:getScoreTextKey(score, plan)
+function RealisticCropRotationFrame:getScoreTextKey(score, plan)
     local anyFilled = false
     for i = 1, 4 do if (plan[i] or "") ~= "" then anyFilled = true; break end end
-    if not anyFilled   then return "fr_plan_none" end
-    if score == 0      then return "fr_score_incomplete" end
-    if score >= 80     then return "fr_score_excellent" end
-    if score >= 60     then return "fr_score_good" end
-    if score >= 40     then return "fr_score_fair" end
-    return "fr_score_poor"
+    if not anyFilled   then return "rcr_plan_none" end
+    if score == 0      then return "rcr_score_incomplete" end
+    if score >= 80     then return "rcr_score_excellent" end
+    if score >= 60     then return "rcr_score_good" end
+    if score >= 40     then return "rcr_score_fair" end
+    return "rcr_score_poor"
 end
 
-function FieldRotationFrame:getScoreLabel(score)
-    if score >= 80 then return "fr_score_short_optimal", 0.325, 0.565, 0.071
-    elseif score >= 60 then return "fr_score_short_good",  0.95,  0.85, 0.05
-    elseif score >= 30 then return "fr_score_short_fair",  0.75,  0.45, 0.05
-    elseif score >  0  then return "fr_score_short_poor",  0.75,  0.20, 0.05
+function RealisticCropRotationFrame:getScoreLabel(score)
+    if score >= 80 then return "rcr_score_short_optimal", 0.325, 0.565, 0.071
+    elseif score >= 60 then return "rcr_score_short_good",  0.95,  0.85, 0.05
+    elseif score >= 30 then return "rcr_score_short_fair",  0.75,  0.45, 0.05
+    elseif score >  0  then return "rcr_score_short_poor",  0.75,  0.20, 0.05
     else                    return nil,                    0.30,  0.30, 0.30
     end
 end
@@ -1446,7 +1446,7 @@ end
 --  ROTATION GROUPS — overview of fields sharing the same crop rotation
 -- ===========================================================================
 
-function FieldRotationFrame:buildRotationGroups()
+function RealisticCropRotationFrame:buildRotationGroups()
     local groups   = {}
     local groupMap = {}
 
@@ -1484,7 +1484,7 @@ function FieldRotationFrame:buildRotationGroups()
     self.rotationGroups = groups
 end
 
-function FieldRotationFrame:getCompactGroupFieldNames(fieldNames)
+function RealisticCropRotationFrame:getCompactGroupFieldNames(fieldNames)
     local parts = {}
     for i = 1, #(fieldNames or {}) do
         table.insert(parts, string.upper(tostring(fieldNames[i] or "")))
@@ -1493,7 +1493,7 @@ function FieldRotationFrame:getCompactGroupFieldNames(fieldNames)
     return table.concat(parts, "  |  ")
 end
 
-function FieldRotationFrame:layoutGroupBadgeContent(cell, slotIndex, displayText, badgeX)
+function RealisticCropRotationFrame:layoutGroupBadgeContent(cell, slotIndex, displayText, badgeX)
     if cell == nil or cell.getAttribute == nil then return end
     if GuiUtils == nil or GuiUtils.getNormalizedScreenValues == nil then return end
     if getTextWidth == nil then return end
@@ -1509,8 +1509,8 @@ function FieldRotationFrame:layoutGroupBadgeContent(cell, slotIndex, displayText
 
     local badgeSize = GuiUtils.getNormalizedScreenValues(string.format(
         "%dpx %dpx",
-        FieldRotationFrame.GROUP_BADGE_W,
-        FieldRotationFrame.GROUP_BADGE_H
+        RealisticCropRotationFrame.GROUP_BADGE_W,
+        RealisticCropRotationFrame.GROUP_BADGE_H
     ))
     local badgePos = {
         badgeX or originalBadgePos[1],
@@ -1518,16 +1518,16 @@ function FieldRotationFrame:layoutGroupBadgeContent(cell, slotIndex, displayText
     }
     local iconSize = GuiUtils.getNormalizedScreenValues(string.format(
         "%dpx %dpx",
-        FieldRotationFrame.GROUP_ICON_W,
-        FieldRotationFrame.GROUP_ICON_H
+        RealisticCropRotationFrame.GROUP_ICON_W,
+        RealisticCropRotationFrame.GROUP_ICON_H
     ))
     local gapSize = GuiUtils.getNormalizedScreenValues(string.format(
         "%dpx 0px",
-        FieldRotationFrame.GROUP_ICON_TEXT_GAP
+        RealisticCropRotationFrame.GROUP_ICON_TEXT_GAP
     ))
     local paddingSize = GuiUtils.getNormalizedScreenValues(string.format(
         "%dpx 0px",
-        FieldRotationFrame.GROUP_BADGE_PADDING_X
+        RealisticCropRotationFrame.GROUP_BADGE_PADDING_X
     ))
 
     local textWidth = self:getTextRenderWidth(labelEl, displayText)
@@ -1542,8 +1542,8 @@ function FieldRotationFrame:layoutGroupBadgeContent(cell, slotIndex, displayText
     local totalWidth = iconSize[1] + gapSize[1] + renderedTextWidth
     local startX = badgePos[1] + (badgeWidth - totalWidth) * 0.5
 
-    local iconYpx = FieldRotationFrame.GROUP_BADGE_Y
-        + math.floor((FieldRotationFrame.GROUP_BADGE_H - FieldRotationFrame.GROUP_ICON_H) * 0.5)
+    local iconYpx = RealisticCropRotationFrame.GROUP_BADGE_Y
+        + math.floor((RealisticCropRotationFrame.GROUP_BADGE_H - RealisticCropRotationFrame.GROUP_ICON_H) * 0.5)
     local iconPosY = GuiUtils.getNormalizedScreenValues(string.format("0px -%dpx", iconYpx))[2]
 
     if badgeEl ~= nil and badgeEl.setPosition ~= nil and badgeEl.setSize ~= nil then
@@ -1567,7 +1567,7 @@ function FieldRotationFrame:layoutGroupBadgeContent(cell, slotIndex, displayText
     return badgeWidth
 end
 
-function FieldRotationFrame:getGroupConnectorGaps(cell, slotIndex)
+function RealisticCropRotationFrame:getGroupConnectorGaps(cell, slotIndex)
     if cell == nil or cell.getAttribute == nil then return 0, 0 end
 
     local badgeEl = cell:getAttribute("gBadge" .. slotIndex)
@@ -1589,7 +1589,7 @@ function FieldRotationFrame:getGroupConnectorGaps(cell, slotIndex)
     return gapBeforeArrow, gapAfterArrow
 end
 
-function FieldRotationFrame:layoutGroupRow(cell, group)
+function RealisticCropRotationFrame:layoutGroupRow(cell, group)
     if cell == nil or cell.getAttribute == nil or group == nil then return end
 
     local currentX = nil
@@ -1644,7 +1644,7 @@ function FieldRotationFrame:layoutGroupRow(cell, group)
     end
 end
 
-function FieldRotationFrame:populateGroupCell(index, cell)
+function RealisticCropRotationFrame:populateGroupCell(index, cell)
     if cell == nil or cell.getAttribute == nil then return end
     local group = (self.rotationGroups or {})[index]
     if group == nil then return end
@@ -1654,7 +1654,7 @@ function FieldRotationFrame:populateGroupCell(index, cell)
     if summaryEl ~= nil then
         summaryEl:setVisible(isEmptyGroup)
         if isEmptyGroup then
-            summaryEl:setText(self.i18n:getText("fr_plan_none"))
+            summaryEl:setText(self.i18n:getText("rcr_plan_none"))
         end
     end
 
@@ -1668,7 +1668,7 @@ function FieldRotationFrame:populateGroupCell(index, cell)
         if badgeEl ~= nil then
             badgeEl:setVisible(show)
             if show then
-                local c = FieldRotationFrame.FAMILY_RGBA[family] or {0.20, 0.20, 0.20, 0.60}
+                local c = RealisticCropRotationFrame.FAMILY_RGBA[family] or {0.20, 0.20, 0.20, 0.60}
                 badgeEl.color = {c[1], c[2], c[3], 0.55}
             end
         end

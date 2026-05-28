@@ -4,38 +4,38 @@
 local modDirectory = g_currentModDirectory
 local modName = g_currentModName
 
-source(modDirectory .. "scripts/FieldRotationRepository.lua")
-source(modDirectory .. "scripts/FieldRotationService.lua")
-source(modDirectory .. "scripts/FieldRotationManager.lua")
-source(modDirectory .. "scripts/FieldRotationHud.lua")
-source(modDirectory .. "events/FRHistoryRequestEvent.lua")
-source(modDirectory .. "events/FRHistoryResponseEvent.lua")
-source(modDirectory .. "events/FRPlanUpdateEvent.lua")
-source(modDirectory .. "gui/FieldRotationFrame.lua")
+source(modDirectory .. "scripts/RealisticCropRotationRepository.lua")
+source(modDirectory .. "scripts/RealisticCropRotationService.lua")
+source(modDirectory .. "scripts/RealisticCropRotationManager.lua")
+source(modDirectory .. "scripts/RealisticCropRotationHud.lua")
+source(modDirectory .. "events/RCRHistoryRequestEvent.lua")
+source(modDirectory .. "events/RCRHistoryResponseEvent.lua")
+source(modDirectory .. "events/RCRPlanUpdateEvent.lua")
+source(modDirectory .. "gui/RealisticCropRotationFrame.lua")
 
-FieldRotation = {}
-FieldRotation.modDirectory = modDirectory
-FieldRotation.modName = modName
-FieldRotation.manager = nil
-FieldRotation.frame = nil
-FieldRotation.pendingSyncData = nil
-FieldRotation.isEnabled = true
-FieldRotation.cropConfig = nil
+RealisticCropRotation = {}
+RealisticCropRotation.modDirectory = modDirectory
+RealisticCropRotation.modName = modName
+RealisticCropRotation.manager = nil
+RealisticCropRotation.frame = nil
+RealisticCropRotation.pendingSyncData = nil
+RealisticCropRotation.isEnabled = true
+RealisticCropRotation.cropConfig = nil
 
 -- Loads cropConfig.xml once at mod init.
 -- Returns a config table: { families, nitrogen, coverCrops }
 local function loadCropConfig()
     local filePath = modDirectory .. "cropConfig.xml"
-    local xmlFile = loadXMLFile("FieldRotationCropConfig", filePath)
+    local xmlFile = loadXMLFile("RealisticCropRotationCropConfig", filePath)
     if xmlFile == nil or xmlFile == 0 then
-        Logging.error("[FieldRotation] Failed to load cropConfig.xml at %s", tostring(filePath))
+        Logging.error("[RealisticCropRotation] Failed to load cropConfig.xml at %s", tostring(filePath))
         return nil
     end
 
     local config = { families = {}, nitrogen = {}, coverCrops = {} }
     local i = 0
     while true do
-        local key = string.format("fieldRotationCrops.crop(%d)", i)
+        local key = string.format("realisticCropRotationCrops.crop(%d)", i)
         if not hasXMLProperty(xmlFile, key) then break end
 
         local name    = getXMLString(xmlFile, key .. "#name")
@@ -58,57 +58,57 @@ local function loadCropConfig()
     end
 
     delete(xmlFile)
-    Logging.info("[FieldRotation] cropConfig.xml loaded: %d crops", i)
+    Logging.info("[RealisticCropRotation] cropConfig.xml loaded: %d crops", i)
     return config
 end
 
 -- Broadcast coalescing: hooks request a broadcast instead of emitting one
 -- per density-map change. Period changes are handled through GIANTS' message
 -- center, matching the local gameSource pattern.
-FieldRotation.BROADCAST_DEBOUNCE_MS = 500
-FieldRotation.broadcastDirty = false
-FieldRotation.broadcastTimerMs = 0
-FieldRotation.broadcastUpdateable = nil
-FieldRotation.periodChangeListener = nil
-FieldRotation.farmlandOwnerChangeListener = nil
-FieldRotation.lastObservedPeriod = 0
-FieldRotation.lastObservedYear = 0
+RealisticCropRotation.BROADCAST_DEBOUNCE_MS = 500
+RealisticCropRotation.broadcastDirty = false
+RealisticCropRotation.broadcastTimerMs = 0
+RealisticCropRotation.broadcastUpdateable = nil
+RealisticCropRotation.periodChangeListener = nil
+RealisticCropRotation.farmlandOwnerChangeListener = nil
+RealisticCropRotation.lastObservedPeriod = 0
+RealisticCropRotation.lastObservedYear = 0
 
-function FieldRotation.requestBroadcast()
+function RealisticCropRotation.requestBroadcast()
     if g_server == nil then return end
-    FieldRotation.broadcastDirty = true
-    FieldRotation.broadcastTimerMs = FieldRotation.BROADCAST_DEBOUNCE_MS
+    RealisticCropRotation.broadcastDirty = true
+    RealisticCropRotation.broadcastTimerMs = RealisticCropRotation.BROADCAST_DEBOUNCE_MS
 end
 
-function FieldRotation.requestServerSync(_reason)
-    if g_client == nil or FRHistoryRequestEvent == nil then return end
+function RealisticCropRotation.requestServerSync(_reason)
+    if g_client == nil or RCRHistoryRequestEvent == nil then return end
     if type(g_client.getServerConnection) ~= "function" then return end
     local connection = g_client:getServerConnection()
     if connection ~= nil then
-        connection:sendEvent(FRHistoryRequestEvent.new())
+        connection:sendEvent(RCRHistoryRequestEvent.new())
     end
 end
 
-local function flushFieldRotationBroadcast()
-    FieldRotation.broadcastDirty = false
-    FieldRotation.broadcastTimerMs = 0
-    if g_server ~= nil and FRHistoryResponseEvent ~= nil then
-        g_server:broadcastEvent(FRHistoryResponseEvent.new(), false)
+local function flushRealisticCropRotationBroadcast()
+    RealisticCropRotation.broadcastDirty = false
+    RealisticCropRotation.broadcastTimerMs = 0
+    if g_server ~= nil and RCRHistoryResponseEvent ~= nil then
+        g_server:broadcastEvent(RCRHistoryResponseEvent.new(), false)
     end
 end
 
-local refreshFieldRotationFrame
+local refreshRealisticCropRotationFrame
 
 local function onFarmlandOwnerChanged(farmlandId, _farmId, loadFromSavegame)
     if loadFromSavegame then return end
-    if FieldRotation.manager == nil or type(FieldRotation.manager.clearRotationPlan) ~= "function" then return end
+    if RealisticCropRotation.manager == nil or type(RealisticCropRotation.manager.clearRotationPlan) ~= "function" then return end
 
-    local changed = FieldRotation.manager:clearRotationPlan(farmlandId)
+    local changed = RealisticCropRotation.manager:clearRotationPlan(farmlandId)
     if changed then
-        Logging.info("[FieldRotation] Rotation plan cleared after farmland owner change: farmland=%s",
+        Logging.info("[RealisticCropRotation] Rotation plan cleared after farmland owner change: farmland=%s",
             tostring(farmlandId))
-        refreshFieldRotationFrame()
-        FieldRotation.requestBroadcast()
+        refreshRealisticCropRotationFrame()
+        RealisticCropRotation.requestBroadcast()
     end
 end
 
@@ -116,42 +116,35 @@ local function checkPeriodChange()
     if g_currentMission == nil or g_currentMission.environment == nil then return end
     local environment = g_currentMission.environment
     local currentPeriod = g_currentMission.environment.currentPeriod or 0
-    local service = FieldRotation.manager ~= nil and FieldRotation.manager.service or nil
+    local service = RealisticCropRotation.manager ~= nil and RealisticCropRotation.manager.service or nil
     local currentYear = service ~= nil and type(service.getCurrentYear) == "function"
         and service:getCurrentYear()
         or (tonumber(environment.currentYear) or 0)
 
-    if currentYear > 0 and FieldRotation.lastObservedYear > 0
-        and currentYear ~= FieldRotation.lastObservedYear then
-        if currentYear ~= FieldRotation.lastObservedYear + 1 then
-            Logging.warning("[FieldRotation] Year jump detected from %d to %d",
-                FieldRotation.lastObservedYear, currentYear)
+    if currentYear > 0 and RealisticCropRotation.lastObservedYear > 0
+        and currentYear ~= RealisticCropRotation.lastObservedYear then
+        if currentYear ~= RealisticCropRotation.lastObservedYear + 1 then
+            Logging.warning("[RealisticCropRotation] Year jump detected from %d to %d",
+                RealisticCropRotation.lastObservedYear, currentYear)
         end
-        FieldRotation.lastObservedYear = currentYear
-    elseif currentYear > 0 and FieldRotation.lastObservedYear == 0 then
-        FieldRotation.lastObservedYear = currentYear
+        RealisticCropRotation.lastObservedYear = currentYear
+    elseif currentYear > 0 and RealisticCropRotation.lastObservedYear == 0 then
+        RealisticCropRotation.lastObservedYear = currentYear
     end
 
     if currentPeriod == 0 then return end
-    if currentPeriod ~= FieldRotation.lastObservedPeriod then
-        FieldRotation.lastObservedPeriod = currentPeriod
-        if FieldRotation.manager ~= nil and FieldRotation.manager.service ~= nil
-            and type(FieldRotation.manager.service.resetNitrogenApplicationMaskForNewPeriod) == "function" then
-            FieldRotation.manager.service:resetNitrogenApplicationMaskForNewPeriod()
+    if currentPeriod ~= RealisticCropRotation.lastObservedPeriod then
+        RealisticCropRotation.lastObservedPeriod = currentPeriod
+        if RealisticCropRotation.manager ~= nil and RealisticCropRotation.manager.service ~= nil
+            and type(RealisticCropRotation.manager.service.resetNitrogenApplicationMaskForNewPeriod) == "function" then
+            RealisticCropRotation.manager.service:resetNitrogenApplicationMaskForNewPeriod()
         end
     end
 end
 
-function FieldRotation.consoleCommandToggle()
-    FieldRotation.isEnabled = not FieldRotation.isEnabled
-    local state = FieldRotation.isEnabled and "ENABLED" or "DISABLED"
-    Logging.info("[FieldRotation] " .. state .. " via console")
-    print("[FieldRotation] " .. state)
-end
-
-function refreshFieldRotationFrame()
-    if FieldRotation.frame == nil then return end
-    local frame = FieldRotation.frame
+function refreshRealisticCropRotationFrame()
+    if RealisticCropRotation.frame == nil then return end
+    local frame = RealisticCropRotation.frame
     -- Planning tab active (MP): only rebuild overview, never reset plan selectors.
     if type(frame.isHistoryTab) == "function" and not frame:isHistoryTab() then
         if type(frame.buildRotationGroups) == "function" then
@@ -170,14 +163,14 @@ function refreshFieldRotationFrame()
     end
 end
 
----Injects the FieldRotationFrame as a tab in the InGameMenu paging element.
-function FieldRotation.addInGameMenuPage(frameFieldName, predicateFunc, insertPosition)
+---Injects the RealisticCropRotationFrame as a tab in the InGameMenu paging element.
+function RealisticCropRotation.addInGameMenuPage(frameFieldName, predicateFunc, insertPosition)
     if g_inGameMenu == nil then return nil end
 
-    local frameRefPath = FieldRotation.modDirectory .. "gui/FieldRotationFrameRef.xml"
-    local xmlFile = loadXMLFile("FieldRotationFrameRefXML", frameRefPath)
+    local frameRefPath = RealisticCropRotation.modDirectory .. "gui/RealisticCropRotationFrameRef.xml"
+    local xmlFile = loadXMLFile("RealisticCropRotationFrameRefXML", frameRefPath)
     if xmlFile == nil or xmlFile == 0 then
-        Logging.error("[FieldRotation] Failed to load FrameReference XML: %s", tostring(frameRefPath))
+        Logging.error("[RealisticCropRotation] Failed to load FrameReference XML: %s", tostring(frameRefPath))
         return nil
     end
 
@@ -189,7 +182,7 @@ function FieldRotation.addInGameMenuPage(frameFieldName, predicateFunc, insertPo
 
     local frame = g_gui:resolveFrameReference(g_inGameMenu[frameFieldName])
     if frame == nil then
-        Logging.error("[FieldRotation] Could not resolve frame reference '%s'", tostring(frameFieldName))
+        Logging.error("[RealisticCropRotation] Could not resolve frame reference '%s'", tostring(frameFieldName))
         return nil
     end
 
@@ -208,7 +201,7 @@ function FieldRotation.addInGameMenuPage(frameFieldName, predicateFunc, insertPo
     end
 
     g_inGameMenu:registerPage(frame, nil, predicateFunc)
-    g_inGameMenu:addPageTab(frame, nil, nil, "fieldRotation.menuIcon")
+    g_inGameMenu:addPageTab(frame, nil, nil, "realisticCropRotation.menuIcon")
     frame:onGuiSetupFinished()
 
     for i, element in ipairs(g_inGameMenu.pagingElement.elements) do
@@ -263,106 +256,106 @@ end
 
 local function loadedMission()
     -- Reload crop config here to guarantee the engine XML API is fully ready.
-    if FieldRotation.cropConfig == nil then
-        FieldRotation.cropConfig = loadCropConfig()
+    if RealisticCropRotation.cropConfig == nil then
+        RealisticCropRotation.cropConfig = loadCropConfig()
     end
 
-    FieldRotation.manager = FieldRotationManager.new()
-    FieldRotation.manager:initialize()
+    RealisticCropRotation.manager = RealisticCropRotationManager.new()
+    RealisticCropRotation.manager:initialize()
 
     local savegameFolderPath = resolveSavegameFolderPath()
 
     if g_currentMission:getIsServer() then
-        FieldRotation.manager:loadFromXML(savegameFolderPath)
+        RealisticCropRotation.manager:loadFromXML(savegameFolderPath)
         if g_currentMission.environment ~= nil then
-            FieldRotation.lastObservedPeriod = g_currentMission.environment.currentPeriod or 0
-            if FieldRotation.manager.service ~= nil
-                and type(FieldRotation.manager.service.getCurrentYear) == "function" then
-                FieldRotation.lastObservedYear = FieldRotation.manager.service:getCurrentYear()
+            RealisticCropRotation.lastObservedPeriod = g_currentMission.environment.currentPeriod or 0
+            if RealisticCropRotation.manager.service ~= nil
+                and type(RealisticCropRotation.manager.service.getCurrentYear) == "function" then
+                RealisticCropRotation.lastObservedYear = RealisticCropRotation.manager.service:getCurrentYear()
             else
-                FieldRotation.lastObservedYear = tonumber(g_currentMission.environment.currentYear) or 0
+                RealisticCropRotation.lastObservedYear = tonumber(g_currentMission.environment.currentYear) or 0
             end
         end
         if g_messageCenter ~= nil and MessageType ~= nil and MessageType.PERIOD_CHANGED ~= nil then
-            FieldRotation.periodChangeListener = {
+            RealisticCropRotation.periodChangeListener = {
                 periodChanged = function()
                     checkPeriodChange()
                 end,
             }
             g_messageCenter:subscribe(MessageType.PERIOD_CHANGED,
-                FieldRotation.periodChangeListener.periodChanged,
-                FieldRotation.periodChangeListener)
+                RealisticCropRotation.periodChangeListener.periodChanged,
+                RealisticCropRotation.periodChangeListener)
         else
-            Logging.warning("[FieldRotation] Period change listener unavailable; nitrogen mask period reset disabled")
+            Logging.warning("[RealisticCropRotation] Period change listener unavailable; nitrogen mask period reset disabled")
         end
         if g_messageCenter ~= nil and MessageType ~= nil and MessageType.FARMLAND_OWNER_CHANGED ~= nil then
-            FieldRotation.farmlandOwnerChangeListener = {
+            RealisticCropRotation.farmlandOwnerChangeListener = {
                 ownerChanged = function(_self, farmlandId, farmId, loadFromSavegame)
                     onFarmlandOwnerChanged(farmlandId, farmId, loadFromSavegame)
                 end,
             }
             g_messageCenter:subscribe(MessageType.FARMLAND_OWNER_CHANGED,
-                FieldRotation.farmlandOwnerChangeListener.ownerChanged,
-                FieldRotation.farmlandOwnerChangeListener)
+                RealisticCropRotation.farmlandOwnerChangeListener.ownerChanged,
+                RealisticCropRotation.farmlandOwnerChangeListener)
         else
-            Logging.warning("[FieldRotation] Farmland owner listener unavailable; rotation plans cannot be cleared on sale")
+            Logging.warning("[RealisticCropRotation] Farmland owner listener unavailable; rotation plans cannot be cleared on sale")
         end
     end
 
-    g_currentMission.fieldRotationManager = FieldRotation.manager
+    g_currentMission.realisticCropRotationManager = RealisticCropRotation.manager
 
     if g_currentMission:getIsServer() and type(g_currentMission.addUpdateable) == "function" then
-        FieldRotation.broadcastUpdateable = {
+        RealisticCropRotation.broadcastUpdateable = {
             update = function(_self, dt)
-                if not FieldRotation.broadcastDirty then return end
-                FieldRotation.broadcastTimerMs = (FieldRotation.broadcastTimerMs or 0) - (dt or 0)
-                if FieldRotation.broadcastTimerMs <= 0 then
-                    flushFieldRotationBroadcast()
+                if not RealisticCropRotation.broadcastDirty then return end
+                RealisticCropRotation.broadcastTimerMs = (RealisticCropRotation.broadcastTimerMs or 0) - (dt or 0)
+                if RealisticCropRotation.broadcastTimerMs <= 0 then
+                    flushRealisticCropRotationBroadcast()
                 end
             end,
         }
-        g_currentMission:addUpdateable(FieldRotation.broadcastUpdateable)
+        g_currentMission:addUpdateable(RealisticCropRotation.broadcastUpdateable)
     end
 
     if not g_currentMission:getIsServer() then
-        if FieldRotation.pendingSyncData ~= nil then
-            local pending = FieldRotation.pendingSyncData
-            FieldRotation.manager.service:applySyncData(
+        if RealisticCropRotation.pendingSyncData ~= nil then
+            local pending = RealisticCropRotation.pendingSyncData
+            RealisticCropRotation.manager.service:applySyncData(
                 pending.history or {},
                 pending.plans or {},
                 pending.lastKnownActiveCrop or {})
-            FieldRotation.pendingSyncData = nil
+            RealisticCropRotation.pendingSyncData = nil
         end
-        FieldRotation.requestServerSync("loadedMission")
+        RealisticCropRotation.requestServerSync("loadedMission")
     end
 
     -- GUI: profiles + icon slice + frame + InGameMenu tab injection.
     -- Skipped on dedicated server (g_gui is nil there).
     if g_gui ~= nil and type(g_gui.loadProfiles) == "function" then
-        g_gui:loadProfiles(FieldRotation.modDirectory .. "gui/guiProfiles.xml")
+        g_gui:loadProfiles(RealisticCropRotation.modDirectory .. "gui/guiProfiles.xml")
 
         if g_overlayManager ~= nil
             and (g_overlayManager.textureConfigs == nil
-                 or g_overlayManager.textureConfigs.fieldRotation == nil) then
+                 or g_overlayManager.textureConfigs.realisticCropRotation == nil) then
             g_overlayManager:addTextureConfigFile(
-                FieldRotation.modDirectory .. "images/menuIcon.xml",
-                "fieldRotation")
+                RealisticCropRotation.modDirectory .. "images/menuIcon.xml",
+                "realisticCropRotation")
         end
 
-        local frame = FieldRotationFrame.new(g_i18n, g_messageCenter)
-        g_gui:loadGui(FieldRotation.modDirectory .. "gui/FieldRotationFrame.xml",
-                      "FieldRotationFrame", frame, true)
+        local frame = RealisticCropRotationFrame.new(g_i18n, g_messageCenter)
+        g_gui:loadGui(RealisticCropRotation.modDirectory .. "gui/RealisticCropRotationFrame.xml",
+                      "RealisticCropRotationFrame", frame, true)
 
-        local inGameMenuFrame = FieldRotation.addInGameMenuPage(
-            "pageFieldRotation",
+        local inGameMenuFrame = RealisticCropRotation.addInGameMenuPage(
+            "pageRealisticCropRotation",
             function() return true end,
             "pageCalendar")
 
         if inGameMenuFrame ~= nil then
-            FieldRotation.frame = inGameMenuFrame
+            RealisticCropRotation.frame = inGameMenuFrame
             inGameMenuFrame:initialize()
         else
-            FieldRotation.frame = frame
+            RealisticCropRotation.frame = frame
             frame:initialize()
         end
     end
@@ -371,17 +364,17 @@ end
 local function onSaveToXMLFile()
     if g_currentMission == nil or g_currentMission.missionInfo == nil then return end
     if not g_currentMission:getIsServer() then return end
-    if FieldRotation.manager == nil then return end
+    if RealisticCropRotation.manager == nil then return end
 
     local savegameFolderPath = resolveSavegameFolderPath()
-    FieldRotation.manager:saveToXML(savegameFolderPath)
+    RealisticCropRotation.manager:saveToXML(savegameFolderPath)
 end
 
 local function sendInitialClientState(_self, connection)
     if g_server == nil then return end
     if connection == nil then return end
-    if FieldRotation.manager == nil then return end
-    connection:sendEvent(FRHistoryResponseEvent.new())
+    if RealisticCropRotation.manager == nil then return end
+    connection:sendEvent(RCRHistoryResponseEvent.new())
 end
 
 -- =========================================================================
@@ -419,9 +412,9 @@ local function getFruitTypeIndexAtArea(xw, xh, zw, zh)
 end
 
 local function hasHookContext(farmlandId)
-    if not FieldRotation.isEnabled then return false end
+    if not RealisticCropRotation.isEnabled then return false end
     if g_currentMission == nil or not g_currentMission:getIsServer() then return false end
-    if FieldRotation.manager == nil or FieldRotation.manager.service == nil then return false end
+    if RealisticCropRotation.manager == nil or RealisticCropRotation.manager.service == nil then return false end
     if farmlandId == nil or farmlandId == 0 then return false end
     return true
 end
@@ -430,7 +423,7 @@ local function captureCropCandidate(farmlandId, xw, xh, zw, zh)
     local fruitTypeIndex = getFruitTypeIndexAtArea(xw, xh, zw, zh)
     if fruitTypeIndex == nil then return nil end
 
-    local service = FieldRotation.manager.service
+    local service = RealisticCropRotation.manager.service
     local shouldResolveActiveCrop = true
     if type(service.isCoverCropForRotationHistory) == "function"
         and service:isCoverCropForRotationHistory(fruitTypeIndex, nil) then
@@ -439,9 +432,9 @@ local function captureCropCandidate(farmlandId, xw, xh, zw, zh)
 
     local activeCropName = nil
     if shouldResolveActiveCrop
-        and FieldRotation.manager ~= nil
-        and type(FieldRotation.manager.getActiveCropName) == "function" then
-        activeCropName = FieldRotation.manager:getActiveCropName(farmlandId)
+        and RealisticCropRotation.manager ~= nil
+        and type(RealisticCropRotation.manager.getActiveCropName) == "function" then
+        activeCropName = RealisticCropRotation.manager:getActiveCropName(farmlandId)
     end
     return {
         farmlandId = farmlandId,
@@ -452,23 +445,23 @@ end
 
 local function recordTermination(sourceName, changedArea, cropCandidate, nextActiveCropName)
     if cropCandidate == nil or changedArea == nil or changedArea <= 0 then return end
-    if FieldRotation.manager == nil then return end
+    if RealisticCropRotation.manager == nil then return end
 
-    local changed = FieldRotation.manager:recordCropChangeFromHook(
+    local changed = RealisticCropRotation.manager:recordCropChangeFromHook(
         sourceName,
         changedArea,
         cropCandidate,
         nextActiveCropName)
     if changed then
-        FieldRotation.manager:invalidateActiveCropCache(cropCandidate.farmlandId)
-        refreshFieldRotationFrame()
-        FieldRotation.requestBroadcast()
+        RealisticCropRotation.manager:invalidateActiveCropCache(cropCandidate.farmlandId)
+        refreshRealisticCropRotationFrame()
+        RealisticCropRotation.requestBroadcast()
     end
 end
 
 local function applyTerminationNitrogen(sourceName, changedArea, xs, zs, xw, zw, xh, zh, farmlandId, cropCandidate)
     if changedArea == nil or changedArea <= 0 then return end
-    local service = FieldRotation.manager.service
+    local service = RealisticCropRotation.manager.service
     if farmlandId == nil or farmlandId == 0 then return end
 
     local totalStateChange = service:getTerminationBonusStateChange(farmlandId)
@@ -518,7 +511,7 @@ local function wrapDensityMapSowingHook(sourceName)
     return function(fruitIndex, superFunc, startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, ...)
         local farmlandId = getFarmlandIdAtArea(widthWorldX, heightWorldX, widthWorldZ, heightWorldZ)
         local shouldProcess = hasHookContext(farmlandId)
-        local nextActiveCropName = shouldProcess and FieldRotation.manager.service:getCropNameByFruitTypeIndex(fruitIndex) or nil
+        local nextActiveCropName = shouldProcess and RealisticCropRotation.manager.service:getCropNameByFruitTypeIndex(fruitIndex) or nil
 
         local cropCandidate = nil
         if shouldProcess then
@@ -543,8 +536,8 @@ end
 -- Init.
 -- =========================================================================
 
-local function initFieldRotation()
-    FieldRotation.cropConfig = loadCropConfig()
+local function initRealisticCropRotation()
+    RealisticCropRotation.cropConfig = loadCropConfig()
 
     Mission00.loadMission00Finished = Utils.appendedFunction(Mission00.loadMission00Finished, loadedMission)
     FSBaseMission.saveSavegame = Utils.appendedFunction(FSBaseMission.saveSavegame, onSaveToXMLFile)
@@ -576,36 +569,34 @@ local function initFieldRotation()
     end
 
     BaseMission.delete = Utils.appendedFunction(BaseMission.delete, function()
-        if g_currentMission ~= nil and FieldRotation.broadcastUpdateable ~= nil
+        if g_currentMission ~= nil and RealisticCropRotation.broadcastUpdateable ~= nil
             and type(g_currentMission.removeUpdateable) == "function" then
-            g_currentMission:removeUpdateable(FieldRotation.broadcastUpdateable)
+            g_currentMission:removeUpdateable(RealisticCropRotation.broadcastUpdateable)
         end
-        if g_messageCenter ~= nil and FieldRotation.periodChangeListener ~= nil then
-            g_messageCenter:unsubscribeAll(FieldRotation.periodChangeListener)
+        if g_messageCenter ~= nil and RealisticCropRotation.periodChangeListener ~= nil then
+            g_messageCenter:unsubscribeAll(RealisticCropRotation.periodChangeListener)
         end
-        if g_messageCenter ~= nil and FieldRotation.farmlandOwnerChangeListener ~= nil then
-            g_messageCenter:unsubscribeAll(FieldRotation.farmlandOwnerChangeListener)
+        if g_messageCenter ~= nil and RealisticCropRotation.farmlandOwnerChangeListener ~= nil then
+            g_messageCenter:unsubscribeAll(RealisticCropRotation.farmlandOwnerChangeListener)
         end
-        FieldRotation.broadcastUpdateable = nil
-        FieldRotation.periodChangeListener = nil
-        FieldRotation.farmlandOwnerChangeListener = nil
-        FieldRotation.broadcastDirty = false
-        FieldRotation.broadcastTimerMs = 0
-        FieldRotation.lastObservedPeriod = 0
-        FieldRotation.lastObservedYear = 0
+        RealisticCropRotation.broadcastUpdateable = nil
+        RealisticCropRotation.periodChangeListener = nil
+        RealisticCropRotation.farmlandOwnerChangeListener = nil
+        RealisticCropRotation.broadcastDirty = false
+        RealisticCropRotation.broadcastTimerMs = 0
+        RealisticCropRotation.lastObservedPeriod = 0
+        RealisticCropRotation.lastObservedYear = 0
 
-        if FieldRotation.manager ~= nil then
-            FieldRotation.manager:cleanup()
-            FieldRotation.manager = nil
+        if RealisticCropRotation.manager ~= nil then
+            RealisticCropRotation.manager:cleanup()
+            RealisticCropRotation.manager = nil
         end
         if g_currentMission ~= nil then
-            g_currentMission.fieldRotationManager = nil
+            g_currentMission.realisticCropRotationManager = nil
         end
-        FieldRotation.frame = nil
-        FieldRotation.pendingSyncData = nil
+        RealisticCropRotation.frame = nil
+        RealisticCropRotation.pendingSyncData = nil
     end)
-
-    addConsoleCommand("assolementToggle", "Enable / disable FieldRotation mod at runtime", "consoleCommandToggle", FieldRotation)
 end
 
-initFieldRotation()
+initRealisticCropRotation()

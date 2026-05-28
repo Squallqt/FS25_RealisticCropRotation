@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <FrameReferences>
-    <FrameReference ref="FieldRotationFrame" name="FieldRotationFrame" id="pageFieldRotation"/>
+    <FrameReference ref="RealisticCropRotationFrame" name="RealisticCropRotationFrame" id="pageRealisticCropRotation"/>
 </FrameReferences>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <!--
-    FieldRotation crop configuration.
+    RealisticCropRotation crop configuration.
     To add a crop: add one <crop> line. No Lua editing required.
 
     Attributes:
@@ -18,7 +18,7 @@
         - MUSTARD and VETCHRYE are regular rotation crops for this release:
           they are recorded in history and provide an N+1 residue bonus.
 -->
-<fieldRotationCrops>
+<realisticCropRotationCrops>
 
     <!-- ======================================================== -->
     <!-- CEREALS                                                    -->
@@ -81,4 +81,4 @@
     <crop name="OILSEEDRADISH"      family="COVER" cover="true" />
     <crop name="FLOWERINGCATCHCROP" family="COVER" cover="true" />
 
-</fieldRotationCrops>
+</realisticCropRotationCrops>

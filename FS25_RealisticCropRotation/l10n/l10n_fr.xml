@@ -2,126 +2,126 @@
 <l10n>
     <elements>
         <!-- General -->
-        <e k="fieldRotation_menu_title" v="Assolement" />
+        <e k="realisticCropRotation_menu_title" v="Assolement" />
 
         <!-- Sidebar -->
-        <e k="fr_field_prefix"         v="Parcelle" />
-        <e k="fr_sidebar_last"            v="Dernier :" />
-        <e k="fr_sidebar_no_active_crop"  v="Aucune culture" />
+        <e k="rcr_field_prefix"         v="Parcelle" />
+        <e k="rcr_sidebar_last"            v="Dernier :" />
+        <e k="rcr_sidebar_no_active_crop"  v="Aucune culture" />
 
         <!-- Tabs -->
-        <e k="fr_tab_history"          v="Assolement" />
-        <e k="fr_tab_planning"         v="Planification" />
+        <e k="rcr_tab_history"          v="Assolement" />
+        <e k="rcr_tab_planning"         v="Planification" />
 
         <!-- Hero card -->
-        <e k="fr_season_label"         v="Saison" />
-        <e k="fr_season_spring"        v="Printemps" />
-        <e k="fr_season_summer"        v="Été" />
-        <e k="fr_season_autumn"        v="Automne" />
-        <e k="fr_season_winter"        v="Hiver" />
-        <e k="fr_status_bonus"         v="Reliquat Azoté" />
-        <e k="fr_status_current_residue" v="Reliquat actuel +%d kg/ha" />
-        <e k="fr_status_planned_residue" v="Reliquat total rotation +%d kg/ha" />
-        <e k="fr_status_current_no_residue" v="Reliquat actuel 0 kg/ha" />
-        <e k="fr_status_planned_no_residue" v="Reliquat total rotation 0 kg/ha" />
-        <e k="fr_hud_previous_n1"      v="Précédent cultural (N-1) :" />
-        <e k="fr_hud_previous_n2"      v="Anté-précédent (N-2) :" />
-        <e k="fr_hud_cover_crop"       v="Couvert végétal :" />
-        <e k="fr_hud_yes"              v="Oui" />
-        <e k="fr_hud_no"               v="Non" />
-        <e k="fr_hud_none"             v="Aucun" />
+        <e k="rcr_season_label"         v="Saison" />
+        <e k="rcr_season_spring"        v="Printemps" />
+        <e k="rcr_season_summer"        v="Été" />
+        <e k="rcr_season_autumn"        v="Automne" />
+        <e k="rcr_season_winter"        v="Hiver" />
+        <e k="rcr_status_bonus"         v="Reliquat Azoté" />
+        <e k="rcr_status_current_residue" v="Reliquat actuel +%d kg/ha" />
+        <e k="rcr_status_planned_residue" v="Reliquat total rotation +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Reliquat actuel 0 kg/ha" />
+        <e k="rcr_status_planned_no_residue" v="Reliquat total rotation 0 kg/ha" />
+        <e k="rcr_hud_previous_n1"      v="Précédent cultural (N-1) :" />
+        <e k="rcr_hud_previous_n2"      v="Anté-précédent (N-2) :" />
+        <e k="rcr_hud_cover_crop"       v="Couvert végétal :" />
+        <e k="rcr_hud_yes"              v="Oui" />
+        <e k="rcr_hud_no"               v="Non" />
+        <e k="rcr_hud_none"             v="Aucun" />
 
         <!-- Section bars -->
-        <e k="fr_section_history"      v="Historique des Cultures" />
-        <e k="fr_section_nitrogen"     v="Statut Azoté" />
-        <e k="fr_section_advice"       v="Conseil Agronomique" />
-        <e k="fr_section_yield"        v="Rendement, herbes et croissance" />
-        <e k="fr_section_lime"         v="Statut Chaux / pH" />
-        <e k="fr_section_plan"         v="Plan de Rotation" />
-        <e k="fr_section_score"        v="Qualité de Rotation" />
-        <e k="fr_section_overview"     v="Aperçu Global" />
-        <e k="fr_overview_total_area"  v="Surface exploitée : %.1f ha" />
+        <e k="rcr_section_history"      v="Historique des Cultures" />
+        <e k="rcr_section_nitrogen"     v="Statut Azoté" />
+        <e k="rcr_section_advice"       v="Conseil Agronomique" />
+        <e k="rcr_section_yield"        v="Rendement, herbes et croissance" />
+        <e k="rcr_section_lime"         v="Statut Chaux / pH" />
+        <e k="rcr_section_plan"         v="Plan de Rotation" />
+        <e k="rcr_section_score"        v="Qualité de Rotation" />
+        <e k="rcr_section_overview"     v="Aperçu Global" />
+        <e k="rcr_overview_total_area"  v="Surface exploitée : %.1f ha" />
 
         <!-- Timeline slot labels and empty state -->
-        <e k="fr_slot_empty"           v="Non cultivé" />
-        <e k="fr_slot_n4"              v="N-4" />
-        <e k="fr_slot_n3"              v="N-3" />
-        <e k="fr_slot_n2"              v="N-2" />
-        <e k="fr_slot_n1"              v="N-1" />
-        <e k="fr_slot_current"         v="Actuel" />
+        <e k="rcr_slot_empty"           v="Non cultivé" />
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Actuel" />
 
         <!-- Crop family badge labels -->
-        <e k="fr_family_cereal"        v="Céréale" />
-        <e k="fr_family_legume"        v="Légumineuse" />
-        <e k="fr_family_oilseed"       v="Oléagineux" />
-        <e k="fr_family_root"          v="Légumes-racines" />
-        <e k="fr_family_vegetable"     v="Légumes" />
-        <e k="fr_family_forage"        v="Fourrage" />
-        <e k="fr_family_cover"         v="Couvert végétal" />
+        <e k="rcr_family_cereal"        v="Céréale" />
+        <e k="rcr_family_legume"        v="Légumineuse" />
+        <e k="rcr_family_oilseed"       v="Oléagineux" />
+        <e k="rcr_family_root"          v="Légumes-racines" />
+        <e k="rcr_family_vegetable"     v="Légumes" />
+        <e k="rcr_family_forage"        v="Fourrage" />
+        <e k="rcr_family_cover"         v="Couvert végétal" />
 
         <!-- Nitrogen gauge -->
-        <e k="fr_n_none"               v="Non fertilisé" />
-        <e k="fr_n_partial"            v="Partiel" />
-        <e k="fr_n_full"               v="Complet" />
-        <e k="fr_n_available"          v="Azote disponible" />
-        <e k="fr_n_average_value"      v="Moyenne d'azote : %.0f kg/ha" />
-        <e k="fr_n_crop_need"          v="Besoin de la culture : %.0f kg/ha" />
-        <e k="fr_n_average_pf"         v="Azote / besoin culture" />
-        <e k="fr_lime_none"            v="Chaux absente" />
-        <e k="fr_lime_partial"         v="Chaux partielle" />
-        <e k="fr_lime_full"            v="Chaux correcte" />
-        <e k="fr_lime_average_pf"      v="Moyenne du pH" />
-        <e k="fr_lime_average_value"   v="Moyenne du pH : %.2f pH" />
-        <e k="fr_lime_target"          v="Objectif : %.2f pH" />
+        <e k="rcr_n_none"               v="Non fertilisé" />
+        <e k="rcr_n_partial"            v="Partiel" />
+        <e k="rcr_n_full"               v="Complet" />
+        <e k="rcr_n_available"          v="Azote disponible" />
+        <e k="rcr_n_average_value"      v="Moyenne d'azote : %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Besoin de la culture : %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Azote / besoin culture" />
+        <e k="rcr_lime_none"            v="Chaux absente" />
+        <e k="rcr_lime_partial"         v="Chaux partielle" />
+        <e k="rcr_lime_full"            v="Chaux correcte" />
+        <e k="rcr_lime_average_pf"      v="Moyenne du pH" />
+        <e k="rcr_lime_average_value"   v="Moyenne du pH : %.2f pH" />
+        <e k="rcr_lime_target"          v="Objectif : %.2f pH" />
 
         <!-- Agronomic advice -->
-        <e k="fr_advice_afterCereal"    v="Après céréale : légumineuse recommandée pour casser le cycle et limiter céréale sur céréale." />
-        <e k="fr_advice_afterLegume"    v="Après légumineuse : céréale recommandée pour valoriser l'azote restitué." />
-        <e k="fr_advice_afterOilseed"   v="Après oléagineux : céréale recommandée; évitez deux oléagineux de suite." />
-        <e k="fr_advice_afterRoot"      v="Après racine : céréale recommandée; espacez le retour des cultures racines." />
-        <e k="fr_advice_afterVegetable" v="Après légume feuille ou bulbe : céréale recommandée; évitez les répétitions." />
-        <e k="fr_advice_afterForage"    v="Après prairie ou fourrage : céréale adaptée, sol structuré et reliquats disponibles." />
-        <e k="fr_advice_no_current_crop" v="Aucune culture principale actuelle : conseil disponible quand une culture est détectée." />
+        <e k="rcr_advice_afterCereal"    v="Après céréale : légumineuse recommandée pour casser le cycle et limiter céréale sur céréale." />
+        <e k="rcr_advice_afterLegume"    v="Après légumineuse : céréale recommandée pour valoriser l'azote restitué." />
+        <e k="rcr_advice_afterOilseed"   v="Après oléagineux : céréale recommandée; évitez deux oléagineux de suite." />
+        <e k="rcr_advice_afterRoot"      v="Après racine : céréale recommandée; espacez le retour des cultures racines." />
+        <e k="rcr_advice_afterVegetable" v="Après légume feuille ou bulbe : céréale recommandée; évitez les répétitions." />
+        <e k="rcr_advice_afterForage"    v="Après prairie ou fourrage : céréale adaptée, sol structuré et reliquats disponibles." />
+        <e k="rcr_advice_no_current_crop" v="Aucune culture principale actuelle : conseil disponible quand une culture est détectée." />
 
         <!-- Yield card -->
-        <e k="fr_yield_harvest"        v="Récolte Totale" />
-        <e k="fr_yield_stage"          v="Croissance" />
+        <e k="rcr_yield_harvest"        v="Récolte Totale" />
+        <e k="rcr_yield_stage"          v="Croissance" />
 
         <!-- Yield card — weed column header (singular, matching base game HUD) -->
-        <e k="fr_weed_header"          v="Mauvaise herbe" />
+        <e k="rcr_weed_header"          v="Mauvaise herbe" />
 
         <!-- Yield card — weed action fallback labels (used when the pedestrian
              HUD cache is empty; base game strings are preferred when available). -->
-        <e k="fr_weed_stage_sprout"    v="pousse" />
-        <e k="fr_weed_stage_small"     v="petite" />
-        <e k="fr_weed_stage_medium"    v="moyenne" />
-        <e k="fr_weed_stage_large"     v="grande" />
-        <e k="fr_weed_stage_partial"   v="partielle" />
-        <e k="fr_weed_tool_weeder"     v="Sarcleuse" />
-        <e k="fr_weed_tool_hoe"        v="Houe" />
-        <e k="fr_weed_tool_herbicide"  v="Herbicide" />
+        <e k="rcr_weed_stage_sprout"    v="pousse" />
+        <e k="rcr_weed_stage_small"     v="petite" />
+        <e k="rcr_weed_stage_medium"    v="moyenne" />
+        <e k="rcr_weed_stage_large"     v="grande" />
+        <e k="rcr_weed_stage_partial"   v="partielle" />
+        <e k="rcr_weed_tool_weeder"     v="Sarcleuse" />
+        <e k="rcr_weed_tool_hoe"        v="Houe" />
+        <e k="rcr_weed_tool_herbicide"  v="Herbicide" />
 
         <!-- Planning tab — year slots (relative to current year, never stale) -->
-        <e k="fr_plan_year1"           v="N+1" />
-        <e k="fr_plan_year2"           v="N+2" />
-        <e k="fr_plan_year3"           v="N+3" />
-        <e k="fr_plan_year4"           v="N+4" />
-        <e k="fr_plan_none"            v="Non planifié" />
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Non planifié" />
 
         <!-- Planning tab — score -->
-        <e k="fr_score_incomplete"     v="Plan incomplet" />
-        <e k="fr_score_excellent"      v="Excellente rotation" />
-        <e k="fr_score_good"           v="Bonne rotation" />
-        <e k="fr_score_fair"           v="Rotation correcte" />
-        <e k="fr_score_poor"           v="Rotation à améliorer" />
-        <e k="fr_score_label_low"      v="Score faible" />
-        <e k="fr_score_label_optimal"  v="Score optimal" />
-        <e k="fr_score_short_optimal"  v="OPTIMAL" />
-        <e k="fr_score_short_good"     v="BON" />
-        <e k="fr_score_short_fair"     v="CORRECT" />
-        <e k="fr_score_short_poor"     v="FAIBLE" />
+        <e k="rcr_score_incomplete"     v="Plan incomplet" />
+        <e k="rcr_score_excellent"      v="Excellente rotation" />
+        <e k="rcr_score_good"           v="Bonne rotation" />
+        <e k="rcr_score_fair"           v="Rotation correcte" />
+        <e k="rcr_score_poor"           v="Rotation à améliorer" />
+        <e k="rcr_score_label_low"      v="Score faible" />
+        <e k="rcr_score_label_optimal"  v="Score optimal" />
+        <e k="rcr_score_short_optimal"  v="OPTIMAL" />
+        <e k="rcr_score_short_good"     v="BON" />
+        <e k="rcr_score_short_fair"     v="CORRECT" />
+        <e k="rcr_score_short_poor"     v="FAIBLE" />
 
         <!-- Empty state -->
-        <e k="fr_empty_no_fields"      v="Aucune parcelle possédée à afficher." />
+        <e k="rcr_empty_no_fields"      v="Aucune parcelle possédée à afficher." />
     </elements>
 </l10n>

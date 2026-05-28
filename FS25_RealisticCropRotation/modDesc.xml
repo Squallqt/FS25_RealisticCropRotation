@@ -3,7 +3,7 @@
     <author>Squallqt</author>
     <version>1.0.0.0</version>
     <title>
-        <en>Field Rotation</en>
+        <en>Realistic Crop Rotation</en>
         <de>Fruchtfolge</de>
         <fr>Assolement</fr>
     </title>
@@ -19,7 +19,7 @@ Features:
 - Multiplayer-ready (server-authoritative, late-join sync)
 - Optimized: O(1) hook operations, no per-frame density map scans
 
-Issues & suggestions: https://github.com/Squallqt/FS25_FieldRotation
+Issues & suggestions: https://github.com/Squallqt/FS25_RealisticCropRotation
 
 Changelog:
 
@@ -36,7 +36,7 @@ Funktionen:
 - Mehrspieler-fähig (serverseitige Autorität, Synchronisation für späten Beitritt)
 - Optimiert: O(1) Hook-Operationen, keine Density-Map-Scans pro Frame
 
-Issues & Vorschläge: https://github.com/Squallqt/FS25_FieldRotation
+Issues & Vorschläge: https://github.com/Squallqt/FS25_RealisticCropRotation
 
 Changelog:
 
@@ -53,7 +53,7 @@ Fonctionnalités :
 - Compatible multijoueur (autorité serveur, synchronisation à la connexion tardive)
 - Optimisé : opérations O(1) dans les hooks, pas de scan de density map par frame
 
-Issues & suggestions : https://github.com/Squallqt/FS25_FieldRotation
+Issues & suggestions : https://github.com/Squallqt/FS25_RealisticCropRotation
 
 Changelog :
 

@@ -1,11 +1,11 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
 -- Facade exposed on g_currentMission.fieldRotationManager.
 -- Owns Repository + Service and forwards GUI-side reads.
-FieldRotationManager = {}
-local FieldRotationManager_mt = Class(FieldRotationManager)
+RealisticCropRotationManager = {}
+local RealisticCropRotationManager_mt = Class(RealisticCropRotationManager)
 
 -- Active-crop cache TTL on the server.
--- captureFieldRotationTerminationCrop calls getActiveCropName from every
+-- captureCropCandidate calls getActiveCropName from every
 -- density-map hook tick. A TTL-based cache (no event invalidation) is the
 -- correct shape: the field's growth state does not move on the second/sub-
 -- second scale, so a stale read up to TTL is harmless.
@@ -76,7 +76,7 @@ local function getRotationAreaHa(farmland, field)
     return getFarmlandFieldAreaHa(farmland)
 end
 
-local function hasUsableFieldRotationArea(farmland, field)
+local function hasUsableRealisticCropRotationArea(farmland, field)
     return getRotationAreaHa(farmland, field) > 0
 end
 
@@ -442,17 +442,17 @@ end
 -- Construction / lifecycle.
 -- =========================================================================
 
-function FieldRotationManager.new()
-    local self = setmetatable({}, FieldRotationManager_mt)
-    self.repository = FieldRotationRepository.new()
-    self.service = FieldRotationService.new(self.repository)
+function RealisticCropRotationManager.new()
+    local self = setmetatable({}, RealisticCropRotationManager_mt)
+    self.repository = RealisticCropRotationRepository.new()
+    self.service = RealisticCropRotationService.new(self.repository)
     self.activeCropNameCache = {}
     self.warnedCropChangeAreaThreshold = {}
     self.isInitialized = false
     return self
 end
 
-function FieldRotationManager:initialize()
+function RealisticCropRotationManager:initialize()
     if self.isInitialized then return end
     self.repository:clear()
     self.service:reset()
@@ -461,7 +461,7 @@ function FieldRotationManager:initialize()
     self.isInitialized = true
 end
 
-function FieldRotationManager:cleanup()
+function RealisticCropRotationManager:cleanup()
     self.repository:clear()
     self.service:reset()
     self.activeCropNameCache = {}
@@ -469,14 +469,14 @@ function FieldRotationManager:cleanup()
     self.isInitialized = false
 end
 
-function FieldRotationManager:saveToXML(savegamePath)
+function RealisticCropRotationManager:saveToXML(savegamePath)
     if self.service ~= nil and type(self.service.saveNitrogenApplicationMask) == "function" then
         self.service:saveNitrogenApplicationMask(savegamePath)
     end
     return self.repository:saveToXML(savegamePath)
 end
 
-function FieldRotationManager:loadFromXML(savegamePath)
+function RealisticCropRotationManager:loadFromXML(savegamePath)
     self.repository:loadFromXML(savegamePath)
     self.service:recomputeAllPendingBonuses()
     self.service:initializeNitrogenApplicationMask(savegamePath)
@@ -486,28 +486,28 @@ end
 -- GUI / runtime queries.
 -- =========================================================================
 
-function FieldRotationManager:getHistory(farmlandId)
+function RealisticCropRotationManager:getHistory(farmlandId)
     return self.repository:getHistory(farmlandId)
 end
 
-function FieldRotationManager:getAllHistory()
+function RealisticCropRotationManager:getAllHistory()
     return self.repository:getAllHistory()
 end
 
-function FieldRotationManager:getPendingBonus(farmlandId)
+function RealisticCropRotationManager:getPendingBonus(farmlandId)
     if farmlandId == nil or self.service == nil then return nil end
     return self.service.pendingBonus[farmlandId]
 end
 
-function FieldRotationManager:getRotationPlan(farmlandId)
+function RealisticCropRotationManager:getRotationPlan(farmlandId)
     return self.repository:getPlan(farmlandId)
 end
 
-function FieldRotationManager:getAllRotationPlans()
+function RealisticCropRotationManager:getAllRotationPlans()
     return self.repository:getAllPlans()
 end
 
-function FieldRotationManager:setRotationPlanYear(farmlandId, yearIdx, family)
+function RealisticCropRotationManager:setRotationPlanYear(farmlandId, yearIdx, family)
     local n = tonumber(farmlandId)
     local y = tonumber(yearIdx)
     if n == nil or n <= 0 or y == nil or y < 1 or y > 4 then return false end
@@ -515,12 +515,12 @@ function FieldRotationManager:setRotationPlanYear(farmlandId, yearIdx, family)
     return true
 end
 
-function FieldRotationManager:clearRotationPlan(farmlandId)
+function RealisticCropRotationManager:clearRotationPlan(farmlandId)
     if self.repository == nil or type(self.repository.clearPlan) ~= "function" then return false end
     return self.repository:clearPlan(farmlandId)
 end
 
-function FieldRotationManager:getCurrentFarmId()
+function RealisticCropRotationManager:getCurrentFarmId()
     if g_localPlayer ~= nil and g_localPlayer.farmId ~= nil then return g_localPlayer.farmId end
     if g_currentMission ~= nil and type(g_currentMission.getFarmId) == "function" then
         return g_currentMission:getFarmId()
@@ -528,7 +528,7 @@ function FieldRotationManager:getCurrentFarmId()
     return nil
 end
 
-function FieldRotationManager:getFieldByFarmlandId(farmlandId)
+function RealisticCropRotationManager:getFieldByFarmlandId(farmlandId)
     local n = tonumber(farmlandId)
     if n == nil or n <= 0 then return nil end
 
@@ -559,7 +559,7 @@ end
 
 -- Returns the currently active crop name on a farmland.
 -- Pure clients use density-map sampling only; fieldState fallback is server-only.
-function FieldRotationManager:getActiveCropName(farmlandId)
+function RealisticCropRotationManager:getActiveCropName(farmlandId)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil then return nil end
 
@@ -590,18 +590,18 @@ function FieldRotationManager:getActiveCropName(farmlandId)
     return resolved
 end
 
-function FieldRotationManager:getActiveCropFruitTypeIndex(farmlandId)
+function RealisticCropRotationManager:getActiveCropFruitTypeIndex(farmlandId)
     return getFieldFruitTypeIndex(self:getFieldByFarmlandId(farmlandId))
 end
 
-function FieldRotationManager:invalidateActiveCropCache(farmlandId)
+function RealisticCropRotationManager:invalidateActiveCropCache(farmlandId)
     if self.activeCropNameCache == nil then return end
     local n = tonumber(farmlandId)
     if n == nil then return end
     self.activeCropNameCache[n] = nil
 end
 
-function FieldRotationManager:getCropChangeRequiredAreaPixels(farmlandId)
+function RealisticCropRotationManager:getCropChangeRequiredAreaPixels(farmlandId)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return nil end
 
@@ -613,11 +613,11 @@ function FieldRotationManager:getCropChangeRequiredAreaPixels(farmlandId)
     local pixelToSqm = getTerrainDetailPixelToSqm()
     if pixelToSqm == nil or pixelToSqm <= 0 then return nil end
 
-    local threshold = FieldRotationService.CROP_CHANGE_AREA_THRESHOLD or 0.90
+    local threshold = RealisticCropRotationService.CROP_CHANGE_AREA_THRESHOLD or 0.90
     return (areaHa * 10000 / pixelToSqm) * threshold
 end
 
-function FieldRotationManager:recordCropChangeFromHook(sourceName, changedArea, cropCandidate, nextActiveCropName)
+function RealisticCropRotationManager:recordCropChangeFromHook(sourceName, changedArea, cropCandidate, nextActiveCropName)
     if self.service == nil or cropCandidate == nil then return false end
 
     local farmlandId = tonumber(cropCandidate.farmlandId)
@@ -627,7 +627,7 @@ function FieldRotationManager:recordCropChangeFromHook(sourceName, changedArea, 
     if requiredArea == nil or requiredArea <= 0 then
         if not self.warnedCropChangeAreaThreshold[farmlandId] then
             self.warnedCropChangeAreaThreshold[farmlandId] = true
-            Logging.warning("[FieldRotation] Crop history update skipped: reliable field area or terrain detail pixel scale unavailable for farmland=%s",
+            Logging.warning("[RealisticCropRotation] Crop history update skipped: reliable field area or terrain detail pixel scale unavailable for farmland=%s",
                 tostring(farmlandId))
         end
         return false
@@ -647,7 +647,7 @@ function FieldRotationManager:recordCropChangeFromHook(sourceName, changedArea, 
     return changed
 end
 
-function FieldRotationManager:reconcileActiveCropForFarmland(farmlandId, sourceName)
+function RealisticCropRotationManager:reconcileActiveCropForFarmland(farmlandId, sourceName)
     if self.service == nil then return false end
     if isPureClient() then return false end
 
@@ -662,13 +662,13 @@ end
 -- Returns the native ground state label (Cultivé/Labouré/Lit de semences/...)
 -- when no active crop is growing on the farmland. nil when there IS a crop
 -- (caller should display the crop) or when the ground is in NONE state.
-function FieldRotationManager:getCurrentGroundStateLabel(farmlandId)
+function RealisticCropRotationManager:getCurrentGroundStateLabel(farmlandId)
     if isPureClient() then return nil end
     local field = self:getFieldByFarmlandId(farmlandId)
     return getNativeGroundStateLabel(field)
 end
 
-function FieldRotationManager:getOwnedFarmlands()
+function RealisticCropRotationManager:getOwnedFarmlands()
     local result = {}
     local farmId = self:getCurrentFarmId()
     if farmId == nil or g_farmlandManager == nil then return result end
@@ -690,13 +690,13 @@ function FieldRotationManager:getOwnedFarmlands()
 
     local prefix = "Field"
     if g_i18n ~= nil and type(g_i18n.getText) == "function" then
-        prefix = g_i18n:getText("fr_field_prefix") or prefix
+        prefix = g_i18n:getText("rcr_field_prefix") or prefix
     end
 
     for _, farmlandId in ipairs(farmlandIds) do
         local farmland = getFarmlandById(farmlandId)
         local field = self:getFieldByFarmlandId(farmlandId)
-        if hasUsableFieldRotationArea(farmland, field) then
+        if hasUsableRealisticCropRotationArea(farmland, field) then
             local rawName = farmland ~= nil and farmland.name or nil
             if (rawName == nil or rawName == "") and field ~= nil then rawName = field.name end
             local displayName
@@ -721,14 +721,14 @@ function FieldRotationManager:getOwnedFarmlands()
     return result
 end
 
-function FieldRotationManager:getCurrentSprayLevel(farmlandId)
+function RealisticCropRotationManager:getCurrentSprayLevel(farmlandId)
     local field = self:getFieldByFarmlandId(farmlandId)
     local sprayLevel = field ~= nil and field.fieldState ~= nil and field.fieldState.sprayLevel or 0
     sprayLevel = tonumber(sprayLevel) or 0
     return math.max(0, math.min(2, math.floor(sprayLevel + 0.5)))
 end
 
-function FieldRotationManager:getCurrentLimeLevel(farmlandId)
+function RealisticCropRotationManager:getCurrentLimeLevel(farmlandId)
     local field = self:getFieldByFarmlandId(farmlandId)
     local limeLevel = field ~= nil and field.fieldState ~= nil and field.fieldState.limeLevel or 0
 
@@ -755,7 +755,7 @@ end
 -- card and to detect the base-game pedestrian HUD's "Croissance:" line so
 -- we can inject the numeric progress into it instead of adding a duplicate.
 -- Returns nil when no displayable tier applies (no fruit / no i18n).
-function FieldRotationManager.getGrowthTierText(fruitType, growthState)
+function RealisticCropRotationManager.getGrowthTierText(fruitType, growthState)
     if fruitType == nil then return nil end
     growthState = tonumber(growthState) or 0
     if growthState <= 0 then return nil end
@@ -800,10 +800,10 @@ end
 --   - terminal tiers (Withered / Cut) get the tier label alone, since the
 --     numeric progress is meaningless once the crop cycle is over
 --   - nil when no displayable tier applies
-function FieldRotationManager.classifyGrowthStage(fruitType, growthState)
-    local tierText = FieldRotationManager.getGrowthTierText(fruitType, growthState)
+function RealisticCropRotationManager.classifyGrowthStage(fruitType, growthState)
+    local tierText = RealisticCropRotationManager.getGrowthTierText(fruitType, growthState)
     if tierText == nil then return nil end
-    local numbers = FieldRotationManager.getGrowthStageNumbers(fruitType, growthState)
+    local numbers = RealisticCropRotationManager.getGrowthStageNumbers(fruitType, growthState)
     if numbers == nil then return tierText end
     return string.format("(%s) · %s", numbers, tierText)
 end
@@ -813,7 +813,7 @@ end
 -- meaningful. Used by the pedestrian HUD which already gets the tier label
 -- from the base game field-info line ("Croissance: <tier>"), so the mod only
 -- needs to surface the numeric progress to avoid duplicating wording.
-function FieldRotationManager.getGrowthStageNumbers(fruitType, growthState)
+function RealisticCropRotationManager.getGrowthStageNumbers(fruitType, growthState)
     if fruitType == nil then return nil end
     growthState = tonumber(growthState) or 0
     if growthState <= 0 then return nil end
@@ -840,16 +840,16 @@ end
 -- game pedestrian field-info HUD (weedState 0..9). These describe weed only;
 -- the crop's foliage state then constrains which mechanical tool is actually
 -- usable (see classifyWeedAction).
-FieldRotationManager.WEED_STAGE_KEY = {
-    [1] = "fr_weed_stage_sprout",
-    [2] = "fr_weed_stage_sprout",
-    [3] = "fr_weed_stage_small",
-    [4] = "fr_weed_stage_medium",
-    [5] = "fr_weed_stage_large",
-    [6] = "fr_weed_stage_partial",
+RealisticCropRotationManager.WEED_STAGE_KEY = {
+    [1] = "rcr_weed_stage_sprout",
+    [2] = "rcr_weed_stage_sprout",
+    [3] = "rcr_weed_stage_small",
+    [4] = "rcr_weed_stage_medium",
+    [5] = "rcr_weed_stage_large",
+    [6] = "rcr_weed_stage_partial",
 }
 
-FieldRotationManager.WEED_IDEAL_TOOL = {
+RealisticCropRotationManager.WEED_IDEAL_TOOL = {
     [1] = "weeder", [2] = "weeder", [3] = "weeder",
     [4] = "hoe",
     [5] = "herbicide",
@@ -877,7 +877,7 @@ FieldRotationManager.WEED_IDEAL_TOOL = {
 --
 -- Returns the final composed display string, or nil when there is nothing to
 -- show (no weed / withered weed / no fruit / no i18n).
-function FieldRotationManager.classifyWeedAction(fruitType, growthState, weedState)
+function RealisticCropRotationManager.classifyWeedAction(fruitType, growthState, weedState)
     weedState = tonumber(weedState) or 0
     if weedState <= 0 or weedState >= 7 then return nil end
     if fruitType == nil then return nil end
@@ -885,8 +885,8 @@ function FieldRotationManager.classifyWeedAction(fruitType, growthState, weedSta
     if growthState <= 0 then return nil end
     if g_i18n == nil or g_i18n.getText == nil then return nil end
 
-    local stageKey  = FieldRotationManager.WEED_STAGE_KEY[weedState]
-    local idealTool = FieldRotationManager.WEED_IDEAL_TOOL[weedState]
+    local stageKey  = RealisticCropRotationManager.WEED_STAGE_KEY[weedState]
+    local idealTool = RealisticCropRotationManager.WEED_IDEAL_TOOL[weedState]
     if stageKey == nil or idealTool == nil then return nil end
 
     -- For weeder-ideal states, try weeder first, then hoe as fallback before
@@ -901,20 +901,20 @@ function FieldRotationManager.classifyWeedAction(fruitType, growthState, weedSta
     local toolKey
     if idealTool == "weeder" then
         if minWeed > 0 and growthState >= minWeed and growthState <= maxWeed then
-            toolKey = "fr_weed_tool_weeder"
+            toolKey = "rcr_weed_tool_weeder"
         elseif minHoe > 0 and growthState >= minHoe and growthState <= maxHoe then
-            toolKey = "fr_weed_tool_hoe"
+            toolKey = "rcr_weed_tool_hoe"
         else
-            toolKey = "fr_weed_tool_herbicide"
+            toolKey = "rcr_weed_tool_herbicide"
         end
     elseif idealTool == "hoe" then
         if minHoe > 0 and growthState >= minHoe and growthState <= maxHoe then
-            toolKey = "fr_weed_tool_hoe"
+            toolKey = "rcr_weed_tool_hoe"
         else
-            toolKey = "fr_weed_tool_herbicide"
+            toolKey = "rcr_weed_tool_herbicide"
         end
     else
-        toolKey = "fr_weed_tool_herbicide"
+        toolKey = "rcr_weed_tool_herbicide"
     end
 
     return string.format("(%s) · %s",
@@ -925,10 +925,10 @@ end
 -- the player walks near a field. The base game runs fieldAddWeed internally
 -- with its own per-crop tool logic; we intercept the addLine call to capture
 -- exactly what it computed. Card prefers this over classifyWeedAction.
-FieldRotationManager.weedCache = {}
+RealisticCropRotationManager.weedCache = {}
 
-function FieldRotationManager.setWeedFromHUD(farmlandId, stage, tool)
-    FieldRotationManager.weedCache[tonumber(farmlandId)] = { stage = stage, tool = tool }
+function RealisticCropRotationManager.setWeedFromHUD(farmlandId, stage, tool)
+    RealisticCropRotationManager.weedCache[tonumber(farmlandId)] = { stage = stage, tool = tool }
 end
 
 -- Returns crop info for a farmland in a single density-map sample:
@@ -939,7 +939,7 @@ end
 -- optional "(X/Y) ·" prefix for active tiers); weedActionText is the composed
 -- weed action label "(<stage>) · <tool>". Either may be nil when nothing
 -- displayable applies for that field.
-function FieldRotationManager:getFieldCropInfo(farmlandId)
+function RealisticCropRotationManager:getFieldCropInfo(farmlandId)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return nil end
 
@@ -968,16 +968,16 @@ function FieldRotationManager:getFieldCropInfo(farmlandId)
     local growthState = tonumber(fieldState.growthState or fieldState.lastGrowthState) or 0
     local weedState = tonumber(fieldState.weedState) or 0
 
-    local cachedWeed = FieldRotationManager.weedCache[numericFarmlandId]
+    local cachedWeed = RealisticCropRotationManager.weedCache[numericFarmlandId]
     local weedText
     if cachedWeed ~= nil then
         weedText = string.format("(%s) · %s", cachedWeed.stage, cachedWeed.tool)
     else
-        weedText = FieldRotationManager.classifyWeedAction(fruitType, growthState, weedState)
+        weedText = RealisticCropRotationManager.classifyWeedAction(fruitType, growthState, weedState)
     end
 
     local info = {
-        growthStageText = FieldRotationManager.classifyGrowthStage(fruitType, growthState),
+        growthStageText = RealisticCropRotationManager.classifyGrowthStage(fruitType, growthState),
         weedActionText  = weedText,
     }
 
@@ -1027,7 +1027,7 @@ end
 --   actualKgHa : average N in kg/ha over the field polygon (nil if not resolvable)
 --   targetKgHa : nitrogen target for the active crop on this soil (nil if no active crop)
 --   mapMaxKgHa : map's global max value in kg/ha, used by UI when no crop target exists.
-function FieldRotationManager:getNitrogenLevel(farmlandId)
+function RealisticCropRotationManager:getNitrogenLevel(farmlandId)
     local precisionFarming = getPrecisionFarmingInstance()
     local nitrogenMap = precisionFarming ~= nil and precisionFarming.nitrogenMap or nil
     if nitrogenMap == nil then return nil end
@@ -1054,7 +1054,7 @@ function FieldRotationManager:getNitrogenLevel(farmlandId)
     return actualKgHa, targetKgHa, mapMaxKgHa
 end
 
-function FieldRotationManager:getPHLevel(farmlandId)
+function RealisticCropRotationManager:getPHLevel(farmlandId)
     local precisionFarming = getPrecisionFarmingInstance()
     local pHMap = precisionFarming ~= nil and precisionFarming.pHMap or nil
     if pHMap == nil or type(pHMap.getPhValueFromInternalValue) ~= "function" then return nil end
