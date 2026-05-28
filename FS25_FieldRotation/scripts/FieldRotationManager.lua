@@ -770,30 +770,25 @@ function FieldRotationManager.getGrowthTierText(fruitType, growthState)
 
     local minHarvest = tonumber(fruitType.minHarvestingGrowthState) or 0
     local maxHarvest = tonumber(fruitType.maxHarvestingGrowthState) or 0
-    local minForage  = tonumber(fruitType.minForageGrowthState) or 0
-    local maxForage  = tonumber(fruitType.maxForageGrowthState) or 0
     local minPrep    = tonumber(fruitType.minPreparingGrowthState) or -1
     local maxPrep    = tonumber(fruitType.maxPreparingGrowthState) or -1
 
-    local firstActionable = nil
-    if minHarvest > 0 then firstActionable = minHarvest end
-    if minForage > 0 and (firstActionable == nil or minForage < firstActionable) then
-        firstActionable = minForage
-    end
-    if minPrep >= 0 and (firstActionable == nil or minPrep < firstActionable) then
-        firstActionable = minPrep
+    -- Match MapOverlayGenerator.buildGrowthStateMapOverlay: forage-ready
+    -- states are still rendered as growing unless they are also harvest-ready.
+    if minHarvest > 0 then
+        local maxGrowingState = minHarvest - 1
+        if minPrep >= 0 then
+            maxGrowingState = math.min(maxGrowingState, minPrep - 1)
+        end
+        if growthState >= 1 and growthState <= maxGrowingState then
+            return g_i18n:getText("ui_growthMapGrowing")
+        end
     end
 
-    if firstActionable ~= nil and growthState < firstActionable then
-        return g_i18n:getText("ui_growthMapGrowing")
-    end
     if minPrep >= 0 and growthState >= minPrep and growthState <= maxPrep then
         return g_i18n:getText("ui_growthMapReadyToPrepareForHarvest")
     end
     if minHarvest > 0 and growthState >= minHarvest and growthState <= maxHarvest then
-        return g_i18n:getText("ui_growthMapReadyToHarvest")
-    end
-    if minForage > 0 and growthState >= minForage and growthState <= maxForage then
         return g_i18n:getText("ui_growthMapReadyToHarvest")
     end
 
@@ -830,8 +825,13 @@ function FieldRotationManager.getGrowthStageNumbers(fruitType, growthState)
         return nil
     end
 
-    local total = tonumber(fruitType.numFoliageStates) or 0
-    if total <= 0 then return nil end
+    -- numFoliageStates includes terminal foliage variants (cut/withered/tracks).
+    -- The visible crop cycle ends at the engine's max harvest-ready state.
+    local total = tonumber(fruitType.maxHarvestingGrowthState) or 0
+    if total <= 0 then
+        total = tonumber(fruitType.numGrowthStates) or 0
+    end
+    if total <= 0 or growthState > total then return nil end
 
     return string.format("%d/%d", growthState, total)
 end
