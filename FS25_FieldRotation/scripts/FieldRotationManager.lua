@@ -749,25 +749,23 @@ function FieldRotationManager:getCurrentLimeLevel(farmlandId)
     return math.min(limeLevel, maxLevel), maxLevel
 end
 
--- Classify the engine foliage growth-state index into the player-facing growth
--- tier the base game itself uses on the minimap growth overlay
--- (MapOverlayGenerator.buildGrowthStateMapOverlay). The stored growthState is a
--- foliage state index over ALL states (1..numFoliageStates) — it is NOT "x of
--- numGrowthStates", so any numeric "x/y" is wrong. Returns an l10n key, or nil
--- when no displayable tier applies.
-function FieldRotationManager.classifyGrowthStage(fruitType, growthState)
+-- Returns the localised growth-tier label string for the current foliage
+-- state, matching what the base game prints on the minimap growth overlay
+-- legend (MapOverlayGenerator.buildGrowthStateMapOverlay). Used both for the
+-- card and to detect the base-game pedestrian HUD's "Croissance:" line so
+-- we can inject the numeric progress into it instead of adding a duplicate.
+-- Returns nil when no displayable tier applies (no fruit / no i18n).
+function FieldRotationManager.getGrowthTierText(fruitType, growthState)
     if fruitType == nil then return nil end
     growthState = tonumber(growthState) or 0
     if growthState <= 0 then return nil end
+    if g_i18n == nil or g_i18n.getText == nil then return nil end
 
-    -- Return the base-game minimap-legend l10n keys directly (Giants strings,
-    -- auto-translated by the engine). The mapping symbol→key was extracted
-    -- from FS25_precisionFarming devdump (MapOverlayGenerator.L10N_SYMBOL).
     if fruitType.witheredState ~= nil and growthState == tonumber(fruitType.witheredState) then
-        return "ui_growthMapWithered"
+        return g_i18n:getText("ui_growthMapWithered")
     end
     if type(fruitType.cutStates) == "table" and fruitType.cutStates[growthState] then
-        return "ui_growthMapCut"
+        return g_i18n:getText("ui_growthMapCut")
     end
 
     local minHarvest = tonumber(fruitType.minHarvestingGrowthState) or 0
@@ -787,83 +785,160 @@ function FieldRotationManager.classifyGrowthStage(fruitType, growthState)
     end
 
     if firstActionable ~= nil and growthState < firstActionable then
-        return "ui_growthMapGrowing"
+        return g_i18n:getText("ui_growthMapGrowing")
     end
     if minPrep >= 0 and growthState >= minPrep and growthState <= maxPrep then
-        return "ui_growthMapReadyToPrepareForHarvest"
+        return g_i18n:getText("ui_growthMapReadyToPrepareForHarvest")
     end
     if minHarvest > 0 and growthState >= minHarvest and growthState <= maxHarvest then
-        return "ui_growthMapReadyToHarvest"
+        return g_i18n:getText("ui_growthMapReadyToHarvest")
     end
     if minForage > 0 and growthState >= minForage and growthState <= maxForage then
-        return "ui_growthMapReadyToHarvest"
+        return g_i18n:getText("ui_growthMapReadyToHarvest")
     end
 
     return nil
 end
 
--- Classify the weed action by combining the engine weedState with the crop's
--- mechanical-removal windows.
+-- Composes the card-side growth display string for the current state:
+--   - active tiers get "(X/Y) · <tier>" with X/Y from getGrowthStageNumbers
+--   - terminal tiers (Withered / Cut) get the tier label alone, since the
+--     numeric progress is meaningless once the crop cycle is over
+--   - nil when no displayable tier applies
+function FieldRotationManager.classifyGrowthStage(fruitType, growthState)
+    local tierText = FieldRotationManager.getGrowthTierText(fruitType, growthState)
+    if tierText == nil then return nil end
+    local numbers = FieldRotationManager.getGrowthStageNumbers(fruitType, growthState)
+    if numbers == nil then return tierText end
+    return string.format("(%s) · %s", numbers, tierText)
+end
+
+-- Returns just the "X/Y" numeric progress for the current growth state, or
+-- nil when the state is terminal (withered / cut) or numbers are not
+-- meaningful. Used by the pedestrian HUD which already gets the tier label
+-- from the base game field-info line ("Croissance: <tier>"), so the mod only
+-- needs to surface the numeric progress to avoid duplicating wording.
+function FieldRotationManager.getGrowthStageNumbers(fruitType, growthState)
+    if fruitType == nil then return nil end
+    growthState = tonumber(growthState) or 0
+    if growthState <= 0 then return nil end
+
+    if fruitType.witheredState ~= nil and growthState == tonumber(fruitType.witheredState) then
+        return nil
+    end
+    if type(fruitType.cutStates) == "table" and fruitType.cutStates[growthState] then
+        return nil
+    end
+
+    local total = tonumber(fruitType.numFoliageStates) or 0
+    if total <= 0 then return nil end
+
+    return string.format("%d/%d", growthState, total)
+end
+
+-- Per-weedState lookup tables for the runtime mapping observed in the base
+-- game pedestrian field-info HUD (weedState 0..9). These describe weed only;
+-- the crop's foliage state then constrains which mechanical tool is actually
+-- usable (see classifyWeedAction).
+FieldRotationManager.WEED_STAGE_KEY = {
+    [1] = "fr_weed_stage_sprout",
+    [2] = "fr_weed_stage_sprout",
+    [3] = "fr_weed_stage_small",
+    [4] = "fr_weed_stage_medium",
+    [5] = "fr_weed_stage_large",
+    [6] = "fr_weed_stage_partial",
+}
+
+FieldRotationManager.WEED_IDEAL_TOOL = {
+    [1] = "weeder", [2] = "weeder", [3] = "weeder",
+    [4] = "hoe",
+    [5] = "herbicide",
+    [6] = "hoe",
+}
+
+-- Compose the weed action label by combining the engine weedState with the
+-- crop's mechanical-removal windows. The output mirrors the format the base
+-- game uses on the pedestrian field-info HUD ("(<stage>) · <tool>").
 --
--- Step 1 — weedState → ideal tool (observed PF HUD escalation, light→heavy):
---   0       → nothing to do (no weed)
---   1..3    → Weeder    (sprout / sprout / small weed)
---   4       → Hoe       (medium weed)
---   5       → Herbicide (large weed, too big for any mechanical pass)
---   6       → Hoe       (partial / wounded remnant — mechanical finishes it)
---   7..9    → nothing to do (withered weed — no action needed)
+-- Step 1 — weedState → ideal tool (from runtime observation, light→heavy):
+--   0       → nothing to do
+--   1..3    → Weeder      (sprout / sprout / small)
+--   4       → Hoe         (medium)
+--   5       → Herbicide   (large — past any mechanical pass)
+--   6       → Hoe         (partial / wounded remnant after treatment)
+--   7..9    → nothing to do (withered weed)
 --
 -- Step 2 — crop constraint: the ideal mechanical tool is only usable when the
--- crop's current foliage state declares the matching flag in its XML. The
--- flags are condensed by FruitTypeDesc into minWeederState/maxWeederState
--- (allowsWeeding → Weeder) and minWeederHoeState/maxWeederHoeState
--- (allowsHoeing → Rotary hoe). When the crop has grown past the relevant
--- window, the recommendation escalates to herbicide — this is the "tall crop:
--- hoe becomes herbicide" behaviour observed in game (e.g. sorghum past k=2).
+-- crop's current foliage state declares the matching flag (allowsWeeding /
+-- allowsHoeing in the fruit XML, condensed by FruitTypeDesc into
+-- minWeederState/maxWeederState and minWeederHoeState/maxWeederHoeState).
+-- When the crop has grown past the relevant window, the recommendation
+-- escalates to herbicide. This applies to any crop the player hovers over.
+--
+-- Returns the final composed display string, or nil when there is nothing to
+-- show (no weed / withered weed / no fruit / no i18n).
 function FieldRotationManager.classifyWeedAction(fruitType, growthState, weedState)
     weedState = tonumber(weedState) or 0
-    if weedState <= 0 or weedState >= 7 then return "fr_weed_none" end
-    if fruitType == nil then return "fr_weed_none" end
+    if weedState <= 0 or weedState >= 7 then return nil end
+    if fruitType == nil then return nil end
     growthState = tonumber(growthState) or 0
-    if growthState <= 0 then return "fr_weed_none" end
+    if growthState <= 0 then return nil end
+    if g_i18n == nil or g_i18n.getText == nil then return nil end
 
-    local idealTool
-    if weedState == 5 then
-        idealTool = "herbicide"
-    elseif weedState == 4 or weedState == 6 then
-        idealTool = "hoe"
-    else
-        idealTool = "weeder" -- weedState in {1, 2, 3}
-    end
+    local stageKey  = FieldRotationManager.WEED_STAGE_KEY[weedState]
+    local idealTool = FieldRotationManager.WEED_IDEAL_TOOL[weedState]
+    if stageKey == nil or idealTool == nil then return nil end
 
+    -- For weeder-ideal states, try weeder first, then hoe as fallback before
+    -- escalating to herbicide. This covers crops where the weeder window is
+    -- narrower than the hoe window (e.g. onion state 4 is outside weeder but
+    -- still inside hoe window — base game confirms "Houe" for that case).
+    local minWeed = tonumber(fruitType.minWeederState) or 0
+    local maxWeed = tonumber(fruitType.maxWeederState) or 0
+    local minHoe  = tonumber(fruitType.minWeederHoeState) or 0
+    local maxHoe  = tonumber(fruitType.maxWeederHoeState) or 0
+
+    local toolKey
     if idealTool == "weeder" then
-        local minWeed = tonumber(fruitType.minWeederState) or 0
-        local maxWeed = tonumber(fruitType.maxWeederState) or 0
         if minWeed > 0 and growthState >= minWeed and growthState <= maxWeed then
-            return "fr_weed_weeder"
+            toolKey = "fr_weed_tool_weeder"
+        elseif minHoe > 0 and growthState >= minHoe and growthState <= maxHoe then
+            toolKey = "fr_weed_tool_hoe"
+        else
+            toolKey = "fr_weed_tool_herbicide"
         end
-        return "fr_weed_herbicide"
-    end
-
-    if idealTool == "hoe" then
-        local minHoe = tonumber(fruitType.minWeederHoeState) or 0
-        local maxHoe = tonumber(fruitType.maxWeederHoeState) or 0
+    elseif idealTool == "hoe" then
         if minHoe > 0 and growthState >= minHoe and growthState <= maxHoe then
-            return "fr_weed_hoe"
+            toolKey = "fr_weed_tool_hoe"
+        else
+            toolKey = "fr_weed_tool_herbicide"
         end
-        return "fr_weed_herbicide"
+    else
+        toolKey = "fr_weed_tool_herbicide"
     end
 
-    return "fr_weed_herbicide"
+    return string.format("(%s) · %s",
+        g_i18n:getText(stageKey), g_i18n:getText(toolKey))
+end
+
+-- Cache populated by the pedestrian HUD hook (fieldAddFarmland wrapper) when
+-- the player walks near a field. The base game runs fieldAddWeed internally
+-- with its own per-crop tool logic; we intercept the addLine call to capture
+-- exactly what it computed. Card prefers this over classifyWeedAction.
+FieldRotationManager.weedCache = {}
+
+function FieldRotationManager.setWeedFromHUD(farmlandId, stage, tool)
+    FieldRotationManager.weedCache[tonumber(farmlandId)] = { stage = stage, tool = tool }
 end
 
 -- Returns crop info for a farmland in a single density-map sample:
---   { growthStageKey, weedActionKey }              -- crop present, not harvestable
---   { growthStageKey, weedActionKey, totalLiters } -- crop present and harvestable
---   nil                                            -- no crop / not resolvable
--- growthStageKey is an l10n key for the base-game growth tier (or nil if the
--- engine reports no usable tier); weedActionKey is an l10n key naming the
--- recommended weed-removal action given the crop state.
+--   { growthStageText, weedActionText }              -- crop present, not harvestable
+--   { growthStageText, weedActionText, totalLiters } -- crop present and harvestable
+--   nil                                              -- no crop / not resolvable
+-- growthStageText is the composed display string for the growth tier (with
+-- optional "(X/Y) ·" prefix for active tiers); weedActionText is the composed
+-- weed action label "(<stage>) · <tool>". Either may be nil when nothing
+-- displayable applies for that field.
 function FieldRotationManager:getFieldCropInfo(farmlandId)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return nil end
@@ -893,9 +968,17 @@ function FieldRotationManager:getFieldCropInfo(farmlandId)
     local growthState = tonumber(fieldState.growthState or fieldState.lastGrowthState) or 0
     local weedState = tonumber(fieldState.weedState) or 0
 
+    local cachedWeed = FieldRotationManager.weedCache[numericFarmlandId]
+    local weedText
+    if cachedWeed ~= nil then
+        weedText = string.format("(%s) · %s", cachedWeed.stage, cachedWeed.tool)
+    else
+        weedText = FieldRotationManager.classifyWeedAction(fruitType, growthState, weedState)
+    end
+
     local info = {
-        growthStageKey = FieldRotationManager.classifyGrowthStage(fruitType, growthState),
-        weedActionKey  = FieldRotationManager.classifyWeedAction(fruitType, growthState, weedState),
+        growthStageText = FieldRotationManager.classifyGrowthStage(fruitType, growthState),
+        weedActionText  = weedText,
     }
 
     local minHarvest = tonumber(fruitType.minHarvestingGrowthState) or 0

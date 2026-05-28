@@ -157,38 +157,78 @@ function FieldRotationHud.addCatchCropLine(fieldBox, data)
     fieldBox:addLine(label, value)
 end
 
--- Adds the current growth tier line (e.g. "Growing"). data is the
--- engine-populated FieldState handed to PlayerHUDUpdater.fieldAddFarmland, so
--- lastFruitTypeIndex / lastGrowthState are valid on MP clients without any
--- extra sampling. The tier classification lives on FieldRotationManager so
--- the card and the HUD agree on the wording.
-function FieldRotationHud.addGrowthStageLine(fieldBox, data)
-    if fieldBox == nil or fieldBox.addLine == nil then return end
-    if data == nil or g_fruitTypeManager == nil then return end
-    if FieldRotationManager == nil or FieldRotationManager.classifyGrowthStage == nil then return end
+-- Computes the (tierText, numbers) pair used to override the base game's
+-- pedestrian "Croissance:" line for the field hovered by the player. Returns
+-- nil for both when the override does not apply (no fruit, terminal state,
+-- no i18n). Resolving both here avoids paying the cost on every addLine call.
+local function resolveGrowthOverride(data)
+    if data == nil or g_fruitTypeManager == nil then return nil, nil end
+    if FieldRotationManager == nil then return nil, nil end
 
     local fruitTypeIndex = tonumber(data.lastFruitTypeIndex)
     local unknownFruitType = (FruitType ~= nil and FruitType.UNKNOWN) or 0
-    if fruitTypeIndex == nil or fruitTypeIndex == unknownFruitType then return end
+    if fruitTypeIndex == nil or fruitTypeIndex == unknownFruitType then return nil, nil end
 
     local fruitType = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
-    if fruitType == nil then return end
+    if fruitType == nil then return nil, nil end
 
-    local stageKey = FieldRotationManager.classifyGrowthStage(fruitType, data.lastGrowthState)
-    if stageKey == nil then return end
+    local numbers = FieldRotationManager.getGrowthStageNumbers(fruitType, data.lastGrowthState)
+    if numbers == nil then return nil, nil end
 
-    local label = FieldRotationHud.getText("fr_hud_growth_stage")
-    fieldBox:addLine(label, FieldRotationHud.getText(stageKey))
+    local tierText = FieldRotationManager.getGrowthTierText(fruitType, data.lastGrowthState)
+    if tierText == nil then return nil, nil end
+
+    return tierText, numbers
 end
 
-function FieldRotationHud.fieldAddFarmland(self, data, fieldBox)
+-- Overrides PlayerHUDUpdater.fieldAddFarmland to fold the mod's numeric
+-- progress directly into the base-game "Croissance:" line instead of adding a
+-- duplicate row. We wrap fieldBox.addLine before the base call so any line
+-- whose value matches the active tier text gets "(X/Y) · " prepended, then
+-- restore the original method and append our own complementary lines.
+-- Giants Utils.overwrittenFunction calling convention (confirmed from
+-- FenceGate.lua:81 and PlaceableHusbandryFeedingRobot.lua:167):
+--   function(self, superFunc, ...originalArgs)
+-- First arg = the object instance (self), second arg = original function.
+function FieldRotationHud.fieldAddFarmland(hudSelf, superFunc, data, fieldBox)
+    local tierText, numbers = resolveGrowthOverride(data)
     local farmlandId = data ~= nil and data.farmlandId or nil
-    FieldRotationHud.addGrowthStageLine(fieldBox, data)
+
+    -- Wrap addLine only when we have growth tier data to inject. The same
+    -- wrapper also captures the base-game weed line ("Mauvaise herbe (petite)
+    -- → Houe"), so the card reuses the engine's per-crop tool computation
+    -- verbatim instead of reproducing it.
+    local originalAddLine = nil
+    if tierText ~= nil and numbers ~= nil
+            and fieldBox ~= nil and fieldBox.addLine ~= nil then
+        originalAddLine = fieldBox.addLine
+        fieldBox.addLine = function(boxSelf, label, value)
+            -- Inject numeric progress into the growth tier line.
+            if value == tierText then
+                value = string.format("(%s) · %s", numbers, value)
+            end
+            -- Capture weed line: base-game label = "<word> (<stage>)", value = tool.
+            if farmlandId ~= nil and label ~= nil then
+                local stage = string.match(tostring(label), "%((.-)%)")
+                if stage ~= nil and value ~= nil and value ~= "" then
+                    FieldRotationManager.setWeedFromHUD(farmlandId, stage, tostring(value))
+                end
+            end
+            return originalAddLine(boxSelf, label, value)
+        end
+    end
+
+    superFunc(hudSelf, data, fieldBox)
+
+    if originalAddLine ~= nil then
+        fieldBox.addLine = originalAddLine
+    end
+
     FieldRotationHud.addHistoryLines(fieldBox, farmlandId)
     FieldRotationHud.addCatchCropLine(fieldBox, data)
 end
 
 if PlayerHUDUpdater ~= nil and PlayerHUDUpdater.fieldAddFarmland ~= nil
-    and Utils ~= nil and Utils.appendedFunction ~= nil then
-    PlayerHUDUpdater.fieldAddFarmland = Utils.appendedFunction(PlayerHUDUpdater.fieldAddFarmland, FieldRotationHud.fieldAddFarmland)
+    and Utils ~= nil and Utils.overwrittenFunction ~= nil then
+    PlayerHUDUpdater.fieldAddFarmland = Utils.overwrittenFunction(PlayerHUDUpdater.fieldAddFarmland, FieldRotationHud.fieldAddFarmland)
 end

@@ -27,7 +27,6 @@
         <e k="fr_hud_previous_n1"      v="Previous crop (N-1):" />
         <e k="fr_hud_previous_n2"      v="Crop before (N-2):" />
         <e k="fr_hud_cover_crop"       v="Cover crop:" />
-        <e k="fr_hud_growth_stage"     v="Growth stage:" />
         <e k="fr_hud_yes"              v="Yes" />
         <e k="fr_hud_no"               v="No" />
         <e k="fr_hud_none"             v="None" />
@@ -36,7 +35,7 @@
         <e k="fr_section_history"      v="Crop History" />
         <e k="fr_section_nitrogen"     v="Nitrogen Status" />
         <e k="fr_section_advice"       v="Agronomic Advice" />
-        <e k="fr_section_yield"        v="Growth and Yield" />
+        <e k="fr_section_yield"        v="Yield, weeds and growth" />
         <e k="fr_section_lime"         v="Lime / pH Status" />
         <e k="fr_section_plan"         v="Rotation Plan" />
         <e k="fr_section_score"        v="Rotation Quality" />
@@ -86,15 +85,21 @@
 
         <!-- Yield card -->
         <e k="fr_yield_harvest"        v="Total Harvest" />
-        <e k="fr_yield_weed"           v="Weeds" />
         <e k="fr_yield_stage"          v="Growth Stage" />
 
-        <!-- Yield card — weed action: tool name derived from the crop's
-             allowsWeeding/allowsHoeing windows (Giant pattern in FruitTypeDesc) -->
-        <e k="fr_weed_none"            v="None" />
-        <e k="fr_weed_weeder"          v="Weeder" />
-        <e k="fr_weed_hoe"             v="Rotary hoe" />
-        <e k="fr_weed_herbicide"       v="Herbicide" />
+        <!-- Yield card — weed column header (singular, matching base game HUD) -->
+        <e k="fr_weed_header"          v="Weed" />
+
+        <!-- Yield card — weed action fallback labels (used when the pedestrian
+             HUD cache is empty; base game strings are preferred when available). -->
+        <e k="fr_weed_stage_sprout"    v="sprout" />
+        <e k="fr_weed_stage_small"     v="small" />
+        <e k="fr_weed_stage_medium"    v="medium" />
+        <e k="fr_weed_stage_large"     v="large" />
+        <e k="fr_weed_stage_partial"   v="partial" />
+        <e k="fr_weed_tool_weeder"     v="Weeder" />
+        <e k="fr_weed_tool_hoe"        v="Hoe" />
+        <e k="fr_weed_tool_herbicide"  v="Herbicide" />
 
         <!-- Planning tab — year slots (relative to current year, never stale) -->
         <e k="fr_plan_year1"           v="N+1" />

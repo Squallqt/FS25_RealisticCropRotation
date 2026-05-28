@@ -27,7 +27,6 @@
         <e k="fr_hud_previous_n1"      v="Vorfrucht (N-1):" />
         <e k="fr_hud_previous_n2"      v="Vor-Vorfrucht (N-2):" />
         <e k="fr_hud_cover_crop"       v="Zwischenfrucht:" />
-        <e k="fr_hud_growth_stage"     v="Wachstumsphase:" />
         <e k="fr_hud_yes"              v="Ja" />
         <e k="fr_hud_no"               v="Nein" />
         <e k="fr_hud_none"             v="Keine" />
@@ -36,7 +35,7 @@
         <e k="fr_section_history"      v="Anbaugeschichte" />
         <e k="fr_section_nitrogen"     v="Stickstoffstatus" />
         <e k="fr_section_advice"       v="Agronomische Empfehlung" />
-        <e k="fr_section_yield"        v="Wachstum und Ertrag" />
+        <e k="fr_section_yield"        v="Ertrag, Unkraut und Wachstum" />
         <e k="fr_section_lime"         v="Kalk-/pH-Status" />
         <e k="fr_section_plan"         v="Rotationsplan" />
         <e k="fr_section_score"        v="Rotationsqualität" />
@@ -86,15 +85,21 @@
 
         <!-- Yield card -->
         <e k="fr_yield_harvest"        v="Gesamternte" />
-        <e k="fr_yield_weed"           v="Unkraut" />
         <e k="fr_yield_stage"          v="Wachstum" />
 
-        <!-- Yield card — weed action: tool name derived from the crop's
-             allowsWeeding/allowsHoeing windows (Giant pattern in FruitTypeDesc) -->
-        <e k="fr_weed_none"            v="Keines" />
-        <e k="fr_weed_weeder"          v="Striegel" />
-        <e k="fr_weed_hoe"             v="Rollhacke" />
-        <e k="fr_weed_herbicide"       v="Herbizid" />
+        <!-- Yield card — weed column header (singular, matching base game HUD) -->
+        <e k="fr_weed_header"          v="Unkraut" />
+
+        <!-- Yield card — weed action fallback labels (used when the pedestrian
+             HUD cache is empty; base game strings are preferred when available). -->
+        <e k="fr_weed_stage_sprout"    v="Keimling" />
+        <e k="fr_weed_stage_small"     v="klein" />
+        <e k="fr_weed_stage_medium"    v="mittel" />
+        <e k="fr_weed_stage_large"     v="groß" />
+        <e k="fr_weed_stage_partial"   v="teilweise" />
+        <e k="fr_weed_tool_weeder"     v="Striegel" />
+        <e k="fr_weed_tool_hoe"        v="Hacke" />
+        <e k="fr_weed_tool_herbicide"  v="Herbizid" />
 
         <!-- Planning tab — year slots -->
         <e k="fr_plan_year1"           v="N+1" />

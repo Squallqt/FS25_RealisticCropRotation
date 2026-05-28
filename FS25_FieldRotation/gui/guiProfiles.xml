@@ -485,6 +485,13 @@
         <textColor value="$preset_fs25_colorGrey"/>
     </Profile>
 
+    <!-- Compact value for KPIs that carry composed text ("(<stage>) · <tool>"
+         for the weed KPI, "(X/Y) · <tier>" for the growth KPI). 26px would
+         clip on a 393px-wide cell with one line; 18px keeps both safe. -->
+    <Profile name="frYieldKpiValueSmall" extends="frYieldKpiValue">
+        <textSize value="18px"/>
+    </Profile>
+
     <!-- Thin vertical divider between the two KPIs -->
     <Profile name="frYieldDivider" extends="baseReference" with="anchorTopCenter">
         <position value="0px -18px"/>

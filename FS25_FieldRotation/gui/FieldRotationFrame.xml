@@ -239,7 +239,7 @@
                 <RoundCorner profile="frYieldDivider" position="-207px -18px"/>
 
                 <GuiElement profile="frYieldKpi" position="413px 0px">
-                    <Text profile="frYieldKpiLabel" text="$l10n_fr_yield_weed"/>
+                    <Text profile="frYieldKpiLabel" text="$l10n_fr_weed_header"/>
                     <Text profile="frYieldKpiValueNA" id="yieldPerHaValue" text="-"/>
                 </GuiElement>
 

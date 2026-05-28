@@ -1074,8 +1074,8 @@ function FieldRotationFrame:updateYieldCard(farmlandId)
     local weedText = "-"
     local stageText = "-"
     local hasYield = info ~= nil and info.totalLiters ~= nil
-    local hasStage = info ~= nil and info.growthStageKey ~= nil
-    local hasWeed = info ~= nil and info.weedActionKey ~= nil
+    local hasStage = info ~= nil and info.growthStageText ~= nil
+    local hasWeed = info ~= nil and info.weedActionText ~= nil
 
     if hasYield then
         local totalLiters = tonumber(info.totalLiters) or 0
@@ -1086,13 +1086,8 @@ function FieldRotationFrame:updateYieldCard(farmlandId)
         end
     end
 
-    if hasWeed then
-        weedText = self.i18n:getText(info.weedActionKey)
-    end
-
-    if hasStage then
-        stageText = self.i18n:getText(info.growthStageKey)
-    end
+    if hasWeed then weedText = info.weedActionText end
+    if hasStage then stageText = info.growthStageText end
 
     if self.yieldTotalValue ~= nil then
         if self.yieldTotalValue.applyProfile ~= nil then
@@ -1101,16 +1096,19 @@ function FieldRotationFrame:updateYieldCard(farmlandId)
         self.yieldTotalValue:setText(totalText)
     end
 
+    -- Weed and stage KPIs use a smaller dedicated profile because their
+    -- composed text strings ("(<stage>) · <tool>" and "(X/Y) · <tier>") would
+    -- not fit one line at the default 26px size used for the litre value.
     if self.yieldPerHaValue ~= nil then
         if self.yieldPerHaValue.applyProfile ~= nil then
-            self.yieldPerHaValue:applyProfile(hasWeed and "frYieldKpiValue" or "frYieldKpiValueNA")
+            self.yieldPerHaValue:applyProfile(hasWeed and "frYieldKpiValueSmall" or "frYieldKpiValueNA")
         end
         self.yieldPerHaValue:setText(weedText)
     end
 
     if self.yieldStageValue ~= nil then
         if self.yieldStageValue.applyProfile ~= nil then
-            self.yieldStageValue:applyProfile(hasStage and "frYieldKpiValue" or "frYieldKpiValueNA")
+            self.yieldStageValue:applyProfile(hasStage and "frYieldKpiValueSmall" or "frYieldKpiValueNA")
         end
         self.yieldStageValue:setText(stageText)
     end
