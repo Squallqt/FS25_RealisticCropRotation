@@ -1,6 +1,6 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
 -- Mod bootstrap: source loading, mission lifecycle hooks, density-map hooks,
--- broadcast coalescing.
+-- broadcast coalescing, period-change reset.
 local modDirectory = g_currentModDirectory
 local modName = g_currentModName
 
@@ -63,12 +63,15 @@ local function loadCropConfig()
 end
 
 -- Broadcast coalescing: hooks request a broadcast instead of emitting one
--- per density-map change.
+-- per density-map change. Period changes are handled through GIANTS' message
+-- center, matching the local gameSource pattern.
 RealisticCropRotation.BROADCAST_DEBOUNCE_MS = 500
 RealisticCropRotation.broadcastDirty = false
 RealisticCropRotation.broadcastTimerMs = 0
 RealisticCropRotation.broadcastUpdateable = nil
+RealisticCropRotation.periodChangeListener = nil
 RealisticCropRotation.farmlandOwnerChangeListener = nil
+RealisticCropRotation.lastObservedPeriod = 0
 
 function RealisticCropRotation.requestBroadcast()
     if g_server == nil then return end
@@ -105,6 +108,16 @@ local function onFarmlandOwnerChanged(farmlandId, _farmId, loadFromSavegame)
             tostring(farmlandId))
         refreshRealisticCropRotationFrame()
         RealisticCropRotation.requestBroadcast()
+    end
+end
+
+local function checkPeriodChange()
+    if g_currentMission == nil or g_currentMission.environment == nil then return end
+    local currentPeriod = g_currentMission.environment.currentPeriod or 0
+
+    if currentPeriod == 0 then return end
+    if currentPeriod ~= RealisticCropRotation.lastObservedPeriod then
+        RealisticCropRotation.lastObservedPeriod = currentPeriod
     end
 end
 
@@ -233,6 +246,21 @@ local function loadedMission()
 
     if g_currentMission:getIsServer() then
         RealisticCropRotation.manager:loadFromXML(savegameFolderPath)
+        if g_currentMission.environment ~= nil then
+            RealisticCropRotation.lastObservedPeriod = g_currentMission.environment.currentPeriod or 0
+        end
+        if g_messageCenter ~= nil and MessageType ~= nil and MessageType.PERIOD_CHANGED ~= nil then
+            RealisticCropRotation.periodChangeListener = {
+                periodChanged = function()
+                    checkPeriodChange()
+                end,
+            }
+            g_messageCenter:subscribe(MessageType.PERIOD_CHANGED,
+                RealisticCropRotation.periodChangeListener.periodChanged,
+                RealisticCropRotation.periodChangeListener)
+        else
+            Logging.warning("[RealisticCropRotation] Period change listener unavailable; nitrogen mask period reset disabled")
+        end
         if g_messageCenter ~= nil and MessageType ~= nil and MessageType.FARMLAND_OWNER_CHANGED ~= nil then
             RealisticCropRotation.farmlandOwnerChangeListener = {
                 ownerChanged = function(_self, farmlandId, farmId, loadFromSavegame)
@@ -268,8 +296,7 @@ local function loadedMission()
             RealisticCropRotation.manager.service:applySyncData(
                 pending.history or {},
                 pending.plans or {},
-                pending.lastKnownActiveCrop or {},
-                pending.appliedResidue or {})
+                pending.lastKnownActiveCrop or {})
             RealisticCropRotation.pendingSyncData = nil
         end
         RealisticCropRotation.requestServerSync("loadedMission")
@@ -389,8 +416,8 @@ local function captureCropCandidate(farmlandId, xw, xh, zw, zh)
 end
 
 local function recordTermination(changedArea, cropCandidate, nextActiveCropName)
-    if cropCandidate == nil or changedArea == nil or changedArea <= 0 then return false end
-    if RealisticCropRotation.manager == nil then return false end
+    if cropCandidate == nil or changedArea == nil or changedArea <= 0 then return end
+    if RealisticCropRotation.manager == nil then return end
 
     local changed = RealisticCropRotation.manager:recordCropChangeFromHook(
         changedArea,
@@ -401,21 +428,15 @@ local function recordTermination(changedArea, cropCandidate, nextActiveCropName)
         refreshRealisticCropRotationFrame()
         RealisticCropRotation.requestBroadcast()
     end
-    return changed
 end
 
 -- Deposit the residue AFTER superFunc: the tool's own engine pass runs inside superFunc and
 -- would overwrite a pre-deposit (the "nitrogen only when the tool drops, then nothing" bug).
 -- The crop is captured before superFunc (still standing); applied on the worked area after.
-local function depositResidueAfterTermination(cropCandidate, changedArea, startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
-    if cropCandidate == nil then return false end
-    local changed = RealisticCropRotation.manager.service:applyNitrogenResidueAtArea(cropCandidate,
-        startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, changedArea)
-    if changed then
-        refreshRealisticCropRotationFrame()
-        RealisticCropRotation.requestBroadcast()
-    end
-    return changed
+local function depositResidueAfterTermination(cropCandidate, startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
+    if cropCandidate == nil then return end
+    RealisticCropRotation.manager.service:applyNitrogenResidueAtArea(cropCandidate,
+        startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
 end
 
 local function wrapDensityMapDestroyHook()
@@ -438,7 +459,7 @@ local function wrapDensityMapDestroyHook()
             -- Deposit only where the engine actually cultivated crop this call (changedArea > 0),
             -- so it fires across the whole pass and stops on already-bare ground.
             if (changedArea or 0) > 0 then
-                depositResidueAfterTermination(cropCandidate, changedArea or 0,
+                depositResidueAfterTermination(cropCandidate,
                     startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
             end
         end
@@ -463,36 +484,14 @@ local function wrapDensityMapSowingHook()
             widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, ...)
 
         if process then
-            -- Normal sowing starts the next crop cycle; it does not destroy stubble, so it never
-            -- deposits residue. The PF lock reset is consumed later, when that crop is terminated.
-            recordTermination(changedArea or 0, cropCandidate, nextActiveCropName)
-        end
-
-        return changedArea, totalArea
-    end
-end
-
-local function wrapDensityMapDirectSowingHook()
-    return function(fruitIndex, superFunc, startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, ...)
-        local farmlandId = getFarmlandIdAtArea(widthWorldX, heightWorldX, widthWorldZ, heightWorldZ)
-        local process = hasHookContext(farmlandId)
-
-        local cropCandidate = nil
-        local nextActiveCropName = nil
-        if process then
-            nextActiveCropName = RealisticCropRotation.manager.service:getCropNameByFruitTypeIndex(fruitIndex)
-            cropCandidate = captureCropCandidate(farmlandId, widthWorldX, heightWorldX, widthWorldZ, heightWorldZ)
-        end
-
-        local changedArea, totalArea = superFunc(fruitIndex, startWorldX, startWorldZ,
-            widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, ...)
-
-        if process and (changedArea or 0) > 0 then
-            -- Direct sowing destroys the existing stubble and sows the next crop in the same
-            -- native engine call. Deposit first for the terminated stubble, then record the crop
-            -- transition for the next cycle.
-            depositResidueAfterTermination(cropCandidate, changedArea or 0,
-                startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
+            -- A new crop is sown here: clear the idempotency lock over the sown area so this crop
+            -- can receive its own residue when it is later worked (PF path only).
+            if (changedArea or 0) > 0 and g_modIsLoaded ~= nil and g_modIsLoaded["FS25_precisionFarming"] then
+                RealisticCropRotation.manager.service:resetNitrogenDepositLockAtArea(
+                    startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
+            end
+            -- Sowing only records the rotation change; the nitrogen deposit happens at tillage
+            -- (destroy hooks), so depositing here too would double-apply on already-worked ground.
             recordTermination(changedArea or 0, cropCandidate, nextActiveCropName)
         end
 
@@ -531,7 +530,7 @@ local function initRealisticCropRotation()
     end
     if FSDensityMapUtil ~= nil and FSDensityMapUtil.updateDirectSowingArea ~= nil then
         FSDensityMapUtil.updateDirectSowingArea = Utils.overwrittenFunction(
-            FSDensityMapUtil.updateDirectSowingArea, wrapDensityMapDirectSowingHook())
+            FSDensityMapUtil.updateDirectSowingArea, wrapDensityMapSowingHook())
     end
 
     BaseMission.delete = Utils.appendedFunction(BaseMission.delete, function()
@@ -539,13 +538,18 @@ local function initRealisticCropRotation()
             and type(g_currentMission.removeUpdateable) == "function" then
             g_currentMission:removeUpdateable(RealisticCropRotation.broadcastUpdateable)
         end
+        if g_messageCenter ~= nil and RealisticCropRotation.periodChangeListener ~= nil then
+            g_messageCenter:unsubscribeAll(RealisticCropRotation.periodChangeListener)
+        end
         if g_messageCenter ~= nil and RealisticCropRotation.farmlandOwnerChangeListener ~= nil then
             g_messageCenter:unsubscribeAll(RealisticCropRotation.farmlandOwnerChangeListener)
         end
         RealisticCropRotation.broadcastUpdateable = nil
+        RealisticCropRotation.periodChangeListener = nil
         RealisticCropRotation.farmlandOwnerChangeListener = nil
         RealisticCropRotation.broadcastDirty = false
         RealisticCropRotation.broadcastTimerMs = 0
+        RealisticCropRotation.lastObservedPeriod = 0
 
         if RealisticCropRotation.manager ~= nil then
             RealisticCropRotation.manager:cleanup()

@@ -168,51 +168,40 @@ function RealisticCropRotationFrame:getManager()
 end
 
 function RealisticCropRotationFrame:checkBonus(farmlandId)
-    return self:getActiveNitrogenResidueInfo(farmlandId) ~= nil
+    return self:getActiveNitrogenResidueKgHa(farmlandId) ~= nil
 end
 
----Returns the residue that has actually been applied on the selected farmland.
+---Returns the currently active rotation nitrogen residue in kg/ha for the selected farmland.
+-- The service stores the residue as PF state changes; keep the conversion centralized
+-- through RealisticCropRotationService:getNitrogenKgPerHaFromStateChange instead of duplicating
+-- PF constants in the UI.
 -- @param integer farmlandId Farmland identifier
--- @return table|nil residueInfo Applied residue display data, or nil when no residue exists
-function RealisticCropRotationFrame:getActiveNitrogenResidueInfo(farmlandId)
+-- @return number|nil residueKgHa Active residue in kg/ha, or nil when no residue exists
+function RealisticCropRotationFrame:getActiveNitrogenResidueKgHa(farmlandId)
     local mgr = self:getManager()
-    if mgr == nil or type(mgr.getAppliedResidue) ~= "function" then
+    if mgr == nil or mgr.getPendingBonus == nil then
         return nil
     end
 
-    local applied = mgr:getAppliedResidue(farmlandId)
-    if applied == nil then
+    local bonus = mgr:getPendingBonus(farmlandId)
+    if bonus == nil then
         return nil
     end
 
-    if applied.unit == "SPRAY_LEVEL" then
-        local sprayLevel = tonumber(applied.sprayLevel) or 0
-        if sprayLevel <= 0 then return nil end
-        return {
-            crop = applied.crop,
-            unit = "SPRAY_LEVEL",
-            value = sprayLevel,
-            isPartial = applied.isPartial,
-        }
+    local totalStateChange = (tonumber(bonus.n1StateChange) or 0) + (tonumber(bonus.n2StateChange) or 0)
+    if totalStateChange <= 0 then
+        return nil
     end
-
-    local stateChange = tonumber(applied.stateChange) or 0
-    if stateChange <= 0 then return nil end
 
     if mgr.service ~= nil and mgr.service.getNitrogenKgPerHaFromStateChange ~= nil then
         local ok, residueKgHa = pcall(
             mgr.service.getNitrogenKgPerHaFromStateChange,
             mgr.service,
-            stateChange
+            totalStateChange
         )
 
         if ok and type(residueKgHa) == "number" and residueKgHa > 0 then
-            return {
-                crop = applied.crop,
-                unit = "KG_HA",
-                value = residueKgHa,
-                isPartial = applied.isPartial,
-            }
+            return residueKgHa
         end
     end
 
@@ -220,20 +209,12 @@ function RealisticCropRotationFrame:getActiveNitrogenResidueInfo(farmlandId)
 end
 
 function RealisticCropRotationFrame:getActiveNitrogenResidueText(farmlandId)
-    local info = self:getActiveNitrogenResidueInfo(farmlandId)
-    if info == nil then
+    local residueKgHa = self:getActiveNitrogenResidueKgHa(farmlandId)
+    if residueKgHa == nil then
         return nil
     end
 
-    if info.unit == "SPRAY_LEVEL" then
-        local key = info.isPartial and "rcr_status_current_residue_vanilla_partial"
-            or "rcr_status_current_residue_vanilla"
-        return string.format(self.i18n:getText(key), math.floor((tonumber(info.value) or 0) + 0.5))
-    end
-
-    local key = info.isPartial and "rcr_status_current_residue_partial"
-        or "rcr_status_current_residue"
-    return string.format(self.i18n:getText(key), math.floor((tonumber(info.value) or 0) + 0.5))
+    return string.format(self.i18n:getText("rcr_status_current_residue"), math.floor(residueKgHa + 0.5))
 end
 
 function RealisticCropRotationFrame:updateResiduePill(pillBg, pillText, farmlandId)

@@ -516,6 +516,10 @@ function RealisticCropRotationManager:getHistory(farmlandId)
     return self.repository:getHistory(farmlandId)
 end
 
+function RealisticCropRotationManager:getLastCover(farmlandId)
+    return self.repository:getLastCover(farmlandId)
+end
+
 function RealisticCropRotationManager:getAllHistory()
     return self.repository:getAllHistory()
 end
@@ -523,31 +527,6 @@ end
 function RealisticCropRotationManager:getPendingBonus(farmlandId)
     if farmlandId == nil or self.service == nil then return nil end
     return self.service.pendingBonus[farmlandId]
-end
-
-function RealisticCropRotationManager:getAppliedResidue(farmlandId)
-    if farmlandId == nil or self.repository == nil or type(self.repository.getAppliedResidue) ~= "function" then
-        return nil
-    end
-
-    local numericFarmlandId = tonumber(farmlandId)
-    if numericFarmlandId == nil or numericFarmlandId <= 0 then return nil end
-
-    local entry = self.repository:getAppliedResidue(numericFarmlandId)
-    if entry == nil or entry.crop == nil or entry.crop == "" then return nil end
-
-    local areaHa = tonumber(entry.areaHa) or 0
-    local totalAreaHa = getRotationAreaHa(getFarmlandById(numericFarmlandId), self:getFieldByFarmlandId(numericFarmlandId))
-
-    return {
-        crop = entry.crop,
-        stateChange = tonumber(entry.stateChange) or 0,
-        sprayLevel = tonumber(entry.sprayLevel) or 0,
-        areaHa = areaHa,
-        totalAreaHa = totalAreaHa,
-        unit = tostring(entry.unit or "STATE"),
-        isPartial = areaHa > 0 and totalAreaHa > 0 and areaHa < (totalAreaHa * 0.95),
-    }
 end
 
 function RealisticCropRotationManager:getRotationPlan(farmlandId)

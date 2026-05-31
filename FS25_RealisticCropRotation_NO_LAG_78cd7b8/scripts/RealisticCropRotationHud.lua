@@ -132,45 +132,65 @@ function RealisticCropRotationHud.addHistoryLines(fieldBox, farmlandId)
     end
 end
 
--- Terrain HUD reads the same applied-residue source as the menu status pill.
--- It shows only residue that was actually deposited by a stubble-destruction hook.
+-- One line per residue-leaving crop in the rotation history: the N-1 crop shows its
+-- n1 residue, the N-2 crop its n2. Value = the fixed deposit (cropConfig states)
+-- converted to kg N/ha, read live from Precision Farming. Hidden when no active
+-- residue. Replaces the old "cover crop: yes/no" line.
+-- Cover crops (isCatchCrop) are deposited natively by PF and excluded from rotation
+-- history, so they are not shown here.
 function RealisticCropRotationHud.addResidueLines(fieldBox, farmlandId)
     if fieldBox == nil or fieldBox.addLine == nil then return end
 
     local manager = g_currentMission ~= nil and g_currentMission.realisticCropRotationManager or nil
-    if manager == nil or type(manager.getAppliedResidue) ~= "function" then return end
+    if manager == nil or manager.getHistory == nil then return end
 
     farmlandId = tonumber(farmlandId)
     if farmlandId == nil or farmlandId == 0 then return end
 
-    local applied = manager:getAppliedResidue(farmlandId)
-    if applied == nil then return end
+    local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
+    local nitrogenConfig = config ~= nil and config.nitrogen or nil
+    if nitrogenConfig == nil then return end
+
+    local history = manager:getHistory(farmlandId) or {}
+    local n1Crop = history[1] ~= nil and history[1].crop or nil
+    local n2Crop = history[2] ~= nil and history[2].crop or nil
 
     local service = manager.service
-    local labelKey = applied.isPartial and "rcr_hud_residue_applied_partial" or "rcr_hud_residue_applied"
-    local label = RealisticCropRotationHud.getText(labelKey)
-    local cropDisplay = RealisticCropRotationHud.getCropDisplayName(applied.crop)
+    local label = RealisticCropRotationHud.getText("rcr_hud_residue")
 
-    if applied.unit == "SPRAY_LEVEL" then
-        local sprayLevel = tonumber(applied.sprayLevel) or 0
-        if sprayLevel > 0 then
-            fieldBox:addLine(string.format("%s (%s)", label, cropDisplay),
-                string.format(RealisticCropRotationHud.getText("rcr_hud_residue_level"), math.floor(sprayLevel + 0.5)))
+    local function emitResidue(cropName, stateChange)
+        if cropName == nil or stateChange == nil or stateChange <= 0 then return end
+        local kg
+        if service ~= nil and type(service.getNitrogenKgFromStates) == "function" then
+            kg = service:getNitrogenKgFromStates(stateChange)
+        else
+            kg = stateChange * RealisticCropRotationService.PF_STATE_PER_UNIT
         end
-        return
+        local cropDisplay = RealisticCropRotationHud.getCropDisplayName(cropName)
+        fieldBox:addLine(string.format("%s (%s)", label, cropDisplay),
+            string.format("%d kg/ha", math.floor(kg + 0.5)))
     end
 
-    local stateChange = tonumber(applied.stateChange) or 0
-    if stateChange <= 0 then return end
-    local kg
-    if service ~= nil and type(service.getNitrogenKgFromStates) == "function" then
-        kg = service:getNitrogenKgFromStates(stateChange)
-    else
-        kg = stateChange * RealisticCropRotationService.PF_STATE_PER_UNIT
+    -- N-1 source -> n1 residue (most recent).
+    if n1Crop ~= nil then
+        local cfg = nitrogenConfig[string.upper(n1Crop)]
+        emitResidue(n1Crop, cfg ~= nil and cfg.n1 or 0)
     end
 
-    fieldBox:addLine(string.format("%s (%s)", label, cropDisplay),
-        string.format("%d kg/ha", math.floor(kg + 0.5)))
+    -- N-2 source -> n2 residue. Never a second line for the same crop as N-1.
+    if n2Crop ~= nil and (n1Crop == nil or string.upper(n2Crop) ~= string.upper(n1Crop)) then
+        local cfg = nitrogenConfig[string.upper(n2Crop)]
+        emitResidue(n2Crop, cfg ~= nil and cfg.n2 or 0)
+    end
+
+    -- Cover crop residue (e.g. oilseed radish): deposited natively by PF on incorporation,
+    -- excluded from rotation history, tracked separately. Shown until the next crop is harvested.
+    local coverCrop = manager.getLastCover ~= nil and manager:getLastCover(farmlandId) or nil
+    if coverCrop ~= nil and coverCrop ~= "" then
+        local coverStates = (service ~= nil and type(service.getCoverResidueStateChange) == "function")
+            and service:getCoverResidueStateChange() or 0
+        emitResidue(coverCrop, coverStates)
+    end
 end
 
 -- Computes the (tierText, numbers) pair used to override the base game's

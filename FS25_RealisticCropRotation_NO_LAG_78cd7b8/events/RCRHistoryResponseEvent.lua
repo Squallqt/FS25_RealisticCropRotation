@@ -1,7 +1,6 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
 -- Server->client full rotation snapshot. Sent on late-join and on explicit
--- RCRHistoryRequestEvent. Payload: history + plans + last known active crops
--- + applied residue state.
+-- RCRHistoryRequestEvent. Payload: history + plans + last known active crops.
 RCRHistoryResponseEvent = {}
 local RCRHistoryResponseEvent_mt = Class(RCRHistoryResponseEvent, Event)
 
@@ -74,26 +73,6 @@ function RCRHistoryResponseEvent:readStream(streamId, _connection)
         end
     end
 
-    local appliedResidueCount = streamReadInt16(streamId)
-    local receivedAppliedResidue = {}
-    for _ = 1, appliedResidueCount do
-        local farmlandId = streamReadInt32(streamId)
-        local cropName = streamReadString(streamId)
-        local unit = streamReadString(streamId)
-        local stateChange = streamReadInt16(streamId)
-        local sprayLevel = streamReadInt8(streamId)
-        local areaHa = streamReadFloat32(streamId)
-        if farmlandId > 0 and cropName ~= nil and cropName ~= "" then
-            receivedAppliedResidue[farmlandId] = {
-                crop = string.upper(tostring(cropName)),
-                unit = unit ~= nil and unit ~= "" and unit or "STATE",
-                stateChange = stateChange or 0,
-                sprayLevel = sprayLevel or 0,
-                areaHa = areaHa or 0,
-            }
-        end
-    end
-
     -- A server replicating its own event back to itself: discard.
     if g_currentMission ~= nil and g_currentMission.getIsServer ~= nil and g_currentMission:getIsServer() then
         return
@@ -106,20 +85,19 @@ function RCRHistoryResponseEvent:readStream(streamId, _connection)
                 history = received,
                 plans = receivedPlans,
                 lastKnownActiveCrop = receivedLastKnownActiveCrop,
-                appliedResidue = receivedAppliedResidue,
             }
         end
-        Logging.warning("[RealisticCropRotation] RCRHistoryResponseEvent: manager not available, historyFarmlands=%d entries=%d plans=%d activeCrops=%d appliedResidues=%d buffered",
-            farmlandCount, totalEntries, planCount, activeCropCount, appliedResidueCount)
+        Logging.warning("[RealisticCropRotation] RCRHistoryResponseEvent: manager not available, historyFarmlands=%d entries=%d plans=%d activeCrops=%d buffered",
+            farmlandCount, totalEntries, planCount, activeCropCount)
         return
     end
 
     if manager.service ~= nil and type(manager.service.applySyncData) == "function" then
-        manager.service:applySyncData(received, receivedPlans, receivedLastKnownActiveCrop, receivedAppliedResidue)
+        manager.service:applySyncData(received, receivedPlans, receivedLastKnownActiveCrop)
     end
 
-    Logging.info("[RealisticCropRotation][MP] Sync received historyFarmlands=%d entries=%d plans=%d activeCrops=%d appliedResidues=%d",
-        farmlandCount, totalEntries, planCount, activeCropCount, appliedResidueCount)
+    Logging.info("[RealisticCropRotation][MP] Sync received historyFarmlands=%d entries=%d plans=%d activeCrops=%d",
+        farmlandCount, totalEntries, planCount, activeCropCount)
 
     if RealisticCropRotation ~= nil and RealisticCropRotation.frame ~= nil then
         if type(RealisticCropRotation.frame.onServerSyncReceived) == "function" then
@@ -138,14 +116,12 @@ function RCRHistoryResponseEvent:writeStream(streamId, _connection)
         streamWriteInt16(streamId, 0)
         streamWriteInt16(streamId, 0)
         streamWriteInt16(streamId, 0)
-        streamWriteInt16(streamId, 0)
         return
     end
 
-    local history, lastKnownActiveCrop, appliedResidue = manager.service:getSyncData()
+    local history, lastKnownActiveCrop = manager.service:getSyncData()
     history = history or {}
     lastKnownActiveCrop = lastKnownActiveCrop or {}
-    appliedResidue = appliedResidue or {}
     local plans = type(manager.getAllRotationPlans) == "function" and manager:getAllRotationPlans() or {}
 
     local farmlandIds = {}
@@ -203,26 +179,7 @@ function RCRHistoryResponseEvent:writeStream(streamId, _connection)
         streamWriteString(streamId, tostring(cropName))
     end
 
-    local appliedResidueFarmlandIds = {}
-    for farmlandId, entry in pairs(appliedResidue) do
-        local n = tonumber(farmlandId)
-        if n ~= nil and n > 0 and entry ~= nil and entry.crop ~= nil and entry.crop ~= "" then
-            table.insert(appliedResidueFarmlandIds, n)
-        end
-    end
-
-    streamWriteInt16(streamId, #appliedResidueFarmlandIds)
-    for _, farmlandId in ipairs(appliedResidueFarmlandIds) do
-        local entry = appliedResidue[farmlandId] or appliedResidue[tostring(farmlandId)] or {}
-        streamWriteInt32(streamId, farmlandId)
-        streamWriteString(streamId, tostring(entry.crop or ""))
-        streamWriteString(streamId, tostring(entry.unit or "STATE"))
-        streamWriteInt16(streamId, tonumber(entry.stateChange) or 0)
-        streamWriteInt8(streamId, tonumber(entry.sprayLevel) or 0)
-        streamWriteFloat32(streamId, tonumber(entry.areaHa) or 0)
-    end
-
     local _, entryCount = countHistory(history)
-    Logging.info("[RealisticCropRotation][MP] Sync sent historyFarmlands=%d entries=%d plans=%d activeCrops=%d appliedResidues=%d",
-        #farmlandIds, entryCount, #planFarmlandIds, #activeCropFarmlandIds, #appliedResidueFarmlandIds)
+    Logging.info("[RealisticCropRotation][MP] Sync sent historyFarmlands=%d entries=%d plans=%d activeCrops=%d",
+        #farmlandIds, entryCount, #planFarmlandIds, #activeCropFarmlandIds)
 end

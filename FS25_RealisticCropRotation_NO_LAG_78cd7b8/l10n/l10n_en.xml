@@ -20,18 +20,17 @@
         <e k="rcr_season_autumn"        v="Autumn" />
         <e k="rcr_season_winter"        v="Winter" />
         <e k="rcr_status_bonus"         v="N Residue" />
-        <e k="rcr_status_current_residue" v="Applied residue +%d kg/ha" />
-        <e k="rcr_status_current_residue_partial" v="Partial residue +%d kg/ha" />
-        <e k="rcr_status_current_residue_vanilla" v="Applied residue +%d fert level" />
-        <e k="rcr_status_current_residue_vanilla_partial" v="Partial residue +%d fert level" />
+        <e k="rcr_status_current_residue" v="Current residue +%d kg/ha" />
         <e k="rcr_status_planned_residue" v="Total rotation residue +%d kg/ha" />
-        <e k="rcr_status_current_no_residue" v="Applied residue 0" />
+        <e k="rcr_status_current_no_residue" v="Current residue 0 kg/ha" />
         <e k="rcr_status_planned_no_residue" v="Total rotation residue 0 kg/ha" />
         <e k="rcr_hud_previous_n1"      v="Previous crop (N-1)" />
         <e k="rcr_hud_previous_n2"      v="Crop before (N-2)" />
-        <e k="rcr_hud_residue_applied"  v="Applied residue" />
-        <e k="rcr_hud_residue_applied_partial" v="Partial residue" />
-        <e k="rcr_hud_residue_level"    v="+%d level" />
+        <e k="rcr_hud_cover_crop"       v="Cover crop" />
+        <e k="rcr_hud_yes"              v="Yes" />
+        <e k="rcr_hud_no"               v="No" />
+        <e k="rcr_hud_none"             v="None" />
+        <e k="rcr_hud_residue"          v="N residue" />
 
         <!-- Section bars -->
         <e k="rcr_section_history"      v="Crop History" />

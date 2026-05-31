@@ -5,8 +5,11 @@
 -- Nitrogen application strategy
 -- -----------------------------
 -- The residue is restituted the way the base game already does it for cover crops: by
--- adding fertilizer over the worked area. With Precision Farming present it writes PF's
--- nitrogen map directly; without PF it falls back to the native spray-level map.
+-- adding fertilizer over the worked area through the native FSDensityMapUtil.updateSprayArea
+-- (SprayType.FERTILIZER), exactly like a fertilizing cultivator. The base game owns the
+-- nitrogen-restitution function; Precision Farming, when present, only reads that and shows
+-- it in kg N/ha. The mod therefore writes no PF map and applies no hack. See
+-- applyNitrogenResidueAtArea.
 --
 -- Cover crops (isCatchCrop=true at runtime, e.g. OILSEEDRADISH) restitute nothing here --
 -- getResidueStateChangeForTermination returns 0 for them -- because the base game already
@@ -36,7 +39,6 @@ function RealisticCropRotationService.new(repository)
     self.pendingBonus = {}            -- farmlandId -> { n1StateChange, n2StateChange }
     self.cropNameByFruitTypeIndex = {}
     self.nitrogenDepositLock = nil    -- transient idempotency lock (created on first deposit)
-    self.nitrogenDepositLockResetCrop = {}
     return self
 end
 
@@ -47,7 +49,6 @@ function RealisticCropRotationService:reset()
         pcall(delete, self.nitrogenDepositLock)
     end
     self.nitrogenDepositLock = nil
-    self.nitrogenDepositLockResetCrop = {}
 end
 
 function RealisticCropRotationService:getNitrogenKgPerHaFromStateChange(stateChange)
@@ -67,22 +68,6 @@ function RealisticCropRotationService:getNitrogenKgFromStates(stateChange)
         if ok and type(kg) == "number" then return kg end
     end
     return self:getNitrogenKgPerHaFromStateChange(states)
-end
-
-function RealisticCropRotationService:getChangedAreaHa(changedArea)
-    local numericChangedArea = tonumber(changedArea) or 0
-    if numericChangedArea <= 0 then return 0 end
-    if MathUtil == nil or type(MathUtil.areaToHa) ~= "function" then return 0 end
-    if g_currentMission == nil or type(g_currentMission.getFruitPixelsToSqm) ~= "function" then return 0 end
-
-    local sqmOk, sqmPerPixel = pcall(function()
-        return g_currentMission:getFruitPixelsToSqm()
-    end)
-    if not sqmOk or sqmPerPixel == nil then return 0 end
-
-    local areaOk, areaHa = pcall(MathUtil.areaToHa, numericChangedArea, sqmPerPixel)
-    if areaOk and type(areaHa) == "number" and areaHa > 0 then return areaHa end
-    return 0
 end
 
 function RealisticCropRotationService:getCurrentPeriod()
@@ -164,6 +149,20 @@ function RealisticCropRotationService:isCoverCropForRotationHistory(fruitTypeInd
     return false
 end
 
+-- Cover crop residue deposited by Precision Farming on incorporation. The amount comes from
+-- PF's catchCropsStateChange (states). Returns 0 without PF. Display-only: PF does the deposit.
+function RealisticCropRotationService:getCoverResidueStateChange()
+    local pf = getPrecisionFarmingInstance()
+    local nitrogenMap = pf ~= nil and pf.nitrogenMap or nil
+    if nitrogenMap == nil then return 0 end
+    return tonumber(nitrogenMap.catchCropsStateChange) or 0
+end
+
+function RealisticCropRotationService:getLastCover(farmlandId)
+    if self.repository == nil then return nil end
+    return self.repository:getLastCover(farmlandId)
+end
+
 function RealisticCropRotationService:recomputePendingBonus(farmlandId)
     local entries = self.repository:getHistory(farmlandId)
     local n1Change = 0
@@ -205,6 +204,8 @@ function RealisticCropRotationService:pushHistoryCrop(farmlandId, cropName)
     local changed = self.repository:pushEntry(numericFarmlandId, normalizedCropName)
     if changed then
         self:recomputePendingBonus(numericFarmlandId)
+        -- A new main crop entered history: the previous cover residue is now consumed.
+        self.repository:clearLastCover(numericFarmlandId)
     end
     return changed
 end
@@ -251,107 +252,65 @@ function RealisticCropRotationService:onCropChangeArea(farmlandId, fruitTypeInde
     end
 
     if self:isCoverCropForRotationHistory(fruitTypeIndex, normalizedCropName) then
-        -- Cover crops are excluded from rotation history. Their native residue is handled by
-        -- the base game / Precision Farming, so the rotation history stays untouched here.
+        -- Cover crop incorporated: excluded from rotation history, but recorded so the HUD can
+        -- show its residue on the following crop. Cleared when the next main crop enters history.
+        self.repository:setLastCover(numericFarmlandId, normalizedCropName)
         return false
     end
 
     local pushed = self:pushHistoryCrop(numericFarmlandId, normalizedCropName)
     local activeChanged = self:setLastKnownActiveCrop(numericFarmlandId, nextActiveCropName)
-    self:markNitrogenDepositLockResetCrop(numericFarmlandId, nextActiveCropName)
     return pushed or activeChanged
 end
 
 -- =========================================================================
--- Nitrogen residue deposit
+-- Nitrogen residue deposit (native vanilla fertilizer)
 -- =========================================================================
 -- Fertilizer amount restituted when a crop is terminated on a farmland: the terminated
 -- crop's own first-year residue (n1) plus the second-year residue (n2) of the crop that is
 -- now N-2 in the rotation history. Cover crops (isCatchCrop) restitute nothing here -- the
 -- base game already gives them their residue on incorporation.
-function RealisticCropRotationService:getResidueApplicationForTermination(farmlandId, fruitTypeIndex)
-    if farmlandId == nil or farmlandId == 0 then return nil end
+function RealisticCropRotationService:getResidueStateChangeForTermination(farmlandId, fruitTypeIndex)
+    if farmlandId == nil or farmlandId == 0 then return 0 end
     local cropName = self:getCropNameByFruitTypeIndex(fruitTypeIndex)
-    if cropName == nil then return nil end
-    if self:isCoverCropForRotationHistory(fruitTypeIndex, cropName) then return nil end
+    if cropName == nil then return 0 end
+    if self:isCoverCropForRotationHistory(fruitTypeIndex, cropName) then return 0 end
 
+    local total = 0
     local candidateEntry = self:getResidueEntry(cropName)
-    local n1Change = candidateEntry ~= nil and (candidateEntry.n1 or 0) or 0
+    if candidateEntry ~= nil then total = total + (candidateEntry.n1 or 0) end
 
     -- Second-year residue of the PREVIOUS crop, only when it is a different crop. The same crop
     -- twice in a row must not stack its own n1 + n2 (e.g. soybean after soybean stays its 80 kg,
     -- not 95). A different predecessor still leaves its n2 (e.g. pea after soybean = pea.n1 + soybean.n2).
-    local previousCropName = nil
-    local n2Change = 0
     local entries = self.repository:getHistoryNoAlloc(farmlandId)
     if entries ~= nil and entries[1] ~= nil and entries[1].crop ~= cropName then
-        previousCropName = entries[1].crop
         local previousEntry = self:getResidueEntry(entries[1].crop)
-        if previousEntry ~= nil then n2Change = previousEntry.n2 or 0 end
+        if previousEntry ~= nil then total = total + (previousEntry.n2 or 0) end
     end
-
-    local total = n1Change + n2Change
-    if total <= 0 then return nil end
-
-    return {
-        stateChange = total,
-        cropName = cropName,
-        displayCropName = (n1Change > 0 and cropName) or previousCropName or cropName,
-    }
-end
-
-function RealisticCropRotationService:getResidueStateChangeForTermination(farmlandId, fruitTypeIndex)
-    local residue = self:getResidueApplicationForTermination(farmlandId, fruitTypeIndex)
-    if residue == nil then
-        return 0
-    end
-    return residue.stateChange or 0
+    return total
 end
 
 -- Server-side. Restitutes the crop residue the same way FS25_MulchingFertilizes does for a
 -- mulcher, with the same two paths: with Precision Farming it writes PF's own nitrogen map;
 -- without it, it adds vanilla fertilizer (SPRAY_LEVEL). Runs AFTER superFunc so the engine's
 -- tillage pass cannot overwrite it. The work-area parallelogram keeps it behind the tool.
-function RealisticCropRotationService:applyNitrogenResidueAtArea(cropCandidate, xs, zs, xw, zw, xh, zh, changedArea)
-    if cropCandidate == nil or cropCandidate.fruitTypeIndex == nil then return false end
+function RealisticCropRotationService:applyNitrogenResidueAtArea(cropCandidate, xs, zs, xw, zw, xh, zh)
+    if cropCandidate == nil or cropCandidate.fruitTypeIndex == nil then return end
 
-    local residueApplication = self:getResidueApplicationForTermination(cropCandidate.farmlandId, cropCandidate.fruitTypeIndex)
-    if residueApplication == nil or (residueApplication.stateChange or 0) <= 0 then
-        return self.repository:clearAppliedResidue(cropCandidate.farmlandId)
-    end
+    local residue = self:getResidueStateChangeForTermination(cropCandidate.farmlandId, cropCandidate.fruitTypeIndex)
+    if residue <= 0 then return end
 
-    local cropName = residueApplication.cropName
-    if cropName == nil then return false end
-
-    local residue = residueApplication.stateChange
-    local applied = false
-    local unit = "STATE"
-    local sprayLevel = 0
     if g_modIsLoaded ~= nil and g_modIsLoaded["FS25_precisionFarming"] then
-        self:consumeNitrogenDepositLockResetCrop(cropCandidate.farmlandId, cropName)
-        applied = self:addNitrogenToPrecisionFarming(residue, xs, zs, xw, zw, xh, zh)
+        self:addNitrogenToPrecisionFarming(residue, xs, zs, xw, zw, xh, zh)
     else
-        unit = "SPRAY_LEVEL"
-        sprayLevel = 1
-        applied = self:addFertilizerToSprayLevel(residue, xs, zs, xw, zw, xh, zh)
+        self:addFertilizerToSprayLevel(residue, xs, zs, xw, zw, xh, zh)
     end
-
-    if not applied then
-        return self.repository:clearAppliedResidue(cropCandidate.farmlandId)
-    end
-
-    return self.repository:recordAppliedResidue(
-        cropCandidate.farmlandId,
-        residueApplication.displayCropName or cropName,
-        residue,
-        sprayLevel,
-        self:getChangedAreaHa(changedArea),
-        unit)
 end
 
 -- Transient, in-memory idempotency lock (NOT the old persisted .grle): a 1-bit map the size of
--- the nitrogen map that marks pixels already given a residue. It is never saved and is cleared
--- for the crop being terminated when a sowing hook has started that crop's cycle.
+-- the nitrogen map that marks pixels already given a residue. It is never saved, never tied to a
+-- period; it is reset per worked area when a new crop is sown. Created lazily on first deposit.
 function RealisticCropRotationService:getNitrogenDepositLock(nitrogenMap)
     if self.nitrogenDepositLock ~= nil then return self.nitrogenDepositLock end
     if createBitVectorMap == nil or loadBitVectorMapNew == nil or getBitVectorMapSize == nil then return nil end
@@ -372,7 +331,7 @@ end
 function RealisticCropRotationService:addNitrogenToPrecisionFarming(residue, xs, zs, xw, zw, xh, zh)
     local pf = getPrecisionFarmingInstance()
     local nitrogenMap = pf ~= nil and pf.nitrogenMap or nil
-    if nitrogenMap == nil then return false end
+    if nitrogenMap == nil then return end
 
     local maxValue = nitrogenMap.maxValue
     local size = nitrogenMap.sizeX
@@ -409,66 +368,38 @@ function RealisticCropRotationService:addNitrogenToPrecisionFarming(residue, xs,
     end
 
     nitrogenMap:setMinimapRequiresUpdate(true)
-    return true
 end
 
-function RealisticCropRotationService:markNitrogenDepositLockResetCrop(farmlandId, cropName)
-    local numericFarmlandId = tonumber(farmlandId)
-    if numericFarmlandId == nil or numericFarmlandId <= 0 then return end
-
-    local normalizedCropName = self:normalizeCropName(cropName)
-    if normalizedCropName == nil then return end
-
-    self.nitrogenDepositLockResetCrop[numericFarmlandId] = normalizedCropName
-    self.nitrogenDepositLockResetCrop[tostring(numericFarmlandId)] = nil
-end
-
-function RealisticCropRotationService:clearNitrogenDepositLock()
+-- Clear the idempotency lock over a worked area, so the next crop grown there can be fertilized
+-- again. Called from the sowing hooks (a new crop starts its own residue cycle).
+function RealisticCropRotationService:resetNitrogenDepositLockAtArea(xs, zs, xw, zw, xh, zh)
     local lock = self.nitrogenDepositLock
     if lock == nil then return end
+    local pf = getPrecisionFarmingInstance()
+    local nitrogenMap = pf ~= nil and pf.nitrogenMap or nil
+    if nitrogenMap == nil then return end
 
-    if delete ~= nil then
-        pcall(delete, lock)
-        self.nitrogenDepositLock = nil
-        return
-    end
-
-    if DensityMapModifier == nil then return end
+    local size = nitrogenMap.sizeX
+    local terrainSize = g_currentMission.terrainSize
+    local function toPixel(c) return size * (c + terrainSize * 0.5) / terrainSize end
 
     local lockModifier = DensityMapModifier.new(lock, 0, 1, g_terrainNode)
+    lockModifier:setPolygonRoundingMode(DensityRoundingMode.INCLUSIVE)
+    lockModifier:setParallelogramDensityMapCoords(toPixel(xs), toPixel(zs), toPixel(xw), toPixel(zw), toPixel(xh), toPixel(zh), DensityCoordType.POINT_POINT_POINT)
     lockModifier:executeSet(0)
 end
 
-function RealisticCropRotationService:consumeNitrogenDepositLockResetCrop(farmlandId, cropName)
-    local numericFarmlandId = tonumber(farmlandId)
-    if numericFarmlandId == nil or numericFarmlandId <= 0 then return end
-
-    local normalizedCropName = self:normalizeCropName(cropName)
-    if normalizedCropName == nil then return end
-
-    local pendingCrop = self.nitrogenDepositLockResetCrop[numericFarmlandId]
-        or self.nitrogenDepositLockResetCrop[tostring(numericFarmlandId)]
-    if pendingCrop ~= normalizedCropName then return end
-
-    self:clearNitrogenDepositLock()
-    self.nitrogenDepositLockResetCrop[numericFarmlandId] = nil
-    self.nitrogenDepositLockResetCrop[tostring(numericFarmlandId)] = nil
-end
-
--- No Precision Farming: add one vanilla fertilizer stage onto the SPRAY_LEVEL map over the
--- worked field area. That map is terrain-attached, so world coords are used directly
--- (setParallelogramWorldCoords), like FS25_MulchingFertilizes' vanilla path.
+-- No Precision Farming: add vanilla fertilizer onto the SPRAY_LEVEL map over the worked field
+-- area. That map is terrain-attached, so world coords are used directly
+-- (setParallelogramWorldCoords), like FS25_MulchingFertilizes' vanilla path. Capped at the
+-- spray-level max and limited to actual field ground.
 function RealisticCropRotationService:addFertilizerToSprayLevel(residue, xs, zs, xw, zw, xh, zh)
     local fieldGroundSystem = g_currentMission ~= nil and g_currentMission.fieldGroundSystem or nil
-    if fieldGroundSystem == nil then return false end
+    if fieldGroundSystem == nil then return end
 
     local sprayLevelMapId, firstChannel, numChannels = fieldGroundSystem:getDensityMapData(FieldDensityMap.SPRAY_LEVEL)
     local maxValue = fieldGroundSystem:getMaxValue(FieldDensityMap.SPRAY_LEVEL)
     local groundTypeMapId, gtFirstChannel, gtNumChannels = fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE)
-    if sprayLevelMapId == nil or firstChannel == nil or numChannels == nil or maxValue == nil
-        or groundTypeMapId == nil or gtFirstChannel == nil or gtNumChannels == nil then
-        return false
-    end
 
     local modifier = DensityMapModifier.new(sprayLevelMapId, firstChannel, numChannels, g_currentMission.terrainRootNode)
     modifier:setParallelogramWorldCoords(xs, zs, xw, zw, xh, zh, DensityCoordType.POINT_POINT_POINT)
@@ -479,19 +410,18 @@ function RealisticCropRotationService:addFertilizerToSprayLevel(residue, xs, zs,
     local fieldFilter = DensityMapFilter.new(groundTypeMapId, gtFirstChannel, gtNumChannels)
     fieldFilter:setValueCompareParams(DensityValueCompareType.GREATER, 0)
 
-    modifier:executeAdd(1, levelFilter, fieldFilter)
-    return true
+    modifier:executeAdd(math.min(residue, maxValue), levelFilter, fieldFilter)
 end
 
 -- =========================================================================
 -- MP sync helpers (server-authoritative).
 -- =========================================================================
 
-function RealisticCropRotationService:applySyncData(receivedHistory, receivedPlans, receivedLastKnownActiveCrop, receivedAppliedResidue)
-    self.repository:replaceAll(receivedHistory or {}, receivedPlans or {}, receivedLastKnownActiveCrop or {}, receivedAppliedResidue or {})
+function RealisticCropRotationService:applySyncData(receivedHistory, receivedPlans, receivedLastKnownActiveCrop)
+    self.repository:replaceAll(receivedHistory or {}, receivedPlans or {}, receivedLastKnownActiveCrop or {})
     self:recomputeAllPendingBonuses()
 end
 
 function RealisticCropRotationService:getSyncData()
-    return self.repository:getAllHistory(), self.repository:getAllLastKnownActiveCrops(), self.repository:getAllAppliedResidues()
+    return self.repository:getAllHistory(), self.repository:getAllLastKnownActiveCrops()
 end
