@@ -21,16 +21,13 @@
         <e k="rcr_season_winter"        v="Winter" />
         <e k="rcr_status_bonus"         v="N-Rückstand" />
         <e k="rcr_status_current_residue" v="Angewandter Rückstand +%d kg/ha" />
-        <e k="rcr_status_current_residue_partial" v="Teilrückstand +%d kg/ha" />
         <e k="rcr_status_current_residue_vanilla" v="Angewandter Rückstand +%d Düngestufe" />
-        <e k="rcr_status_current_residue_vanilla_partial" v="Teilrückstand +%d Düngestufe" />
         <e k="rcr_status_planned_residue" v="Rückstand Rotation gesamt +%d kg/ha" />
         <e k="rcr_status_current_no_residue" v="Angewandter Rückstand 0" />
         <e k="rcr_status_planned_no_residue" v="Rückstand Rotation gesamt 0 kg/ha" />
         <e k="rcr_hud_previous_n1"      v="Vorfrucht (N-1)" />
         <e k="rcr_hud_previous_n2"      v="Vor-Vorfrucht (N-2)" />
         <e k="rcr_hud_residue_applied"  v="Angewandter Rest" />
-        <e k="rcr_hud_residue_applied_partial" v="Teilrückstand" />
         <e k="rcr_hud_residue_level"    v="+%d Stufe" />
 
         <!-- Section bars -->

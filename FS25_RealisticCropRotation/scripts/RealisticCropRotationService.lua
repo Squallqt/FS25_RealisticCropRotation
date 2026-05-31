@@ -18,6 +18,8 @@ local RealisticCropRotationService_mt = Class(RealisticCropRotationService)
 -- RealisticCropRotation.cropConfig is loaded once at mod init by main.lua.
 -- 1 PF state = 5 kg N/ha (source: PrecisionFarming.xml amountPerState=5).
 RealisticCropRotationService.PF_STATE_PER_UNIT = 5
+RealisticCropRotationService.NITROGEN_DEPOSIT_LOCK_CHANNELS = 8
+RealisticCropRotationService.NITROGEN_DEPOSIT_LOCK_MAX_VALUE = (2 ^ RealisticCropRotationService.NITROGEN_DEPOSIT_LOCK_CHANNELS) - 1
 
 local function getPrecisionFarmingInstance()
     if g_precisionFarming ~= nil then return g_precisionFarming end
@@ -35,19 +37,23 @@ function RealisticCropRotationService.new(repository)
     self.repository = repository
     self.pendingBonus = {}            -- farmlandId -> { n1StateChange, n2StateChange }
     self.cropNameByFruitTypeIndex = {}
+    self.residueCycleByFarmland = {}  -- farmlandId -> current residue lock generation
     self.nitrogenDepositLock = nil    -- transient idempotency lock (created on first deposit)
-    self.nitrogenDepositLockResetCrop = {}
+    self.nitrogenDepositLockSizeX = nil
+    self.nitrogenDepositLockSizeY = nil
     return self
 end
 
 function RealisticCropRotationService:reset()
     self.pendingBonus = {}
     self.cropNameByFruitTypeIndex = {}
+    self.residueCycleByFarmland = {}
     if self.nitrogenDepositLock ~= nil and delete ~= nil then
         pcall(delete, self.nitrogenDepositLock)
     end
     self.nitrogenDepositLock = nil
-    self.nitrogenDepositLockResetCrop = {}
+    self.nitrogenDepositLockSizeX = nil
+    self.nitrogenDepositLockSizeY = nil
 end
 
 function RealisticCropRotationService:getNitrogenKgPerHaFromStateChange(stateChange)
@@ -67,22 +73,6 @@ function RealisticCropRotationService:getNitrogenKgFromStates(stateChange)
         if ok and type(kg) == "number" then return kg end
     end
     return self:getNitrogenKgPerHaFromStateChange(states)
-end
-
-function RealisticCropRotationService:getChangedAreaHa(changedArea)
-    local numericChangedArea = tonumber(changedArea) or 0
-    if numericChangedArea <= 0 then return 0 end
-    if MathUtil == nil or type(MathUtil.areaToHa) ~= "function" then return 0 end
-    if g_currentMission == nil or type(g_currentMission.getFruitPixelsToSqm) ~= "function" then return 0 end
-
-    local sqmOk, sqmPerPixel = pcall(function()
-        return g_currentMission:getFruitPixelsToSqm()
-    end)
-    if not sqmOk or sqmPerPixel == nil then return 0 end
-
-    local areaOk, areaHa = pcall(MathUtil.areaToHa, numericChangedArea, sqmPerPixel)
-    if areaOk and type(areaHa) == "number" and areaHa > 0 then return areaHa end
-    return 0
 end
 
 function RealisticCropRotationService:getCurrentPeriod()
@@ -209,6 +199,37 @@ function RealisticCropRotationService:pushHistoryCrop(farmlandId, cropName)
     return changed
 end
 
+function RealisticCropRotationService:getResidueCycle(farmlandId)
+    local numericFarmlandId = tonumber(farmlandId)
+    if numericFarmlandId == nil or numericFarmlandId <= 0 then return 1 end
+
+    local cycle = tonumber(self.residueCycleByFarmland[numericFarmlandId]
+        or self.residueCycleByFarmland[tostring(numericFarmlandId)]) or 1
+    if cycle < 1 then cycle = 1 end
+    return math.floor(cycle)
+end
+
+function RealisticCropRotationService:advanceResidueCycle(farmlandId)
+    local numericFarmlandId = tonumber(farmlandId)
+    if numericFarmlandId == nil or numericFarmlandId <= 0 then return 1 end
+
+    local nextCycle = self:getResidueCycle(numericFarmlandId) + 1
+    if nextCycle > RealisticCropRotationService.NITROGEN_DEPOSIT_LOCK_MAX_VALUE then
+        if self.nitrogenDepositLock ~= nil and delete ~= nil then
+            pcall(delete, self.nitrogenDepositLock)
+        end
+        self.nitrogenDepositLock = nil
+        self.nitrogenDepositLockSizeX = nil
+        self.nitrogenDepositLockSizeY = nil
+        self.residueCycleByFarmland = {}
+        nextCycle = 1
+    end
+
+    self.residueCycleByFarmland[numericFarmlandId] = nextCycle
+    self.residueCycleByFarmland[tostring(numericFarmlandId)] = nil
+    return nextCycle
+end
+
 function RealisticCropRotationService:setLastKnownActiveCrop(farmlandId, cropName)
     local normalizedCropName = self:normalizeCropName(cropName)
     return self.repository:setLastKnownActiveCrop(farmlandId, normalizedCropName)
@@ -231,6 +252,9 @@ function RealisticCropRotationService:reconcileActiveCrop(farmlandId, currentCro
 
     local pushed = self:pushHistoryCrop(numericFarmlandId, lastKnownCrop)
     local activeChanged = self.repository:setLastKnownActiveCrop(numericFarmlandId, normalizedCurrentCrop)
+    if pushed or activeChanged then
+        self:advanceResidueCycle(numericFarmlandId)
+    end
     return pushed or activeChanged
 end
 
@@ -258,7 +282,9 @@ function RealisticCropRotationService:onCropChangeArea(farmlandId, fruitTypeInde
 
     local pushed = self:pushHistoryCrop(numericFarmlandId, normalizedCropName)
     local activeChanged = self:setLastKnownActiveCrop(numericFarmlandId, nextActiveCropName)
-    self:markNitrogenDepositLockResetCrop(numericFarmlandId, nextActiveCropName)
+    if pushed or activeChanged then
+        self:advanceResidueCycle(numericFarmlandId)
+    end
     return pushed or activeChanged
 end
 
@@ -312,7 +338,7 @@ end
 -- mulcher, with the same two paths: with Precision Farming it writes PF's own nitrogen map;
 -- without it, it adds vanilla fertilizer (SPRAY_LEVEL). Runs AFTER superFunc so the engine's
 -- tillage pass cannot overwrite it. The work-area parallelogram keeps it behind the tool.
-function RealisticCropRotationService:applyNitrogenResidueAtArea(cropCandidate, xs, zs, xw, zw, xh, zh, changedArea)
+function RealisticCropRotationService:applyNitrogenResidueAtArea(cropCandidate, xs, zs, xw, zw, xh, zh)
     if cropCandidate == nil or cropCandidate.fruitTypeIndex == nil then return false end
 
     local residueApplication = self:getResidueApplicationForTermination(cropCandidate.farmlandId, cropCandidate.fruitTypeIndex)
@@ -324,12 +350,12 @@ function RealisticCropRotationService:applyNitrogenResidueAtArea(cropCandidate, 
     if cropName == nil then return false end
 
     local residue = residueApplication.stateChange
+    local residueCycle = tonumber(cropCandidate.residueCycle) or self:getResidueCycle(cropCandidate.farmlandId)
     local applied = false
     local unit = "STATE"
     local sprayLevel = 0
     if g_modIsLoaded ~= nil and g_modIsLoaded["FS25_precisionFarming"] then
-        self:consumeNitrogenDepositLockResetCrop(cropCandidate.farmlandId, cropName)
-        applied = self:addNitrogenToPrecisionFarming(residue, xs, zs, xw, zw, xh, zh)
+        applied = self:addNitrogenToPrecisionFarming(residue, residueCycle, xs, zs, xw, zw, xh, zh)
     else
         unit = "SPRAY_LEVEL"
         sprayLevel = 1
@@ -345,13 +371,13 @@ function RealisticCropRotationService:applyNitrogenResidueAtArea(cropCandidate, 
         residueApplication.displayCropName or cropName,
         residue,
         sprayLevel,
-        self:getChangedAreaHa(changedArea),
         unit)
 end
 
--- Transient, in-memory idempotency lock (NOT the old persisted .grle): a 1-bit map the size of
--- the nitrogen map that marks pixels already given a residue. It is never saved and is cleared
--- for the crop being terminated when a sowing hook has started that crop's cycle.
+-- Transient, in-memory idempotency lock (NOT the old persisted .grle): a small generation map the
+-- size of the nitrogen map that marks pixels already given a residue for the current crop cycle. It
+-- is never saved and never reset in a hot sowing/deposit path; a new crop cycle simply uses the next
+-- generation value, so a later N2 residue is not blocked by an earlier N1 residue on the same pixels.
 function RealisticCropRotationService:getNitrogenDepositLock(nitrogenMap)
     if self.nitrogenDepositLock ~= nil then return self.nitrogenDepositLock end
     if createBitVectorMap == nil or loadBitVectorMapNew == nil or getBitVectorMapSize == nil then return nil end
@@ -359,17 +385,29 @@ function RealisticCropRotationService:getNitrogenDepositLock(nitrogenMap)
     if not sizeOk or w == nil or h == nil then return nil end
     local createOk, lock = pcall(createBitVectorMap, "RealisticCropRotationNitrogenDepositLock")
     if not createOk or lock == nil then return nil end
-    local newOk = pcall(loadBitVectorMapNew, lock, w, h, 1, false)
+    local newOk = pcall(loadBitVectorMapNew, lock, w, h,
+        RealisticCropRotationService.NITROGEN_DEPOSIT_LOCK_CHANNELS, false)
     if not newOk then pcall(delete, lock); return nil end
     self.nitrogenDepositLock = lock
+    self.nitrogenDepositLockSizeX = w
+    self.nitrogenDepositLockSizeY = h
     return lock
+end
+
+function RealisticCropRotationService:getNitrogenDepositLockGeneration(residueCycle)
+    local generation = tonumber(residueCycle) or 1
+    generation = math.floor(generation)
+    if generation < 1 then generation = 1 end
+
+    local maxValue = RealisticCropRotationService.NITROGEN_DEPOSIT_LOCK_MAX_VALUE
+    return ((generation - 1) % maxValue) + 1
 end
 
 -- Precision Farming present: write the residue onto nitrogenMap.bitVectorMap. That map is
 -- standalone (not terrain-attached), so world coords are converted to its pixel space and
 -- setParallelogramDensityMapCoords is used, like FS25_MulchingFertilizes' destroy path. The
 -- transient lock makes it idempotent: each pixel only receives the residue once per crop.
-function RealisticCropRotationService:addNitrogenToPrecisionFarming(residue, xs, zs, xw, zw, xh, zh)
+function RealisticCropRotationService:addNitrogenToPrecisionFarming(residue, residueCycle, xs, zs, xw, zw, xh, zh)
     local pf = getPrecisionFarmingInstance()
     local nitrogenMap = pf ~= nil and pf.nitrogenMap or nil
     if nitrogenMap == nil then return false end
@@ -386,12 +424,15 @@ function RealisticCropRotationService:addNitrogenToPrecisionFarming(residue, xs,
 
     local nFilter = DensityMapFilter.new(modifier)
 
-    -- Idempotency: only deposit where the lock is still 0, so overlapping tool slices don't stack.
+    -- Idempotency: only deposit where this cycle has not already written, so overlapping tool
+    -- slices do not stack while future cycles stay eligible on the same pixels.
     local lock = self:getNitrogenDepositLock(nitrogenMap)
+    local lockGeneration = self:getNitrogenDepositLockGeneration(residueCycle)
     local lockFilter = nil
     if lock ~= nil then
-        lockFilter = DensityMapFilter.new(lock, 0, 1)
-        lockFilter:setValueCompareParams(DensityValueCompareType.EQUAL, 0)
+        lockFilter = DensityMapFilter.new(lock, 0,
+            RealisticCropRotationService.NITROGEN_DEPOSIT_LOCK_CHANNELS)
+        lockFilter:setValueCompareParams(DensityValueCompareType.NOTEQUAL, lockGeneration)
     end
 
     -- Saturate the band that would overflow maxValue, then add the residue to the rest.
@@ -402,57 +443,15 @@ function RealisticCropRotationService:addNitrogenToPrecisionFarming(residue, xs,
 
     -- Mark the whole worked area as done for this crop so a later overlapping slice skips it.
     if lock ~= nil then
-        local lockModifier = DensityMapModifier.new(lock, 0, 1, g_terrainNode)
+        local lockModifier = DensityMapModifier.new(lock, 0,
+            RealisticCropRotationService.NITROGEN_DEPOSIT_LOCK_CHANNELS, g_terrainNode)
         lockModifier:setPolygonRoundingMode(DensityRoundingMode.INCLUSIVE)
         lockModifier:setParallelogramDensityMapCoords(lxs, lzs, lxw, lzw, lxh, lzh, DensityCoordType.POINT_POINT_POINT)
-        lockModifier:executeSet(1)
+        lockModifier:executeSet(lockGeneration)
     end
 
     nitrogenMap:setMinimapRequiresUpdate(true)
     return true
-end
-
-function RealisticCropRotationService:markNitrogenDepositLockResetCrop(farmlandId, cropName)
-    local numericFarmlandId = tonumber(farmlandId)
-    if numericFarmlandId == nil or numericFarmlandId <= 0 then return end
-
-    local normalizedCropName = self:normalizeCropName(cropName)
-    if normalizedCropName == nil then return end
-
-    self.nitrogenDepositLockResetCrop[numericFarmlandId] = normalizedCropName
-    self.nitrogenDepositLockResetCrop[tostring(numericFarmlandId)] = nil
-end
-
-function RealisticCropRotationService:clearNitrogenDepositLock()
-    local lock = self.nitrogenDepositLock
-    if lock == nil then return end
-
-    if delete ~= nil then
-        pcall(delete, lock)
-        self.nitrogenDepositLock = nil
-        return
-    end
-
-    if DensityMapModifier == nil then return end
-
-    local lockModifier = DensityMapModifier.new(lock, 0, 1, g_terrainNode)
-    lockModifier:executeSet(0)
-end
-
-function RealisticCropRotationService:consumeNitrogenDepositLockResetCrop(farmlandId, cropName)
-    local numericFarmlandId = tonumber(farmlandId)
-    if numericFarmlandId == nil or numericFarmlandId <= 0 then return end
-
-    local normalizedCropName = self:normalizeCropName(cropName)
-    if normalizedCropName == nil then return end
-
-    local pendingCrop = self.nitrogenDepositLockResetCrop[numericFarmlandId]
-        or self.nitrogenDepositLockResetCrop[tostring(numericFarmlandId)]
-    if pendingCrop ~= normalizedCropName then return end
-
-    self:clearNitrogenDepositLock()
-    self.nitrogenDepositLockResetCrop[numericFarmlandId] = nil
-    self.nitrogenDepositLockResetCrop[tostring(numericFarmlandId)] = nil
 end
 
 -- No Precision Farming: add one vanilla fertilizer stage onto the SPRAY_LEVEL map over the

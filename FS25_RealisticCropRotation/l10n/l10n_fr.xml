@@ -21,16 +21,13 @@
         <e k="rcr_season_winter"        v="Hiver" />
         <e k="rcr_status_bonus"         v="Reliquat Azoté" />
         <e k="rcr_status_current_residue" v="Reliquat appliqué +%d kg/ha" />
-        <e k="rcr_status_current_residue_partial" v="Reliquat partiel +%d kg/ha" />
         <e k="rcr_status_current_residue_vanilla" v="Reliquat appliqué +%d niveau ferti" />
-        <e k="rcr_status_current_residue_vanilla_partial" v="Reliquat partiel +%d niveau ferti" />
         <e k="rcr_status_planned_residue" v="Reliquat total rotation +%d kg/ha" />
         <e k="rcr_status_current_no_residue" v="Reliquat appliqué 0" />
         <e k="rcr_status_planned_no_residue" v="Reliquat total rotation 0 kg/ha" />
         <e k="rcr_hud_previous_n1"      v="Précédent cultural (N-1)" />
         <e k="rcr_hud_previous_n2"      v="Anté-précédent (N-2)" />
         <e k="rcr_hud_residue_applied"  v="Reliquat appliqué" />
-        <e k="rcr_hud_residue_applied_partial" v="Reliquat partiel" />
         <e k="rcr_hud_residue_level"    v="+%d niveau" />
 
         <!-- Section bars -->

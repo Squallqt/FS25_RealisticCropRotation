@@ -147,8 +147,7 @@ function RealisticCropRotationHud.addResidueLines(fieldBox, farmlandId)
     if applied == nil then return end
 
     local service = manager.service
-    local labelKey = applied.isPartial and "rcr_hud_residue_applied_partial" or "rcr_hud_residue_applied"
-    local label = RealisticCropRotationHud.getText(labelKey)
+    local label = RealisticCropRotationHud.getText("rcr_hud_residue_applied")
     local cropDisplay = RealisticCropRotationHud.getCropDisplayName(applied.crop)
 
     if applied.unit == "SPRAY_LEVEL" then

@@ -192,7 +192,6 @@ function RealisticCropRotationFrame:getActiveNitrogenResidueInfo(farmlandId)
             crop = applied.crop,
             unit = "SPRAY_LEVEL",
             value = sprayLevel,
-            isPartial = applied.isPartial,
         }
     end
 
@@ -211,7 +210,6 @@ function RealisticCropRotationFrame:getActiveNitrogenResidueInfo(farmlandId)
                 crop = applied.crop,
                 unit = "KG_HA",
                 value = residueKgHa,
-                isPartial = applied.isPartial,
             }
         end
     end
@@ -226,14 +224,12 @@ function RealisticCropRotationFrame:getActiveNitrogenResidueText(farmlandId)
     end
 
     if info.unit == "SPRAY_LEVEL" then
-        local key = info.isPartial and "rcr_status_current_residue_vanilla_partial"
-            or "rcr_status_current_residue_vanilla"
-        return string.format(self.i18n:getText(key), math.floor((tonumber(info.value) or 0) + 0.5))
+        return string.format(self.i18n:getText("rcr_status_current_residue_vanilla"),
+            math.floor((tonumber(info.value) or 0) + 0.5))
     end
 
-    local key = info.isPartial and "rcr_status_current_residue_partial"
-        or "rcr_status_current_residue"
-    return string.format(self.i18n:getText(key), math.floor((tonumber(info.value) or 0) + 0.5))
+    return string.format(self.i18n:getText("rcr_status_current_residue"),
+        math.floor((tonumber(info.value) or 0) + 0.5))
 end
 
 function RealisticCropRotationFrame:updateResiduePill(pillBg, pillText, farmlandId)

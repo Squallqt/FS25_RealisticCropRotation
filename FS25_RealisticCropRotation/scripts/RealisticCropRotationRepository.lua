@@ -95,7 +95,7 @@ function RealisticCropRotationRepository:clearAppliedResidue(farmlandId)
     return changed
 end
 
-function RealisticCropRotationRepository:recordAppliedResidue(farmlandId, cropName, stateChange, sprayLevel, areaHa, unit)
+function RealisticCropRotationRepository:recordAppliedResidue(farmlandId, cropName, stateChange, sprayLevel, unit)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
     if cropName == nil or cropName == "" then return false end
@@ -103,36 +103,26 @@ function RealisticCropRotationRepository:recordAppliedResidue(farmlandId, cropNa
     local normalizedCropName = string.upper(tostring(cropName))
     local numericStateChange = tonumber(stateChange) or 0
     local numericSprayLevel = tonumber(sprayLevel) or 0
-    local numericAreaHa = math.max(0, tonumber(areaHa) or 0)
     local normalizedUnit = tostring(unit or "STATE")
 
     local existing = self.appliedResidue[numericFarmlandId]
         or self.appliedResidue[tostring(numericFarmlandId)]
-    local newAreaHa = numericAreaHa
     if existing ~= nil
         and existing.crop == normalizedCropName
         and (tonumber(existing.stateChange) or 0) == numericStateChange
         and (tonumber(existing.sprayLevel) or 0) == numericSprayLevel
         and tostring(existing.unit or "STATE") == normalizedUnit then
-        newAreaHa = (tonumber(existing.areaHa) or 0) + numericAreaHa
+        return false
     end
-
-    local changed = existing == nil
-        or existing.crop ~= normalizedCropName
-        or (tonumber(existing.stateChange) or 0) ~= numericStateChange
-        or (tonumber(existing.sprayLevel) or 0) ~= numericSprayLevel
-        or tostring(existing.unit or "STATE") ~= normalizedUnit
-        or math.abs((tonumber(existing.areaHa) or 0) - newAreaHa) > 0.0001
 
     self.appliedResidue[numericFarmlandId] = {
         crop = normalizedCropName,
         stateChange = numericStateChange,
         sprayLevel = numericSprayLevel,
-        areaHa = newAreaHa,
         unit = normalizedUnit,
     }
     self.appliedResidue[tostring(numericFarmlandId)] = nil
-    return changed
+    return true
 end
 
 function RealisticCropRotationRepository:pushEntry(farmlandId, cropName)
@@ -280,7 +270,6 @@ function RealisticCropRotationRepository:saveToXML(savegamePath)
                 setXMLString(xmlFile, farmlandKey .. "#appliedResidueUnit", tostring(applied.unit or "STATE"))
                 setXMLInt(xmlFile, farmlandKey .. "#appliedResidueStateChange", tonumber(applied.stateChange) or 0)
                 setXMLInt(xmlFile, farmlandKey .. "#appliedResidueSprayLevel", tonumber(applied.sprayLevel) or 0)
-                setXMLFloat(xmlFile, farmlandKey .. "#appliedResidueAreaHa", tonumber(applied.areaHa) or 0)
             end
 
             if hasHistory then
@@ -363,7 +352,6 @@ function RealisticCropRotationRepository:loadFromXML(savegamePath)
                     unit = getXMLString(xmlFile, farmlandKey .. "#appliedResidueUnit") or "STATE",
                     stateChange = getXMLInt(xmlFile, farmlandKey .. "#appliedResidueStateChange") or 0,
                     sprayLevel = getXMLInt(xmlFile, farmlandKey .. "#appliedResidueSprayLevel") or 0,
-                    areaHa = getXMLFloat(xmlFile, farmlandKey .. "#appliedResidueAreaHa") or 0,
                 }
             end
 

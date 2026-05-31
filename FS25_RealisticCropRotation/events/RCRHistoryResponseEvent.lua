@@ -82,14 +82,12 @@ function RCRHistoryResponseEvent:readStream(streamId, _connection)
         local unit = streamReadString(streamId)
         local stateChange = streamReadInt16(streamId)
         local sprayLevel = streamReadInt8(streamId)
-        local areaHa = streamReadFloat32(streamId)
         if farmlandId > 0 and cropName ~= nil and cropName ~= "" then
             receivedAppliedResidue[farmlandId] = {
                 crop = string.upper(tostring(cropName)),
                 unit = unit ~= nil and unit ~= "" and unit or "STATE",
                 stateChange = stateChange or 0,
                 sprayLevel = sprayLevel or 0,
-                areaHa = areaHa or 0,
             }
         end
     end
@@ -219,7 +217,6 @@ function RCRHistoryResponseEvent:writeStream(streamId, _connection)
         streamWriteString(streamId, tostring(entry.unit or "STATE"))
         streamWriteInt16(streamId, tonumber(entry.stateChange) or 0)
         streamWriteInt8(streamId, tonumber(entry.sprayLevel) or 0)
-        streamWriteFloat32(streamId, tonumber(entry.areaHa) or 0)
     end
 
     local _, entryCount = countHistory(history)
