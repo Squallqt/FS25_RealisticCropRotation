@@ -72,7 +72,6 @@ RealisticCropRotation.broadcastUpdateable = nil
 RealisticCropRotation.periodChangeListener = nil
 RealisticCropRotation.farmlandOwnerChangeListener = nil
 RealisticCropRotation.lastObservedPeriod = 0
-RealisticCropRotation.lastObservedYear = 0
 
 function RealisticCropRotation.requestBroadcast()
     if g_server == nil then return end
@@ -114,31 +113,11 @@ end
 
 local function checkPeriodChange()
     if g_currentMission == nil or g_currentMission.environment == nil then return end
-    local environment = g_currentMission.environment
     local currentPeriod = g_currentMission.environment.currentPeriod or 0
-    local service = RealisticCropRotation.manager ~= nil and RealisticCropRotation.manager.service or nil
-    local currentYear = service ~= nil and type(service.getCurrentYear) == "function"
-        and service:getCurrentYear()
-        or (tonumber(environment.currentYear) or 0)
-
-    if currentYear > 0 and RealisticCropRotation.lastObservedYear > 0
-        and currentYear ~= RealisticCropRotation.lastObservedYear then
-        if currentYear ~= RealisticCropRotation.lastObservedYear + 1 then
-            Logging.warning("[RealisticCropRotation] Year jump detected from %d to %d",
-                RealisticCropRotation.lastObservedYear, currentYear)
-        end
-        RealisticCropRotation.lastObservedYear = currentYear
-    elseif currentYear > 0 and RealisticCropRotation.lastObservedYear == 0 then
-        RealisticCropRotation.lastObservedYear = currentYear
-    end
 
     if currentPeriod == 0 then return end
     if currentPeriod ~= RealisticCropRotation.lastObservedPeriod then
         RealisticCropRotation.lastObservedPeriod = currentPeriod
-        if RealisticCropRotation.manager ~= nil and RealisticCropRotation.manager.service ~= nil
-            and type(RealisticCropRotation.manager.service.resetNitrogenApplicationMaskForNewPeriod) == "function" then
-            RealisticCropRotation.manager.service:resetNitrogenApplicationMaskForNewPeriod()
-        end
     end
 end
 
@@ -269,12 +248,6 @@ local function loadedMission()
         RealisticCropRotation.manager:loadFromXML(savegameFolderPath)
         if g_currentMission.environment ~= nil then
             RealisticCropRotation.lastObservedPeriod = g_currentMission.environment.currentPeriod or 0
-            if RealisticCropRotation.manager.service ~= nil
-                and type(RealisticCropRotation.manager.service.getCurrentYear) == "function" then
-                RealisticCropRotation.lastObservedYear = RealisticCropRotation.manager.service:getCurrentYear()
-            else
-                RealisticCropRotation.lastObservedYear = tonumber(g_currentMission.environment.currentYear) or 0
-            end
         end
         if g_messageCenter ~= nil and MessageType ~= nil and MessageType.PERIOD_CHANGED ~= nil then
             RealisticCropRotation.periodChangeListener = {
@@ -420,22 +393,21 @@ local function hasHookContext(farmlandId)
 end
 
 local function captureCropCandidate(farmlandId, xw, xh, zw, zh)
-    local fruitTypeIndex = getFruitTypeIndexAtArea(xw, xh, zw, zh)
-    if fruitTypeIndex == nil then return nil end
-
     local service = RealisticCropRotation.manager.service
-    local shouldResolveActiveCrop = true
-    if type(service.isCoverCropForRotationHistory) == "function"
-        and service:isCoverCropForRotationHistory(fruitTypeIndex, nil) then
-        shouldResolveActiveCrop = false
+    local activeCropName = RealisticCropRotation.manager:getActiveCropName(farmlandId)
+
+    -- Precise sample at the work area. When it misses -- harvested stubble has no foliage at
+    -- the single sampled point even though the engine is still cultivating the crop
+    -- (changedArea > 0) -- fall back to the field's known active crop, so the deposit keeps
+    -- firing across the whole worked pass instead of only on the first slice.
+    local fruitTypeIndex = getFruitTypeIndexAtArea(xw, xh, zw, zh)
+    if fruitTypeIndex == nil then
+        if activeCropName == nil or activeCropName == "" then return nil end
+        local fruitType = service:getFruitTypeByCropName(activeCropName)
+        if fruitType == nil or fruitType.index == nil then return nil end
+        fruitTypeIndex = fruitType.index
     end
 
-    local activeCropName = nil
-    if shouldResolveActiveCrop
-        and RealisticCropRotation.manager ~= nil
-        and type(RealisticCropRotation.manager.getActiveCropName) == "function" then
-        activeCropName = RealisticCropRotation.manager:getActiveCropName(farmlandId)
-    end
     return {
         farmlandId = farmlandId,
         fruitTypeIndex = fruitTypeIndex,
@@ -443,12 +415,11 @@ local function captureCropCandidate(farmlandId, xw, xh, zw, zh)
     }
 end
 
-local function recordTermination(sourceName, changedArea, cropCandidate, nextActiveCropName)
+local function recordTermination(changedArea, cropCandidate, nextActiveCropName)
     if cropCandidate == nil or changedArea == nil or changedArea <= 0 then return end
     if RealisticCropRotation.manager == nil then return end
 
     local changed = RealisticCropRotation.manager:recordCropChangeFromHook(
-        sourceName,
         changedArea,
         cropCandidate,
         nextActiveCropName)
@@ -459,73 +430,69 @@ local function recordTermination(sourceName, changedArea, cropCandidate, nextAct
     end
 end
 
-local function applyTerminationNitrogen(sourceName, changedArea, xs, zs, xw, zw, xh, zh, farmlandId, cropCandidate)
-    if changedArea == nil or changedArea <= 0 then return end
-    local service = RealisticCropRotation.manager.service
-    if farmlandId == nil or farmlandId == 0 then return end
-
-    local totalStateChange = service:getTerminationBonusStateChange(farmlandId)
-    if cropCandidate ~= nil and cropCandidate.fruitTypeIndex ~= nil then
-        if type(service.getTerminationBonusStateChangeForCandidate) == "function" then
-            totalStateChange = service:getTerminationBonusStateChangeForCandidate(
-                farmlandId,
-                cropCandidate.fruitTypeIndex,
-                cropCandidate.activeCropName)
-        end
-        if type(service.getCoverCropTerminationStateChange) == "function" then
-            totalStateChange = totalStateChange
-                + service:getCoverCropTerminationStateChange(cropCandidate.fruitTypeIndex)
-        end
-    end
-
-    if totalStateChange <= 0 then return end
-    service:applyNitrogenStateChangeAtArea(totalStateChange, xs, zs, xw, zw, xh, zh, sourceName)
+-- Deposit the residue AFTER superFunc: the tool's own engine pass runs inside superFunc and
+-- would overwrite a pre-deposit (the "nitrogen only when the tool drops, then nothing" bug).
+-- The crop is captured before superFunc (still standing); applied on the worked area after.
+local function depositResidueAfterTermination(cropCandidate, startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
+    if cropCandidate == nil then return end
+    RealisticCropRotation.manager.service:applyNitrogenResidueAtArea(cropCandidate,
+        startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
 end
 
-local function wrapDensityMapDestroyHook(sourceName)
+local function wrapDensityMapDestroyHook()
     return function(startWorldX, superFunc, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, ...)
-        -- Always call the engine. Skip the mod work on early-out.
         local farmlandId = getFarmlandIdAtArea(widthWorldX, heightWorldX, widthWorldZ, heightWorldZ)
-        local shouldProcess = hasHookContext(farmlandId)
+        local process = hasHookContext(farmlandId)
 
         local cropCandidate = nil
-        if shouldProcess then
+        if process then
             cropCandidate = captureCropCandidate(farmlandId, widthWorldX, heightWorldX, widthWorldZ, heightWorldZ)
         end
 
         local changedArea, totalArea = superFunc(startWorldX, startWorldZ,
             widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, ...)
 
-        if shouldProcess then
-            recordTermination(sourceName, changedArea or 0, cropCandidate, nil)
-            applyTerminationNitrogen(sourceName, changedArea or 0,
-                startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ,
-                farmlandId, cropCandidate)
+        if process then
+            -- Tillage only deposits the residue; it must NOT touch the rotation history. Only the
+            -- seeder records a crop change (sowing hook below), so working stubble -- or running a
+            -- tool over a grass strip outside the field -- never pushes a bogus history entry.
+            -- Deposit only where the engine actually cultivated crop this call (changedArea > 0),
+            -- so it fires across the whole pass and stops on already-bare ground.
+            if (changedArea or 0) > 0 then
+                depositResidueAfterTermination(cropCandidate,
+                    startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
+            end
         end
 
         return changedArea, totalArea
     end
 end
 
-local function wrapDensityMapSowingHook(sourceName)
+local function wrapDensityMapSowingHook()
     return function(fruitIndex, superFunc, startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, ...)
         local farmlandId = getFarmlandIdAtArea(widthWorldX, heightWorldX, widthWorldZ, heightWorldZ)
-        local shouldProcess = hasHookContext(farmlandId)
-        local nextActiveCropName = shouldProcess and RealisticCropRotation.manager.service:getCropNameByFruitTypeIndex(fruitIndex) or nil
+        local process = hasHookContext(farmlandId)
 
         local cropCandidate = nil
-        if shouldProcess then
+        local nextActiveCropName = nil
+        if process then
+            nextActiveCropName = RealisticCropRotation.manager.service:getCropNameByFruitTypeIndex(fruitIndex)
             cropCandidate = captureCropCandidate(farmlandId, widthWorldX, heightWorldX, widthWorldZ, heightWorldZ)
         end
 
         local changedArea, totalArea = superFunc(fruitIndex, startWorldX, startWorldZ,
             widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, ...)
 
-        if shouldProcess then
-            recordTermination(sourceName, changedArea or 0, cropCandidate, nextActiveCropName)
-            applyTerminationNitrogen(sourceName, changedArea or 0,
-                startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ,
-                farmlandId, cropCandidate)
+        if process then
+            -- A new crop is sown here: clear the idempotency lock over the sown area so this crop
+            -- can receive its own residue when it is later worked (PF path only).
+            if (changedArea or 0) > 0 and g_modIsLoaded ~= nil and g_modIsLoaded["FS25_precisionFarming"] then
+                RealisticCropRotation.manager.service:resetNitrogenDepositLockAtArea(
+                    startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
+            end
+            -- Sowing only records the rotation change; the nitrogen deposit happens at tillage
+            -- (destroy hooks), so depositing here too would double-apply on already-worked ground.
+            recordTermination(changedArea or 0, cropCandidate, nextActiveCropName)
         end
 
         return changedArea, totalArea
@@ -543,29 +510,27 @@ local function initRealisticCropRotation()
     FSBaseMission.saveSavegame = Utils.appendedFunction(FSBaseMission.saveSavegame, onSaveToXMLFile)
     FSBaseMission.sendInitialClientState = Utils.appendedFunction(FSBaseMission.sendInitialClientState, sendInitialClientState)
 
-    if FSDensityMapUtil ~= nil and FSDensityMapUtil.updateDestroyCommonArea ~= nil then
-        FSDensityMapUtil.updateDestroyCommonArea = Utils.overwrittenFunction(
-            FSDensityMapUtil.updateDestroyCommonArea, wrapDensityMapDestroyHook("DESTROY_COMMON"))
-    end
+    -- Hook only the tool entry points (not the internal updateDestroyCommonArea they call):
+    -- one tool pass = one hooked call = one deposit, with no nesting and no re-entrancy guard.
     if FSDensityMapUtil ~= nil and FSDensityMapUtil.updateCultivatorArea ~= nil then
         FSDensityMapUtil.updateCultivatorArea = Utils.overwrittenFunction(
-            FSDensityMapUtil.updateCultivatorArea, wrapDensityMapDestroyHook("CULTIVATOR"))
+            FSDensityMapUtil.updateCultivatorArea, wrapDensityMapDestroyHook())
     end
     if FSDensityMapUtil ~= nil and FSDensityMapUtil.updateDiscHarrowArea ~= nil then
         FSDensityMapUtil.updateDiscHarrowArea = Utils.overwrittenFunction(
-            FSDensityMapUtil.updateDiscHarrowArea, wrapDensityMapDestroyHook("DISC_HARROW"))
+            FSDensityMapUtil.updateDiscHarrowArea, wrapDensityMapDestroyHook())
     end
     if FSDensityMapUtil ~= nil and FSDensityMapUtil.updatePlowArea ~= nil then
         FSDensityMapUtil.updatePlowArea = Utils.overwrittenFunction(
-            FSDensityMapUtil.updatePlowArea, wrapDensityMapDestroyHook("PLOW"))
+            FSDensityMapUtil.updatePlowArea, wrapDensityMapDestroyHook())
     end
     if FSDensityMapUtil ~= nil and FSDensityMapUtil.updateSowingArea ~= nil then
         FSDensityMapUtil.updateSowingArea = Utils.overwrittenFunction(
-            FSDensityMapUtil.updateSowingArea, wrapDensityMapSowingHook("SOWING"))
+            FSDensityMapUtil.updateSowingArea, wrapDensityMapSowingHook())
     end
     if FSDensityMapUtil ~= nil and FSDensityMapUtil.updateDirectSowingArea ~= nil then
         FSDensityMapUtil.updateDirectSowingArea = Utils.overwrittenFunction(
-            FSDensityMapUtil.updateDirectSowingArea, wrapDensityMapSowingHook("DIRECT_SOWING"))
+            FSDensityMapUtil.updateDirectSowingArea, wrapDensityMapSowingHook())
     end
 
     BaseMission.delete = Utils.appendedFunction(BaseMission.delete, function()
@@ -585,7 +550,6 @@ local function initRealisticCropRotation()
         RealisticCropRotation.broadcastDirty = false
         RealisticCropRotation.broadcastTimerMs = 0
         RealisticCropRotation.lastObservedPeriod = 0
-        RealisticCropRotation.lastObservedYear = 0
 
         if RealisticCropRotation.manager ~= nil then
             RealisticCropRotation.manager:cleanup()

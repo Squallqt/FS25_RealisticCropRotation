@@ -24,12 +24,13 @@
         <e k="rcr_status_planned_residue" v="Reliquat total rotation +%d kg/ha" />
         <e k="rcr_status_current_no_residue" v="Reliquat actuel 0 kg/ha" />
         <e k="rcr_status_planned_no_residue" v="Reliquat total rotation 0 kg/ha" />
-        <e k="rcr_hud_previous_n1"      v="Précédent cultural (N-1) :" />
-        <e k="rcr_hud_previous_n2"      v="Anté-précédent (N-2) :" />
-        <e k="rcr_hud_cover_crop"       v="Couvert végétal :" />
+        <e k="rcr_hud_previous_n1"      v="Précédent cultural (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Anté-précédent (N-2)" />
+        <e k="rcr_hud_cover_crop"       v="Couvert végétal" />
         <e k="rcr_hud_yes"              v="Oui" />
         <e k="rcr_hud_no"               v="Non" />
         <e k="rcr_hud_none"             v="Aucun" />
+        <e k="rcr_hud_residue"          v="Reliquat" />
 
         <!-- Section bars -->
         <e k="rcr_section_history"      v="Historique des Cultures" />

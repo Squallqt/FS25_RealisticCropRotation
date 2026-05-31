@@ -846,7 +846,7 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
 
     local mgr = self:getManager()
     if mgr ~= nil and type(mgr.reconcileActiveCropForFarmland) == "function" then
-        local changed = mgr:reconcileActiveCropForFarmland(farmlandId, "UI_RECONCILE")
+        local changed = mgr:reconcileActiveCropForFarmland(farmlandId)
         if changed and RealisticCropRotation ~= nil and type(RealisticCropRotation.requestBroadcast) == "function" then
             RealisticCropRotation.requestBroadcast()
         end

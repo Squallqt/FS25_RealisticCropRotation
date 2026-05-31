@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<realisticCropRotation version="1" nitrogenMaskPeriod="2">
+    <farmland id="1">
+        <plan year1="SUGARBEET" year2="SILAGEMAIZE" year3="SUGARBEET" year4="SUNFLOWER"/>
+    </farmland>
+    <farmland id="2">
+        <plan year1="SUGARBEET" year2="SOYBEAN" year3="SUNFLOWER" year4="SILAGEMAIZE"/>
+    </farmland>
+    <farmland id="4">
+        <plan year1="OAT" year2="CANOLA" year3="ONION"/>
+    </farmland>
+    <farmland id="5">
+        <plan year1="SILAGEMAIZE" year2="SUNFLOWER" year3="SOYBEAN" year4="SUGARBEET"/>
+    </farmland>
+    <farmland id="6">
+        <plan year1="GREENRYE" year2="SUGARBEET" year3="MAIZE"/>
+    </farmland>
+    <farmland id="8">
+        <plan year1="GRASS" year2="GRASS" year3="GRASS"/>
+    </farmland>
+    <farmland id="10">
+        <plan year1="ONION" year2="SUNFLOWER" year3="POTATO" year4="SOYBEAN"/>
+    </farmland>
+    <farmland id="13">
+        <plan year1="SILAGEMAIZE" year2="SUGARBEET" year3="SUNFLOWER" year4="ONION"/>
+    </farmland>
+    <farmland id="14">
+        <plan year1="SUNFLOWER" year2="WHEAT" year3="SUGARBEET"/>
+    </farmland>
+    <farmland id="15">
+        <plan year1="CANOLA" year2="ONION" year3="OAT"/>
+    </farmland>
+    <farmland id="16">
+        <plan year1="CANOLA" year2="ONION" year3="OAT"/>
+    </farmland>
+    <farmland id="25">
+        <plan year1="SUNFLOWER" year2="ONION" year3="SILAGEMAIZE" year4="SUGARBEET"/>
+    </farmland>
+    <farmland id="26">
+        <plan year1="MAIZE" year2="GREENRYE" year3="SUGARBEET"/>
+    </farmland>
+    <farmland id="29">
+        <plan year1="CANOLA" year2="MAIZE" year3="WHEAT"/>
+    </farmland>
+    <farmland id="31">
+        <plan year1="ONION" year2="OAT" year3="CANOLA"/>
+    </farmland>
+    <farmland id="34">
+        <plan year1="WHEAT" year2="SUGARBEET" year3="SUNFLOWER"/>
+    </farmland>
+    <farmland id="43">
+        <plan year1="SUGARBEET" year2="SUNFLOWER" year3="WHEAT"/>
+    </farmland>
+    <farmland id="54">
+        <plan year1="ONION" year2="SILAGEMAIZE" year3="SPELT" year4="BEETROOT"/>
+    </farmland>
+    <farmland id="55">
+        <plan year1="ONION" year2="SILAGEMAIZE" year3="SPELT" year4="BEETROOT"/>
+    </farmland>
+    <farmland id="79">
+        <plan year1="SORGHUM" year2="CANOLA" year3="SOYBEAN" year4="MAIZE"/>
+    </farmland>
+    <farmland id="80">
+        <plan year1="SORGHUM" year2="CANOLA" year3="SOYBEAN" year4="MAIZE"/>
+    </farmland>
+    <farmland id="81">
+        <plan year1="BARLEY" year2="SUNFLOWER" year3="POTATO" year4="SOYBEAN"/>
+    </farmland>
+    <farmland id="82">
+        <plan year1="SUNFLOWER" year2="SOYBEAN" year3="WINTERBARLEY" year4="CANOLA"/>
+    </farmland>
+    <farmland id="83">
+        <plan year1="BARLEY" year2="SUNFLOWER" year3="POTATO" year4="SOYBEAN"/>
+    </farmland>
+    <farmland id="93">
+        <plan year1="GRASS" year2="GRASS" year3="GRASS"/>
+    </farmland>
+    <farmland id="95">
+        <plan year1="FIELDGRASS" year2="FIELDGRASS" year3="FIELDGRASS" year4="FIELDGRASS"/>
+    </farmland>
+    <farmland id="96">
+        <plan year1="FIELDGRASS" year2="FIELDGRASS" year3="FIELDGRASS" year4="FIELDGRASS"/>
+    </farmland>
+    <farmland id="97">
+        <plan year1="FIELDGRASS" year2="FIELDGRASS" year3="FIELDGRASS" year4="FIELDGRASS"/>
+    </farmland>
+    <farmland id="98">
+        <plan year1="FIELDGRASS" year2="FIELDGRASS" year3="FIELDGRASS" year4="FIELDGRASS"/>
+    </farmland>
+    <farmland id="103">
+        <plan year1="ALFALFA" year3="WHEAT" year4="CANOLA"/>
+    </farmland>
+</realisticCropRotation>

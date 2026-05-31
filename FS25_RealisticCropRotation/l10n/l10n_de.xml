@@ -24,12 +24,13 @@
         <e k="rcr_status_planned_residue" v="Rückstand Rotation gesamt +%d kg/ha" />
         <e k="rcr_status_current_no_residue" v="Aktueller Rückstand 0 kg/ha" />
         <e k="rcr_status_planned_no_residue" v="Rückstand Rotation gesamt 0 kg/ha" />
-        <e k="rcr_hud_previous_n1"      v="Vorfrucht (N-1):" />
-        <e k="rcr_hud_previous_n2"      v="Vor-Vorfrucht (N-2):" />
-        <e k="rcr_hud_cover_crop"       v="Zwischenfrucht:" />
+        <e k="rcr_hud_previous_n1"      v="Vorfrucht (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Vor-Vorfrucht (N-2)" />
+        <e k="rcr_hud_cover_crop"       v="Zwischenfrucht" />
         <e k="rcr_hud_yes"              v="Ja" />
         <e k="rcr_hud_no"               v="Nein" />
         <e k="rcr_hud_none"             v="Keine" />
+        <e k="rcr_hud_residue"          v="N-Rest" />
 
         <!-- Section bars -->
         <e k="rcr_section_history"      v="Anbaugeschichte" />

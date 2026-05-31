@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
-<modDesc descVersion="108">
+<modDesc descVersion="109">
     <author>Squallqt</author>
     <version>1.0.0.0</version>
     <title>
@@ -60,7 +60,7 @@ Changelog :
 1.0.0.0 :
 - Publication initiale]]></fr>
     </description>
-    <iconFilename>images/menuIcon.dds</iconFilename>
+    <iconFilename>icon_RealCropRotation.dds</iconFilename>
     <multiplayer supported="true" />
 
     <extraSourceFiles>

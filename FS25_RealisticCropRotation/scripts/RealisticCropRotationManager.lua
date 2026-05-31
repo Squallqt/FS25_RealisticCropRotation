@@ -80,19 +80,6 @@ local function hasUsableRealisticCropRotationArea(farmland, field)
     return getRotationAreaHa(farmland, field) > 0
 end
 
-local function getTerrainDetailPixelToSqm()
-    if g_currentMission == nil then return nil end
-    local terrainSize = tonumber(g_currentMission.terrainSize)
-    local terrainDetailMapSize = tonumber(g_currentMission.terrainDetailMapSize)
-    if terrainSize == nil or terrainSize <= 0
-        or terrainDetailMapSize == nil or terrainDetailMapSize <= 0 then
-        return nil
-    end
-
-    local metersPerPixel = terrainSize / terrainDetailMapSize
-    return metersPerPixel * metersPerPixel
-end
-
 local function getPermanentGrasslandFallbackCropName()
     if g_fruitTypeManager == nil or g_fruitTypeManager.getFruitTypeByName == nil then return nil end
     local fieldGrass = g_fruitTypeManager:getFruitTypeByName("FIELDGRASS")
@@ -248,14 +235,60 @@ local function getActiveCropNameFromField(field)
     return tostring(fruitType.name)
 end
 
+-- Live ground type at the field, read straight from the GROUND_TYPE density map at the same
+-- sample points the crop detection uses (getFieldFruitTypeIndexFromDensityMap). This keeps the
+-- "worked" status (Cultivé/Labouré/...) as fresh as the crop status, instead of lagging behind the
+-- engine's periodic field.fieldState snapshot -- the reason the status did not always appear right
+-- after working a field. Mirrors the engine's own per-position read
+-- (WheelPhysics: getDensityAtWorldPos + FieldGroundType.getTypeByValue).
+local function getFieldGroundTypeFromDensityMap(field)
+    if g_currentMission == nil or g_currentMission.fieldGroundSystem == nil then return nil end
+    if getDensityAtWorldPos == nil or getTerrainHeightAtWorldPos == nil or g_terrainNode == nil then return nil end
+    if FieldGroundType == nil or type(FieldGroundType.getTypeByValue) ~= "function" then return nil end
+    if FieldDensityMap == nil or FieldDensityMap.GROUND_TYPE == nil then return nil end
+
+    local mapId, firstChannel, numChannels =
+        g_currentMission.fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE)
+    if mapId == nil or firstChannel == nil or numChannels == nil then return nil end
+
+    local samples = {}
+    if field ~= nil and type(field.posX) == "number" and type(field.posZ) == "number" then
+        table.insert(samples, { x = field.posX, z = field.posZ })
+    end
+    collectFieldDimensionSamples(field, samples)
+    if #samples == 0 then return nil end
+
+    local mask = 2 ^ numChannels - 1
+    local counts = {}
+    for _, sample in ipairs(samples) do
+        local wy = getTerrainHeightAtWorldPos(g_terrainNode, sample.x, 0, sample.z)
+        local bits = getDensityAtWorldPos(mapId, sample.x, wy, sample.z)
+        local value = bit32.band(bit32.rshift(bits, firstChannel), mask)
+        local groundType = FieldGroundType.getTypeByValue(value)
+        if groundType ~= nil then
+            counts[groundType] = (counts[groundType] or 0) + 1
+        end
+    end
+
+    local best, bestCount = nil, 0
+    for groundType, count in pairs(counts) do
+        if count > bestCount then best, bestCount = groundType, count end
+    end
+    return best
+end
+
 local function getNativeGroundStateIndex(field)
-    if field == nil or field.fieldState == nil then return nil end
     if FieldGroundType == nil or MapOverlayGenerator == nil
         or MapOverlayGenerator.GROWTH_STATE_INDEX == nil then
         return nil
     end
 
-    local groundType = field.fieldState.groundType
+    -- Live read first (fresh, consistent with the crop detection); fall back to the engine's
+    -- periodic fieldState snapshot only when the live read is unavailable.
+    local groundType = getFieldGroundTypeFromDensityMap(field)
+    if groundType == nil and field ~= nil and field.fieldState ~= nil then
+        groundType = field.fieldState.groundType
+    end
     if groundType == nil then return nil end
 
     local indices = MapOverlayGenerator.GROWTH_STATE_INDEX
@@ -447,7 +480,6 @@ function RealisticCropRotationManager.new()
     self.repository = RealisticCropRotationRepository.new()
     self.service = RealisticCropRotationService.new(self.repository)
     self.activeCropNameCache = {}
-    self.warnedCropChangeAreaThreshold = {}
     self.isInitialized = false
     return self
 end
@@ -457,7 +489,6 @@ function RealisticCropRotationManager:initialize()
     self.repository:clear()
     self.service:reset()
     self.activeCropNameCache = {}
-    self.warnedCropChangeAreaThreshold = {}
     self.isInitialized = true
 end
 
@@ -465,21 +496,16 @@ function RealisticCropRotationManager:cleanup()
     self.repository:clear()
     self.service:reset()
     self.activeCropNameCache = {}
-    self.warnedCropChangeAreaThreshold = {}
     self.isInitialized = false
 end
 
 function RealisticCropRotationManager:saveToXML(savegamePath)
-    if self.service ~= nil and type(self.service.saveNitrogenApplicationMask) == "function" then
-        self.service:saveNitrogenApplicationMask(savegamePath)
-    end
     return self.repository:saveToXML(savegamePath)
 end
 
 function RealisticCropRotationManager:loadFromXML(savegamePath)
     self.repository:loadFromXML(savegamePath)
     self.service:recomputeAllPendingBonuses()
-    self.service:initializeNitrogenApplicationMask(savegamePath)
 end
 
 -- =========================================================================
@@ -488,6 +514,10 @@ end
 
 function RealisticCropRotationManager:getHistory(farmlandId)
     return self.repository:getHistory(farmlandId)
+end
+
+function RealisticCropRotationManager:getLastCover(farmlandId)
+    return self.repository:getLastCover(farmlandId)
 end
 
 function RealisticCropRotationManager:getAllHistory()
@@ -601,45 +631,17 @@ function RealisticCropRotationManager:invalidateActiveCropCache(farmlandId)
     self.activeCropNameCache[n] = nil
 end
 
-function RealisticCropRotationManager:getCropChangeRequiredAreaPixels(farmlandId)
-    local numericFarmlandId = tonumber(farmlandId)
-    if numericFarmlandId == nil or numericFarmlandId <= 0 then return nil end
-
-    local field = self:getFieldByFarmlandId(numericFarmlandId)
-    local farmland = getFarmlandById(numericFarmlandId)
-    local areaHa = getRotationAreaHa(farmland, field)
-    if areaHa <= 0 then return nil end
-
-    local pixelToSqm = getTerrainDetailPixelToSqm()
-    if pixelToSqm == nil or pixelToSqm <= 0 then return nil end
-
-    local threshold = RealisticCropRotationService.CROP_CHANGE_AREA_THRESHOLD or 0.90
-    return (areaHa * 10000 / pixelToSqm) * threshold
-end
-
-function RealisticCropRotationManager:recordCropChangeFromHook(sourceName, changedArea, cropCandidate, nextActiveCropName)
+function RealisticCropRotationManager:recordCropChangeFromHook(changedArea, cropCandidate, nextActiveCropName)
     if self.service == nil or cropCandidate == nil then return false end
 
     local farmlandId = tonumber(cropCandidate.farmlandId)
     if farmlandId == nil or farmlandId <= 0 then return false end
 
-    local requiredArea = self:getCropChangeRequiredAreaPixels(farmlandId)
-    if requiredArea == nil or requiredArea <= 0 then
-        if not self.warnedCropChangeAreaThreshold[farmlandId] then
-            self.warnedCropChangeAreaThreshold[farmlandId] = true
-            Logging.warning("[RealisticCropRotation] Crop history update skipped: reliable field area or terrain detail pixel scale unavailable for farmland=%s",
-                tostring(farmlandId))
-        end
-        return false
-    end
-
     local changed = self.service:onCropChangeArea(
         farmlandId,
         cropCandidate.fruitTypeIndex,
-        sourceName,
         cropCandidate.activeCropName,
         changedArea,
-        requiredArea,
         nextActiveCropName)
     if changed then
         self:invalidateActiveCropCache(farmlandId)
@@ -647,12 +649,12 @@ function RealisticCropRotationManager:recordCropChangeFromHook(sourceName, chang
     return changed
 end
 
-function RealisticCropRotationManager:reconcileActiveCropForFarmland(farmlandId, sourceName)
+function RealisticCropRotationManager:reconcileActiveCropForFarmland(farmlandId)
     if self.service == nil then return false end
     if isPureClient() then return false end
 
     local currentCropName = self:getActiveCropName(farmlandId)
-    local changed = self.service:reconcileActiveCrop(farmlandId, currentCropName, sourceName or "UI_RECONCILE")
+    local changed = self.service:reconcileActiveCrop(farmlandId, currentCropName)
     if changed then
         self:invalidateActiveCropCache(farmlandId)
     end

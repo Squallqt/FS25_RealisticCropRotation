@@ -24,12 +24,13 @@
         <e k="rcr_status_planned_residue" v="Total rotation residue +%d kg/ha" />
         <e k="rcr_status_current_no_residue" v="Current residue 0 kg/ha" />
         <e k="rcr_status_planned_no_residue" v="Total rotation residue 0 kg/ha" />
-        <e k="rcr_hud_previous_n1"      v="Previous crop (N-1):" />
-        <e k="rcr_hud_previous_n2"      v="Crop before (N-2):" />
-        <e k="rcr_hud_cover_crop"       v="Cover crop:" />
+        <e k="rcr_hud_previous_n1"      v="Previous crop (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Crop before (N-2)" />
+        <e k="rcr_hud_cover_crop"       v="Cover crop" />
         <e k="rcr_hud_yes"              v="Yes" />
         <e k="rcr_hud_no"               v="No" />
         <e k="rcr_hud_none"             v="None" />
+        <e k="rcr_hud_residue"          v="N residue" />
 
         <!-- Section bars -->
         <e k="rcr_section_history"      v="Crop History" />

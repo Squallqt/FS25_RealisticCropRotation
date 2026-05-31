@@ -45,7 +45,7 @@ function RealisticCropRotationRepository.new()
     self.history = {}
     self.plans   = {}
     self.lastKnownActiveCrop = {}
-    self.nitrogenMaskPeriod = 0
+    self.lastCover = {}
     return self
 end
 
@@ -53,7 +53,7 @@ function RealisticCropRotationRepository:clear()
     self.history = {}
     self.plans   = {}
     self.lastKnownActiveCrop = {}
-    self.nitrogenMaskPeriod = 0
+    self.lastCover = {}
 end
 
 function RealisticCropRotationRepository:getHistory(farmlandId)
@@ -75,6 +75,12 @@ function RealisticCropRotationRepository:pushEntry(farmlandId, cropName)
     if entries == nil then
         entries = {}
         self.history[farmlandId] = entries
+    end
+
+    -- One entry per actual rotation change: ignore a crop that is already the most recent.
+    -- This is what keeps the history from growing on every tool pass over the same crop.
+    if entries[1] ~= nil and entries[1].crop == cropName then
+        return false
     end
 
     table.insert(entries, 1, { crop = cropName })
@@ -140,18 +146,40 @@ function RealisticCropRotationRepository:setLastKnownActiveCrop(farmlandId, crop
     return changed
 end
 
+-- lastCover: the last cover crop incorporated on a farmland (excluded from rotation
+-- history). Set on cover incorporation, cleared when the next main crop enters history.
+-- Used by the HUD to show the cover residue on the following crop.
+function RealisticCropRotationRepository:getLastCover(farmlandId)
+    return self.lastCover[farmlandId] or self.lastCover[tostring(farmlandId)]
+end
+
+function RealisticCropRotationRepository:setLastCover(farmlandId, coverName)
+    local numericFarmlandId = tonumber(farmlandId)
+    if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
+    if coverName == nil or coverName == "" then return false end
+
+    local normalized = string.upper(tostring(coverName))
+    local changed = self.lastCover[numericFarmlandId] ~= normalized
+    self.lastCover[numericFarmlandId] = normalized
+    self.lastCover[tostring(numericFarmlandId)] = nil
+    return changed
+end
+
+function RealisticCropRotationRepository:clearLastCover(farmlandId)
+    local numericFarmlandId = tonumber(farmlandId)
+    if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
+
+    local stringFarmlandId = tostring(numericFarmlandId)
+    local changed = self.lastCover[numericFarmlandId] ~= nil or self.lastCover[stringFarmlandId] ~= nil
+    self.lastCover[numericFarmlandId] = nil
+    self.lastCover[stringFarmlandId] = nil
+    return changed
+end
+
 function RealisticCropRotationRepository:replaceAll(newHistory, newPlans, newLastKnownActiveCrop)
     self.history = newHistory or {}
     self.plans   = newPlans or {}
     self.lastKnownActiveCrop = newLastKnownActiveCrop or {}
-end
-
-function RealisticCropRotationRepository:getNitrogenMaskPeriod()
-    return tonumber(self.nitrogenMaskPeriod) or 0
-end
-
-function RealisticCropRotationRepository:setNitrogenMaskPeriod(period)
-    self.nitrogenMaskPeriod = tonumber(period) or 0
 end
 
 function RealisticCropRotationRepository:saveToXML(savegamePath)
@@ -168,9 +196,6 @@ function RealisticCropRotationRepository:saveToXML(savegamePath)
     end
 
     setXMLInt(xmlFile, "realisticCropRotation#version", RealisticCropRotationRepository.SAVE_VERSION)
-    if self.nitrogenMaskPeriod ~= nil and self.nitrogenMaskPeriod > 0 then
-        setXMLInt(xmlFile, "realisticCropRotation#nitrogenMaskPeriod", self.nitrogenMaskPeriod)
-    end
 
     local allIds = {}
     local seen = {}
@@ -183,6 +208,10 @@ function RealisticCropRotationRepository:saveToXML(savegamePath)
         if n ~= nil and n > 0 and not seen[n] then seen[n] = true; table.insert(allIds, n) end
     end
     for farmlandId in pairs(self.lastKnownActiveCrop) do
+        local n = tonumber(farmlandId)
+        if n ~= nil and n > 0 and not seen[n] then seen[n] = true; table.insert(allIds, n) end
+    end
+    for farmlandId in pairs(self.lastCover) do
         local n = tonumber(farmlandId)
         if n ~= nil and n > 0 and not seen[n] then seen[n] = true; table.insert(allIds, n) end
     end
@@ -201,11 +230,17 @@ function RealisticCropRotationRepository:saveToXML(savegamePath)
             or self.lastKnownActiveCrop[tostring(numericFarmlandId)]
         local hasActiveCrop = activeCrop ~= nil and activeCrop ~= ""
 
-        if hasHistory or hasPlan or hasActiveCrop then
+        local cover = self.lastCover[numericFarmlandId] or self.lastCover[tostring(numericFarmlandId)]
+        local hasCover = cover ~= nil and cover ~= ""
+
+        if hasHistory or hasPlan or hasActiveCrop or hasCover then
             local farmlandKey = string.format("realisticCropRotation.farmland(%d)", farmlandIndex)
             setXMLInt(xmlFile, farmlandKey .. "#id", numericFarmlandId)
             if hasActiveCrop then
                 setXMLString(xmlFile, farmlandKey .. "#lastKnownActiveCrop", tostring(activeCrop))
+            end
+            if hasCover then
+                setXMLString(xmlFile, farmlandKey .. "#lastCover", tostring(cover))
             end
 
             if hasHistory then
@@ -267,7 +302,7 @@ function RealisticCropRotationRepository:loadFromXML(savegamePath)
     self.history = {}
     self.plans   = {}
     self.lastKnownActiveCrop = {}
-    self.nitrogenMaskPeriod = getXMLInt(xmlFile, "realisticCropRotation#nitrogenMaskPeriod") or 0
+    self.lastCover = {}
 
     local farmlandIndex = 0
     while true do
@@ -279,6 +314,11 @@ function RealisticCropRotationRepository:loadFromXML(savegamePath)
             local activeCrop = getXMLString(xmlFile, farmlandKey .. "#lastKnownActiveCrop")
             if activeCrop ~= nil and activeCrop ~= "" then
                 self.lastKnownActiveCrop[farmlandId] = string.upper(tostring(activeCrop))
+            end
+
+            local cover = getXMLString(xmlFile, farmlandKey .. "#lastCover")
+            if cover ~= nil and cover ~= "" then
+                self.lastCover[farmlandId] = string.upper(tostring(cover))
             end
 
             local entries = {}
