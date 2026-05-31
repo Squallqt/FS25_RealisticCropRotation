@@ -416,8 +416,8 @@ local function captureCropCandidate(farmlandId, xw, xh, zw, zh)
 end
 
 local function recordTermination(changedArea, cropCandidate, nextActiveCropName)
-    if cropCandidate == nil or changedArea == nil or changedArea <= 0 then return end
-    if RealisticCropRotation.manager == nil then return end
+    if cropCandidate == nil or changedArea == nil or changedArea <= 0 then return false end
+    if RealisticCropRotation.manager == nil then return false end
 
     local changed = RealisticCropRotation.manager:recordCropChangeFromHook(
         changedArea,
@@ -428,6 +428,7 @@ local function recordTermination(changedArea, cropCandidate, nextActiveCropName)
         refreshRealisticCropRotationFrame()
         RealisticCropRotation.requestBroadcast()
     end
+    return changed
 end
 
 -- Deposit the residue AFTER superFunc: the tool's own engine pass runs inside superFunc and
@@ -484,14 +485,36 @@ local function wrapDensityMapSowingHook()
             widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, ...)
 
         if process then
-            -- A new crop is sown here: clear the idempotency lock over the sown area so this crop
-            -- can receive its own residue when it is later worked (PF path only).
-            if (changedArea or 0) > 0 and g_modIsLoaded ~= nil and g_modIsLoaded["FS25_precisionFarming"] then
-                RealisticCropRotation.manager.service:resetNitrogenDepositLockAtArea(
-                    startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
-            end
-            -- Sowing only records the rotation change; the nitrogen deposit happens at tillage
-            -- (destroy hooks), so depositing here too would double-apply on already-worked ground.
+            -- Normal sowing starts the next crop cycle; it does not destroy stubble, so it never
+            -- deposits residue. The PF lock reset is consumed later, when that crop is terminated.
+            recordTermination(changedArea or 0, cropCandidate, nextActiveCropName)
+        end
+
+        return changedArea, totalArea
+    end
+end
+
+local function wrapDensityMapDirectSowingHook()
+    return function(fruitIndex, superFunc, startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, ...)
+        local farmlandId = getFarmlandIdAtArea(widthWorldX, heightWorldX, widthWorldZ, heightWorldZ)
+        local process = hasHookContext(farmlandId)
+
+        local cropCandidate = nil
+        local nextActiveCropName = nil
+        if process then
+            nextActiveCropName = RealisticCropRotation.manager.service:getCropNameByFruitTypeIndex(fruitIndex)
+            cropCandidate = captureCropCandidate(farmlandId, widthWorldX, heightWorldX, widthWorldZ, heightWorldZ)
+        end
+
+        local changedArea, totalArea = superFunc(fruitIndex, startWorldX, startWorldZ,
+            widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, ...)
+
+        if process and (changedArea or 0) > 0 then
+            -- Direct sowing destroys the existing stubble and sows the next crop in the same
+            -- native engine call. Deposit first for the terminated stubble, then record the crop
+            -- transition for the next cycle.
+            depositResidueAfterTermination(cropCandidate,
+                startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
             recordTermination(changedArea or 0, cropCandidate, nextActiveCropName)
         end
 
@@ -530,7 +553,7 @@ local function initRealisticCropRotation()
     end
     if FSDensityMapUtil ~= nil and FSDensityMapUtil.updateDirectSowingArea ~= nil then
         FSDensityMapUtil.updateDirectSowingArea = Utils.overwrittenFunction(
-            FSDensityMapUtil.updateDirectSowingArea, wrapDensityMapSowingHook())
+            FSDensityMapUtil.updateDirectSowingArea, wrapDensityMapDirectSowingHook())
     end
 
     BaseMission.delete = Utils.appendedFunction(BaseMission.delete, function()

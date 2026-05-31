@@ -5,11 +5,8 @@
 -- Nitrogen application strategy
 -- -----------------------------
 -- The residue is restituted the way the base game already does it for cover crops: by
--- adding fertilizer over the worked area through the native FSDensityMapUtil.updateSprayArea
--- (SprayType.FERTILIZER), exactly like a fertilizing cultivator. The base game owns the
--- nitrogen-restitution function; Precision Farming, when present, only reads that and shows
--- it in kg N/ha. The mod therefore writes no PF map and applies no hack. See
--- applyNitrogenResidueAtArea.
+-- adding fertilizer over the worked area. With Precision Farming present it writes PF's
+-- nitrogen map directly; without PF it falls back to the native spray-level map.
 --
 -- Cover crops (isCatchCrop=true at runtime, e.g. OILSEEDRADISH) restitute nothing here --
 -- getResidueStateChangeForTermination returns 0 for them -- because the base game already
@@ -39,6 +36,7 @@ function RealisticCropRotationService.new(repository)
     self.pendingBonus = {}            -- farmlandId -> { n1StateChange, n2StateChange }
     self.cropNameByFruitTypeIndex = {}
     self.nitrogenDepositLock = nil    -- transient idempotency lock (created on first deposit)
+    self.nitrogenDepositLockResetCrop = {}
     return self
 end
 
@@ -49,6 +47,7 @@ function RealisticCropRotationService:reset()
         pcall(delete, self.nitrogenDepositLock)
     end
     self.nitrogenDepositLock = nil
+    self.nitrogenDepositLockResetCrop = {}
 end
 
 function RealisticCropRotationService:getNitrogenKgPerHaFromStateChange(stateChange)
@@ -260,6 +259,7 @@ function RealisticCropRotationService:onCropChangeArea(farmlandId, fruitTypeInde
 
     local pushed = self:pushHistoryCrop(numericFarmlandId, normalizedCropName)
     local activeChanged = self:setLastKnownActiveCrop(numericFarmlandId, nextActiveCropName)
+    self:markNitrogenDepositLockResetCrop(numericFarmlandId, nextActiveCropName)
     return pushed or activeChanged
 end
 
@@ -302,6 +302,8 @@ function RealisticCropRotationService:applyNitrogenResidueAtArea(cropCandidate, 
     if residue <= 0 then return end
 
     if g_modIsLoaded ~= nil and g_modIsLoaded["FS25_precisionFarming"] then
+        local cropName = self:getCropNameByFruitTypeIndex(cropCandidate.fruitTypeIndex)
+        self:consumeNitrogenDepositLockResetCrop(cropCandidate.farmlandId, cropName)
         self:addNitrogenToPrecisionFarming(residue, xs, zs, xw, zw, xh, zh)
     else
         self:addFertilizerToSprayLevel(residue, xs, zs, xw, zw, xh, zh)
@@ -309,8 +311,8 @@ function RealisticCropRotationService:applyNitrogenResidueAtArea(cropCandidate, 
 end
 
 -- Transient, in-memory idempotency lock (NOT the old persisted .grle): a 1-bit map the size of
--- the nitrogen map that marks pixels already given a residue. It is never saved, never tied to a
--- period; it is reset per worked area when a new crop is sown. Created lazily on first deposit.
+-- the nitrogen map that marks pixels already given a residue. It is never saved and is cleared
+-- for the crop being terminated when a sowing hook has started that crop's cycle.
 function RealisticCropRotationService:getNitrogenDepositLock(nitrogenMap)
     if self.nitrogenDepositLock ~= nil then return self.nitrogenDepositLock end
     if createBitVectorMap == nil or loadBitVectorMapNew == nil or getBitVectorMapSize == nil then return nil end
@@ -370,23 +372,47 @@ function RealisticCropRotationService:addNitrogenToPrecisionFarming(residue, xs,
     nitrogenMap:setMinimapRequiresUpdate(true)
 end
 
--- Clear the idempotency lock over a worked area, so the next crop grown there can be fertilized
--- again. Called from the sowing hooks (a new crop starts its own residue cycle).
-function RealisticCropRotationService:resetNitrogenDepositLockAtArea(xs, zs, xw, zw, xh, zh)
+function RealisticCropRotationService:markNitrogenDepositLockResetCrop(farmlandId, cropName)
+    local numericFarmlandId = tonumber(farmlandId)
+    if numericFarmlandId == nil or numericFarmlandId <= 0 then return end
+
+    local normalizedCropName = self:normalizeCropName(cropName)
+    if normalizedCropName == nil then return end
+
+    self.nitrogenDepositLockResetCrop[numericFarmlandId] = normalizedCropName
+    self.nitrogenDepositLockResetCrop[tostring(numericFarmlandId)] = nil
+end
+
+function RealisticCropRotationService:clearNitrogenDepositLock()
     local lock = self.nitrogenDepositLock
     if lock == nil then return end
-    local pf = getPrecisionFarmingInstance()
-    local nitrogenMap = pf ~= nil and pf.nitrogenMap or nil
-    if nitrogenMap == nil then return end
 
-    local size = nitrogenMap.sizeX
-    local terrainSize = g_currentMission.terrainSize
-    local function toPixel(c) return size * (c + terrainSize * 0.5) / terrainSize end
+    if delete ~= nil then
+        pcall(delete, lock)
+        self.nitrogenDepositLock = nil
+        return
+    end
+
+    if DensityMapModifier == nil then return end
 
     local lockModifier = DensityMapModifier.new(lock, 0, 1, g_terrainNode)
-    lockModifier:setPolygonRoundingMode(DensityRoundingMode.INCLUSIVE)
-    lockModifier:setParallelogramDensityMapCoords(toPixel(xs), toPixel(zs), toPixel(xw), toPixel(zw), toPixel(xh), toPixel(zh), DensityCoordType.POINT_POINT_POINT)
     lockModifier:executeSet(0)
+end
+
+function RealisticCropRotationService:consumeNitrogenDepositLockResetCrop(farmlandId, cropName)
+    local numericFarmlandId = tonumber(farmlandId)
+    if numericFarmlandId == nil or numericFarmlandId <= 0 then return end
+
+    local normalizedCropName = self:normalizeCropName(cropName)
+    if normalizedCropName == nil then return end
+
+    local pendingCrop = self.nitrogenDepositLockResetCrop[numericFarmlandId]
+        or self.nitrogenDepositLockResetCrop[tostring(numericFarmlandId)]
+    if pendingCrop ~= normalizedCropName then return end
+
+    self:clearNitrogenDepositLock()
+    self.nitrogenDepositLockResetCrop[numericFarmlandId] = nil
+    self.nitrogenDepositLockResetCrop[tostring(numericFarmlandId)] = nil
 end
 
 -- No Precision Farming: add vanilla fertilizer onto the SPRAY_LEVEL map over the worked field
