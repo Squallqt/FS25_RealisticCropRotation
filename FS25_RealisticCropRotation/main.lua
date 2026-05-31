@@ -412,7 +412,6 @@ local function depositResidueAfterTermination(cropCandidate, changedArea, startW
     local changed = RealisticCropRotation.manager.service:applyNitrogenResidueAtArea(cropCandidate,
         startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, changedArea)
     if changed then
-        refreshRealisticCropRotationFrame()
         RealisticCropRotation.requestBroadcast()
     end
     return changed
