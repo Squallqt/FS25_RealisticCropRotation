@@ -544,10 +544,13 @@ end
 -- Deposit the residue AFTER superFunc: the tool's own engine pass runs inside superFunc and
 -- would overwrite a pre-deposit (the "nitrogen only when the tool drops, then nothing" bug).
 -- The crop is captured before superFunc (still standing); applied on the worked area after.
-local function depositResidueAfterTermination(cropCandidate, startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
+-- consume = true (harvest hook only) empties the worked area of the nitrogen the crop took up
+-- during growth before restituting the residue; destruction hooks never consume (the plant was
+-- not harvested, so nothing was exported).
+local function depositResidueAfterTermination(cropCandidate, startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, consume)
     if cropCandidate == nil then return false end
     return RealisticCropRotation.manager.service:applyNitrogenResidueAtArea(cropCandidate,
-        startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
+        startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, consume == true)
 end
 
 local function wrapDensityMapDestroyHook()
@@ -683,7 +686,8 @@ local function wrapDensityMapHarvestHook()
                     fruitTypeIndex = fruitIndex,
                     activeCropName = cropName,
                     residueCycle = service:getResidueCycle(farmlandId),
-                }, startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
+                }, startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ,
+                    service:cropConsumesNitrogenAtHarvest(fruitIndex))
             end
         end
 

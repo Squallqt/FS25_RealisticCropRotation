@@ -299,41 +299,77 @@ function RealisticCropRotationService:getResidueApplicationForTermination(farmla
     }
 end
 
+-- True when, per Precision Farming's own data, the crop takes up soil nitrogen as it grows -- i.e.
+-- it has a fertilization target > 0 (cereals, oilseeds, roots, grass...). Nitrogen-fixing legumes
+-- (soybean, pea) have targetLevel 0 in PrecisionFarming.xml and must NOT empty the soil at harvest.
+-- The value is read straight from PF at runtime, so the decision is the game's data, not a guess.
+function RealisticCropRotationService:cropConsumesNitrogenAtHarvest(fruitTypeIndex)
+    if fruitTypeIndex == nil then return false end
+    local pf = getPrecisionFarmingInstance()
+    local nitrogenMap = pf ~= nil and pf.nitrogenMap or nil
+    if nitrogenMap == nil then return false end
+
+    local requirement = nil
+    local byIndex = nitrogenMap.fruitTypeIndexToFruitRequirement
+    if type(byIndex) == "table" then requirement = byIndex[fruitTypeIndex] end
+    if requirement == nil and type(nitrogenMap.fruitRequirements) == "table" then
+        for _, req in ipairs(nitrogenMap.fruitRequirements) do
+            if type(req) == "table" and tonumber(req.fruitTypeIndex) == fruitTypeIndex then
+                requirement = req
+                break
+            end
+        end
+    end
+    if type(requirement) ~= "table" then return false end
+
+    if (tonumber(requirement.targetLevel) or 0) > 0 then return true end
+    local bySoilType = requirement.bySoilType
+    if type(bySoilType) == "table" then
+        for _, entry in pairs(bySoilType) do
+            if type(entry) == "table" and (tonumber(entry.targetLevel) or 0) > 0 then return true end
+        end
+    end
+    return false
+end
+
 -- Server-side. Restitutes the crop residue the same way FS25_MulchingFertilizes does for a
 -- mulcher, with the same two paths: with Precision Farming it writes PF's own nitrogen map;
 -- without it, it adds vanilla fertilizer (SPRAY_LEVEL). Runs AFTER superFunc so the engine's
 -- tillage pass cannot overwrite it. The work-area parallelogram keeps it behind the tool.
-function RealisticCropRotationService:applyNitrogenResidueAtArea(cropCandidate, xs, zs, xw, zw, xh, zh)
+-- consume = the harvested crop took up the soil nitrogen during growth: the worked area is emptied
+-- (set to the restituted residue, which may be 0) instead of having the residue added on top. PF
+-- does not model this at harvest, so the mod does it; it is only ever passed by the harvest hook.
+function RealisticCropRotationService:applyNitrogenResidueAtArea(cropCandidate, xs, zs, xw, zw, xh, zh, consume)
     if cropCandidate == nil or cropCandidate.fruitTypeIndex == nil then return false end
 
     local residueApplication = self:getResidueApplicationForTermination(cropCandidate.farmlandId, cropCandidate.fruitTypeIndex)
-    if residueApplication == nil or (residueApplication.stateChange or 0) <= 0 then
+    local residue = residueApplication ~= nil and (tonumber(residueApplication.stateChange) or 0) or 0
+
+    -- Nothing to write when the crop neither consumes its nitrogen nor restitutes a residue.
+    if not consume and residue <= 0 then
         return self.repository:clearAppliedResidue(cropCandidate.farmlandId)
     end
 
-    local cropName = residueApplication.cropName
-    if cropName == nil then return false end
-
-    local residue = residueApplication.stateChange
     local residueCycle = tonumber(cropCandidate.residueCycle) or self:getResidueCycle(cropCandidate.farmlandId)
     local applied = false
     local unit = "STATE"
     local sprayLevel = 0
     if g_modIsLoaded ~= nil and g_modIsLoaded["FS25_precisionFarming"] then
-        applied = self:addNitrogenToPrecisionFarming(residue, residueCycle, xs, zs, xw, zw, xh, zh)
-    else
+        applied = self:addNitrogenToPrecisionFarming(residue, residueCycle, consume == true, xs, zs, xw, zw, xh, zh)
+    elseif residue > 0 then
+        -- Vanilla has no nitrogen map, so crop consumption is not modelled; only the +1 residue.
         unit = "SPRAY_LEVEL"
         sprayLevel = 1
         applied = self:addFertilizerToSprayLevel(xs, zs, xw, zw, xh, zh)
     end
 
-    if not applied then
+    if not applied or residue <= 0 then
         return self.repository:clearAppliedResidue(cropCandidate.farmlandId)
     end
 
     return self.repository:recordAppliedResidue(
         cropCandidate.farmlandId,
-        residueApplication.displayCropName or cropName,
+        residueApplication.displayCropName or residueApplication.cropName,
         residue,
         sprayLevel,
         unit)
@@ -370,7 +406,7 @@ end
 -- standalone (not terrain-attached), so world coords are converted to its pixel space and
 -- setParallelogramDensityMapCoords is used, like FS25_MulchingFertilizes' destroy path. The
 -- transient lock makes it idempotent: each pixel only receives the residue once per crop.
-function RealisticCropRotationService:addNitrogenToPrecisionFarming(residue, residueCycle, xs, zs, xw, zw, xh, zh)
+function RealisticCropRotationService:addNitrogenToPrecisionFarming(residue, residueCycle, consume, xs, zs, xw, zw, xh, zh)
     local pf = getPrecisionFarmingInstance()
     local nitrogenMap = pf ~= nil and pf.nitrogenMap or nil
     if nitrogenMap == nil then return false end
@@ -398,11 +434,19 @@ function RealisticCropRotationService:addNitrogenToPrecisionFarming(residue, res
         lockFilter:setValueCompareParams(DensityValueCompareType.NOTEQUAL, lockGeneration)
     end
 
-    -- Saturate the band that would overflow maxValue, then add the residue to the rest.
-    nFilter:setValueCompareParams(DensityValueCompareType.BETWEEN, maxValue - residue + 1, maxValue)
-    if lockFilter ~= nil then modifier:executeSet(maxValue, lockFilter, nFilter) else modifier:executeSet(maxValue, nFilter) end
-    nFilter:setValueCompareParams(DensityValueCompareType.BETWEEN, 0, maxValue - residue)
-    if lockFilter ~= nil then modifier:executeAdd(residue, lockFilter, nFilter) else modifier:executeAdd(residue, nFilter) end
+    if consume then
+        -- The harvested crop took up the soil nitrogen as it grew: the worked area is set to exactly
+        -- the restituted residue (everything consumed, then the residue added back -- residue may be
+        -- 0). One lock-gated set, so overlapping combine slices never re-zero an already-made deposit.
+        local setValue = math.min(residue, maxValue)
+        if lockFilter ~= nil then modifier:executeSet(setValue, lockFilter) else modifier:executeSet(setValue) end
+    else
+        -- Saturate the band that would overflow maxValue, then add the residue to the rest.
+        nFilter:setValueCompareParams(DensityValueCompareType.BETWEEN, maxValue - residue + 1, maxValue)
+        if lockFilter ~= nil then modifier:executeSet(maxValue, lockFilter, nFilter) else modifier:executeSet(maxValue, nFilter) end
+        nFilter:setValueCompareParams(DensityValueCompareType.BETWEEN, 0, maxValue - residue)
+        if lockFilter ~= nil then modifier:executeAdd(residue, lockFilter, nFilter) else modifier:executeAdd(residue, nFilter) end
+    end
 
     -- Mark the whole worked area as done for this crop so a later overlapping slice skips it.
     if lock ~= nil then
