@@ -429,29 +429,71 @@ local function getFruitTypeDesc(fruitTypeIndex)
     return g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
 end
 
-local function isResidueGrowthState(fruitTypeIndex, growthState)
-    local state = tonumber(growthState) or 0
-    if state <= 0 then return false end
+local function addResidueState(states, seenStates, state)
+    local numericState = tonumber(state)
+    if numericState == nil or numericState <= 0 or seenStates[numericState] then return end
+    seenStates[numericState] = true
+    table.insert(states, numericState)
+end
 
-    local fruitType = getFruitTypeDesc(fruitTypeIndex)
-    if fruitType == nil then return false end
+local function getResidueGrowthStates(fruitType)
+    local states = {}
+    local seenStates = {}
 
-    if type(fruitType.getIsCut) == "function" and fruitType:getIsCut(state) then return true end
-    if type(fruitType.getIsWithered) == "function" and fruitType:getIsWithered(state) then return true end
-    if type(fruitType.cutStates) == "table" and fruitType.cutStates[state] then return true end
-    if tonumber(fruitType.cutState) == state then return true end
-    if tonumber(fruitType.witheredState) == state then return true end
-    return false
+    if type(fruitType.cutStates) == "table" then
+        for state, isCut in pairs(fruitType.cutStates) do
+            if isCut then addResidueState(states, seenStates, state) end
+        end
+    end
+
+    addResidueState(states, seenStates, fruitType.cutState)
+
+    if type(fruitType.harvestTransitions) == "table" then
+        for _, state in pairs(fruitType.harvestTransitions) do
+            addResidueState(states, seenStates, state)
+        end
+    end
+
+    addResidueState(states, seenStates, fruitType.witheredState)
+    return states
 end
 
 local function hasResidueFruitArea(fruitTypeIndex, xs, zs, xw, zw, xh, zh)
-    if FSDensityMapUtil == nil or type(FSDensityMapUtil.getFruitArea) ~= "function" then return false end
     if fruitTypeIndex == nil or fruitTypeIndex == FruitType.UNKNOWN then return false end
+    if DensityMapModifier == nil or DensityMapFilter == nil
+        or DensityValueCompareType == nil or DensityCoordType == nil then
+        return false
+    end
 
-    local fruitValue, _, _, growthState =
-        FSDensityMapUtil.getFruitArea(fruitTypeIndex, xs, zs, xw, zw, xh, zh)
-    if (tonumber(fruitValue) or 0) <= 0 then return false end
-    return isResidueGrowthState(fruitTypeIndex, growthState)
+    local fruitType = getFruitTypeDesc(fruitTypeIndex)
+    if fruitType == nil or fruitType.terrainDataPlaneId == nil
+        or fruitType.startStateChannel == nil or fruitType.numStateChannels == nil then
+        return false
+    end
+
+    local residueStates = getResidueGrowthStates(fruitType)
+    if residueStates[1] == nil then return false end
+
+    local terrainRootNode = g_currentMission ~= nil and g_currentMission.terrainRootNode or g_terrainNode
+    local modifier = DensityMapModifier.new(
+        fruitType.terrainDataPlaneId,
+        fruitType.startStateChannel,
+        fruitType.numStateChannels,
+        terrainRootNode)
+    modifier:setParallelogramWorldCoords(xs, zs, xw, zw, xh, zh, DensityCoordType.POINT_POINT_POINT)
+
+    local filter = DensityMapFilter.new(
+        fruitType.terrainDataPlaneId,
+        fruitType.startStateChannel,
+        fruitType.numStateChannels)
+
+    for _, state in ipairs(residueStates) do
+        filter:setValueCompareParams(DensityValueCompareType.EQUAL, state)
+        local _, area = modifier:executeGet(filter)
+        if (area or 0) > 0 then return true end
+    end
+
+    return false
 end
 
 local function makeCropCandidateFromFruitType(farmlandId, fruitTypeIndex, residueCycle)
@@ -526,13 +568,20 @@ local function captureDirectSowingCropCandidate(farmlandId, xs, zs, xw, zw, xh, 
     local repository = service.repository
     local entries = repository ~= nil and repository:getHistoryNoAlloc(farmlandId) or nil
     local cropNames = {}
+    local seenCropNames = {}
+    local function addCropName(cropName)
+        if cropName == nil or cropName == "" or seenCropNames[cropName] then return end
+        seenCropNames[cropName] = true
+        table.insert(cropNames, cropName)
+    end
+
     local lastKnownCrop = repository ~= nil and repository:getLastKnownActiveCrop(farmlandId) or nil
-    if lastKnownCrop ~= nil and lastKnownCrop ~= "" then table.insert(cropNames, lastKnownCrop) end
+    addCropName(lastKnownCrop)
     if entries ~= nil and entries[1] ~= nil and entries[1].crop ~= nil and entries[1].crop ~= "" then
-        table.insert(cropNames, entries[1].crop)
+        addCropName(entries[1].crop)
     end
     local activeCropName = RealisticCropRotation.manager:getActiveCropName(farmlandId)
-    if activeCropName ~= nil and activeCropName ~= "" then table.insert(cropNames, activeCropName) end
+    addCropName(activeCropName)
 
     for _, cropName in ipairs(cropNames) do
         local candidate = makeCropCandidateFromCropName(farmlandId, cropName, currentCycle)
