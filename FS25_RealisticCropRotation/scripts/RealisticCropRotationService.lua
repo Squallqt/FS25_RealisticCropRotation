@@ -102,6 +102,24 @@ function RealisticCropRotationService:getResidueEntry(cropName)
     return nil
 end
 
+-- Residue-release event for a crop, driving the mode-exclusive deposit:
+--   "harvest"      : deposited at harvest (cutFruitArea) -- grain crops.
+--   "destroy"      : deposited at mechanical destruction -- perennial/multi-cut forage, roots, veg.
+--   "destroyGreen" : deposited at destruction only while still green -- green-manure dual-use crops.
+-- The value is resolved at config load (family default + per-crop override) and stored in
+-- RealisticCropRotation.cropConfig.residueEvent. A crop never deposits at more than one event,
+-- so a save/reload between harvest and a later tillage can never double-deposit.
+function RealisticCropRotationService:getResidueEvent(cropName)
+    local normalizedCropName = self:normalizeCropName(cropName)
+    if normalizedCropName == nil then return "harvest" end
+    local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
+    if config ~= nil and config.residueEvent ~= nil then
+        local event = config.residueEvent[normalizedCropName]
+        if event ~= nil then return event end
+    end
+    return "harvest"
+end
+
 function RealisticCropRotationService:getFruitTypeByCropName(cropName)
     if cropName == nil or g_fruitTypeManager == nil or g_fruitTypeManager.getFruitTypeByName == nil then
         return nil

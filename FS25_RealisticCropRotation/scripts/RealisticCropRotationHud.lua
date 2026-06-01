@@ -133,7 +133,8 @@ function RealisticCropRotationHud.addHistoryLines(fieldBox, farmlandId)
 end
 
 -- Terrain HUD reads the same applied-residue source as the menu status pill.
--- It shows only residue that was actually deposited by a stubble-destruction hook.
+-- It shows only residue that was actually deposited by the residue-release hook
+-- (at harvest for grain crops, at destruction for forage / green-manure crops).
 function RealisticCropRotationHud.addResidueLines(fieldBox, farmlandId)
     if fieldBox == nil or fieldBox.addLine == nil then return end
 

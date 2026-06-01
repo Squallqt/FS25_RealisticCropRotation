@@ -22,8 +22,26 @@ RealisticCropRotation.pendingSyncData = nil
 RealisticCropRotation.isEnabled = true
 RealisticCropRotation.cropConfig = nil
 
+-- Resolves a crop's nitrogen residue-release event from its explicit residueEvent attribute,
+-- falling back to a family default. The deposit is mode-exclusive (one event per crop), which is
+-- what keeps it safe across a save/reload: a crop is never eligible at two different events, so a
+-- harvest followed later by a tillage can never double-deposit.
+local function resolveResidueEvent(rawEvent, upperFamily)
+    if rawEvent ~= nil then
+        local event = string.lower(rawEvent)
+        if event == "destroy" then return "destroy" end
+        if event == "destroygreen" then return "destroyGreen" end
+        if event == "harvest" then return "harvest" end
+    end
+    if upperFamily == "FORAGE" or upperFamily == "ROOT"
+        or upperFamily == "VEGETABLE" or upperFamily == "COVER" then
+        return "destroy"
+    end
+    return "harvest"
+end
+
 -- Loads cropConfig.xml once at mod init.
--- Returns a config table: { families, nitrogen, coverCrops }
+-- Returns a config table: { families, nitrogen, coverCrops, residueEvent }
 local function loadCropConfig()
     local filePath = modDirectory .. "cropConfig.xml"
     local xmlFile = loadXMLFile("RealisticCropRotationCropConfig", filePath)
@@ -32,7 +50,7 @@ local function loadCropConfig()
         return nil
     end
 
-    local config = { families = {}, nitrogen = {}, coverCrops = {} }
+    local config = { families = {}, nitrogen = {}, coverCrops = {}, residueEvent = {} }
     local i = 0
     while true do
         local key = string.format("realisticCropRotationCrops.crop(%d)", i)
@@ -43,16 +61,20 @@ local function loadCropConfig()
         local n1      = getXMLInt(xmlFile,    key .. "#n1") or 0
         local n2      = getXMLInt(xmlFile,    key .. "#n2") or 0
         local cover   = getXMLBool(xmlFile,   key .. "#cover") or false
+        local event   = getXMLString(xmlFile, key .. "#residueEvent")
 
         if name ~= nil and name ~= "" then
             name = string.upper(name)
+            local upperFamily = nil
             if family ~= nil and family ~= "" then
-                config.families[name] = string.upper(family)
+                upperFamily = string.upper(family)
+                config.families[name] = upperFamily
             end
             if n1 > 0 or n2 > 0 then
                 config.nitrogen[name] = { n1 = n1, n2 = n2 }
             end
             if cover   then config.coverCrops[name] = true end
+            config.residueEvent[name] = resolveResidueEvent(event, upperFamily)
         end
         i = i + 1
     end
@@ -69,7 +91,6 @@ RealisticCropRotation.broadcastDirty = false
 RealisticCropRotation.broadcastTimerMs = 0
 RealisticCropRotation.broadcastUpdateable = nil
 RealisticCropRotation.farmlandOwnerChangeListener = nil
-RealisticCropRotation.directSowingResidueSessions = {}
 
 function RealisticCropRotation.requestBroadcast()
     if g_server == nil then return end
@@ -227,7 +248,6 @@ local function loadedMission()
         RealisticCropRotation.cropConfig = loadCropConfig()
     end
 
-    RealisticCropRotation.directSowingResidueSessions = {}
     RealisticCropRotation.manager = RealisticCropRotationManager.new()
     RealisticCropRotation.manager:initialize()
 
@@ -326,16 +346,22 @@ local function sendInitialClientState(_self, connection)
 end
 
 -- =========================================================================
--- Density-map destroy/sow hooks.
+-- Density-map harvest/destroy/sow hooks.
 -- =========================================================================
 --
--- One server-side path per hook:
+-- The nitrogen residue is released at exactly ONE event per crop (mode-exclusive), chosen so it is
+-- always in the soil before the next sowing -- a Precision Farming seeder then deducts it (no
+-- overshoot) instead of stacking on top:
+--   * harvest-mode crops (grain): deposited at harvest (cutFruitArea).
+--   * destroy / destroyGreen crops (forage, roots, green manure): deposited at destruction.
+-- Because no crop is eligible at two events, a save/reload between harvest and a later tillage can
+-- never double-deposit. Rotation history is pushed only by the sowing hooks. Per hook:
 --   1. Cheap farmland lookup (1 call).
 --   2. Sample the pre-operation fruit type at the work area center.
---   3. Resolve active crop before mutation for cover-crop filtering.
+--   3. Resolve the residue-release mode before mutation (cover crops are filtered out).
 --   4. Call the engine.
---   5. Push to history only after cumulative significant field area changed.
---   6. Apply the pending nitrogen residue inside the worked area.
+--   5. Push to history only after cumulative significant field area changed (sowing hooks).
+--   6. Apply the nitrogen residue inside the worked area when the crop's mode matches the event.
 
 local function getFarmlandIdAtArea(xw, xh, zw, zh)
     if g_farmlandManager == nil then return nil end
@@ -382,10 +408,17 @@ local function getFruitTypeIndexAtArea(xs, zs, xw, zw, xh, zh)
     return bestIndex
 end
 
-local function hasHookContext(farmlandId)
+-- Server-side, mod-ready check without a farmland id -- used by the harvest hook to early-out on
+-- the hot cut path before paying for a farmland lookup.
+local function isHookServerActive()
     if not RealisticCropRotation.isEnabled then return false end
     if g_currentMission == nil or not g_currentMission:getIsServer() then return false end
     if RealisticCropRotation.manager == nil or RealisticCropRotation.manager.service == nil then return false end
+    return true
+end
+
+local function hasHookContext(farmlandId)
+    if not isHookServerActive() then return false end
     if farmlandId == nil or farmlandId == 0 then return false end
     return true
 end
@@ -420,8 +453,6 @@ local function captureCropCandidate(farmlandId, xs, zs, xw, zw, xh, zh)
         residueCycle = service:getResidueCycle(farmlandId),
     }
 end
-
-local DIRECT_SOWING_SESSION_TIMEOUT_MS = 30000
 
 local function getFruitTypeDesc(fruitTypeIndex)
     if g_fruitTypeManager == nil or fruitTypeIndex == nil then return nil end
@@ -496,107 +527,24 @@ local function hasResidueFruitArea(fruitTypeIndex, xs, zs, xw, zw, xh, zh)
     return false
 end
 
-local function makeCropCandidateFromFruitType(farmlandId, fruitTypeIndex, residueCycle)
+-- Deposit decision for the destruction hooks (cultivator / disc / plow / direct sow).
+--   * destroy crops (multi-cut forage, roots, veg): always release at destruction (plough-out).
+--   * harvest and destroyGreen crops: release only while still STANDING/green. harvest crops
+--     normally deposit via the harvest hook; this branch also covers a standing crop destroyed
+--     before it was ever harvested (green-manure use), and -- crucially -- skips a harvested
+--     stubble, whose cut/withered foliage states are present. The gate reads that persistent
+--     foliage state (not the transient deposit lock), so harvest followed by a later tillage
+--     never double-deposits, even across a save/reload.
+-- Evaluate BEFORE superFunc, while the crop is still standing; deposit AFTER superFunc.
+local function shouldDepositAtDestruction(cropCandidate, xs, zs, xw, zw, xh, zh)
+    if cropCandidate == nil or cropCandidate.fruitTypeIndex == nil then return false end
     local service = RealisticCropRotation.manager.service
-    local cropName = service:getCropNameByFruitTypeIndex(fruitTypeIndex)
-    if cropName == nil or cropName == "" then return nil end
-
-    return {
-        farmlandId = farmlandId,
-        fruitTypeIndex = fruitTypeIndex,
-        activeCropName = cropName,
-        residueCycle = residueCycle or service:getResidueCycle(farmlandId),
-    }
-end
-
-local function makeCropCandidateFromCropName(farmlandId, cropName, residueCycle)
-    if cropName == nil or cropName == "" then return nil end
-    local service = RealisticCropRotation.manager.service
-    local fruitType = service:getFruitTypeByCropName(cropName)
-    if fruitType == nil or fruitType.index == nil then return nil end
-    return makeCropCandidateFromFruitType(farmlandId, fruitType.index, residueCycle)
-end
-
-local function getDirectSowingSession(farmlandId)
-    local sessions = RealisticCropRotation.directSowingResidueSessions
-    if sessions == nil then return nil end
-
-    local numericFarmlandId = tonumber(farmlandId)
-    if numericFarmlandId == nil or numericFarmlandId <= 0 then return nil end
-
-    local session = sessions[numericFarmlandId]
-    if session == nil then return nil end
-
-    local nowMs = tonumber(g_time) or 0
-    if nowMs > 0 and (nowMs - (tonumber(session.tMs) or 0)) > DIRECT_SOWING_SESSION_TIMEOUT_MS then
-        sessions[numericFarmlandId] = nil
-        return nil
+    local cropName = cropCandidate.activeCropName
+    if cropName == nil or cropName == "" then
+        cropName = service:getCropNameByFruitTypeIndex(cropCandidate.fruitTypeIndex)
     end
-    return session
-end
-
-local function storeDirectSowingSession(cropCandidate)
-    if cropCandidate == nil then return end
-    local numericFarmlandId = tonumber(cropCandidate.farmlandId)
-    if numericFarmlandId == nil or numericFarmlandId <= 0 then return end
-
-    RealisticCropRotation.directSowingResidueSessions[numericFarmlandId] = {
-        fruitTypeIndex = cropCandidate.fruitTypeIndex,
-        activeCropName = cropCandidate.activeCropName,
-        residueCycle = cropCandidate.residueCycle,
-        tMs = tonumber(g_time) or 0,
-    }
-end
-
-local function captureDirectSowingCropCandidate(farmlandId, xs, zs, xw, zw, xh, zh)
-    local service = RealisticCropRotation.manager.service
-    local currentCycle = service:getResidueCycle(farmlandId)
-
-    -- Trust the established session: the stubble crop was already identified AND validated with a
-    -- fruit-map scan when the session was stored. Re-running hasResidueFruitArea (a DensityMapModifier
-    -- + executeGet per growth state) on EVERY direct-sowing hook call was the FPS cost -- the seeder
-    -- fires continuously while drilling. The scan now happens once per session, not once per frame.
-    local session = getDirectSowingSession(farmlandId)
-    if session ~= nil then
-        session.tMs = tonumber(g_time) or 0
-        return makeCropCandidateFromFruitType(farmlandId, session.fruitTypeIndex, session.residueCycle)
-    end
-
-    local fruitTypeIndex = getFruitTypeIndexAtArea(xs, zs, xw, zw, xh, zh)
-    if fruitTypeIndex ~= nil and hasResidueFruitArea(fruitTypeIndex, xs, zs, xw, zw, xh, zh) then
-        local candidate = makeCropCandidateFromFruitType(farmlandId, fruitTypeIndex, currentCycle)
-        storeDirectSowingSession(candidate)
-        return candidate
-    end
-
-    local repository = service.repository
-    local entries = repository ~= nil and repository:getHistoryNoAlloc(farmlandId) or nil
-    local cropNames = {}
-    local seenCropNames = {}
-    local function addCropName(cropName)
-        if cropName == nil or cropName == "" or seenCropNames[cropName] then return end
-        seenCropNames[cropName] = true
-        table.insert(cropNames, cropName)
-    end
-
-    local lastKnownCrop = repository ~= nil and repository:getLastKnownActiveCrop(farmlandId) or nil
-    addCropName(lastKnownCrop)
-    if entries ~= nil and entries[1] ~= nil and entries[1].crop ~= nil and entries[1].crop ~= "" then
-        addCropName(entries[1].crop)
-    end
-    local activeCropName = RealisticCropRotation.manager:getActiveCropName(farmlandId)
-    addCropName(activeCropName)
-
-    for _, cropName in ipairs(cropNames) do
-        local candidate = makeCropCandidateFromCropName(farmlandId, cropName, currentCycle)
-        if candidate ~= nil
-            and hasResidueFruitArea(candidate.fruitTypeIndex, xs, zs, xw, zw, xh, zh) then
-            storeDirectSowingSession(candidate)
-            return candidate
-        end
-    end
-
-    return nil
+    if service:getResidueEvent(cropName) == "destroy" then return true end
+    return not hasResidueFruitArea(cropCandidate.fruitTypeIndex, xs, zs, xw, zw, xh, zh)
 end
 
 local function recordTermination(changedArea, cropCandidate, nextActiveCropName)
@@ -630,8 +578,13 @@ local function wrapDensityMapDestroyHook()
         local process = hasHookContext(farmlandId)
 
         local cropCandidate = nil
+        local depositAtDestruction = false
         if process then
             cropCandidate = captureCropCandidate(farmlandId,
+                startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
+            -- Decide before superFunc, while the crop is still standing (the green-manure gate
+            -- reads the live foliage state).
+            depositAtDestruction = shouldDepositAtDestruction(cropCandidate,
                 startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
         end
 
@@ -642,9 +595,9 @@ local function wrapDensityMapDestroyHook()
             -- Tillage only deposits the residue; it must NOT touch the rotation history. Only the
             -- seeder records a crop change (sowing hook below), so working stubble -- or running a
             -- tool over a grass strip outside the field -- never pushes a bogus history entry.
-            -- Deposit only where the engine actually cultivated crop this call (changedArea > 0),
-            -- so it fires across the whole pass and stops on already-bare ground.
-            if (changedArea or 0) > 0 then
+            -- Deposit only for destroy-mode crops (harvest-mode residue was already deposited at
+            -- harvest), and only where the engine actually cultivated crop this call (changedArea > 0).
+            if depositAtDestruction and (changedArea or 0) > 0 then
                 depositResidueAfterTermination(cropCandidate,
                     startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
             end
@@ -686,14 +639,15 @@ local function wrapDensityMapDirectSowingHook()
         local farmlandId = getFarmlandIdAtArea(widthWorldX, heightWorldX, widthWorldZ, heightWorldZ)
         local process = hasHookContext(farmlandId)
 
-        local residueCandidate = nil
-        local rotationCandidate = nil
+        local cropCandidate = nil
         local nextActiveCropName = nil
+        local depositAtDestruction = false
         if process then
             nextActiveCropName = RealisticCropRotation.manager.service:getCropNameByFruitTypeIndex(fruitIndex)
-            residueCandidate = captureDirectSowingCropCandidate(farmlandId,
+            cropCandidate = captureCropCandidate(farmlandId,
                 startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
-            rotationCandidate = residueCandidate or captureCropCandidate(farmlandId,
+            -- Decide before superFunc, while the terminated crop is still standing.
+            depositAtDestruction = shouldDepositAtDestruction(cropCandidate,
                 startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
         end
 
@@ -701,15 +655,61 @@ local function wrapDensityMapDirectSowingHook()
             widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, ...)
 
         if process and (changedArea or 0) > 0 then
-            -- Direct sowing destroys the existing stubble and sows the next crop in the same
-            -- native engine call. Deposit first for the terminated stubble, then record the crop
-            -- transition for the next cycle.
-            depositResidueAfterTermination(residueCandidate,
-                startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
-            recordTermination(changedArea or 0, rotationCandidate, nextActiveCropName)
+            -- Direct sowing destroys the existing stubble and sows the next crop in one native call.
+            -- Deposit only for destroy-mode terminated crops: harvest-mode crops were already given
+            -- their residue at harvest, so it is in the soil before this pass and the seeder's own
+            -- nitrogen is not overshot. Then record the crop transition for the next cycle.
+            if depositAtDestruction then
+                depositResidueAfterTermination(cropCandidate,
+                    startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
+            end
+            recordTermination(changedArea or 0, cropCandidate, nextActiveCropName)
         end
 
         return changedArea, totalArea
+    end
+end
+
+-- Hooked on FSDensityMapUtil.cutFruitArea (gameSource Cutter.lua): harvesting is when a grain crop
+-- releases its residue, so it lands in the soil before the next (direct) sowing and a Precision
+-- Farming seeder deducts it instead of stacking on top. Only harvest-mode crops deposit here.
+local function wrapDensityMapHarvestHook()
+    return function(fruitIndex, superFunc, startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, ...)
+        -- Fast path: forage / roots / green-manure / cover / client / disabled return immediately,
+        -- with NO farmland lookup -- two table reads keep this hot harvest path cheap.
+        if not isHookServerActive() then
+            return superFunc(fruitIndex, startWorldX, startWorldZ,
+                widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, ...)
+        end
+
+        local service = RealisticCropRotation.manager.service
+        local cropName = service:getCropNameByFruitTypeIndex(fruitIndex)
+        if cropName == nil or service:getResidueEvent(cropName) ~= "harvest" then
+            return superFunc(fruitIndex, startWorldX, startWorldZ,
+                widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, ...)
+        end
+
+        -- cutFruitArea returns 12 values (area, totalArea, sprayFactor, plowFactor, limeFactor,
+        -- weedFactor, stubbleFactor, rollerFactor, beeYieldBonusPerc, growthState, _,
+        -- terrainDetailPixelsSum). Capture all to forward them unchanged -- no table allocation.
+        local r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12 = superFunc(
+            fruitIndex, startWorldX, startWorldZ,
+            widthWorldX, widthWorldZ, heightWorldX, heightWorldZ, ...)
+
+        if (r1 or 0) > 0 then
+            -- Farmland lookup deferred to here: it only runs when crop was actually cut.
+            local farmlandId = getFarmlandIdAtArea(widthWorldX, heightWorldX, widthWorldZ, heightWorldZ)
+            if farmlandId ~= nil and farmlandId ~= 0 then
+                depositResidueAfterTermination({
+                    farmlandId = farmlandId,
+                    fruitTypeIndex = fruitIndex,
+                    activeCropName = cropName,
+                    residueCycle = service:getResidueCycle(farmlandId),
+                }, startWorldX, startWorldZ, widthWorldX, widthWorldZ, heightWorldX, heightWorldZ)
+            end
+        end
+
+        return r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12
     end
 end
 
@@ -726,6 +726,7 @@ local function initRealisticCropRotation()
 
     -- Hook only the tool entry points (not the internal updateDestroyCommonArea they call):
     -- one tool pass = one hooked call = one deposit, with no nesting and no re-entrancy guard.
+    -- cutFruitArea (harvest) is hooked too, as the residue-release event for grain crops.
     if FSDensityMapUtil ~= nil and FSDensityMapUtil.updateCultivatorArea ~= nil then
         FSDensityMapUtil.updateCultivatorArea = Utils.overwrittenFunction(
             FSDensityMapUtil.updateCultivatorArea, wrapDensityMapDestroyHook())
@@ -746,6 +747,12 @@ local function initRealisticCropRotation()
         FSDensityMapUtil.updateDirectSowingArea = Utils.overwrittenFunction(
             FSDensityMapUtil.updateDirectSowingArea, wrapDensityMapDirectSowingHook())
     end
+    -- Harvest is the residue-release event for grain crops: deposit at cutFruitArea so it precedes
+    -- the next sowing and the seeder deducts it (no overshoot). Mode-exclusive with the destroy hooks.
+    if FSDensityMapUtil ~= nil and FSDensityMapUtil.cutFruitArea ~= nil then
+        FSDensityMapUtil.cutFruitArea = Utils.overwrittenFunction(
+            FSDensityMapUtil.cutFruitArea, wrapDensityMapHarvestHook())
+    end
 
     BaseMission.delete = Utils.appendedFunction(BaseMission.delete, function()
         if g_currentMission ~= nil and RealisticCropRotation.broadcastUpdateable ~= nil
@@ -759,7 +766,6 @@ local function initRealisticCropRotation()
         RealisticCropRotation.farmlandOwnerChangeListener = nil
         RealisticCropRotation.broadcastDirty = false
         RealisticCropRotation.broadcastTimerMs = 0
-        RealisticCropRotation.directSowingResidueSessions = {}
 
         if RealisticCropRotation.manager ~= nil then
             RealisticCropRotation.manager:cleanup()
