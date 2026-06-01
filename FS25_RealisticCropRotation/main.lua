@@ -552,8 +552,12 @@ local function captureDirectSowingCropCandidate(farmlandId, xs, zs, xw, zw, xh, 
     local service = RealisticCropRotation.manager.service
     local currentCycle = service:getResidueCycle(farmlandId)
 
+    -- Trust the established session: the stubble crop was already identified AND validated with a
+    -- fruit-map scan when the session was stored. Re-running hasResidueFruitArea (a DensityMapModifier
+    -- + executeGet per growth state) on EVERY direct-sowing hook call was the FPS cost -- the seeder
+    -- fires continuously while drilling. The scan now happens once per session, not once per frame.
     local session = getDirectSowingSession(farmlandId)
-    if session ~= nil and hasResidueFruitArea(session.fruitTypeIndex, xs, zs, xw, zw, xh, zh) then
+    if session ~= nil then
         session.tMs = tonumber(g_time) or 0
         return makeCropCandidateFromFruitType(farmlandId, session.fruitTypeIndex, session.residueCycle)
     end
