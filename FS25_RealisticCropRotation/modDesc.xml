@@ -8,57 +8,51 @@
         <fr>Assolement</fr>
     </title>
     <description>
-        <en><![CDATA[Tracks crop history per farmland (up to 4 completed main crops) and applies a nitrogen restitution bonus to the harvested area when legumes return nitrogen to the soil.
+        <en><![CDATA[Tracks crop history per farmland (up to 4 completed main crops) and returns nitrogen to the soil from legume and green-manure residues, at the moment each crop naturally releases it.
 
 Compatible with vanilla farming and with Precision Farming (PF).
 
-Features:
-- Per-farmland crop history (N-1 to N-4)
-- Automatic nitrogen bonus at harvest after legumes (alfalfa, clover, pea, soybean, green bean)
-- Two-tier bonus: stronger after a legume in N-1, residual effect when a legume was grown in N-2
-- Multiplayer-ready (server-authoritative, late-join sync)
-- Optimized: O(1) hook operations, no per-frame density map scans
+How the residue works:
+- Grain legumes (soybean, pea, green bean): released at harvest, so it is already in the soil before the next sowing.
+- Forage legumes (alfalfa, clover): released when the stand is ploughed out, never at a forage cut.
+- Green-manure crops (vetch-rye, mustard): released only when the plant is destroyed while still green; nothing when it is harvested for grain.
+- With Precision Farming the residue is written to the nitrogen map, so a seeder in auto mode applies less and the total stays at the crop's target. Without PF it adds one vanilla fertilizer level.
 
-Issues & suggestions: https://github.com/Squallqt/FS25_RealisticCropRotation
+Two-tier amount: a stronger first-year credit (after a legume in N-1) plus a residual second-year credit (when a legume was grown in N-2).
 
-Changelog:
+Per-farmland crop history (N-1 to N-4). Multiplayer-ready (server-authoritative, late-join sync). Optimized: O(1) hook operations, no per-frame density-map scans.
 
-1.0.0.0:
-- Initial release]]></en>
-        <de><![CDATA[Speichert die Fruchtfolge pro Feld (bis zu 4 abgeschlossene Hauptkulturen) und vergibt einen Stickstoffbonus auf die geerntete Fläche, wenn Leguminosen Stickstoff in den Boden zurückführen.
+Issues & suggestions: https://github.com/Squallqt/FS25_RealisticCropRotation]]></en>
+        <de><![CDATA[Speichert die Fruchtfolge pro Feld (bis zu 4 abgeschlossene Hauptkulturen) und führt Stickstoff aus den Rückständen von Leguminosen und Gründüngung in den Boden zurück – in dem Moment, in dem die jeweilige Kultur ihn natürlich freisetzt.
 
 Kompatibel mit der Standardlandwirtschaft und mit Precision Farming (PF).
 
-Funktionen:
-- Fruchtfolgehistorie pro Feld (N-1 bis N-4)
-- Automatischer Stickstoffbonus bei der Ernte nach Leguminosen (Luzerne, Klee, Erbsen, Sojabohnen, grüne Bohnen)
-- Zweistufiger Bonus: stärker nach einer Leguminose in N-1, Restwirkung wenn eine Leguminose in N-2 angebaut wurde
-- Mehrspieler-fähig (serverseitige Autorität, Synchronisation für späten Beitritt)
-- Optimiert: O(1) Hook-Operationen, keine Density-Map-Scans pro Frame
+So wirkt der Rückstand:
+- Körnerleguminosen (Sojabohne, Erbse, grüne Bohne): bei der Ernte freigesetzt, also bereits im Boden vor der nächsten Aussaat.
+- Futterleguminosen (Luzerne, Klee): beim Umbruch des Bestands freigesetzt, nie bei einem Schnitt.
+- Gründüngung (Wicke-Roggen, Senf): nur freigesetzt, wenn die Pflanze noch grün zerstört wird; nichts bei der Kornernte.
+- Mit Precision Farming wird der Rückstand in die Stickstoffkarte geschrieben: eine Sämaschine im Automatikmodus bringt weniger aus und die Gesamtmenge bleibt beim Kulturziel. Ohne PF wird eine Standard-Düngestufe hinzugefügt.
 
-Issues & Vorschläge: https://github.com/Squallqt/FS25_RealisticCropRotation
+Zweistufige Menge: ein stärkeres Erstjahres-Guthaben (nach einer Leguminose in N-1) plus ein Restguthaben im zweiten Jahr (wenn in N-2 eine Leguminose angebaut wurde).
 
-Changelog:
+Fruchtfolgehistorie pro Feld (N-1 bis N-4). Mehrspieler-fähig (serverseitige Autorität, Synchronisation für späten Beitritt). Optimiert: O(1) Hook-Operationen, keine Density-Map-Scans pro Frame.
 
-1.0.0.0:
-- Erstveröffentlichung]]></de>
-        <fr><![CDATA[Mémorise l'historique des cultures par parcelle (jusqu'à 4 cultures principales terminées) et applique un bonus de restitution azotée sur la zone récoltée lorsque les légumineuses restituent de l'azote au sol.
+Issues & Vorschläge: https://github.com/Squallqt/FS25_RealisticCropRotation]]></de>
+        <fr><![CDATA[Mémorise l'historique des cultures par parcelle (jusqu'à 4 cultures principales terminées) et restitue de l'azote au sol à partir des résidus de légumineuses et d'engrais verts, au moment où chaque culture le libère naturellement.
 
 Compatible avec l'agriculture vanilla et avec Precision Farming (PF).
 
-Fonctionnalités :
-- Historique des cultures par parcelle (N-1 à N-4)
-- Bonus d'azote automatique à la récolte après une légumineuse (luzerne, trèfle, pois, soja, haricot vert)
-- Bonus à deux niveaux : plus important après une légumineuse en N-1, effet résiduel si une légumineuse a été cultivée en N-2
-- Compatible multijoueur (autorité serveur, synchronisation à la connexion tardive)
-- Optimisé : opérations O(1) dans les hooks, pas de scan de density map par frame
+Fonctionnement du reliquat :
+- Légumineuses à grain (soja, pois, haricot vert) : libéré à la récolte, donc déjà présent dans le sol avant le semis suivant.
+- Légumineuses fourragères (luzerne, trèfle) : libéré au retournement de la prairie, jamais à une fauche.
+- Engrais verts (vesce-seigle, moutarde) : libéré uniquement si la plante est détruite encore verte ; rien si elle est récoltée au grain.
+- Avec Precision Farming, le reliquat est écrit sur la carte d'azote : un semoir en mode auto applique moins et le total reste à la cible de la culture. Sans PF, il ajoute un niveau d'engrais vanilla.
 
-Issues & suggestions : https://github.com/Squallqt/FS25_RealisticCropRotation
+Montant à deux niveaux : un crédit de première année plus important (après une légumineuse en N-1) et un crédit résiduel de deuxième année (si une légumineuse a été cultivée en N-2).
 
-Changelog :
+Historique des cultures par parcelle (N-1 à N-4). Compatible multijoueur (autorité serveur, synchronisation à la connexion tardive). Optimisé : opérations O(1) dans les hooks, pas de scan de density map par frame.
 
-1.0.0.0 :
-- Publication initiale]]></fr>
+Issues & suggestions : https://github.com/Squallqt/FS25_RealisticCropRotation]]></fr>
     </description>
     <iconFilename>icon_RealCropRotation.dds</iconFilename>
     <multiplayer supported="true" />

@@ -460,41 +460,14 @@ local function getFruitTypeDesc(fruitTypeIndex)
     return g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
 end
 
-local function addResidueState(states, seenStates, state)
-    local numericState = tonumber(state)
-    if numericState == nil or numericState <= 0 or seenStates[numericState] then return end
-    seenStates[numericState] = true
-    table.insert(states, numericState)
-end
-
-local function getResidueGrowthStates(fruitType)
-    local states = {}
-    local seenStates = {}
-
-    if type(fruitType.cutStates) == "table" then
-        for state, isCut in pairs(fruitType.cutStates) do
-            if isCut then addResidueState(states, seenStates, state) end
-        end
-    end
-
-    addResidueState(states, seenStates, fruitType.cutState)
-
-    if type(fruitType.harvestTransitions) == "table" then
-        for _, state in pairs(fruitType.harvestTransitions) do
-            addResidueState(states, seenStates, state)
-        end
-    end
-
-    addResidueState(states, seenStates, fruitType.witheredState)
-    return states
-end
-
-local function hasResidueFruitArea(fruitTypeIndex, xs, zs, xw, zw, xh, zh)
+-- True when a STANDING crop (green or mature, but not harvested/cut/withered) of this fruit type
+-- is present at the work-area centre. A single density read of the fruit growth channel is cheap
+-- and -- unlike scanning for "residue" foliage states, which several fruits (e.g. vetch-rye,
+-- mustard) do not even define -- it reliably tells a green-manure plant apart from a harvested
+-- stubble. This is what gates the green-only residue deposit (harvest- and destroyGreen-mode crops).
+local function isStandingCropAtArea(fruitTypeIndex, xs, zs, xw, zw, xh, zh)
     if fruitTypeIndex == nil or fruitTypeIndex == FruitType.UNKNOWN then return false end
-    if DensityMapModifier == nil or DensityMapFilter == nil
-        or DensityValueCompareType == nil or DensityCoordType == nil then
-        return false
-    end
+    if getDensityAtWorldPos == nil or bit32 == nil then return false end
 
     local fruitType = getFruitTypeDesc(fruitTypeIndex)
     if fruitType == nil or fruitType.terrainDataPlaneId == nil
@@ -502,29 +475,34 @@ local function hasResidueFruitArea(fruitTypeIndex, xs, zs, xw, zw, xh, zh)
         return false
     end
 
-    local residueStates = getResidueGrowthStates(fruitType)
-    if residueStates[1] == nil then return false end
-
-    local terrainRootNode = g_currentMission ~= nil and g_currentMission.terrainRootNode or g_terrainNode
-    local modifier = DensityMapModifier.new(
-        fruitType.terrainDataPlaneId,
-        fruitType.startStateChannel,
-        fruitType.numStateChannels,
-        terrainRootNode)
-    modifier:setParallelogramWorldCoords(xs, zs, xw, zw, xh, zh, DensityCoordType.POINT_POINT_POINT)
-
-    local filter = DensityMapFilter.new(
-        fruitType.terrainDataPlaneId,
-        fruitType.startStateChannel,
-        fruitType.numStateChannels)
-
-    for _, state in ipairs(residueStates) do
-        filter:setValueCompareParams(DensityValueCompareType.EQUAL, state)
-        local _, area = modifier:executeGet(filter)
-        if (area or 0) > 0 then return true end
+    -- Centre of the work-area parallelogram (same midpoint used for the farmland lookup).
+    local cx = (xw + xh) * 0.5
+    local cz = (zw + zh) * 0.5
+    local cy = 0
+    if getTerrainHeightAtWorldPos ~= nil and g_terrainNode ~= nil then
+        cy = getTerrainHeightAtWorldPos(g_terrainNode, cx, 0, cz)
     end
 
-    return false
+    local bits = getDensityAtWorldPos(fruitType.terrainDataPlaneId, cx, cy, cz)
+    local mask = 2 ^ fruitType.numStateChannels - 1
+    local growthState = bit32.band(bit32.rshift(bits, fruitType.startStateChannel), mask)
+    if growthState <= 0 then return false end
+
+    if type(fruitType.getIsCut) == "function" then
+        local okCut, isCut = pcall(fruitType.getIsCut, fruitType, growthState)
+        if okCut and isCut then return false end
+    elseif fruitType.cutState ~= nil and growthState == tonumber(fruitType.cutState) then
+        return false
+    end
+
+    if type(fruitType.getIsWithered) == "function" then
+        local okWith, isWithered = pcall(fruitType.getIsWithered, fruitType, growthState)
+        if okWith and isWithered then return false end
+    elseif fruitType.witheredState ~= nil and growthState == tonumber(fruitType.witheredState) then
+        return false
+    end
+
+    return true
 end
 
 -- Deposit decision for the destruction hooks (cultivator / disc / plow / direct sow).
@@ -544,7 +522,7 @@ local function shouldDepositAtDestruction(cropCandidate, xs, zs, xw, zw, xh, zh)
         cropName = service:getCropNameByFruitTypeIndex(cropCandidate.fruitTypeIndex)
     end
     if service:getResidueEvent(cropName) == "destroy" then return true end
-    return not hasResidueFruitArea(cropCandidate.fruitTypeIndex, xs, zs, xw, zw, xh, zh)
+    return isStandingCropAtArea(cropCandidate.fruitTypeIndex, xs, zs, xw, zw, xh, zh)
 end
 
 local function recordTermination(changedArea, cropCandidate, nextActiveCropName)
@@ -738,6 +716,12 @@ local function initRealisticCropRotation()
     if FSDensityMapUtil ~= nil and FSDensityMapUtil.updatePlowArea ~= nil then
         FSDensityMapUtil.updatePlowArea = Utils.overwrittenFunction(
             FSDensityMapUtil.updatePlowArea, wrapDensityMapDestroyHook())
+    end
+    -- Mulcher (broyeur) destroys standing vegetation: it is a valid green-manure termination, so
+    -- it deposits like the other destruction tools (gated to standing/green crops).
+    if FSDensityMapUtil ~= nil and FSDensityMapUtil.updateMulcherArea ~= nil then
+        FSDensityMapUtil.updateMulcherArea = Utils.overwrittenFunction(
+            FSDensityMapUtil.updateMulcherArea, wrapDensityMapDestroyHook())
     end
     if FSDensityMapUtil ~= nil and FSDensityMapUtil.updateSowingArea ~= nil then
         FSDensityMapUtil.updateSowingArea = Utils.overwrittenFunction(
