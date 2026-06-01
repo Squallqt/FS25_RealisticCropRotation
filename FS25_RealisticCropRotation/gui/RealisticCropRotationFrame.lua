@@ -167,10 +167,6 @@ function RealisticCropRotationFrame:getManager()
     return g_currentMission.realisticCropRotationManager
 end
 
-function RealisticCropRotationFrame:checkBonus(farmlandId)
-    return self:getActiveNitrogenResidueInfo(farmlandId) ~= nil
-end
-
 ---Returns the residue that has actually been applied on the selected farmland.
 -- @param integer farmlandId Farmland identifier
 -- @return table|nil residueInfo Applied residue display data, or nil when no residue exists

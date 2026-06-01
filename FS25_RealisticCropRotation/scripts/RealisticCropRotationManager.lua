@@ -505,7 +505,6 @@ end
 
 function RealisticCropRotationManager:loadFromXML(savegamePath)
     self.repository:loadFromXML(savegamePath)
-    self.service:recomputeAllPendingBonuses()
 end
 
 -- =========================================================================
@@ -518,11 +517,6 @@ end
 
 function RealisticCropRotationManager:getAllHistory()
     return self.repository:getAllHistory()
-end
-
-function RealisticCropRotationManager:getPendingBonus(farmlandId)
-    if farmlandId == nil or self.service == nil then return nil end
-    return self.service.pendingBonus[farmlandId]
 end
 
 function RealisticCropRotationManager:getAppliedResidue(farmlandId)

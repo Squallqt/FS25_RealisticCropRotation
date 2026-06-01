@@ -9,7 +9,7 @@
 -- nitrogen map directly; without PF it falls back to the native spray-level map.
 --
 -- Cover crops (isCatchCrop=true at runtime, e.g. OILSEEDRADISH) restitute nothing here --
--- getResidueStateChangeForTermination returns 0 for them -- because the base game already
+-- getResidueApplicationForTermination returns nil for them -- because the base game already
 -- gives them their residue on incorporation.
 RealisticCropRotationService = {}
 local RealisticCropRotationService_mt = Class(RealisticCropRotationService)
@@ -35,25 +35,19 @@ end
 function RealisticCropRotationService.new(repository)
     local self = setmetatable({}, RealisticCropRotationService_mt)
     self.repository = repository
-    self.pendingBonus = {}            -- farmlandId -> { n1StateChange, n2StateChange }
     self.cropNameByFruitTypeIndex = {}
     self.residueCycleByFarmland = {}  -- farmlandId -> current residue lock generation
     self.nitrogenDepositLock = nil    -- transient idempotency lock (created on first deposit)
-    self.nitrogenDepositLockSizeX = nil
-    self.nitrogenDepositLockSizeY = nil
     return self
 end
 
 function RealisticCropRotationService:reset()
-    self.pendingBonus = {}
     self.cropNameByFruitTypeIndex = {}
     self.residueCycleByFarmland = {}
     if self.nitrogenDepositLock ~= nil and delete ~= nil then
         pcall(delete, self.nitrogenDepositLock)
     end
     self.nitrogenDepositLock = nil
-    self.nitrogenDepositLockSizeX = nil
-    self.nitrogenDepositLockSizeY = nil
 end
 
 function RealisticCropRotationService:getNitrogenKgPerHaFromStateChange(stateChange)
@@ -73,11 +67,6 @@ function RealisticCropRotationService:getNitrogenKgFromStates(stateChange)
         if ok and type(kg) == "number" then return kg end
     end
     return self:getNitrogenKgPerHaFromStateChange(states)
-end
-
-function RealisticCropRotationService:getCurrentPeriod()
-    if g_currentMission == nil or g_currentMission.environment == nil then return 0 end
-    return g_currentMission.environment.currentPeriod or 0
 end
 
 function RealisticCropRotationService:getCropNameByFruitTypeIndex(fruitTypeIndex)
@@ -154,34 +143,6 @@ function RealisticCropRotationService:isCoverCropForRotationHistory(fruitTypeInd
     return false
 end
 
-function RealisticCropRotationService:recomputePendingBonus(farmlandId)
-    local entries = self.repository:getHistory(farmlandId)
-    local n1Change = 0
-    local n2Change = 0
-
-    if entries[1] ~= nil then
-        local entry = self:getResidueEntry(entries[1].crop)
-        if entry ~= nil then n1Change = entry.n1 or 0 end
-    end
-    if entries[2] ~= nil then
-        local entry = self:getResidueEntry(entries[2].crop)
-        if entry ~= nil then n2Change = entry.n2 or 0 end
-    end
-
-    if n1Change > 0 or n2Change > 0 then
-        self.pendingBonus[farmlandId] = { n1StateChange = n1Change, n2StateChange = n2Change }
-    else
-        self.pendingBonus[farmlandId] = nil
-    end
-end
-
-function RealisticCropRotationService:recomputeAllPendingBonuses()
-    self.pendingBonus = {}
-    for farmlandId in pairs(self.repository:getAllHistory()) do
-        self:recomputePendingBonus(farmlandId)
-    end
-end
-
 function RealisticCropRotationService:pushHistoryCrop(farmlandId, cropName)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
@@ -192,11 +153,7 @@ function RealisticCropRotationService:pushHistoryCrop(farmlandId, cropName)
         return false
     end
 
-    local changed = self.repository:pushEntry(numericFarmlandId, normalizedCropName)
-    if changed then
-        self:recomputePendingBonus(numericFarmlandId)
-    end
-    return changed
+    return self.repository:pushEntry(numericFarmlandId, normalizedCropName)
 end
 
 function RealisticCropRotationService:getResidueCycle(farmlandId)
@@ -219,8 +176,6 @@ function RealisticCropRotationService:advanceResidueCycle(farmlandId)
             pcall(delete, self.nitrogenDepositLock)
         end
         self.nitrogenDepositLock = nil
-        self.nitrogenDepositLockSizeX = nil
-        self.nitrogenDepositLockSizeY = nil
         self.residueCycleByFarmland = {}
         nextCycle = 1
     end
@@ -326,14 +281,6 @@ function RealisticCropRotationService:getResidueApplicationForTermination(farmla
     }
 end
 
-function RealisticCropRotationService:getResidueStateChangeForTermination(farmlandId, fruitTypeIndex)
-    local residue = self:getResidueApplicationForTermination(farmlandId, fruitTypeIndex)
-    if residue == nil then
-        return 0
-    end
-    return residue.stateChange or 0
-end
-
 -- Server-side. Restitutes the crop residue the same way FS25_MulchingFertilizes does for a
 -- mulcher, with the same two paths: with Precision Farming it writes PF's own nitrogen map;
 -- without it, it adds vanilla fertilizer (SPRAY_LEVEL). Runs AFTER superFunc so the engine's
@@ -359,7 +306,7 @@ function RealisticCropRotationService:applyNitrogenResidueAtArea(cropCandidate, 
     else
         unit = "SPRAY_LEVEL"
         sprayLevel = 1
-        applied = self:addFertilizerToSprayLevel(residue, xs, zs, xw, zw, xh, zh)
+        applied = self:addFertilizerToSprayLevel(xs, zs, xw, zw, xh, zh)
     end
 
     if not applied then
@@ -389,8 +336,6 @@ function RealisticCropRotationService:getNitrogenDepositLock(nitrogenMap)
         RealisticCropRotationService.NITROGEN_DEPOSIT_LOCK_CHANNELS, false)
     if not newOk then pcall(delete, lock); return nil end
     self.nitrogenDepositLock = lock
-    self.nitrogenDepositLockSizeX = w
-    self.nitrogenDepositLockSizeY = h
     return lock
 end
 
@@ -457,7 +402,10 @@ end
 -- No Precision Farming: add one vanilla fertilizer stage onto the SPRAY_LEVEL map over the
 -- worked field area. That map is terrain-attached, so world coords are used directly
 -- (setParallelogramWorldCoords), like FS25_MulchingFertilizes' vanilla path.
-function RealisticCropRotationService:addFertilizerToSprayLevel(residue, xs, zs, xw, zw, xh, zh)
+-- Vanilla (no Precision Farming): the spray-level map is coarse (a few stages), so a terminated
+-- crop adds exactly one fertilizer stage regardless of its per-crop residue amount -- this path
+-- therefore takes no residue value (the amount is only meaningful on the PF path).
+function RealisticCropRotationService:addFertilizerToSprayLevel(xs, zs, xw, zw, xh, zh)
     local fieldGroundSystem = g_currentMission ~= nil and g_currentMission.fieldGroundSystem or nil
     if fieldGroundSystem == nil then return false end
 
@@ -488,7 +436,6 @@ end
 
 function RealisticCropRotationService:applySyncData(receivedHistory, receivedPlans, receivedLastKnownActiveCrop, receivedAppliedResidue)
     self.repository:replaceAll(receivedHistory or {}, receivedPlans or {}, receivedLastKnownActiveCrop or {}, receivedAppliedResidue or {})
-    self:recomputeAllPendingBonuses()
 end
 
 function RealisticCropRotationService:getSyncData()
