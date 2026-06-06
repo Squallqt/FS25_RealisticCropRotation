@@ -8,51 +8,102 @@
         <fr>Assolement</fr>
     </title>
     <description>
-        <en><![CDATA[Tracks crop history per farmland (up to 4 completed main crops) and returns nitrogen to the soil from legume and green-manure residues, at the moment each crop naturally releases it.
+        <en><![CDATA[Track the crop history of every field and let legumes and green manures return nitrogen to the soil, the way a real crop rotation does.
 
 Compatible with vanilla farming and with Precision Farming (PF).
 
-How the residue works:
-- Grain legumes (soybean, pea, green bean): released at harvest, so it is already in the soil before the next sowing.
-- Forage legumes (alfalfa, clover): released when the stand is ploughed out, never at a forage cut.
-- Green-manure crops (vetch-rye, mustard): released only when the plant is destroyed while still green; nothing when it is harvested for grain.
-- With Precision Farming the residue is written to the nitrogen map, so a seeder in auto mode applies less and the total stays at the crop's target. Without PF it adds one vanilla fertilizer level.
+Each crop releases its nitrogen residue at the moment that makes agronomic sense:
+- Grain legumes (soybean, pea, green bean): at harvest, so it is already in the soil before the next sowing.
+- Forage legumes (alfalfa, clover): when the stand is ploughed out, never at a forage cut.
+- Green manures (vetch-rye, mustard): only when destroyed while still green (mulched or cultivated before the harvestable stage); nothing if combined for grain.
 
-Two-tier amount: a stronger first-year credit (after a legume in N-1) plus a residual second-year credit (when a legume was grown in N-2).
+Combine-harvested crops also take up the soil nitrogen as they grow: the worked area is emptied at harvest, then any residue is restituted on top.
 
-Per-farmland crop history (N-1 to N-4). Multiplayer-ready (server-authoritative, late-join sync). Optimized: O(1) hook operations, no per-frame density-map scans.
+With Precision Farming the residue is written to the nitrogen map, so a seeder in auto mode applies less and the total stays at the crop's target. Without PF it adds one vanilla fertilizer level.
 
-Issues & suggestions: https://github.com/Squallqt/FS25_RealisticCropRotation]]></en>
-        <de><![CDATA[Speichert die Fruchtfolge pro Feld (bis zu 4 abgeschlossene Hauptkulturen) und führt Stickstoff aus den Rückständen von Leguminosen und Gründüngung in den Boden zurück – in dem Moment, in dem die jeweilige Kultur ihn natürlich freisetzt.
+Features:
+- Per-field crop history (N-1 to N-4) with an in-game rotation planner
+- Per-field nitrogen, pH, growth and weed information
+- Two-tier residue: a stronger first-year credit (year +1) plus a residual second-year credit (year +2)
+- Multiplayer-ready (server-authoritative, late-join sync)
+- Optimized: O(1) hook operations, no per-frame density-map scans
+
+Nitrogen residue values (kg N/ha, year +1 / year +2):
+- Alfalfa: 80 / 50 - released at plough-out
+- Vetch-rye: 60 / 20 - released when destroyed green
+- Clover: 50 / 20 - released at plough-out
+- Soybean: 40 / 10 - released at harvest
+- Pea: 40 / 10 - released at harvest
+- Green bean: 20 / 5 - released at harvest
+- Mustard: 15 / - - released when destroyed green
+
+Issues & suggestions: https://github.com/Squallqt/FS25_RealisticCropRotation
+
+Access via the dedicated tab in the InGame Menu (ESC).]]></en>
+        <de><![CDATA[Verfolge die Fruchtfolge jedes Feldes und lass Leguminosen und Gründüngung Stickstoff in den Boden zurückführen, so wie es eine echte Fruchtfolge tut.
 
 Kompatibel mit der Standardlandwirtschaft und mit Precision Farming (PF).
 
-So wirkt der Rückstand:
-- Körnerleguminosen (Sojabohne, Erbse, grüne Bohne): bei der Ernte freigesetzt, also bereits im Boden vor der nächsten Aussaat.
-- Futterleguminosen (Luzerne, Klee): beim Umbruch des Bestands freigesetzt, nie bei einem Schnitt.
-- Gründüngung (Wicke-Roggen, Senf): nur freigesetzt, wenn die Pflanze noch grün zerstört wird; nichts bei der Kornernte.
-- Mit Precision Farming wird der Rückstand in die Stickstoffkarte geschrieben: eine Sämaschine im Automatikmodus bringt weniger aus und die Gesamtmenge bleibt beim Kulturziel. Ohne PF wird eine Standard-Düngestufe hinzugefügt.
+Jede Kultur gibt ihren Stickstoffrückstand zum agronomisch sinnvollen Zeitpunkt frei:
+- Körnerleguminosen (Sojabohne, Erbse, grüne Bohne): bei der Ernte, also bereits im Boden vor der nächsten Aussaat.
+- Futterleguminosen (Luzerne, Klee): beim Umbruch des Bestands, nie bei einem Schnitt.
+- Gründüngung (Wicke-Roggen, Senf): nur wenn sie noch grün zerstört wird (gemulcht oder vor dem Erntestadium kultiviert); nichts bei der Kornernte.
 
-Zweistufige Menge: ein stärkeres Erstjahres-Guthaben (nach einer Leguminose in N-1) plus ein Restguthaben im zweiten Jahr (wenn in N-2 eine Leguminose angebaut wurde).
+Mit dem Mähdrescher geerntete Kulturen nehmen außerdem den Bodenstickstoff während des Wachstums auf: die bearbeitete Fläche wird bei der Ernte geleert, danach wird der Rückstand obenauf zurückgeführt.
 
-Fruchtfolgehistorie pro Feld (N-1 bis N-4). Mehrspieler-fähig (serverseitige Autorität, Synchronisation für späten Beitritt). Optimiert: O(1) Hook-Operationen, keine Density-Map-Scans pro Frame.
+Mit Precision Farming wird der Rückstand in die Stickstoffkarte geschrieben: eine Sämaschine im Automatikmodus bringt weniger aus und die Gesamtmenge bleibt beim Kulturziel. Ohne PF wird eine Standard-Düngestufe hinzugefügt.
 
-Issues & Vorschläge: https://github.com/Squallqt/FS25_RealisticCropRotation]]></de>
-        <fr><![CDATA[Mémorise l'historique des cultures par parcelle (jusqu'à 4 cultures principales terminées) et restitue de l'azote au sol à partir des résidus de légumineuses et d'engrais verts, au moment où chaque culture le libère naturellement.
+Funktionen:
+- Fruchtfolgehistorie pro Feld (N-1 bis N-4) mit Fruchtfolge-Planer im Spiel
+- Stickstoff-, pH-, Wachstums- und Unkraut-Informationen pro Feld
+- Zweistufiger Rückstand: ein stärkeres Erstjahres-Guthaben (Jahr +1) plus ein Restguthaben im zweiten Jahr (Jahr +2)
+- Mehrspieler-fähig (serverseitige Autorität, Synchronisation für späten Beitritt)
+- Optimiert: O(1) Hook-Operationen, keine Density-Map-Scans pro Frame
+
+Stickstoff-Rückstandswerte (kg N/ha, Jahr +1 / Jahr +2):
+- Luzerne: 80 / 50 - freigesetzt beim Umbruch
+- Wicke-Roggen: 60 / 20 - freigesetzt bei grüner Zerstörung
+- Klee: 50 / 20 - freigesetzt beim Umbruch
+- Sojabohne: 40 / 10 - freigesetzt bei der Ernte
+- Erbse: 40 / 10 - freigesetzt bei der Ernte
+- Grüne Bohne: 20 / 5 - freigesetzt bei der Ernte
+- Senf: 15 / - - freigesetzt bei grüner Zerstörung
+
+Issues & Vorschläge: https://github.com/Squallqt/FS25_RealisticCropRotation
+
+Zugriff über den eigenen Tab im InGame-Menü (ESC).]]></de>
+        <fr><![CDATA[Suivez l'historique des cultures de chaque parcelle et laissez les légumineuses et les engrais verts restituer de l'azote au sol, comme le fait un véritable assolement.
 
 Compatible avec l'agriculture vanilla et avec Precision Farming (PF).
 
-Fonctionnement du reliquat :
-- Légumineuses à grain (soja, pois, haricot vert) : libéré à la récolte, donc déjà présent dans le sol avant le semis suivant.
-- Légumineuses fourragères (luzerne, trèfle) : libéré au retournement de la prairie, jamais à une fauche.
-- Engrais verts (vesce-seigle, moutarde) : libéré uniquement si la plante est détruite encore verte ; rien si elle est récoltée au grain.
-- Avec Precision Farming, le reliquat est écrit sur la carte d'azote : un semoir en mode auto applique moins et le total reste à la cible de la culture. Sans PF, il ajoute un niveau d'engrais vanilla.
+Chaque culture libère son reliquat d'azote au moment qui a un sens agronomique :
+- Légumineuses à grain (soja, pois, haricot vert) : à la récolte, donc déjà dans le sol avant le semis suivant.
+- Légumineuses fourragères (luzerne, trèfle) : au retournement de la prairie, jamais à une fauche.
+- Engrais verts (vesce-seigle, moutarde) : uniquement si détruits encore verts (broyés ou cultivés avant le stade récoltable) ; rien s'ils sont récoltés au grain.
 
-Montant à deux niveaux : un crédit de première année plus important (après une légumineuse en N-1) et un crédit résiduel de deuxième année (si une légumineuse a été cultivée en N-2).
+Les cultures récoltées à la moissonneuse consomment aussi l'azote du sol pendant leur croissance : la zone travaillée est vidée à la récolte, puis le reliquat éventuel est restitué par-dessus.
 
-Historique des cultures par parcelle (N-1 à N-4). Compatible multijoueur (autorité serveur, synchronisation à la connexion tardive). Optimisé : opérations O(1) dans les hooks, pas de scan de density map par frame.
+Avec Precision Farming, le reliquat est écrit sur la carte d'azote : un semoir en mode auto applique moins et le total reste à la cible de la culture. Sans PF, il ajoute un niveau d'engrais vanilla.
 
-Issues & suggestions : https://github.com/Squallqt/FS25_RealisticCropRotation]]></fr>
+Fonctionnalités :
+- Historique des cultures par parcelle (N-1 à N-4) avec planificateur d'assolement en jeu
+- Informations azote, pH, croissance et adventices par parcelle
+- Reliquat à deux niveaux : un crédit de première année plus important (année +1) et un crédit résiduel de deuxième année (année +2)
+- Compatible multijoueur (autorité serveur, synchronisation à la connexion tardive)
+- Optimisé : opérations O(1) dans les hooks, pas de scan de density map par frame
+
+Valeurs de reliquat d'azote (kg N/ha, année +1 / année +2) :
+- Luzerne : 80 / 50 - libéré au retournement
+- Vesce-seigle : 60 / 20 - libéré si détruite verte
+- Trèfle : 50 / 20 - libéré au retournement
+- Soja : 40 / 10 - libéré à la récolte
+- Pois : 40 / 10 - libéré à la récolte
+- Haricot vert : 20 / 5 - libéré à la récolte
+- Moutarde : 15 / - - libéré si détruite verte
+
+Issues & suggestions : https://github.com/Squallqt/FS25_RealisticCropRotation
+
+Accès via l'onglet dédié dans le menu en jeu (ECHAP).]]></fr>
     </description>
     <iconFilename>icon_RealCropRotation.dds</iconFilename>
     <multiplayer supported="true" />

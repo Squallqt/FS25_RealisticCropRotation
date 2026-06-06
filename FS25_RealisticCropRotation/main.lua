@@ -174,51 +174,26 @@ function RealisticCropRotation.addInGameMenuPage(frameFieldName, predicateFunc, 
         return nil
     end
 
-    local targetPosition = #g_inGameMenu.pagingElement.elements + 1
+    local targetPosition = #g_inGameMenu.pageFrames + 1
 
     if type(insertPosition) == "number" then
-        targetPosition = math.max(1, math.min(insertPosition, targetPosition))
+        targetPosition = math.max(1, math.min(#g_inGameMenu.pageFrames + 1, insertPosition))
     elseif type(insertPosition) == "string" then
-        for i = 1, #g_inGameMenu.pagingElement.elements do
-            local child = g_inGameMenu.pagingElement.elements[i]
+        for i, child in ipairs(g_inGameMenu.pageFrames) do
             if child == g_inGameMenu[insertPosition] then
-                targetPosition = i + 1
+                targetPosition = math.min(#g_inGameMenu.pageFrames + 1, i + 1)
                 break
             end
         end
     end
 
-    g_inGameMenu:registerPage(frame, nil, predicateFunc)
-    g_inGameMenu:addPageTab(frame, nil, nil, "realisticCropRotation.menuIcon")
-    frame:onGuiSetupFinished()
+    g_inGameMenu[frameFieldName] = frame
+    g_inGameMenu.pagingElement:removePageByElement(frame)
 
-    for i, element in ipairs(g_inGameMenu.pagingElement.elements) do
-        if element == frame then
-            if i ~= targetPosition then
-                table.remove(g_inGameMenu.pagingElement.elements, i)
-                table.insert(g_inGameMenu.pagingElement.elements, targetPosition, element)
-            end
-            break
-        end
-    end
-    for i, page in ipairs(g_inGameMenu.pagingElement.pages) do
-        if page.element == frame then
-            if i ~= targetPosition then
-                table.remove(g_inGameMenu.pagingElement.pages, i)
-                table.insert(g_inGameMenu.pagingElement.pages, targetPosition, page)
-            end
-            break
-        end
-    end
-    for i, pageFrame in ipairs(g_inGameMenu.pageFrames) do
-        if pageFrame == frame then
-            if i ~= targetPosition then
-                table.remove(g_inGameMenu.pageFrames, i)
-                table.insert(g_inGameMenu.pageFrames, targetPosition, pageFrame)
-            end
-            break
-        end
-    end
+    local _, actualPosition = g_inGameMenu:registerPage(frame, targetPosition, predicateFunc)
+    g_inGameMenu:addPageTab(frame, nil, nil, "realisticCropRotation.menuIcon")
+    g_inGameMenu.pagingElement:addPage(string.upper(frameFieldName), frame, g_i18n:getText("realisticCropRotation_menu_title"), actualPosition)
+    frame:onGuiSetupFinished()
 
     g_inGameMenu.pagingElement:updateAbsolutePosition()
     g_inGameMenu.pagingElement:updatePageMapping()
