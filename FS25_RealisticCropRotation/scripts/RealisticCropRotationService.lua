@@ -205,18 +205,18 @@ function RealisticCropRotationService:onCropChangeArea(farmlandId, fruitTypeInde
     local normalizedCropName = self:normalizeCropName(cropName)
     if normalizedCropName == nil then return false end
 
-    if activeCropNameBeforeTermination ~= nil and activeCropNameBeforeTermination ~= ""
-        and self:isCoverCropForRotationHistory(nil, activeCropNameBeforeTermination) then
-        return false
+    local historyCropIsCover = false
+    if activeCropNameBeforeTermination ~= nil and activeCropNameBeforeTermination ~= "" then
+        historyCropIsCover = self:isCoverCropForRotationHistory(nil, activeCropNameBeforeTermination)
+    end
+    if not historyCropIsCover then
+        historyCropIsCover = self:isCoverCropForRotationHistory(fruitTypeIndex, normalizedCropName)
     end
 
-    if self:isCoverCropForRotationHistory(fruitTypeIndex, normalizedCropName) then
-        -- Cover crops are excluded from rotation history. Their native residue is handled by
-        -- the base game / Precision Farming, so the rotation history stays untouched here.
-        return false
+    local pushed = false
+    if not historyCropIsCover then
+        pushed = self:pushHistoryCrop(numericFarmlandId, normalizedCropName)
     end
-
-    local pushed = self:pushHistoryCrop(numericFarmlandId, normalizedCropName)
     local activeChanged = self:setLastKnownActiveCrop(numericFarmlandId, nextActiveCropName)
     if pushed or activeChanged then
         self:advanceResidueCycle(numericFarmlandId)
