@@ -131,48 +131,6 @@ function RealisticCropRotationHud.addHistoryLines(fieldBox, farmlandId)
         end
     end
 end
-
--- Terrain HUD reads the same applied-residue source as the menu status pill.
--- It shows only residue that was actually deposited by the residue-release hook
--- (at harvest for grain crops, at destruction for forage / green-manure crops).
-function RealisticCropRotationHud.addResidueLines(fieldBox, farmlandId)
-    if fieldBox == nil or fieldBox.addLine == nil then return end
-
-    local manager = g_currentMission ~= nil and g_currentMission.realisticCropRotationManager or nil
-    if manager == nil or type(manager.getAppliedResidue) ~= "function" then return end
-
-    farmlandId = tonumber(farmlandId)
-    if farmlandId == nil or farmlandId == 0 then return end
-
-    local applied = manager:getAppliedResidue(farmlandId)
-    if applied == nil then return end
-
-    local service = manager.service
-    local label = RealisticCropRotationHud.getText("rcr_hud_residue_applied")
-    local cropDisplay = RealisticCropRotationHud.getCropDisplayName(applied.crop)
-
-    if applied.unit == "SPRAY_LEVEL" then
-        local sprayLevel = tonumber(applied.sprayLevel) or 0
-        if sprayLevel > 0 then
-            fieldBox:addLine(string.format("%s (%s)", label, cropDisplay),
-                string.format(RealisticCropRotationHud.getText("rcr_hud_residue_level"), math.floor(sprayLevel + 0.5)))
-        end
-        return
-    end
-
-    local stateChange = tonumber(applied.stateChange) or 0
-    if stateChange <= 0 then return end
-    local kg
-    if service ~= nil and type(service.getNitrogenKgFromStates) == "function" then
-        kg = service:getNitrogenKgFromStates(stateChange)
-    else
-        kg = stateChange * RealisticCropRotationService.PF_STATE_PER_UNIT
-    end
-
-    fieldBox:addLine(string.format("%s (%s)", label, cropDisplay),
-        string.format("%d kg/ha", math.floor(kg + 0.5)))
-end
-
 -- Computes the (tierText, numbers) pair used to override the base game's
 -- pedestrian "Croissance:" line for the field hovered by the player. Returns
 -- nil for both when the override does not apply (no fruit, terminal state,
@@ -250,7 +208,6 @@ function RealisticCropRotationHud.fieldAddFarmland(hudSelf, superFunc, data, fie
     superFunc(hudSelf, data, fieldBox)
 
     RealisticCropRotationHud.addHistoryLines(fieldBox, farmlandId)
-    RealisticCropRotationHud.addResidueLines(fieldBox, farmlandId)
 end
 
 if PlayerHUDUpdater ~= nil and Utils ~= nil and Utils.overwrittenFunction ~= nil then

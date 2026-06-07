@@ -17,17 +17,6 @@ local function isPureClient()
         and not g_currentMission:getIsServer()
 end
 
-local function getPrecisionFarmingInstance()
-    if g_precisionFarming ~= nil then return g_precisionFarming end
-    if FS25_precisionFarming ~= nil and FS25_precisionFarming.g_precisionFarming ~= nil then
-        return FS25_precisionFarming.g_precisionFarming
-    end
-    if g_currentMission ~= nil and g_currentMission.g_precisionFarming ~= nil then
-        return g_currentMission.g_precisionFarming
-    end
-    return nil
-end
-
 local function getFarmlandById(farmlandId)
     if farmlandId == nil or g_farmlandManager == nil then return nil end
     if g_farmlandManager.getFarmlandById ~= nil then
@@ -342,136 +331,6 @@ local function getNativeGroundStateLabel(field)
 end
 
 -- =========================================================================
--- Density-map polygon helpers (read-only).
--- =========================================================================
-
-local function getMapMaxInternalValue(map)
-    local maxValue = tonumber(map ~= nil and map.maxValue or nil) or 0
-    return math.max(0, math.floor(maxValue + 0.5))
-end
-
-local function getFieldDensityMapAverage(field, map, converterName)
-    if field == nil or map == nil or map.bitVectorMap == nil or map.numChannels == nil then
-        return nil, nil, nil
-    end
-    if DensityMapModifier == nil or DensityMapFilter == nil or DensityValueCompareType == nil then
-        return nil, nil, nil
-    end
-
-    local polygon = field.densityMapPolygon
-    if type(field.getDensityMapPolygon) == "function" then
-        local ok, result = pcall(field.getDensityMapPolygon, field)
-        if ok and result ~= nil then polygon = result end
-    end
-    if polygon == nil or polygon.applyToModifier == nil then return nil, nil, nil end
-
-    local modOk, modifier = pcall(DensityMapModifier.new,
-        map.bitVectorMap, tonumber(map.firstChannel) or 0, map.numChannels, g_terrainNode)
-    if not modOk or modifier == nil then return nil, nil, nil end
-
-    local applyOk = pcall(function() polygon:applyToModifier(modifier) end)
-    if not applyOk then return nil, nil, nil end
-
-    local filterOk, filter = pcall(DensityMapFilter.new, modifier)
-    if not filterOk or filter == nil then return nil, nil, nil end
-
-    local maxState = getMapMaxInternalValue(map)
-    local valueFunc = converterName ~= nil and map[converterName] or nil
-    local weightedValue = 0
-    local areaTotal = 0
-
-    for state = 0, maxState do
-        filter:setValueCompareParams(DensityValueCompareType.EQUAL, state)
-        local ok, _, area = pcall(modifier.executeGet, modifier, filter)
-        if ok and type(area) == "number" and area > 0 then
-            local value = state
-            if valueFunc ~= nil then
-                local valueOk, converted = pcall(valueFunc, map, state)
-                if valueOk and type(converted) == "number" then value = converted end
-            end
-            weightedValue = weightedValue + value * area
-            areaTotal = areaTotal + area
-        end
-    end
-
-    if areaTotal <= 0 then return nil end
-    return weightedValue / areaTotal
-end
-
-local function getMapMaxKgHa(nitrogenMap)
-    if nitrogenMap == nil or type(nitrogenMap.getNitrogenValueFromInternalValue) ~= "function" then
-        return nil
-    end
-    local maxState = getMapMaxInternalValue(nitrogenMap)
-    if maxState <= 0 then return nil end
-    local ok, converted = pcall(nitrogenMap.getNitrogenValueFromInternalValue, nitrogenMap, maxState)
-    if not ok or type(converted) ~= "number" or converted <= 0 then return nil end
-    return converted
-end
-
-local function getNitrogenRequirementForFruit(nitrogenMap, fruitTypeIndex)
-    if nitrogenMap == nil or fruitTypeIndex == nil then return nil end
-    local byIndex = nitrogenMap.fruitTypeIndexToFruitRequirement
-    if type(byIndex) == "table" and type(byIndex[fruitTypeIndex]) == "table" then
-        return byIndex[fruitTypeIndex]
-    end
-    local requirements = nitrogenMap.fruitRequirements
-    if type(requirements) == "table" then
-        for _, req in ipairs(requirements) do
-            if type(req) == "table" and tonumber(req.fruitTypeIndex) == fruitTypeIndex then
-                return req
-            end
-        end
-    end
-    return nil
-end
-
-local function getNitrogenTargetKgHa(nitrogenMap, farmland, fruitTypeIndex)
-    local requirement = getNitrogenRequirementForFruit(nitrogenMap, fruitTypeIndex)
-    if requirement == nil then return nil end
-    if type(nitrogenMap.getNitrogenValueFromInternalValue) ~= "function" then return nil end
-
-    local function convert(internalValue)
-        local n = tonumber(internalValue)
-        if n == nil or n <= 0 then return nil end
-        local ok, real = pcall(nitrogenMap.getNitrogenValueFromInternalValue, nitrogenMap, n)
-        if ok and type(real) == "number" and real > 0 then return real end
-        return nil
-    end
-
-    local bySoilType = requirement.bySoilType
-    if type(farmland) == "table" and type(farmland.soilDistribution) == "table" and type(bySoilType) == "table" then
-        local weightedTarget = 0
-        local weightTotal = 0
-        for soilTypeIndex, weight in pairs(farmland.soilDistribution) do
-            local numericSoilTypeIndex = tonumber(soilTypeIndex)
-            local numericWeight = tonumber(weight)
-            if numericSoilTypeIndex ~= nil and numericWeight ~= nil and numericWeight > 0 then
-                local soilSettings = bySoilType[numericSoilTypeIndex]
-                if soilSettings == nil then
-                    for _, entry in pairs(bySoilType) do
-                        if type(entry) == "table" and tonumber(entry.soilTypeIndex) == numericSoilTypeIndex then
-                            soilSettings = entry
-                            break
-                        end
-                    end
-                end
-                if type(soilSettings) == "table" then
-                    local target = convert(soilSettings.targetLevel)
-                    if target ~= nil then
-                        weightedTarget = weightedTarget + target * numericWeight
-                        weightTotal = weightTotal + numericWeight
-                    end
-                end
-            end
-        end
-        if weightTotal > 0 then return weightedTarget / weightTotal end
-    end
-
-    return convert(requirement.targetLevel)
-end
-
--- =========================================================================
 -- Construction / lifecycle.
 -- =========================================================================
 
@@ -517,25 +376,6 @@ end
 
 function RealisticCropRotationManager:getAllHistory()
     return self.repository:getAllHistory()
-end
-
-function RealisticCropRotationManager:getAppliedResidue(farmlandId)
-    if farmlandId == nil or self.repository == nil or type(self.repository.getAppliedResidue) ~= "function" then
-        return nil
-    end
-
-    local numericFarmlandId = tonumber(farmlandId)
-    if numericFarmlandId == nil or numericFarmlandId <= 0 then return nil end
-
-    local entry = self.repository:getAppliedResidue(numericFarmlandId)
-    if entry == nil or entry.crop == nil or entry.crop == "" then return nil end
-
-    return {
-        crop = entry.crop,
-        stateChange = tonumber(entry.stateChange) or 0,
-        sprayLevel = tonumber(entry.sprayLevel) or 0,
-        unit = tostring(entry.unit or "STATE"),
-    }
 end
 
 function RealisticCropRotationManager:getRotationPlan(farmlandId)
@@ -730,13 +570,6 @@ function RealisticCropRotationManager:getOwnedFarmlands()
     end)
 
     return result
-end
-
-function RealisticCropRotationManager:getCurrentSprayLevel(farmlandId)
-    local field = self:getFieldByFarmlandId(farmlandId)
-    local sprayLevel = field ~= nil and field.fieldState ~= nil and field.fieldState.sprayLevel or 0
-    sprayLevel = tonumber(sprayLevel) or 0
-    return math.max(0, math.min(2, math.floor(sprayLevel + 0.5)))
 end
 
 function RealisticCropRotationManager:getCurrentLimeLevel(farmlandId)
@@ -1032,85 +865,4 @@ function RealisticCropRotationManager:getFieldCropInfo(farmlandId)
 
     info.totalLiters = totalLiters
     return info
-end
-
--- Returns:
---   actualKgHa : average N in kg/ha over the field polygon (nil if not resolvable)
---   targetKgHa : nitrogen target for the active crop on this soil (nil if no active crop)
---   mapMaxKgHa : map's global max value in kg/ha, used by UI when no crop target exists.
-function RealisticCropRotationManager:getNitrogenLevel(farmlandId)
-    local precisionFarming = getPrecisionFarmingInstance()
-    local nitrogenMap = precisionFarming ~= nil and precisionFarming.nitrogenMap or nil
-    if nitrogenMap == nil then return nil end
-
-    local field = self:getFieldByFarmlandId(farmlandId)
-    local farmland = getFarmlandById(farmlandId)
-    local activeFruitIndex = self:getActiveCropFruitTypeIndex(farmlandId)
-
-    local mapMaxKgHa = getMapMaxKgHa(nitrogenMap)
-    local targetKgHa = activeFruitIndex ~= nil
-        and getNitrogenTargetKgHa(nitrogenMap, farmland, activeFruitIndex)
-        or nil
-
-    local actualKgHa = getFieldDensityMapAverage(field, nitrogenMap, "getNitrogenValueFromInternalValue")
-    if actualKgHa == nil and field ~= nil and field.posX ~= nil and field.posZ ~= nil
-        and type(nitrogenMap.getLevelAtWorldPos) == "function" then
-        local levelOk, level = pcall(nitrogenMap.getLevelAtWorldPos, nitrogenMap, field.posX, field.posZ)
-        if levelOk and level ~= nil and type(nitrogenMap.getNitrogenValueFromInternalValue) == "function" then
-            local convertOk, value = pcall(nitrogenMap.getNitrogenValueFromInternalValue, nitrogenMap, level)
-            if convertOk and type(value) == "number" then actualKgHa = value end
-        end
-    end
-
-    return actualKgHa, targetKgHa, mapMaxKgHa
-end
-
-function RealisticCropRotationManager:getPHLevel(farmlandId)
-    local precisionFarming = getPrecisionFarmingInstance()
-    local pHMap = precisionFarming ~= nil and precisionFarming.pHMap or nil
-    if pHMap == nil or type(pHMap.getPhValueFromInternalValue) ~= "function" then return nil end
-
-    local field = self:getFieldByFarmlandId(farmlandId)
-
-    local minPH = nil
-    local maxPH = nil
-    local minOk, convertedMin = pcall(pHMap.getPhValueFromInternalValue, pHMap, 0)
-    if minOk and type(convertedMin) == "number" then minPH = convertedMin end
-    local maxOk, convertedMax = pcall(pHMap.getPhValueFromInternalValue,
-        pHMap, getMapMaxInternalValue(pHMap))
-    if maxOk and type(convertedMax) == "number" then maxPH = convertedMax end
-
-    local actualPH = getFieldDensityMapAverage(field, pHMap, "getPhValueFromInternalValue")
-    if actualPH == nil and field ~= nil and field.posX ~= nil and field.posZ ~= nil
-        and type(pHMap.getLevelAtWorldPos) == "function" then
-        local ok, level = pcall(pHMap.getLevelAtWorldPos, pHMap, field.posX, field.posZ)
-        if ok then
-            local valueOk, value = pcall(pHMap.getPhValueFromInternalValue, pHMap, level)
-            if valueOk and type(value) == "number" then actualPH = value end
-        end
-    end
-
-    local targetPH = nil
-    if type(pHMap.getOptimalPHValueForSoilTypeIndex) == "function" and g_farmlandManager ~= nil then
-        local farmland = getFarmlandById(farmlandId)
-        if farmland ~= nil and type(farmland.soilDistribution) == "table" then
-            local weightedTarget = 0
-            local weightTotal = 0
-            for soilTypeIndex, weight in pairs(farmland.soilDistribution) do
-                if type(soilTypeIndex) == "number" and type(weight) == "number" and weight > 0 then
-                    local ok, optimal = pcall(pHMap.getOptimalPHValueForSoilTypeIndex, pHMap, soilTypeIndex)
-                    if ok and type(optimal) == "number" then
-                        local target = optimal
-                        local convOk, conv = pcall(pHMap.getPhValueFromInternalValue, pHMap, optimal)
-                        if convOk and type(conv) == "number" then target = conv end
-                        weightedTarget = weightedTarget + target * weight
-                        weightTotal = weightTotal + weight
-                    end
-                end
-            end
-            if weightTotal > 0 then targetPH = weightedTarget / weightTotal end
-        end
-    end
-
-    return actualPH, targetPH, minPH, maxPH
 end

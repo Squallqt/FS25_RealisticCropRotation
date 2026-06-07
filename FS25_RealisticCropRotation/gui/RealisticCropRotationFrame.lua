@@ -33,11 +33,6 @@ RealisticCropRotationFrame.FAMILY_RGBA = {
 -- slot index 1..4 maps to history newest-first (history[1] = N-1)
 RealisticCropRotationFrame.SLOT_HISTORY_IDX = { 4, 3, 2, 1 }
 
--- Vanilla spray state labels
-RealisticCropRotationFrame.SPRAY_LABEL_KEY = {
-    [0] = "rcr_n_none", [1] = "rcr_n_partial", [2] = "rcr_n_full",
-}
-
 -- Max pixel widths (must match profile sizes)
 RealisticCropRotationFrame.N_BAR_MAX_WIDTH     = 1192
 RealisticCropRotationFrame.N_BAR_HEIGHT        = 14
@@ -167,73 +162,10 @@ function RealisticCropRotationFrame:getManager()
     return g_currentMission.realisticCropRotationManager
 end
 
----Returns the residue that has actually been applied on the selected farmland.
--- @param integer farmlandId Farmland identifier
--- @return table|nil residueInfo Applied residue display data, or nil when no residue exists
-function RealisticCropRotationFrame:getActiveNitrogenResidueInfo(farmlandId)
-    local mgr = self:getManager()
-    if mgr == nil or type(mgr.getAppliedResidue) ~= "function" then
-        return nil
-    end
-
-    local applied = mgr:getAppliedResidue(farmlandId)
-    if applied == nil then
-        return nil
-    end
-
-    if applied.unit == "SPRAY_LEVEL" then
-        local sprayLevel = tonumber(applied.sprayLevel) or 0
-        if sprayLevel <= 0 then return nil end
-        return {
-            crop = applied.crop,
-            unit = "SPRAY_LEVEL",
-            value = sprayLevel,
-        }
-    end
-
-    local stateChange = tonumber(applied.stateChange) or 0
-    if stateChange <= 0 then return nil end
-
-    if mgr.service ~= nil and mgr.service.getNitrogenKgPerHaFromStateChange ~= nil then
-        local ok, residueKgHa = pcall(
-            mgr.service.getNitrogenKgPerHaFromStateChange,
-            mgr.service,
-            stateChange
-        )
-
-        if ok and type(residueKgHa) == "number" and residueKgHa > 0 then
-            return {
-                crop = applied.crop,
-                unit = "KG_HA",
-                value = residueKgHa,
-            }
-        end
-    end
-
-    return nil
-end
-
-function RealisticCropRotationFrame:getActiveNitrogenResidueText(farmlandId)
-    local info = self:getActiveNitrogenResidueInfo(farmlandId)
-    if info == nil then
-        return nil
-    end
-
-    if info.unit == "SPRAY_LEVEL" then
-        return string.format(self.i18n:getText("rcr_status_current_residue_vanilla"),
-            math.floor((tonumber(info.value) or 0) + 0.5))
-    end
-
-    return string.format(self.i18n:getText("rcr_status_current_residue"),
-        math.floor((tonumber(info.value) or 0) + 0.5))
-end
-
 function RealisticCropRotationFrame:updateResiduePill(pillBg, pillText, farmlandId)
-    local residueText = self:getActiveNitrogenResidueText(farmlandId)
-    local hasBonus = residueText ~= nil
-    local text = hasBonus and residueText or self.i18n:getText("rcr_status_current_no_residue")
+    local text = self.i18n:getText("rcr_status_current_no_residue")
     if pillBg ~= nil then
-        pillBg:applyProfile(hasBonus and "frStatusPillBgBonus" or "frStatusPillBg")
+        pillBg:applyProfile("frStatusPillBg")
     end
     if pillText ~= nil then
         pillText:setText(text)
@@ -870,7 +802,13 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
     local currentCropName, currentFamily, currentFallbackText = self:getCurrentSlotData(farmlandId)
     self:updateTimelineSlot(5, currentCropName, currentFamily, currentFallbackText)
 
-    self:updateNitrogenGauge(farmlandId)
+    self:setStatusBarFill(self.nitrogenBarFill, 0)
+    if self.nitrogenStateLabel ~= nil then
+        self.nitrogenStateLabel:setText(self.i18n:getText("rcr_n_none"))
+    end
+    if self.nitrogenValueLabel ~= nil then
+        self.nitrogenValueLabel:setVisible(false)
+    end
     self:updateSoilPHGauge(farmlandId)
     self:updateAdvice(currentFamily)
     self:updateYieldCard(farmlandId)
@@ -941,65 +879,6 @@ function RealisticCropRotationFrame:setStatusBarFill(barFill, ratio)
         end
         barFill:setVisible(fillW > 0)
     end
-end
-
-function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId)
-    local mgr = self:getManager()
-    local ratio = 0
-    local labelKey = "rcr_n_none"
-    local stateText = nil
-    local valueText = nil
-    local needText = nil
-
-    if mgr ~= nil and mgr.getNitrogenLevel ~= nil then
-        local kgHa, targetKgHa, mapMaxKgHa = mgr:getNitrogenLevel(farmlandId)
-        if kgHa ~= nil then
-            kgHa = tonumber(kgHa) or 0
-            targetKgHa = tonumber(targetKgHa) or 0
-            mapMaxKgHa = tonumber(mapMaxKgHa) or 0
-
-            -- With an active crop, Precision Farming evaluates nitrogen against
-            -- the crop target. Without a crop target, the gauge falls back to the
-            -- nitrogen map's global capacity.
-            if targetKgHa > 0 then
-                ratio = kgHa / targetKgHa
-            elseif mapMaxKgHa > 0 then
-                ratio = kgHa / mapMaxKgHa
-            end
-            ratio = math.max(0, math.min(1, ratio))
-
-            labelKey = "rcr_n_available"
-            stateText = string.format(self.i18n:getText("rcr_n_average_value"), kgHa)
-
-            if targetKgHa > 0 then
-                needText = string.format(self.i18n:getText("rcr_n_crop_need"), targetKgHa)
-            end
-        end
-    end
-
-    if stateText == nil then
-        local sprayLevel = 0
-        if mgr ~= nil and mgr.getCurrentSprayLevel ~= nil then
-            sprayLevel = mgr:getCurrentSprayLevel(farmlandId) or 0
-        end
-        sprayLevel = math.max(0, math.min(2, tonumber(sprayLevel) or 0))
-        ratio = sprayLevel / 2.0
-        labelKey = RealisticCropRotationFrame.SPRAY_LABEL_KEY[sprayLevel] or "rcr_n_none"
-    end
-
-    self:setStatusBarFill(self.nitrogenBarFill, ratio)
-
-    if self.nitrogenStateLabel ~= nil then
-        self.nitrogenStateLabel:setText(stateText or self.i18n:getText(labelKey))
-    end
-
-    if self.nitrogenValueLabel ~= nil then
-        if needText ~= nil then
-            self.nitrogenValueLabel:setText(needText)
-        end
-        self.nitrogenValueLabel:setVisible(needText ~= nil)
-    end
-
 end
 
 -- ---------------------------------------------------------------------------
