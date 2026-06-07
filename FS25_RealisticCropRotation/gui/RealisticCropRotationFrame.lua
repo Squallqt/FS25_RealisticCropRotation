@@ -856,13 +856,6 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
     end
 
     local mgr = self:getManager()
-    if mgr ~= nil and type(mgr.reconcileActiveCropForFarmland) == "function" then
-        local changed = mgr:reconcileActiveCropForFarmland(farmlandId)
-        if changed and RealisticCropRotation ~= nil and type(RealisticCropRotation.requestBroadcast) == "function" then
-            RealisticCropRotation.requestBroadcast()
-        end
-    end
-
     self:updateResiduePill(self.statusPillBg, self.statusPillText, farmlandId)
 
     local history = (mgr ~= nil) and (mgr:getHistory(farmlandId) or {}) or {}
