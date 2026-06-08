@@ -298,6 +298,7 @@ local function loadedMission()
             RealisticCropRotation.manager.service:applySyncData(
                 pending.history or {},
                 pending.plans or {},
+                pending.coverPlans or {},
                 pending.lastKnownActiveCrop or {},
                 pending.appliedResidue or {},
                 pending.lastKnownGrowthState or {})

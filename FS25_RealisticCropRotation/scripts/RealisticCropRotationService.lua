@@ -316,8 +316,8 @@ end
 -- MP sync helpers (server-authoritative).
 -- =========================================================================
 
-function RealisticCropRotationService:applySyncData(receivedHistory, receivedPlans, receivedLastKnownActiveCrop, receivedAppliedResidue, receivedLastKnownGrowthState)
-    self.repository:replaceAll(receivedHistory or {}, receivedPlans or {}, receivedLastKnownActiveCrop or {}, receivedAppliedResidue or {}, receivedLastKnownGrowthState or {})
+function RealisticCropRotationService:applySyncData(receivedHistory, receivedPlans, receivedCoverPlans, receivedLastKnownActiveCrop, receivedAppliedResidue, receivedLastKnownGrowthState)
+    self.repository:replaceAll(receivedHistory or {}, receivedPlans or {}, receivedCoverPlans or {}, receivedLastKnownActiveCrop or {}, receivedAppliedResidue or {}, receivedLastKnownGrowthState or {})
 end
 
 function RealisticCropRotationService:getSyncData()

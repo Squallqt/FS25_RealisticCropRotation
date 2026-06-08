@@ -33,6 +33,13 @@ RealisticCropRotationFrame.FAMILY_RGBA = {
 -- slot index 1..4 maps to history newest-first (history[1] = N-1)
 RealisticCropRotationFrame.SLOT_HISTORY_IDX = { 4, 3, 2, 1 }
 
+RealisticCropRotationFrame.COVER_CROP_NAMES = {
+    "OILSEEDRADISH",
+    "FLOWERINGCATCHCROP",
+}
+
+RealisticCropRotationFrame.COVER_PLAN_BONUS = 10
+
 -- Max pixel widths (must match profile sizes)
 RealisticCropRotationFrame.N_BAR_MAX_WIDTH     = 1192
 RealisticCropRotationFrame.N_BAR_HEIGHT        = 14
@@ -62,6 +69,7 @@ function RealisticCropRotationFrame.new(i18n, messageCenter)
     self.farmlandList  = {}
     self.selectedId    = nil
     self.planCropList  = {""}  -- index 1 = no crop; populated in initialize()
+    self.coverCropList = {""}  -- index 1 = no cover; populated in initialize()
     self.rotationGroups = {}   -- rebuilt when plans change
     self.totalAreaHa   = 0
     self.isSubscribedToFarmlandChanges = false
@@ -512,12 +520,24 @@ function RealisticCropRotationFrame:getPlanForFarmland(farmlandId)
     return {"","","",""}
 end
 
+function RealisticCropRotationFrame:getCoverPlanForFarmland(farmlandId)
+    local mgr = self:getManager()
+    if mgr ~= nil and mgr.getRotationCoverPlan ~= nil then
+        return mgr:getRotationCoverPlan(farmlandId)
+    end
+    return {"","","",""}
+end
+
 -- ===========================================================================
 --  CROP LIST (built once from fruitTypeManager; drives plan slot selectors)
 -- ===========================================================================
 
 function RealisticCropRotationFrame:buildPlanCropList()
     self.planCropList = {""}  -- index 1 = no crop
+    self.coverCropList = {""}
+    for _, cropName in ipairs(RealisticCropRotationFrame.COVER_CROP_NAMES) do
+        table.insert(self.coverCropList, cropName)
+    end
 
     -- Include all plantable crops on this map (including modded ones from any modhub map).
     -- Filter: next(harvestTransitions) ~= nil ensures the table is non-empty, meaning the
@@ -570,6 +590,21 @@ function RealisticCropRotationFrame:buildPlanCropList()
             if self.planSlotSelector[i] ~= nil then
                 self.planSlotSelector[i]:setTexts(cropTexts)
                 self.planSlotSelector[i]:setState(1, false)
+            end
+        end
+    end
+
+    local coverTexts = {}
+    for _, cropName in ipairs(self.coverCropList) do
+        table.insert(coverTexts, cropName == "" and self.i18n:getText("rcr_plan_none")
+                                                or self:getCropDisplayName(cropName))
+    end
+
+    if self.coverSlotSelector ~= nil then
+        for i = 1, 4 do
+            if self.coverSlotSelector[i] ~= nil then
+                self.coverSlotSelector[i]:setTexts(coverTexts)
+                self.coverSlotSelector[i]:setState(1, false)
             end
         end
     end
@@ -699,7 +734,8 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
             local family = self:getCropFamily(activeCropName)
             local line   = self:getCropDisplayName(activeCropName)
             if family ~= "UNKNOWN" then
-                line = line .. "  \xc2\xb7  " .. self.i18n:getText("rcr_family_" .. string.lower(family))
+                local badgeKey = family == "COVER" and "rcr_interculture" or "rcr_family_" .. string.lower(family)
+                line = line .. "  \xc2\xb7  " .. self.i18n:getText(badgeKey)
             end
             cropLineEl:setText(line)
         else
@@ -816,7 +852,8 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
     end
 
     local currentCropName, currentFamily, currentFallbackText = self:getCurrentSlotData(farmlandId)
-    self:updateTimelineSlot(5, currentCropName, currentFamily, currentFallbackText)
+    local currentBadgeKey = currentFamily == "COVER" and "rcr_interculture" or nil
+    self:updateTimelineSlot(5, currentCropName, currentFamily, currentFallbackText, currentBadgeKey)
 
     self:setStatusBarFill(self.nitrogenBarFill, 0)
     if self.nitrogenStateLabel ~= nil then
@@ -834,7 +871,7 @@ end
 --  Timeline slot (slotId 1..5) — history tab
 -- ---------------------------------------------------------------------------
 
-function RealisticCropRotationFrame:updateTimelineSlot(slotId, cropName, family, fallbackText)
+function RealisticCropRotationFrame:updateTimelineSlot(slotId, cropName, family, fallbackText, badgeTextKey)
     local pfx = "slot" .. tostring(slotId)
     local iconEl   = self[pfx .. "Icon"]
     local nameEl   = self[pfx .. "CropName"]
@@ -868,7 +905,7 @@ function RealisticCropRotationFrame:updateTimelineSlot(slotId, cropName, family,
     if badgeTxt ~= nil then
         badgeTxt:setVisible(showBadge)
         if showBadge then
-            local familyText = self.i18n:getText("rcr_family_" .. string.lower(family))
+            local familyText = self.i18n:getText(badgeTextKey or "rcr_family_" .. string.lower(family))
             badgeTxt:setText(familyText)
             self:resizePillToText(badgeBg, badgeTxt, familyText)
         end
@@ -1058,7 +1095,8 @@ function RealisticCropRotationFrame:updatePlanningPanel(farmlandId)
 
     self:updatePlanSlots(farmlandId)
     local plan = self:getPlanForFarmland(farmlandId)
-    self:updateScoreCard(plan)
+    local coverPlan = self:getCoverPlanForFarmland(farmlandId)
+    self:updateScoreCard(plan, coverPlan)
     self:updatePlannedResiduePill(self.planStatusPillBg, self.planStatusPillText, plan)
 end
 
@@ -1068,14 +1106,20 @@ end
 
 function RealisticCropRotationFrame:updatePlanSlots(farmlandId)
     local plan = self:getPlanForFarmland(farmlandId)
+    local coverPlan = self:getCoverPlanForFarmland(farmlandId)
     self:updatePlanSlotYearLabels(plan)
     for i = 1, 4 do
         local sel      = self.planSlotSelector  ~= nil and self.planSlotSelector[i]
         local iconEl   = self.planSlotIcon      ~= nil and self.planSlotIcon[i]
         local badgeBg  = self.planSlotBadge     ~= nil and self.planSlotBadge[i]
         local badgeTxt = self.planSlotBadgeText ~= nil and self.planSlotBadgeText[i]
+        local coverSel      = self.coverSlotSelector  ~= nil and self.coverSlotSelector[i]
+        local coverIconEl   = self.coverSlotIcon      ~= nil and self.coverSlotIcon[i]
+        local coverBadgeBg  = self.coverSlotBadge     ~= nil and self.coverSlotBadge[i]
+        local coverBadgeTxt = self.coverSlotBadgeText ~= nil and self.coverSlotBadgeText[i]
 
         local cropName = plan[i] or ""
+        local coverCropName = coverPlan[i] or ""
 
         -- Sync MultiTextOption state to saved crop
         if sel ~= nil then
@@ -1085,9 +1129,18 @@ function RealisticCropRotationFrame:updatePlanSlots(farmlandId)
             end
             sel:setState(state, false)
         end
+        if coverSel ~= nil then
+            local coverState = 1
+            for idx, name in ipairs(self.coverCropList) do
+                if name == coverCropName then coverState = idx; break end
+            end
+            coverSel:setState(coverState, false)
+        end
 
         self:applySlotCropIcon(iconEl, cropName)
         self:applySlotBadge(badgeBg, badgeTxt, self:getCropFamily(cropName))
+        self:applySlotCropIcon(coverIconEl, coverCropName)
+        self:applySlotBadge(coverBadgeBg, coverBadgeTxt, "COVER", "rcr_family_cover")
     end
 end
 
@@ -1103,18 +1156,37 @@ function RealisticCropRotationFrame:getPlanFromSelectors()
     return plan
 end
 
+function RealisticCropRotationFrame:getCoverPlanFromSelectors()
+    local coverPlan = {"", "", "", ""}
+    for i = 1, 4 do
+        local sel = self.coverSlotSelector ~= nil and self.coverSlotSelector[i]
+        if sel ~= nil and self.coverCropList ~= nil then
+            local state = sel:getState()
+            coverPlan[i] = self.coverCropList[state] or ""
+        end
+    end
+    return coverPlan
+end
+
 function RealisticCropRotationFrame:updatePlanSlotVisualsFromSelectors()
     local plan = self:getPlanFromSelectors()
+    local coverPlan = self:getCoverPlanFromSelectors()
     self:updatePlanSlotYearLabels(plan)
     for i = 1, 4 do
         local cropName = plan[i] or ""
+        local coverCropName = coverPlan[i] or ""
         local iconEl   = self.planSlotIcon      ~= nil and self.planSlotIcon[i]
         local badgeBg  = self.planSlotBadge     ~= nil and self.planSlotBadge[i]
         local badgeTxt = self.planSlotBadgeText ~= nil and self.planSlotBadgeText[i]
+        local coverIconEl   = self.coverSlotIcon      ~= nil and self.coverSlotIcon[i]
+        local coverBadgeBg  = self.coverSlotBadge     ~= nil and self.coverSlotBadge[i]
+        local coverBadgeTxt = self.coverSlotBadgeText ~= nil and self.coverSlotBadgeText[i]
         self:applySlotCropIcon(iconEl, cropName)
         self:applySlotBadge(badgeBg, badgeTxt, self:getCropFamily(cropName))
+        self:applySlotCropIcon(coverIconEl, coverCropName)
+        self:applySlotBadge(coverBadgeBg, coverBadgeTxt, "COVER", "rcr_family_cover")
     end
-    self:updateScoreCard(plan)
+    self:updateScoreCard(plan, coverPlan)
     self:updatePlannedResiduePill(self.planStatusPillBg, self.planStatusPillText, plan)
 end
 
@@ -1168,7 +1240,7 @@ function RealisticCropRotationFrame:applySlotCropIcon(iconEl, cropName)
     if not loaded then iconEl:setVisible(false) end
 end
 
-function RealisticCropRotationFrame:applySlotBadge(badgeBg, badgeTxt, family)
+function RealisticCropRotationFrame:applySlotBadge(badgeBg, badgeTxt, family, badgeTextKey)
     local showBadge = family ~= nil and family ~= "" and family ~= "UNKNOWN"
     if badgeBg ~= nil then
         badgeBg:setVisible(showBadge)
@@ -1182,7 +1254,7 @@ function RealisticCropRotationFrame:applySlotBadge(badgeBg, badgeTxt, family)
     if badgeTxt ~= nil then
         badgeTxt:setVisible(showBadge)
         if showBadge then
-            local familyText = self.i18n:getText("rcr_family_" .. string.lower(family))
+            local familyText = self.i18n:getText(badgeTextKey or "rcr_family_" .. string.lower(family))
             badgeTxt:setText(familyText)
             self:resizePillToText(badgeBg, badgeTxt, familyText)
         end
@@ -1197,6 +1269,11 @@ function RealisticCropRotationFrame:onChangePlanSlot1() self:handlePlanSlotChang
 function RealisticCropRotationFrame:onChangePlanSlot2() self:handlePlanSlotChange(2) end
 function RealisticCropRotationFrame:onChangePlanSlot3() self:handlePlanSlotChange(3) end
 function RealisticCropRotationFrame:onChangePlanSlot4() self:handlePlanSlotChange(4) end
+
+function RealisticCropRotationFrame:onChangeCoverSlot1() self:handleCoverSlotChange(1) end
+function RealisticCropRotationFrame:onChangeCoverSlot2() self:handleCoverSlotChange(2) end
+function RealisticCropRotationFrame:onChangeCoverSlot3() self:handleCoverSlotChange(3) end
+function RealisticCropRotationFrame:onChangeCoverSlot4() self:handleCoverSlotChange(4) end
 
 function RealisticCropRotationFrame:handlePlanSlotChange(slotIdx)
     if self.isApplyingServerSync then return end
@@ -1214,7 +1291,7 @@ function RealisticCropRotationFrame:handlePlanSlotChange(slotIdx)
         if g_client ~= nil and g_client.getServerConnection ~= nil and RCRPlanUpdateEvent ~= nil then
             local connection = g_client:getServerConnection()
             if connection ~= nil then
-                connection:sendEvent(RCRPlanUpdateEvent.new(self.selectedId, slotIdx, cropName))
+                connection:sendEvent(RCRPlanUpdateEvent.new(self.selectedId, slotIdx, cropName, false))
             end
         else
             Logging.warning("[RealisticCropRotation][MP] Plan update not sent: client connection or event unavailable")
@@ -1237,8 +1314,9 @@ function RealisticCropRotationFrame:handlePlanSlotChange(slotIdx)
     self:applySlotBadge(badgeBg, badgeTxt, self:getCropFamily(cropName))
 
     local plan = self:getPlanFromSelectors()
+    local coverPlan = self:getCoverPlanFromSelectors()
     self:updatePlanSlotYearLabels(plan)
-    self:updateScoreCard(plan)
+    self:updateScoreCard(plan, coverPlan)
     self:updatePlannedResiduePill(self.planStatusPillBg, self.planStatusPillText, plan)
 
     -- Keep the overview refreshed from the repository. On MP clients this may
@@ -1250,15 +1328,64 @@ function RealisticCropRotationFrame:handlePlanSlotChange(slotIdx)
     end
 end
 
+function RealisticCropRotationFrame:handleCoverSlotChange(slotIdx)
+    if self.isApplyingServerSync then return end
+    if self.selectedId == nil then return end
+    local sel = self.coverSlotSelector ~= nil and self.coverSlotSelector[slotIdx]
+    if sel == nil then return end
+
+    local state = sel:getState()
+    local cropName = (self.coverCropList ~= nil and self.coverCropList[state]) or ""
+
+    local isClientOnly = g_currentMission ~= nil and g_currentMission.getIsServer ~= nil
+        and not g_currentMission:getIsServer()
+
+    if isClientOnly then
+        if g_client ~= nil and g_client.getServerConnection ~= nil and RCRPlanUpdateEvent ~= nil then
+            local connection = g_client:getServerConnection()
+            if connection ~= nil then
+                connection:sendEvent(RCRPlanUpdateEvent.new(self.selectedId, slotIdx, cropName, true))
+            end
+        else
+            Logging.warning("[RealisticCropRotation][MP] Cover plan update not sent: client connection or event unavailable")
+        end
+    else
+        local mgr = self:getManager()
+        local changed = false
+        if mgr ~= nil and mgr.setRotationCoverPlanYear ~= nil then
+            changed = mgr:setRotationCoverPlanYear(self.selectedId, slotIdx, cropName)
+        end
+        if changed and RealisticCropRotation ~= nil and RealisticCropRotation.requestBroadcast ~= nil then
+            RealisticCropRotation.requestBroadcast()
+        end
+    end
+
+    local iconEl   = self.coverSlotIcon      ~= nil and self.coverSlotIcon[slotIdx]
+    local badgeBg  = self.coverSlotBadge     ~= nil and self.coverSlotBadge[slotIdx]
+    local badgeTxt = self.coverSlotBadgeText ~= nil and self.coverSlotBadgeText[slotIdx]
+    self:applySlotCropIcon(iconEl, cropName)
+    self:applySlotBadge(badgeBg, badgeTxt, "COVER", "rcr_family_cover")
+
+    local plan = self:getPlanFromSelectors()
+    local coverPlan = self:getCoverPlanFromSelectors()
+    self:updateScoreCard(plan, coverPlan)
+
+    self:buildRotationGroups()
+    if self.listPlanOverview ~= nil then
+        self.listPlanOverview:reloadData()
+    end
+end
+
 -- ---------------------------------------------------------------------------
 --  Score card
 -- ---------------------------------------------------------------------------
 
-function RealisticCropRotationFrame:updateScoreCard(plan)
+function RealisticCropRotationFrame:updateScoreCard(plan, coverPlan)
     if self.scoreText == nil then return end
     plan = plan or {"","","",""}
+    coverPlan = coverPlan or {"","","",""}
 
-    local score    = self:calcRotationScore(plan)
+    local score    = self:calcRotationScore(plan, coverPlan)
     local scoreKey = self:getScoreTextKey(score, plan)
     self.scoreText:setText(self.i18n:getText(scoreKey))
 
@@ -1286,9 +1413,10 @@ function RealisticCropRotationFrame:updateScoreCard(plan)
     end
 end
 
-function RealisticCropRotationFrame:calcRotationScore(plan)
+function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
     local families = {}
     local hasLegume = false
+    local hasCover = false
     for i = 1, 4 do
         local crop = plan[i] or ""
         if crop ~= "" then
@@ -1297,6 +1425,11 @@ function RealisticCropRotationFrame:calcRotationScore(plan)
                 families[i] = fam
                 if fam == "LEGUME" then hasLegume = true end
             end
+        end
+
+        local coverCrop = coverPlan ~= nil and coverPlan[i] or ""
+        if coverCrop ~= nil and coverCrop ~= "" then
+            hasCover = true
         end
     end
 
@@ -1307,7 +1440,10 @@ function RealisticCropRotationFrame:calcRotationScore(plan)
     local score = 100
     for i = 1, 3 do
         if families[i] ~= nil and families[i+1] ~= nil and families[i] == families[i+1] then
-            score = score - 25
+            local coverCrop = coverPlan ~= nil and coverPlan[i] or ""
+            if coverCrop == nil or coverCrop == "" then
+                score = score - 25
+            end
         end
     end
     if hasLegume then score = math.min(100, score + 10) end
@@ -1317,6 +1453,7 @@ function RealisticCropRotationFrame:calcRotationScore(plan)
     local uniqueCount = 0
     for _ in pairs(seen) do uniqueCount = uniqueCount + 1 end
     if uniqueCount == 1 then score = math.max(0, score - 20) end
+    if hasCover then score = math.min(100, score + RealisticCropRotationFrame.COVER_PLAN_BONUS) end
 
     return math.max(0, math.min(100, score))
 end
@@ -1351,17 +1488,21 @@ function RealisticCropRotationFrame:buildRotationGroups()
 
     for _, entry in ipairs(self.farmlandList or {}) do
         local plan = self:getPlanForFarmland(entry.farmlandId)
-        -- Key by exact crop sequence
+        local coverPlan = self:getCoverPlanForFarmland(entry.farmlandId)
+        -- Key by exact main crop and cover crop sequence
         local key = (plan[1] or "") .. "|" .. (plan[2] or "")
                  .. "|" .. (plan[3] or "") .. "|" .. (plan[4] or "")
+                 .. "||" .. (coverPlan[1] or "") .. "|" .. (coverPlan[2] or "")
+                 .. "|" .. (coverPlan[3] or "") .. "|" .. (coverPlan[4] or "")
 
         if groupMap[key] == nil then
             table.insert(groups, {
                 key        = key,
                 plan       = plan,
+                coverPlan  = coverPlan,
                 fieldNames = {},
                 areaHa     = 0,
-                score      = self:calcRotationScore(plan),
+                score      = self:calcRotationScore(plan, coverPlan),
             })
             groupMap[key] = #groups
         end
@@ -1371,7 +1512,7 @@ function RealisticCropRotationFrame:buildRotationGroups()
     end
 
     -- Sort: non-empty plans first, then by field count (desc), then by score (desc)
-    local emptyKey = "|||"
+    local emptyKey = "||||||||"
     table.sort(groups, function(a, b)
         local aEmpty = (a.key == emptyKey)
         local bEmpty = (b.key == emptyKey)
@@ -1547,7 +1688,7 @@ function RealisticCropRotationFrame:populateGroupCell(index, cell)
     if cell == nil or cell.getAttribute == nil then return end
     local group = (self.rotationGroups or {})[index]
     if group == nil then return end
-    local isEmptyGroup = group.key == "|||"
+    local isEmptyGroup = group.key == "||||||||"
 
     local summaryEl = cell:getAttribute("gPlanSummary")
     if summaryEl ~= nil then

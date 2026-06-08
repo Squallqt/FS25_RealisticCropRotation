@@ -5,16 +5,22 @@ local RCRPlanUpdateEvent_mt = Class(RCRPlanUpdateEvent, Event)
 
 InitEventClass(RCRPlanUpdateEvent, "RCRPlanUpdateEvent")
 
+local VALID_COVER_CROPS = {
+    OILSEEDRADISH = true,
+    FLOWERINGCATCHCROP = true,
+}
+
 function RCRPlanUpdateEvent.emptyNew()
     local self = Event.new(RCRPlanUpdateEvent_mt)
     return self
 end
 
-function RCRPlanUpdateEvent.new(farmlandId, yearIdx, cropName)
+function RCRPlanUpdateEvent.new(farmlandId, yearIdx, cropName, isCover)
     local self = RCRPlanUpdateEvent.emptyNew()
     self.farmlandId = tonumber(farmlandId) or 0
     self.yearIdx = tonumber(yearIdx) or 0
     self.cropName = tostring(cropName or "")
+    self.isCover = isCover == true
     return self
 end
 
@@ -22,6 +28,7 @@ function RCRPlanUpdateEvent:readStream(streamId, connection)
     self.farmlandId = streamReadInt32(streamId)
     self.yearIdx = streamReadInt8(streamId)
     self.cropName = streamReadString(streamId)
+    self.isCover = streamReadInt8(streamId) == 1
 
     self:run(connection)
 end
@@ -30,6 +37,7 @@ function RCRPlanUpdateEvent:writeStream(streamId, connection)
     streamWriteInt32(streamId, tonumber(self.farmlandId) or 0)
     streamWriteInt8(streamId, tonumber(self.yearIdx) or 0)
     streamWriteString(streamId, tostring(self.cropName or ""))
+    streamWriteInt8(streamId, self.isCover and 1 or 0)
 end
 
 function RCRPlanUpdateEvent:run(connection)
@@ -38,10 +46,15 @@ function RCRPlanUpdateEvent:run(connection)
     end
 
     local manager = g_currentMission.realisticCropRotationManager
-    if manager == nil or manager.setRotationPlanYear == nil then
+    local isCoverUpdate = self.isCover == true
+    if manager == nil
+        or (not isCoverUpdate and manager.setRotationPlanYear == nil)
+        or (isCoverUpdate and manager.setRotationCoverPlanYear == nil) then
         Logging.warning("[RealisticCropRotation][MP] Plan update ignored: manager unavailable")
         return
     end
+
+    self.cropName = string.upper(tostring(self.cropName or ""))
 
     -- P0-4 auth: resolve the requesting client's farm via the userManager and
     -- reject the event unless that farm owns the target farmland. Pattern from
@@ -79,17 +92,36 @@ function RCRPlanUpdateEvent:run(connection)
                 tostring(self.farmlandId), tostring(self.cropName))
             return
         end
+
+        local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
+        local family = config ~= nil and config.families ~= nil and config.families[self.cropName] or nil
+        if isCoverUpdate then
+            if not VALID_COVER_CROPS[self.cropName] or family ~= "COVER" then
+                Logging.warning("[RealisticCropRotation][MP] Cover plan update rejected (invalid cover): farmland=%s crop=%s",
+                    tostring(self.farmlandId), tostring(self.cropName))
+                return
+            end
+        elseif family == "COVER" or VALID_COVER_CROPS[self.cropName] then
+            Logging.warning("[RealisticCropRotation][MP] Main plan update rejected (cover in main plan): farmland=%s crop=%s",
+                tostring(self.farmlandId), tostring(self.cropName))
+            return
+        end
     end
 
-    local changed = manager:setRotationPlanYear(self.farmlandId, self.yearIdx, self.cropName)
+    local changed = false
+    if isCoverUpdate then
+        changed = manager:setRotationCoverPlanYear(self.farmlandId, self.yearIdx, self.cropName)
+    else
+        changed = manager:setRotationPlanYear(self.farmlandId, self.yearIdx, self.cropName)
+    end
     if not changed then
-        Logging.warning("[RealisticCropRotation][MP] Plan update ignored: invalid payload farmland=%s year=%s crop=%s",
-            tostring(self.farmlandId), tostring(self.yearIdx), tostring(self.cropName))
+        Logging.warning("[RealisticCropRotation][MP] Plan update ignored: invalid payload farmland=%s year=%s crop=%s cover=%s",
+            tostring(self.farmlandId), tostring(self.yearIdx), tostring(self.cropName), tostring(isCoverUpdate))
         return
     end
 
-    Logging.info("[RealisticCropRotation][MP] Plan update applied farmland=%s year=%s crop=%s",
-        tostring(self.farmlandId), tostring(self.yearIdx), tostring(self.cropName))
+    Logging.info("[RealisticCropRotation][MP] Plan update applied farmland=%s year=%s crop=%s cover=%s",
+        tostring(self.farmlandId), tostring(self.yearIdx), tostring(self.cropName), tostring(isCoverUpdate))
 
     if RealisticCropRotation ~= nil and RealisticCropRotation.requestBroadcast ~= nil then
         RealisticCropRotation.requestBroadcast()

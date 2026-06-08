@@ -4,10 +4,21 @@
 RealisticCropRotationRepository = {}
 local RealisticCropRotationRepository_mt = Class(RealisticCropRotationRepository)
 
-RealisticCropRotationRepository.SAVE_VERSION = 1
+RealisticCropRotationRepository.SAVE_VERSION = 2
 RealisticCropRotationRepository.MAX_HISTORY = 4
 
-local function getPersistenceCounts(history, plans, lastKnownActiveCrop, appliedResidue)
+local function hasPlanData(plan)
+    if plan ~= nil then
+        for i = 1, 4 do
+            if plan[i] ~= nil and plan[i] ~= "" then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+local function getPersistenceCounts(history, plans, coverPlans, lastKnownActiveCrop, appliedResidue)
     local historyFarmlands = 0
     local historyEntries = 0
     for _, entries in pairs(history or {}) do
@@ -19,13 +30,15 @@ local function getPersistenceCounts(history, plans, lastKnownActiveCrop, applied
 
     local planFarmlands = 0
     for _, plan in pairs(plans or {}) do
-        if plan ~= nil then
-            for i = 1, 4 do
-                if plan[i] ~= nil and plan[i] ~= "" then
-                    planFarmlands = planFarmlands + 1
-                    break
-                end
-            end
+        if hasPlanData(plan) then
+            planFarmlands = planFarmlands + 1
+        end
+    end
+
+    local coverPlanFarmlands = 0
+    for _, coverPlan in pairs(coverPlans or {}) do
+        if hasPlanData(coverPlan) then
+            coverPlanFarmlands = coverPlanFarmlands + 1
         end
     end
 
@@ -43,13 +56,14 @@ local function getPersistenceCounts(history, plans, lastKnownActiveCrop, applied
         end
     end
 
-    return historyFarmlands, historyEntries, planFarmlands, activeCropFarmlands, appliedResidueFarmlands
+    return historyFarmlands, historyEntries, planFarmlands, coverPlanFarmlands, activeCropFarmlands, appliedResidueFarmlands
 end
 
 function RealisticCropRotationRepository.new()
     local self = setmetatable({}, RealisticCropRotationRepository_mt)
-    self.history = {}
-    self.plans   = {}
+    self.history    = {}
+    self.plans      = {}
+    self.coverPlans = {}
     self.lastKnownActiveCrop = {}
     self.lastKnownGrowthState = {}
     -- Legacy residue payload retained for old saves and MP sync compatibility.
@@ -58,8 +72,9 @@ function RealisticCropRotationRepository.new()
 end
 
 function RealisticCropRotationRepository:clear()
-    self.history = {}
-    self.plans   = {}
+    self.history    = {}
+    self.plans      = {}
+    self.coverPlans = {}
     self.lastKnownActiveCrop = {}
     self.lastKnownGrowthState = {}
     self.appliedResidue = {}
@@ -166,14 +181,34 @@ function RealisticCropRotationRepository:setPlanYear(farmlandId, yearIdx, family
     self.plans[farmlandId][yearIdx] = tostring(family or "")
 end
 
+function RealisticCropRotationRepository:getCoverPlan(farmlandId)
+    return self.coverPlans[farmlandId] or self.coverPlans[tostring(farmlandId)] or {"","","",""}
+end
+
+function RealisticCropRotationRepository:getAllCoverPlans()
+    return self.coverPlans
+end
+
+function RealisticCropRotationRepository:setCoverPlanYear(farmlandId, yearIdx, cropName)
+    yearIdx = tonumber(yearIdx) or 0
+    if yearIdx < 1 or yearIdx > 4 then return end
+    if self.coverPlans[farmlandId] == nil then
+        self.coverPlans[farmlandId] = {"","","",""}
+    end
+    self.coverPlans[farmlandId][yearIdx] = tostring(cropName or "")
+end
+
 function RealisticCropRotationRepository:clearPlan(farmlandId)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
 
     local stringFarmlandId = tostring(numericFarmlandId)
     local changed = self.plans[numericFarmlandId] ~= nil or self.plans[stringFarmlandId] ~= nil
+        or self.coverPlans[numericFarmlandId] ~= nil or self.coverPlans[stringFarmlandId] ~= nil
     self.plans[numericFarmlandId] = nil
     self.plans[stringFarmlandId] = nil
+    self.coverPlans[numericFarmlandId] = nil
+    self.coverPlans[stringFarmlandId] = nil
     return changed
 end
 
@@ -242,9 +277,10 @@ function RealisticCropRotationRepository:setLastKnownGrowthState(farmlandId, gro
     return changed
 end
 
-function RealisticCropRotationRepository:replaceAll(newHistory, newPlans, newLastKnownActiveCrop, newAppliedResidue, newLastKnownGrowthState)
-    self.history = newHistory or {}
-    self.plans   = newPlans or {}
+function RealisticCropRotationRepository:replaceAll(newHistory, newPlans, newCoverPlans, newLastKnownActiveCrop, newAppliedResidue, newLastKnownGrowthState)
+    self.history    = newHistory or {}
+    self.plans      = newPlans or {}
+    self.coverPlans = newCoverPlans or {}
     self.lastKnownActiveCrop = newLastKnownActiveCrop or {}
     self.lastKnownGrowthState = newLastKnownGrowthState or {}
     self.appliedResidue = newAppliedResidue or {}
@@ -275,6 +311,10 @@ function RealisticCropRotationRepository:saveToXML(savegamePath)
         local n = tonumber(farmlandId)
         if n ~= nil and n > 0 and not seen[n] then seen[n] = true; table.insert(allIds, n) end
     end
+    for farmlandId in pairs(self.coverPlans) do
+        local n = tonumber(farmlandId)
+        if n ~= nil and n > 0 and not seen[n] then seen[n] = true; table.insert(allIds, n) end
+    end
     for farmlandId in pairs(self.lastKnownActiveCrop) do
         local n = tonumber(farmlandId)
         if n ~= nil and n > 0 and not seen[n] then seen[n] = true; table.insert(allIds, n) end
@@ -294,10 +334,9 @@ function RealisticCropRotationRepository:saveToXML(savegamePath)
         local entries = self.history[numericFarmlandId]
         local hasHistory = entries ~= nil and #entries > 0
         local plan = self.plans[numericFarmlandId]
-        local hasPlan = false
-        if plan ~= nil then
-            for i = 1, 4 do if plan[i] ~= nil and plan[i] ~= "" then hasPlan = true; break end end
-        end
+        local hasPlan = hasPlanData(plan)
+        local coverPlan = self.coverPlans[numericFarmlandId]
+        local hasCoverPlan = hasPlanData(coverPlan)
         local activeCrop = self.lastKnownActiveCrop[numericFarmlandId]
             or self.lastKnownActiveCrop[tostring(numericFarmlandId)]
         local hasActiveCrop = activeCrop ~= nil and activeCrop ~= ""
@@ -308,7 +347,7 @@ function RealisticCropRotationRepository:saveToXML(savegamePath)
         local applied = self.appliedResidue[numericFarmlandId] or self.appliedResidue[tostring(numericFarmlandId)]
         local hasApplied = applied ~= nil and applied.crop ~= nil and applied.crop ~= ""
 
-        if hasHistory or hasPlan or hasActiveCrop or hasActiveGrowthState or hasApplied then
+        if hasHistory or hasPlan or hasCoverPlan or hasActiveCrop or hasActiveGrowthState or hasApplied then
             local farmlandKey = string.format("realisticCropRotation.farmland(%d)", farmlandIndex)
             setXMLInt(xmlFile, farmlandKey .. "#id", numericFarmlandId)
             if hasActiveCrop then
@@ -344,6 +383,15 @@ function RealisticCropRotationRepository:saveToXML(savegamePath)
                 end
             end
 
+            if hasCoverPlan then
+                local coverPlanKey = farmlandKey .. ".coverPlan(0)"
+                for pi = 1, 4 do
+                    if coverPlan[pi] ~= nil and coverPlan[pi] ~= "" then
+                        setXMLString(xmlFile, coverPlanKey .. "#year" .. pi, coverPlan[pi])
+                    end
+                end
+            end
+
             farmlandIndex = farmlandIndex + 1
         end
     end
@@ -351,10 +399,10 @@ function RealisticCropRotationRepository:saveToXML(savegamePath)
     saveXMLFile(xmlFile)
     delete(xmlFile)
 
-    local historyFarmlands, historyEntries, planFarmlands, activeCropFarmlands, appliedResidueFarmlands =
-        getPersistenceCounts(self.history, self.plans, self.lastKnownActiveCrop, self.appliedResidue)
-    Logging.info("[RealisticCropRotation] Saved realisticCropRotation.xml historyFarmlands=%d entries=%d plans=%d activeCrops=%d appliedResidues=%d path=%s",
-        historyFarmlands, historyEntries, planFarmlands, activeCropFarmlands, appliedResidueFarmlands, tostring(filePath))
+    local historyFarmlands, historyEntries, planFarmlands, coverPlanFarmlands, activeCropFarmlands, appliedResidueFarmlands =
+        getPersistenceCounts(self.history, self.plans, self.coverPlans, self.lastKnownActiveCrop, self.appliedResidue)
+    Logging.info("[RealisticCropRotation] Saved realisticCropRotation.xml historyFarmlands=%d entries=%d plans=%d coverPlans=%d activeCrops=%d appliedResidues=%d path=%s",
+        historyFarmlands, historyEntries, planFarmlands, coverPlanFarmlands, activeCropFarmlands, appliedResidueFarmlands, tostring(filePath))
 end
 
 function RealisticCropRotationRepository:loadFromXML(savegamePath)
@@ -381,8 +429,9 @@ function RealisticCropRotationRepository:loadFromXML(savegamePath)
             version, RealisticCropRotationRepository.SAVE_VERSION)
     end
 
-    self.history = {}
-    self.plans   = {}
+    self.history    = {}
+    self.plans      = {}
+    self.coverPlans = {}
     self.lastKnownActiveCrop = {}
     self.lastKnownGrowthState = {}
     self.appliedResidue = {}
@@ -443,14 +492,28 @@ function RealisticCropRotationRepository:loadFromXML(savegamePath)
                 end
                 if hasPlan then self.plans[farmlandId] = plan end
             end
+
+            local coverPlanKey = farmlandKey .. ".coverPlan(0)"
+            if hasXMLProperty(xmlFile, coverPlanKey) then
+                local coverPlan = {"","","",""}
+                local hasCoverPlan = false
+                for pi = 1, 4 do
+                    local val = getXMLString(xmlFile, coverPlanKey .. "#year" .. pi)
+                    if val ~= nil and val ~= "" then
+                        coverPlan[pi] = val
+                        hasCoverPlan = true
+                    end
+                end
+                if hasCoverPlan then self.coverPlans[farmlandId] = coverPlan end
+            end
         end
 
         farmlandIndex = farmlandIndex + 1
     end
 
-    local historyFarmlands, historyEntries, planFarmlands, activeCropFarmlands, appliedResidueFarmlands =
-        getPersistenceCounts(self.history, self.plans, self.lastKnownActiveCrop, self.appliedResidue)
-    Logging.info("[RealisticCropRotation] Loaded realisticCropRotation.xml historyFarmlands=%d entries=%d plans=%d activeCrops=%d appliedResidues=%d path=%s (format v%d)",
-        historyFarmlands, historyEntries, planFarmlands, activeCropFarmlands, appliedResidueFarmlands, tostring(filePath), version)
+    local historyFarmlands, historyEntries, planFarmlands, coverPlanFarmlands, activeCropFarmlands, appliedResidueFarmlands =
+        getPersistenceCounts(self.history, self.plans, self.coverPlans, self.lastKnownActiveCrop, self.appliedResidue)
+    Logging.info("[RealisticCropRotation] Loaded realisticCropRotation.xml historyFarmlands=%d entries=%d plans=%d coverPlans=%d activeCrops=%d appliedResidues=%d path=%s (format v%d)",
+        historyFarmlands, historyEntries, planFarmlands, coverPlanFarmlands, activeCropFarmlands, appliedResidueFarmlands, tostring(filePath), version)
     delete(xmlFile)
 end

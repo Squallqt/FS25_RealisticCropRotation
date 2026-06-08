@@ -428,6 +428,22 @@ function RealisticCropRotationManager:setRotationPlanYear(farmlandId, yearIdx, f
     return true
 end
 
+function RealisticCropRotationManager:getRotationCoverPlan(farmlandId)
+    return self.repository:getCoverPlan(farmlandId)
+end
+
+function RealisticCropRotationManager:getAllRotationCoverPlans()
+    return self.repository:getAllCoverPlans()
+end
+
+function RealisticCropRotationManager:setRotationCoverPlanYear(farmlandId, yearIdx, cropName)
+    local n = tonumber(farmlandId)
+    local y = tonumber(yearIdx)
+    if n == nil or n <= 0 or y == nil or y < 1 or y > 4 then return false end
+    self.repository:setCoverPlanYear(n, y, cropName)
+    return true
+end
+
 function RealisticCropRotationManager:clearRotationPlan(farmlandId)
     if self.repository == nil or type(self.repository.clearPlan) ~= "function" then return false end
     return self.repository:clearPlan(farmlandId)
