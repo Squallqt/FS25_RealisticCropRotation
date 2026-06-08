@@ -286,9 +286,9 @@
 
             <!-- == PLAN TIMELINE (y=-144..298) == -->
             <!--                                                                        -->
-            <!--  4 planning slots: regular card/dash/card timeline                    -->
-            <!--    Slot1 x=8   Conn x=294  Slot2 x=319  Conn x=605                    -->
-            <!--    Slot3 x=630 Conn x=916  Slot4 x=941                                -->
+            <!--  4 widened slots, same height as history cards                         -->
+            <!--    Slot1 x=8   Conn x=274  Slot2 x=340  Conn x=606                    -->
+            <!--    Slot3 x=672 Conn x=938  Slot4 x=974                                -->
             <!-- ====================================================================== -->
             <GuiElement profile="frPlanTimeline" position="20px -144px">
                 <!-- == Slot 1: AN 1 == -->
@@ -306,13 +306,13 @@
                 </GuiElement>
 
                 <!-- Connector 1 -->
-                <GuiElement profile="frPlanTimelineConnector" position="294px -4px">
+                <GuiElement profile="frPlanTimelineConnector" position="274px -4px">
                     <RoundCorner profile="frTimelineConnectorLine"/>
                     <Text        profile="frTimelineArrowText" text=">"/>
                 </GuiElement>
 
                 <!-- == Slot 2: AN 2 == -->
-                <GuiElement profile="frPlanSlotCard" position="319px -4px">
+                <GuiElement profile="frPlanSlotCard" position="340px -4px">
                     <RoundCorner     profile="frPlanSlotCardBg"/>
                     <Text            profile="frPlanSlotYear"      id="planSlotYear[2]"     text="$l10n_rcr_plan_year2"/>
                     <Bitmap          profile="frPlanSlotCropIcon"  id="planSlotIcon[2]"     visible="false"/>
@@ -326,13 +326,13 @@
                 </GuiElement>
 
                 <!-- Connector 2 -->
-                <GuiElement profile="frPlanTimelineConnector" position="605px -4px">
+                <GuiElement profile="frPlanTimelineConnector" position="606px -4px">
                     <RoundCorner profile="frTimelineConnectorLine"/>
                     <Text        profile="frTimelineArrowText" text=">"/>
                 </GuiElement>
 
                 <!-- == Slot 3: AN 3 == -->
-                <GuiElement profile="frPlanSlotCard" position="630px -4px">
+                <GuiElement profile="frPlanSlotCard" position="672px -4px">
                     <RoundCorner     profile="frPlanSlotCardBg"/>
                     <Text            profile="frPlanSlotYear"      id="planSlotYear[3]"     text="$l10n_rcr_plan_year3"/>
                     <Bitmap          profile="frPlanSlotCropIcon"  id="planSlotIcon[3]"     visible="false"/>
@@ -346,13 +346,13 @@
                 </GuiElement>
 
                 <!-- Connector 3 -->
-                <GuiElement profile="frPlanTimelineConnector" position="916px -4px">
+                <GuiElement profile="frPlanTimelineConnector" position="938px -4px">
                     <RoundCorner profile="frTimelineConnectorLine"/>
                     <Text        profile="frTimelineArrowText" text=">"/>
                 </GuiElement>
 
                 <!-- == Slot 4: AN 4 == -->
-                <GuiElement profile="frPlanSlotCard" position="941px -4px">
+                <GuiElement profile="frPlanSlotCard" position="974px -4px">
                     <RoundCorner     profile="frPlanSlotCardBg"/>
                     <Text            profile="frPlanSlotYear"      id="planSlotYear[4]"     text="$l10n_rcr_plan_year4"/>
                     <Bitmap          profile="frPlanSlotCropIcon"  id="planSlotIcon[4]"     visible="false"/>

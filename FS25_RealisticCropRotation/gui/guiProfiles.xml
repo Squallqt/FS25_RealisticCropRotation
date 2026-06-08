@@ -507,18 +507,18 @@
     <!-- Same size/anchor as frDetailContainer — shown in planning tab -->
     <Profile name="frPlanContainer" extends="frDetailContainer"/>
 
-    <!-- Plan timeline strip — 4 compact planning cards spread across 1240 px -->
+    <!-- Plan timeline strip — 4 widened slots spread across 1240 px -->
     <Profile name="frPlanTimeline" extends="emptyPanel" with="anchorTopLeft">
         <size value="1240px 154px"/>
     </Profile>
 
-    <!-- Individual plan slot card: main crop row + cover crop row -->
+    <!-- Individual plan slot card: main crop row + cover crop row, widened on X only -->
     <Profile name="frPlanSlotCard" extends="emptyPanel" with="anchorTopLeft">
-        <size value="286px 160px"/>
+        <size value="266px 160px"/>
     </Profile>
 
     <Profile name="frPlanSlotCardBg" extends="baseReference" with="anchorTopLeft">
-        <size value="286px 160px"/>
+        <size value="266px 160px"/>
         <color value="0 0 0 0.42"/>
         <cornerSize value="0.35"/>
     </Profile>
@@ -526,7 +526,7 @@
     <!-- Year label at top of plan slot -->
     <Profile name="frPlanSlotYear" extends="fs25_textDefault" with="anchorTopCenter">
         <position value="0px -9px"/>
-        <size value="240px 18px"/>
+        <size value="210px 18px"/>
         <textSize value="12px"/>
         <textBold value="true"/>
         <textUpperCase value="true"/>
@@ -541,30 +541,30 @@
         <textLayoutMode value="resize"/>
     </Profile>
 
-    <!-- Main crop row: icon and selector share the same visual baseline -->
+    <!-- Main crop row: icon left of selector (filename set in Lua) -->
     <Profile name="frPlanSlotCropIcon" extends="baseReference" with="anchorTopCenter">
-        <position value="-109px -31px"/>
-        <size value="32px 32px"/>
+        <position value="-106px -34px"/>
+        <size value="30px 30px"/>
     </Profile>
 
-    <!-- Main crop selector -->
+    <!-- Main crop selector — wider card allows icon + selector on one row -->
     <Profile name="frPlanSlotSelector" extends="fs25_multiTextOption" with="anchorTopCenter">
-        <size value="222px 34px"/>
-        <position value="20px -30px"/>
+        <size value="204px 34px"/>
+        <position value="19px -31px"/>
         <wrap value="true"/>
     </Profile>
 
     <!-- Family badge below the main crop selector -->
     <Profile name="frPlanSlotBadgeBg" extends="baseReference" with="anchorTopCenter">
-        <position value="20px -66px"/>
-        <size value="108px 22px"/>
+        <position value="19px -66px"/>
+        <size value="100px 22px"/>
         <color value="$preset_fs25_colorGrey"/>
         <cornerSize value="0.20"/>
     </Profile>
 
     <Profile name="frPlanSlotBadgeText" extends="fs25_textDefault" with="anchorTopCenter">
-        <position value="20px -66px"/>
-        <size value="108px 22px"/>
+        <position value="19px -66px"/>
+        <size value="100px 22px"/>
         <textSize value="12px"/>
         <textBold value="true"/>
         <textUpperCase value="true"/>
@@ -574,28 +574,28 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Cover crop row: same grid as the main row, visually secondary by label only -->
+    <!-- Cover crop row: compact icon + selector, with COVER badge below -->
     <Profile name="frPlanCoverCropIcon" extends="baseReference" with="anchorTopCenter">
-        <position value="-109px -91px"/>
-        <size value="32px 32px"/>
+        <position value="-106px -94px"/>
+        <size value="30px 30px"/>
     </Profile>
 
     <Profile name="frPlanCoverSelector" extends="fs25_multiTextOption" with="anchorTopCenter">
-        <size value="222px 34px"/>
-        <position value="20px -90px"/>
+        <size value="204px 34px"/>
+        <position value="19px -91px"/>
         <wrap value="true"/>
     </Profile>
 
     <Profile name="frPlanCoverBadgeBg" extends="baseReference" with="anchorTopCenter">
-        <position value="20px -126px"/>
-        <size value="96px 22px"/>
+        <position value="19px -126px"/>
+        <size value="94px 22px"/>
         <color value="$preset_fs25_colorGrey"/>
         <cornerSize value="0.20"/>
     </Profile>
 
     <Profile name="frPlanCoverBadgeText" extends="fs25_textDefault" with="anchorTopCenter">
-        <position value="20px -126px"/>
-        <size value="96px 22px"/>
+        <position value="19px -126px"/>
+        <size value="94px 22px"/>
         <textSize value="12px"/>
         <textBold value="true"/>
         <textUpperCase value="true"/>
