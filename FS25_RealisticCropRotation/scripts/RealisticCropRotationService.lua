@@ -201,21 +201,16 @@ function RealisticCropRotationService:onCropChangeArea(farmlandId, fruitTypeInde
     local numericChangedArea = tonumber(changedArea) or 0
     if numericChangedArea <= 0 then return false end
 
-    local cropName = self:getCropNameByFruitTypeIndex(fruitTypeIndex)
-    local normalizedCropName = self:normalizeCropName(cropName)
-    if normalizedCropName == nil then return false end
+    local normalizedHistoryCrop = self:normalizeCropName(activeCropNameBeforeTermination)
 
     local historyCropIsCover = false
-    if activeCropNameBeforeTermination ~= nil and activeCropNameBeforeTermination ~= "" then
-        historyCropIsCover = self:isCoverCropForRotationHistory(nil, activeCropNameBeforeTermination)
-    end
-    if not historyCropIsCover then
-        historyCropIsCover = self:isCoverCropForRotationHistory(fruitTypeIndex, normalizedCropName)
+    if normalizedHistoryCrop ~= nil then
+        historyCropIsCover = self:isCoverCropForRotationHistory(nil, normalizedHistoryCrop)
     end
 
     local pushed = false
-    if not historyCropIsCover then
-        pushed = self:pushHistoryCrop(numericFarmlandId, normalizedCropName)
+    if normalizedHistoryCrop ~= nil and not historyCropIsCover then
+        pushed = self:pushHistoryCrop(numericFarmlandId, normalizedHistoryCrop)
     end
     local activeChanged = self:setLastKnownActiveCrop(numericFarmlandId, nextActiveCropName)
     if pushed or activeChanged then
