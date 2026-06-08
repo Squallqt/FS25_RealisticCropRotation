@@ -90,6 +90,7 @@ RealisticCropRotation.broadcastDirty = false
 RealisticCropRotation.broadcastTimerMs = 0
 RealisticCropRotation.broadcastUpdateable = nil
 RealisticCropRotation.farmlandOwnerChangeListener = nil
+RealisticCropRotation.periodChangedListener = nil
 
 function RealisticCropRotation.requestBroadcast()
     if g_server == nil then return end
@@ -124,6 +125,27 @@ local function onFarmlandOwnerChanged(farmlandId, _farmId, loadFromSavegame)
     if changed then
         Logging.info("[RealisticCropRotation] Rotation plan cleared after farmland owner change: farmland=%s",
             tostring(farmlandId))
+        refreshRealisticCropRotationFrame()
+        RealisticCropRotation.requestBroadcast()
+    end
+end
+
+local function onPeriodChanged()
+    if g_currentMission == nil or not g_currentMission:getIsServer() then return end
+    if RealisticCropRotation.manager == nil
+        or type(RealisticCropRotation.manager.getOwnedRotationFarmlandIds) ~= "function"
+        or type(RealisticCropRotation.manager.reconcileActiveCropForFarmland) ~= "function" then
+        return
+    end
+
+    local changed = false
+    for _, farmlandId in ipairs(RealisticCropRotation.manager:getOwnedRotationFarmlandIds()) do
+        if RealisticCropRotation.manager:reconcileActiveCropForFarmland(farmlandId) then
+            changed = true
+        end
+    end
+
+    if changed then
         refreshRealisticCropRotationFrame()
         RealisticCropRotation.requestBroadcast()
     end
@@ -241,6 +263,18 @@ local function loadedMission()
         else
             Logging.warning("[RealisticCropRotation] Farmland owner listener unavailable; rotation plans cannot be cleared on sale")
         end
+        if g_messageCenter ~= nil and MessageType ~= nil and MessageType.PERIOD_CHANGED ~= nil then
+            RealisticCropRotation.periodChangedListener = {
+                periodChanged = function(_self)
+                    onPeriodChanged()
+                end,
+            }
+            g_messageCenter:subscribe(MessageType.PERIOD_CHANGED,
+                RealisticCropRotation.periodChangedListener.periodChanged,
+                RealisticCropRotation.periodChangedListener)
+        else
+            Logging.warning("[RealisticCropRotation] Period change listener unavailable; crop rotation history cannot be reconciled automatically")
+        end
     end
 
     g_currentMission.realisticCropRotationManager = RealisticCropRotation.manager
@@ -265,7 +299,8 @@ local function loadedMission()
                 pending.history or {},
                 pending.plans or {},
                 pending.lastKnownActiveCrop or {},
-                pending.appliedResidue or {})
+                pending.appliedResidue or {},
+                pending.lastKnownGrowthState or {})
             RealisticCropRotation.pendingSyncData = nil
         end
         RealisticCropRotation.requestServerSync("loadedMission")
@@ -338,8 +373,12 @@ local function initRealisticCropRotation()
         if g_messageCenter ~= nil and RealisticCropRotation.farmlandOwnerChangeListener ~= nil then
             g_messageCenter:unsubscribeAll(RealisticCropRotation.farmlandOwnerChangeListener)
         end
+        if g_messageCenter ~= nil and RealisticCropRotation.periodChangedListener ~= nil then
+            g_messageCenter:unsubscribeAll(RealisticCropRotation.periodChangedListener)
+        end
         RealisticCropRotation.broadcastUpdateable = nil
         RealisticCropRotation.farmlandOwnerChangeListener = nil
+        RealisticCropRotation.periodChangedListener = nil
         RealisticCropRotation.broadcastDirty = false
         RealisticCropRotation.broadcastTimerMs = 0
 

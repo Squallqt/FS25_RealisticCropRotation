@@ -26,6 +26,23 @@ local function getFarmlandById(farmlandId)
     return nil
 end
 
+local function getOwnerFarmIdForFarmland(farmlandId, farmland)
+    if g_farmlandManager ~= nil and type(g_farmlandManager.getFarmlandOwner) == "function" then
+        return g_farmlandManager:getFarmlandOwner(tonumber(farmlandId) or farmlandId)
+    end
+    return farmland ~= nil and farmland.farmId or nil
+end
+
+local function isRealFarmOwner(farmId)
+    local numericFarmId = tonumber(farmId)
+    if numericFarmId == nil or numericFarmId <= 0 then return false end
+    if FarmlandManager ~= nil and FarmlandManager.NOT_BUYABLE_FARM_ID ~= nil
+        and numericFarmId == FarmlandManager.NOT_BUYABLE_FARM_ID then
+        return false
+    end
+    return true
+end
+
 local function getUsableFieldFromFarmland(farmland)
     if type(farmland) ~= "table" then return nil end
     if type(farmland.field) == "table" then return farmland.field end
@@ -91,9 +108,9 @@ local function getFruitTypeIndexAtWorldPos(x, z)
         return nil, false
     end
 
-    local ok, fruitTypeIndex = pcall(FSDensityMapUtil.getFruitTypeIndexAtWorldPos, x, z)
+    local ok, fruitTypeIndex, growthState = pcall(FSDensityMapUtil.getFruitTypeIndexAtWorldPos, x, z)
     if not ok then return nil, true end
-    return normalizeFruitTypeIndex(fruitTypeIndex), true
+    return normalizeFruitTypeIndex(fruitTypeIndex), true, tonumber(growthState)
 end
 
 local function collectFieldDimensionSamples(field, samples)
@@ -148,12 +165,19 @@ local function getFieldFruitTypeIndexFromDensityMap(field)
 
     local sampled = false
     local counts = {}
+    local growthStateCounts = {}
     for _, sample in ipairs(samples) do
-        local fruitTypeIndex, didSample = getFruitTypeIndexAtWorldPos(sample.x, sample.z)
+        local fruitTypeIndex, didSample, growthState = getFruitTypeIndexAtWorldPos(sample.x, sample.z)
         if didSample then
             sampled = true
             if fruitTypeIndex ~= nil then
                 counts[fruitTypeIndex] = (counts[fruitTypeIndex] or 0) + 1
+                growthState = tonumber(growthState)
+                if growthState ~= nil then
+                    growthState = math.floor(growthState + 0.5)
+                    growthStateCounts[fruitTypeIndex] = growthStateCounts[fruitTypeIndex] or {}
+                    growthStateCounts[fruitTypeIndex][growthState] = (growthStateCounts[fruitTypeIndex][growthState] or 0) + 1
+                end
             end
         end
     end
@@ -169,7 +193,19 @@ local function getFieldFruitTypeIndexFromDensityMap(field)
         end
     end
 
-    return bestFruitTypeIndex, true
+    local representativeGrowthState = nil
+    local representativeGrowthCount = 0
+    local states = bestFruitTypeIndex ~= nil and growthStateCounts[bestFruitTypeIndex] or nil
+    for growthState, count in pairs(states or {}) do
+        if count > representativeGrowthCount
+            or (count == representativeGrowthCount
+                and (representativeGrowthState == nil or growthState < representativeGrowthState)) then
+            representativeGrowthState = growthState
+            representativeGrowthCount = count
+        end
+    end
+
+    return bestFruitTypeIndex, true, representativeGrowthState
 end
 
 local function getFieldFruitTypeIndexFromFieldState(field)
@@ -178,6 +214,7 @@ local function getFieldFruitTypeIndexFromFieldState(field)
 
     local fruitTypeIndex = normalizeFruitTypeIndex(fieldState.fruitTypeIndex)
     if fruitTypeIndex == nil then return nil end
+    local growthState = tonumber(fieldState.growthState or fieldState.lastGrowthState)
 
     local fruitType = nil
     if g_fruitTypeManager ~= nil and g_fruitTypeManager.getFruitTypeByIndex ~= nil then
@@ -185,7 +222,6 @@ local function getFieldFruitTypeIndexFromFieldState(field)
     end
 
     if fruitType ~= nil then
-        local growthState = tonumber(fieldState.growthState or fieldState.lastGrowthState)
         if growthState ~= nil then
             if type(fruitType.getIsCut) == "function" then
                 local ok, isCut = pcall(fruitType.getIsCut, fruitType, growthState)
@@ -203,23 +239,23 @@ local function getFieldFruitTypeIndexFromFieldState(field)
         end
     end
 
-    return fruitTypeIndex
+    return fruitTypeIndex, growthState
 end
 
 local function getFieldFruitTypeIndex(field)
-    local fruitTypeIndex, sampledDensityMap = getFieldFruitTypeIndexFromDensityMap(field)
-    if sampledDensityMap then return fruitTypeIndex end
+    local fruitTypeIndex, sampledDensityMap, growthState = getFieldFruitTypeIndexFromDensityMap(field)
+    if sampledDensityMap then return fruitTypeIndex, growthState end
     if isPureClient() then return nil end
     return getFieldFruitTypeIndexFromFieldState(field)
 end
 
 local function getActiveCropNameFromField(field)
-    local fruitTypeIndex = getFieldFruitTypeIndex(field)
+    local fruitTypeIndex, growthState = getFieldFruitTypeIndex(field)
     if fruitTypeIndex == nil or g_fruitTypeManager == nil then return nil end
 
     local fruitType = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
     if fruitType == nil or fruitType.name == nil or fruitType.name == "" then return nil end
-    return tostring(fruitType.name)
+    return tostring(fruitType.name), fruitTypeIndex, growthState
 end
 
 -- Live ground type at the field, read straight from the GROUND_TYPE density map at the same
@@ -434,9 +470,9 @@ function RealisticCropRotationManager:getFieldByFarmlandId(farmlandId)
     return getUsableFieldFromFarmland(getFarmlandById(n))
 end
 
--- Returns the currently active crop name on a farmland.
+-- Returns the currently active crop details on a farmland.
 -- Pure clients use density-map sampling only; fieldState fallback is server-only.
-function RealisticCropRotationManager:getActiveCropName(farmlandId)
+function RealisticCropRotationManager:getActiveCropInfo(farmlandId)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil then return nil end
 
@@ -445,12 +481,12 @@ function RealisticCropRotationManager:getActiveCropName(farmlandId)
     if cache ~= nil then
         local entry = cache[numericFarmlandId]
         if entry ~= nil and (nowMs - (entry.tMs or 0)) < ACTIVE_CROP_CACHE_TTL_MS then
-            return entry.name
+            return entry.name, entry.fruitTypeIndex, entry.growthState
         end
     end
 
     local field = self:getFieldByFarmlandId(numericFarmlandId)
-    local resolved = getActiveCropNameFromField(field)
+    local resolved, fruitTypeIndex, growthState = getActiveCropNameFromField(field)
     if resolved == nil then
         local farmland = getFarmlandById(numericFarmlandId)
         if field == nil and getFarmlandFieldAreaHa(farmland) > 0 then
@@ -458,17 +494,34 @@ function RealisticCropRotationManager:getActiveCropName(farmlandId)
             -- but still valid rotation land. Show FIELDGRASS as the natural
             -- meadow crop, not Fallow.
             resolved = getPermanentGrasslandFallbackCropName()
+            if resolved ~= nil and g_fruitTypeManager ~= nil
+                and type(g_fruitTypeManager.getFruitTypeByName) == "function" then
+                local fruitType = g_fruitTypeManager:getFruitTypeByName(resolved)
+                fruitTypeIndex = fruitType ~= nil and fruitType.index or nil
+            end
         end
     end
 
     if cache ~= nil then
-        cache[numericFarmlandId] = { name = resolved, tMs = nowMs }
+        cache[numericFarmlandId] = {
+            name = resolved,
+            fruitTypeIndex = fruitTypeIndex,
+            growthState = growthState,
+            tMs = nowMs,
+        }
     end
-    return resolved
+    return resolved, fruitTypeIndex, growthState
+end
+
+-- Returns the currently active crop name on a farmland.
+function RealisticCropRotationManager:getActiveCropName(farmlandId)
+    local cropName = self:getActiveCropInfo(farmlandId)
+    return cropName
 end
 
 function RealisticCropRotationManager:getActiveCropFruitTypeIndex(farmlandId)
-    return getFieldFruitTypeIndex(self:getFieldByFarmlandId(farmlandId))
+    local _, fruitTypeIndex = self:getActiveCropInfo(farmlandId)
+    return fruitTypeIndex
 end
 
 function RealisticCropRotationManager:invalidateActiveCropCache(farmlandId)
@@ -500,8 +553,8 @@ function RealisticCropRotationManager:reconcileActiveCropForFarmland(farmlandId)
     if self.service == nil then return false end
     if isPureClient() then return false end
 
-    local currentCropName = self:getActiveCropName(farmlandId)
-    local changed = self.service:reconcileActiveCrop(farmlandId, currentCropName)
+    local currentCropName, currentFruitTypeIndex, currentGrowthState = self:getActiveCropInfo(farmlandId)
+    local changed = self.service:reconcileActiveCrop(farmlandId, currentCropName, currentFruitTypeIndex, currentGrowthState)
     if changed then
         self:invalidateActiveCropCache(farmlandId)
     end
@@ -517,6 +570,28 @@ function RealisticCropRotationManager:getCurrentGroundStateLabel(farmlandId)
     return getNativeGroundStateLabel(field)
 end
 
+function RealisticCropRotationManager:getOwnedRotationFarmlandIds()
+    local result = {}
+    if g_farmlandManager == nil or type(g_farmlandManager.getFarmlands) ~= "function" then return result end
+
+    for farmlandId, farmland in pairs(g_farmlandManager:getFarmlands() or {}) do
+        if isRealFarmOwner(getOwnerFarmIdForFarmland(farmlandId, farmland)) then
+            local field = self:getFieldByFarmlandId(farmlandId)
+            if hasUsableRealisticCropRotationArea(farmland, field) then
+                table.insert(result, tonumber(farmlandId) or farmlandId)
+            end
+        end
+    end
+
+    table.sort(result, function(a, b)
+        local na, nb = tonumber(a), tonumber(b)
+        if na ~= nil and nb ~= nil then return na < nb end
+        return tostring(a) < tostring(b)
+    end)
+
+    return result
+end
+
 function RealisticCropRotationManager:getOwnedFarmlands()
     local result = {}
     local farmId = self:getCurrentFarmId()
@@ -527,12 +602,7 @@ function RealisticCropRotationManager:getOwnedFarmlands()
         farmlandIds = g_farmlandManager:getOwnedFarmlandIdsByFarmId(farmId) or {}
     elseif type(g_farmlandManager.getFarmlands) == "function" then
         for farmlandId, farmland in pairs(g_farmlandManager:getFarmlands() or {}) do
-            local owner = nil
-            if type(g_farmlandManager.getFarmlandOwner) == "function" then
-                owner = g_farmlandManager:getFarmlandOwner(farmlandId)
-            elseif farmland ~= nil then
-                owner = farmland.farmId
-            end
+            local owner = getOwnerFarmIdForFarmland(farmlandId, farmland)
             if owner == farmId then table.insert(farmlandIds, farmlandId) end
         end
     end

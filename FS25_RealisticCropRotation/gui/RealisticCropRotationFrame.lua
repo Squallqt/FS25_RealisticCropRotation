@@ -126,6 +126,22 @@ end
 function RealisticCropRotationFrame:onFrameOpen()
     RealisticCropRotationFrame:superClass().onFrameOpen(self)
     self:subscribeFarmlandChanges()
+    if g_currentMission ~= nil and g_currentMission:getIsServer() then
+        local mgr = self:getManager()
+        if mgr ~= nil and type(mgr.getOwnedFarmlands) == "function"
+            and type(mgr.reconcileActiveCropForFarmland) == "function" then
+            local changed = false
+            for _, entry in ipairs(mgr:getOwnedFarmlands() or {}) do
+                if mgr:reconcileActiveCropForFarmland(entry.farmlandId) then
+                    changed = true
+                end
+            end
+            if changed and RealisticCropRotation ~= nil
+                and type(RealisticCropRotation.requestBroadcast) == "function" then
+                RealisticCropRotation.requestBroadcast()
+            end
+        end
+    end
     self:populateSidebar()
     if RealisticCropRotation ~= nil and RealisticCropRotation.requestServerSync ~= nil then
         RealisticCropRotation.requestServerSync("frameOpen")

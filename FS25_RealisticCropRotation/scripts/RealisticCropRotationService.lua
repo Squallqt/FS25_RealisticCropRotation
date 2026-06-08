@@ -123,7 +123,7 @@ function RealisticCropRotationService:isCoverCropForRotationHistory(fruitTypeInd
     return false
 end
 
-function RealisticCropRotationService:pushHistoryCrop(farmlandId, cropName)
+function RealisticCropRotationService:pushHistoryCrop(farmlandId, cropName, allowDuplicate)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
 
@@ -133,7 +133,7 @@ function RealisticCropRotationService:pushHistoryCrop(farmlandId, cropName)
         return false
     end
 
-    return self.repository:pushEntry(numericFarmlandId, normalizedCropName)
+    return self.repository:pushEntry(numericFarmlandId, normalizedCropName, allowDuplicate == true)
 end
 
 function RealisticCropRotationService:getResidueCycle(farmlandId)
@@ -170,23 +170,117 @@ function RealisticCropRotationService:setLastKnownActiveCrop(farmlandId, cropNam
     return self.repository:setLastKnownActiveCrop(farmlandId, normalizedCropName)
 end
 
-function RealisticCropRotationService:reconcileActiveCrop(farmlandId, currentCropName)
+function RealisticCropRotationService:normalizeGrowthState(growthState)
+    local numericGrowthState = tonumber(growthState)
+    if numericGrowthState == nil or numericGrowthState < 0 then return nil end
+    return math.floor(numericGrowthState + 0.5)
+end
+
+function RealisticCropRotationService:getFruitTypeForCrop(cropName, fruitTypeIndex)
+    if g_fruitTypeManager == nil then return nil end
+    local numericFruitTypeIndex = tonumber(fruitTypeIndex)
+    local unknownFruitTypeIndex = (FruitType ~= nil and FruitType.UNKNOWN) or 0
+    if numericFruitTypeIndex ~= nil and numericFruitTypeIndex ~= unknownFruitTypeIndex
+        and type(g_fruitTypeManager.getFruitTypeByIndex) == "function" then
+        local fruitType = g_fruitTypeManager:getFruitTypeByIndex(numericFruitTypeIndex)
+        if fruitType ~= nil then return fruitType end
+    end
+    local normalizedCropName = self:normalizeCropName(cropName)
+    if normalizedCropName ~= nil and type(g_fruitTypeManager.getFruitTypeByName) == "function" then
+        return g_fruitTypeManager:getFruitTypeByName(normalizedCropName)
+    end
+    return nil
+end
+
+function RealisticCropRotationService:isTerminalGrowthState(fruitType, growthState)
+    local numericGrowthState = self:normalizeGrowthState(growthState)
+    if fruitType == nil or numericGrowthState == nil then return false end
+
+    if type(fruitType.getIsCut) == "function" then
+        local ok, isCut = pcall(fruitType.getIsCut, fruitType, numericGrowthState)
+        if ok and isCut then return true end
+    elseif type(fruitType.cutStates) == "table" and fruitType.cutStates[numericGrowthState] then
+        return true
+    elseif fruitType.cutState ~= nil and numericGrowthState == tonumber(fruitType.cutState) then
+        return true
+    end
+
+    if type(fruitType.getIsWithered) == "function" then
+        local ok, isWithered = pcall(fruitType.getIsWithered, fruitType, numericGrowthState)
+        if ok and isWithered then return true end
+    elseif fruitType.witheredState ~= nil and numericGrowthState == tonumber(fruitType.witheredState) then
+        return true
+    end
+
+    return false
+end
+
+function RealisticCropRotationService:isEarlyGrowthState(fruitType, growthState)
+    local numericGrowthState = self:normalizeGrowthState(growthState)
+    if fruitType == nil or numericGrowthState == nil or numericGrowthState <= 0 then return false end
+    if self:isTerminalGrowthState(fruitType, numericGrowthState) then return false end
+
+    local minHarvestingGrowthState = tonumber(fruitType.minHarvestingGrowthState) or 0
+    if minHarvestingGrowthState > 1 then
+        return numericGrowthState < minHarvestingGrowthState
+    end
+
+    local numGrowthStates = tonumber(fruitType.numGrowthStates) or 0
+    if numGrowthStates > 1 then
+        return numericGrowthState <= math.max(1, math.floor(numGrowthStates / 2))
+    end
+
+    return numericGrowthState == 1
+end
+
+function RealisticCropRotationService:isFreshReplantingGrowthDrop(fruitType, lastGrowthState, currentGrowthState)
+    local last = self:normalizeGrowthState(lastGrowthState)
+    local current = self:normalizeGrowthState(currentGrowthState)
+    if fruitType == nil or last == nil or current == nil then return false end
+    if current >= last then return false end
+    if self:isEarlyGrowthState(fruitType, last) then return false end
+    return self:isEarlyGrowthState(fruitType, current)
+end
+
+function RealisticCropRotationService:reconcileActiveCrop(farmlandId, currentCropName, currentFruitTypeIndex, currentGrowthState)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
 
     local normalizedCurrentCrop = self:normalizeCropName(currentCropName)
+    local normalizedCurrentGrowthState = self:normalizeGrowthState(currentGrowthState)
     local lastKnownCrop = self.repository:getLastKnownActiveCrop(numericFarmlandId)
+    local lastKnownGrowthState = self.repository:getLastKnownGrowthState(numericFarmlandId)
 
     if lastKnownCrop == nil or lastKnownCrop == "" then
-        return self.repository:setLastKnownActiveCrop(numericFarmlandId, normalizedCurrentCrop)
+        local activeChanged = self.repository:setLastKnownActiveCrop(numericFarmlandId, normalizedCurrentCrop)
+        if normalizedCurrentCrop ~= nil then
+            self.repository:setLastKnownGrowthState(numericFarmlandId, normalizedCurrentGrowthState)
+        end
+        return activeChanged
     end
 
     if lastKnownCrop == normalizedCurrentCrop then
-        return false
+        if normalizedCurrentCrop == nil or normalizedCurrentGrowthState == nil then
+            return false
+        end
+
+        local fruitType = self:getFruitTypeForCrop(normalizedCurrentCrop, currentFruitTypeIndex)
+        local pushed = false
+        if fruitType ~= nil and fruitType.regrows ~= true
+            and self:isFreshReplantingGrowthDrop(fruitType, lastKnownGrowthState, normalizedCurrentGrowthState) then
+            pushed = self:pushHistoryCrop(numericFarmlandId, normalizedCurrentCrop, true)
+        end
+
+        self.repository:setLastKnownGrowthState(numericFarmlandId, normalizedCurrentGrowthState)
+        if pushed then
+            self:advanceResidueCycle(numericFarmlandId)
+        end
+        return pushed
     end
 
-    local pushed = self:pushHistoryCrop(numericFarmlandId, lastKnownCrop)
+    local pushed = self:pushHistoryCrop(numericFarmlandId, lastKnownCrop, true)
     local activeChanged = self.repository:setLastKnownActiveCrop(numericFarmlandId, normalizedCurrentCrop)
+    self.repository:setLastKnownGrowthState(numericFarmlandId, normalizedCurrentGrowthState)
     if pushed or activeChanged then
         self:advanceResidueCycle(numericFarmlandId)
     end
@@ -222,10 +316,13 @@ end
 -- MP sync helpers (server-authoritative).
 -- =========================================================================
 
-function RealisticCropRotationService:applySyncData(receivedHistory, receivedPlans, receivedLastKnownActiveCrop, receivedAppliedResidue)
-    self.repository:replaceAll(receivedHistory or {}, receivedPlans or {}, receivedLastKnownActiveCrop or {}, receivedAppliedResidue or {})
+function RealisticCropRotationService:applySyncData(receivedHistory, receivedPlans, receivedLastKnownActiveCrop, receivedAppliedResidue, receivedLastKnownGrowthState)
+    self.repository:replaceAll(receivedHistory or {}, receivedPlans or {}, receivedLastKnownActiveCrop or {}, receivedAppliedResidue or {}, receivedLastKnownGrowthState or {})
 end
 
 function RealisticCropRotationService:getSyncData()
-    return self.repository:getAllHistory(), self.repository:getAllLastKnownActiveCrops(), self.repository:getAllAppliedResidues()
+    return self.repository:getAllHistory(),
+        self.repository:getAllLastKnownActiveCrops(),
+        self.repository:getAllAppliedResidues(),
+        self.repository:getAllLastKnownGrowthStates()
 end

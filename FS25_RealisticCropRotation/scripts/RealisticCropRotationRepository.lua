@@ -51,6 +51,7 @@ function RealisticCropRotationRepository.new()
     self.history = {}
     self.plans   = {}
     self.lastKnownActiveCrop = {}
+    self.lastKnownGrowthState = {}
     -- Legacy residue payload retained for old saves and MP sync compatibility.
     self.appliedResidue = {}
     return self
@@ -60,6 +61,7 @@ function RealisticCropRotationRepository:clear()
     self.history = {}
     self.plans   = {}
     self.lastKnownActiveCrop = {}
+    self.lastKnownGrowthState = {}
     self.appliedResidue = {}
 end
 
@@ -127,7 +129,7 @@ function RealisticCropRotationRepository:recordAppliedResidue(farmlandId, cropNa
     return true
 end
 
-function RealisticCropRotationRepository:pushEntry(farmlandId, cropName)
+function RealisticCropRotationRepository:pushEntry(farmlandId, cropName, allowDuplicate)
     local entries = self.history[farmlandId]
     if entries == nil then
         entries = {}
@@ -136,7 +138,7 @@ function RealisticCropRotationRepository:pushEntry(farmlandId, cropName)
 
     -- One entry per actual rotation change: ignore a crop that is already the most recent.
     -- This is what keeps the history from growing on every tool pass over the same crop.
-    if entries[1] ~= nil and entries[1].crop == cropName then
+    if not allowDuplicate and entries[1] ~= nil and entries[1].crop == cropName then
         return false
     end
 
@@ -183,6 +185,14 @@ function RealisticCropRotationRepository:getAllLastKnownActiveCrops()
     return self.lastKnownActiveCrop
 end
 
+function RealisticCropRotationRepository:getLastKnownGrowthState(farmlandId)
+    return tonumber(self.lastKnownGrowthState[farmlandId] or self.lastKnownGrowthState[tostring(farmlandId)])
+end
+
+function RealisticCropRotationRepository:getAllLastKnownGrowthStates()
+    return self.lastKnownGrowthState
+end
+
 function RealisticCropRotationRepository:setLastKnownActiveCrop(farmlandId, cropName)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
@@ -191,8 +201,12 @@ function RealisticCropRotationRepository:setLastKnownActiveCrop(farmlandId, crop
         local stringFarmlandId = tostring(numericFarmlandId)
         local changed = self.lastKnownActiveCrop[numericFarmlandId] ~= nil
             or self.lastKnownActiveCrop[stringFarmlandId] ~= nil
+            or self.lastKnownGrowthState[numericFarmlandId] ~= nil
+            or self.lastKnownGrowthState[stringFarmlandId] ~= nil
         self.lastKnownActiveCrop[numericFarmlandId] = nil
         self.lastKnownActiveCrop[stringFarmlandId] = nil
+        self.lastKnownGrowthState[numericFarmlandId] = nil
+        self.lastKnownGrowthState[stringFarmlandId] = nil
         return changed
     end
 
@@ -200,13 +214,39 @@ function RealisticCropRotationRepository:setLastKnownActiveCrop(farmlandId, crop
     local changed = self.lastKnownActiveCrop[numericFarmlandId] ~= normalizedCropName
     self.lastKnownActiveCrop[numericFarmlandId] = normalizedCropName
     self.lastKnownActiveCrop[tostring(numericFarmlandId)] = nil
+    if changed then
+        self.lastKnownGrowthState[numericFarmlandId] = nil
+        self.lastKnownGrowthState[tostring(numericFarmlandId)] = nil
+    end
     return changed
 end
 
-function RealisticCropRotationRepository:replaceAll(newHistory, newPlans, newLastKnownActiveCrop, newAppliedResidue)
+function RealisticCropRotationRepository:setLastKnownGrowthState(farmlandId, growthState)
+    local numericFarmlandId = tonumber(farmlandId)
+    if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
+
+    local stringFarmlandId = tostring(numericFarmlandId)
+    local numericGrowthState = tonumber(growthState)
+    if numericGrowthState == nil or numericGrowthState < 0 then
+        local changed = self.lastKnownGrowthState[numericFarmlandId] ~= nil
+            or self.lastKnownGrowthState[stringFarmlandId] ~= nil
+        self.lastKnownGrowthState[numericFarmlandId] = nil
+        self.lastKnownGrowthState[stringFarmlandId] = nil
+        return changed
+    end
+
+    numericGrowthState = math.floor(numericGrowthState + 0.5)
+    local changed = tonumber(self.lastKnownGrowthState[numericFarmlandId]) ~= numericGrowthState
+    self.lastKnownGrowthState[numericFarmlandId] = numericGrowthState
+    self.lastKnownGrowthState[stringFarmlandId] = nil
+    return changed
+end
+
+function RealisticCropRotationRepository:replaceAll(newHistory, newPlans, newLastKnownActiveCrop, newAppliedResidue, newLastKnownGrowthState)
     self.history = newHistory or {}
     self.plans   = newPlans or {}
     self.lastKnownActiveCrop = newLastKnownActiveCrop or {}
+    self.lastKnownGrowthState = newLastKnownGrowthState or {}
     self.appliedResidue = newAppliedResidue or {}
 end
 
@@ -239,6 +279,10 @@ function RealisticCropRotationRepository:saveToXML(savegamePath)
         local n = tonumber(farmlandId)
         if n ~= nil and n > 0 and not seen[n] then seen[n] = true; table.insert(allIds, n) end
     end
+    for farmlandId in pairs(self.lastKnownGrowthState) do
+        local n = tonumber(farmlandId)
+        if n ~= nil and n > 0 and not seen[n] then seen[n] = true; table.insert(allIds, n) end
+    end
     for farmlandId in pairs(self.appliedResidue) do
         local n = tonumber(farmlandId)
         if n ~= nil and n > 0 and not seen[n] then seen[n] = true; table.insert(allIds, n) end
@@ -257,15 +301,21 @@ function RealisticCropRotationRepository:saveToXML(savegamePath)
         local activeCrop = self.lastKnownActiveCrop[numericFarmlandId]
             or self.lastKnownActiveCrop[tostring(numericFarmlandId)]
         local hasActiveCrop = activeCrop ~= nil and activeCrop ~= ""
+        local activeGrowthState = tonumber(self.lastKnownGrowthState[numericFarmlandId]
+            or self.lastKnownGrowthState[tostring(numericFarmlandId)])
+        local hasActiveGrowthState = activeGrowthState ~= nil and activeGrowthState >= 0
 
         local applied = self.appliedResidue[numericFarmlandId] or self.appliedResidue[tostring(numericFarmlandId)]
         local hasApplied = applied ~= nil and applied.crop ~= nil and applied.crop ~= ""
 
-        if hasHistory or hasPlan or hasActiveCrop or hasApplied then
+        if hasHistory or hasPlan or hasActiveCrop or hasActiveGrowthState or hasApplied then
             local farmlandKey = string.format("realisticCropRotation.farmland(%d)", farmlandIndex)
             setXMLInt(xmlFile, farmlandKey .. "#id", numericFarmlandId)
             if hasActiveCrop then
                 setXMLString(xmlFile, farmlandKey .. "#lastKnownActiveCrop", tostring(activeCrop))
+            end
+            if hasActiveGrowthState then
+                setXMLInt(xmlFile, farmlandKey .. "#lastKnownGrowthState", math.floor(activeGrowthState + 0.5))
             end
             if hasApplied then
                 -- Legacy residue fields are kept to avoid dropping old save data.
@@ -334,6 +384,7 @@ function RealisticCropRotationRepository:loadFromXML(savegamePath)
     self.history = {}
     self.plans   = {}
     self.lastKnownActiveCrop = {}
+    self.lastKnownGrowthState = {}
     self.appliedResidue = {}
 
     local farmlandIndex = 0
@@ -346,6 +397,10 @@ function RealisticCropRotationRepository:loadFromXML(savegamePath)
             local activeCrop = getXMLString(xmlFile, farmlandKey .. "#lastKnownActiveCrop")
             if activeCrop ~= nil and activeCrop ~= "" then
                 self.lastKnownActiveCrop[farmlandId] = string.upper(tostring(activeCrop))
+            end
+            local activeGrowthState = getXMLInt(xmlFile, farmlandKey .. "#lastKnownGrowthState")
+            if activeGrowthState ~= nil and activeGrowthState >= 0 then
+                self.lastKnownGrowthState[farmlandId] = activeGrowthState
             end
 
             local appliedCrop = getXMLString(xmlFile, farmlandKey .. "#appliedResidueCrop")
