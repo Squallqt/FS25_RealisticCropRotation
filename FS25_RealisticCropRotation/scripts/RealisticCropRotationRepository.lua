@@ -51,6 +51,7 @@ function RealisticCropRotationRepository.new()
     self.history = {}
     self.plans   = {}
     self.lastKnownActiveCrop = {}
+    -- Legacy residue payload retained for old saves and MP sync compatibility.
     self.appliedResidue = {}
     return self
 end
@@ -96,6 +97,7 @@ function RealisticCropRotationRepository:clearAppliedResidue(farmlandId)
 end
 
 function RealisticCropRotationRepository:recordAppliedResidue(farmlandId, cropName, stateChange, sprayLevel, unit)
+    -- Legacy writer retained for compatibility; current dev has no active nitrogen/PF caller.
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
     if cropName == nil or cropName == "" then return false end
@@ -266,6 +268,7 @@ function RealisticCropRotationRepository:saveToXML(savegamePath)
                 setXMLString(xmlFile, farmlandKey .. "#lastKnownActiveCrop", tostring(activeCrop))
             end
             if hasApplied then
+                -- Legacy residue fields are kept to avoid dropping old save data.
                 setXMLString(xmlFile, farmlandKey .. "#appliedResidueCrop", tostring(applied.crop or ""))
                 setXMLString(xmlFile, farmlandKey .. "#appliedResidueUnit", tostring(applied.unit or "STATE"))
                 setXMLInt(xmlFile, farmlandKey .. "#appliedResidueStateChange", tonumber(applied.stateChange) or 0)
@@ -347,6 +350,7 @@ function RealisticCropRotationRepository:loadFromXML(savegamePath)
 
             local appliedCrop = getXMLString(xmlFile, farmlandKey .. "#appliedResidueCrop")
             if appliedCrop ~= nil and appliedCrop ~= "" then
+                -- Legacy residue fields are loaded for compatibility only.
                 self.appliedResidue[farmlandId] = {
                     crop = string.upper(tostring(appliedCrop)),
                     unit = getXMLString(xmlFile, farmlandKey .. "#appliedResidueUnit") or "STATE",

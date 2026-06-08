@@ -74,6 +74,7 @@ function RCRHistoryResponseEvent:readStream(streamId, _connection)
         end
     end
 
+    -- Legacy residue payload; kept for old save/MP wire compatibility.
     local appliedResidueCount = streamReadInt16(streamId)
     local receivedAppliedResidue = {}
     for _ = 1, appliedResidueCount do
@@ -143,6 +144,7 @@ function RCRHistoryResponseEvent:writeStream(streamId, _connection)
     local history, lastKnownActiveCrop, appliedResidue = manager.service:getSyncData()
     history = history or {}
     lastKnownActiveCrop = lastKnownActiveCrop or {}
+    -- Legacy residue payload; no current dev runtime applies nitrogen/PF effects.
     appliedResidue = appliedResidue or {}
     local plans = type(manager.getAllRotationPlans) == "function" and manager:getAllRotationPlans() or {}
 

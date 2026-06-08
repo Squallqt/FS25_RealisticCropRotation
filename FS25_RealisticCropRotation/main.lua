@@ -22,10 +22,8 @@ RealisticCropRotation.pendingSyncData = nil
 RealisticCropRotation.isEnabled = true
 RealisticCropRotation.cropConfig = nil
 
--- Resolves a crop's nitrogen residue-release event from its explicit residueEvent attribute,
--- falling back to a family default. The deposit is mode-exclusive (one event per crop), which is
--- what keeps it safe across a save/reload: a crop is never eligible at two different events, so a
--- harvest followed later by a tillage can never double-deposit.
+-- Resolves legacy residue metadata from cropConfig.xml.
+-- Current dev does not apply nitrogen; the value is kept for planner/status code paths only.
 local function resolveResidueEvent(rawEvent, upperFamily)
     if rawEvent ~= nil then
         local event = string.lower(rawEvent)
@@ -41,7 +39,8 @@ local function resolveResidueEvent(rawEvent, upperFamily)
 end
 
 -- Loads cropConfig.xml once at mod init.
--- Returns a config table: { families, nitrogen, coverCrops, residueEvent }
+-- Returns a config table: { families, nitrogen, coverCrops, residueEvent }.
+-- The nitrogen/residueEvent entries are legacy metadata on dev.
 local function loadCropConfig()
     local filePath = modDirectory .. "cropConfig.xml"
     local xmlFile = loadXMLFile("RealisticCropRotationCropConfig", filePath)
