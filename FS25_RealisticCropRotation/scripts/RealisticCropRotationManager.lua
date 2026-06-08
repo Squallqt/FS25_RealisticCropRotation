@@ -5,10 +5,8 @@ RealisticCropRotationManager = {}
 local RealisticCropRotationManager_mt = Class(RealisticCropRotationManager)
 
 -- Active-crop cache TTL on the server.
--- captureCropCandidate calls getActiveCropName from every
--- density-map hook tick. A TTL-based cache (no event invalidation) is the
--- correct shape: the field's growth state does not move on the second/sub-
--- second scale, so a stale read up to TTL is harmless.
+-- UI/HUD reads can call getActiveCropName repeatedly. A TTL-based cache keeps
+-- those reads cheap while the field's growth state changes far slower than this.
 local ACTIVE_CROP_CACHE_TTL_MS = 10000
 
 local function isPureClient()
