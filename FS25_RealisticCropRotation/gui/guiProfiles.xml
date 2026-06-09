@@ -86,19 +86,6 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Season label — vertically centered, same plane as title (left) and pill (right) -->
-    <Profile name="frHeroMeta" extends="fs25_textDefault" with="anchorMiddleCenter">
-        <position value="0px 0px"/>
-        <size value="500px 20px"/>
-        <textSize value="12px"/>
-        <textBold value="false"/>
-        <textUpperCase value="true"/>
-        <textColor value="$preset_colorWhite_50"/>
-        <textAlignment value="center"/>
-        <textVerticalAlignment value="middle"/>
-        <textMaxNumLines value="1"/>
-    </Profile>
-
     <!-- Status pill — centré verticalement à droite, taille augmentée -->
     <Profile name="frStatusPillBg" extends="baseReference" with="anchorMiddleRight">
         <position value="-50px 0px"/>
@@ -507,28 +494,64 @@
     <!-- Same size/anchor as frDetailContainer — shown in planning tab -->
     <Profile name="frPlanContainer" extends="frDetailContainer"/>
 
-    <!-- Plan timeline strip — 4 widened slots spread across 1240 px -->
-    <Profile name="frPlanTimeline" extends="emptyPanel" with="anchorTopLeft">
+    <!-- Annual calendar strip: top editor + 1130px month axis -->
+    <Profile name="frCalendarTimeline" extends="emptyPanel" with="anchorTopLeft">
         <size value="1240px 154px"/>
     </Profile>
 
-    <!-- Individual plan slot card: main crop row + cover crop row, widened on X only -->
-    <Profile name="frPlanSlotCard" extends="emptyPanel" with="anchorTopLeft">
-        <size value="266px 160px"/>
-    </Profile>
-
-    <Profile name="frPlanSlotCardBg" extends="baseReference" with="anchorTopLeft">
-        <size value="266px 160px"/>
+    <Profile name="frCalendarBg" extends="baseReference" with="anchorTopLeft">
+        <size value="1240px 154px"/>
         <color value="0 0 0 0.42"/>
         <cornerSize value="0.35"/>
     </Profile>
 
-    <!-- Year label at top of plan slot -->
-    <Profile name="frPlanSlotYear" extends="fs25_textDefault" with="anchorTopCenter">
-        <position value="0px -9px"/>
-        <size value="210px 18px"/>
-        <textSize value="12px"/>
-        <textBold value="true"/>
+    <Profile name="frCalendarAccent" extends="fs25_lineSeparatorTopHighlighted" with="anchorTopLeft">
+        <size value="1240px 3dp"/>
+        <position value="0px 0px"/>
+        <imageColor value="$preset_fs25_colorMainHighlight"/>
+    </Profile>
+
+    <Profile name="frCalendarEditor" extends="emptyPanel" with="anchorTopLeft">
+        <position value="10px -7px"/>
+        <size value="852px 30px"/>
+    </Profile>
+
+    <Profile name="frCalendarEditorBg" extends="baseReference" with="anchorTopLeft">
+        <position value="0px 0px"/>
+        <size value="852px 30px"/>
+        <color value="0 0 0 0.30"/>
+        <cornerSize value="0.22"/>
+    </Profile>
+
+    <Profile name="frCalendarStepSelector" extends="fs25_multiTextOption" with="anchorTopLeft">
+        <position value="8px -3px"/>
+        <size value="104px 24px"/>
+        <wrap value="true"/>
+    </Profile>
+
+    <Profile name="frCalendarEditCropSelector" extends="fs25_multiTextOption" with="anchorTopLeft">
+        <position value="124px -3px"/>
+        <size value="380px 24px"/>
+        <wrap value="true"/>
+    </Profile>
+
+    <Profile name="frCalendarEditCoverSelector" extends="fs25_multiTextOption" with="anchorTopLeft">
+        <position value="516px -3px"/>
+        <size value="336px 24px"/>
+        <wrap value="true"/>
+    </Profile>
+
+    <Profile name="frCalendarAxisBase" extends="baseReference" with="anchorTopLeft">
+        <position value="94px -53px"/>
+        <size value="1130px 1px"/>
+        <color value="$preset_colorWhite_25"/>
+    </Profile>
+
+    <Profile name="frCalendarMonthLabel" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="94px -38px"/>
+        <size value="86px 14px"/>
+        <textSize value="10px"/>
+        <textBold value="false"/>
         <textUpperCase value="true"/>
         <textColor value="$preset_colorWhite_50"/>
         <textAlignment value="center"/>
@@ -536,77 +559,104 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <Profile name="frPlanSlotYearResidue" extends="frPlanSlotYear">
+    <Profile name="frCalendarMonthGridLine" extends="baseReference" with="anchorTopLeft">
+        <position value="94px -53px"/>
+        <size value="1px 101px"/>
+        <color value="1 1 1 0.07"/>
+    </Profile>
+
+    <Profile name="frCalendarTodayMarker" extends="emptyPanel" with="anchorTopLeft">
+        <position value="94px 0px"/>
+        <size value="74px 154px"/>
+    </Profile>
+
+    <Profile name="frCalendarTodayLine" extends="baseReference" with="anchorTopLeft">
+        <position value="36px -43px"/>
+        <size value="2px 109px"/>
+        <color value="$preset_fs25_colorMainHighlight"/>
+    </Profile>
+
+    <Profile name="frCalendarTodayLabel" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="0px -38px"/>
+        <size value="74px 14px"/>
+        <textSize value="9px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
         <textColor value="$preset_fs25_colorMainHighlight"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frCalendarRow" extends="emptyPanel" with="anchorTopLeft">
+        <size value="1240px 22px"/>
+    </Profile>
+
+    <Profile name="frCalendarRowBg" extends="baseReference" with="anchorTopLeft">
+        <position value="0px 0px"/>
+        <size value="1240px 22px"/>
+        <color value="0 0 0 0.18"/>
+        <cornerSize value="0.16"/>
+    </Profile>
+
+    <Profile name="frCalendarStepLabel" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="10px -2px"/>
+        <size value="36px 18px"/>
+        <textSize value="12px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_fs25_colorMainHighlight"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frCalendarCropIcon" extends="baseReference" with="anchorTopLeft">
+        <position value="52px -3px"/>
+        <size value="16px 16px"/>
+    </Profile>
+
+    <Profile name="frCalendarCropBar" extends="baseReference" with="anchorTopLeft">
+        <position value="94px -5px"/>
+        <size value="94px 8px"/>
+        <color value="$preset_fs25_colorMainHighlight"/>
+    </Profile>
+
+    <Profile name="frCalendarCropBarText" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="94px -3px"/>
+        <size value="94px 12px"/>
+        <textSize value="9px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_fs25_colorMainDark"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
         <textLayoutMode value="resize"/>
     </Profile>
 
-    <!-- Main crop row: icon left of selector (filename set in Lua) -->
-    <Profile name="frPlanSlotCropIcon" extends="baseReference" with="anchorTopCenter">
-        <position value="-106px -34px"/>
-        <size value="30px 30px"/>
+    <Profile name="frCalendarCoverMarker" extends="baseReference" with="anchorTopLeft">
+        <position value="94px -15px"/>
+        <size value="120px 6px"/>
+        <color value="0.420 0.300 0.100 0.90"/>
     </Profile>
 
-    <!-- Main crop selector — wider card allows icon + selector on one row -->
-    <Profile name="frPlanSlotSelector" extends="fs25_multiTextOption" with="anchorTopCenter">
-        <size value="204px 34px"/>
-        <position value="19px -31px"/>
-        <wrap value="true"/>
+    <Profile name="frCalendarCoverIcon" extends="baseReference" with="anchorTopLeft">
+        <position value="99px -12px"/>
+        <size value="12px 12px"/>
     </Profile>
 
-    <!-- Family badge below the main crop selector -->
-    <Profile name="frPlanSlotBadgeBg" extends="baseReference" with="anchorTopCenter">
-        <position value="19px -66px"/>
-        <size value="100px 22px"/>
-        <color value="$preset_fs25_colorGrey"/>
-        <cornerSize value="0.20"/>
-    </Profile>
-
-    <Profile name="frPlanSlotBadgeText" extends="fs25_textDefault" with="anchorTopCenter">
-        <position value="19px -66px"/>
-        <size value="100px 22px"/>
-        <textSize value="12px"/>
+    <Profile name="frCalendarCoverLabel" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="116px -12px"/>
+        <size value="94px 12px"/>
+        <textSize value="8px"/>
         <textBold value="true"/>
         <textUpperCase value="true"/>
-        <textColor value="$preset_fs25_colorMainDark"/>
-        <textAlignment value="center"/>
+        <textColor value="$preset_fs25_colorMainLight"/>
+        <textAlignment value="left"/>
         <textVerticalAlignment value="middle"/>
         <textMaxNumLines value="1"/>
-    </Profile>
-
-    <!-- Cover crop row: compact icon + selector, with COVER badge below -->
-    <Profile name="frPlanCoverCropIcon" extends="baseReference" with="anchorTopCenter">
-        <position value="-106px -94px"/>
-        <size value="30px 30px"/>
-    </Profile>
-
-    <Profile name="frPlanCoverSelector" extends="fs25_multiTextOption" with="anchorTopCenter">
-        <size value="204px 34px"/>
-        <position value="19px -91px"/>
-        <wrap value="true"/>
-    </Profile>
-
-    <Profile name="frPlanCoverBadgeBg" extends="baseReference" with="anchorTopCenter">
-        <position value="19px -126px"/>
-        <size value="94px 22px"/>
-        <color value="$preset_fs25_colorGrey"/>
-        <cornerSize value="0.20"/>
-    </Profile>
-
-    <Profile name="frPlanCoverBadgeText" extends="fs25_textDefault" with="anchorTopCenter">
-        <position value="19px -126px"/>
-        <size value="94px 22px"/>
-        <textSize value="12px"/>
-        <textBold value="true"/>
-        <textUpperCase value="true"/>
-        <textColor value="$preset_fs25_colorMainDark"/>
-        <textAlignment value="center"/>
-        <textVerticalAlignment value="middle"/>
-        <textMaxNumLines value="1"/>
-    </Profile>
-
-    <Profile name="frPlanTimelineConnector" extends="emptyPanel" with="anchorTopLeft">
-        <size value="25px 148px"/>
+        <textLayoutMode value="resize"/>
     </Profile>
 
     <!-- ===== Score card (1240 x 70 px) ===== -->
@@ -775,6 +825,28 @@
         <textLayoutMode value="resize"/>
     </Profile>
 
+    <Profile name="frGroupCoverBadge" extends="baseReference" with="anchorTopLeft">
+        <size value="104px 16px"/>
+        <color value="0.420 0.300 0.100 0.65"/>
+        <cornerSize value="0.18"/>
+    </Profile>
+
+    <Profile name="frGroupCoverIcon" extends="baseReference" with="anchorTopLeft">
+        <size value="14px 14px"/>
+    </Profile>
+
+    <Profile name="frGroupCoverLabel" extends="fs25_textDefault" with="anchorTopLeft">
+        <size value="82px 16px"/>
+        <textSize value="9px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_fs25_colorMainLight"/>
+        <textAlignment value="left"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+        <textLayoutMode value="resize"/>
+    </Profile>
+
     <!-- Year position label (N+1..N+4) above each crop badge -->
     <Profile name="frGroupYearLabel" extends="fs25_textDefault" with="anchorTopLeft">
         <size value="170px 12px"/>
@@ -847,9 +919,9 @@
     <!-- card=1206 | text_start=132 | left_gap=28 → right_gap=28          -->
     <!-- text_end = 1206-28 = 1178 | width = 1178-132 = 1046px            -->
     <Profile name="frGroupFieldNames" extends="fs25_textDefault" with="anchorTopLeft">
-        <position value="132px -52px"/>
-        <size value="1046px 18px"/>
-        <textSize value="12px"/>
+        <position value="132px -64px"/>
+        <size value="1046px 14px"/>
+        <textSize value="11px"/>
         <textBold value="false"/>
         <textUpperCase value="false"/>
         <textColor value="$preset_colorWhite_50"/>

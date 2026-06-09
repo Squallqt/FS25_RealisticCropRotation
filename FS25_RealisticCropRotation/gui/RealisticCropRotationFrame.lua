@@ -55,10 +55,28 @@ RealisticCropRotationFrame.GROUP_ICON_H           = 20
 RealisticCropRotationFrame.GROUP_ICON_TEXT_GAP    = 5
 RealisticCropRotationFrame.GROUP_BADGE_PADDING_X  = 20
 
--- Season name l10n keys indexed by currentSeason (0-based)
-RealisticCropRotationFrame.SEASON_KEY = {
-    [0] = "rcr_season_spring", [1] = "rcr_season_summer",
-    [2] = "rcr_season_autumn", [3] = "rcr_season_winter",
+-- Annual calendar layout in pixels. The XML container is 1240 x 154 px.
+RealisticCropRotationFrame.CALENDAR_AXIS_X = 94
+RealisticCropRotationFrame.CALENDAR_AXIS_W = 1130
+RealisticCropRotationFrame.CALENDAR_BAR_Y = 5
+RealisticCropRotationFrame.CALENDAR_BAR_H = 8
+RealisticCropRotationFrame.CALENDAR_COVER_Y = 15
+RealisticCropRotationFrame.CALENDAR_COVER_W = 120
+RealisticCropRotationFrame.CALENDAR_GRID_H = 101
+
+RealisticCropRotationFrame.CALENDAR_MONTH_KEYS = {
+    "rcr_calendar_month_1",
+    "rcr_calendar_month_2",
+    "rcr_calendar_month_3",
+    "rcr_calendar_month_4",
+    "rcr_calendar_month_5",
+    "rcr_calendar_month_6",
+    "rcr_calendar_month_7",
+    "rcr_calendar_month_8",
+    "rcr_calendar_month_9",
+    "rcr_calendar_month_10",
+    "rcr_calendar_month_11",
+    "rcr_calendar_month_12",
 }
 
 function RealisticCropRotationFrame.new(i18n, messageCenter)
@@ -71,6 +89,9 @@ function RealisticCropRotationFrame.new(i18n, messageCenter)
     self.planCropList  = {""}  -- index 1 = no crop; populated in initialize()
     self.coverCropList = {""}  -- index 1 = no cover; populated in initialize()
     self.rotationGroups = {}   -- rebuilt when plans change
+    self.calendarEditSlotIdx = 1
+    self.calendarLocalPlan = {"", "", "", ""}
+    self.calendarLocalCoverPlan = {"", "", "", ""}
     self.totalAreaHa   = 0
     self.isSubscribedToFarmlandChanges = false
     return self
@@ -250,72 +271,6 @@ function RealisticCropRotationFrame:updatePlannedResiduePill(pillBg, pillText, p
     self:resizePillToText(pillBg, pillText, text)
 end
 
-function RealisticCropRotationFrame:getPlanSlotNitrogenResidueKgHa(plan, slotIdx)
-    local mgr = self:getManager()
-    if mgr == nil or mgr.service == nil then return nil end
-
-    local service = mgr.service
-    if type(service.getResidueEntry) ~= "function"
-        or type(service.getNitrogenKgPerHaFromStateChange) ~= "function" then
-        return nil
-    end
-
-    slotIdx = tonumber(slotIdx)
-    if slotIdx == nil or slotIdx < 1 or slotIdx > 4 then return nil end
-
-    local totalStateChange = 0
-    local function addResidue(cropName, residueKey)
-        if cropName == nil or cropName == "" then return end
-        local entry = service:getResidueEntry(string.upper(tostring(cropName)))
-        if entry ~= nil then
-            totalStateChange = totalStateChange + (tonumber(entry[residueKey]) or 0)
-        end
-    end
-
-    local n1SourceIdx = ((slotIdx - 2) % 4) + 1
-    local n2SourceIdx = ((slotIdx - 3) % 4) + 1
-    addResidue(plan ~= nil and plan[n1SourceIdx] or nil, "n1")
-    addResidue(plan ~= nil and plan[n2SourceIdx] or nil, "n2")
-
-    if totalStateChange <= 0 then return nil end
-
-    local ok, residueKgHa = pcall(
-        service.getNitrogenKgPerHaFromStateChange,
-        service,
-        totalStateChange
-    )
-    if ok and type(residueKgHa) == "number" and residueKgHa > 0 then
-        return residueKgHa
-    end
-    return nil
-end
-
-function RealisticCropRotationFrame:updatePlanSlotYearLabel(slotIdx, plan)
-    local yearEl = self.planSlotYear ~= nil and self.planSlotYear[slotIdx]
-    if yearEl == nil then return end
-
-    local baseText = self.i18n:getText("rcr_plan_year" .. tostring(slotIdx))
-    local residueKgHa = self:getPlanSlotNitrogenResidueKgHa(plan, slotIdx)
-
-    if residueKgHa ~= nil then
-        if yearEl.applyProfile ~= nil then
-            yearEl:applyProfile("frPlanSlotYearResidue")
-        end
-        yearEl:setText(string.format("%s  \xc2\xb7  +%d kg/ha", baseText, math.floor(residueKgHa + 0.5)))
-    else
-        if yearEl.applyProfile ~= nil then
-            yearEl:applyProfile("frPlanSlotYear")
-        end
-        yearEl:setText(baseText)
-    end
-end
-
-function RealisticCropRotationFrame:updatePlanSlotYearLabels(plan)
-    for i = 1, 4 do
-        self:updatePlanSlotYearLabel(i, plan)
-    end
-end
-
 function RealisticCropRotationFrame:getCropFamily(cropName)
     if cropName == nil or cropName == "" then return "UNKNOWN" end
     local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
@@ -486,29 +441,29 @@ function RealisticCropRotationFrame:linkFocusNavigation()
     if FocusManager == nil then return end
 
     local hasFields = #(self.farmlandList or {}) > 0
-    local selectors = self.planSlotSelector
-    local firstSelector = selectors ~= nil and selectors[1] or nil
+    local stepSelector = self.calendarStepSelector
+    local cropSelector = self.calendarEditCropSelector
+    local coverSelector = self.calendarEditCoverSelector
 
     if self.listFields ~= nil and FocusManager.RIGHT ~= nil then
-        local target = (hasFields and not self:isHistoryTab()) and firstSelector or nil
+        local target = (hasFields and not self:isHistoryTab()) and stepSelector or nil
         FocusManager:linkElements(self.listFields, FocusManager.RIGHT, target)
     end
 
-    if selectors == nil then return end
-
-    for i = 1, 4 do
-        local selector = selectors[i]
-        if selector ~= nil then
-            local previousElement = i > 1 and selectors[i - 1] or self.listFields
-            local nextElement = i < 4 and selectors[i + 1] or self.listFields
-
-            if FocusManager.TOP ~= nil then
-                FocusManager:linkElements(selector, FocusManager.TOP, previousElement)
-            end
-            if FocusManager.BOTTOM ~= nil then
-                FocusManager:linkElements(selector, FocusManager.BOTTOM, nextElement)
-            end
-        end
+    if stepSelector ~= nil and cropSelector ~= nil and FocusManager.RIGHT ~= nil then
+        FocusManager:linkElements(stepSelector, FocusManager.RIGHT, cropSelector)
+    end
+    if cropSelector ~= nil and coverSelector ~= nil and FocusManager.RIGHT ~= nil then
+        FocusManager:linkElements(cropSelector, FocusManager.RIGHT, coverSelector)
+    end
+    if coverSelector ~= nil and cropSelector ~= nil and FocusManager.LEFT ~= nil then
+        FocusManager:linkElements(coverSelector, FocusManager.LEFT, cropSelector)
+    end
+    if cropSelector ~= nil and stepSelector ~= nil and FocusManager.LEFT ~= nil then
+        FocusManager:linkElements(cropSelector, FocusManager.LEFT, stepSelector)
+    end
+    if stepSelector ~= nil and self.listFields ~= nil and FocusManager.LEFT ~= nil then
+        FocusManager:linkElements(stepSelector, FocusManager.LEFT, self.listFields)
     end
 end
 
@@ -578,20 +533,26 @@ function RealisticCropRotationFrame:buildPlanCropList()
         return self:getCropDisplayName(a) < self:getCropDisplayName(b)
     end)
 
-    -- Wire selectors
+    -- Wire the calendar editor selectors.
+    if self.calendarStepSelector ~= nil then
+        self.calendarStepSelector:setTexts({
+            self.i18n:getText("rcr_plan_year1"),
+            self.i18n:getText("rcr_plan_year2"),
+            self.i18n:getText("rcr_plan_year3"),
+            self.i18n:getText("rcr_plan_year4"),
+        })
+        self.calendarStepSelector:setState(self.calendarEditSlotIdx or 1, false)
+    end
+
     local cropTexts = {}
     for _, cropName in ipairs(self.planCropList) do
         table.insert(cropTexts, cropName == "" and self.i18n:getText("rcr_plan_none")
                                                or self:getCropDisplayName(cropName))
     end
 
-    if self.planSlotSelector ~= nil then
-        for i = 1, 4 do
-            if self.planSlotSelector[i] ~= nil then
-                self.planSlotSelector[i]:setTexts(cropTexts)
-                self.planSlotSelector[i]:setState(1, false)
-            end
-        end
+    if self.calendarEditCropSelector ~= nil then
+        self.calendarEditCropSelector:setTexts(cropTexts)
+        self.calendarEditCropSelector:setState(1, false)
     end
 
     local coverTexts = {}
@@ -600,13 +561,9 @@ function RealisticCropRotationFrame:buildPlanCropList()
                                                 or self:getCropDisplayName(cropName))
     end
 
-    if self.coverSlotSelector ~= nil then
-        for i = 1, 4 do
-            if self.coverSlotSelector[i] ~= nil then
-                self.coverSlotSelector[i]:setTexts(coverTexts)
-                self.coverSlotSelector[i]:setState(1, false)
-            end
-        end
+    if self.calendarEditCoverSelector ~= nil then
+        self.calendarEditCoverSelector:setTexts(coverTexts)
+        self.calendarEditCoverSelector:setState(1, false)
     end
 end
 
@@ -826,16 +783,6 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
             string.upper(tostring(entry.name or ""))
             .. "  |  "
             .. string.format("%.1f ha", tonumber(entry.areaHa) or 0)
-        )
-    end
-
-    if self.detailSeason ~= nil then
-        local seasonIdx = (g_currentMission ~= nil and g_currentMission.environment ~= nil)
-            and (g_currentMission.environment.currentSeason or 0) or 0
-        local seasonKey = RealisticCropRotationFrame.SEASON_KEY[seasonIdx] or "rcr_season_spring"
-        self.detailSeason:setText(
-            "\xc2\xb7  " .. self.i18n:getText("rcr_season_label") .. ": "
-            .. string.upper(self.i18n:getText(seasonKey)) .. "  \xc2\xb7"
         )
     end
 
@@ -1083,17 +1030,8 @@ function RealisticCropRotationFrame:updatePlanningPanel(farmlandId)
             .. string.format("%.1f ha", tonumber(entry.areaHa) or 0)
         )
     end
-    if self.planSeason ~= nil then
-        local seasonIdx = (g_currentMission ~= nil and g_currentMission.environment ~= nil)
-            and (g_currentMission.environment.currentSeason or 0) or 0
-        local seasonKey = RealisticCropRotationFrame.SEASON_KEY[seasonIdx] or "rcr_season_spring"
-        self.planSeason:setText(
-            "\xc2\xb7  " .. self.i18n:getText("rcr_season_label") .. ": "
-            .. string.upper(self.i18n:getText(seasonKey)) .. "  \xc2\xb7"
-        )
-    end
 
-    self:updatePlanSlots(farmlandId)
+    self:updateCalendar(farmlandId)
     local plan = self:getPlanForFarmland(farmlandId)
     local coverPlan = self:getCoverPlanForFarmland(farmlandId)
     self:updateScoreCard(plan, coverPlan)
@@ -1101,93 +1039,365 @@ function RealisticCropRotationFrame:updatePlanningPanel(farmlandId)
 end
 
 -- ---------------------------------------------------------------------------
---  Plan slots — crop selector + icon + family badge
+--  Annual calendar — crop selector + sow window + cover marker
 -- ---------------------------------------------------------------------------
 
-function RealisticCropRotationFrame:updatePlanSlots(farmlandId)
-    local plan = self:getPlanForFarmland(farmlandId)
-    local coverPlan = self:getCoverPlanForFarmland(farmlandId)
-    self:updatePlanSlotYearLabels(plan)
-    for i = 1, 4 do
-        local sel      = self.planSlotSelector  ~= nil and self.planSlotSelector[i]
-        local iconEl   = self.planSlotIcon      ~= nil and self.planSlotIcon[i]
-        local badgeBg  = self.planSlotBadge     ~= nil and self.planSlotBadge[i]
-        local badgeTxt = self.planSlotBadgeText ~= nil and self.planSlotBadgeText[i]
-        local coverSel      = self.coverSlotSelector  ~= nil and self.coverSlotSelector[i]
-        local coverIconEl   = self.coverSlotIcon      ~= nil and self.coverSlotIcon[i]
-        local coverBadgeBg  = self.coverSlotBadge     ~= nil and self.coverSlotBadge[i]
-        local coverBadgeTxt = self.coverSlotBadgeText ~= nil and self.coverSlotBadgeText[i]
+function RealisticCropRotationFrame:setElementPixelPosition(element, xPx, yPx)
+    if element == nil or element.setPosition == nil
+        or GuiUtils == nil or GuiUtils.getNormalizedScreenValues == nil then
+        return
+    end
 
-        local cropName = plan[i] or ""
-        local coverCropName = coverPlan[i] or ""
+    local pos = GuiUtils.getNormalizedScreenValues(string.format(
+        "%dpx -%dpx",
+        math.floor((tonumber(xPx) or 0) + 0.5),
+        math.floor((tonumber(yPx) or 0) + 0.5)
+    ))
+    element:setPosition(pos[1], pos[2])
+end
 
-        -- Sync MultiTextOption state to saved crop
-        if sel ~= nil then
-            local state = 1
-            for idx, name in ipairs(self.planCropList) do
-                if name == cropName then state = idx; break end
-            end
-            sel:setState(state, false)
-        end
-        if coverSel ~= nil then
-            local coverState = 1
-            for idx, name in ipairs(self.coverCropList) do
-                if name == coverCropName then coverState = idx; break end
-            end
-            coverSel:setState(coverState, false)
-        end
+function RealisticCropRotationFrame:setElementPixelSize(element, wPx, hPx)
+    if element == nil or element.setSize == nil
+        or GuiUtils == nil or GuiUtils.getNormalizedScreenValues == nil then
+        return
+    end
 
-        self:applySlotCropIcon(iconEl, cropName)
-        self:applySlotBadge(badgeBg, badgeTxt, self:getCropFamily(cropName))
-        self:applySlotCropIcon(coverIconEl, coverCropName)
-        self:applySlotBadge(coverBadgeBg, coverBadgeTxt, "COVER", "rcr_family_cover")
+    local size = GuiUtils.getNormalizedScreenValues(string.format(
+        "%dpx %dpx",
+        math.max(1, math.floor((tonumber(wPx) or 1) + 0.5)),
+        math.max(1, math.floor((tonumber(hPx) or 1) + 0.5))
+    ))
+    element:setSize(size[1], size[2])
+end
+
+function RealisticCropRotationFrame:setBitmapColor(element, color)
+    if element == nil or color == nil then return end
+    if element.setImageSlice ~= nil and g_plainColorSliceId ~= nil then
+        pcall(element.setImageSlice, element, nil, g_plainColorSliceId)
+    end
+    if element.setImageColor ~= nil then
+        element:setImageColor(nil, color[1], color[2], color[3], color[4] or 1)
+    else
+        element.color = {color[1], color[2], color[3], color[4] or 1}
     end
 end
 
-function RealisticCropRotationFrame:getPlanFromSelectors()
-    local plan = {"", "", "", ""}
-    for i = 1, 4 do
-        local sel = self.planSlotSelector ~= nil and self.planSlotSelector[i]
-        if sel ~= nil and self.planCropList ~= nil then
-            local state = sel:getState()
-            plan[i] = self.planCropList[state] or ""
+function RealisticCropRotationFrame:getCalendarPeriodInfo()
+    local env = g_currentMission ~= nil and g_currentMission.environment or nil
+    local candidates = {
+        env ~= nil and env.numPeriods or nil,
+        env ~= nil and env.numberOfPeriods or nil,
+        env ~= nil and env.periodsPerYear or nil,
+        env ~= nil and env.monthsPerYear or nil,
+    }
+    for _, value in ipairs(candidates) do
+        local count = tonumber(value)
+        if count ~= nil and count >= 1 and count <= 24 then
+            return math.floor(count), 1
         end
+    end
+
+    if SeasonPeriod ~= nil
+        and SeasonPeriod.EARLY_SPRING ~= nil
+        and SeasonPeriod.LATE_WINTER ~= nil then
+        local firstPeriod = tonumber(SeasonPeriod.EARLY_SPRING)
+        local lastPeriod = tonumber(SeasonPeriod.LATE_WINTER)
+        if firstPeriod ~= nil and lastPeriod ~= nil and lastPeriod >= firstPeriod then
+            local count = lastPeriod - firstPeriod + 1
+            if count >= 1 and count <= 24 then
+                return count, firstPeriod
+            end
+        end
+    end
+
+    return 12, 1
+end
+
+function RealisticCropRotationFrame:getCurrentCalendarPeriodIndex(periodCount, firstPeriod)
+    local env = g_currentMission ~= nil and g_currentMission.environment or nil
+    local currentPeriod = env ~= nil and tonumber(env.currentPeriod) or nil
+    periodCount = math.max(1, tonumber(periodCount) or 12)
+    firstPeriod = tonumber(firstPeriod) or 1
+
+    local index = currentPeriod ~= nil and (currentPeriod - firstPeriod + 1) or 1
+    if index < 1 or index > periodCount then
+        index = currentPeriod or 1
+    end
+    return math.max(1, math.min(periodCount, math.floor(index)))
+end
+
+function RealisticCropRotationFrame:getCalendarGrowthMode()
+    return g_currentMission ~= nil
+        and g_currentMission.missionInfo ~= nil
+        and g_currentMission.missionInfo.growthMode
+        or nil
+end
+
+function RealisticCropRotationFrame:getCropPlantingWindow(cropName, periodCount, firstPeriod)
+    if cropName == nil or cropName == "" then return nil end
+    if g_fruitTypeManager == nil or type(g_fruitTypeManager.getFruitTypeByName) ~= "function" then return nil end
+
+    local fruitDesc = g_fruitTypeManager:getFruitTypeByName(string.upper(tostring(cropName)))
+    if fruitDesc == nil or type(fruitDesc.getIsPlantableInPeriod) ~= "function" then return nil end
+
+    periodCount = math.max(1, tonumber(periodCount) or 12)
+    firstPeriod = tonumber(firstPeriod) or 1
+    local growthMode = self:getCalendarGrowthMode()
+    local plantable = {}
+    for i = 1, periodCount do
+        local period = firstPeriod + i - 1
+        local ok, isPlantable = pcall(fruitDesc.getIsPlantableInPeriod, fruitDesc, growthMode, period)
+        plantable[i] = ok and isPlantable == true
+    end
+
+    local bestStart, bestLen = nil, 0
+    local i = 1
+    while i <= periodCount do
+        if plantable[i] then
+            local start = i
+            local len = 0
+            while i <= periodCount and plantable[i] do
+                len = len + 1
+                i = i + 1
+            end
+            if len > bestLen then
+                bestStart, bestLen = start, len
+            end
+        else
+            i = i + 1
+        end
+    end
+
+    if bestStart == nil or bestLen <= 0 then return nil end
+    return bestStart, bestLen
+end
+
+function RealisticCropRotationFrame:updateCalendarAxis()
+    local periodCount, firstPeriod = self:getCalendarPeriodInfo()
+    local periodW = RealisticCropRotationFrame.CALENDAR_AXIS_W / math.max(1, periodCount)
+
+    for i = 1, 12 do
+        local labelEl = self.calendarMonthLabel ~= nil and self.calendarMonthLabel[i] or nil
+        if labelEl ~= nil then
+            local show = i <= periodCount
+            labelEl:setVisible(show)
+            if show then
+                local key = RealisticCropRotationFrame.CALENDAR_MONTH_KEYS[((i - 1) % 12) + 1]
+                local labelW = math.min(86, periodW)
+                labelEl:setText(self.i18n:getText(key))
+                self:setElementPixelPosition(
+                    labelEl,
+                    RealisticCropRotationFrame.CALENDAR_AXIS_X + ((i - 1) * periodW) + ((periodW - labelW) * 0.5),
+                    38
+                )
+                self:setElementPixelSize(labelEl, labelW, 14)
+            end
+        end
+
+        local gridEl = self.calendarMonthGridLine ~= nil and self.calendarMonthGridLine[i] or nil
+        if gridEl ~= nil then
+            local show = i <= periodCount
+            gridEl:setVisible(show)
+            if show then
+                self:setElementPixelPosition(
+                    gridEl,
+                    RealisticCropRotationFrame.CALENDAR_AXIS_X + ((i - 1) * periodW),
+                    53
+                )
+                self:setElementPixelSize(gridEl, 1, RealisticCropRotationFrame.CALENDAR_GRID_H)
+            end
+        end
+    end
+
+    local marker = self.calendarTodayMarker
+    if marker ~= nil then
+        local todayIndex = self:getCurrentCalendarPeriodIndex(periodCount, firstPeriod)
+        local lineX = RealisticCropRotationFrame.CALENDAR_AXIS_X + ((todayIndex - 0.5) * periodW)
+        self:setElementPixelPosition(marker, lineX - 36, 0)
+        marker:setVisible(true)
+    end
+
+    return periodCount, firstPeriod, periodW
+end
+
+function RealisticCropRotationFrame:applyCalendarRow(slotIdx, cropName, coverCropName, periodCount, firstPeriod, periodW)
+    local rowBg = self.calendarRowBg ~= nil and self.calendarRowBg[slotIdx] or nil
+    local cropIcon = self.calendarCropIcon ~= nil and self.calendarCropIcon[slotIdx] or nil
+    local coverIcon = self.calendarCoverIcon ~= nil and self.calendarCoverIcon[slotIdx] or nil
+    local cropBar = self.calendarCropBar ~= nil and self.calendarCropBar[slotIdx] or nil
+    local cropText = self.calendarCropBarText ~= nil and self.calendarCropBarText[slotIdx] or nil
+    local coverMarker = self.calendarCoverMarker ~= nil and self.calendarCoverMarker[slotIdx] or nil
+    local coverLabel = self.calendarCoverLabel ~= nil and self.calendarCoverLabel[slotIdx] or nil
+
+    if rowBg ~= nil then
+        local active = slotIdx == self:getCalendarEditSlotIndex()
+        rowBg.color = active and {0.35, 0.55, 0.00, 0.26} or {0, 0, 0, 0.18}
+        rowBg:setVisible(true)
+    end
+
+    self:applySlotCropIcon(cropIcon, cropName)
+    self:applySlotCropIcon(coverIcon, coverCropName)
+
+    local windowStart, windowLen = self:getCropPlantingWindow(cropName, periodCount, firstPeriod)
+    local hasCrop = cropName ~= nil and cropName ~= ""
+    local axisX = RealisticCropRotationFrame.CALENDAR_AXIS_X
+    local axisW = RealisticCropRotationFrame.CALENDAR_AXIS_W
+    local barX, barW = nil, nil
+
+    if cropBar ~= nil then
+        cropBar:setVisible(hasCrop)
+        if hasCrop then
+            if windowStart ~= nil and windowLen ~= nil then
+                barX = axisX + ((windowStart - 1) * periodW)
+                barW = math.max(8, windowLen * periodW)
+                local c = RealisticCropRotationFrame.FAMILY_RGBA[self:getCropFamily(cropName)]
+                    or {0.45, 0.45, 0.45, 0.90}
+                self:setBitmapColor(cropBar, {c[1], c[2], c[3], 0.88})
+            else
+                barW = math.max(28, periodW)
+                barX = axisX + ((axisW - barW) * 0.5)
+                self:setBitmapColor(cropBar, {0.38, 0.38, 0.38, 0.85})
+            end
+            self:setElementPixelPosition(cropBar, barX, RealisticCropRotationFrame.CALENDAR_BAR_Y)
+            self:setElementPixelSize(cropBar, barW, RealisticCropRotationFrame.CALENDAR_BAR_H)
+        end
+    end
+
+    if cropText ~= nil then
+        cropText:setVisible(hasCrop)
+        if hasCrop then
+            local unknown = windowStart == nil
+            cropText:setText(unknown and "?" or self:getCropDisplayName(cropName))
+            self:setElementPixelPosition(cropText, barX or axisX, 5)
+            self:setElementPixelSize(cropText, barW or periodW, 14)
+        end
+    end
+
+    local hasCover = coverCropName ~= nil and coverCropName ~= ""
+    if coverMarker ~= nil then
+        coverMarker:setVisible(hasCover)
+        if hasCover then
+            local coverW = RealisticCropRotationFrame.CALENDAR_COVER_W
+            local coverX = axisX + axisW - coverW
+            if windowStart ~= nil and windowLen ~= nil then
+                local afterBarX = axisX + ((windowStart + windowLen - 1) * periodW) + 4
+                coverX = math.min(axisX + axisW - coverW, math.max(axisX, afterBarX))
+            end
+            self:setBitmapColor(coverMarker, RealisticCropRotationFrame.FAMILY_RGBA.COVER)
+            self:setElementPixelPosition(coverMarker, coverX, RealisticCropRotationFrame.CALENDAR_COVER_Y)
+            self:setElementPixelSize(coverMarker, coverW, 6)
+
+            if coverIcon ~= nil then
+                self:setElementPixelPosition(coverIcon, coverX + 5, 10)
+                self:setElementPixelSize(coverIcon, 12, 12)
+            end
+            if coverLabel ~= nil then
+                coverLabel:setVisible(true)
+                coverLabel:setText(self:getCropDisplayName(coverCropName))
+                self:setElementPixelPosition(coverLabel, coverX + 22, 10)
+                self:setElementPixelSize(coverLabel, coverW - 28, 12)
+            end
+        end
+    end
+    if not hasCover and coverLabel ~= nil then
+        coverLabel:setVisible(false)
+    end
+end
+
+function RealisticCropRotationFrame:copyFourSlotPlan(plan)
+    local copy = {"", "", "", ""}
+    for i = 1, 4 do
+        copy[i] = plan ~= nil and (plan[i] or "") or ""
+    end
+    return copy
+end
+
+function RealisticCropRotationFrame:getCalendarEditSlotIndex()
+    local state = self.calendarStepSelector ~= nil and self.calendarStepSelector:getState() or self.calendarEditSlotIdx
+    local slotIdx = math.floor(tonumber(state) or tonumber(self.calendarEditSlotIdx) or 1)
+    slotIdx = math.max(1, math.min(4, slotIdx))
+    self.calendarEditSlotIdx = slotIdx
+    return slotIdx
+end
+
+function RealisticCropRotationFrame:setSelectorStateFromCrop(selector, list, cropName)
+    if selector == nil or list == nil then return end
+    local state = 1
+    for idx, name in ipairs(list) do
+        if name == cropName then state = idx; break end
+    end
+    selector:setState(state, false)
+end
+
+function RealisticCropRotationFrame:updateCalendarEditorSelectorsFromSlot()
+    local slotIdx = self:getCalendarEditSlotIndex()
+    if self.calendarStepSelector ~= nil then
+        self.calendarStepSelector:setState(slotIdx, false)
+    end
+    self:setSelectorStateFromCrop(
+        self.calendarEditCropSelector,
+        self.planCropList,
+        self.calendarLocalPlan ~= nil and self.calendarLocalPlan[slotIdx] or ""
+    )
+    self:setSelectorStateFromCrop(
+        self.calendarEditCoverSelector,
+        self.coverCropList,
+        self.calendarLocalCoverPlan ~= nil and self.calendarLocalCoverPlan[slotIdx] or ""
+    )
+end
+
+function RealisticCropRotationFrame:renderCalendarFromLocalPlans()
+    local plan = self.calendarLocalPlan or {"", "", "", ""}
+    local coverPlan = self.calendarLocalCoverPlan or {"", "", "", ""}
+    local periodCount, firstPeriod, periodW = self:updateCalendarAxis()
+
+    for i = 1, 4 do
+        self:applyCalendarRow(i, plan[i] or "", coverPlan[i] or "", periodCount, firstPeriod, periodW)
+    end
+
+    self:updateScoreCard(plan, coverPlan)
+    self:updatePlannedResiduePill(self.planStatusPillBg, self.planStatusPillText, plan)
+end
+
+function RealisticCropRotationFrame:updateCalendar(farmlandId)
+    self.calendarLocalPlan = self:copyFourSlotPlan(self:getPlanForFarmland(farmlandId))
+    self.calendarLocalCoverPlan = self:copyFourSlotPlan(self:getCoverPlanForFarmland(farmlandId))
+    self:updateCalendarEditorSelectorsFromSlot()
+    self:renderCalendarFromLocalPlans()
+end
+
+function RealisticCropRotationFrame:getPlanFromSelectors()
+    local sourcePlan = self.calendarLocalPlan
+    if sourcePlan == nil and self.selectedId ~= nil then
+        sourcePlan = self:getPlanForFarmland(self.selectedId)
+    end
+    local plan = self:copyFourSlotPlan(sourcePlan)
+    local slotIdx = self:getCalendarEditSlotIndex()
+    local sel = self.calendarEditCropSelector
+    if sel ~= nil and self.planCropList ~= nil then
+        plan[slotIdx] = self.planCropList[sel:getState()] or ""
     end
     return plan
 end
 
 function RealisticCropRotationFrame:getCoverPlanFromSelectors()
-    local coverPlan = {"", "", "", ""}
-    for i = 1, 4 do
-        local sel = self.coverSlotSelector ~= nil and self.coverSlotSelector[i]
-        if sel ~= nil and self.coverCropList ~= nil then
-            local state = sel:getState()
-            coverPlan[i] = self.coverCropList[state] or ""
-        end
+    local sourceCoverPlan = self.calendarLocalCoverPlan
+    if sourceCoverPlan == nil and self.selectedId ~= nil then
+        sourceCoverPlan = self:getCoverPlanForFarmland(self.selectedId)
+    end
+    local coverPlan = self:copyFourSlotPlan(sourceCoverPlan)
+    local slotIdx = self:getCalendarEditSlotIndex()
+    local sel = self.calendarEditCoverSelector
+    if sel ~= nil and self.coverCropList ~= nil then
+        coverPlan[slotIdx] = self.coverCropList[sel:getState()] or ""
     end
     return coverPlan
 end
 
-function RealisticCropRotationFrame:updatePlanSlotVisualsFromSelectors()
-    local plan = self:getPlanFromSelectors()
-    local coverPlan = self:getCoverPlanFromSelectors()
-    self:updatePlanSlotYearLabels(plan)
-    for i = 1, 4 do
-        local cropName = plan[i] or ""
-        local coverCropName = coverPlan[i] or ""
-        local iconEl   = self.planSlotIcon      ~= nil and self.planSlotIcon[i]
-        local badgeBg  = self.planSlotBadge     ~= nil and self.planSlotBadge[i]
-        local badgeTxt = self.planSlotBadgeText ~= nil and self.planSlotBadgeText[i]
-        local coverIconEl   = self.coverSlotIcon      ~= nil and self.coverSlotIcon[i]
-        local coverBadgeBg  = self.coverSlotBadge     ~= nil and self.coverSlotBadge[i]
-        local coverBadgeTxt = self.coverSlotBadgeText ~= nil and self.coverSlotBadgeText[i]
-        self:applySlotCropIcon(iconEl, cropName)
-        self:applySlotBadge(badgeBg, badgeTxt, self:getCropFamily(cropName))
-        self:applySlotCropIcon(coverIconEl, coverCropName)
-        self:applySlotBadge(coverBadgeBg, coverBadgeTxt, "COVER", "rcr_family_cover")
-    end
-    self:updateScoreCard(plan, coverPlan)
-    self:updatePlannedResiduePill(self.planStatusPillBg, self.planStatusPillText, plan)
+function RealisticCropRotationFrame:updateCalendarVisualsFromSelectors()
+    self.calendarLocalPlan = self:getPlanFromSelectors()
+    self.calendarLocalCoverPlan = self:getCoverPlanFromSelectors()
+    self:renderCalendarFromLocalPlans()
 end
 
 function RealisticCropRotationFrame:onServerSyncReceived()
@@ -1199,7 +1409,7 @@ function RealisticCropRotationFrame:onServerSyncReceived()
 
     -- In the history tab it is safe to rebuild the sidebar/details from the
     -- authoritative server snapshot.
-    -- In the planner tab, do NOT call populateSidebar/updatePlanSlots here:
+    -- In the planner tab, do NOT call populateSidebar/updateCalendar here:
     -- server snapshots can arrive while the user is clicking MultiTextOption
     -- arrows. Re-setting selector state during that interaction makes the
     -- control appear to skip crops or fail to advance.
@@ -1210,7 +1420,7 @@ function RealisticCropRotationFrame:onServerSyncReceived()
         if self.listPlanOverview ~= nil then
             self.listPlanOverview:reloadData()
         end
-        self:updatePlanSlotVisualsFromSelectors()
+        self:updateCalendarVisualsFromSelectors()
     end
 
     self.isApplyingServerSync = false
@@ -1262,27 +1472,34 @@ function RealisticCropRotationFrame:applySlotBadge(badgeBg, badgeTxt, family, ba
 end
 
 -- ---------------------------------------------------------------------------
---  Plan slot onClick handlers
+--  Calendar editor onClick handlers
 -- ---------------------------------------------------------------------------
 
-function RealisticCropRotationFrame:onChangePlanSlot1() self:handlePlanSlotChange(1) end
-function RealisticCropRotationFrame:onChangePlanSlot2() self:handlePlanSlotChange(2) end
-function RealisticCropRotationFrame:onChangePlanSlot3() self:handlePlanSlotChange(3) end
-function RealisticCropRotationFrame:onChangePlanSlot4() self:handlePlanSlotChange(4) end
+function RealisticCropRotationFrame:onChangeCalendarEditStep()
+    if self.isApplyingServerSync then return end
+    self.calendarEditSlotIdx = self:getCalendarEditSlotIndex()
+    self:updateCalendarEditorSelectorsFromSlot()
+    self:renderCalendarFromLocalPlans()
+end
 
-function RealisticCropRotationFrame:onChangeCoverSlot1() self:handleCoverSlotChange(1) end
-function RealisticCropRotationFrame:onChangeCoverSlot2() self:handleCoverSlotChange(2) end
-function RealisticCropRotationFrame:onChangeCoverSlot3() self:handleCoverSlotChange(3) end
-function RealisticCropRotationFrame:onChangeCoverSlot4() self:handleCoverSlotChange(4) end
+function RealisticCropRotationFrame:onChangeCalendarEditCrop()
+    self:handleCalendarCropChange(self:getCalendarEditSlotIndex())
+end
 
-function RealisticCropRotationFrame:handlePlanSlotChange(slotIdx)
+function RealisticCropRotationFrame:onChangeCalendarEditCover()
+    self:handleCalendarCoverChange(self:getCalendarEditSlotIndex())
+end
+
+function RealisticCropRotationFrame:handleCalendarCropChange(slotIdx)
     if self.isApplyingServerSync then return end
     if self.selectedId == nil then return end
-    local sel = self.planSlotSelector ~= nil and self.planSlotSelector[slotIdx]
+    local sel = self.calendarEditCropSelector
     if sel == nil then return end
 
     local state    = sel:getState()
     local cropName = (self.planCropList ~= nil and self.planCropList[state]) or ""
+    self.calendarLocalPlan = self:copyFourSlotPlan(self.calendarLocalPlan)
+    self.calendarLocalPlan[slotIdx] = cropName
 
     local isClientOnly = g_currentMission ~= nil and g_currentMission.getIsServer ~= nil
         and not g_currentMission:getIsServer()
@@ -1307,35 +1524,27 @@ function RealisticCropRotationFrame:handlePlanSlotChange(slotIdx)
         end
     end
 
-    local iconEl   = self.planSlotIcon      ~= nil and self.planSlotIcon[slotIdx]
-    local badgeBg  = self.planSlotBadge     ~= nil and self.planSlotBadge[slotIdx]
-    local badgeTxt = self.planSlotBadgeText ~= nil and self.planSlotBadgeText[slotIdx]
-    self:applySlotCropIcon(iconEl, cropName)
-    self:applySlotBadge(badgeBg, badgeTxt, self:getCropFamily(cropName))
-
-    local plan = self:getPlanFromSelectors()
-    local coverPlan = self:getCoverPlanFromSelectors()
-    self:updatePlanSlotYearLabels(plan)
-    self:updateScoreCard(plan, coverPlan)
-    self:updatePlannedResiduePill(self.planStatusPillBg, self.planStatusPillText, plan)
+    self:renderCalendarFromLocalPlans()
 
     -- Keep the overview refreshed from the repository. On MP clients this may
     -- lag one server snapshot behind, but it avoids using local optimistic data
-    -- as saved truth. The slot cards themselves are updated directly above.
+    -- as saved truth. The calendar itself is updated directly above.
     self:buildRotationGroups()
     if self.listPlanOverview ~= nil then
         self.listPlanOverview:reloadData()
     end
 end
 
-function RealisticCropRotationFrame:handleCoverSlotChange(slotIdx)
+function RealisticCropRotationFrame:handleCalendarCoverChange(slotIdx)
     if self.isApplyingServerSync then return end
     if self.selectedId == nil then return end
-    local sel = self.coverSlotSelector ~= nil and self.coverSlotSelector[slotIdx]
+    local sel = self.calendarEditCoverSelector
     if sel == nil then return end
 
     local state = sel:getState()
     local cropName = (self.coverCropList ~= nil and self.coverCropList[state]) or ""
+    self.calendarLocalCoverPlan = self:copyFourSlotPlan(self.calendarLocalCoverPlan)
+    self.calendarLocalCoverPlan[slotIdx] = cropName
 
     local isClientOnly = g_currentMission ~= nil and g_currentMission.getIsServer ~= nil
         and not g_currentMission:getIsServer()
@@ -1360,15 +1569,7 @@ function RealisticCropRotationFrame:handleCoverSlotChange(slotIdx)
         end
     end
 
-    local iconEl   = self.coverSlotIcon      ~= nil and self.coverSlotIcon[slotIdx]
-    local badgeBg  = self.coverSlotBadge     ~= nil and self.coverSlotBadge[slotIdx]
-    local badgeTxt = self.coverSlotBadgeText ~= nil and self.coverSlotBadgeText[slotIdx]
-    self:applySlotCropIcon(iconEl, cropName)
-    self:applySlotBadge(badgeBg, badgeTxt, "COVER", "rcr_family_cover")
-
-    local plan = self:getPlanFromSelectors()
-    local coverPlan = self:getCoverPlanFromSelectors()
-    self:updateScoreCard(plan, coverPlan)
+    self:renderCalendarFromLocalPlans()
 
     self:buildRotationGroups()
     if self.listPlanOverview ~= nil then
@@ -1698,11 +1899,13 @@ function RealisticCropRotationFrame:populateGroupCell(index, cell)
         end
     end
 
-    -- 4 crop zones: badge bg + icon + crop name label
+    -- 4 crop zones: main crop badge plus optional cover marker.
     for i = 1, 4 do
         local cropName = group.plan[i] or ""
+        local coverName = group.coverPlan ~= nil and (group.coverPlan[i] or "") or ""
         local family   = self:getCropFamily(cropName)
         local show     = cropName ~= ""
+        local showCover = coverName ~= ""
 
         local badgeEl = cell:getAttribute("gBadge" .. i)
         if badgeEl ~= nil then
@@ -1729,6 +1932,28 @@ function RealisticCropRotationFrame:populateGroupCell(index, cell)
 
         local yearLabelEl = cell:getAttribute("gYearLabel" .. i)
         if yearLabelEl ~= nil then yearLabelEl:setVisible(show and not isEmptyGroup) end
+
+        local coverBadgeEl = cell:getAttribute("gCoverBadge" .. i)
+        if coverBadgeEl ~= nil then
+            coverBadgeEl:setVisible(showCover)
+            if showCover then
+                local c = RealisticCropRotationFrame.FAMILY_RGBA.COVER
+                coverBadgeEl.color = {c[1], c[2], c[3], 0.65}
+            end
+        end
+
+        local coverIconEl = cell:getAttribute("gCoverIcon" .. i)
+        if coverIconEl ~= nil then
+            self:applySlotCropIcon(coverIconEl, coverName)
+        end
+
+        local coverLabelEl = cell:getAttribute("gCoverLabel" .. i)
+        if coverLabelEl ~= nil then
+            coverLabelEl:setVisible(showCover)
+            if showCover then
+                coverLabelEl:setText(self:getCropDisplayName(coverName))
+            end
+        end
     end
 
     self:layoutGroupRow(cell, group)

@@ -76,7 +76,6 @@
                 <RoundCorner     profile="frHeroCardBg"/>
                 <ThreePartBitmap profile="frHeroAccent"/>
                 <Text profile="frHeroTitle" id="detailTitle"  text="-"/>
-                <Text profile="frHeroMeta"  id="detailSeason" text=""/>
                 <RoundCorner profile="frStatusPillBg"   id="statusPillBg"/>
                 <Text        profile="frStatusPillText" id="statusPillText" text=""/>
             </GuiElement>
@@ -258,7 +257,7 @@
         <!--  Layout — same y-origin as detailsContainer (y=0 = top of card):      -->
         <!--    Hero           y=   0  h= 88                                        -->
         <!--    Section PLAN   y= -98  h= 32                                        -->
-        <!--    Plan slots     y=-144  h=154   gap title/card = 14                  -->
+        <!--    Calendar       y=-144  h=154   gap title/card = 14                  -->
         <!--    Section SCORE  y=-330  h= 32   group gap = 32                       -->
         <!--    Score card     y=-374  h= 80   gap title/card = 12                  -->
         <!--    Section GLOBAL y=-476  h= 32   group gap = 32                       -->
@@ -272,7 +271,6 @@
                 <RoundCorner     profile="frHeroCardBg"/>
                 <ThreePartBitmap profile="frHeroAccent"/>
                 <Text profile="frHeroTitle" id="planTitle"  text="-"/>
-                <Text profile="frHeroMeta"  id="planSeason" text=""/>
                 <RoundCorner profile="frStatusPillBg"   id="planStatusPillBg"/>
                 <Text        profile="frStatusPillText" id="planStatusPillText" text=""/>
             </GuiElement>
@@ -284,87 +282,98 @@
                 <Text profile="frSectionTitle" text="$l10n_rcr_section_plan"/>
             </GuiElement>
 
-            <!-- == PLAN TIMELINE (y=-144..298) == -->
-            <!--                                                                        -->
-            <!--  4 widened slots, same height as history cards                         -->
-            <!--    Slot1 x=8   Conn x=274  Slot2 x=340  Conn x=606                    -->
-            <!--    Slot3 x=672 Conn x=938  Slot4 x=974                                -->
-            <!-- ====================================================================== -->
-            <GuiElement profile="frPlanTimeline" position="20px -144px">
-                <!-- == Slot 1: AN 1 == -->
-                <GuiElement profile="frPlanSlotCard" position="8px -4px">
-                    <RoundCorner     profile="frPlanSlotCardBg"/>
-                    <Text            profile="frPlanSlotYear"      id="planSlotYear[1]"     text="$l10n_rcr_plan_year1"/>
-                    <Bitmap          profile="frPlanSlotCropIcon"  id="planSlotIcon[1]"     visible="false"/>
-                    <MultiTextOption profile="frPlanSlotSelector"  id="planSlotSelector[1]" onClick="onChangePlanSlot1"/>
-                    <RoundCorner     profile="frPlanSlotBadgeBg"   id="planSlotBadge[1]"    visible="false"/>
-                    <Text            profile="frPlanSlotBadgeText" id="planSlotBadgeText[1]" text="" visible="false"/>
-                    <Bitmap          profile="frPlanCoverCropIcon"  id="coverSlotIcon[1]"     visible="false"/>
-                    <MultiTextOption profile="frPlanCoverSelector"  id="coverSlotSelector[1]" onClick="onChangeCoverSlot1"/>
-                    <RoundCorner     profile="frPlanCoverBadgeBg"   id="coverSlotBadge[1]"    visible="false"/>
-                    <Text            profile="frPlanCoverBadgeText" id="coverSlotBadgeText[1]" text="" visible="false"/>
+            <!-- == ANNUAL ROTATION CALENDAR (y=-144..298) == -->
+            <GuiElement profile="frCalendarTimeline" position="20px -144px">
+                <RoundCorner profile="frCalendarBg"/>
+                <ThreePartBitmap profile="frCalendarAccent"/>
+
+                <GuiElement profile="frCalendarEditor">
+                    <RoundCorner profile="frCalendarEditorBg"/>
+                    <MultiTextOption profile="frCalendarStepSelector" id="calendarStepSelector" onClick="onChangeCalendarEditStep"/>
+                    <MultiTextOption profile="frCalendarEditCropSelector" id="calendarEditCropSelector" onClick="onChangeCalendarEditCrop"/>
+                    <MultiTextOption profile="frCalendarEditCoverSelector" id="calendarEditCoverSelector" onClick="onChangeCalendarEditCover"/>
                 </GuiElement>
 
-                <!-- Connector 1 -->
-                <GuiElement profile="frPlanTimelineConnector" position="274px -4px">
-                    <RoundCorner profile="frTimelineConnectorLine"/>
-                    <Text        profile="frTimelineArrowText" text=">"/>
+                <RoundCorner profile="frCalendarAxisBase"/>
+
+                <Text profile="frCalendarMonthLabel" id="calendarMonthLabel[1]"  text="$l10n_rcr_calendar_month_1"/>
+                <Text profile="frCalendarMonthLabel" id="calendarMonthLabel[2]"  text="$l10n_rcr_calendar_month_2"/>
+                <Text profile="frCalendarMonthLabel" id="calendarMonthLabel[3]"  text="$l10n_rcr_calendar_month_3"/>
+                <Text profile="frCalendarMonthLabel" id="calendarMonthLabel[4]"  text="$l10n_rcr_calendar_month_4"/>
+                <Text profile="frCalendarMonthLabel" id="calendarMonthLabel[5]"  text="$l10n_rcr_calendar_month_5"/>
+                <Text profile="frCalendarMonthLabel" id="calendarMonthLabel[6]"  text="$l10n_rcr_calendar_month_6"/>
+                <Text profile="frCalendarMonthLabel" id="calendarMonthLabel[7]"  text="$l10n_rcr_calendar_month_7"/>
+                <Text profile="frCalendarMonthLabel" id="calendarMonthLabel[8]"  text="$l10n_rcr_calendar_month_8"/>
+                <Text profile="frCalendarMonthLabel" id="calendarMonthLabel[9]"  text="$l10n_rcr_calendar_month_9"/>
+                <Text profile="frCalendarMonthLabel" id="calendarMonthLabel[10]" text="$l10n_rcr_calendar_month_10"/>
+                <Text profile="frCalendarMonthLabel" id="calendarMonthLabel[11]" text="$l10n_rcr_calendar_month_11"/>
+                <Text profile="frCalendarMonthLabel" id="calendarMonthLabel[12]" text="$l10n_rcr_calendar_month_12"/>
+
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[1]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[2]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[3]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[4]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[5]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[6]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[7]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[8]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[9]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[10]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[11]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[12]"/>
+
+                <GuiElement profile="frCalendarTodayMarker" id="calendarTodayMarker">
+                    <RoundCorner profile="frCalendarTodayLine"/>
+                    <Text profile="frCalendarTodayLabel" id="calendarTodayLabel" text="$l10n_rcr_calendar_today"/>
                 </GuiElement>
 
-                <!-- == Slot 2: AN 2 == -->
-                <GuiElement profile="frPlanSlotCard" position="340px -4px">
-                    <RoundCorner     profile="frPlanSlotCardBg"/>
-                    <Text            profile="frPlanSlotYear"      id="planSlotYear[2]"     text="$l10n_rcr_plan_year2"/>
-                    <Bitmap          profile="frPlanSlotCropIcon"  id="planSlotIcon[2]"     visible="false"/>
-                    <MultiTextOption profile="frPlanSlotSelector"  id="planSlotSelector[2]" onClick="onChangePlanSlot2"/>
-                    <RoundCorner     profile="frPlanSlotBadgeBg"   id="planSlotBadge[2]"    visible="false"/>
-                    <Text            profile="frPlanSlotBadgeText" id="planSlotBadgeText[2]" text="" visible="false"/>
-                    <Bitmap          profile="frPlanCoverCropIcon"  id="coverSlotIcon[2]"     visible="false"/>
-                    <MultiTextOption profile="frPlanCoverSelector"  id="coverSlotSelector[2]" onClick="onChangeCoverSlot2"/>
-                    <RoundCorner     profile="frPlanCoverBadgeBg"   id="coverSlotBadge[2]"    visible="false"/>
-                    <Text            profile="frPlanCoverBadgeText" id="coverSlotBadgeText[2]" text="" visible="false"/>
+                <!-- N+1 -->
+                <GuiElement profile="frCalendarRow" position="0px -54px">
+                    <RoundCorner profile="frCalendarRowBg" id="calendarRowBg[1]"/>
+                    <Text profile="frCalendarStepLabel" id="calendarStepLabel[1]" text="$l10n_rcr_plan_year1"/>
+                    <Bitmap profile="frCalendarCropIcon" id="calendarCropIcon[1]" visible="false"/>
+                    <Bitmap profile="frCalendarCropBar" id="calendarCropBar[1]" visible="false"/>
+                    <Text profile="frCalendarCropBarText" id="calendarCropBarText[1]" text="" visible="false"/>
+                    <Bitmap profile="frCalendarCoverMarker" id="calendarCoverMarker[1]" visible="false"/>
+                    <Bitmap profile="frCalendarCoverIcon" id="calendarCoverIcon[1]" visible="false"/>
+                    <Text profile="frCalendarCoverLabel" id="calendarCoverLabel[1]" text="" visible="false"/>
                 </GuiElement>
 
-                <!-- Connector 2 -->
-                <GuiElement profile="frPlanTimelineConnector" position="606px -4px">
-                    <RoundCorner profile="frTimelineConnectorLine"/>
-                    <Text        profile="frTimelineArrowText" text=">"/>
+                <!-- N+2 -->
+                <GuiElement profile="frCalendarRow" position="0px -78px">
+                    <RoundCorner profile="frCalendarRowBg" id="calendarRowBg[2]"/>
+                    <Text profile="frCalendarStepLabel" id="calendarStepLabel[2]" text="$l10n_rcr_plan_year2"/>
+                    <Bitmap profile="frCalendarCropIcon" id="calendarCropIcon[2]" visible="false"/>
+                    <Bitmap profile="frCalendarCropBar" id="calendarCropBar[2]" visible="false"/>
+                    <Text profile="frCalendarCropBarText" id="calendarCropBarText[2]" text="" visible="false"/>
+                    <Bitmap profile="frCalendarCoverMarker" id="calendarCoverMarker[2]" visible="false"/>
+                    <Bitmap profile="frCalendarCoverIcon" id="calendarCoverIcon[2]" visible="false"/>
+                    <Text profile="frCalendarCoverLabel" id="calendarCoverLabel[2]" text="" visible="false"/>
                 </GuiElement>
 
-                <!-- == Slot 3: AN 3 == -->
-                <GuiElement profile="frPlanSlotCard" position="672px -4px">
-                    <RoundCorner     profile="frPlanSlotCardBg"/>
-                    <Text            profile="frPlanSlotYear"      id="planSlotYear[3]"     text="$l10n_rcr_plan_year3"/>
-                    <Bitmap          profile="frPlanSlotCropIcon"  id="planSlotIcon[3]"     visible="false"/>
-                    <MultiTextOption profile="frPlanSlotSelector"  id="planSlotSelector[3]" onClick="onChangePlanSlot3"/>
-                    <RoundCorner     profile="frPlanSlotBadgeBg"   id="planSlotBadge[3]"    visible="false"/>
-                    <Text            profile="frPlanSlotBadgeText" id="planSlotBadgeText[3]" text="" visible="false"/>
-                    <Bitmap          profile="frPlanCoverCropIcon"  id="coverSlotIcon[3]"     visible="false"/>
-                    <MultiTextOption profile="frPlanCoverSelector"  id="coverSlotSelector[3]" onClick="onChangeCoverSlot3"/>
-                    <RoundCorner     profile="frPlanCoverBadgeBg"   id="coverSlotBadge[3]"    visible="false"/>
-                    <Text            profile="frPlanCoverBadgeText" id="coverSlotBadgeText[3]" text="" visible="false"/>
+                <!-- N+3 -->
+                <GuiElement profile="frCalendarRow" position="0px -102px">
+                    <RoundCorner profile="frCalendarRowBg" id="calendarRowBg[3]"/>
+                    <Text profile="frCalendarStepLabel" id="calendarStepLabel[3]" text="$l10n_rcr_plan_year3"/>
+                    <Bitmap profile="frCalendarCropIcon" id="calendarCropIcon[3]" visible="false"/>
+                    <Bitmap profile="frCalendarCropBar" id="calendarCropBar[3]" visible="false"/>
+                    <Text profile="frCalendarCropBarText" id="calendarCropBarText[3]" text="" visible="false"/>
+                    <Bitmap profile="frCalendarCoverMarker" id="calendarCoverMarker[3]" visible="false"/>
+                    <Bitmap profile="frCalendarCoverIcon" id="calendarCoverIcon[3]" visible="false"/>
+                    <Text profile="frCalendarCoverLabel" id="calendarCoverLabel[3]" text="" visible="false"/>
                 </GuiElement>
 
-                <!-- Connector 3 -->
-                <GuiElement profile="frPlanTimelineConnector" position="938px -4px">
-                    <RoundCorner profile="frTimelineConnectorLine"/>
-                    <Text        profile="frTimelineArrowText" text=">"/>
+                <!-- N+4 -->
+                <GuiElement profile="frCalendarRow" position="0px -126px">
+                    <RoundCorner profile="frCalendarRowBg" id="calendarRowBg[4]"/>
+                    <Text profile="frCalendarStepLabel" id="calendarStepLabel[4]" text="$l10n_rcr_plan_year4"/>
+                    <Bitmap profile="frCalendarCropIcon" id="calendarCropIcon[4]" visible="false"/>
+                    <Bitmap profile="frCalendarCropBar" id="calendarCropBar[4]" visible="false"/>
+                    <Text profile="frCalendarCropBarText" id="calendarCropBarText[4]" text="" visible="false"/>
+                    <Bitmap profile="frCalendarCoverMarker" id="calendarCoverMarker[4]" visible="false"/>
+                    <Bitmap profile="frCalendarCoverIcon" id="calendarCoverIcon[4]" visible="false"/>
+                    <Text profile="frCalendarCoverLabel" id="calendarCoverLabel[4]" text="" visible="false"/>
                 </GuiElement>
-
-                <!-- == Slot 4: AN 4 == -->
-                <GuiElement profile="frPlanSlotCard" position="974px -4px">
-                    <RoundCorner     profile="frPlanSlotCardBg"/>
-                    <Text            profile="frPlanSlotYear"      id="planSlotYear[4]"     text="$l10n_rcr_plan_year4"/>
-                    <Bitmap          profile="frPlanSlotCropIcon"  id="planSlotIcon[4]"     visible="false"/>
-                    <MultiTextOption profile="frPlanSlotSelector"  id="planSlotSelector[4]" onClick="onChangePlanSlot4"/>
-                    <RoundCorner     profile="frPlanSlotBadgeBg"   id="planSlotBadge[4]"    visible="false"/>
-                    <Text            profile="frPlanSlotBadgeText" id="planSlotBadgeText[4]" text="" visible="false"/>
-                    <Bitmap          profile="frPlanCoverCropIcon"  id="coverSlotIcon[4]"     visible="false"/>
-                    <MultiTextOption profile="frPlanCoverSelector"  id="coverSlotSelector[4]" onClick="onChangeCoverSlot4"/>
-                    <RoundCorner     profile="frPlanCoverBadgeBg"   id="coverSlotBadge[4]"    visible="false"/>
-                    <Text            profile="frPlanCoverBadgeText" id="coverSlotBadgeText[4]" text="" visible="false"/>
-                </GuiElement>
-
             </GuiElement>
 
             <!-- == SECTION: QUALITÉ DE ROTATION (y=-330) == -->
@@ -433,6 +442,9 @@
                         <RoundCorner profile="frGroupBadge"      name="gBadge1" position="132px -18px" visible="false"/>
                         <Bitmap      profile="frGroupCropIconCard" name="gCropIcon1" position="132px -23px" visible="false"/>
                         <Text        profile="frGroupBadgeLabel" name="gLabel1" position="157px -18px" size="170px 30px" text="" visible="false"/>
+                        <RoundCorner profile="frGroupCoverBadge" name="gCoverBadge1" position="132px -49px" visible="false"/>
+                        <Bitmap      profile="frGroupCoverIcon" name="gCoverIcon1" position="137px -51px" visible="false"/>
+                        <Text        profile="frGroupCoverLabel" name="gCoverLabel1" position="154px -48px" text="" visible="false"/>
 
                         <!-- Arrow 1 -->
                         <Text profile="frGroupArrow" name="gArrow1" position="310px -23px" text=">" visible="false"/>
@@ -441,6 +453,9 @@
                         <RoundCorner profile="frGroupBadge"      name="gBadge2" position="334px -18px" visible="false"/>
                         <Bitmap      profile="frGroupCropIconCard" name="gCropIcon2" position="334px -23px" visible="false"/>
                         <Text        profile="frGroupBadgeLabel" name="gLabel2" position="359px -18px" size="170px 30px" text="" visible="false"/>
+                        <RoundCorner profile="frGroupCoverBadge" name="gCoverBadge2" position="334px -49px" visible="false"/>
+                        <Bitmap      profile="frGroupCoverIcon" name="gCoverIcon2" position="339px -51px" visible="false"/>
+                        <Text        profile="frGroupCoverLabel" name="gCoverLabel2" position="356px -48px" text="" visible="false"/>
 
                         <!-- Arrow 2 -->
                         <Text profile="frGroupArrow" name="gArrow2" position="512px -23px" text=">" visible="false"/>
@@ -449,6 +464,9 @@
                         <RoundCorner profile="frGroupBadge"      name="gBadge3" position="536px -18px" visible="false"/>
                         <Bitmap      profile="frGroupCropIconCard" name="gCropIcon3" position="536px -23px" visible="false"/>
                         <Text        profile="frGroupBadgeLabel" name="gLabel3" position="561px -18px" size="170px 30px" text="" visible="false"/>
+                        <RoundCorner profile="frGroupCoverBadge" name="gCoverBadge3" position="536px -49px" visible="false"/>
+                        <Bitmap      profile="frGroupCoverIcon" name="gCoverIcon3" position="541px -51px" visible="false"/>
+                        <Text        profile="frGroupCoverLabel" name="gCoverLabel3" position="558px -48px" text="" visible="false"/>
 
                         <!-- Arrow 3 -->
                         <Text profile="frGroupArrow" name="gArrow3" position="714px -23px" text=">" visible="false"/>
@@ -457,6 +475,9 @@
                         <RoundCorner profile="frGroupBadge"      name="gBadge4" position="738px -18px" visible="false"/>
                         <Bitmap      profile="frGroupCropIconCard" name="gCropIcon4" position="738px -23px" visible="false"/>
                         <Text        profile="frGroupBadgeLabel" name="gLabel4" position="763px -18px" size="170px 30px" text="" visible="false"/>
+                        <RoundCorner profile="frGroupCoverBadge" name="gCoverBadge4" position="738px -49px" visible="false"/>
+                        <Bitmap      profile="frGroupCoverIcon" name="gCoverIcon4" position="743px -51px" visible="false"/>
+                        <Text        profile="frGroupCoverLabel" name="gCoverLabel4" position="760px -48px" text="" visible="false"/>
 
                         <!-- Score -->
                         <Text profile="frOverviewScore" name="gScore" text=""/>

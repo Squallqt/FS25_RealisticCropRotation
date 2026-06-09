@@ -13,12 +13,7 @@
         <e k="rcr_tab_history"          v="Fruchtfolge" />
         <e k="rcr_tab_planning"         v="Planung" />
 
-        <!-- Hero card -->
-        <e k="rcr_season_label"         v="Saison" />
-        <e k="rcr_season_spring"        v="Frühling" />
-        <e k="rcr_season_summer"        v="Sommer" />
-        <e k="rcr_season_autumn"        v="Herbst" />
-        <e k="rcr_season_winter"        v="Winter" />
+        <!-- Status labels -->
         <e k="rcr_status_bonus"         v="N-Rückstand" />
         <e k="rcr_status_current_residue" v="Angewandter Rückstand +%d kg/ha" />
         <e k="rcr_status_current_residue_vanilla" v="Angewandter Rückstand +%d Düngestufe" />
@@ -107,6 +102,21 @@
         <e k="rcr_plan_year3"           v="N+3" />
         <e k="rcr_plan_year4"           v="N+4" />
         <e k="rcr_plan_none"            v="Nicht geplant" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_today"       v="Heute" />
+        <e k="rcr_calendar_month_1"     v="Mär" />
+        <e k="rcr_calendar_month_2"     v="Apr" />
+        <e k="rcr_calendar_month_3"     v="Mai" />
+        <e k="rcr_calendar_month_4"     v="Jun" />
+        <e k="rcr_calendar_month_5"     v="Jul" />
+        <e k="rcr_calendar_month_6"     v="Aug" />
+        <e k="rcr_calendar_month_7"     v="Sep" />
+        <e k="rcr_calendar_month_8"     v="Okt" />
+        <e k="rcr_calendar_month_9"     v="Nov" />
+        <e k="rcr_calendar_month_10"    v="Dez" />
+        <e k="rcr_calendar_month_11"    v="Jan" />
+        <e k="rcr_calendar_month_12"    v="Feb" />
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Unvollständiger Plan" />
