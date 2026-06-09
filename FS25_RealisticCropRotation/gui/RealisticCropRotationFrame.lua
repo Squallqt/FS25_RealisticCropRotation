@@ -41,9 +41,9 @@ RealisticCropRotationFrame.COVER_CROP_NAMES = {
 RealisticCropRotationFrame.COVER_PLAN_BONUS = 10
 
 -- Max pixel widths (must match profile sizes)
+-- N_BAR_MAX_WIDTH: keep in sync with guiProfiles.xml frNitrogenTrack size (1192px)
 RealisticCropRotationFrame.N_BAR_MAX_WIDTH     = 1192
 RealisticCropRotationFrame.N_BAR_HEIGHT        = 14
-RealisticCropRotationFrame.SCORE_BAR_MAX_WIDTH = 280
 
 -- Global overview crop badge layout (pixel values, converted at runtime)
 -- Goal: center the whole pair [crop icon + 5px gap + crop text] inside each crop badge.
@@ -58,10 +58,6 @@ RealisticCropRotationFrame.GROUP_BADGE_PADDING_X  = 20
 -- Annual calendar layout in pixels. The XML container is 1240 x 154 px.
 RealisticCropRotationFrame.CALENDAR_AXIS_X = 94
 RealisticCropRotationFrame.CALENDAR_AXIS_W = 1130
-RealisticCropRotationFrame.CALENDAR_BAR_Y = 5
-RealisticCropRotationFrame.CALENDAR_BAR_H = 8
-RealisticCropRotationFrame.CALENDAR_COVER_Y = 15
-RealisticCropRotationFrame.CALENDAR_COVER_W = 120
 RealisticCropRotationFrame.CALENDAR_GRID_H = 101
 
 RealisticCropRotationFrame.CALENDAR_MONTH_KEYS = {
@@ -655,7 +651,7 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
     --      first, then fieldState fallback on the server/local host).
     --   2. Native ground state on local host/server, looked up via
     --      MapOverlayGenerator.L10N_SYMBOL.
-    --   3. "Aucune culture" neutral fallback. NEVER "Jachère" — fallow is an
+    --   3. Neutral "no crop" fallback. NEVER the fallow label — fallow is an
     --      agronomic choice, not a generic "no crop here" indicator.
     local activeCropName = nil
     if mgr ~= nil and mgr.getActiveCropName ~= nil then
@@ -1070,18 +1066,6 @@ function RealisticCropRotationFrame:setElementPixelSize(element, wPx, hPx)
     element:setSize(size[1], size[2])
 end
 
-function RealisticCropRotationFrame:setBitmapColor(element, color)
-    if element == nil or color == nil then return end
-    if element.setImageSlice ~= nil and g_plainColorSliceId ~= nil then
-        pcall(element.setImageSlice, element, nil, g_plainColorSliceId)
-    end
-    if element.setImageColor ~= nil then
-        element:setImageColor(nil, color[1], color[2], color[3], color[4] or 1)
-    else
-        element.color = {color[1], color[2], color[3], color[4] or 1}
-    end
-end
-
 function RealisticCropRotationFrame:getCalendarPeriodInfo()
     local env = g_currentMission ~= nil and g_currentMission.environment or nil
     local candidates = {
@@ -1133,38 +1117,56 @@ function RealisticCropRotationFrame:getCalendarGrowthMode()
         or nil
 end
 
-function RealisticCropRotationFrame:getCropPlantingWindow(cropName, periodCount, firstPeriod)
-    if cropName == nil or cropName == "" then return nil end
-    if g_fruitTypeManager == nil or type(g_fruitTypeManager.getFruitTypeByName) ~= "function" then return nil end
+function RealisticCropRotationFrame:getCropPeriodFlags(cropName, periodCount, firstPeriod)
+    if cropName == nil or cropName == "" then return nil, nil end
+    if g_fruitTypeManager == nil or type(g_fruitTypeManager.getFruitTypeByName) ~= "function" then return nil, nil end
 
     local fruitDesc = g_fruitTypeManager:getFruitTypeByName(string.upper(tostring(cropName)))
-    if fruitDesc == nil or type(fruitDesc.getIsPlantableInPeriod) ~= "function" then return nil end
+    if fruitDesc == nil then return nil, nil end
+
+    local data = fruitDesc.growthDataSeasonal
+    if type(data) ~= "table" or type(data.periods) ~= "table" then return nil, nil end
 
     periodCount = math.max(1, tonumber(periodCount) or 12)
     firstPeriod = tonumber(firstPeriod) or 1
-    local growthMode = self:getCalendarGrowthMode()
-    local plantable = {}
+    local plant, harvest = {}, {}
     for i = 1, periodCount do
-        local period = firstPeriod + i - 1
-        local ok, isPlantable = pcall(fruitDesc.getIsPlantableInPeriod, fruitDesc, growthMode, period)
-        plantable[i] = ok and isPlantable == true
+        local period = ((firstPeriod - 1 + i - 1) % periodCount) + 1
+        local pd = data.periods[period]
+        plant[i]   = pd ~= nil and pd.plantingAllowed == true
+        harvest[i] = pd ~= nil and pd.isHarvestable == true
     end
+    return plant, harvest
+end
 
-    local bestStart, bestLen = nil, 0
+function RealisticCropRotationFrame:getFlagRuns(flags, periodCount)
+    local runs = {}
+    if type(flags) ~= "table" then return runs end
+    periodCount = math.max(1, tonumber(periodCount) or #flags)
     local i = 1
     while i <= periodCount do
-        if plantable[i] then
-            local start = i
-            local len = 0
-            while i <= periodCount and plantable[i] do
+        if flags[i] then
+            local start, len = i, 0
+            while i <= periodCount and flags[i] do
                 len = len + 1
                 i = i + 1
             end
-            if len > bestLen then
-                bestStart, bestLen = start, len
-            end
+            table.insert(runs, { start = start, len = len })
         else
             i = i + 1
+        end
+    end
+    return runs
+end
+
+function RealisticCropRotationFrame:getCropPlantingWindow(cropName, periodCount, firstPeriod)
+    local plant = self:getCropPeriodFlags(cropName, periodCount, firstPeriod)
+    if plant == nil then return nil end
+
+    local bestStart, bestLen = nil, 0
+    for _, run in ipairs(self:getFlagRuns(plant, periodCount)) do
+        if run.len > bestLen then
+            bestStart, bestLen = run.start, run.len
         end
     end
 
@@ -1223,84 +1225,61 @@ end
 function RealisticCropRotationFrame:applyCalendarRow(slotIdx, cropName, coverCropName, periodCount, firstPeriod, periodW)
     local rowBg = self.calendarRowBg ~= nil and self.calendarRowBg[slotIdx] or nil
     local cropIcon = self.calendarCropIcon ~= nil and self.calendarCropIcon[slotIdx] or nil
-    local coverIcon = self.calendarCoverIcon ~= nil and self.calendarCoverIcon[slotIdx] or nil
     local cropBar = self.calendarCropBar ~= nil and self.calendarCropBar[slotIdx] or nil
-    local cropText = self.calendarCropBarText ~= nil and self.calendarCropBarText[slotIdx] or nil
     local coverMarker = self.calendarCoverMarker ~= nil and self.calendarCoverMarker[slotIdx] or nil
-    local coverLabel = self.calendarCoverLabel ~= nil and self.calendarCoverLabel[slotIdx] or nil
 
     if rowBg ~= nil then
         local active = slotIdx == self:getCalendarEditSlotIndex()
-        rowBg.color = active and {0.35, 0.55, 0.00, 0.26} or {0, 0, 0, 0.18}
+        rowBg.color = active and {0.35, 0.55, 0.00, 0.26} or (slotIdx % 2 == 1 and {0, 0, 0, 0.28} or {0, 0, 0, 0.10})
         rowBg:setVisible(true)
     end
 
     self:applySlotCropIcon(cropIcon, cropName)
-    self:applySlotCropIcon(coverIcon, coverCropName)
 
-    local windowStart, windowLen = self:getCropPlantingWindow(cropName, periodCount, firstPeriod)
     local hasCrop = cropName ~= nil and cropName ~= ""
-    local axisX = RealisticCropRotationFrame.CALENDAR_AXIS_X
-    local axisW = RealisticCropRotationFrame.CALENDAR_AXIS_W
-    local barX, barW = nil, nil
-
-    if cropBar ~= nil then
-        cropBar:setVisible(hasCrop)
-        if hasCrop then
-            if windowStart ~= nil and windowLen ~= nil then
-                barX = axisX + ((windowStart - 1) * periodW)
-                barW = math.max(8, windowLen * periodW)
-                local c = RealisticCropRotationFrame.FAMILY_RGBA[self:getCropFamily(cropName)]
-                    or {0.45, 0.45, 0.45, 0.90}
-                self:setBitmapColor(cropBar, {c[1], c[2], c[3], 0.88})
-            else
-                barW = math.max(28, periodW)
-                barX = axisX + ((axisW - barW) * 0.5)
-                self:setBitmapColor(cropBar, {0.38, 0.38, 0.38, 0.85})
-            end
-            self:setElementPixelPosition(cropBar, barX, RealisticCropRotationFrame.CALENDAR_BAR_Y)
-            self:setElementPixelSize(cropBar, barW, RealisticCropRotationFrame.CALENDAR_BAR_H)
-        end
-    end
-
-    if cropText ~= nil then
-        cropText:setVisible(hasCrop)
-        if hasCrop then
-            local unknown = windowStart == nil
-            cropText:setText(unknown and "?" or self:getCropDisplayName(cropName))
-            self:setElementPixelPosition(cropText, barX or axisX, 5)
-            self:setElementPixelSize(cropText, barW or periodW, 14)
-        end
-    end
-
     local hasCover = coverCropName ~= nil and coverCropName ~= ""
-    if coverMarker ~= nil then
-        coverMarker:setVisible(hasCover)
-        if hasCover then
-            local coverW = RealisticCropRotationFrame.CALENDAR_COVER_W
-            local coverX = axisX + axisW - coverW
-            if windowStart ~= nil and windowLen ~= nil then
-                local afterBarX = axisX + ((windowStart + windowLen - 1) * periodW) + 4
-                coverX = math.min(axisX + axisW - coverW, math.max(axisX, afterBarX))
-            end
-            self:setBitmapColor(coverMarker, RealisticCropRotationFrame.FAMILY_RGBA.COVER)
-            self:setElementPixelPosition(coverMarker, coverX, RealisticCropRotationFrame.CALENDAR_COVER_Y)
-            self:setElementPixelSize(coverMarker, coverW, 6)
+    local axisX = RealisticCropRotationFrame.CALENDAR_AXIS_X
+    local harvestBar = self.calendarHarvestBar ~= nil and self.calendarHarvestBar[slotIdx] or nil
 
-            if coverIcon ~= nil then
-                self:setElementPixelPosition(coverIcon, coverX + 5, 10)
-                self:setElementPixelSize(coverIcon, 12, 12)
-            end
-            if coverLabel ~= nil then
-                coverLabel:setVisible(true)
-                coverLabel:setText(self:getCropDisplayName(coverCropName))
-                self:setElementPixelPosition(coverLabel, coverX + 22, 10)
-                self:setElementPixelSize(coverLabel, coverW - 28, 12)
+    local SOW_Y, HARVEST_Y, COVER_Y, LANE_H = 3, 17, 31, 10
+
+    local function longestRun(flags)
+        local bestStart, bestLen = nil, 0
+        if flags ~= nil then
+            for _, run in ipairs(self:getFlagRuns(flags, periodCount)) do
+                if run.len > bestLen then bestStart, bestLen = run.start, run.len end
             end
         end
+        return bestStart, bestLen
     end
-    if not hasCover and coverLabel ~= nil then
-        coverLabel:setVisible(false)
+
+    local function placeBar(bar, startP, lenP, y, visible)
+        if bar == nil then return false end
+        local show = visible and startP ~= nil and lenP ~= nil and lenP > 0
+        bar:setVisible(show)
+        if show then
+            self:setElementPixelPosition(bar, axisX + ((startP - 1) * periodW), y)
+            self:setElementPixelSize(bar, math.max(8, lenP * periodW), LANE_H)
+        end
+        return show
+    end
+
+    -- main crop: planting (green, top) + harvest (orange, bottom)
+    local plantFlags, harvestFlags = self:getCropPeriodFlags(cropName, periodCount, firstPeriod)
+    local pStart, pLen = longestRun(plantFlags)
+    local hStart, hLen = longestRun(harvestFlags)
+    placeBar(cropBar, pStart, pLen, SOW_Y, hasCrop)
+    placeBar(harvestBar, hStart, hLen, HARVEST_Y, hasCrop)
+
+    -- cover crop: planting only (covers are never harvested), middle lane, tinted to its
+    -- planner-card colour (RGB) so it reads as the cover and not a main crop.
+    local cStart, cLen = nil, nil
+    if hasCover then
+        cStart, cLen = longestRun(self:getCropPeriodFlags(coverCropName, periodCount, firstPeriod))
+    end
+    if placeBar(coverMarker, cStart, cLen, COVER_Y, hasCover) then
+        coverMarker.color = RealisticCropRotationFrame.FAMILY_RGBA[self:getCropFamily(coverCropName)]
+            or RealisticCropRotationFrame.FAMILY_RGBA.COVER
     end
 end
 
@@ -1448,27 +1427,6 @@ function RealisticCropRotationFrame:applySlotCropIcon(iconEl, cropName)
         end
     end
     if not loaded then iconEl:setVisible(false) end
-end
-
-function RealisticCropRotationFrame:applySlotBadge(badgeBg, badgeTxt, family, badgeTextKey)
-    local showBadge = family ~= nil and family ~= "" and family ~= "UNKNOWN"
-    if badgeBg ~= nil then
-        badgeBg:setVisible(showBadge)
-        if showBadge then
-            local c = RealisticCropRotationFrame.FAMILY_RGBA[family]
-            if c ~= nil then
-                badgeBg.color = {c[1], c[2], c[3], c[4]}
-            end
-        end
-    end
-    if badgeTxt ~= nil then
-        badgeTxt:setVisible(showBadge)
-        if showBadge then
-            local familyText = self.i18n:getText(badgeTextKey or "rcr_family_" .. string.lower(family))
-            badgeTxt:setText(familyText)
-            self:resizePillToText(badgeBg, badgeTxt, familyText)
-        end
-    end
 end
 
 -- ---------------------------------------------------------------------------

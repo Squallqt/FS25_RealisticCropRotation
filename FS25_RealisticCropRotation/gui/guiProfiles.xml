@@ -2,6 +2,14 @@
 <GUIProfiles>
 
     <!-- ============================================================ -->
+    <!--  Profiles referenced by name from RealisticCropRotationFrame.lua -->
+    <!--  via applyProfile() — renaming any of these breaks the GUI    -->
+    <!--  silently (no XML-side error):                                -->
+    <!--    frStatusPillBg, frStatusPillBgBonus,                       -->
+    <!--    frYieldKpiValue, frYieldKpiValueNA, frYieldKpiValueSmall    -->
+    <!-- ============================================================ -->
+
+    <!-- ============================================================ -->
     <!--  SIDEBAR                                                      -->
     <!-- ============================================================ -->
 
@@ -59,25 +67,25 @@
     <!--  Row 2 (y=60..80): ha · season + pill  -->
 
     <Profile name="frHeroCard" extends="emptyPanel" with="anchorTopLeft">
-        <size value="1240px 88px"/>
+        <size value="1280px 56px"/>
     </Profile>
 
     <Profile name="frHeroCardBg" extends="baseReference" with="anchorTopLeft">
-        <size value="1240px 88px"/>
+        <size value="1280px 56px"/>
         <color value="0 0 0 0.65"/>
         <cornerSize value="0.35"/>
     </Profile>
 
     <Profile name="frHeroAccent" extends="fs25_lineSeparatorTopHighlighted" with="anchorTopLeft">
-        <size value="1240px 3dp"/>
+        <size value="1280px 3dp"/>
         <position value="0px 0px"/>
     </Profile>
 
-    <!-- Titre gauche, centré verticalement dans la carte -->
+    <!-- Left-aligned title, vertically centered in the card -->
     <Profile name="frHeroTitle" extends="fs25_textDefault" with="anchorMiddleLeft">
         <position value="50px 0px"/>
-        <size value="750px 44px"/>
-        <textSize value="28px"/>
+        <size value="750px 28px"/>
+        <textSize value="20px"/>
         <textBold value="true"/>
         <textUpperCase value="true"/>
         <textColor value="$preset_fs25_colorMainLight"/>
@@ -86,10 +94,10 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Status pill — centré verticalement à droite, taille augmentée -->
+    <!-- Status pill — vertically centered on the right, increased size -->
     <Profile name="frStatusPillBg" extends="baseReference" with="anchorMiddleRight">
         <position value="-50px 0px"/>
-        <size value="240px 38px"/>
+        <size value="240px 22px"/>
         <color value="$preset_fs25_colorGrey"/>
         <cornerSize value="0.20"/>
     </Profile>
@@ -100,8 +108,8 @@
 
     <Profile name="frStatusPillText" extends="fs25_textDefault" with="anchorMiddleRight">
         <position value="-50px 0px"/>
-        <size value="240px 38px"/>
-        <textSize value="14px"/>
+        <size value="240px 22px"/>
+        <textSize value="12px"/>
         <textBold value="true"/>
         <textUpperCase value="true"/>
         <textColor value="$preset_fs25_colorMainDark"/>
@@ -185,13 +193,13 @@
     <!--  plus 8 px left margin = 1228 px inside 1240 px container     -->
     <!--  Slot height: 148 px. No global rail: each card owns its bg.   -->
     <!--                                                               -->
-    <!--  Gradient de présence N-4 (faint) -> ACTUEL (ancre) :        -->
+    <!--  Presence gradient N-4 (faint) -> CURRENT (anchor):           -->
     <!--  frSlotCardBgN4 0.22 / N3 0.32 / N2 0.44 / N1 0.50           -->
     <!--  Current crop 0.58                                             -->
     <!-- ============================================================ -->
 
     <Profile name="frTimeline" extends="emptyPanel" with="anchorTopLeft">
-        <size value="1240px 154px"/>
+        <size value="1240px 186px"/>
     </Profile>
 
     <!-- Slot card container (224 x 148 px) -->
@@ -311,10 +319,6 @@
     </Profile>
 
     <!-- Container for the connector assembly -->
-    <Profile name="frTimelineConnector" extends="emptyPanel" with="anchorTopLeft">
-        <size value="25px 162px"/>
-    </Profile>
-
     <Profile name="frHistoryTimelineConnector" extends="emptyPanel" with="anchorTopLeft">
         <size value="25px 148px"/>
     </Profile>
@@ -346,9 +350,6 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <Profile name="frLimeStateLabel" extends="frNitrogenStateLabel">
-        <textUpperCase value="false"/>
-    </Profile>
 
     <!-- kg/ha value (PF mode) — top right -->
     <Profile name="frNitrogenValueLabel" extends="fs25_textDefault" with="anchorTopRight">
@@ -364,6 +365,7 @@
     </Profile>
 
     <!-- Progress bar track (full width, closer to bottom) -->
+    <!-- keep in sync with RealisticCropRotationFrame.lua N_BAR_MAX_WIDTH (1192) -->
     <Profile name="frNitrogenTrack" extends="baseReference" with="anchorBottomLeft">
         <position value="24px 10px"/>
         <size value="1192px 14px"/>
@@ -496,19 +498,13 @@
 
     <!-- Annual calendar strip: top editor + 1130px month axis -->
     <Profile name="frCalendarTimeline" extends="emptyPanel" with="anchorTopLeft">
-        <size value="1240px 154px"/>
+        <size value="1240px 238px"/>
     </Profile>
 
     <Profile name="frCalendarBg" extends="baseReference" with="anchorTopLeft">
-        <size value="1240px 154px"/>
+        <size value="1240px 238px"/>
         <color value="0 0 0 0.42"/>
         <cornerSize value="0.35"/>
-    </Profile>
-
-    <Profile name="frCalendarAccent" extends="fs25_lineSeparatorTopHighlighted" with="anchorTopLeft">
-        <size value="1240px 3dp"/>
-        <position value="0px 0px"/>
-        <imageColor value="$preset_fs25_colorMainHighlight"/>
     </Profile>
 
     <Profile name="frCalendarEditor" extends="emptyPanel" with="anchorTopLeft">
@@ -541,12 +537,6 @@
         <wrap value="true"/>
     </Profile>
 
-    <Profile name="frCalendarAxisBase" extends="baseReference" with="anchorTopLeft">
-        <position value="94px -53px"/>
-        <size value="1130px 1px"/>
-        <color value="$preset_colorWhite_25"/>
-    </Profile>
-
     <Profile name="frCalendarMonthLabel" extends="fs25_textDefault" with="anchorTopLeft">
         <position value="94px -38px"/>
         <size value="86px 14px"/>
@@ -561,46 +551,39 @@
 
     <Profile name="frCalendarMonthGridLine" extends="baseReference" with="anchorTopLeft">
         <position value="94px -53px"/>
-        <size value="1px 101px"/>
-        <color value="1 1 1 0.07"/>
+        <size value="1px 182px"/>
+        <color value="$preset_fs25_colorGrey"/>
     </Profile>
 
-    <Profile name="frCalendarTodayMarker" extends="emptyPanel" with="anchorTopLeft">
-        <position value="94px 0px"/>
-        <size value="74px 154px"/>
+    <!-- Transparent container; position set in Lua, frCalendarTodayDash children have fixed XML positions -->
+    <Profile name="frCalendarTodayMarker" extends="emptyPanel" with="anchorTopLeft"/>
+
+    <Profile name="frCalendarTodayDash" extends="baseReference" with="anchorTopLeft">
+        <size value="2px 8px"/>
+        <color value="$preset_fs25_colorMainLight"/>
     </Profile>
 
-    <Profile name="frCalendarTodayLine" extends="baseReference" with="anchorTopLeft">
-        <position value="36px -43px"/>
-        <size value="2px 109px"/>
+    <Profile name="frCalendarHeaderSep" extends="baseReference" with="anchorTopLeft">
+        <position value="94px -52px"/>
+        <size value="1130px 1px"/>
         <color value="$preset_fs25_colorMainHighlight"/>
-    </Profile>
-
-    <Profile name="frCalendarTodayLabel" extends="fs25_textDefault" with="anchorTopLeft">
-        <position value="0px -38px"/>
-        <size value="74px 14px"/>
-        <textSize value="9px"/>
-        <textBold value="true"/>
-        <textUpperCase value="true"/>
-        <textColor value="$preset_fs25_colorMainHighlight"/>
-        <textAlignment value="center"/>
-        <textVerticalAlignment value="middle"/>
-        <textMaxNumLines value="1"/>
+        <cornerSize value="0.05"/>
     </Profile>
 
     <Profile name="frCalendarRow" extends="emptyPanel" with="anchorTopLeft">
-        <size value="1240px 22px"/>
+        <size value="1240px 43px"/>
     </Profile>
 
+    <!-- color set in Lua -->
     <Profile name="frCalendarRowBg" extends="baseReference" with="anchorTopLeft">
         <position value="0px 0px"/>
-        <size value="1240px 22px"/>
+        <size value="1240px 43px"/>
         <color value="0 0 0 0.18"/>
         <cornerSize value="0.16"/>
     </Profile>
 
     <Profile name="frCalendarStepLabel" extends="fs25_textDefault" with="anchorTopLeft">
-        <position value="10px -2px"/>
+        <position value="10px -13px"/>
         <size value="36px 18px"/>
         <textSize value="12px"/>
         <textBold value="true"/>
@@ -612,70 +595,37 @@
     </Profile>
 
     <Profile name="frCalendarCropIcon" extends="baseReference" with="anchorTopLeft">
-        <position value="52px -3px"/>
+        <position value="52px -14px"/>
         <size value="16px 16px"/>
     </Profile>
 
     <Profile name="frCalendarCropBar" extends="baseReference" with="anchorTopLeft">
-        <position value="94px -5px"/>
-        <size value="94px 8px"/>
-        <color value="$preset_fs25_colorMainHighlight"/>
+        <color value="$preset_fs25_colorGreen"/>
+        <cornerSize value="0.17"/>
     </Profile>
 
-    <Profile name="frCalendarCropBarText" extends="fs25_textDefault" with="anchorTopLeft">
-        <position value="94px -3px"/>
-        <size value="94px 12px"/>
-        <textSize value="9px"/>
-        <textBold value="true"/>
-        <textUpperCase value="true"/>
-        <textColor value="$preset_fs25_colorMainDark"/>
-        <textAlignment value="center"/>
-        <textVerticalAlignment value="middle"/>
-        <textMaxNumLines value="1"/>
-        <textLayoutMode value="resize"/>
+    <Profile name="frCalendarHarvestBar" extends="baseReference" with="anchorTopLeft">
+        <color value="$preset_fs25_colorOrangeDark"/>
+        <cornerSize value="0.17"/>
     </Profile>
 
+    <!-- color set in Lua -->
     <Profile name="frCalendarCoverMarker" extends="baseReference" with="anchorTopLeft">
-        <position value="94px -15px"/>
-        <size value="120px 6px"/>
-        <color value="0.420 0.300 0.100 0.90"/>
-    </Profile>
-
-    <Profile name="frCalendarCoverIcon" extends="baseReference" with="anchorTopLeft">
-        <position value="99px -12px"/>
-        <size value="12px 12px"/>
-    </Profile>
-
-    <Profile name="frCalendarCoverLabel" extends="fs25_textDefault" with="anchorTopLeft">
-        <position value="116px -12px"/>
-        <size value="94px 12px"/>
-        <textSize value="8px"/>
-        <textBold value="true"/>
-        <textUpperCase value="true"/>
-        <textColor value="$preset_fs25_colorMainLight"/>
-        <textAlignment value="left"/>
-        <textVerticalAlignment value="middle"/>
-        <textMaxNumLines value="1"/>
-        <textLayoutMode value="resize"/>
+        <color value="$preset_fs25_colorGreen"/>
+        <cornerSize value="0.17"/>
     </Profile>
 
     <!-- ===== Score card (1240 x 70 px) ===== -->
 
     <!-- Score card: 80px — text left, cursor track right, labels below track -->
     <Profile name="frScoreCard" extends="emptyPanel" with="anchorTopLeft">
-        <size value="1240px 80px"/>
+        <size value="1240px 56px"/>
     </Profile>
 
     <Profile name="frScoreCardBg" extends="baseReference" with="anchorTopLeft">
-        <size value="1240px 80px"/>
+        <size value="1240px 56px"/>
         <color value="0 0 0 0.50"/>
         <cornerSize value="0.35"/>
-    </Profile>
-
-    <Profile name="frScoreAccent" extends="fs25_lineSeparatorTopHighlighted" with="anchorTopLeft">
-        <size value="1240px 3dp"/>
-        <position value="0px 0px"/>
-        <imageColor value="$preset_fs25_colorMainHighlight"/>
     </Profile>
 
     <!-- Score verdict text — left side, shifted up to align with track -->
@@ -691,6 +641,7 @@
     </Profile>
 
     <!-- Cursor track: pill shape (cornerSize 0.5), like BankCredit portfolio bar -->
+    <!-- keep in sync with RealisticCropRotationFrame.lua updateScoreCard (trackW=400) -->
     <Profile name="frScoreTrack" extends="baseReference" with="anchorMiddleRight">
         <position value="-24px 0px"/>
         <size value="400px 14px"/>
@@ -699,6 +650,7 @@
     </Profile>
 
     <!-- Cursor positioner: transparent, width changes in Lua to move cursor -->
+    <!-- keep in sync with RealisticCropRotationFrame.lua updateScoreCard (trackW=400) -->
     <Profile name="frScoreCursorPos" extends="emptyPanel" with="anchorMiddleLeft">
         <position value="816px 0px"/>
         <size value="14px 14px"/>
@@ -715,8 +667,9 @@
          Left label starts exactly under the gauge left edge.
          Right label ends exactly under the gauge right edge.
          Vertical offset: 10px below the 14px track. -->
+    <!-- keep in sync with RealisticCropRotationFrame.lua updateScoreCard (trackW=400) -->
     <Profile name="frScoreLabelLeft" extends="fs25_textDefault" with="anchorMiddleLeft">
-        <position value="816px -24px"/>
+        <position value="816px -14px"/>
         <size value="180px 14px"/>
         <textSize value="10px"/>
         <textBold value="false"/>
@@ -728,7 +681,7 @@
     </Profile>
 
     <Profile name="frScoreLabelRight" extends="fs25_textDefault" with="anchorMiddleRight">
-        <position value="-24px -24px"/>
+        <position value="-24px -14px"/>
         <size value="180px 14px"/>
         <textSize value="10px"/>
         <textBold value="false"/>
@@ -740,7 +693,7 @@
     </Profile>
 
     <!-- ===== Global overview (1240 x 312 px) ===== -->
-    <!-- wrap y=-520 + h=312 = bottom at y=-832, matching ASSOLEMENT panel -->
+    <!-- wrap y=-520 + h=312 = bottom at y=-832, matching history panel -->
 
     <Profile name="frOverviewWrap" extends="emptyPanel" with="anchorTopLeft">
         <size value="1240px 312px"/>
@@ -825,6 +778,7 @@
         <textLayoutMode value="resize"/>
     </Profile>
 
+    <!-- color set in Lua -->
     <Profile name="frGroupCoverBadge" extends="baseReference" with="anchorTopLeft">
         <size value="104px 16px"/>
         <color value="0.420 0.300 0.100 0.65"/>
@@ -893,6 +847,7 @@
     </Profile>
 
     <!-- Score label — right-aligned, y=18 aligns with badge/summary line -->
+    <!-- textColor set in Lua -->
     <Profile name="frOverviewScore" extends="fs25_textDefault" with="anchorTopRight">
         <position value="-26px -18px"/>
         <size value="120px 22px"/>
