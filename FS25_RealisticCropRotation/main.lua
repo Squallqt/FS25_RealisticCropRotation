@@ -22,25 +22,8 @@ RealisticCropRotation.pendingSyncData = nil
 RealisticCropRotation.isEnabled = true
 RealisticCropRotation.cropConfig = nil
 
--- Resolves legacy residue metadata from cropConfig.xml.
--- Current dev does not apply nitrogen; the value is kept for planner/status code paths only.
-local function resolveResidueEvent(rawEvent, upperFamily)
-    if rawEvent ~= nil then
-        local event = string.lower(rawEvent)
-        if event == "destroy" then return "destroy" end
-        if event == "destroygreen" then return "destroyGreen" end
-        if event == "harvest" then return "harvest" end
-    end
-    if upperFamily == "FORAGE" or upperFamily == "ROOT"
-        or upperFamily == "VEGETABLE" or upperFamily == "COVER" then
-        return "destroy"
-    end
-    return "harvest"
-end
-
 -- Loads cropConfig.xml once at mod init.
--- Returns a config table: { families, nitrogen, coverCrops, residueEvent }.
--- The nitrogen/residueEvent entries are legacy metadata on dev.
+-- Returns a config table: { families, nitrogen, coverCrops }.
 local function loadCropConfig()
     local filePath = modDirectory .. "cropConfig.xml"
     local xmlFile = loadXMLFile("RealisticCropRotationCropConfig", filePath)
@@ -49,7 +32,7 @@ local function loadCropConfig()
         return nil
     end
 
-    local config = { families = {}, nitrogen = {}, coverCrops = {}, residueEvent = {} }
+    local config = { families = {}, nitrogen = {}, coverCrops = {} }
     local i = 0
     while true do
         local key = string.format("realisticCropRotationCrops.crop(%d)", i)
@@ -60,20 +43,16 @@ local function loadCropConfig()
         local n1      = getXMLInt(xmlFile,    key .. "#n1") or 0
         local n2      = getXMLInt(xmlFile,    key .. "#n2") or 0
         local cover   = getXMLBool(xmlFile,   key .. "#cover") or false
-        local event   = getXMLString(xmlFile, key .. "#residueEvent")
 
         if name ~= nil and name ~= "" then
             name = string.upper(name)
-            local upperFamily = nil
             if family ~= nil and family ~= "" then
-                upperFamily = string.upper(family)
-                config.families[name] = upperFamily
+                config.families[name] = string.upper(family)
             end
             if n1 > 0 or n2 > 0 then
                 config.nitrogen[name] = { n1 = n1, n2 = n2 }
             end
-            if cover   then config.coverCrops[name] = true end
-            config.residueEvent[name] = resolveResidueEvent(event, upperFamily)
+            if cover then config.coverCrops[name] = true end
         end
         i = i + 1
     end
@@ -300,7 +279,6 @@ local function loadedMission()
                 pending.plans or {},
                 pending.coverPlans or {},
                 pending.lastKnownActiveCrop or {},
-                pending.appliedResidue or {},
                 pending.lastKnownGrowthState or {})
             RealisticCropRotation.pendingSyncData = nil
         end

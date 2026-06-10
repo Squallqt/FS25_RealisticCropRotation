@@ -509,31 +509,25 @@
 
     <Profile name="frCalendarEditor" extends="emptyPanel" with="anchorTopLeft">
         <position value="10px -7px"/>
-        <size value="852px 30px"/>
+        <size value="736px 30px"/>
     </Profile>
 
     <Profile name="frCalendarEditorBg" extends="baseReference" with="anchorTopLeft">
         <position value="0px 0px"/>
-        <size value="852px 30px"/>
+        <size value="736px 30px"/>
         <color value="0 0 0 0.30"/>
         <cornerSize value="0.22"/>
     </Profile>
 
-    <Profile name="frCalendarStepSelector" extends="fs25_multiTextOption" with="anchorTopLeft">
-        <position value="8px -3px"/>
-        <size value="104px 24px"/>
-        <wrap value="true"/>
-    </Profile>
-
     <Profile name="frCalendarEditCropSelector" extends="fs25_multiTextOption" with="anchorTopLeft">
-        <position value="124px -3px"/>
-        <size value="380px 24px"/>
+        <position value="0px 0px"/>
+        <size value="360px 24px"/>
         <wrap value="true"/>
     </Profile>
 
     <Profile name="frCalendarEditCoverSelector" extends="fs25_multiTextOption" with="anchorTopLeft">
-        <position value="516px -3px"/>
-        <size value="336px 24px"/>
+        <position value="380px 0px"/>
+        <size value="360px 24px"/>
         <wrap value="true"/>
     </Profile>
 
@@ -541,7 +535,7 @@
         <position value="94px -38px"/>
         <size value="86px 14px"/>
         <textSize value="10px"/>
-        <textBold value="false"/>
+        <textBold value="true"/>
         <textUpperCase value="true"/>
         <textColor value="$preset_colorWhite_50"/>
         <textAlignment value="center"/>
@@ -549,10 +543,15 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
+    <!-- Vertical month grid lines. Rendered as RoundCorner (NOT Bitmap): a
+         <Bitmap> ignores <color> and draws the default white texture, whereas
+         RoundCorner honours <color> — same proven pattern as frYieldDivider.
+         Width is overridden per line in Lua (thin intra-season / thick season). -->
     <Profile name="frCalendarMonthGridLine" extends="baseReference" with="anchorTopLeft">
-        <position value="94px -53px"/>
-        <size value="1px 182px"/>
-        <color value="$preset_fs25_colorGrey"/>
+        <position value="94px -38px"/>
+        <size value="1px 188px"/>
+        <color value="$preset_fs25_colorGreyLight"/>
+        <cornerSize value="0.05"/>
     </Profile>
 
     <!-- Transparent container; position set in Lua, frCalendarTodayDash children have fixed XML positions -->
@@ -560,7 +559,7 @@
 
     <Profile name="frCalendarTodayDash" extends="baseReference" with="anchorTopLeft">
         <size value="2px 8px"/>
-        <color value="$preset_fs25_colorMainLight"/>
+        <color value="$preset_colorWhite_50"/>
     </Profile>
 
     <Profile name="frCalendarHeaderSep" extends="baseReference" with="anchorTopLeft">
@@ -574,18 +573,32 @@
         <size value="1240px 43px"/>
     </Profile>
 
-    <!-- color set in Lua -->
+    <!-- Invisible click overlay so a row can be selected by clicking anywhere on it -->
+    <Profile name="frCalendarRowButton" extends="emptyPanel" with="anchorTopLeft">
+        <position value="0px 0px"/>
+        <size value="1240px 43px"/>
+    </Profile>
+
+    <!-- color set in Lua for the active row; switched via applyProfile for odd/even striping -->
     <Profile name="frCalendarRowBg" extends="baseReference" with="anchorTopLeft">
         <position value="0px 0px"/>
         <size value="1240px 43px"/>
         <color value="0 0 0 0.18"/>
-        <cornerSize value="0.16"/>
+        <cornerSize value="0"/>
+    </Profile>
+
+    <Profile name="frCalendarRowBgOdd" extends="frCalendarRowBg">
+        <color value="$preset_fs25_colorGreyDark_50"/>
+    </Profile>
+
+    <Profile name="frCalendarRowBgEven" extends="frCalendarRowBg">
+        <color value="$preset_colorTransparent"/>
     </Profile>
 
     <Profile name="frCalendarStepLabel" extends="fs25_textDefault" with="anchorTopLeft">
-        <position value="10px -13px"/>
-        <size value="36px 18px"/>
-        <textSize value="12px"/>
+        <position value="4px -6px"/>
+        <size value="50px 30px"/>
+        <textSize value="20px"/>
         <textBold value="true"/>
         <textUpperCase value="true"/>
         <textColor value="$preset_fs25_colorMainHighlight"/>
@@ -595,8 +608,13 @@
     </Profile>
 
     <Profile name="frCalendarCropIcon" extends="baseReference" with="anchorTopLeft">
-        <position value="52px -14px"/>
-        <size value="16px 16px"/>
+        <position value="58px -3px"/>
+        <size value="18px 18px"/>
+    </Profile>
+
+    <Profile name="frCalendarCoverIcon" extends="baseReference" with="anchorTopLeft">
+        <position value="58px -22px"/>
+        <size value="18px 18px"/>
     </Profile>
 
     <Profile name="frCalendarCropBar" extends="baseReference" with="anchorTopLeft">
@@ -613,6 +631,44 @@
     <Profile name="frCalendarCoverMarker" extends="baseReference" with="anchorTopLeft">
         <color value="$preset_fs25_colorGreen"/>
         <cornerSize value="0.17"/>
+    </Profile>
+
+    <!-- Legend: anchored to the right edge of the timeline, aligned with the editor.
+         Children positions/sizes are computed in Lua (layoutCalendarLegend) since the
+         label widths depend on the localized text. -->
+    <Profile name="frCalendarLegend" extends="emptyPanel" with="anchorTopRight">
+        <position value="-10px -7px"/>
+        <size value="460px 24px"/>
+    </Profile>
+
+    <!-- position/size set in Lua -->
+    <Profile name="frCalendarLegendSwatch" extends="baseReference" with="anchorTopLeft">
+        <size value="14px 14px"/>
+        <cornerSize value="0.17"/>
+    </Profile>
+
+    <Profile name="frCalendarLegendSwatchSow" extends="frCalendarLegendSwatch">
+        <color value="$preset_fs25_colorGreen"/>
+    </Profile>
+
+    <Profile name="frCalendarLegendSwatchHarvest" extends="frCalendarLegendSwatch">
+        <color value="$preset_fs25_colorOrangeDark"/>
+    </Profile>
+
+    <!-- color set in Lua to FAMILY_RGBA.COVER -->
+    <Profile name="frCalendarLegendSwatchCover" extends="frCalendarLegendSwatch">
+        <color value="$preset_fs25_colorGreen"/>
+    </Profile>
+
+    <!-- position/size set in Lua; bold to match frCalendarMonthLabel -->
+    <Profile name="frCalendarLegendLabel" extends="fs25_textDefault" with="anchorTopLeft">
+        <size value="200px 24px"/>
+        <textSize value="12px"/>
+        <textBold value="true"/>
+        <textColor value="$preset_colorWhite_50"/>
+        <textAlignment value="left"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
     </Profile>
 
     <!-- ===== Score card (1240 x 70 px) ===== -->
@@ -754,7 +810,7 @@
 
     <!-- Family zone background pill (color set in Lua) -->
     <Profile name="frGroupBadge" extends="baseReference" with="anchorTopLeft">
-        <size value="170px 30px"/>
+        <size value="300px 30px"/>
         <color value="$preset_fs25_colorGrey"/>
         <cornerSize value="0.20"/>
     </Profile>
@@ -767,31 +823,8 @@
     <!-- Crop name text inside global overview badge.
          Positioned in Lua so [icon + 10px gap + text] is centered as a group. -->
     <Profile name="frGroupBadgeLabel" extends="fs25_textDefault" with="anchorTopLeft">
-        <size value="170px 30px"/>
+        <size value="300px 30px"/>
         <textSize value="11px"/>
-        <textBold value="true"/>
-        <textUpperCase value="true"/>
-        <textColor value="$preset_fs25_colorMainLight"/>
-        <textAlignment value="left"/>
-        <textVerticalAlignment value="middle"/>
-        <textMaxNumLines value="1"/>
-        <textLayoutMode value="resize"/>
-    </Profile>
-
-    <!-- color set in Lua -->
-    <Profile name="frGroupCoverBadge" extends="baseReference" with="anchorTopLeft">
-        <size value="104px 16px"/>
-        <color value="0.420 0.300 0.100 0.65"/>
-        <cornerSize value="0.18"/>
-    </Profile>
-
-    <Profile name="frGroupCoverIcon" extends="baseReference" with="anchorTopLeft">
-        <size value="14px 14px"/>
-    </Profile>
-
-    <Profile name="frGroupCoverLabel" extends="fs25_textDefault" with="anchorTopLeft">
-        <size value="82px 16px"/>
-        <textSize value="9px"/>
         <textBold value="true"/>
         <textUpperCase value="true"/>
         <textColor value="$preset_fs25_colorMainLight"/>
@@ -803,7 +836,7 @@
 
     <!-- Year position label (N+1..N+4) above each crop badge -->
     <Profile name="frGroupYearLabel" extends="fs25_textDefault" with="anchorTopLeft">
-        <size value="170px 12px"/>
+        <size value="300px 12px"/>
         <textSize value="10px"/>
         <textBold value="false"/>
         <textUpperCase value="true"/>
@@ -870,7 +903,24 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Field names — line 2                                              -->
+    <!-- Cover crop recap — small line in the gap between the badge row
+         (bottom at y=-48) and the field names line (y=-64), so it does not
+         share a line with the field names and the card stays 80px tall. -->
+    <Profile name="frGroupCoverRecap" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="132px -49px"/>
+        <size value="1046px 14px"/>
+        <textSize value="11px"/>
+        <textBold value="false"/>
+        <textUpperCase value="false"/>
+        <textColor value="$preset_colorWhite_50"/>
+        <textAlignment value="left"/>
+        <textVerticalAlignment value="middle"/>
+        <textLayoutMode value="scrolling"/>
+        <textScrollOnFocusOnly value="false"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <!-- Field names — bottom strip                                        -->
     <!-- card=1206 | text_start=132 | left_gap=28 → right_gap=28          -->
     <!-- text_end = 1206-28 = 1178 | width = 1178-132 = 1046px            -->
     <Profile name="frGroupFieldNames" extends="fs25_textDefault" with="anchorTopLeft">

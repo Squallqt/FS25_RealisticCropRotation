@@ -10,22 +10,11 @@
         n2       (optional) : nitrogen residue bonus (PF states) when this crop is N-2 in history. Default 0.
                               1 PF state = 5 kg N/ha (source: PrecisionFarming.xml amountPerState=5)
         cover    (optional) : true = excluded from rotation history (interculture / cover crop). Default false.
-        residueEvent (optional) : when the nitrogen residue is released into the soil.
-                              harvest      = at harvest (combine / cutFruitArea). Residue is in the soil before
-                                             the next sowing, so a Precision Farming seeder deducts it (no overshoot).
-                              destroy      = at mechanical destruction (plough-out). For perennial / multi-cut
-                                             forage that must not deposit at every cut, and for ROOT / VEGETABLE.
-                              destroyGreen = at destruction, but only while still green (never after a grain
-                                             harvest). For green-manure dual-use crops.
-                              Omitted -> derived from family: FORAGE / ROOT / VEGETABLE / COVER = destroy,
-                              everything else (CEREAL / OILSEED / LEGUME) = harvest.
 
     Notes:
         - isCatchCrop=true crops (OILSEEDRADISH, FLOWERINGCATCHCROP) already receive +25 kg N from
           Precision Farming on destruction. The mod never applies nitrogen for those to avoid duplication.
           Set n1=0 (default) for them.
-        - MUSTARD and VETCHRYE are regular rotation crops for this release:
-          they are recorded in history and provide an N+1 residue bonus.
 -->
 <realisticCropRotationCrops>
 
@@ -52,21 +41,21 @@
     <crop name="CANOLA"    family="OILSEED" />
     <crop name="SUNFLOWER" family="OILSEED" />
     <!-- Mustard scavenges/returns N as a green manure only when destroyed green (not when combined). -->
-    <crop name="MUSTARD"   family="OILSEED" n1="3" residueEvent="destroyGreen" />
+    <crop name="MUSTARD"   family="OILSEED" n1="3" />
     <!-- ======================================================== -->
     <!-- LEGUMES  (n1/n2 in PF states; 1 state = 5 kg N/ha)       -->
     <!-- Values follow real first-year N credits: a terminated alfalfa/vetch stand returns far    -->
     <!-- more than grain legumes (soybean/pea), which export most fixed N in the grain.            -->
     <!--   alfalfa 80/50 > vetch 60/20 > clover 50/20 > soybean 40/10 = pea 40/10 > bean 20/5      -->
     <!-- Forage legumes (alfalfa, clover) are multi-cut: their residue is released only at the     -->
-    <!-- plough-out (residueEvent="destroy"), never at a forage cut.                               -->
+    <!-- plough-out, never at a forage cut.                                                        -->
     <!-- ======================================================== -->
     <crop name="SOYBEAN"   family="LEGUME" n1="8"  n2="2"  />
-    <crop name="ALFALFA"   family="LEGUME" n1="16" n2="10" residueEvent="destroy" />
-    <crop name="CLOVER"    family="LEGUME" n1="10" n2="4"  residueEvent="destroy" />
+    <crop name="ALFALFA"   family="LEGUME" n1="16" n2="10" />
+    <crop name="CLOVER"    family="LEGUME" n1="10" n2="4"  />
     <crop name="PEA"       family="LEGUME" n1="8"  n2="2"  />
     <crop name="GREENBEAN" family="LEGUME" n1="4"  n2="1"  />
-    <crop name="VETCHRYE"  family="LEGUME" n1="12" n2="4"  residueEvent="destroyGreen" />
+    <crop name="VETCHRYE"  family="LEGUME" n1="12" n2="4"  />
 
     <!-- ======================================================== -->
     <!-- ROOT VEGETABLES                                            -->

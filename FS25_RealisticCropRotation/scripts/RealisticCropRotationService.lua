@@ -10,6 +10,11 @@ RealisticCropRotationService.PF_STATE_PER_UNIT = 5
 RealisticCropRotationService.NITROGEN_DEPOSIT_LOCK_CHANNELS = 8
 RealisticCropRotationService.NITROGEN_DEPOSIT_LOCK_MAX_VALUE = (2 ^ RealisticCropRotationService.NITROGEN_DEPOSIT_LOCK_CHANNELS) - 1
 
+-- Precision Farming applies +25 kg N/ha natively when a catch-crop cover is destroyed.
+-- The mod never deposits this itself (see cropConfig.xml notes), but the planner total
+-- reflects it as a PF-equivalent estimate, like the rest of the residue figures.
+RealisticCropRotationService.COVER_CROP_RESIDUE_KG_HA = 25
+
 function RealisticCropRotationService.new(repository)
     local self = setmetatable({}, RealisticCropRotationService_mt)
     self.repository = repository
@@ -65,21 +70,18 @@ function RealisticCropRotationService:getResidueEntry(cropName)
     return nil
 end
 
--- Legacy residue-release metadata for a crop:
---   "harvest"      : deposited at harvest (cutFruitArea) -- grain crops.
---   "destroy"      : deposited at mechanical destruction -- perennial/multi-cut forage, roots, veg.
---   "destroyGreen" : deposited at destruction only while still green -- green-manure dual-use crops.
--- The value is resolved at config load (family default + per-crop override) and stored in
--- RealisticCropRotation.cropConfig.residueEvent. Current dev does not deposit nitrogen.
-function RealisticCropRotationService:getResidueEvent(cropName)
-    local normalizedCropName = self:normalizeCropName(cropName)
-    if normalizedCropName == nil then return "harvest" end
+function RealisticCropRotationService:getCoverResidueKgHa(coverPlan)
     local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
-    if config ~= nil and config.residueEvent ~= nil then
-        local event = config.residueEvent[normalizedCropName]
-        if event ~= nil then return event end
+    if config == nil or config.coverCrops == nil or coverPlan == nil then return 0 end
+
+    local total = 0
+    for i = 1, 4 do
+        local cropName = self:normalizeCropName(coverPlan[i])
+        if cropName ~= nil and config.coverCrops[cropName] then
+            total = total + RealisticCropRotationService.COVER_CROP_RESIDUE_KG_HA
+        end
     end
-    return "harvest"
+    return total
 end
 
 function RealisticCropRotationService:getFruitTypeByCropName(cropName)
@@ -316,13 +318,12 @@ end
 -- MP sync helpers (server-authoritative).
 -- =========================================================================
 
-function RealisticCropRotationService:applySyncData(receivedHistory, receivedPlans, receivedCoverPlans, receivedLastKnownActiveCrop, receivedAppliedResidue, receivedLastKnownGrowthState)
-    self.repository:replaceAll(receivedHistory or {}, receivedPlans or {}, receivedCoverPlans or {}, receivedLastKnownActiveCrop or {}, receivedAppliedResidue or {}, receivedLastKnownGrowthState or {})
+function RealisticCropRotationService:applySyncData(receivedHistory, receivedPlans, receivedCoverPlans, receivedLastKnownActiveCrop, receivedLastKnownGrowthState)
+    self.repository:replaceAll(receivedHistory or {}, receivedPlans or {}, receivedCoverPlans or {}, receivedLastKnownActiveCrop or {}, receivedLastKnownGrowthState or {})
 end
 
 function RealisticCropRotationService:getSyncData()
     return self.repository:getAllHistory(),
         self.repository:getAllLastKnownActiveCrops(),
-        self.repository:getAllAppliedResidues(),
         self.repository:getAllLastKnownGrowthStates()
 end

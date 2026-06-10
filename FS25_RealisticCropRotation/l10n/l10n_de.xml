@@ -70,12 +70,12 @@
         <e k="rcr_lime_target"          v="Ziel: %.2f pH" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="Nach Getreide: Leguminose empfohlen, um Getreide nach Getreide zu vermeiden." />
-        <e k="rcr_advice_afterLegume"    v="Nach Leguminose: Getreide nutzt den zurückgeführten Stickstoff gut." />
-        <e k="rcr_advice_afterOilseed"   v="Nach Ölsaat: Getreide empfohlen; zwei Ölsaaten nacheinander vermeiden." />
-        <e k="rcr_advice_afterRoot"      v="Nach Wurzelfrucht: Getreide empfohlen; Wurzelfrüchte mit Abstand planen." />
-        <e k="rcr_advice_afterVegetable" v="Nach Blatt- oder Zwiebelgemüse: Getreide empfohlen; enge Wiederholung vermeiden." />
-        <e k="rcr_advice_afterForage"    v="Nach Grünland oder Futterbau: Getreide passt gut zu Struktur und Rückständen." />
+        <e k="rcr_advice_afterCereal"    v="Nach Getreide: mindestens 2 Jahre bis zum nächsten Getreide warten; eine Hülsenfrucht dazwischen liefert Stickstoff." />
+        <e k="rcr_advice_afterLegume"    v="Nach Hülsenfrucht: Getreide nutzt den zurückgeführten Stickstoff gut; mindestens 3 Jahre bis zur nächsten Hülsenfrucht warten." />
+        <e k="rcr_advice_afterOilseed"   v="Nach Ölsaat: mindestens 3 Jahre bis zur nächsten Ölsaat warten; Getreide passt dazwischen gut." />
+        <e k="rcr_advice_afterRoot"      v="Nach Wurzelgemüse: mindestens 4 Jahre bis zum nächsten Wurzelgemüse warten; Getreide passt dazwischen gut." />
+        <e k="rcr_advice_afterVegetable" v="Nach Gemüse: mindestens 3 Jahre bis zur Wiederholung warten; Getreide passt dazwischen gut." />
+        <e k="rcr_advice_afterForage"    v="Nach Futter: Getreide passt gut, mit Struktur und verfügbaren Rückständen." />
         <e k="rcr_advice_no_current_crop" v="Keine aktuelle Hauptkultur: Empfehlung verfügbar, sobald eine Kultur erkannt wird." />
 
         <!-- Yield card -->
@@ -103,6 +103,9 @@
         <e k="rcr_plan_year4"           v="N+4" />
         <e k="rcr_plan_none"            v="Nicht geplant" />
 
+        <!-- Global overview — cover crop recap (own line) -->
+        <e k="rcr_overview_cover_entry" v="Zwischenfrucht %s: %s (Aussaat %s)" />
+
         <!-- Planning tab — annual calendar -->
         <e k="rcr_calendar_month_1"     v="Mär" />
         <e k="rcr_calendar_month_2"     v="Apr" />
@@ -116,6 +119,10 @@
         <e k="rcr_calendar_month_10"    v="Dez" />
         <e k="rcr_calendar_month_11"    v="Jan" />
         <e k="rcr_calendar_month_12"    v="Feb" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Aussaat" />
+        <e k="rcr_calendar_legend_harvest" v="Ernte" />
+        <e k="rcr_calendar_legend_cover"   v="Zwischenfrucht-Aussaat" />
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Unvollständiger Plan" />

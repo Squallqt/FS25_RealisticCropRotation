@@ -70,12 +70,12 @@
         <e k="rcr_lime_target"          v="Objectif : %.2f pH" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="Après céréale : légumineuse recommandée pour casser le cycle et limiter céréale sur céréale." />
-        <e k="rcr_advice_afterLegume"    v="Après légumineuse : céréale recommandée pour valoriser l'azote restitué." />
-        <e k="rcr_advice_afterOilseed"   v="Après oléagineux : céréale recommandée; évitez deux oléagineux de suite." />
-        <e k="rcr_advice_afterRoot"      v="Après racine : céréale recommandée; espacez le retour des cultures racines." />
-        <e k="rcr_advice_afterVegetable" v="Après légume feuille ou bulbe : céréale recommandée; évitez les répétitions." />
-        <e k="rcr_advice_afterForage"    v="Après prairie ou fourrage : céréale adaptée, sol structuré et reliquats disponibles." />
+        <e k="rcr_advice_afterCereal"    v="Après Céréale : attendez au moins 2 ans avant une nouvelle Céréale ; une Légumineuse entre les deux restitue de l'azote." />
+        <e k="rcr_advice_afterLegume"    v="Après Légumineuse : une Céréale valorise bien l'azote restitué ; attendez au moins 3 ans avant de ressemer une Légumineuse." />
+        <e k="rcr_advice_afterOilseed"   v="Après Oléagineux : attendez au moins 3 ans avant un nouvel Oléagineux ; une Céréale convient entretemps." />
+        <e k="rcr_advice_afterRoot"      v="Après Légumes-racines : attendez au moins 4 ans avant de nouveaux Légumes-racines ; une Céréale convient entretemps." />
+        <e k="rcr_advice_afterVegetable" v="Après Légumes : attendez au moins 3 ans avant répétition ; une Céréale convient entretemps." />
+        <e k="rcr_advice_afterForage"    v="Après Fourrage : une Céréale convient bien, sol structuré et reliquats disponibles." />
         <e k="rcr_advice_no_current_crop" v="Aucune culture principale actuelle : conseil disponible quand une culture est détectée." />
 
         <!-- Yield card -->
@@ -103,6 +103,9 @@
         <e k="rcr_plan_year4"           v="N+4" />
         <e k="rcr_plan_none"            v="Non planifié" />
 
+        <!-- Global overview — cover crop recap (own line) -->
+        <e k="rcr_overview_cover_entry" v="Couvert %s : %s (semis %s)" />
+
         <!-- Planning tab — annual calendar -->
         <e k="rcr_calendar_month_1"     v="Mars" />
         <e k="rcr_calendar_month_2"     v="Avr" />
@@ -116,6 +119,10 @@
         <e k="rcr_calendar_month_10"    v="Déc" />
         <e k="rcr_calendar_month_11"    v="Janv" />
         <e k="rcr_calendar_month_12"    v="Févr" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Semis" />
+        <e k="rcr_calendar_legend_harvest" v="Récolte" />
+        <e k="rcr_calendar_legend_cover"   v="Semis couvert" />
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Plan incomplet" />

@@ -25,17 +25,16 @@ Features:
 - Per-field crop history (N-1 to N-4) with an in-game rotation planner
 - Per-field nitrogen, pH, growth and weed information
 - Two-tier residue: a stronger first-year credit (year +1) plus a residual second-year credit (year +2)
-- Multiplayer-ready (server-authoritative, late-join sync)
-- Optimized: O(1) hook operations, no per-frame density-map scans
+- Multiplayer-ready
 
 Nitrogen residue values (kg N/ha, year +1 / year +2):
-- Alfalfa: 80 / 50 - released at plough-out
-- Vetch-rye: 60 / 20 - released when destroyed green
-- Clover: 50 / 20 - released at plough-out
-- Soybean: 40 / 10 - released at harvest
-- Pea: 40 / 10 - released at harvest
-- Green bean: 20 / 5 - released at harvest
-- Mustard: 15 / - - released when destroyed green
+- Alfalfa: 80 / 50
+- Vetch-rye: 60 / 20
+- Clover: 50 / 20
+- Soybean: 40 / 10
+- Pea: 40 / 10
+- Green bean: 20 / 5
+- Mustard: 15 / -
 
 Issues & suggestions: https://github.com/Squallqt/FS25_RealisticCropRotation
 
@@ -57,17 +56,16 @@ Funktionen:
 - Fruchtfolgehistorie pro Feld (N-1 bis N-4) mit Fruchtfolge-Planer im Spiel
 - Stickstoff-, pH-, Wachstums- und Unkraut-Informationen pro Feld
 - Zweistufiger Rückstand: ein stärkeres Erstjahres-Guthaben (Jahr +1) plus ein Restguthaben im zweiten Jahr (Jahr +2)
-- Mehrspieler-fähig (serverseitige Autorität, Synchronisation für späten Beitritt)
-- Optimiert: O(1) Hook-Operationen, keine Density-Map-Scans pro Frame
+- Mehrspieler-fähig
 
 Stickstoff-Rückstandswerte (kg N/ha, Jahr +1 / Jahr +2):
-- Luzerne: 80 / 50 - freigesetzt beim Umbruch
-- Wicke-Roggen: 60 / 20 - freigesetzt bei grüner Zerstörung
-- Klee: 50 / 20 - freigesetzt beim Umbruch
-- Sojabohne: 40 / 10 - freigesetzt bei der Ernte
-- Erbse: 40 / 10 - freigesetzt bei der Ernte
-- Grüne Bohne: 20 / 5 - freigesetzt bei der Ernte
-- Senf: 15 / - - freigesetzt bei grüner Zerstörung
+- Luzerne: 80 / 50
+- Wicke-Roggen: 60 / 20
+- Klee: 50 / 20
+- Sojabohne: 40 / 10
+- Erbse: 40 / 10
+- Grüne Bohne: 20 / 5
+- Senf: 15 / -
 
 Issues & Vorschläge: https://github.com/Squallqt/FS25_RealisticCropRotation
 
@@ -89,17 +87,16 @@ Fonctionnalités :
 - Historique des cultures par parcelle (N-1 à N-4) avec planificateur d'assolement en jeu
 - Informations azote, pH, croissance et adventices par parcelle
 - Reliquat à deux niveaux : un crédit de première année plus important (année +1) et un crédit résiduel de deuxième année (année +2)
-- Compatible multijoueur (autorité serveur, synchronisation à la connexion tardive)
-- Optimisé : opérations O(1) dans les hooks, pas de scan de density map par frame
+- Compatible multijoueur
 
 Valeurs de reliquat d'azote (kg N/ha, année +1 / année +2) :
-- Luzerne : 80 / 50 - libéré au retournement
-- Vesce-seigle : 60 / 20 - libéré si détruite verte
-- Trèfle : 50 / 20 - libéré au retournement
-- Soja : 40 / 10 - libéré à la récolte
-- Pois : 40 / 10 - libéré à la récolte
-- Haricot vert : 20 / 5 - libéré à la récolte
-- Moutarde : 15 / - - libéré si détruite verte
+- Luzerne : 80 / 50
+- Vesce-seigle : 60 / 20
+- Trèfle : 50 / 20
+- Soja : 40 / 10
+- Pois : 40 / 10
+- Haricot vert : 20 / 5
+- Moutarde : 15 / -
 
 Issues & suggestions : https://github.com/Squallqt/FS25_RealisticCropRotation
 

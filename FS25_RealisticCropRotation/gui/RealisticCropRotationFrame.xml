@@ -278,6 +278,7 @@
             <!-- == SECTION: ROTATION PLAN (y=-66) == -->
             <GuiElement profile="frSectionBar" position="0px -66px">
                 <RoundCorner profile="frSectionBarBg"/>
+                <RoundCorner profile="frSectionAccent" position="14px 0px"/>
                 <Text profile="frSectionTitle" text="$l10n_rcr_section_plan"/>
             </GuiElement>
 
@@ -286,10 +287,17 @@
                 <RoundCorner profile="frCalendarBg"/>
 
                 <GuiElement profile="frCalendarEditor">
-                    <RoundCorner profile="frCalendarEditorBg"/>
-                    <MultiTextOption profile="frCalendarStepSelector" id="calendarStepSelector" onClick="onChangeCalendarEditStep"/>
                     <MultiTextOption profile="frCalendarEditCropSelector" id="calendarEditCropSelector" onClick="onChangeCalendarEditCrop"/>
                     <MultiTextOption profile="frCalendarEditCoverSelector" id="calendarEditCoverSelector" onClick="onChangeCalendarEditCover"/>
+                </GuiElement>
+
+                <GuiElement profile="frCalendarLegend" id="calendarLegend">
+                    <Text profile="frCalendarLegendLabel" id="calendarLegendLabelSow" text="$l10n_rcr_calendar_legend_sowing"/>
+                    <RoundCorner profile="frCalendarLegendSwatchSow" id="calendarLegendSwatchSow"/>
+                    <Text profile="frCalendarLegendLabel" id="calendarLegendLabelHarvest" text="$l10n_rcr_calendar_legend_harvest"/>
+                    <RoundCorner profile="frCalendarLegendSwatchHarvest" id="calendarLegendSwatchHarvest"/>
+                    <Text profile="frCalendarLegendLabel" id="calendarLegendLabelCover" text="$l10n_rcr_calendar_legend_cover"/>
+                    <RoundCorner profile="frCalendarLegendSwatchCover" id="calendarLegendSwatchCover"/>
                 </GuiElement>
 
                 <Text profile="frCalendarMonthLabel" id="calendarMonthLabel[1]"  text="$l10n_rcr_calendar_month_1"/>
@@ -305,18 +313,67 @@
                 <Text profile="frCalendarMonthLabel" id="calendarMonthLabel[11]" text="$l10n_rcr_calendar_month_11"/>
                 <Text profile="frCalendarMonthLabel" id="calendarMonthLabel[12]" text="$l10n_rcr_calendar_month_12"/>
 
-                <Bitmap profile="frCalendarMonthGridLine" id="calendarMonthGridLine[1]"/>
-                <Bitmap profile="frCalendarMonthGridLine" id="calendarMonthGridLine[2]"/>
-                <Bitmap profile="frCalendarMonthGridLine" id="calendarMonthGridLine[3]"/>
-                <Bitmap profile="frCalendarMonthGridLine" id="calendarMonthGridLine[4]"/>
-                <Bitmap profile="frCalendarMonthGridLine" id="calendarMonthGridLine[5]"/>
-                <Bitmap profile="frCalendarMonthGridLine" id="calendarMonthGridLine[6]"/>
-                <Bitmap profile="frCalendarMonthGridLine" id="calendarMonthGridLine[7]"/>
-                <Bitmap profile="frCalendarMonthGridLine" id="calendarMonthGridLine[8]"/>
-                <Bitmap profile="frCalendarMonthGridLine" id="calendarMonthGridLine[9]"/>
-                <Bitmap profile="frCalendarMonthGridLine" id="calendarMonthGridLine[10]"/>
-                <Bitmap profile="frCalendarMonthGridLine" id="calendarMonthGridLine[11]"/>
-                <Bitmap profile="frCalendarMonthGridLine" id="calendarMonthGridLine[12]"/>
+                <!-- N+1 -->
+                <GuiElement profile="frCalendarRow" position="0px -54px">
+                    <RoundCorner profile="frCalendarRowBg" id="calendarRowBg[1]"/>
+                    <Text profile="frCalendarStepLabel" id="calendarStepLabel[1]" text="$l10n_rcr_plan_year1"/>
+                    <Bitmap profile="frCalendarCropIcon" id="calendarCropIcon[1]" visible="false"/>
+                    <Bitmap profile="frCalendarCoverIcon" id="calendarCoverIcon[1]" visible="false"/>
+                    <RoundCorner profile="frCalendarCropBar" id="calendarCropBar[1]" visible="false"/>
+                    <RoundCorner profile="frCalendarHarvestBar" id="calendarHarvestBar[1]" visible="false"/>
+                    <RoundCorner profile="frCalendarCoverMarker" id="calendarCoverMarker[1]" visible="false"/>
+                    <Button profile="frCalendarRowButton" id="calendarRowButton[1]" onClick="onCalendarRowClicked"/>
+                </GuiElement>
+
+                <!-- N+2 -->
+                <GuiElement profile="frCalendarRow" position="0px -97px">
+                    <RoundCorner profile="frCalendarRowBg" id="calendarRowBg[2]"/>
+                    <Text profile="frCalendarStepLabel" id="calendarStepLabel[2]" text="$l10n_rcr_plan_year2"/>
+                    <Bitmap profile="frCalendarCropIcon" id="calendarCropIcon[2]" visible="false"/>
+                    <Bitmap profile="frCalendarCoverIcon" id="calendarCoverIcon[2]" visible="false"/>
+                    <RoundCorner profile="frCalendarCropBar" id="calendarCropBar[2]" visible="false"/>
+                    <RoundCorner profile="frCalendarHarvestBar" id="calendarHarvestBar[2]" visible="false"/>
+                    <RoundCorner profile="frCalendarCoverMarker" id="calendarCoverMarker[2]" visible="false"/>
+                    <Button profile="frCalendarRowButton" id="calendarRowButton[2]" onClick="onCalendarRowClicked"/>
+                </GuiElement>
+
+                <!-- N+3 -->
+                <GuiElement profile="frCalendarRow" position="0px -140px">
+                    <RoundCorner profile="frCalendarRowBg" id="calendarRowBg[3]"/>
+                    <Text profile="frCalendarStepLabel" id="calendarStepLabel[3]" text="$l10n_rcr_plan_year3"/>
+                    <Bitmap profile="frCalendarCropIcon" id="calendarCropIcon[3]" visible="false"/>
+                    <Bitmap profile="frCalendarCoverIcon" id="calendarCoverIcon[3]" visible="false"/>
+                    <RoundCorner profile="frCalendarCropBar" id="calendarCropBar[3]" visible="false"/>
+                    <RoundCorner profile="frCalendarHarvestBar" id="calendarHarvestBar[3]" visible="false"/>
+                    <RoundCorner profile="frCalendarCoverMarker" id="calendarCoverMarker[3]" visible="false"/>
+                    <Button profile="frCalendarRowButton" id="calendarRowButton[3]" onClick="onCalendarRowClicked"/>
+                </GuiElement>
+
+                <!-- N+4 -->
+                <GuiElement profile="frCalendarRow" position="0px -183px">
+                    <RoundCorner profile="frCalendarRowBg" id="calendarRowBg[4]"/>
+                    <Text profile="frCalendarStepLabel" id="calendarStepLabel[4]" text="$l10n_rcr_plan_year4"/>
+                    <Bitmap profile="frCalendarCropIcon" id="calendarCropIcon[4]" visible="false"/>
+                    <Bitmap profile="frCalendarCoverIcon" id="calendarCoverIcon[4]" visible="false"/>
+                    <RoundCorner profile="frCalendarCropBar" id="calendarCropBar[4]" visible="false"/>
+                    <RoundCorner profile="frCalendarHarvestBar" id="calendarHarvestBar[4]" visible="false"/>
+                    <RoundCorner profile="frCalendarCoverMarker" id="calendarCoverMarker[4]" visible="false"/>
+                    <Button profile="frCalendarRowButton" id="calendarRowButton[4]" onClick="onCalendarRowClicked"/>
+                </GuiElement>
+
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[1]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[2]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[3]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[4]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[5]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[6]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[7]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[8]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[9]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[10]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[11]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[12]"/>
+                <RoundCorner profile="frCalendarMonthGridLine" id="calendarMonthGridLine[13]"/>
 
                 <RoundCorner profile="frCalendarHeaderSep"/>
 
@@ -335,51 +392,12 @@
                     <Bitmap profile="frCalendarTodayDash" position="36px -207px"/>
                     <Bitmap profile="frCalendarTodayDash" position="36px -221px"/>
                 </GuiElement>
-
-                <!-- N+1 -->
-                <GuiElement profile="frCalendarRow" position="0px -54px">
-                    <RoundCorner profile="frCalendarRowBg" id="calendarRowBg[1]"/>
-                    <Text profile="frCalendarStepLabel" id="calendarStepLabel[1]" text="$l10n_rcr_plan_year1"/>
-                    <Bitmap profile="frCalendarCropIcon" id="calendarCropIcon[1]" visible="false"/>
-                    <RoundCorner profile="frCalendarCropBar" id="calendarCropBar[1]" visible="false"/>
-                    <RoundCorner profile="frCalendarHarvestBar" id="calendarHarvestBar[1]" visible="false"/>
-                    <RoundCorner profile="frCalendarCoverMarker" id="calendarCoverMarker[1]" visible="false"/>
-                </GuiElement>
-
-                <!-- N+2 -->
-                <GuiElement profile="frCalendarRow" position="0px -97px">
-                    <RoundCorner profile="frCalendarRowBg" id="calendarRowBg[2]"/>
-                    <Text profile="frCalendarStepLabel" id="calendarStepLabel[2]" text="$l10n_rcr_plan_year2"/>
-                    <Bitmap profile="frCalendarCropIcon" id="calendarCropIcon[2]" visible="false"/>
-                    <RoundCorner profile="frCalendarCropBar" id="calendarCropBar[2]" visible="false"/>
-                    <RoundCorner profile="frCalendarHarvestBar" id="calendarHarvestBar[2]" visible="false"/>
-                    <RoundCorner profile="frCalendarCoverMarker" id="calendarCoverMarker[2]" visible="false"/>
-                </GuiElement>
-
-                <!-- N+3 -->
-                <GuiElement profile="frCalendarRow" position="0px -140px">
-                    <RoundCorner profile="frCalendarRowBg" id="calendarRowBg[3]"/>
-                    <Text profile="frCalendarStepLabel" id="calendarStepLabel[3]" text="$l10n_rcr_plan_year3"/>
-                    <Bitmap profile="frCalendarCropIcon" id="calendarCropIcon[3]" visible="false"/>
-                    <RoundCorner profile="frCalendarCropBar" id="calendarCropBar[3]" visible="false"/>
-                    <RoundCorner profile="frCalendarHarvestBar" id="calendarHarvestBar[3]" visible="false"/>
-                    <RoundCorner profile="frCalendarCoverMarker" id="calendarCoverMarker[3]" visible="false"/>
-                </GuiElement>
-
-                <!-- N+4 -->
-                <GuiElement profile="frCalendarRow" position="0px -183px">
-                    <RoundCorner profile="frCalendarRowBg" id="calendarRowBg[4]"/>
-                    <Text profile="frCalendarStepLabel" id="calendarStepLabel[4]" text="$l10n_rcr_plan_year4"/>
-                    <Bitmap profile="frCalendarCropIcon" id="calendarCropIcon[4]" visible="false"/>
-                    <RoundCorner profile="frCalendarCropBar" id="calendarCropBar[4]" visible="false"/>
-                    <RoundCorner profile="frCalendarHarvestBar" id="calendarHarvestBar[4]" visible="false"/>
-                    <RoundCorner profile="frCalendarCoverMarker" id="calendarCoverMarker[4]" visible="false"/>
-                </GuiElement>
             </GuiElement>
 
             <!-- == SECTION: ROTATION QUALITY (y=-366) == -->
             <GuiElement profile="frSectionBar" position="0px -366px">
                 <RoundCorner profile="frSectionBarBg"/>
+                <RoundCorner profile="frSectionAccent" position="14px 0px"/>
                 <Text profile="frSectionTitle" text="$l10n_rcr_section_score"/>
             </GuiElement>
 
@@ -441,9 +459,6 @@
                         <RoundCorner profile="frGroupBadge"      name="gBadge1" position="132px -18px" visible="false"/>
                         <Bitmap      profile="frGroupCropIconCard" name="gCropIcon1" position="132px -23px" visible="false"/>
                         <Text        profile="frGroupBadgeLabel" name="gLabel1" position="157px -18px" size="170px 30px" text="" visible="false"/>
-                        <RoundCorner profile="frGroupCoverBadge" name="gCoverBadge1" position="132px -49px" visible="false"/>
-                        <Bitmap      profile="frGroupCoverIcon" name="gCoverIcon1" position="137px -51px" visible="false"/>
-                        <Text        profile="frGroupCoverLabel" name="gCoverLabel1" position="154px -48px" text="" visible="false"/>
 
                         <!-- Arrow 1 -->
                         <Text profile="frGroupArrow" name="gArrow1" position="310px -23px" text=">" visible="false"/>
@@ -452,9 +467,6 @@
                         <RoundCorner profile="frGroupBadge"      name="gBadge2" position="334px -18px" visible="false"/>
                         <Bitmap      profile="frGroupCropIconCard" name="gCropIcon2" position="334px -23px" visible="false"/>
                         <Text        profile="frGroupBadgeLabel" name="gLabel2" position="359px -18px" size="170px 30px" text="" visible="false"/>
-                        <RoundCorner profile="frGroupCoverBadge" name="gCoverBadge2" position="334px -49px" visible="false"/>
-                        <Bitmap      profile="frGroupCoverIcon" name="gCoverIcon2" position="339px -51px" visible="false"/>
-                        <Text        profile="frGroupCoverLabel" name="gCoverLabel2" position="356px -48px" text="" visible="false"/>
 
                         <!-- Arrow 2 -->
                         <Text profile="frGroupArrow" name="gArrow2" position="512px -23px" text=">" visible="false"/>
@@ -463,9 +475,6 @@
                         <RoundCorner profile="frGroupBadge"      name="gBadge3" position="536px -18px" visible="false"/>
                         <Bitmap      profile="frGroupCropIconCard" name="gCropIcon3" position="536px -23px" visible="false"/>
                         <Text        profile="frGroupBadgeLabel" name="gLabel3" position="561px -18px" size="170px 30px" text="" visible="false"/>
-                        <RoundCorner profile="frGroupCoverBadge" name="gCoverBadge3" position="536px -49px" visible="false"/>
-                        <Bitmap      profile="frGroupCoverIcon" name="gCoverIcon3" position="541px -51px" visible="false"/>
-                        <Text        profile="frGroupCoverLabel" name="gCoverLabel3" position="558px -48px" text="" visible="false"/>
 
                         <!-- Arrow 3 -->
                         <Text profile="frGroupArrow" name="gArrow3" position="714px -23px" text=">" visible="false"/>
@@ -474,12 +483,12 @@
                         <RoundCorner profile="frGroupBadge"      name="gBadge4" position="738px -18px" visible="false"/>
                         <Bitmap      profile="frGroupCropIconCard" name="gCropIcon4" position="738px -23px" visible="false"/>
                         <Text        profile="frGroupBadgeLabel" name="gLabel4" position="763px -18px" size="170px 30px" text="" visible="false"/>
-                        <RoundCorner profile="frGroupCoverBadge" name="gCoverBadge4" position="738px -49px" visible="false"/>
-                        <Bitmap      profile="frGroupCoverIcon" name="gCoverIcon4" position="743px -51px" visible="false"/>
-                        <Text        profile="frGroupCoverLabel" name="gCoverLabel4" position="760px -48px" text="" visible="false"/>
 
                         <!-- Score -->
                         <Text profile="frOverviewScore" name="gScore" text=""/>
+
+                        <!-- Cover crop recap (between badge row and field names) -->
+                        <Text profile="frGroupCoverRecap" name="gCoverRecap" text="" visible="false"/>
 
                         <!-- Field names (bottom strip) -->
                         <Text profile="frGroupFieldNames" name="gFieldNames" text=""/>
