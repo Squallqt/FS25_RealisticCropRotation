@@ -9,6 +9,10 @@ local RealisticCropRotationManager_mt = Class(RealisticCropRotationManager)
 -- those reads cheap while the field's growth state changes far slower than this.
 local ACTIVE_CROP_CACHE_TTL_MS = 10000
 
+-- PF soil read cache TTL. PF nitrogen/pH only change when the player works the
+-- field; a short TTL keeps the menu-open reads cheap without going stale.
+local SOIL_PF_CACHE_TTL_MS = 10000
+
 local function isPureClient()
     return g_currentMission ~= nil
         and g_currentMission.getIsServer ~= nil
@@ -373,6 +377,8 @@ function RealisticCropRotationManager.new()
     self.repository = RealisticCropRotationRepository.new()
     self.service = RealisticCropRotationService.new(self.repository)
     self.activeCropNameCache = {}
+    self.soilPFCache = {}
+    self.loggedFirstPFRead = nil
     self.isInitialized = false
     return self
 end
@@ -382,6 +388,8 @@ function RealisticCropRotationManager:initialize()
     self.repository:clear()
     self.service:reset()
     self.activeCropNameCache = {}
+    self.soilPFCache = {}
+    self.loggedFirstPFRead = nil
     self.isInitialized = true
 end
 
@@ -389,6 +397,8 @@ function RealisticCropRotationManager:cleanup()
     self.repository:clear()
     self.service:reset()
     self.activeCropNameCache = {}
+    self.soilPFCache = {}
+    self.loggedFirstPFRead = nil
     self.isInitialized = false
 end
 
@@ -716,6 +726,159 @@ function RealisticCropRotationManager:getCurrentNitrogenLevel(farmlandId)
     sprayLevel = math.max(0, math.floor((tonumber(sprayLevel) or 0) + 0.5))
     maxLevel = math.max(1, math.floor((tonumber(maxLevel) or 1) + 0.5))
     return math.min(sprayLevel, maxLevel), maxLevel
+end
+
+-- =========================================================================
+-- Precision Farming soil reads (nitrogen + pH). Active only when PF is
+-- installed; otherwise the gauges use the vanilla getCurrent*Level above.
+-- Bounded sampling + TTL cache, read on menu open only: no hooks, no per-frame.
+-- =========================================================================
+
+-- Samples a PF value map (nitrogenMap / pHMap) across the field's representative
+-- points and returns the averaged internal actual level (and target when asked).
+-- Off-field samples are skipped via the terrain field mask. getLevelAtWorldPos /
+-- getTargetLevelAtWorldPos follow the engine *AtWorldPos(worldX, worldZ)
+-- convention (same as getDensityAtWorldPos / getFruitTypeIndexAtWorldPos used
+-- above); the sampling pass is pcall-guarded so an unexpected PF API simply
+-- yields nil and the gauge falls back to the vanilla read.
+-- Returns avgActualInternal, avgTargetInternal, sampleCount -- or nil on failure.
+function RealisticCropRotationManager:samplePFValueMapAtField(valueMap, field, wantTarget)
+    if valueMap == nil or field == nil then return nil end
+    if type(valueMap.getLevelAtWorldPos) ~= "function" then return nil end
+
+    local samples = {}
+    if type(field.posX) == "number" and type(field.posZ) == "number" then
+        table.insert(samples, { x = field.posX, z = field.posZ })
+    end
+    collectFieldDimensionSamples(field, samples)
+    if #samples == 0 then return nil end
+
+    local terrainDetailId = g_currentMission ~= nil and g_currentMission.terrainDetailId or nil
+    local canMaskField = terrainDetailId ~= nil and getDensityAtWorldPos ~= nil
+    local hasTarget = wantTarget == true and type(valueMap.getTargetLevelAtWorldPos) == "function"
+
+    local actualSum, targetSum, count = 0, 0, 0
+    local ok = pcall(function()
+        for _, s in ipairs(samples) do
+            local onField = true
+            if canMaskField then
+                onField = getDensityAtWorldPos(terrainDetailId, s.x, 0, s.z) ~= 0
+            end
+            if onField then
+                local actual = valueMap:getLevelAtWorldPos(s.x, s.z)
+                if type(actual) == "number" then
+                    actualSum = actualSum + actual
+                    if hasTarget then
+                        local target = valueMap:getTargetLevelAtWorldPos(s.x, s.z)
+                        if type(target) == "number" then targetSum = targetSum + target end
+                    end
+                    count = count + 1
+                end
+            end
+        end
+    end)
+
+    if not ok or count == 0 then return nil end
+    return actualSum / count, hasTarget and (targetSum / count) or nil, count
+end
+
+function RealisticCropRotationManager:getCachedPFSoil(farmlandId, kind)
+    local cache = self.soilPFCache
+    if cache == nil then return nil end
+    local entry = cache[farmlandId]
+    if entry == nil or entry[kind] == nil then return nil end
+    local nowMs = tonumber(g_time) or 0
+    if (nowMs - (entry[kind .. "Ms"] or 0)) >= SOIL_PF_CACHE_TTL_MS then return nil end
+    return entry[kind]
+end
+
+function RealisticCropRotationManager:setCachedPFSoil(farmlandId, kind, values)
+    if self.soilPFCache == nil then self.soilPFCache = {} end
+    local entry = self.soilPFCache[farmlandId]
+    if entry == nil then entry = {}; self.soilPFCache[farmlandId] = entry end
+    entry[kind] = values
+    entry[kind .. "Ms"] = tonumber(g_time) or 0
+end
+
+-- One-time log per metric so the PF read (and the *AtWorldPos signature) can be
+-- confirmed empirically in-game before trusting it further.
+function RealisticCropRotationManager:logFirstPFRead(kind, actual, target, count)
+    if self.loggedFirstPFRead == nil then self.loggedFirstPFRead = {} end
+    if self.loggedFirstPFRead[kind] then return end
+    self.loggedFirstPFRead[kind] = true
+    Logging.info("[RealisticCropRotation][PF] First %s read: actual=%.2f target=%s samples=%d",
+        tostring(kind), tonumber(actual) or 0,
+        target ~= nil and string.format("%.2f", target) or "nil", tonumber(count) or 0)
+end
+
+-- PF nitrogen for a farmland: averaged actual + target, converted to kg/ha.
+-- Returns actual, target, min, max (kg/ha) or nil when PF is absent / read fails
+-- -> the nitrogen gauge then falls back to the vanilla SPRAY_LEVEL read.
+function RealisticCropRotationManager:getNitrogenLevel(farmlandId)
+    if g_precisionFarming == nil then return nil end
+    local nMap = g_precisionFarming.nitrogenMap
+    if nMap == nil or type(nMap.getNitrogenValueFromInternalValue) ~= "function" then return nil end
+
+    local n = tonumber(farmlandId)
+    if n == nil then return nil end
+
+    local cached = self:getCachedPFSoil(n, "nitrogen")
+    if cached ~= nil then return cached[1], cached[2], cached[3], cached[4] end
+
+    local field = self:getFieldByFarmlandId(n)
+    local avgActual, avgTarget, count = self:samplePFValueMapAtField(nMap, field, true)
+    if avgActual == nil then return nil end
+
+    -- Clamp internal levels to [0, maxValue] before conversion, mirroring the PF
+    -- sprayer HUD (math.clamp(value, 0, nitrogenMap.maxValue)).
+    local maxInternal = tonumber(nMap.maxValue) or 45
+    local function conv(level)
+        return tonumber(nMap:getNitrogenValueFromInternalValue(math.max(0, math.min(level, maxInternal))))
+    end
+
+    local actual = conv(avgActual)
+    if actual == nil then return nil end
+    local target = avgTarget ~= nil and conv(avgTarget) or nil
+    local minVal = conv(0) or 0
+    local maxVal = conv(maxInternal) or 0
+
+    self:logFirstPFRead("nitrogen", actual, target, count)
+    self:setCachedPFSoil(n, "nitrogen", { actual, target, minVal, maxVal })
+    return actual, target, minVal, maxVal
+end
+
+-- PF soil pH for a farmland: averaged actual pH + display range (the gauge uses
+-- the min..max range; pH has no per-pixel "target" the way nitrogen does).
+-- Returns actual, nil, min, max (pH) or nil -> falls back to the vanilla lime read.
+function RealisticCropRotationManager:getPHLevel(farmlandId)
+    if g_precisionFarming == nil then return nil end
+    local phMap = g_precisionFarming.pHMap
+    if phMap == nil or type(phMap.getPhValueFromInternalValue) ~= "function" then return nil end
+
+    local n = tonumber(farmlandId)
+    if n == nil then return nil end
+
+    local cached = self:getCachedPFSoil(n, "ph")
+    if cached ~= nil then return cached[1], cached[2], cached[3], cached[4] end
+
+    local field = self:getFieldByFarmlandId(n)
+    local avgActual, _, count = self:samplePFValueMapAtField(phMap, field, false)
+    if avgActual == nil then return nil end
+
+    -- Clamp internal level to [0, maxValue] before conversion (same guard as PF).
+    local maxInternal = tonumber(phMap.maxValue) or 31
+    local function conv(level)
+        return tonumber(phMap:getPhValueFromInternalValue(math.max(0, math.min(level, maxInternal))))
+    end
+
+    local actual = conv(avgActual)
+    if actual == nil then return nil end
+    local minPH = conv(0) or 0
+    local maxPH = conv(maxInternal) or 0
+
+    self:logFirstPFRead("pH", actual, nil, count)
+    self:setCachedPFSoil(n, "ph", { actual, nil, minPH, maxPH })
+    return actual, nil, minPH, maxPH
 end
 
 -- Returns the localised growth-tier label string for the current foliage
