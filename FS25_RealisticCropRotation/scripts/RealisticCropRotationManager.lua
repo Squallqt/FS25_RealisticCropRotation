@@ -656,9 +656,26 @@ function RealisticCropRotationManager:getOwnedFarmlands()
     return result
 end
 
-function RealisticCropRotationManager:getCurrentLimeLevel(farmlandId)
+-- Samples a fresh FieldState from the density maps at the field centre. The
+-- engine forces field.fieldState to a placeholder on MP clients (FieldManager),
+-- so the soil gauges read this client-safe sample instead -- the same pattern
+-- getFieldCropInfo already uses. One density sample, on menu open only. Returns
+-- a populated FieldState or nil.
+function RealisticCropRotationManager:sampleFieldState(farmlandId)
     local field = self:getFieldByFarmlandId(farmlandId)
-    local limeLevel = field ~= nil and field.fieldState ~= nil and field.fieldState.limeLevel or 0
+    if field == nil or FieldState == nil then return nil end
+    if type(field.posX) ~= "number" or type(field.posZ) ~= "number" then return nil end
+
+    local fieldState = FieldState.new()
+    if type(fieldState.update) ~= "function" then return nil end
+    fieldState:update(field.posX, field.posZ)
+    if not fieldState.isValid then return nil end
+    return fieldState
+end
+
+function RealisticCropRotationManager:getCurrentLimeLevel(farmlandId)
+    local fieldState = self:sampleFieldState(farmlandId)
+    local limeLevel = fieldState ~= nil and fieldState.limeLevel or 0
 
     local maxLevel = nil
     if g_fieldManager ~= nil then
@@ -675,6 +692,30 @@ function RealisticCropRotationManager:getCurrentLimeLevel(farmlandId)
     limeLevel = math.max(0, math.floor((tonumber(limeLevel) or 0) + 0.5))
     maxLevel = math.max(1, math.floor((tonumber(maxLevel) or 1) + 0.5))
     return math.min(limeLevel, maxLevel), maxLevel
+end
+
+-- Current base-game fertilisation level (SPRAY_LEVEL density map), mirroring
+-- getCurrentLimeLevel. Reads the client-safe sampled FieldState so the gauge
+-- works in MP too. Returns level, maxLevel.
+function RealisticCropRotationManager:getCurrentNitrogenLevel(farmlandId)
+    local fieldState = self:sampleFieldState(farmlandId)
+    local sprayLevel = fieldState ~= nil and fieldState.sprayLevel or 0
+
+    local maxLevel = nil
+    if g_fieldManager ~= nil then
+        maxLevel = tonumber(g_fieldManager.sprayLevelMaxValue)
+    end
+    if maxLevel == nil and g_currentMission ~= nil and g_currentMission.fieldGroundSystem ~= nil
+        and FieldDensityMap ~= nil and FieldDensityMap.SPRAY_LEVEL ~= nil
+        and type(g_currentMission.fieldGroundSystem.getMaxValue) == "function" then
+        local ok, value = pcall(g_currentMission.fieldGroundSystem.getMaxValue,
+            g_currentMission.fieldGroundSystem, FieldDensityMap.SPRAY_LEVEL)
+        if ok then maxLevel = tonumber(value) end
+    end
+
+    sprayLevel = math.max(0, math.floor((tonumber(sprayLevel) or 0) + 0.5))
+    maxLevel = math.max(1, math.floor((tonumber(maxLevel) or 1) + 0.5))
+    return math.min(sprayLevel, maxLevel), maxLevel
 end
 
 -- Returns the localised growth-tier label string for the current foliage

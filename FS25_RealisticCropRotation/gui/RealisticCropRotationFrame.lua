@@ -895,13 +895,7 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
         self:updateTimelineSlot(histIdx + 1, cropName, self:getCropFamily(cropName), nil)
     end
 
-    self:setStatusBarFill(self.nitrogenBarFill, 0)
-    if self.nitrogenStateLabel ~= nil then
-        self.nitrogenStateLabel:setText(self.i18n:getText("rcr_n_none"))
-    end
-    if self.nitrogenValueLabel ~= nil then
-        self.nitrogenValueLabel:setVisible(false)
-    end
+    self:updateNitrogenGauge(farmlandId)
     self:updateSoilPHGauge(farmlandId)
     self:updateAdvice(currentFamily)
     self:updateYieldCard(farmlandId)
@@ -971,6 +965,70 @@ function RealisticCropRotationFrame:setStatusBarFill(barFill, ratio)
             end
         end
         barFill:setVisible(fillW > 0)
+    end
+end
+
+-- ---------------------------------------------------------------------------
+--  Nitrogen gauge
+-- ---------------------------------------------------------------------------
+
+function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId)
+    local mgr = self:getManager()
+    local ratio = 0
+    local labelKey = "rcr_n_none"
+    local stateText = nil
+    local valueText = nil
+
+    -- Precision Farming path: dormant seam (getNitrogenLevel) until the PF
+    -- per-field aggregation sub-project (PLAN.md Phase 4.5) is designed.
+    if mgr ~= nil and mgr.getNitrogenLevel ~= nil then
+        local actualN, targetN, minN, maxN = mgr:getNitrogenLevel(farmlandId)
+        if actualN ~= nil then
+            minN = tonumber(minN) or 0
+            maxN = tonumber(maxN) or 0
+            labelKey = "rcr_n_average_pf"
+            if targetN ~= nil then
+                ratio = targetN > 0 and (actualN / targetN) or 0
+                stateText = string.format(self.i18n:getText("rcr_n_average_value"), actualN)
+                valueText = string.format(self.i18n:getText("rcr_n_crop_need"), targetN)
+            else
+                ratio = maxN > minN and ((actualN - minN) / (maxN - minN)) or 0
+                stateText = string.format(self.i18n:getText("rcr_n_average_value"), actualN)
+            end
+        end
+    end
+
+    -- Vanilla fallback: base-game fertilisation level (SPRAY_LEVEL).
+    if stateText == nil then
+        local nLevel = 0
+        local maxLevel = 1
+        if mgr ~= nil and mgr.getCurrentNitrogenLevel ~= nil then
+            nLevel, maxLevel = mgr:getCurrentNitrogenLevel(farmlandId)
+        end
+
+        nLevel = tonumber(nLevel) or 0
+        maxLevel = math.max(1, tonumber(maxLevel) or 1)
+        ratio = nLevel / maxLevel
+        valueText = string.format("%d / %d", nLevel, maxLevel)
+
+        if nLevel <= 0 then
+            labelKey = "rcr_n_none"
+        elseif nLevel >= maxLevel then
+            labelKey = "rcr_n_full"
+        else
+            labelKey = "rcr_n_partial"
+        end
+    end
+
+    self:setStatusBarFill(self.nitrogenBarFill, ratio)
+
+    if self.nitrogenStateLabel ~= nil then
+        self.nitrogenStateLabel:setText(stateText or self.i18n:getText(labelKey))
+    end
+
+    if self.nitrogenValueLabel ~= nil then
+        self.nitrogenValueLabel:setText(valueText or "")
+        self.nitrogenValueLabel:setVisible(valueText ~= nil)
     end
 end
 
