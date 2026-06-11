@@ -95,10 +95,11 @@
             <!--    Slot5 x=1004                                               -->
             <!-- ============================================================ -->
             <GuiElement profile="frTimeline" position="20px -112px">
-                <!-- == Slot 1: N-4 == -->
+                <!-- == Slot 1: CURRENT active crop / ground state (leftmost) == -->
                 <GuiElement profile="frSlotCard" position="8px -4px">
-                    <RoundCorner profile="frSlotCardBgN4"/>
-                    <Text        profile="frSlotSeasonLabel"     id="slot1SeasonLabel" text="$l10n_rcr_slot_n4"/>
+                    <RoundCorner profile="frSlotCardBgCurrent"/>
+                    <ThreePartBitmap profile="frSlotAccentCurrent"/>
+                    <Text        profile="frSlotSeasonLabel"     id="slot1SeasonLabel" text="$l10n_rcr_slot_current"/>
                     <Bitmap      profile="frSlotIcon"            id="slot1Icon"        visible="false"/>
                     <Text        profile="frSlotCropName"        id="slot1CropName"    text=""/>
                     <RoundCorner profile="frSlotFamilyBadgeBg"   id="slot1BadgeBg"     visible="false"/>
@@ -107,14 +108,13 @@
 
                 <!-- Connector 1 -->
                 <GuiElement profile="frHistoryTimelineConnector" position="232px -4px">
-                    <RoundCorner profile="frTimelineConnectorLine"/>
-                    <Text        profile="frTimelineArrowText" text=">"/>
+                    <Bitmap profile="frTimelineArrowIcon"/>
                 </GuiElement>
 
-                <!-- == Slot 2: N-3 == -->
+                <!-- == Slot 2: N-1 == -->
                 <GuiElement profile="frSlotCard" position="257px -4px">
-                    <RoundCorner profile="frSlotCardBgN3"/>
-                    <Text        profile="frSlotSeasonLabel"     id="slot2SeasonLabel" text="$l10n_rcr_slot_n3"/>
+                    <RoundCorner profile="frSlotCardBgN1"/>
+                    <Text        profile="frSlotSeasonLabel"     id="slot2SeasonLabel" text="$l10n_rcr_slot_n1"/>
                     <Bitmap      profile="frSlotIcon"            id="slot2Icon"        visible="false"/>
                     <Text        profile="frSlotCropName"        id="slot2CropName"    text=""/>
                     <RoundCorner profile="frSlotFamilyBadgeBg"   id="slot2BadgeBg"     visible="false"/>
@@ -123,8 +123,7 @@
 
                 <!-- Connector 2 -->
                 <GuiElement profile="frHistoryTimelineConnector" position="481px -4px">
-                    <RoundCorner profile="frTimelineConnectorLine"/>
-                    <Text        profile="frTimelineArrowText" text=">"/>
+                    <Bitmap profile="frTimelineArrowIcon"/>
                 </GuiElement>
 
                 <!-- == Slot 3: N-2 == -->
@@ -139,14 +138,13 @@
 
                 <!-- Connector 3 -->
                 <GuiElement profile="frHistoryTimelineConnector" position="730px -4px">
-                    <RoundCorner profile="frTimelineConnectorLine"/>
-                    <Text        profile="frTimelineArrowText" text=">"/>
+                    <Bitmap profile="frTimelineArrowIcon"/>
                 </GuiElement>
 
-                <!-- == Slot 4: N-1 == -->
+                <!-- == Slot 4: N-3 == -->
                 <GuiElement profile="frSlotCard" position="755px -4px">
-                    <RoundCorner     profile="frSlotCardBgN1"/>
-                    <Text        profile="frSlotSeasonLabel"     id="slot4SeasonLabel" text="$l10n_rcr_slot_n1"/>
+                    <RoundCorner     profile="frSlotCardBgN3"/>
+                    <Text        profile="frSlotSeasonLabel"     id="slot4SeasonLabel" text="$l10n_rcr_slot_n3"/>
                     <Bitmap      profile="frSlotIcon"            id="slot4Icon"        visible="false"/>
                     <Text        profile="frSlotCropName"        id="slot4CropName"    text=""/>
                     <RoundCorner profile="frSlotFamilyBadgeBg"   id="slot4BadgeBg"     visible="false"/>
@@ -155,15 +153,13 @@
 
                 <!-- Connector 4 -->
                 <GuiElement profile="frHistoryTimelineConnector" position="979px -4px">
-                    <RoundCorner profile="frTimelineConnectorLine"/>
-                    <Text        profile="frTimelineArrowText" text=">"/>
+                    <Bitmap profile="frTimelineArrowIcon"/>
                 </GuiElement>
 
-                <!-- == Slot 5: CURRENT active crop / ground state == -->
+                <!-- == Slot 5: N-4 (oldest, rightmost) == -->
                 <GuiElement profile="frSlotCard" position="1004px -4px">
-                    <RoundCorner profile="frSlotCardBgCurrent"/>
-                    <ThreePartBitmap profile="frSlotAccentCurrent"/>
-                    <Text        profile="frSlotSeasonLabel"     id="slot5SeasonLabel" text="$l10n_rcr_slot_current"/>
+                    <RoundCorner profile="frSlotCardBgN4"/>
+                    <Text        profile="frSlotSeasonLabel"     id="slot5SeasonLabel" text="$l10n_rcr_slot_n4"/>
                     <Bitmap      profile="frSlotIcon"            id="slot5Icon"        visible="false"/>
                     <Text        profile="frSlotCropName"        id="slot5CropName"    text=""/>
                     <RoundCorner profile="frSlotFamilyBadgeBg"   id="slot5BadgeBg"     visible="false"/>
@@ -461,7 +457,7 @@
                         <Text        profile="frGroupBadgeLabel" name="gLabel1" position="157px -18px" size="170px 30px" text="" visible="false"/>
 
                         <!-- Arrow 1 -->
-                        <Text profile="frGroupArrow" name="gArrow1" position="310px -23px" text=">" visible="false"/>
+                        <Bitmap profile="frGroupArrow" name="gArrow1" position="310px -23px" visible="false"/>
 
                         <!-- Zone 2 -->
                         <RoundCorner profile="frGroupBadge"      name="gBadge2" position="334px -18px" visible="false"/>
@@ -469,7 +465,7 @@
                         <Text        profile="frGroupBadgeLabel" name="gLabel2" position="359px -18px" size="170px 30px" text="" visible="false"/>
 
                         <!-- Arrow 2 -->
-                        <Text profile="frGroupArrow" name="gArrow2" position="512px -23px" text=">" visible="false"/>
+                        <Bitmap profile="frGroupArrow" name="gArrow2" position="512px -23px" visible="false"/>
 
                         <!-- Zone 3 -->
                         <RoundCorner profile="frGroupBadge"      name="gBadge3" position="536px -18px" visible="false"/>
@@ -477,7 +473,7 @@
                         <Text        profile="frGroupBadgeLabel" name="gLabel3" position="561px -18px" size="170px 30px" text="" visible="false"/>
 
                         <!-- Arrow 3 -->
-                        <Text profile="frGroupArrow" name="gArrow3" position="714px -23px" text=">" visible="false"/>
+                        <Bitmap profile="frGroupArrow" name="gArrow3" position="714px -23px" visible="false"/>
 
                         <!-- Zone 4 -->
                         <RoundCorner profile="frGroupBadge"      name="gBadge4" position="738px -18px" visible="false"/>

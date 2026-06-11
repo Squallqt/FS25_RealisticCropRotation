@@ -21,6 +21,8 @@ RealisticCropRotation.frame = nil
 RealisticCropRotation.pendingSyncData = nil
 RealisticCropRotation.isEnabled = true
 RealisticCropRotation.cropConfig = nil
+RealisticCropRotation.guiProfilesLoaded = false
+RealisticCropRotation.tabListFixApplied = false
 
 -- Loads cropConfig.xml once at mod init.
 -- Returns a config table: { families, nitrogen, coverCrops }.
@@ -151,9 +153,28 @@ function refreshRealisticCropRotationFrame()
     end
 end
 
+-- The horizontal tab list only recomputes its item alignment offset while the
+-- content is narrower than the bar (SmoothListElement:reloadData, contentOffset>0).
+-- Adding a tab fills the bar, skipping that recompute and leaving a stale offset
+-- that shifts every tab icon. Force the offset back to 0 on each rebuild.
+local function applyTabListAlignmentFix()
+    if RealisticCropRotation.tabListFixApplied then return end
+    if InGameMenu == nil or InGameMenu.rebuildTabList == nil then return end
+
+    InGameMenu.rebuildTabList = Utils.prependedFunction(InGameMenu.rebuildTabList, function(self)
+        if self.pagingTabList ~= nil then
+            self.pagingTabList.listItemAlignmentOffset = 0
+        end
+    end)
+
+    RealisticCropRotation.tabListFixApplied = true
+end
+
 ---Injects the RealisticCropRotationFrame as a tab in the InGameMenu paging element.
 function RealisticCropRotation.addInGameMenuPage(frameFieldName, predicateFunc, insertPosition)
     if g_inGameMenu == nil then return nil end
+
+    applyTabListAlignmentFix()
 
     local frameRefPath = RealisticCropRotation.modDirectory .. "gui/RealisticCropRotationFrameRef.xml"
     local xmlFile = loadXMLFile("RealisticCropRotationFrameRefXML", frameRefPath)
@@ -217,11 +238,33 @@ local function resolveSavegameFolderPath()
     return path
 end
 
+-- Loads GUI profiles (once) and registers the menu icon texture config.
+-- Called early at mission load so the slice is ready before any tab render,
+-- and again when the page is built. Skipped on dedicated server (no g_gui).
+local function loadGuiAssets()
+    if g_gui == nil or type(g_gui.loadProfiles) ~= "function" then return end
+
+    if not RealisticCropRotation.guiProfilesLoaded then
+        g_gui:loadProfiles(RealisticCropRotation.modDirectory .. "gui/guiProfiles.xml")
+        RealisticCropRotation.guiProfilesLoaded = true
+    end
+
+    if g_overlayManager ~= nil
+        and (g_overlayManager.textureConfigs == nil
+            or g_overlayManager.textureConfigs.realisticCropRotation == nil) then
+        g_overlayManager:addTextureConfigFile(
+            RealisticCropRotation.modDirectory .. "images/gui.xml",
+            "realisticCropRotation")
+    end
+end
+
 local function loadedMission()
     -- Reload crop config here to guarantee the engine XML API is fully ready.
     if RealisticCropRotation.cropConfig == nil then
         RealisticCropRotation.cropConfig = loadCropConfig()
     end
+
+    loadGuiAssets()
 
     RealisticCropRotation.manager = RealisticCropRotationManager.new()
     RealisticCropRotation.manager:initialize()
@@ -284,36 +327,36 @@ local function loadedMission()
         end
         RealisticCropRotation.requestServerSync("loadedMission")
     end
+end
 
-    -- GUI: profiles + icon slice + frame + InGameMenu tab injection.
-    -- Skipped on dedicated server (g_gui is nil there).
-    if g_gui ~= nil and type(g_gui.loadProfiles) == "function" then
-        g_gui:loadProfiles(RealisticCropRotation.modDirectory .. "gui/guiProfiles.xml")
+-- Builds the GUI page + menu icon once the in-game menu is ready.
+-- Skipped on dedicated server (g_gui is nil there).
+local function loadInGameMenuGui()
+    if g_gui == nil or type(g_gui.loadProfiles) ~= "function" then return end
+    if g_inGameMenu == nil then return end
 
-        if g_overlayManager ~= nil
-            and (g_overlayManager.textureConfigs == nil
-                 or g_overlayManager.textureConfigs.realisticCropRotation == nil) then
-            g_overlayManager:addTextureConfigFile(
-                RealisticCropRotation.modDirectory .. "images/menuIcon.xml",
-                "realisticCropRotation")
-        end
+    if g_inGameMenu.pageRealisticCropRotation ~= nil then
+        RealisticCropRotation.frame = g_inGameMenu.pageRealisticCropRotation
+        return
+    end
 
-        local frame = RealisticCropRotationFrame.new(g_i18n, g_messageCenter)
-        g_gui:loadGui(RealisticCropRotation.modDirectory .. "gui/RealisticCropRotationFrame.xml",
-                      "RealisticCropRotationFrame", frame, true)
+    loadGuiAssets()
 
-        local inGameMenuFrame = RealisticCropRotation.addInGameMenuPage(
-            "pageRealisticCropRotation",
-            function() return true end,
-            "pageCalendar")
+    local frame = RealisticCropRotationFrame.new(g_i18n, g_messageCenter)
+    g_gui:loadGui(RealisticCropRotation.modDirectory .. "gui/RealisticCropRotationFrame.xml",
+                  "RealisticCropRotationFrame", frame, true)
 
-        if inGameMenuFrame ~= nil then
-            RealisticCropRotation.frame = inGameMenuFrame
-            inGameMenuFrame:initialize()
-        else
-            RealisticCropRotation.frame = frame
-            frame:initialize()
-        end
+    local inGameMenuFrame = RealisticCropRotation.addInGameMenuPage(
+        "pageRealisticCropRotation",
+        function() return true end,
+        "pageCalendar")
+
+    if inGameMenuFrame ~= nil then
+        RealisticCropRotation.frame = inGameMenuFrame
+        inGameMenuFrame:initialize()
+    else
+        RealisticCropRotation.frame = frame
+        frame:initialize()
     end
 end
 
@@ -341,6 +384,11 @@ local function initRealisticCropRotation()
     RealisticCropRotation.cropConfig = loadCropConfig()
 
     Mission00.loadMission00Finished = Utils.appendedFunction(Mission00.loadMission00Finished, loadedMission)
+
+    InGameMenu.onLoadMapFinished = Utils.appendedFunction(InGameMenu.onLoadMapFinished, function(_inGameMenu)
+        loadInGameMenuGui()
+    end)
+
     FSBaseMission.saveSavegame = Utils.appendedFunction(FSBaseMission.saveSavegame, onSaveToXMLFile)
     FSBaseMission.sendInitialClientState = Utils.appendedFunction(FSBaseMission.sendInitialClientState, sendInitialClientState)
 

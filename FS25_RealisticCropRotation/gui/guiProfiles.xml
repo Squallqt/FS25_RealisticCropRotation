@@ -191,25 +191,26 @@
     <!--                                                               -->
     <!--  5 slot cards (224 px) + 4 arrow gaps (25 px) = 1220 px      -->
     <!--  plus 8 px left margin = 1228 px inside 1240 px container     -->
-    <!--  Slot height: 148 px. No global rail: each card owns its bg.   -->
+    <!--  Slot height: 186 px (fills the block). No global rail: each   -->
+    <!--  card owns its bg.                                              -->
     <!--                                                               -->
-    <!--  Presence gradient N-4 (faint) -> CURRENT (anchor):           -->
-    <!--  frSlotCardBgN4 0.22 / N3 0.32 / N2 0.44 / N1 0.50           -->
-    <!--  Current crop 0.58                                             -->
+    <!--  Cards read present->past, left to right: CURRENT (left,       -->
+    <!--  anchor) fading to N-4 (right, faintest):                      -->
+    <!--  Current crop 0.58 / N1 0.50 / N2 0.44 / N3 0.32 / N4 0.22     -->
     <!-- ============================================================ -->
 
     <Profile name="frTimeline" extends="emptyPanel" with="anchorTopLeft">
         <size value="1240px 186px"/>
     </Profile>
 
-    <!-- Slot card container (224 x 148 px) -->
+    <!-- Slot card container (224 x 186 px — fills the timeline block height) -->
     <Profile name="frSlotCard" extends="emptyPanel" with="anchorTopLeft">
-        <size value="224px 148px"/>
+        <size value="224px 186px"/>
     </Profile>
 
     <!-- Base shape shared by all slot backgrounds -->
     <Profile name="frSlotCardBg" extends="baseReference" with="anchorTopLeft">
-        <size value="224px 148px"/>
+        <size value="224px 186px"/>
         <color value="0 0 0 0.44"/>
         <cornerSize value="0.35"/>
     </Profile>
@@ -248,7 +249,7 @@
 
     <!-- Season label — top of card -->
     <Profile name="frSlotSeasonLabel" extends="fs25_textDefault" with="anchorTopCenter">
-        <position value="0px -9px"/>
+        <position value="0px -12px"/>
         <size value="210px 18px"/>
         <textSize value="12px"/>
         <textBold value="true"/>
@@ -261,13 +262,13 @@
 
     <!-- Crop icon — center of card (filename loaded in Lua) -->
     <Profile name="frSlotIcon" extends="baseReference" with="anchorTopCenter">
-        <position value="0px -32px"/>
+        <position value="0px -46px"/>
         <size value="52px 52px"/>
     </Profile>
 
     <!-- Crop name — below icon -->
     <Profile name="frSlotCropName" extends="fs25_textDefault" with="anchorTopCenter">
-        <position value="0px -92px"/>
+        <position value="0px -114px"/>
         <size value="210px 18px"/>
         <textSize value="14px"/>
         <textBold value="false"/>
@@ -280,7 +281,7 @@
 
     <!-- Family badge background pill — bottom of card (color set in Lua) -->
     <Profile name="frSlotFamilyBadgeBg" extends="baseReference" with="anchorBottomCenter">
-        <position value="0px 8px"/>
+        <position value="0px 16px"/>
         <size value="88px 22px"/>
         <color value="$preset_fs25_colorGrey"/>
         <cornerSize value="0.20"/>
@@ -288,7 +289,7 @@
 
     <!-- Family badge text overlay -->
     <Profile name="frSlotFamilyBadgeText" extends="fs25_textDefault" with="anchorBottomCenter">
-        <position value="0px 8px"/>
+        <position value="0px 16px"/>
         <size value="88px 22px"/>
         <textSize value="12px"/>
         <textBold value="true"/>
@@ -299,28 +300,17 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Thin connector between slots: horizontal line + arrow text -->
-    <Profile name="frTimelineConnectorLine" extends="baseReference" with="anchorMiddleLeft">
+    <!-- Connector arrow between history slots -->
+    <Profile name="frTimelineArrowIcon" extends="baseReference" with="anchorMiddleCenter">
         <position value="0px 0px"/>
-        <size value="25px 2px"/>
-        <color value="$preset_fs25_colorMainHighlight"/>
-        <cornerSize value="0.20"/>
-    </Profile>
-
-    <Profile name="frTimelineArrowText" extends="fs25_textDefault" with="anchorBottomCenter">
-        <position value="0px 18px"/>
         <size value="25px 18px"/>
-        <textSize value="12px"/>
-        <textBold value="false"/>
-        <textColor value="$preset_fs25_colorMainHighlight"/>
-        <textAlignment value="center"/>
-        <textVerticalAlignment value="middle"/>
-        <textMaxNumLines value="1"/>
+        <imageSliceId value="realisticCropRotation.timelineArrowRight"/>
+        <imageColor value="$preset_fs25_colorMainHighlight"/>
     </Profile>
 
     <!-- Container for the connector assembly -->
     <Profile name="frHistoryTimelineConnector" extends="emptyPanel" with="anchorTopLeft">
-        <size value="25px 148px"/>
+        <size value="25px 186px"/>
     </Profile>
 
     <!-- ============================================================ -->
@@ -847,14 +837,10 @@
     </Profile>
 
     <!-- Arrow between zones -->
-    <Profile name="frGroupArrow" extends="fs25_textDefault" with="anchorTopLeft">
-        <size value="20px 20px"/>
-        <textSize value="13px"/>
-        <textBold value="false"/>
-        <textColor value="$preset_fs25_colorMainHighlight"/>
-        <textAlignment value="center"/>
-        <textVerticalAlignment value="middle"/>
-        <textMaxNumLines value="1"/>
+    <Profile name="frGroupArrow" extends="baseReference" with="anchorTopLeft">
+        <size value="25px 18px"/>
+        <imageSliceId value="realisticCropRotation.timelineArrowRight"/>
+        <imageColor value="$preset_fs25_colorMainHighlight"/>
     </Profile>
 
     <!-- Field count "× N" -->

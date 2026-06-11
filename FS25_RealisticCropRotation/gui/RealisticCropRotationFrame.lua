@@ -30,9 +30,6 @@ RealisticCropRotationFrame.FAMILY_RGBA = {
     COVER     = {0.420, 0.300, 0.100, 1.0},  -- earthy brown
 }
 
--- slot index 1..4 maps to history newest-first (history[1] = N-1)
-RealisticCropRotationFrame.SLOT_HISTORY_IDX = { 4, 3, 2, 1 }
-
 RealisticCropRotationFrame.COVER_CROP_NAMES = {
     "OILSEEDRADISH",
     "FLOWERINGCATCHCROP",
@@ -885,16 +882,18 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
 
     local history = (mgr ~= nil) and (mgr:getHistory(farmlandId) or {}) or {}
 
-    for slotIdx = 1, 4 do
-        local histIdx  = RealisticCropRotationFrame.SLOT_HISTORY_IDX[slotIdx]
-        local hEntry   = history[histIdx]
-        local cropName = hEntry and hEntry.crop or nil
-        self:updateTimelineSlot(slotIdx, cropName, self:getCropFamily(cropName), nil)
-    end
-
+    -- Slot 1 is the current crop (leftmost); slots 2..5 are history N-1..N-4
+    -- (history[1] = N-1), so the strip reads from the present on the left
+    -- back into the past on the right.
     local currentCropName, currentFamily, currentFallbackText = self:getCurrentSlotData(farmlandId)
     local currentBadgeKey = currentFamily == "COVER" and "rcr_interculture" or nil
-    self:updateTimelineSlot(5, currentCropName, currentFamily, currentFallbackText, currentBadgeKey)
+    self:updateTimelineSlot(1, currentCropName, currentFamily, currentFallbackText, currentBadgeKey)
+
+    for histIdx = 1, 4 do
+        local hEntry   = history[histIdx]
+        local cropName = hEntry and hEntry.crop or nil
+        self:updateTimelineSlot(histIdx + 1, cropName, self:getCropFamily(cropName), nil)
+    end
 
     self:setStatusBarFill(self.nitrogenBarFill, 0)
     if self.nitrogenStateLabel ~= nil then
