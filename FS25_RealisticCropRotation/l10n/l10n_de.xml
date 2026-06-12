@@ -102,17 +102,6 @@
         <!-- Yield card — weed column header (singular, matching base game HUD) -->
         <e k="rcr_weed_header"          v="Unkraut" />
 
-        <!-- Yield card — weed action fallback labels (used when the pedestrian
-             HUD cache is empty; base game strings are preferred when available). -->
-        <e k="rcr_weed_stage_sprout"    v="Keimling" />
-        <e k="rcr_weed_stage_small"     v="klein" />
-        <e k="rcr_weed_stage_medium"    v="mittel" />
-        <e k="rcr_weed_stage_large"     v="groß" />
-        <e k="rcr_weed_stage_partial"   v="teilweise" />
-        <e k="rcr_weed_tool_weeder"     v="Striegel" />
-        <e k="rcr_weed_tool_hoe"        v="Hacke" />
-        <e k="rcr_weed_tool_herbicide"  v="Herbizid" />
-
         <!-- Planning tab — year slots -->
         <e k="rcr_plan_year1"           v="N+1" />
         <e k="rcr_plan_year2"           v="N+2" />

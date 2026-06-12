@@ -1037,100 +1037,12 @@ function RealisticCropRotationManager.getGrowthStageNumbers(fruitType, growthSta
     return string.format("%d/%d", growthState, total)
 end
 
--- Per-weedState lookup tables for the runtime mapping observed in the base
--- game pedestrian field-info HUD (weedState 0..9). These describe weed only;
--- the crop's foliage state then constrains which mechanical tool is actually
--- usable (see classifyWeedAction).
-RealisticCropRotationManager.WEED_STAGE_KEY = {
-    [1] = "rcr_weed_stage_sprout",
-    [2] = "rcr_weed_stage_sprout",
-    [3] = "rcr_weed_stage_small",
-    [4] = "rcr_weed_stage_medium",
-    [5] = "rcr_weed_stage_large",
-    [6] = "rcr_weed_stage_partial",
-}
-
-RealisticCropRotationManager.WEED_IDEAL_TOOL = {
-    [1] = "weeder", [2] = "weeder", [3] = "weeder",
-    [4] = "hoe",
-    [5] = "herbicide",
-    [6] = "hoe",
-}
-
--- Compose the weed action label by combining the engine weedState with the
--- crop's mechanical-removal windows. The output mirrors the format the base
--- game uses on the pedestrian field-info HUD ("(<stage>) · <tool>").
---
--- Step 1 — weedState → ideal tool (from runtime observation, light→heavy):
---   0       → nothing to do
---   1..3    → Weeder      (sprout / sprout / small)
---   4       → Hoe         (medium)
---   5       → Herbicide   (large — past any mechanical pass)
---   6       → Hoe         (partial / wounded remnant after treatment)
---   7..9    → nothing to do (withered weed)
---
--- Step 2 — crop constraint: the ideal mechanical tool is only usable when the
--- crop's current foliage state declares the matching flag (allowsWeeding /
--- allowsHoeing in the fruit XML, condensed by FruitTypeDesc into
--- minWeederState/maxWeederState and minWeederHoeState/maxWeederHoeState).
--- When the crop has grown past the relevant window, the recommendation
--- escalates to herbicide. This applies to any crop the player hovers over.
---
--- Returns the final composed display string, or nil when there is nothing to
--- show (no weed / withered weed / no fruit / no i18n).
-function RealisticCropRotationManager.classifyWeedAction(fruitType, growthState, weedState)
-    weedState = tonumber(weedState) or 0
-    if weedState <= 0 or weedState >= 7 then return nil end
-    if fruitType == nil then return nil end
-    growthState = tonumber(growthState) or 0
-    if growthState <= 0 then return nil end
-    if g_i18n == nil or g_i18n.getText == nil then return nil end
-
-    local stageKey  = RealisticCropRotationManager.WEED_STAGE_KEY[weedState]
-    local idealTool = RealisticCropRotationManager.WEED_IDEAL_TOOL[weedState]
-    if stageKey == nil or idealTool == nil then return nil end
-
-    -- For weeder-ideal states, try weeder first, then hoe as fallback before
-    -- escalating to herbicide. This covers crops where the weeder window is
-    -- narrower than the hoe window (e.g. onion state 4 is outside weeder but
-    -- still inside hoe window — base game confirms "Houe" for that case).
-    local minWeed = tonumber(fruitType.minWeederState) or 0
-    local maxWeed = tonumber(fruitType.maxWeederState) or 0
-    local minHoe  = tonumber(fruitType.minWeederHoeState) or 0
-    local maxHoe  = tonumber(fruitType.maxWeederHoeState) or 0
-
-    local toolKey
-    if idealTool == "weeder" then
-        if minWeed > 0 and growthState >= minWeed and growthState <= maxWeed then
-            toolKey = "rcr_weed_tool_weeder"
-        elseif minHoe > 0 and growthState >= minHoe and growthState <= maxHoe then
-            toolKey = "rcr_weed_tool_hoe"
-        else
-            toolKey = "rcr_weed_tool_herbicide"
-        end
-    elseif idealTool == "hoe" then
-        if minHoe > 0 and growthState >= minHoe and growthState <= maxHoe then
-            toolKey = "rcr_weed_tool_hoe"
-        else
-            toolKey = "rcr_weed_tool_herbicide"
-        end
-    else
-        toolKey = "rcr_weed_tool_herbicide"
-    end
-
-    return string.format("(%s) · %s",
-        g_i18n:getText(stageKey), g_i18n:getText(toolKey))
-end
-
--- Cache populated by the pedestrian HUD hook (fieldAddFarmland wrapper) when
--- the player walks near a field. The base game runs fieldAddWeed internally
--- with its own per-crop tool logic; we intercept the addLine call to capture
--- exactly what it computed. Card prefers this over classifyWeedAction.
-RealisticCropRotationManager.weedCache = {}
-
-function RealisticCropRotationManager.setWeedFromHUD(farmlandId, stage, tool)
-    RealisticCropRotationManager.weedCache[tonumber(farmlandId)] = { stage = stage, tool = tool }
-end
+-- Weed display is mirrored directly from the base-game pedestrian HUD via
+-- RealisticCropRotationHud.getWeedLineFromGame (it calls the real
+-- PlayerHUDUpdater:fieldAddWeed with a capture box). No hardcoded
+-- weedState->stage/tool mapping lives here anymore: the game composes both the
+-- stage label and the tool recommendation, and Precision Farming feeds the
+-- weedState, so the card never drifts from what the player sees on foot.
 
 -- Returns crop info for a farmland in a single density-map sample:
 --   { growthStageText, weedActionText }              -- crop present, not harvestable
@@ -1167,19 +1079,22 @@ function RealisticCropRotationManager:getFieldCropInfo(farmlandId)
     if fruitType == nil then return nil end
 
     local growthState = tonumber(fieldState.growthState or fieldState.lastGrowthState) or 0
-    local weedState = tonumber(fieldState.weedState) or 0
 
-    local cachedWeed = RealisticCropRotationManager.weedCache[numericFarmlandId]
-    local weedText
-    if cachedWeed ~= nil then
-        weedText = string.format("(%s) · %s", cachedWeed.stage, cachedWeed.tool)
-    else
-        weedText = RealisticCropRotationManager.classifyWeedAction(fruitType, growthState, weedState)
+    -- Mirror the base-game pedestrian HUD weed line: feed our sampled field
+    -- state (weedState already set by the engine / PF override) to the real
+    -- PlayerHUDUpdater:fieldAddWeed and read back the exact stage label + tool
+    -- value it would display. farmlandId is set because the HUD's own data
+    -- carries it; fieldAddWeed reads weedState/fruitTypeIndex/growthState here.
+    fieldState.farmlandId = numericFarmlandId
+    local weedHeader, weedValue
+    if RealisticCropRotationHud ~= nil and RealisticCropRotationHud.getWeedLineFromGame ~= nil then
+        weedHeader, weedValue = RealisticCropRotationHud.getWeedLineFromGame(fieldState)
     end
 
     local info = {
         growthStageText = RealisticCropRotationManager.classifyGrowthStage(fruitType, growthState),
-        weedActionText  = weedText,
+        weedHeader      = weedHeader,
+        weedActionText  = weedValue,
     }
 
     local minHarvest = tonumber(fruitType.minHarvestingGrowthState) or 0

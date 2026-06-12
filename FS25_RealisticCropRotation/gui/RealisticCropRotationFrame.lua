@@ -1485,9 +1485,21 @@ function RealisticCropRotationFrame:updateYieldCard(farmlandId)
         self.yieldTotalValue:setText(totalText)
     end
 
-    -- Weed and stage KPIs use a smaller dedicated profile because their
-    -- composed text strings ("(<stage>) · <tool>" and "(X/Y) · <tier>") would
-    -- not fit one line at the default 26px size used for the litre value.
+    -- Weed and stage KPIs use a smaller dedicated profile because their text
+    -- (the weed tool name, and "(X/Y) · <tier>" for stage) would not fit one
+    -- line at the default 26px size used for the litre value.
+    --
+    -- The weed KPI mirrors the on-foot HUD line: its header carries the game's
+    -- weed stage label (info.weedHeader) and its value the game's tool
+    -- recommendation (info.weedActionText). When no weed applies, the header
+    -- falls back to the static "rcr_weed_header" caption.
+    if self.weedHeaderText ~= nil then
+        local headerText = (hasWeed and info.weedHeader ~= nil)
+            and info.weedHeader
+            or self.i18n:getText("rcr_weed_header")
+        self.weedHeaderText:setText(headerText)
+    end
+
     if self.yieldPerHaValue ~= nil then
         if self.yieldPerHaValue.applyProfile ~= nil then
             self.yieldPerHaValue:applyProfile(hasWeed and "frYieldKpiValueSmall" or "frYieldKpiValueNA")

@@ -203,6 +203,7 @@ end
 --   function(self, superFunc, ...originalArgs)
 -- First arg = the object instance (self), second arg = original function.
 function RealisticCropRotationHud.fieldAddFarmland(hudSelf, superFunc, data, fieldBox)
+    RealisticCropRotationHud.hudInstance = hudSelf
     local farmlandId = data ~= nil and data.farmlandId or nil
 
     superFunc(hudSelf, data, fieldBox)
@@ -218,4 +219,50 @@ if PlayerHUDUpdater ~= nil and Utils ~= nil and Utils.overwrittenFunction ~= nil
     if PlayerHUDUpdater.fieldAddFarmland ~= nil then
         PlayerHUDUpdater.fieldAddFarmland = Utils.overwrittenFunction(PlayerHUDUpdater.fieldAddFarmland, RealisticCropRotationHud.fieldAddFarmland)
     end
+end
+
+-- ===========================================================================
+-- Active mirror of the base-game pedestrian weed line
+-- ---------------------------------------------------------------------------
+-- PlayerHUDUpdater:fieldAddWeed(self, data, fieldBox) is the function the
+-- on-foot field-info HUD uses to render the weed row ("<stage>: <tool>"). Its
+-- body is stripped from every source dump, so its weedState->stage/tool mapping
+-- cannot be reproduced by hand without drifting from the game. Instead we call
+-- the real function with a capture box and read back the exact (label, value)
+-- it emits. This mirrors what the player sees on foot -- tool recommendation
+-- included -- and automatically follows Precision Farming, which feeds the
+-- weedState through its FieldState.update override (read by fieldAddWeed via
+-- data.weedState). Signature/behaviour confirmed in-game: 2 args, data carries
+-- weedState/weedFactor/fruitTypeIndex/growthState/farmlandId, weedState==0
+-- emits no line.
+-- Returns label, value (localized strings) or nil when no weed line applies.
+-- ===========================================================================
+RealisticCropRotationHud.hudInstance = nil
+
+function RealisticCropRotationHud.getWeedLineFromGame(data)
+    if data == nil or PlayerHUDUpdater == nil or PlayerHUDUpdater.fieldAddWeed == nil then
+        return nil
+    end
+
+    -- Canonical instance is the local player's HUD updater (Player.lua:363);
+    -- fall back to the instance seen by our live HUD hooks.
+    local hudUpdater = (g_localPlayer ~= nil and g_localPlayer.hudUpdater)
+        or RealisticCropRotationHud.hudInstance
+    if hudUpdater == nil then
+        return nil
+    end
+
+    local capturedLabel, capturedValue
+    local captureBox = setmetatable({
+        addLine = function(_, label, value)
+            capturedLabel, capturedValue = label, value
+        end,
+    }, { __index = function() return function() end end })
+
+    local ok = pcall(PlayerHUDUpdater.fieldAddWeed, hudUpdater, data, captureBox)
+    if not ok then
+        return nil
+    end
+
+    return capturedLabel, capturedValue
 end
