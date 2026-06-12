@@ -94,10 +94,41 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
+    <!-- Weather forecast pill — vanilla weather icon slices are set from Lua -->
+    <Profile name="frWeatherPill" extends="emptyPanel" with="anchorMiddleLeft">
+        <position value="0px 0px"/>
+        <size value="120px 28px"/>
+    </Profile>
+
+    <Profile name="frWeatherPillBg" extends="baseReference" with="anchorTopLeft">
+        <size value="120px 28px"/>
+        <color value="0.04 0.20 0.28 0.86"/>
+        <cornerSize value="0.20"/>
+    </Profile>
+
+    <Profile name="frWeatherPillIcon" extends="baseReference" with="anchorMiddleLeft">
+        <position value="12px 0px"/>
+        <size value="22px 22px"/>
+        <imageSliceId value="gui.icon_weather_rain"/>
+        <imageColor value="$preset_fs25_colorMainLight"/>
+    </Profile>
+
+    <Profile name="frWeatherPillText" extends="fs25_textDefault" with="anchorMiddleLeft">
+        <position value="42px 0px"/>
+        <size value="66px 22px"/>
+        <textSize value="12px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_fs25_colorMainLight"/>
+        <textAlignment value="left"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
     <!-- Status pill — vertically centered on the right, increased size -->
     <Profile name="frStatusPillBg" extends="baseReference" with="anchorMiddleRight">
         <position value="-50px 0px"/>
-        <size value="240px 22px"/>
+        <size value="196px 28px"/>
         <color value="$preset_fs25_colorGrey"/>
         <cornerSize value="0.20"/>
     </Profile>
@@ -108,7 +139,7 @@
 
     <Profile name="frStatusPillText" extends="fs25_textDefault" with="anchorMiddleRight">
         <position value="-50px 0px"/>
-        <size value="240px 22px"/>
+        <size value="196px 28px"/>
         <textSize value="12px"/>
         <textBold value="true"/>
         <textUpperCase value="true"/>

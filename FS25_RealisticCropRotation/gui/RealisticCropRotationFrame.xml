@@ -76,6 +76,11 @@
                 <RoundCorner     profile="frHeroCardBg"/>
                 <ThreePartBitmap profile="frHeroAccent"/>
                 <Text profile="frHeroTitle" id="detailTitle"  text="-"/>
+                <GuiElement profile="frWeatherPill" id="weatherPill" visible="false">
+                    <RoundCorner profile="frWeatherPillBg" id="weatherPillBg"/>
+                    <Bitmap      profile="frWeatherPillIcon" id="weatherPillIcon"/>
+                    <Text        profile="frWeatherPillText" id="weatherPillText" text=""/>
+                </GuiElement>
                 <RoundCorner profile="frStatusPillBg"   id="statusPillBg"/>
                 <Text        profile="frStatusPillText" id="statusPillText" text=""/>
             </GuiElement>
@@ -267,6 +272,11 @@
                 <RoundCorner     profile="frHeroCardBg"/>
                 <ThreePartBitmap profile="frHeroAccent"/>
                 <Text profile="frHeroTitle" id="planTitle"  text="-"/>
+                <GuiElement profile="frWeatherPill" id="planWeatherPill" visible="false">
+                    <RoundCorner profile="frWeatherPillBg" id="planWeatherPillBg"/>
+                    <Bitmap      profile="frWeatherPillIcon" id="planWeatherPillIcon"/>
+                    <Text        profile="frWeatherPillText" id="planWeatherPillText" text=""/>
+                </GuiElement>
                 <RoundCorner profile="frStatusPillBg"   id="planStatusPillBg"/>
                 <Text        profile="frStatusPillText" id="planStatusPillText" text=""/>
             </GuiElement>
