@@ -827,9 +827,29 @@ function RealisticCropRotationManager:getPrecisionFarming()
     return nil
 end
 
+-- True when the field's PF soil is NOT analysed (so the gauges show "not
+-- sampled" instead of a misleading 0 / pH 4.5). PF exposes no reliable
+-- per-farmland "analysed" getter (getIsLockedAtWorldPos returns false even when
+-- unanalysed). The reliable, verified signal: until the soil is analysed PF
+-- returns the absolute floor from the read methods (pH internal state 0 = 4.5,
+-- confirmed in-game), and a real analysed pH is never at the floor (PF generates
+-- pH per soil type, optimum 6-7 + small noise -- PrecisionFarming.xml). So a pH
+-- reading at/below state 1 means not analysed. One analysis unlocks N + pH +
+-- soil type, so this single pH check covers both gauges. Fail-open: any read
+-- error -> false (treat as analysed/available).
+function RealisticCropRotationManager:isPFSoilLocked(pf, field)
+    if pf == nil or field == nil then return false end
+    local phMap = pf.pHMap
+    if phMap == nil or type(phMap.getLevelAtWorldPos) ~= "function" then return false end
+    if type(field.posX) ~= "number" or type(field.posZ) ~= "number" then return false end
+    local ok, phInternal = pcall(phMap.getLevelAtWorldPos, phMap, field.posX, field.posZ)
+    if not ok or type(phInternal) ~= "number" then return false end
+    return phInternal <= 1
+end
+
 -- PF nitrogen for a farmland: averaged actual + target, converted to kg/ha.
--- Returns actual, target, min, max (kg/ha) or nil when PF is absent / read fails
--- -> the nitrogen gauge then falls back to the vanilla SPRAY_LEVEL read.
+-- Returns actual, target, min, max (kg/ha); false when the soil is not analysed
+-- ("not sampled"); or nil when PF is absent -> falls back to the vanilla read.
 function RealisticCropRotationManager:getNitrogenLevel(farmlandId)
     local pf = self:getPrecisionFarming()
     if pf == nil then return nil end
@@ -839,10 +859,12 @@ function RealisticCropRotationManager:getNitrogenLevel(farmlandId)
     local n = tonumber(farmlandId)
     if n == nil then return nil end
 
+    local field = self:getFieldByFarmlandId(n)
+    if self:isPFSoilLocked(pf, field) then return false end
+
     local cached = self:getCachedPFSoil(n, "nitrogen")
     if cached ~= nil then return cached[1], cached[2], cached[3], cached[4] end
 
-    local field = self:getFieldByFarmlandId(n)
     local avgActual, avgTarget = self:samplePFValueMapAtField(nMap, field, true)
     if avgActual == nil then return nil end
 
@@ -863,9 +885,10 @@ function RealisticCropRotationManager:getNitrogenLevel(farmlandId)
     return actual, target, minVal, maxVal
 end
 
--- PF soil pH for a farmland: averaged actual pH + display range (the gauge uses
--- the min..max range; pH has no per-pixel "target" the way nitrogen does).
--- Returns actual, nil, min, max (pH) or nil -> falls back to the vanilla lime read.
+-- PF soil pH for a farmland: averaged actual pH + the optimal (target) pH for
+-- the field's soil type, so the gauge fills relative to the target. Returns
+-- actual, target, min, max (pH); false when the soil is not analysed ("not
+-- sampled"); or nil when PF is absent -> falls back to the vanilla lime read.
 function RealisticCropRotationManager:getPHLevel(farmlandId)
     local pf = self:getPrecisionFarming()
     if pf == nil then return nil end
@@ -875,10 +898,12 @@ function RealisticCropRotationManager:getPHLevel(farmlandId)
     local n = tonumber(farmlandId)
     if n == nil then return nil end
 
+    local field = self:getFieldByFarmlandId(n)
+    if self:isPFSoilLocked(pf, field) then return false end
+
     local cached = self:getCachedPFSoil(n, "ph")
     if cached ~= nil then return cached[1], cached[2], cached[3], cached[4] end
 
-    local field = self:getFieldByFarmlandId(n)
     local avgActual = self:samplePFValueMapAtField(phMap, field, false)
     if avgActual == nil then return nil end
 
@@ -893,8 +918,36 @@ function RealisticCropRotationManager:getPHLevel(farmlandId)
     local minPH = conv(0) or 0
     local maxPH = conv(maxInternal) or 0
 
-    self:setCachedPFSoil(n, "ph", { actual, nil, minPH, maxPH })
-    return actual, nil, minPH, maxPH
+    -- Target pH = optimal pH for the field's soil type (lime depends on soil, not
+    -- crop). PrecisionFarming.xml pHMap.valueTransformation[soilTypeIndex].optimalValue:
+    -- type 1=6.0, 2=6.5, 3=6.75, 4=7.0.
+    local target = self:getOptimalPHForField(pf, phMap, field, conv)
+
+    self:setCachedPFSoil(n, "ph", { actual, target, minPH, maxPH })
+    return actual, target, minPH, maxPH
+end
+
+-- Optimal (target) pH for the field's soil type. Reads the soil type at the
+-- field centre, then asks PF for the optimal of that type so the index stays
+-- PF-consistent. getOptimalPHValueForSoilTypeIndex may return a real pH (6-7) or
+-- an internal state (>9); a real optimal is always 6-7 here, so a value >9 is an
+-- internal state and is converted. Returns nil if unavailable -> the gauge then
+-- falls back to the min..max range.
+function RealisticCropRotationManager:getOptimalPHForField(pf, phMap, field, conv)
+    if field == nil or type(field.posX) ~= "number" or type(field.posZ) ~= "number" then return nil end
+    local soilMap = pf.soilMap
+    if soilMap == nil or type(soilMap.getTypeIndexAtWorldPos) ~= "function" then return nil end
+    if type(phMap.getOptimalPHValueForSoilTypeIndex) ~= "function" then return nil end
+
+    local ok, typeIndex = pcall(soilMap.getTypeIndexAtWorldPos, soilMap, field.posX, field.posZ)
+    if not ok or typeIndex == nil then return nil end
+
+    local ok2, optimal = pcall(phMap.getOptimalPHValueForSoilTypeIndex, phMap, typeIndex)
+    if not ok2 or type(optimal) ~= "number" or optimal <= 0 then return nil end
+
+    if optimal > 9 then optimal = conv(optimal) end
+
+    return tonumber(optimal)
 end
 
 -- Returns the localised growth-tier label string for the current foliage

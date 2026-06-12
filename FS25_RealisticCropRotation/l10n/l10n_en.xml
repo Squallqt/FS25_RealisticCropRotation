@@ -68,6 +68,7 @@
         <e k="rcr_lime_average_pf"      v="Average pH" />
         <e k="rcr_lime_average_value"   v="Average pH: %.2f pH" />
         <e k="rcr_lime_target"          v="Target: %.2f pH" />
+        <e k="rcr_soil_not_sampled"     v="Soil not sampled" />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal"    v="After Cereal: wait at least 2 years before another Cereal; a Legume in between returns nitrogen." />

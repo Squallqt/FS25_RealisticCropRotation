@@ -68,6 +68,7 @@
         <e k="rcr_lime_average_pf"      v="Moyenne du pH" />
         <e k="rcr_lime_average_value"   v="Moyenne du pH : %.2f pH" />
         <e k="rcr_lime_target"          v="Objectif : %.2f pH" />
+        <e k="rcr_soil_not_sampled"     v="Sol non analysé" />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal"    v="Après Céréale : attendez au moins 2 ans avant une nouvelle Céréale ; une Légumineuse entre les deux restitue de l'azote." />

@@ -979,11 +979,15 @@ function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId)
     local stateText = nil
     local valueText = nil
 
-    -- Precision Farming path: dormant seam (getNitrogenLevel) until the PF
-    -- per-field aggregation sub-project (PLAN.md Phase 4.5) is designed.
+    -- Precision Farming path: PF nitrogen average when PF is installed. false =
+    -- soil not analysed ("not sampled"); nil = no PF -> vanilla fallback.
     if mgr ~= nil and mgr.getNitrogenLevel ~= nil then
         local actualN, targetN, minN, maxN = mgr:getNitrogenLevel(farmlandId)
-        if actualN ~= nil then
+        if actualN == false then
+            labelKey = "rcr_soil_not_sampled"
+            stateText = self.i18n:getText("rcr_soil_not_sampled")
+            ratio = 0
+        elseif actualN ~= nil then
             minN = tonumber(minN) or 0
             maxN = tonumber(maxN) or 0
             labelKey = "rcr_n_average_pf"
@@ -1045,7 +1049,11 @@ function RealisticCropRotationFrame:updateSoilPHGauge(farmlandId)
 
     if mgr ~= nil and mgr.getPHLevel ~= nil then
         local actualPH, targetPH, minPH, maxPH = mgr:getPHLevel(farmlandId)
-        if actualPH ~= nil then
+        if actualPH == false then
+            labelKey = "rcr_soil_not_sampled"
+            stateText = self.i18n:getText("rcr_soil_not_sampled")
+            ratio = 0
+        elseif actualPH ~= nil then
             minPH = tonumber(minPH) or 0
             maxPH = tonumber(maxPH) or 0
             labelKey = "rcr_lime_average_pf"
