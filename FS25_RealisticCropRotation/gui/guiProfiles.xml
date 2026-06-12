@@ -913,7 +913,7 @@
         <position value="132px -64px"/>
         <size value="1046px 14px"/>
         <textSize value="11px"/>
-        <textBold value="false"/>
+        <textBold value="true"/>
         <textUpperCase value="false"/>
         <textColor value="$preset_colorWhite_50"/>
         <textAlignment value="left"/>
