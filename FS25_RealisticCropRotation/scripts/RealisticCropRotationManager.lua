@@ -1052,6 +1052,67 @@ end
 -- optional "(X/Y) ·" prefix for active tiers); weedActionText is the composed
 -- weed action label "(<stage>) · <tool>". Either may be nil when nothing
 -- displayable applies for that field.
+-- Real harvested yield (litres) for a farmland, read straight from PF's per-
+-- farmland statistics (FarmlandStatisticCounter.yield, accumulated by the combine
+-- at harvest). This is the actual recorded harvest -- not an estimate. total=false
+-- reads the current-period counter, true the all-time total. Returns nil when PF
+-- is absent or no statistic exists for the farmland.
+function RealisticCropRotationManager:getHarvestedYield(farmlandId, total)
+    local pf = self:getPrecisionFarming()
+    if pf == nil then return nil end
+    local fs = pf.farmlandStatistics
+    if fs == nil or type(fs.statisticsByFarmland) ~= "table" then return nil end
+    local stat = fs.statisticsByFarmland[tonumber(farmlandId)]
+    if stat == nil or type(stat.getValue) ~= "function" then return nil end
+    local ok, v = pcall(stat.getValue, stat, total == true, "yield")
+    return (ok and type(v) == "number") and v or nil
+end
+
+-- PF-aware expected-yield factor (PF's "Rendement attendu %"): the product of the
+-- nitrogen and pH yield factors PF itself applies. Each map turns the internal
+-- (target - actual) gap into a 0..1 factor via getYieldFactorByLevelDifference --
+-- the exact model behind PF's on-foot box. Computed synthetically for any field
+-- (no on-foot visit). Validated on field 95: N 0.87 x pH 0.90 = 0.78, matching
+-- PF's "79 %". Returns a factor in (0,1], or 1.0 when PF is absent.
+function RealisticCropRotationManager:getPFYieldFactor(field)
+    local pf = self:getPrecisionFarming()
+    if pf == nil or field == nil then return 1.0 end
+    local x, z = field.posX, field.posZ
+    if type(x) ~= "number" or type(z) ~= "number" then return 1.0 end
+
+    local function num(obj, name, ...)
+        if obj == nil or type(obj[name]) ~= "function" then return nil end
+        local ok, v = pcall(obj[name], obj, ...)
+        return (ok and type(v) == "number") and v or nil
+    end
+
+    local factor = 1.0
+
+    -- Nitrogen: (target - actual) internal gap -> yield factor.
+    local nMap = pf.nitrogenMap
+    local nActual = num(nMap, "getLevelAtWorldPos", x, z)
+    local nTarget = num(nMap, "getTargetLevelAtWorldPos", x, z)
+    if nActual ~= nil and nTarget ~= nil then
+        local f = num(nMap, "getYieldFactorByLevelDifference", nTarget - nActual)
+        if f ~= nil and f > 0 then factor = factor * f end
+    end
+
+    -- pH: (optimal - actual) internal gap. The optimal is soil-type based and is
+    -- an internal state when > 9 (getOptimalPHValueForSoilTypeIndex).
+    local phMap, soilMap = pf.pHMap, pf.soilMap
+    local phActual = num(phMap, "getLevelAtWorldPos", x, z)
+    local soilType = num(soilMap, "getTypeIndexAtWorldPos", x, z)
+    if phActual ~= nil and soilType ~= nil then
+        local phTarget = num(phMap, "getOptimalPHValueForSoilTypeIndex", soilType)
+        if phTarget ~= nil and phTarget > 9 then
+            local f = num(phMap, "getYieldFactorByLevelDifference", phTarget - phActual)
+            if f ~= nil and f > 0 then factor = factor * f end
+        end
+    end
+
+    return factor
+end
+
 function RealisticCropRotationManager:getFieldCropInfo(farmlandId)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return nil end
@@ -1106,11 +1167,6 @@ function RealisticCropRotationManager:getFieldCropInfo(farmlandId)
     local isForageReady = minForage > 0 and growthState >= minForage and growthState <= maxForage
     if not isHarvestReady and not isForageReady then return info end
 
-    if type(fieldState.getHarvestScaleMultiplier) ~= "function" then return info end
-    local ok, harvestMultiplier = pcall(fieldState.getHarvestScaleMultiplier, fieldState)
-    harvestMultiplier = ok and tonumber(harvestMultiplier) or nil
-    if harvestMultiplier == nil or harvestMultiplier < 0 then return info end
-
     local areaHa = tonumber(field.areaHa) or 0
     if areaHa <= 0 then return info end
 
@@ -1132,9 +1188,35 @@ function RealisticCropRotationManager:getFieldCropInfo(farmlandId)
         yieldScale = fruitType.yieldScales[growthState]
     end
 
-    local totalLiters = literPerSqm * areaHa * 10000 * harvestMultiplier * yieldScale
-    if totalLiters <= 0 then return info end
+    -- Yield. Under PF: expected % before harvest (PF "Rendement attendu" = the
+    -- N x pH adequacy, computed synthetically -- no on-foot visit), and the REAL
+    -- harvested litres read from PF's per-farmland statistics once harvested. No
+    -- absolute-litre estimate is invented. Without PF, FieldState's (correct,
+    -- vanilla) multiplier gives an absolute litre estimate.
+    local pf = self:getPrecisionFarming()
+    if pf ~= nil then
+        local f = self:getPFYieldFactor(field)
+        info.expectedPct = math.floor((f or 1) * 100 + 0.5)
+        info.harvestedLiters = self:getHarvestedYield(numericFarmlandId, false)
 
-    info.totalLiters = totalLiters
+        -- [TEMP yield validation — REMOVE AFTER CHECK] confirm the real-yield read
+        -- vs your harvests, and whether the period counter resets or accumulates.
+        if Logging ~= nil and Logging.info ~= nil then
+            Logging.info("[RCR][yield-probe] fid=%s expected=%d%% harvestedPeriod=%s harvestedTotal=%s",
+                tostring(numericFarmlandId), info.expectedPct,
+                tostring(info.harvestedLiters), tostring(self:getHarvestedYield(numericFarmlandId, true)))
+        end
+    else
+        local base = literPerSqm * areaHa * 10000 * yieldScale
+        local mult
+        if type(fieldState.getHarvestScaleMultiplier) == "function" then
+            local ok, m = pcall(fieldState.getHarvestScaleMultiplier, fieldState)
+            mult = ok and tonumber(m) or nil
+        end
+        if mult ~= nil and mult >= 0 and base > 0 then
+            info.totalLiters = base * mult
+        end
+    end
+
     return info
 end

@@ -1462,16 +1462,25 @@ function RealisticCropRotationFrame:updateYieldCard(farmlandId)
     local totalText = "-"
     local weedText = "-"
     local stageText = "-"
-    local hasYield = info ~= nil and info.totalLiters ~= nil
     local hasStage = info ~= nil and info.growthStageText ~= nil
     local hasWeed = info ~= nil and info.weedActionText ~= nil
 
-    if hasYield then
-        local totalLiters = tonumber(info.totalLiters) or 0
-        if g_i18n ~= nil and g_i18n.formatVolume ~= nil then
-            totalText = g_i18n:formatVolume(totalLiters, 0)
-        else
-            totalText = string.format("%d L", math.floor(totalLiters + 0.5))
+    -- Yield KPI: real harvested litres once the field is harvested (PF stats),
+    -- otherwise the expected yield % (PF forecast), otherwise the vanilla litre
+    -- estimate. % before harvest, real litres after -- no invented absolute yield.
+    local function fmtL(v)
+        if g_i18n ~= nil and g_i18n.formatVolume ~= nil then return g_i18n:formatVolume(v, 0) end
+        return string.format("%d L", math.floor(v + 0.5))
+    end
+    local hasYield = false
+    if info ~= nil then
+        local harvested = tonumber(info.harvestedLiters)
+        if harvested ~= nil and harvested > 0 then
+            totalText, hasYield = fmtL(harvested), true
+        elseif info.expectedPct ~= nil then
+            totalText, hasYield = string.format("~%d %%", tonumber(info.expectedPct) or 0), true
+        elseif info.totalLiters ~= nil then
+            totalText, hasYield = fmtL(tonumber(info.totalLiters) or 0), true
         end
     end
 
@@ -1661,6 +1670,54 @@ function RealisticCropRotationFrame:getCropPeriodFlags(cropName, periodCount, fi
         harvest[i] = pd ~= nil and pd.isHarvestable == true
     end
     return plant, harvest
+end
+
+-- Per calendar flags index, whether an already-established cover crop can still
+-- advance its growth in that period. Read from growthDataSeasonal.periods[p].
+-- growthMapping (see docs/SOWING_PLANNER_AUDIT.md section 23.2): a period grows
+-- the crop when some established state (index >= 2, i.e. past the just-sown
+-- "invisible" state 1) maps to a higher state. Winter periods stall or regress
+-- the growth, so they read false. Used to require at least one real growth
+-- period before a cover is destroyed (so it can release its nitrogen residue).
+--
+-- Returns nil (not an all-false table) when no growth transition is detectable
+-- for this crop -- e.g. its growthMapping is absent or stored in a form this
+-- reader does not recognise. nil means "unknown", so callers skip the growth
+-- constraint instead of treating the cover as one that never grows (which would
+-- wrongly hide it). A non-nil table means the data was understood.
+function RealisticCropRotationFrame:getCropGrowthPeriods(cropName, periodCount, firstPeriod)
+    if cropName == nil or cropName == "" then return nil end
+    if g_fruitTypeManager == nil or type(g_fruitTypeManager.getFruitTypeByName) ~= "function" then return nil end
+
+    local fruitDesc = g_fruitTypeManager:getFruitTypeByName(string.upper(tostring(cropName)))
+    if fruitDesc == nil then return nil end
+
+    local data = fruitDesc.growthDataSeasonal
+    if type(data) ~= "table" or type(data.periods) ~= "table" then return nil end
+
+    periodCount = math.max(1, tonumber(periodCount) or 12)
+    firstPeriod = tonumber(firstPeriod) or 1
+    local grow = {}
+    local anyGrowth = false
+    for i = 1, periodCount do
+        local period = ((firstPeriod - 1 + i - 1) % periodCount) + 1
+        local pd = data.periods[period]
+        local advances = false
+        if pd ~= nil and type(pd.growthMapping) == "table" then
+            for state, nextState in pairs(pd.growthMapping) do
+                if type(state) == "number" and type(nextState) == "number"
+                    and state >= 2 and nextState > state then
+                    advances = true
+                    break
+                end
+            end
+        end
+        grow[i] = advances
+        if advances then anyGrowth = true end
+    end
+
+    if not anyGrowth then return nil end
+    return grow
 end
 
 function RealisticCropRotationFrame:getFlagRuns(flags, periodCount)
@@ -2365,12 +2422,18 @@ function RealisticCropRotationFrame:formatCalendarPeriodRange(start, len, period
     return startLabel .. "-" .. endLabel
 end
 
--- Cover crop sowing period for a rotation slot, anchored to the actual
--- rotation around it: it starts once the slot's main crop has been
--- harvested, and ends one period before the NEXT slot's main crop is sown
--- (rotation is circular over 4 slots: slot 4's "next" is slot 1) so the
--- cover crop has at least one month to grow before it must be destroyed
--- to release its nitrogen residue.
+-- Cover crop sowing window for a rotation slot, fully derived from game data
+-- (no hard-coded dates). It is the intersection of three constraints:
+--   (1) the field is free only after the slot's main crop is harvested, and the
+--       cover must be destroyed before the NEXT slot's main crop is sown
+--       (rotation is circular over 4 slots: slot 4's "next" is slot 1);
+--   (2) the cover may only be sown in periods where IT is plantable
+--       (growthDataSeasonal.plantingAllowed -- differs per cover crop, so radish
+--       and the flowering catch crop get different windows from the same gap);
+--   (3) a sowing period is kept only if at least one real growth period remains
+--       before that destruction deadline, so the cover has time to grow and
+--       release its nitrogen residue. A cover sown too late in autumn would
+--       stall over winter and never release it, so it is excluded.
 function RealisticCropRotationFrame:getRotationAwareCoverSowingText(group, slotIndex, periodCount, firstPeriod)
     local coverName = group.coverPlan[slotIndex] or ""
     if coverName == "" then return "" end
@@ -2378,22 +2441,67 @@ function RealisticCropRotationFrame:getRotationAwareCoverSowingText(group, slotI
     local mainCrop = group.plan[slotIndex] or ""
     local harvestStart, harvestLen = self:getCropHarvestWindow(mainCrop, periodCount, firstPeriod)
     if harvestStart == nil then return "" end
-    local coverStart = ((harvestStart - 1 + harvestLen) % periodCount) + 1
+    -- (1) earliest the field is free: the period right after the main crop harvest.
+    local fieldFreeStart = ((harvestStart - 1 + harvestLen) % periodCount) + 1
 
-    local nextCrop = group.plan[(slotIndex % 4) + 1] or ""
+    -- The next main crop anchors the destruction deadline. The rotation cycles,
+    -- so the next crop is the next NON-EMPTY slot going forward circularly: in a
+    -- 3-crop plan, slot 3's next is slot 1 (not the empty slot 4). Without this,
+    -- the cover on the last used slot has nothing to anchor to and disappears.
+    local nextCrop = ""
+    for step = 1, 3 do
+        local idx = ((slotIndex - 1 + step) % 4) + 1
+        local c = group.plan[idx] or ""
+        if c ~= "" then nextCrop = c; break end
+    end
     local nextStart = self:getCropPlantingWindow(nextCrop, periodCount, firstPeriod)
-    if nextStart == nil or nextStart == coverStart then return "" end
+    if nextStart == nil or nextStart == fieldFreeStart then return "" end
 
-    -- Periods from coverStart up to (and including) the period right before
-    -- nextStart, going forward circularly.
-    local freeLen = ((nextStart - 1 - coverStart) % periodCount) + 1
+    -- Free window [fieldFreeStart .. nextStart-1]: from when the field frees up
+    -- to the destruction deadline (the period before the next crop is sown).
+    local freeLen = ((nextStart - 1 - fieldFreeStart) % periodCount) + 1
 
-    -- Reserve the last free period for the cover crop's one month of growth
-    -- before destruction, so it is excluded from the sowing window.
-    local coverLen = freeLen - 1
-    if coverLen <= 0 then return "" end
+    -- Constraints (2) and (3) use the cover's OWN runtime data. When a data
+    -- source is missing we degrade gracefully (apply only the constraints whose
+    -- data is available) instead of hiding the cover entirely.
+    local coverPlant = self:getCropPeriodFlags(coverName, periodCount, firstPeriod)
+    local canGrow = self:getCropGrowthPeriods(coverName, periodCount, firstPeriod)
 
-    return self:formatCalendarPeriodRange(coverStart, coverLen, periodCount)
+    -- Walk the free window and keep the contiguous run of valid sowing periods.
+    -- The start slides forward to the first valid period if the field frees up
+    -- before the cover can be sown.
+    local sowStart, sowLen = nil, 0
+    for offset = 0, freeLen - 1 do
+        local p = ((fieldFreeStart - 1 + offset) % periodCount) + 1
+
+        -- (2) plantable for this cover (skipped if no plantingAllowed data).
+        local valid = (coverPlant == nil) or (coverPlant[p] == true)
+
+        -- (3) at least one growth month before the destruction deadline: the
+        -- next period (within the free window) must let the cover grow. The cover
+        -- cannot sit dormant across winter and only grow the next spring, so the
+        -- growth period must be the one immediately after sowing. With no growth
+        -- data, fall back to simply reserving that last free period.
+        if valid then
+            local nextOffset = offset + 1
+            if nextOffset > freeLen - 1 then
+                valid = false
+            elseif canGrow ~= nil then
+                local pg = ((fieldFreeStart - 1 + nextOffset) % periodCount) + 1
+                valid = canGrow[pg] == true
+            end
+        end
+
+        if valid then
+            if sowStart == nil then sowStart = p end
+            sowLen = sowLen + 1
+        elseif sowStart ~= nil then
+            break
+        end
+    end
+
+    if sowStart == nil or sowLen <= 0 then return "" end
+    return self:formatCalendarPeriodRange(sowStart, sowLen, periodCount)
 end
 
 -- Cover crop recap, displayed on its own line. For each rotation slot with
@@ -2424,16 +2532,44 @@ function RealisticCropRotationFrame:getGroupCoverRecapText(group)
     return table.concat(parts, "   ·   ")
 end
 
-function RealisticCropRotationFrame:layoutGroupBadgeContent(cell, slotIndex, displayText, badgeX)
+function RealisticCropRotationFrame:getGroupPlanBounds(plan)
+    local firstFilled, lastFilled = nil, nil
+    for i = 1, 4 do
+        if (plan ~= nil and (plan[i] or "") or "") ~= "" then
+            firstFilled = firstFilled or i
+            lastFilled = i
+        end
+    end
+    return firstFilled, lastFilled
+end
+
+function RealisticCropRotationFrame:getGroupSlotDisplay(group, slotIndex, firstFilled, lastFilled)
+    local plan = group ~= nil and group.plan or nil
+    local cropName = plan ~= nil and (plan[slotIndex] or "") or ""
+    if cropName ~= "" then
+        return true, true, self:getCropDisplayName(cropName), cropName
+    end
+
+    if firstFilled ~= nil and lastFilled ~= nil
+        and slotIndex > firstFilled and slotIndex < lastFilled then
+        return true, false, self.i18n:getText("rcr_plan_none"), ""
+    end
+
+    return false, false, "", ""
+end
+
+function RealisticCropRotationFrame:layoutGroupBadgeContent(cell, slotIndex, displayText, badgeX, showIcon)
     if cell == nil or cell.getAttribute == nil then return end
     if GuiUtils == nil or GuiUtils.getNormalizedScreenValues == nil then return end
     if getTextWidth == nil then return end
+
+    if showIcon == nil then showIcon = true end
 
     local iconEl  = cell:getAttribute("gCropIcon" .. slotIndex)
     local labelEl = cell:getAttribute("gLabel" .. slotIndex)
     local badgeEl = cell:getAttribute("gBadge" .. slotIndex)
     local yearLabelEl = cell:getAttribute("gYearLabel" .. slotIndex)
-    if iconEl == nil or labelEl == nil then return end
+    if labelEl == nil or (showIcon and iconEl == nil) then return end
 
     local originalBadgePos = self:getElementOriginalPosition(badgeEl)
     if originalBadgePos == nil then return end
@@ -2464,13 +2600,16 @@ function RealisticCropRotationFrame:layoutGroupBadgeContent(cell, slotIndex, dis
     local textWidth = self:getTextRenderWidth(labelEl, displayText)
     if textWidth == nil then return end
 
+    local iconWidth = showIcon and iconSize[1] or 0
+    local iconTextGap = showIcon and gapSize[1] or 0
+
     local badgeWidth = math.min(
         badgeSize[1],
-        math.max(iconSize[1] + gapSize[1] + paddingSize[1], iconSize[1] + gapSize[1] + textWidth + paddingSize[1])
+        math.max(iconWidth + iconTextGap + paddingSize[1], iconWidth + iconTextGap + textWidth + paddingSize[1])
     )
-    local textBoxWidth = math.max(0, badgeWidth - iconSize[1] - gapSize[1] - paddingSize[1])
+    local textBoxWidth = math.max(0, badgeWidth - iconWidth - iconTextGap - paddingSize[1])
     local renderedTextWidth = math.min(textWidth, textBoxWidth)
-    local totalWidth = iconSize[1] + gapSize[1] + renderedTextWidth
+    local totalWidth = iconWidth + iconTextGap + renderedTextWidth
     local startX = badgePos[1] + (badgeWidth - totalWidth) * 0.5
 
     local iconYpx = RealisticCropRotationFrame.GROUP_BADGE_Y
@@ -2486,8 +2625,10 @@ function RealisticCropRotationFrame:layoutGroupBadgeContent(cell, slotIndex, dis
         yearLabelEl:setSize(badgeWidth, yearLabelEl.size[2])
     end
 
-    iconEl:setPosition(startX, iconPosY)
-    labelEl:setPosition(startX + iconSize[1] + gapSize[1], badgePos[2])
+    if showIcon then
+        iconEl:setPosition(startX, iconPosY)
+    end
+    labelEl:setPosition(startX + iconWidth + iconTextGap, badgePos[2])
     if labelEl.setSize ~= nil then
         labelEl:setSize(textBoxWidth, badgeSize[2])
     end
@@ -2523,12 +2664,12 @@ end
 function RealisticCropRotationFrame:layoutGroupRow(cell, group)
     if cell == nil or cell.getAttribute == nil or group == nil then return end
 
+    local firstFilled, lastFilled = self:getGroupPlanBounds(group.plan)
     local currentX = nil
     for i = 1, 4 do
-        local cropName = group.plan[i] or ""
-        local isFilled = cropName ~= ""
+        local showSlot, hasCrop, displayName = self:getGroupSlotDisplay(group, i, firstFilled, lastFilled)
 
-        if isFilled then
+        if showSlot then
             local badgeEl = cell:getAttribute("gBadge" .. i)
             local originalBadgePos = self:getElementOriginalPosition(badgeEl)
             currentX = currentX or (originalBadgePos ~= nil and originalBadgePos[1] or nil)
@@ -2538,15 +2679,14 @@ function RealisticCropRotationFrame:layoutGroupRow(cell, group)
                 gapBeforeArrow, gapAfterArrow = self:getGroupConnectorGaps(cell, i)
             end
 
-            local displayName = self:getCropDisplayName(cropName)
-            local badgeWidth = self:layoutGroupBadgeContent(cell, i, displayName, currentX)
+            local badgeWidth = self:layoutGroupBadgeContent(cell, i, displayName, currentX, hasCrop)
 
             if badgeWidth ~= nil and currentX ~= nil and i < 4 then
-                local nextFilled = (group.plan[i + 1] or "") ~= ""
+                local nextVisible = self:getGroupSlotDisplay(group, i + 1, firstFilled, lastFilled)
                 local arrowEl = cell:getAttribute("gArrow" .. i)
                 if arrowEl ~= nil then
-                    arrowEl:setVisible(nextFilled)
-                    if nextFilled then
+                    arrowEl:setVisible(nextVisible)
+                    if nextVisible then
                         local arrowPos = self:getElementOriginalPosition(arrowEl)
                         local arrowSize = self:getElementOriginalSize(arrowEl)
                         if arrowPos ~= nil and arrowSize ~= nil then
@@ -2590,30 +2730,37 @@ function RealisticCropRotationFrame:populateGroupCell(index, cell)
     end
 
     -- 4 crop zones: main crop badges.
+    local firstFilled, lastFilled = self:getGroupPlanBounds(group.plan)
     for i = 1, 4 do
-        local cropName = group.plan[i] or ""
-        local family   = self:getCropFamily(cropName)
-        local show     = cropName ~= ""
+        local show, hasCrop, displayName, cropName = self:getGroupSlotDisplay(group, i, firstFilled, lastFilled)
+        local family = hasCrop and self:getCropFamily(cropName) or nil
 
         local badgeEl = cell:getAttribute("gBadge" .. i)
         if badgeEl ~= nil then
             badgeEl:setVisible(show)
             if show then
-                local c = RealisticCropRotationFrame.FAMILY_RGBA[family] or {0.20, 0.20, 0.20, 0.60}
-                badgeEl.color = {c[1], c[2], c[3], 0.55}
+                if hasCrop then
+                    local c = RealisticCropRotationFrame.FAMILY_RGBA[family] or {0.20, 0.20, 0.20, 0.60}
+                    badgeEl.color = {c[1], c[2], c[3], 0.55}
+                else
+                    badgeEl:applyProfile("frGroupBadge")
+                end
             end
         end
 
         local iconEl = cell:getAttribute("gCropIcon" .. i)
         if iconEl ~= nil then
-            self:applySlotCropIcon(iconEl, cropName)
+            if hasCrop then
+                self:applySlotCropIcon(iconEl, cropName)
+            else
+                iconEl:setVisible(false)
+            end
         end
 
         local labelEl = cell:getAttribute("gLabel" .. i)
         if labelEl ~= nil then
             labelEl:setVisible(show)
             if show then
-                local displayName = self:getCropDisplayName(cropName)
                 labelEl:setText(displayName)
             end
         end

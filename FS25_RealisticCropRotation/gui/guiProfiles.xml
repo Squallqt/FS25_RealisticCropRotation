@@ -103,7 +103,7 @@
     <Profile name="frWeatherPillBg" extends="baseReference" with="anchorTopLeft">
         <size value="120px 28px"/>
         <color value="0.04 0.20 0.28 0.86"/>
-        <cornerSize value="0.20"/>
+        <cornerSize value="0.5"/>
     </Profile>
 
     <Profile name="frWeatherPillIcon" extends="baseReference" with="anchorMiddleLeft">
