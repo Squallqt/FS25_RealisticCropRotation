@@ -323,11 +323,6 @@ function RealisticCropRotationRepository:saveToXML(savegamePath)
 
     saveXMLFile(xmlFile)
     delete(xmlFile)
-
-    local historyFarmlands, historyEntries, planFarmlands, coverPlanFarmlands, activeCropFarmlands =
-        getPersistenceCounts(self.history, self.plans, self.coverPlans, self.lastKnownActiveCrop)
-    Logging.info("[RealisticCropRotation] Saved realisticCropRotation.xml historyFarmlands=%d entries=%d plans=%d coverPlans=%d activeCrops=%d path=%s",
-        historyFarmlands, historyEntries, planFarmlands, coverPlanFarmlands, activeCropFarmlands, tostring(filePath))
 end
 
 function RealisticCropRotationRepository:loadFromXML(savegamePath)
