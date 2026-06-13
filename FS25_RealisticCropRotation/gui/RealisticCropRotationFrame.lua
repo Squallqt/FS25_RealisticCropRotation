@@ -58,6 +58,13 @@ RealisticCropRotationFrame.COVER_CROP_NAMES = {
     "FLOWERINGCATCHCROP",
 }
 
+-- Minimum number of growth-possible months a cover must accumulate (between
+-- sowing and destruction) before it can release its nitrogen residue. Growth is
+-- counted only in months where the crop actually advances its state -- winter
+-- stalls do not count -- and may continue past the sowing window, since sowing
+-- (plantingAllowed) and growing (growthMapping) are independent windows.
+RealisticCropRotationFrame.COVER_MIN_GROWTH_MONTHS = 1
+
 -- Rotation score: minimum recommended return interval (in years) per family
 -- before the same family should reappear in the plan. FORAGE has no entry
 -- (no constraint). Mirrors the agronomic advice text (rcr_advice_after*).
@@ -1672,19 +1679,21 @@ function RealisticCropRotationFrame:getCropPeriodFlags(cropName, periodCount, fi
     return plant, harvest
 end
 
--- Per calendar flags index, whether an already-established cover crop can still
--- advance its growth in that period. Read from growthDataSeasonal.periods[p].
--- growthMapping (see docs/SOWING_PLANNER_AUDIT.md section 23.2): a period grows
--- the crop when some established state (index >= 2, i.e. past the just-sown
--- "invisible" state 1) maps to a higher state. Winter periods stall or regress
--- the growth, so they read false. Used to require at least one real growth
--- period before a cover is destroyed (so it can release its nitrogen residue).
+-- Per calendar flags index, whether the cover crop is actively growing toward
+-- harvest in that period -- i.e. the period is inside its growing season, not
+-- winter dormancy. Derived from the game's own data:
+--   * harvest-ready state = fruitType.minHarvestingGrowthState (radish=2, the
+--     flowering catch crop=4 in vanilla data);
+--   * a period qualifies when a plant one step below that state advances into it
+--     (growthDataSeasonal.periods[p].growthMapping[minHarvest-1] >= minHarvest).
+-- This single rule fits both shapes of cover: the radish, whose harvest-ready
+-- state IS its first visible state (so germinating 1->2 is its growth, possible
+-- only Mar-Oct), and the catch crop, which needs real vegetative growth 3->4
+-- (possible only Apr-Nov). Winter periods stall or regress that final step.
 --
--- Returns nil (not an all-false table) when no growth transition is detectable
--- for this crop -- e.g. its growthMapping is absent or stored in a form this
--- reader does not recognise. nil means "unknown", so callers skip the growth
--- constraint instead of treating the cover as one that never grows (which would
--- wrongly hide it). A non-nil table means the data was understood.
+-- Returns nil when the growth data cannot be read (no growthMapping, or no such
+-- transition anywhere) so callers treat it as "unknown" and skip the growth
+-- constraint rather than hiding the cover.
 function RealisticCropRotationFrame:getCropGrowthPeriods(cropName, periodCount, firstPeriod)
     if cropName == nil or cropName == "" then return nil end
     if g_fruitTypeManager == nil or type(g_fruitTypeManager.getFruitTypeByName) ~= "function" then return nil end
@@ -1695,6 +1704,10 @@ function RealisticCropRotationFrame:getCropGrowthPeriods(cropName, periodCount, 
     local data = fruitDesc.growthDataSeasonal
     if type(data) ~= "table" or type(data.periods) ~= "table" then return nil end
 
+    local mature = tonumber(fruitDesc.minHarvestingGrowthState)
+    if mature == nil or mature < 2 then return nil end
+    local finalStep = mature - 1
+
     periodCount = math.max(1, tonumber(periodCount) or 12)
     firstPeriod = tonumber(firstPeriod) or 1
     local grow = {}
@@ -1704,13 +1717,8 @@ function RealisticCropRotationFrame:getCropGrowthPeriods(cropName, periodCount, 
         local pd = data.periods[period]
         local advances = false
         if pd ~= nil and type(pd.growthMapping) == "table" then
-            for state, nextState in pairs(pd.growthMapping) do
-                if type(state) == "number" and type(nextState) == "number"
-                    and state >= 2 and nextState > state then
-                    advances = true
-                    break
-                end
-            end
+            local nextState = pd.growthMapping[finalStep]
+            advances = type(nextState) == "number" and nextState >= mature
         end
         grow[i] = advances
         if advances then anyGrowth = true end
@@ -2422,32 +2430,35 @@ function RealisticCropRotationFrame:formatCalendarPeriodRange(start, len, period
     return startLabel .. "-" .. endLabel
 end
 
--- Cover crop sowing window for a rotation slot, fully derived from game data
--- (no hard-coded dates). It is the intersection of three constraints:
---   (1) the field is free only after the slot's main crop is harvested, and the
---       cover must be destroyed before the NEXT slot's main crop is sown
---       (rotation is circular over 4 slots: slot 4's "next" is slot 1);
---   (2) the cover may only be sown in periods where IT is plantable
---       (growthDataSeasonal.plantingAllowed -- differs per cover crop, so radish
---       and the flowering catch crop get different windows from the same gap);
---   (3) a sowing period is kept only if at least one real growth period remains
---       before that destruction deadline, so the cover has time to grow and
---       release its nitrogen residue. A cover sown too late in autumn would
---       stall over winter and never release it, so it is excluded.
+-- Cover crop sowing window for a rotation slot, derived entirely from game data
+-- (no hard-coded dates). For each candidate month it answers one question: "if
+-- the cover is sown this month, can it still accumulate its minimum growth before
+-- the next main crop is sown (and so release its residue)?". A month qualifies
+-- when all of:
+--   (1) it is in the free window between this slot's crop being harvested and the
+--       next crop being sown. The rotation cycles, so "next" is the next NON-EMPTY
+--       slot going forward (in a 3-crop plan, slot 3's next is slot 1).
+--   (2) the cover may be sown that month (growthDataSeasonal.plantingAllowed).
+--   (3) at least COVER_MIN_GROWTH_MONTHS growth-possible months remain before the
+--       next crop is sown (growthDataSeasonal.growthMapping). Growth is counted
+--       only in months where the crop actually advances -- winter stalls do not
+--       count -- and may run past the sowing window, since sowing and growing are
+--       separate windows.
+-- Constraints whose runtime data the engine does not expose are skipped, so a
+-- cover is never hidden merely for lack of that data.
 function RealisticCropRotationFrame:getRotationAwareCoverSowingText(group, slotIndex, periodCount, firstPeriod)
     local coverName = group.coverPlan[slotIndex] or ""
     if coverName == "" then return "" end
 
+    -- (1a) The field is free only once this slot's own main crop is harvested.
     local mainCrop = group.plan[slotIndex] or ""
     local harvestStart, harvestLen = self:getCropHarvestWindow(mainCrop, periodCount, firstPeriod)
     if harvestStart == nil then return "" end
-    -- (1) earliest the field is free: the period right after the main crop harvest.
     local fieldFreeStart = ((harvestStart - 1 + harvestLen) % periodCount) + 1
 
-    -- The next main crop anchors the destruction deadline. The rotation cycles,
-    -- so the next crop is the next NON-EMPTY slot going forward circularly: in a
-    -- 3-crop plan, slot 3's next is slot 1 (not the empty slot 4). Without this,
-    -- the cover on the last used slot has nothing to anchor to and disappears.
+    -- (1b) The destruction deadline is when the next main crop is sown. The
+    -- rotation cycles, so "next" is the next non-empty slot going forward (a
+    -- 3-crop plan's slot 3 wraps to slot 1, not the empty slot 4).
     local nextCrop = ""
     for step = 1, 3 do
         local idx = ((slotIndex - 1 + step) % 4) + 1
@@ -2457,40 +2468,36 @@ function RealisticCropRotationFrame:getRotationAwareCoverSowingText(group, slotI
     local nextStart = self:getCropPlantingWindow(nextCrop, periodCount, firstPeriod)
     if nextStart == nil or nextStart == fieldFreeStart then return "" end
 
-    -- Free window [fieldFreeStart .. nextStart-1]: from when the field frees up
-    -- to the destruction deadline (the period before the next crop is sown).
+    -- Free window [fieldFreeStart .. nextStart-1], walked by offset 0..freeLen-1.
     local freeLen = ((nextStart - 1 - fieldFreeStart) % periodCount) + 1
 
-    -- Constraints (2) and (3) use the cover's OWN runtime data. When a data
-    -- source is missing we degrade gracefully (apply only the constraints whose
-    -- data is available) instead of hiding the cover entirely.
-    local coverPlant = self:getCropPeriodFlags(coverName, periodCount, firstPeriod)
-    local canGrow = self:getCropGrowthPeriods(coverName, periodCount, firstPeriod)
+    local plantable = self:getCropPeriodFlags(coverName, periodCount, firstPeriod)
+    local growsIn = self:getCropGrowthPeriods(coverName, periodCount, firstPeriod)
 
-    -- Walk the free window and keep the contiguous run of valid sowing periods.
-    -- The start slides forward to the first valid period if the field frees up
-    -- before the cover can be sown.
+    -- Growth-possible months still available from a candidate sowing month up to
+    -- the deadline. Growth happens only in growth-possible months and may continue
+    -- after the sowing window has closed. If the engine did not expose growth data
+    -- for this cover, do not restrict on it.
+    local function growthMonthsAvailable(fromOffset)
+        if growsIn == nil then
+            return RealisticCropRotationFrame.COVER_MIN_GROWTH_MONTHS
+        end
+        local count = 0
+        for o = fromOffset, freeLen - 1 do
+            local p = ((fieldFreeStart - 1 + o) % periodCount) + 1
+            if growsIn[p] then count = count + 1 end
+        end
+        return count
+    end
+
+    -- Keep the contiguous run of months that are both sowable and leave enough
+    -- growth before the deadline. The start slides forward to the first such month.
+    local needed = RealisticCropRotationFrame.COVER_MIN_GROWTH_MONTHS
     local sowStart, sowLen = nil, 0
     for offset = 0, freeLen - 1 do
         local p = ((fieldFreeStart - 1 + offset) % periodCount) + 1
-
-        -- (2) plantable for this cover (skipped if no plantingAllowed data).
-        local valid = (coverPlant == nil) or (coverPlant[p] == true)
-
-        -- (3) at least one growth month before the destruction deadline: the
-        -- next period (within the free window) must let the cover grow. The cover
-        -- cannot sit dormant across winter and only grow the next spring, so the
-        -- growth period must be the one immediately after sowing. With no growth
-        -- data, fall back to simply reserving that last free period.
-        if valid then
-            local nextOffset = offset + 1
-            if nextOffset > freeLen - 1 then
-                valid = false
-            elseif canGrow ~= nil then
-                local pg = ((fieldFreeStart - 1 + nextOffset) % periodCount) + 1
-                valid = canGrow[pg] == true
-            end
-        end
+        local valid = (plantable == nil or plantable[p] == true)
+            and growthMonthsAvailable(offset) >= needed
 
         if valid then
             if sowStart == nil then sowStart = p end
