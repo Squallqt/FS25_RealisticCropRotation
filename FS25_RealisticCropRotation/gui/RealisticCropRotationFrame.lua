@@ -578,6 +578,76 @@ function RealisticCropRotationFrame:formatAreaHa(areaHa)
     return string.format("%.1f ha", tonumber(areaHa) or 0)
 end
 
+function RealisticCropRotationFrame:getIsColorBlindMode()
+    if g_gameSettings == nil or GameSettings == nil
+        or GameSettings.SETTING == nil
+        or GameSettings.SETTING.USE_COLORBLIND_MODE == nil
+        or type(g_gameSettings.getValue) ~= "function" then
+        return false
+    end
+
+    return g_gameSettings:getValue(GameSettings.SETTING.USE_COLORBLIND_MODE) == true
+end
+
+function RealisticCropRotationFrame:copyGuiColor(color)
+    if color == nil then return nil end
+
+    local r, g, b, a
+    if type(color) == "table" and type(color.unpack) == "function" then
+        r, g, b, a = color:unpack()
+    elseif type(color) == "table" then
+        r, g, b, a = color[1], color[2], color[3], color[4]
+    end
+
+    if r == nil or g == nil or b == nil then return nil end
+    return { r, g, b, a or 1 }
+end
+
+function RealisticCropRotationFrame:getFruitTypeMapColor(fruitType)
+    if fruitType == nil then return nil end
+
+    local color = self:getIsColorBlindMode()
+        and fruitType.colorBlindMapColor
+        or fruitType.defaultMapColor
+
+    return self:copyGuiColor(color)
+end
+
+function RealisticCropRotationFrame:getGroundStateMapColor(groundStateIndex)
+    if groundStateIndex == nil or MapOverlayGenerator == nil
+        or MapOverlayGenerator.GROWTH_STATE_INDEX == nil then
+        return nil
+    end
+
+    local indices = MapOverlayGenerator.GROWTH_STATE_INDEX
+    local colorByMode = nil
+
+    if groundStateIndex == indices.CULTIVATED then
+        colorByMode = MapOverlayGenerator.FRUIT_COLOR_CULTIVATED
+    elseif groundStateIndex == indices.PLOWED then
+        colorByMode = MapOverlayGenerator.FRUIT_COLOR_PLOWED
+    elseif groundStateIndex == indices.SEEDBED then
+        colorByMode = MapOverlayGenerator.FRUIT_COLOR_SEEDBED
+    elseif groundStateIndex == indices.STUBBLE_TILLAGE then
+        colorByMode = MapOverlayGenerator.FRUIT_COLOR_STUBBLE_TILLAGE
+    end
+
+    if colorByMode == nil then return nil end
+    return self:copyGuiColor(colorByMode[self:getIsColorBlindMode()])
+end
+
+function RealisticCropRotationFrame:applyIconBackgroundColor(element, color)
+    if element == nil or color == nil then return end
+
+    local guiColor = { color[1], color[2], color[3], color[4] or 1 }
+    element.color = guiColor
+    element.colorSelected = { guiColor[1], guiColor[2], guiColor[3], guiColor[4] }
+    element.colorFocused = { guiColor[1], guiColor[2], guiColor[3], guiColor[4] }
+    element.colorHighlighted = { guiColor[1], guiColor[2], guiColor[3], guiColor[4] }
+    element.colorPressed = { guiColor[1], guiColor[2], guiColor[3], guiColor[4] }
+    element:setVisible(true)
+end
+
 function RealisticCropRotationFrame:calculateTotalAreaHa(farmlandList)
     local total = 0
     for _, entry in ipairs(farmlandList or {}) do
@@ -1101,15 +1171,28 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
     --   3. Neutral "no crop" fallback. NEVER the fallow label — fallow is an
     --      agronomic choice, not a generic "no crop here" indicator.
     local activeCropName = nil
-    if mgr ~= nil and mgr.getActiveCropName ~= nil then
+    local activeFruitTypeIndex = nil
+    if mgr ~= nil and type(mgr.getActiveCropInfo) == "function" then
+        activeCropName, activeFruitTypeIndex = mgr:getActiveCropInfo(entry.farmlandId)
+    elseif mgr ~= nil and mgr.getActiveCropName ~= nil then
         activeCropName = mgr:getActiveCropName(entry.farmlandId)
     end
 
     local iconFruitType = nil
-    if activeCropName ~= nil and g_fruitTypeManager ~= nil
-        and g_fruitTypeManager.getFruitTypeByName ~= nil then
+    if activeFruitTypeIndex ~= nil and g_fruitTypeManager ~= nil
+        and type(g_fruitTypeManager.getFruitTypeByIndex) == "function" then
+        iconFruitType = g_fruitTypeManager:getFruitTypeByIndex(activeFruitTypeIndex)
+    end
+    if iconFruitType == nil and activeCropName ~= nil and g_fruitTypeManager ~= nil
+        and type(g_fruitTypeManager.getFruitTypeByName) == "function" then
         iconFruitType = g_fruitTypeManager:getFruitTypeByName(tostring(activeCropName))
     end
+
+    local iconBgEl = cell:getAttribute("cropIconBackground")
+    if iconBgEl ~= nil then
+        iconBgEl:setVisible(false)
+    end
+    local iconBgReady = iconBgEl ~= nil
 
     local iconEl = cell:getAttribute("cropIcon")
     if iconEl ~= nil then
@@ -1128,13 +1211,23 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
         if not loaded then iconEl:setVisible(false) end
     end
 
+    local iconBgColor = nil
+    if iconFruitType ~= nil then
+        iconBgColor = self:getFruitTypeMapColor(iconFruitType)
+    elseif mgr ~= nil and type(mgr.getCurrentGroundStateIndex) == "function" then
+        iconBgColor = self:getGroundStateMapColor(mgr:getCurrentGroundStateIndex(entry.farmlandId))
+    end
+    if iconBgReady then
+        self:applyIconBackgroundColor(iconBgEl, iconBgColor)
+    end
+
     local cropLineEl = cell:getAttribute("cropLine")
     if cropLineEl ~= nil then
         if activeCropName ~= nil then
             local family = self:getCropFamily(activeCropName)
             local line   = self:getCropDisplayName(activeCropName)
             if family ~= "UNKNOWN" then
-                local badgeKey = family == "COVER" and "rcr_interculture" or "rcr_family_" .. string.lower(family)
+                local badgeKey = family == "COVER" and "rcr_cover_crop" or "rcr_family_" .. string.lower(family)
                 line = line .. "  ·  " .. self.i18n:getText(badgeKey)
             end
             cropLineEl:setText(line)
@@ -1240,7 +1333,7 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
     -- (history[1] = N-1), so the strip reads from the present on the left
     -- back into the past on the right.
     local currentCropName, currentFamily, currentFallbackText = self:getCurrentSlotData(farmlandId)
-    local currentBadgeKey = currentFamily == "COVER" and "rcr_interculture" or nil
+    local currentBadgeKey = currentFamily == "COVER" and "rcr_cover_crop" or nil
     self:updateTimelineSlot(1, currentCropName, currentFamily, currentFallbackText, currentBadgeKey)
 
     for histIdx = 1, 4 do

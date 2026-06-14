@@ -26,6 +26,7 @@
                     listItemSpacing="-20px">
 
                     <ListItem profile="fs25_subCategoryListItem" name="field">
+                        <RoundCorner profile="fs25_subCategoryListItemIcon" name="cropIconBackground" visible="false" cornerSize="0"/>
                         <Bitmap profile="fs25_subCategoryListItemIcon" name="cropIcon"  visible="false"/>
                         <Text   profile="frSidebarItemName"            name="fieldName" text="-"/>
                         <Text   profile="frSidebarItemArea"            name="fieldArea" text=""/>

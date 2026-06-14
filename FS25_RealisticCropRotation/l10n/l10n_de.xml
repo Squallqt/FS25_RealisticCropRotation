@@ -68,7 +68,7 @@
         <e k="rcr_family_vegetable"     v="Gemüse" />
         <e k="rcr_family_forage"        v="Futter" />
         <e k="rcr_family_cover"         v="Zwischenfrucht" />
-        <e k="rcr_interculture"         v="Zwischenkultur" />
+        <e k="rcr_cover_crop"           v="Zwischenkultur" />
 
         <!-- Nitrogen gauge -->
         <e k="rcr_n_none"               v="Kein Dünger" />

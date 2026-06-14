@@ -9,7 +9,7 @@
         n1       (optional) : nitrogen residue bonus (PF states) when this crop is N-1 in history. Default 0.
         n2       (optional) : nitrogen residue bonus (PF states) when this crop is N-2 in history. Default 0.
                               1 PF state = 5 kg N/ha (source: PrecisionFarming.xml amountPerState=5)
-        cover    (optional) : true = excluded from rotation history (interculture / cover crop). Default false.
+        cover    (optional) : true = excluded from rotation history (cover crop). Default false.
 
     Notes:
         - isCatchCrop=true crops (OILSEEDRADISH, FLOWERINGCATCHCROP) already receive +25 kg N from

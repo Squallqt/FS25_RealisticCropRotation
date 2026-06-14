@@ -264,7 +264,7 @@ end
 
 -- Live ground type at the field, read straight from the GROUND_TYPE density map at the same
 -- sample points the crop detection uses (getFieldFruitTypeIndexFromDensityMap). This keeps the
--- "worked" status (Cultivé/Labouré/...) as fresh as the crop status, instead of lagging behind the
+-- "worked" status (cultivated/plowed/...) as fresh as the crop status, instead of lagging behind the
 -- engine's periodic field.fieldState snapshot -- the reason the status did not always appear right
 -- after working a field. Mirrors the engine's own per-position read
 -- (WheelPhysics: getDensityAtWorldPos + FieldGroundType.getTypeByValue).
@@ -584,13 +584,19 @@ function RealisticCropRotationManager:reconcileActiveCropForFarmland(farmlandId)
     return changed
 end
 
--- Returns the native ground state label (Cultivé/Labouré/Lit de semences/...)
+-- Returns the native ground state label (cultivated/plowed/seedbed/...)
 -- when no active crop is growing on the farmland. nil when there IS a crop
 -- (caller should display the crop) or when the ground is in NONE state.
 function RealisticCropRotationManager:getCurrentGroundStateLabel(farmlandId)
     if isPureClient() then return nil end
     local field = self:getFieldByFarmlandId(farmlandId)
     return getNativeGroundStateLabel(field)
+end
+
+function RealisticCropRotationManager:getCurrentGroundStateIndex(farmlandId)
+    if isPureClient() then return nil end
+    local field = self:getFieldByFarmlandId(farmlandId)
+    return getNativeGroundStateIndex(field)
 end
 
 function RealisticCropRotationManager:getOwnedRotationFarmlandIds()
