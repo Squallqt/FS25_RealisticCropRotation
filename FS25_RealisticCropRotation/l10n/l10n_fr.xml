@@ -82,8 +82,8 @@
         <e k="rcr_lime_partial"         v="Chaux partielle" />
         <e k="rcr_lime_full"            v="Chaux correcte" />
         <e k="rcr_lime_average_pf"      v="Moyenne du pH" />
-        <e k="rcr_lime_average_value"   v="Moyenne du pH : %.2f pH" />
-        <e k="rcr_lime_target"          v="Objectif : %.2f pH" />
+        <e k="rcr_lime_average_value"   v="Moyenne du pH : %.3f pH" />
+        <e k="rcr_lime_target"          v="Objectif : %.3f pH" />
         <e k="rcr_soil_not_sampled"     v="Sol non analysé" />
 
         <!-- Agronomic advice -->

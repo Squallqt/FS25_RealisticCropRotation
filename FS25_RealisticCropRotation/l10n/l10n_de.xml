@@ -82,8 +82,8 @@
         <e k="rcr_lime_partial"         v="Teilweise Kalk" />
         <e k="rcr_lime_full"            v="Kalk korrekt" />
         <e k="rcr_lime_average_pf"      v="Durchschnitt pH" />
-        <e k="rcr_lime_average_value"   v="Durchschnitt pH: %.2f pH" />
-        <e k="rcr_lime_target"          v="Ziel: %.2f pH" />
+        <e k="rcr_lime_average_value"   v="Durchschnitt pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="Ziel: %.3f pH" />
         <e k="rcr_soil_not_sampled"     v="Boden nicht beprobt" />
 
         <!-- Agronomic advice -->
