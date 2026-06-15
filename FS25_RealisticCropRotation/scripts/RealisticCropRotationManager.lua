@@ -753,28 +753,24 @@ function RealisticCropRotationManager:samplePFValueMapAtField(valueMap, field, w
     local canMaskField = terrainDetailId ~= nil and getDensityAtWorldPos ~= nil
     local hasTarget = wantTarget == true and type(valueMap.getTargetLevelAtWorldPos) == "function"
 
-    local samples = {}
-    if type(field.posX) == "number" and type(field.posZ) == "number" then
-        table.insert(samples, { x = field.posX, z = field.posZ })
+    if type(field.posX) ~= "number" or type(field.posZ) ~= "number" then return nil end
 
-        -- A single centre point is not representative -- PF application varies
-        -- per pixel. Spread a grid sized to the field; points that fall outside
-        -- the field are dropped by the mask in the loop below. Only when we can
-        -- mask, otherwise we would average off-field values.
-        if canMaskField then
-            local areaHa = getFieldAreaHa(field)
-            if areaHa <= 0 then areaHa = 1 end
-            local halfSide = math.sqrt(areaHa * 10000) * 0.5
-            local fractions = { -0.6, -0.3, 0.3, 0.6 }
-            for _, fx in ipairs(fractions) do
-                for _, fz in ipairs(fractions) do
-                    table.insert(samples, { x = field.posX + fx * halfSide, z = field.posZ + fz * halfSide })
-                end
-            end
+    -- Dense grid over the WHOLE field bounding box -- the exact same 11x11 grid as
+    -- the yield scan (scanFieldYield), so the gauge averages the whole
+    -- field, never a centre cluster. Off-field points are dropped by the mask in
+    -- the loop below.
+    local areaHa = getFieldAreaHa(field)
+    if areaHa <= 0 then areaHa = 1 end
+    local side = math.sqrt(areaHa * 10000)
+    local steps = 50 -- same full-field resolution as the yield scan (menu only)
+    local step = (steps > 1) and (side / (steps - 1)) or 0
+    local startX, startZ = field.posX - side * 0.5, field.posZ - side * 0.5
+    local samples = {}
+    for i = 0, steps - 1 do
+        for j = 0, steps - 1 do
+            samples[#samples + 1] = { x = startX + i * step, z = startZ + j * step }
         end
     end
-    collectFieldDimensionSamples(field, samples)
-    if #samples == 0 then return nil end
 
     local actualSum, targetSum, count = 0, 0, 0
     local ok = pcall(function()
@@ -1050,41 +1046,44 @@ end
 -- stage label and the tool recommendation, and Precision Farming feeds the
 -- weedState, so the card never drifts from what the player sees on foot.
 
--- Returns crop info for a farmland in a single density-map sample:
---   { growthStageText, weedActionText }              -- crop present, not harvestable
---   { growthStageText, weedActionText, totalLiters } -- crop present and harvestable
---   nil                                              -- no crop / not resolvable
--- growthStageText is the composed display string for the growth tier (with
--- optional "(X/Y) ·" prefix for active tiers); weedActionText is the composed
--- weed action label "(<stage>) · <tool>". Either may be nil when nothing
--- displayable applies for that field.
--- Real harvested yield (litres) for a farmland, read straight from PF's per-
--- farmland statistics (FarmlandStatisticCounter.yield, accumulated by the combine
--- at harvest). This is the actual recorded harvest -- not an estimate. total=false
--- reads the current-period counter, true the all-time total. Returns nil when PF
--- is absent or no statistic exists for the farmland.
-function RealisticCropRotationManager:getHarvestedYield(farmlandId, total)
-    local pf = self:getPrecisionFarming()
-    if pf == nil then return nil end
-    local fs = pf.farmlandStatistics
-    if fs == nil or type(fs.statisticsByFarmland) ~= "table" then return nil end
-    local stat = fs.statisticsByFarmland[tonumber(farmlandId)]
-    if stat == nil or type(stat.getValue) ~= "function" then return nil end
-    local ok, v = pcall(stat.getValue, stat, total == true, "yield")
-    return (ok and type(v) == "number") and v or nil
+-- Litres -> t/ha using the crop's fill-type density, exactly as PF computes
+-- harvest weight (FarmlandStatistics:getFillLevelWeight, FarmlandStatistics.lua:173):
+-- tonnes = litres * massPerLiter / FillTypeManager.MASS_SCALE, then / area. No
+-- invented constant -- massPerLiter is the fill type's own value.
+local function litersToTHa(liters, fillType, areaHa)
+    if liters == nil or liters <= 0 or areaHa == nil or areaHa <= 0 then return nil end
+    local mpl = type(fillType) == "table" and tonumber(fillType.massPerLiter) or nil
+    if mpl == nil or FillTypeManager == nil or FillTypeManager.MASS_SCALE == nil then return nil end
+    return (liters * (mpl / FillTypeManager.MASS_SCALE)) / areaHa
 end
 
--- PF-aware expected-yield factor (PF's "Rendement attendu %"): the product of the
--- nitrogen and pH yield factors PF itself applies. Each map turns the internal
--- (target - actual) gap into a 0..1 factor via getYieldFactorByLevelDifference --
--- the exact model behind PF's on-foot box. Computed synthetically for any field
--- (no on-foot visit). Validated on field 95: N 0.87 x pH 0.90 = 0.78, matching
--- PF's "79 %". Returns a factor in (0,1], or 1.0 when PF is absent.
-function RealisticCropRotationManager:getPFYieldFactor(field)
+-- Full-field POTENTIAL yield scan (menu only -- perf is irrelevant off the gameplay
+-- loop; a sample-count safeguard bounds it). Averages over the WHOLE field the
+-- optimal yield the soil can give: at each on-field, same-crop grid point, the
+-- engine's own getHarvestScaleMultiplier (fertiliser & lime set optimal, since
+-- under PF those come from the soil maps) x literPerSqm x the per-state yieldScale
+-- x the soil's yieldPotential. This equals PF's "Potentiel de rendement" -- no
+-- invented coefficient, no stripped PF formula. Returns potential litres, or nil.
+function RealisticCropRotationManager:scanFieldYield(field, fruitTypeIndex, fruitType, literPerSqm)
+    if field == nil or fruitType == nil or FieldState == nil then return nil end
+    if type(field.posX) ~= "number" or type(field.posZ) ~= "number" then return nil end
+    if type(literPerSqm) ~= "number" or literPerSqm <= 0 then return nil end
+
+    local fs = FieldState.new()
+    if type(fs.update) ~= "function" or type(fs.getHarvestScaleMultiplier) ~= "function" then return nil end
+
+    local terrainDetailId = g_currentMission ~= nil and g_currentMission.terrainDetailId or nil
+    local canMask = terrainDetailId ~= nil and getDensityAtWorldPos ~= nil
+
+    local areaHa = getFieldAreaHa(field)
+    if areaHa <= 0 then areaHa = 1 end
+    local side = math.sqrt(areaHa * 10000)
+    local steps = 50 -- safeguard: at most 50x50 sampled points, regardless of field size
+    local step = (steps > 1) and (side / (steps - 1)) or 0
+    local startX, startZ = field.posX - side * 0.5, field.posZ - side * 0.5
+
     local pf = self:getPrecisionFarming()
-    if pf == nil or field == nil then return 1.0 end
-    local x, z = field.posX, field.posZ
-    if type(x) ~= "number" or type(z) ~= "number" then return 1.0 end
+    local soilMap = pf ~= nil and pf.soilMap or nil
 
     local function num(obj, name, ...)
         if obj == nil or type(obj[name]) ~= "function" then return nil end
@@ -1092,31 +1091,71 @@ function RealisticCropRotationManager:getPFYieldFactor(field)
         return (ok and type(v) == "number") and v or nil
     end
 
-    local factor = 1.0
+    local yieldScales = type(fruitType.yieldScales) == "table" and fruitType.yieldScales or nil
+    local sum, count = 0, 0
 
-    -- Nitrogen: (target - actual) internal gap -> yield factor.
-    local nMap = pf.nitrogenMap
-    local nActual = num(nMap, "getLevelAtWorldPos", x, z)
-    local nTarget = num(nMap, "getTargetLevelAtWorldPos", x, z)
-    if nActual ~= nil and nTarget ~= nil then
-        local f = num(nMap, "getYieldFactorByLevelDifference", nTarget - nActual)
-        if f ~= nil and f > 0 then factor = factor * f end
-    end
+    for i = 0, steps - 1 do
+        for j = 0, steps - 1 do
+            local x, z = startX + i * step, startZ + j * step
+            if not canMask or getDensityAtWorldPos(terrainDetailId, x, 0, z) ~= 0 then
+                fs:update(x, z)
+                if fs.isValid and normalizeFruitTypeIndex(fs.fruitTypeIndex) == fruitTypeIndex then
+                    -- Optimal multiplier: fertiliser & lime set to 1 (under PF they are
+                    -- driven by the soil maps, not the vanilla levels); other factors
+                    -- (plow / weed / mulch / roller / bee) as on the field.
+                    local mult
+                    local fok, _spray, plow, _lime, weed, stubble, roller, bee =
+                        pcall(fs.getHarvestScaleFactors, fs)
+                    if fok and g_currentMission ~= nil
+                            and type(g_currentMission.getHarvestScaleMultiplier) == "function" then
+                        local ok, m = pcall(g_currentMission.getHarvestScaleMultiplier, g_currentMission,
+                            fruitTypeIndex, 1, plow, 1, weed, stubble, roller, bee)
+                        if ok then mult = tonumber(m) end
+                    end
+                    if mult == nil then
+                        local ok, m = pcall(fs.getHarvestScaleMultiplier, fs)
+                        mult = ok and tonumber(m) or nil
+                    end
+                    if mult ~= nil and mult >= 0 then
+                        local gs = tonumber(fs.growthState or fs.lastGrowthState) or 0
+                        local yieldScale = (yieldScales ~= nil and type(yieldScales[gs]) == "number")
+                            and yieldScales[gs] or 1
 
-    -- pH: (optimal - actual) internal gap. The optimal is soil-type based and is
-    -- an internal state when > 9 (getOptimalPHValueForSoilTypeIndex).
-    local phMap, soilMap = pf.pHMap, pf.soilMap
-    local phActual = num(phMap, "getLevelAtWorldPos", x, z)
-    local soilType = num(soilMap, "getTypeIndexAtWorldPos", x, z)
-    if phActual ~= nil and soilType ~= nil then
-        local phTarget = num(phMap, "getOptimalPHValueForSoilTypeIndex", soilType)
-        if phTarget ~= nil and phTarget > 9 then
-            local f = num(phMap, "getYieldFactorByLevelDifference", phTarget - phActual)
-            if f ~= nil and f > 0 then factor = factor * f end
+                        -- Soil yield potential (PF "Potentiel" %): the soil type caps the
+                        -- crop max (e.g. sandy loam = 0.80).
+                        local soilPot = 1.0
+                        if soilMap ~= nil and type(soilMap.getYieldPotentialBySoilTypeIndex) == "function" then
+                            local st = num(soilMap, "getTypeIndexAtWorldPos", x, z)
+                            if st ~= nil then
+                                local ok, sp = pcall(soilMap.getYieldPotentialBySoilTypeIndex, soilMap, st)
+                                if ok and type(sp) == "number" and sp > 0 then soilPot = sp end
+                            end
+                        end
+
+                        sum = sum + literPerSqm * yieldScale * mult * soilPot
+                        count = count + 1
+                    end
+                end
+            end
         end
     end
 
-    return factor
+    if count == 0 then return nil end
+    return (sum / count) * areaHa * 10000
+end
+
+-- Real harvested yield in LITRES for a farmland (FarmlandStatisticCounter.yield,
+-- period counter, accumulated since the last PF reset). The actual recorded
+-- harvest -- shown once the field is bare. Returns nil when PF/stat is absent.
+function RealisticCropRotationManager:getHarvestedYield(farmlandId)
+    local pf = self:getPrecisionFarming()
+    if pf == nil then return nil end
+    local stats = pf.farmlandStatistics
+    if stats == nil or type(stats.statisticsByFarmland) ~= "table" then return nil end
+    local stat = stats.statisticsByFarmland[tonumber(farmlandId)]
+    if stat == nil or type(stat.getValue) ~= "function" then return nil end
+    local ok, v = pcall(stat.getValue, stat, false, "yield")
+    return (ok and type(v) == "number" and v > 0) and v or nil
 end
 
 function RealisticCropRotationManager:getFieldCropInfo(farmlandId)
@@ -1185,43 +1224,14 @@ function RealisticCropRotationManager:getFieldCropInfo(farmlandId)
     end
     if literPerSqm <= 0 then return info end
 
-    -- Per-growth-state yield scale (FruitTypeDesc.lua:296, XML #yieldScale).
-    -- This is why the same crop yields different litres at green-plant vs full
-    -- maturity. Defaults to 1 when the state defines no scale.
-    local yieldScale = 1
-    if type(fruitType.yieldScales) == "table"
-        and type(fruitType.yieldScales[growthState]) == "number" then
-        yieldScale = fruitType.yieldScales[growthState]
-    end
-
-    -- Yield. Under PF: expected % before harvest (PF "Rendement attendu" = the
-    -- N x pH adequacy, computed synthetically -- no on-foot visit), and the REAL
-    -- harvested litres read from PF's per-farmland statistics once harvested. No
-    -- absolute-litre estimate is invented. Without PF, FieldState's (correct,
-    -- vanilla) multiplier gives an absolute litre estimate.
-    local pf = self:getPrecisionFarming()
-    if pf ~= nil then
-        local f = self:getPFYieldFactor(field)
-        info.expectedPct = math.floor((f or 1) * 100 + 0.5)
-        info.harvestedLiters = self:getHarvestedYield(numericFarmlandId, false)
-
-        -- [TEMP yield validation — REMOVE AFTER CHECK] confirm the real-yield read
-        -- vs your harvests, and whether the period counter resets or accumulates.
-        if Logging ~= nil and Logging.info ~= nil then
-            Logging.info("[RCR][yield-probe] fid=%s expected=%d%% harvestedPeriod=%s harvestedTotal=%s",
-                tostring(numericFarmlandId), info.expectedPct,
-                tostring(info.harvestedLiters), tostring(self:getHarvestedYield(numericFarmlandId, true)))
-        end
-    else
-        local base = literPerSqm * areaHa * 10000 * yieldScale
-        local mult
-        if type(fieldState.getHarvestScaleMultiplier) == "function" then
-            local ok, m = pcall(fieldState.getHarvestScaleMultiplier, fieldState)
-            mult = ok and tonumber(m) or nil
-        end
-        if mult ~= nil and mult >= 0 and base > 0 then
-            info.totalLiters = base * mult
-        end
+    -- Potential yield in t/ha = PF's "Potentiel de rendement": the optimal yield
+    -- the soil can give, averaged over the whole field (scanFieldYield). fillType
+    -- resolves the litres -> tonnes density. Exact, no invented coefficient.
+    local fillType = (useForage and type(fruitType.windrowFillType) == "table")
+        and fruitType.windrowFillType or fruitType.fillType
+    local potentialLiters = self:scanFieldYield(field, fruitTypeIndex, fruitType, literPerSqm)
+    if potentialLiters ~= nil then
+        info.potentialTHa = litersToTHa(potentialLiters, fillType, areaHa)
     end
 
     return info

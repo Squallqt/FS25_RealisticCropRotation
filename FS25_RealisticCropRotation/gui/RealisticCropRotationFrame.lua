@@ -1565,22 +1565,22 @@ function RealisticCropRotationFrame:updateYieldCard(farmlandId)
     local hasStage = info ~= nil and info.growthStageText ~= nil
     local hasWeed = info ~= nil and info.weedActionText ~= nil
 
-    -- Yield KPI: real harvested litres once the field is harvested (PF stats),
-    -- otherwise the expected yield % (PF forecast), otherwise the vanilla litre
-    -- estimate. % before harvest, real litres after -- no invented absolute yield.
+    -- Yield KPI: a standing crop shows the POTENTIAL yield in t/ha (PF's "Potentiel
+    -- de rendement", full-field, exact); once harvested (no standing crop) it shows
+    -- the REAL harvested LITRES from PF's statistics.
+    local function fmtTHa(v) return string.format("%.1f t/ha", v) end
     local function fmtL(v)
         if g_i18n ~= nil and g_i18n.formatVolume ~= nil then return g_i18n:formatVolume(v, 0) end
         return string.format("%d L", math.floor(v + 0.5))
     end
     local hasYield = false
-    if info ~= nil then
-        local harvested = tonumber(info.harvestedLiters)
+    if info ~= nil and info.potentialTHa ~= nil then
+        totalText, hasYield = fmtTHa(tonumber(info.potentialTHa) or 0), true
+    else
+        local harvested = (mgr ~= nil and mgr.getHarvestedYield ~= nil)
+            and mgr:getHarvestedYield(farmlandId) or nil
         if harvested ~= nil and harvested > 0 then
             totalText, hasYield = fmtL(harvested), true
-        elseif info.expectedPct ~= nil then
-            totalText, hasYield = string.format("~%d %%", tonumber(info.expectedPct) or 0), true
-        elseif info.totalLiters ~= nil then
-            totalText, hasYield = fmtL(tonumber(info.totalLiters) or 0), true
         end
     end
 

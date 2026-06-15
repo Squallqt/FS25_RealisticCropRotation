@@ -96,7 +96,7 @@
         <e k="rcr_advice_no_current_crop" v="Aucune culture principale actuelle : conseil disponible quand une culture est détectée." />
 
         <!-- Yield card -->
-        <e k="rcr_yield_harvest"        v="Récolte Totale" />
+        <e k="rcr_yield_harvest"        v="Rendement" />
         <e k="rcr_yield_stage"          v="Croissance" />
 
         <!-- Yield card — weed column header (singular, matching base game HUD) -->
