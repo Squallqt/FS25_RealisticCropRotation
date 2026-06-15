@@ -636,6 +636,29 @@ function RealisticCropRotationFrame:getGroundStateMapColor(groundStateIndex)
     return self:copyGuiColor(colorByMode[self:getIsColorBlindMode()])
 end
 
+function RealisticCropRotationFrame:getSoilStateMapColor(soilStateIndex)
+    if soilStateIndex == nil or MapOverlayGenerator == nil
+        or MapOverlayGenerator.SOIL_STATE_INDEX == nil then
+        return nil
+    end
+
+    local indices = MapOverlayGenerator.SOIL_STATE_INDEX
+    local colorByMode = nil
+
+    if soilStateIndex == indices.NEEDS_PLOWING then
+        colorByMode = MapOverlayGenerator.FRUIT_COLOR_NEEDS_PLOWING
+    elseif soilStateIndex == indices.NEEDS_ROLLING then
+        colorByMode = MapOverlayGenerator.FRUIT_COLOR_NEEDS_ROLLING
+    elseif soilStateIndex == indices.MULCHED then
+        colorByMode = MapOverlayGenerator.FRUIT_COLOR_MULCHED
+    elseif soilStateIndex == indices.WATERED then
+        colorByMode = MapOverlayGenerator.FRUIT_COLOR_WATERED
+    end
+
+    if colorByMode == nil then return nil end
+    return self:copyGuiColor(colorByMode[self:getIsColorBlindMode()])
+end
+
 function RealisticCropRotationFrame:applyIconBackgroundColor(element, color)
     if element == nil or color == nil then return end
 
@@ -1212,8 +1235,17 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
     end
 
     local iconBgColor = nil
+    local soilStateIndex = nil
+    local soilStateIndexResolved = false
+    if activeCropName == nil and mgr ~= nil
+        and type(mgr.getCurrentSoilStateIndex) == "function" then
+        soilStateIndexResolved = true
+        soilStateIndex = mgr:getCurrentSoilStateIndex(entry.farmlandId)
+    end
     if iconFruitType ~= nil then
         iconBgColor = self:getFruitTypeMapColor(iconFruitType)
+    elseif soilStateIndex ~= nil then
+        iconBgColor = self:getSoilStateMapColor(soilStateIndex)
     elseif mgr ~= nil and type(mgr.getCurrentGroundStateIndex) == "function" then
         iconBgColor = self:getGroundStateMapColor(mgr:getCurrentGroundStateIndex(entry.farmlandId))
     end
@@ -1233,8 +1265,12 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
             cropLineEl:setText(line)
         else
             local groundLabel = nil
+            if mgr ~= nil and type(mgr.getCurrentSoilStateLabel) == "function"
+                and (soilStateIndex ~= nil or not soilStateIndexResolved) then
+                groundLabel = mgr:getCurrentSoilStateLabel(entry.farmlandId, soilStateIndex)
+            end
             if mgr ~= nil and type(mgr.getCurrentGroundStateLabel) == "function" then
-                groundLabel = mgr:getCurrentGroundStateLabel(entry.farmlandId)
+                groundLabel = groundLabel or mgr:getCurrentGroundStateLabel(entry.farmlandId)
             end
             if groundLabel ~= nil and groundLabel ~= "" then
                 cropLineEl:setText(groundLabel)
@@ -1294,8 +1330,11 @@ function RealisticCropRotationFrame:getCurrentSlotData(farmlandId)
     end
 
     local groundLabel = nil
+    if mgr ~= nil and type(mgr.getCurrentSoilStateLabel) == "function" then
+        groundLabel = mgr:getCurrentSoilStateLabel(farmlandId)
+    end
     if mgr ~= nil and type(mgr.getCurrentGroundStateLabel) == "function" then
-        groundLabel = mgr:getCurrentGroundStateLabel(farmlandId)
+        groundLabel = groundLabel or mgr:getCurrentGroundStateLabel(farmlandId)
     end
     if groundLabel ~= nil and groundLabel ~= "" then
         return nil, "UNKNOWN", groundLabel

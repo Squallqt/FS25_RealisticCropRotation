@@ -262,6 +262,17 @@ local function getActiveCropNameFromField(field)
     return tostring(fruitType.name), fruitTypeIndex, growthState
 end
 
+local function sampleFieldStateAtField(field)
+    if field == nil or FieldState == nil then return nil end
+    if type(field.posX) ~= "number" or type(field.posZ) ~= "number" then return nil end
+
+    local fieldState = FieldState.new()
+    if type(fieldState.update) ~= "function" then return nil end
+    fieldState:update(field.posX, field.posZ)
+    if not fieldState.isValid then return nil end
+    return fieldState
+end
+
 -- Live ground type at the field, read straight from the GROUND_TYPE density map at the same
 -- sample points the crop detection uses (getFieldFruitTypeIndexFromDensityMap). This keeps the
 -- "worked" status (cultivated/plowed/...) as fresh as the crop status, instead of lagging behind the
@@ -334,6 +345,92 @@ local function getNativeGroundStateIndex(field)
     return nil
 end
 
+local function getRoundedFieldStateLevel(fieldState, name)
+    return math.floor((tonumber(fieldState ~= nil and fieldState[name]) or 0) + 0.5)
+end
+
+local function getNativeSoilStateIndexFromFieldState(fieldState)
+    if fieldState == nil or MapOverlayGenerator == nil
+        or MapOverlayGenerator.SOIL_STATE_INDEX == nil then
+        return nil
+    end
+
+    local indices = MapOverlayGenerator.SOIL_STATE_INDEX
+    local gameplay = Platform ~= nil and Platform.gameplay or nil
+    local missionInfo = g_currentMission ~= nil and g_currentMission.missionInfo or nil
+
+    if indices.WATERED ~= nil and getRoundedFieldStateLevel(fieldState, "waterLevel") == 1 then
+        return indices.WATERED
+    end
+    if gameplay ~= nil and gameplay.useStubbleShred == true and indices.MULCHED ~= nil
+        and getRoundedFieldStateLevel(fieldState, "stubbleShredLevel") == 1 then
+        return indices.MULCHED
+    end
+    if gameplay ~= nil and gameplay.useRolling == true and indices.NEEDS_ROLLING ~= nil
+        and getRoundedFieldStateLevel(fieldState, "rollerLevel") == 1 then
+        return indices.NEEDS_ROLLING
+    end
+    if gameplay ~= nil and gameplay.usePlowCounter == true
+        and missionInfo ~= nil and missionInfo.plowingRequiredEnabled == true
+        and indices.NEEDS_PLOWING ~= nil
+        and getRoundedFieldStateLevel(fieldState, "plowLevel") == 0 then
+        return indices.NEEDS_PLOWING
+    end
+
+    return nil
+end
+
+local function getNativeSoilStatePriority()
+    if MapOverlayGenerator == nil or MapOverlayGenerator.SOIL_STATE_INDEX == nil then return {} end
+    local indices = MapOverlayGenerator.SOIL_STATE_INDEX
+    local result = {}
+    if indices.WATERED ~= nil then table.insert(result, indices.WATERED) end
+    if indices.MULCHED ~= nil then table.insert(result, indices.MULCHED) end
+    if indices.NEEDS_ROLLING ~= nil then table.insert(result, indices.NEEDS_ROLLING) end
+    if indices.NEEDS_PLOWING ~= nil then table.insert(result, indices.NEEDS_PLOWING) end
+    return result
+end
+
+local function getNativeSoilStateIndex(field)
+    if field == nil then return nil end
+
+    local samples = {}
+    if type(field.posX) == "number" and type(field.posZ) == "number" then
+        table.insert(samples, { x = field.posX, z = field.posZ })
+    end
+    collectFieldDimensionSamples(field, samples)
+
+    local counts = {}
+    if #samples > 0 and FieldState ~= nil then
+        for _, sample in ipairs(samples) do
+            local fieldState = FieldState.new()
+            if type(fieldState.update) == "function" then
+                fieldState:update(sample.x, sample.z)
+                if fieldState.isValid then
+                    local index = getNativeSoilStateIndexFromFieldState(fieldState)
+                    if index ~= nil then
+                        counts[index] = (counts[index] or 0) + 1
+                    end
+                end
+            end
+        end
+    end
+
+    local best, bestCount = nil, 0
+    for _, index in ipairs(getNativeSoilStatePriority()) do
+        local count = counts[index] or 0
+        if count > bestCount then
+            best = index
+            bestCount = count
+        end
+    end
+    if best ~= nil then return best end
+
+    local fieldState = sampleFieldStateAtField(field)
+        or (field ~= nil and field.fieldState or nil)
+    return getNativeSoilStateIndexFromFieldState(fieldState)
+end
+
 -- Resolves the current ground state of a field to a native GIANTS l10n key.
 -- Mapping is between FieldGroundType.<NAME> and
 -- MapOverlayGenerator.L10N_SYMBOL.GROWTH_MAP_<NAME>, both globally exposed at
@@ -360,6 +457,36 @@ local function getNativeGroundStateLabel(field)
         key = symbols.GROWTH_MAP_STUBBLE_TILLAGE
     elseif index == indices.SEEDBED then
         key = symbols.GROWTH_MAP_SEEDBED
+    end
+
+    if key == nil then return nil end
+    local label = g_i18n:getText(key)
+    if label == nil or label == "" or label == key then return nil end
+    return label
+end
+
+local function getNativeSoilStateLabel(field, soilStateIndex)
+    if MapOverlayGenerator == nil or MapOverlayGenerator.L10N_SYMBOL == nil
+        or MapOverlayGenerator.SOIL_STATE_INDEX == nil
+        or g_i18n == nil or type(g_i18n.getText) ~= "function" then
+        return nil
+    end
+
+    local index = soilStateIndex or getNativeSoilStateIndex(field)
+    if index == nil then return nil end
+
+    local symbols = MapOverlayGenerator.L10N_SYMBOL
+    local indices = MapOverlayGenerator.SOIL_STATE_INDEX
+    local key = nil
+
+    if index == indices.NEEDS_PLOWING then
+        key = symbols.SOIL_MAP_NEED_PLOWING
+    elseif index == indices.NEEDS_ROLLING then
+        key = symbols.SOIL_MAP_NEED_ROLLING
+    elseif index == indices.MULCHED then
+        key = symbols.SOIL_MAP_MULCHED
+    elseif index == indices.WATERED then
+        key = symbols.SOIL_MAP_WATERED
     end
 
     if key == nil then return nil end
@@ -599,6 +726,20 @@ function RealisticCropRotationManager:getCurrentGroundStateIndex(farmlandId)
     return getNativeGroundStateIndex(field)
 end
 
+function RealisticCropRotationManager:getCurrentSoilStateLabel(farmlandId, soilStateIndex)
+    if soilStateIndex ~= nil then
+        return getNativeSoilStateLabel(nil, soilStateIndex)
+    end
+
+    local field = self:getFieldByFarmlandId(farmlandId)
+    return getNativeSoilStateLabel(field, soilStateIndex)
+end
+
+function RealisticCropRotationManager:getCurrentSoilStateIndex(farmlandId)
+    local field = self:getFieldByFarmlandId(farmlandId)
+    return getNativeSoilStateIndex(field)
+end
+
 function RealisticCropRotationManager:getOwnedRotationFarmlandIds()
     local result = {}
     if g_farmlandManager == nil or type(g_farmlandManager.getFarmlands) ~= "function" then return result end
@@ -676,14 +817,7 @@ end
 -- a populated FieldState or nil.
 function RealisticCropRotationManager:sampleFieldState(farmlandId)
     local field = self:getFieldByFarmlandId(farmlandId)
-    if field == nil or FieldState == nil then return nil end
-    if type(field.posX) ~= "number" or type(field.posZ) ~= "number" then return nil end
-
-    local fieldState = FieldState.new()
-    if type(fieldState.update) ~= "function" then return nil end
-    fieldState:update(field.posX, field.posZ)
-    if not fieldState.isValid then return nil end
-    return fieldState
+    return sampleFieldStateAtField(field)
 end
 
 function RealisticCropRotationManager:getCurrentLimeLevel(farmlandId)
