@@ -45,7 +45,7 @@
         <e k="rcr_section_history"      v="Anbaugeschichte" />
         <e k="rcr_section_nitrogen"     v="Stickstoffstatus" />
         <e k="rcr_section_advice"       v="Agronomische Empfehlung" />
-        <e k="rcr_section_yield"        v="Ertrag, Unkraut und Wachstum" />
+        <e k="rcr_section_yield"        v="Aktionen, Unkraut und Wachstum" />
         <e k="rcr_section_lime"         v="Kalk-/pH-Status" />
         <e k="rcr_section_plan"         v="Rotationsplan" />
         <e k="rcr_section_score"        v="Rotationsqualität" />
@@ -95,9 +95,9 @@
         <e k="rcr_advice_afterForage"    v="Nach Futter: Getreide passt gut, mit Struktur und verfügbaren Rückständen." />
         <e k="rcr_advice_no_current_crop" v="Keine aktuelle Hauptkultur: Empfehlung verfügbar, sobald eine Kultur erkannt wird." />
 
-        <!-- Yield card -->
-        <e k="rcr_yield_expected"       v="Erwarteter Ertrag" />
-        <e k="rcr_yield_actual"         v="Tatsächlicher Ertrag" />
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Erforderliche Aktionen" />
+        <e k="rcr_action_none"          v="Keine Aktion" />
         <e k="rcr_yield_stage"          v="Wachstum" />
 
         <!-- Yield card — weed column header (singular, matching base game HUD) -->

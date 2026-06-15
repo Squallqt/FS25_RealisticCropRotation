@@ -45,7 +45,7 @@
         <e k="rcr_section_history"      v="Crop History" />
         <e k="rcr_section_nitrogen"     v="Nitrogen Status" />
         <e k="rcr_section_advice"       v="Agronomic Advice" />
-        <e k="rcr_section_yield"        v="Yield, weeds and growth" />
+        <e k="rcr_section_yield"        v="Actions, weeds and growth" />
         <e k="rcr_section_lime"         v="Lime / pH Status" />
         <e k="rcr_section_plan"         v="Rotation Plan" />
         <e k="rcr_section_score"        v="Rotation Quality" />
@@ -95,9 +95,9 @@
         <e k="rcr_advice_afterForage"    v="After Forage: a Cereal fits well, with structure and residues available." />
         <e k="rcr_advice_no_current_crop" v="No current main crop: advice available when a crop is detected." />
 
-        <!-- Yield card -->
-        <e k="rcr_yield_expected"       v="Expected yield" />
-        <e k="rcr_yield_actual"         v="Actual yield" />
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Required actions" />
+        <e k="rcr_action_none"          v="No action" />
         <e k="rcr_yield_stage"          v="Growth Stage" />
 
         <!-- Yield card — weed column header (singular, matching base game HUD) -->

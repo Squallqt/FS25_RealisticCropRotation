@@ -1234,20 +1234,22 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
         if not loaded then iconEl:setVisible(false) end
     end
 
-    local iconBgColor = nil
-    local soilStateIndex = nil
-    local soilStateIndexResolved = false
+    -- No-crop fields: resolve the single most-important field status (tillage +
+    -- soil condition combined by importance) once, reused for the icon colour and
+    -- the text line. Works on MP clients (live density read; no isPureClient guard).
+    local statusLabel, statusKind, statusIndex = nil, nil, nil
     if activeCropName == nil and mgr ~= nil
-        and type(mgr.getCurrentSoilStateIndex) == "function" then
-        soilStateIndexResolved = true
-        soilStateIndex = mgr:getCurrentSoilStateIndex(entry.farmlandId)
+        and type(mgr.getCurrentFieldStatus) == "function" then
+        statusLabel, statusKind, statusIndex = mgr:getCurrentFieldStatus(entry.farmlandId)
     end
+
+    local iconBgColor = nil
     if iconFruitType ~= nil then
         iconBgColor = self:getFruitTypeMapColor(iconFruitType)
-    elseif soilStateIndex ~= nil then
-        iconBgColor = self:getSoilStateMapColor(soilStateIndex)
-    elseif mgr ~= nil and type(mgr.getCurrentGroundStateIndex) == "function" then
-        iconBgColor = self:getGroundStateMapColor(mgr:getCurrentGroundStateIndex(entry.farmlandId))
+    elseif statusKind == "soil" then
+        iconBgColor = self:getSoilStateMapColor(statusIndex)
+    elseif statusKind == "ground" then
+        iconBgColor = self:getGroundStateMapColor(statusIndex)
     end
     if iconBgReady then
         self:applyIconBackgroundColor(iconBgEl, iconBgColor)
@@ -1263,20 +1265,10 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
                 line = line .. "  ·  " .. self.i18n:getText(badgeKey)
             end
             cropLineEl:setText(line)
+        elseif statusLabel ~= nil and statusLabel ~= "" then
+            cropLineEl:setText(statusLabel)
         else
-            local groundLabel = nil
-            if mgr ~= nil and type(mgr.getCurrentSoilStateLabel) == "function"
-                and (soilStateIndex ~= nil or not soilStateIndexResolved) then
-                groundLabel = mgr:getCurrentSoilStateLabel(entry.farmlandId, soilStateIndex)
-            end
-            if mgr ~= nil and type(mgr.getCurrentGroundStateLabel) == "function" then
-                groundLabel = groundLabel or mgr:getCurrentGroundStateLabel(entry.farmlandId)
-            end
-            if groundLabel ~= nil and groundLabel ~= "" then
-                cropLineEl:setText(groundLabel)
-            else
-                cropLineEl:setText(self.i18n:getText("rcr_sidebar_no_active_crop"))
-            end
+            cropLineEl:setText(self.i18n:getText("rcr_sidebar_no_active_crop"))
         end
     end
 end
@@ -1329,15 +1321,12 @@ function RealisticCropRotationFrame:getCurrentSlotData(farmlandId)
         return activeCropName, self:getCropFamily(activeCropName), nil
     end
 
-    local groundLabel = nil
-    if mgr ~= nil and type(mgr.getCurrentSoilStateLabel) == "function" then
-        groundLabel = mgr:getCurrentSoilStateLabel(farmlandId)
+    local statusLabel = nil
+    if mgr ~= nil and type(mgr.getCurrentFieldStatus) == "function" then
+        statusLabel = mgr:getCurrentFieldStatus(farmlandId)
     end
-    if mgr ~= nil and type(mgr.getCurrentGroundStateLabel) == "function" then
-        groundLabel = groundLabel or mgr:getCurrentGroundStateLabel(farmlandId)
-    end
-    if groundLabel ~= nil and groundLabel ~= "" then
-        return nil, "UNKNOWN", groundLabel
+    if statusLabel ~= nil and statusLabel ~= "" then
+        return nil, "UNKNOWN", statusLabel
     end
 
     return nil, "UNKNOWN", self.i18n:getText("rcr_sidebar_no_active_crop")
@@ -1468,22 +1457,21 @@ function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId)
     -- Precision Farming path: PF nitrogen average when PF is installed. false =
     -- soil not analysed ("not sampled"); nil = no PF -> vanilla fallback.
     if mgr ~= nil and mgr.getNitrogenLevel ~= nil then
-        local actualN, targetN, minN, maxN = mgr:getNitrogenLevel(farmlandId)
+        local actualN, targetN = mgr:getNitrogenLevel(farmlandId)
         if actualN == false then
             labelKey = "rcr_soil_not_sampled"
             stateText = self.i18n:getText("rcr_soil_not_sampled")
             ratio = 0
         elseif actualN ~= nil then
-            minN = tonumber(minN) or 0
-            maxN = tonumber(maxN) or 0
             labelKey = "rcr_n_average_pf"
-            if targetN ~= nil then
-                ratio = targetN > 0 and (actualN / targetN) or 0
-                stateText = string.format(self.i18n:getText("rcr_n_average_value"), actualN)
+            stateText = string.format(self.i18n:getText("rcr_n_average_value"), actualN)
+            if targetN ~= nil and targetN > 0 then
+                -- Crop planted: fill the gauge against the crop's average requirement.
+                ratio = actualN / targetN
                 valueText = string.format(self.i18n:getText("rcr_n_crop_need"), targetN)
             else
-                ratio = maxN > minN and ((actualN - minN) / (maxN - minN)) or 0
-                stateText = string.format(self.i18n:getText("rcr_n_average_value"), actualN)
+                -- No crop planted: empty gauge, just the soil's real average N.
+                ratio = 0
             end
         end
     end
@@ -1598,50 +1586,31 @@ function RealisticCropRotationFrame:updateYieldCard(farmlandId)
         info = mgr:getFieldCropInfo(farmlandId)
     end
 
-    local totalText = "-"
-    local weedText = "-"
-    local stageText = "-"
     local hasStage = info ~= nil and info.growthStageText ~= nil
-    local hasWeed = info ~= nil and info.weedActionText ~= nil
+    local hasWeed  = info ~= nil and info.weedActionText ~= nil
+    local weedText  = hasWeed and info.weedActionText or "-"
+    local stageText = hasStage and info.growthStageText or "-"
 
-    -- Yield KPI: a standing crop shows the POTENTIAL yield in t/ha (PF's "Potentiel
-    -- de rendement", full-field, exact); once harvested (no standing crop) it shows
-    -- the REAL harvested LITRES from PF's statistics.
-    local function fmtTHa(v) return string.format("%.1f t/ha", v) end
-    local function fmtL(v)
-        if g_i18n ~= nil and g_i18n.formatVolume ~= nil then return g_i18n:formatVolume(v, 0) end
-        return string.format("%d L", math.floor(v + 0.5))
+    -- Required-action KPI (replaces the former yield KPI): the top field-prep
+    -- action the player still has to do on the parcel (needs plowing / rolling),
+    -- or "no action" when the field is ready. Uses the native GIANTS labels.
+    local actionLabel = nil
+    if mgr ~= nil and type(mgr.getRequiredFieldActionLabel) == "function" then
+        actionLabel = mgr:getRequiredFieldActionLabel(farmlandId)
     end
-    local hasYield = false
-    local totalLabelKey = "rcr_yield_expected"
-    if info ~= nil and info.potentialTHa ~= nil then
-        totalText, hasYield = fmtTHa(tonumber(info.potentialTHa) or 0), true
-    else
-        local harvested = (mgr ~= nil and mgr.getHarvestedYield ~= nil)
-            and mgr:getHarvestedYield(farmlandId) or nil
-        if harvested ~= nil and harvested > 0 then
-            totalText, hasYield = fmtL(harvested), true
-            totalLabelKey = "rcr_yield_actual"
+    local hasAction = actionLabel ~= nil and actionLabel ~= ""
+    local actionText = hasAction and actionLabel or self.i18n:getText("rcr_action_none")
+
+    if self.requiredActionValue ~= nil then
+        if self.requiredActionValue.applyProfile ~= nil then
+            self.requiredActionValue:applyProfile(hasAction and "frYieldKpiValueSmall" or "frYieldKpiValueNA")
         end
-    end
-
-    if hasWeed then weedText = info.weedActionText end
-    if hasStage then stageText = info.growthStageText end
-
-    if self.yieldTotalLabel ~= nil then
-        self.yieldTotalLabel:setText(self.i18n:getText(totalLabelKey))
-    end
-
-    if self.yieldTotalValue ~= nil then
-        if self.yieldTotalValue.applyProfile ~= nil then
-            self.yieldTotalValue:applyProfile(hasYield and "frYieldKpiValue" or "frYieldKpiValueNA")
-        end
-        self.yieldTotalValue:setText(totalText)
+        self.requiredActionValue:setText(actionText)
     end
 
     -- Weed and stage KPIs use a smaller dedicated profile because their text
     -- (the weed tool name, and "(X/Y) · <tier>" for stage) would not fit one
-    -- line at the default 26px size used for the litre value.
+    -- line at the default 26px size.
     --
     -- The weed KPI mirrors the on-foot HUD line: its header carries the game's
     -- weed stage label (info.weedHeader) and its value the game's tool
