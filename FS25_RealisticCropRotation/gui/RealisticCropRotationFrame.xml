@@ -233,7 +233,7 @@
                 <ThreePartBitmap profile="frYieldAccent"/>
 
                 <GuiElement profile="frYieldKpi" position="0px 0px">
-                    <Text profile="frYieldKpiLabel" text="$l10n_rcr_yield_harvest"/>
+                    <Text profile="frYieldKpiLabel" id="yieldTotalLabel" text="$l10n_rcr_yield_expected"/>
                     <Text profile="frYieldKpiValueNA" id="yieldTotalValue" text="-"/>
                 </GuiElement>
 

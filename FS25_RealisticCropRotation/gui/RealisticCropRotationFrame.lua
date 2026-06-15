@@ -1613,6 +1613,7 @@ function RealisticCropRotationFrame:updateYieldCard(farmlandId)
         return string.format("%d L", math.floor(v + 0.5))
     end
     local hasYield = false
+    local totalLabelKey = "rcr_yield_expected"
     if info ~= nil and info.potentialTHa ~= nil then
         totalText, hasYield = fmtTHa(tonumber(info.potentialTHa) or 0), true
     else
@@ -1620,11 +1621,16 @@ function RealisticCropRotationFrame:updateYieldCard(farmlandId)
             and mgr:getHarvestedYield(farmlandId) or nil
         if harvested ~= nil and harvested > 0 then
             totalText, hasYield = fmtL(harvested), true
+            totalLabelKey = "rcr_yield_actual"
         end
     end
 
     if hasWeed then weedText = info.weedActionText end
     if hasStage then stageText = info.growthStageText end
+
+    if self.yieldTotalLabel ~= nil then
+        self.yieldTotalLabel:setText(self.i18n:getText(totalLabelKey))
+    end
 
     if self.yieldTotalValue ~= nil then
         if self.yieldTotalValue.applyProfile ~= nil then
