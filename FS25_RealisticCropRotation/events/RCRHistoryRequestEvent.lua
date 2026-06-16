@@ -46,7 +46,7 @@ function RCRHistoryRequestEvent.new()
     return self
 end
 
----Reads request from network stream (no payload). Server replies on receipt.
+---Reads the request (no payload); the server replies on receipt.
 -- @param integer streamId Network stream identifier
 -- @param Connection connection Network connection
 function RCRHistoryRequestEvent:readStream(streamId, connection)
@@ -75,7 +75,7 @@ function RCRHistoryRequestEvent:readStream(streamId, connection)
     connection:sendEvent(RCRHistoryResponseEvent.new())
 end
 
----Writes request to network stream (no payload).
+---Writes the request (no payload).
 -- @param integer streamId Network stream identifier
 -- @param Connection connection Network connection
 function RCRHistoryRequestEvent:writeStream(streamId, connection)

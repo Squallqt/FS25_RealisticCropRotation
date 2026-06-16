@@ -3,18 +3,19 @@
 RealisticCropRotationService = {}
 local RealisticCropRotationService_mt = Class(RealisticCropRotationService)
 
--- Crop data (families, legacy nitrogen metadata, cover flags) is driven by cropConfig.xml.
--- RealisticCropRotation.cropConfig is loaded once at mod init by main.lua.
--- Historical conversion: 1 legacy state = 5 kg N/ha. No nitrogen/PF write path is active on dev.
+-- Crop data (families, nitrogen, cover flags) comes from cropConfig.xml (loaded at init).
+-- Legacy conversion: 1 state = 5 kg N/ha; no nitrogen/PF write path is active.
 RealisticCropRotationService.PF_STATE_PER_UNIT = 5
 RealisticCropRotationService.NITROGEN_DEPOSIT_LOCK_CHANNELS = 8
 RealisticCropRotationService.NITROGEN_DEPOSIT_LOCK_MAX_VALUE = (2 ^ RealisticCropRotationService.NITROGEN_DEPOSIT_LOCK_CHANNELS) - 1
 
--- Precision Farming applies +25 kg N/ha natively when a catch-crop cover is destroyed.
--- The mod never deposits this itself (see cropConfig.xml notes), but the planner total
--- reflects it as a PF-equivalent estimate, like the rest of the residue figures.
+-- PF applies +25 kg N/ha when a catch-crop cover is destroyed; the planner reflects
+-- it as an estimate (the mod never deposits it itself).
 RealisticCropRotationService.COVER_CROP_RESIDUE_KG_HA = 25
 
+---Creates the service over a repository.
+-- @param RealisticCropRotationRepository repository
+-- @return RealisticCropRotationService instance
 function RealisticCropRotationService.new(repository)
     local self = setmetatable({}, RealisticCropRotationService_mt)
     self.repository = repository
@@ -24,6 +25,7 @@ function RealisticCropRotationService.new(repository)
     return self
 end
 
+---Resets caches and the legacy nitrogen deposit lock.
 function RealisticCropRotationService:reset()
     self.cropNameByFruitTypeIndex = {}
     self.residueCycleByFarmland = {}
@@ -33,10 +35,16 @@ function RealisticCropRotationService:reset()
     self.nitrogenDepositLock = nil
 end
 
+---Converts a legacy state change into kg N/ha.
+-- @param number stateChange Number of legacy states
+-- @return number kgPerHa
 function RealisticCropRotationService:getNitrogenKgPerHaFromStateChange(stateChange)
     return (stateChange or 0) * RealisticCropRotationService.PF_STATE_PER_UNIT
 end
 
+---Returns the upper-case crop name for a fruit type index (cached).
+-- @param integer fruitTypeIndex
+-- @return string cropName or nil
 function RealisticCropRotationService:getCropNameByFruitTypeIndex(fruitTypeIndex)
     if g_fruitTypeManager == nil or fruitTypeIndex == nil then return nil end
     local cached = self.cropNameByFruitTypeIndex[fruitTypeIndex]
@@ -54,6 +62,9 @@ function RealisticCropRotationService:getCropNameByFruitTypeIndex(fruitTypeIndex
     return cropName
 end
 
+---Upper-cases a crop name, or nil when empty.
+-- @param string cropName
+-- @return string normalizedCropName or nil
 function RealisticCropRotationService:normalizeCropName(cropName)
     if cropName == nil or cropName == "" then return nil end
     local normalizedCropName = string.upper(tostring(cropName))
@@ -61,6 +72,9 @@ function RealisticCropRotationService:normalizeCropName(cropName)
     return normalizedCropName
 end
 
+---Returns the cropConfig nitrogen residue entry for a crop, or nil when none.
+-- @param string cropName Upper-case crop name
+-- @return table entry { n1, n2 } or nil
 function RealisticCropRotationService:getResidueEntry(cropName)
     if cropName == nil then return nil end
     local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
@@ -70,6 +84,9 @@ function RealisticCropRotationService:getResidueEntry(cropName)
     return nil
 end
 
+---Sums the cover-crop nitrogen residue (kg/ha) over a 4-slot cover plan.
+-- @param table coverPlan 4-slot cover plan
+-- @return number totalKgHa
 function RealisticCropRotationService:getCoverResidueKgHa(coverPlan)
     local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
     if config == nil or config.coverCrops == nil or coverPlan == nil then return 0 end
@@ -84,6 +101,9 @@ function RealisticCropRotationService:getCoverResidueKgHa(coverPlan)
     return total
 end
 
+---Returns the fruit type for a crop name.
+-- @param string cropName
+-- @return table fruitType or nil
 function RealisticCropRotationService:getFruitTypeByCropName(cropName)
     if cropName == nil or g_fruitTypeManager == nil or g_fruitTypeManager.getFruitTypeByName == nil then
         return nil
@@ -91,6 +111,10 @@ function RealisticCropRotationService:getFruitTypeByCropName(cropName)
     return g_fruitTypeManager:getFruitTypeByName(cropName)
 end
 
+---True when the fruit type is a catch crop (by index or name).
+-- @param integer fruitTypeIndex
+-- @param string cropName
+-- @return boolean isCatchCrop
 function RealisticCropRotationService:isFruitTypeCatchCrop(fruitTypeIndex, cropName)
     local fruitType = nil
     if fruitTypeIndex ~= nil and fruitTypeIndex ~= FruitType.UNKNOWN
@@ -104,6 +128,10 @@ function RealisticCropRotationService:isFruitTypeCatchCrop(fruitTypeIndex, cropN
     return fruitType.isCatchCrop == true
 end
 
+---True when a crop is a cover crop excluded from rotation history (cropConfig or catch-crop flag).
+-- @param integer fruitTypeIndex
+-- @param string cropName
+-- @return boolean isCover
 function RealisticCropRotationService:isCoverCropForRotationHistory(fruitTypeIndex, cropName)
     local normalizedName = cropName
     if normalizedName == nil and fruitTypeIndex ~= nil then
@@ -125,6 +153,11 @@ function RealisticCropRotationService:isCoverCropForRotationHistory(fruitTypeInd
     return false
 end
 
+---Pushes a non-cover crop onto a farmland's rotation history.
+-- @param integer farmlandId
+-- @param string cropName
+-- @param boolean allowDuplicate Allow repeating the most recent crop
+-- @return boolean changed
 function RealisticCropRotationService:pushHistoryCrop(farmlandId, cropName, allowDuplicate)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
@@ -138,6 +171,9 @@ function RealisticCropRotationService:pushHistoryCrop(farmlandId, cropName, allo
     return self.repository:pushEntry(numericFarmlandId, normalizedCropName, allowDuplicate == true)
 end
 
+---Returns the current residue cycle generation for a farmland (>= 1).
+-- @param integer farmlandId
+-- @return integer cycle
 function RealisticCropRotationService:getResidueCycle(farmlandId)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return 1 end
@@ -148,6 +184,9 @@ function RealisticCropRotationService:getResidueCycle(farmlandId)
     return math.floor(cycle)
 end
 
+---Advances and returns the residue cycle for a farmland (wraps at the lock max).
+-- @param integer farmlandId
+-- @return integer nextCycle
 function RealisticCropRotationService:advanceResidueCycle(farmlandId)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return 1 end
@@ -167,17 +206,28 @@ function RealisticCropRotationService:advanceResidueCycle(farmlandId)
     return nextCycle
 end
 
+---Normalizes then stores the last-known active crop for a farmland.
+-- @param integer farmlandId
+-- @param string cropName
+-- @return boolean changed
 function RealisticCropRotationService:setLastKnownActiveCrop(farmlandId, cropName)
     local normalizedCropName = self:normalizeCropName(cropName)
     return self.repository:setLastKnownActiveCrop(farmlandId, normalizedCropName)
 end
 
+---Rounds a growth state to a non-negative integer, or nil when invalid.
+-- @param number growthState
+-- @return integer growthState or nil
 function RealisticCropRotationService:normalizeGrowthState(growthState)
     local numericGrowthState = tonumber(growthState)
     if numericGrowthState == nil or numericGrowthState < 0 then return nil end
     return math.floor(numericGrowthState + 0.5)
 end
 
+---Resolves the fruit type from a fruit type index, falling back to the crop name.
+-- @param string cropName
+-- @param integer fruitTypeIndex
+-- @return table fruitType or nil
 function RealisticCropRotationService:getFruitTypeForCrop(cropName, fruitTypeIndex)
     if g_fruitTypeManager == nil then return nil end
     local numericFruitTypeIndex = tonumber(fruitTypeIndex)
@@ -194,6 +244,10 @@ function RealisticCropRotationService:getFruitTypeForCrop(cropName, fruitTypeInd
     return nil
 end
 
+---True when a growth state is terminal (cut or withered) for the fruit type.
+-- @param table fruitType
+-- @param number growthState
+-- @return boolean isTerminal
 function RealisticCropRotationService:isTerminalGrowthState(fruitType, growthState)
     local numericGrowthState = self:normalizeGrowthState(growthState)
     if fruitType == nil or numericGrowthState == nil then return false end
@@ -217,6 +271,10 @@ function RealisticCropRotationService:isTerminalGrowthState(fruitType, growthSta
     return false
 end
 
+---True when a growth state is in the crop's early (pre-harvest) phase.
+-- @param table fruitType
+-- @param number growthState
+-- @return boolean isEarly
 function RealisticCropRotationService:isEarlyGrowthState(fruitType, growthState)
     local numericGrowthState = self:normalizeGrowthState(growthState)
     if fruitType == nil or numericGrowthState == nil or numericGrowthState <= 0 then return false end
@@ -235,6 +293,11 @@ function RealisticCropRotationService:isEarlyGrowthState(fruitType, growthState)
     return numericGrowthState == 1
 end
 
+---True when a growth-state drop means a fresh replant (mature -> early), i.e. a new cycle.
+-- @param table fruitType
+-- @param number lastGrowthState
+-- @param number currentGrowthState
+-- @return boolean isReplant
 function RealisticCropRotationService:isFreshReplantingGrowthDrop(fruitType, lastGrowthState, currentGrowthState)
     local last = self:normalizeGrowthState(lastGrowthState)
     local current = self:normalizeGrowthState(currentGrowthState)
@@ -244,6 +307,12 @@ function RealisticCropRotationService:isFreshReplantingGrowthDrop(fruitType, las
     return self:isEarlyGrowthState(fruitType, current)
 end
 
+---Reconciles the field's current crop with stored state, pushing history on a real rotation change.
+-- @param integer farmlandId
+-- @param string currentCropName Crop currently on the field
+-- @param integer currentFruitTypeIndex Current fruit type index
+-- @param number currentGrowthState Current growth state
+-- @return boolean changed
 function RealisticCropRotationService:reconcileActiveCrop(farmlandId, currentCropName, currentFruitTypeIndex, currentGrowthState)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
@@ -289,39 +358,22 @@ function RealisticCropRotationService:reconcileActiveCrop(farmlandId, currentCro
     return pushed or activeChanged
 end
 
-function RealisticCropRotationService:onCropChangeArea(farmlandId, fruitTypeIndex, activeCropNameBeforeTermination, changedArea, nextActiveCropName)
-    local numericFarmlandId = tonumber(farmlandId)
-    if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
-
-    local numericChangedArea = tonumber(changedArea) or 0
-    if numericChangedArea <= 0 then return false end
-
-    local normalizedHistoryCrop = self:normalizeCropName(activeCropNameBeforeTermination)
-
-    local historyCropIsCover = false
-    if normalizedHistoryCrop ~= nil then
-        historyCropIsCover = self:isCoverCropForRotationHistory(nil, normalizedHistoryCrop)
-    end
-
-    local pushed = false
-    if normalizedHistoryCrop ~= nil and not historyCropIsCover then
-        pushed = self:pushHistoryCrop(numericFarmlandId, normalizedHistoryCrop)
-    end
-    local activeChanged = self:setLastKnownActiveCrop(numericFarmlandId, nextActiveCropName)
-    if pushed or activeChanged then
-        self:advanceResidueCycle(numericFarmlandId)
-    end
-    return pushed or activeChanged
-end
-
--- =========================================================================
 -- MP sync helpers (server-authoritative).
--- =========================================================================
 
+---Applies a received server snapshot to the repository (client).
+-- @param table receivedHistory
+-- @param table receivedPlans
+-- @param table receivedCoverPlans
+-- @param table receivedLastKnownActiveCrop
+-- @param table receivedLastKnownGrowthState
 function RealisticCropRotationService:applySyncData(receivedHistory, receivedPlans, receivedCoverPlans, receivedLastKnownActiveCrop, receivedLastKnownGrowthState)
     self.repository:replaceAll(receivedHistory or {}, receivedPlans or {}, receivedCoverPlans or {}, receivedLastKnownActiveCrop or {}, receivedLastKnownGrowthState or {})
 end
 
+---Returns the snapshot to broadcast (server).
+-- @return table history
+-- @return table lastKnownActiveCrop
+-- @return table lastKnownGrowthState
 function RealisticCropRotationService:getSyncData()
     return self.repository:getAllHistory(),
         self.repository:getAllLastKnownActiveCrops(),

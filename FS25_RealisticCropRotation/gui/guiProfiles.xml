@@ -6,7 +6,7 @@
     <!--  via applyProfile() — renaming any of these breaks the GUI    -->
     <!--  silently (no XML-side error):                                -->
     <!--    frStatusPillBg, frStatusPillBgBonus,                       -->
-    <!--    frYieldKpiValue, frYieldKpiValueNA, frYieldKpiValueSmall    -->
+    <!--    frFieldKpiValue, frFieldKpiValueNA, frFieldKpiValueSmall    -->
     <!-- ============================================================ -->
 
     <!-- ============================================================ -->
@@ -197,11 +197,11 @@
         <textColor value="0.95 0.85 0.05 1.0"/>
     </Profile>
 
-    <Profile name="frSectionAccentYield" extends="frSectionAccent">
+    <Profile name="frSectionAccentField" extends="frSectionAccent">
         <color value="$preset_fs25_colorOrangeDark"/>
     </Profile>
 
-    <Profile name="frSectionTitleYield" extends="frSectionTitle">
+    <Profile name="frSectionTitleField" extends="frSectionTitle">
         <textColor value="$preset_fs25_colorOrangeDark"/>
     </Profile>
 
@@ -441,32 +441,32 @@
     </Profile>
 
     <!-- ============================================================ -->
-    <!--  YIELD CARD (1240 x 82 px)                                    -->
+    <!--  FIELD CARD (1240 x 82 px)                                    -->
     <!-- ============================================================ -->
 
-    <Profile name="frYieldCard" extends="emptyPanel" with="anchorTopLeft">
+    <Profile name="frFieldCard" extends="emptyPanel" with="anchorTopLeft">
         <size value="1240px 82px"/>
     </Profile>
 
-    <Profile name="frYieldCardBg" extends="baseReference" with="anchorTopLeft">
+    <Profile name="frFieldCardBg" extends="baseReference" with="anchorTopLeft">
         <size value="1240px 82px"/>
         <color value="0 0 0 0.50"/>
         <cornerSize value="0.35"/>
     </Profile>
 
-    <Profile name="frYieldAccent" extends="fs25_lineSeparatorTopHighlighted" with="anchorTopLeft">
+    <Profile name="frFieldAccent" extends="fs25_lineSeparatorTopHighlighted" with="anchorTopLeft">
         <position value="0px 0px"/>
         <size value="1240px 3dp"/>
         <imageColor value="$preset_fs25_colorOrangeDark"/>
     </Profile>
 
     <!-- Third-width KPI container (3 columns across the 1240px card) -->
-    <Profile name="frYieldKpi" extends="emptyPanel" with="anchorTopLeft">
+    <Profile name="frFieldKpi" extends="emptyPanel" with="anchorTopLeft">
         <size value="413px 82px"/>
     </Profile>
 
     <!-- Label at top, closer to value -->
-    <Profile name="frYieldKpiLabel" extends="fs25_textDefault" with="anchorTopCenter">
+    <Profile name="frFieldKpiLabel" extends="fs25_textDefault" with="anchorTopCenter">
         <position value="0px -10px"/>
         <size value="393px 18px"/>
         <textSize value="12px"/>
@@ -479,7 +479,7 @@
     </Profile>
 
     <!-- Value pulled up toward label -->
-    <Profile name="frYieldKpiValue" extends="fs25_textDefault" with="anchorBottomCenter">
+    <Profile name="frFieldKpiValue" extends="fs25_textDefault" with="anchorBottomCenter">
         <position value="0px 12px"/>
         <size value="393px 38px"/>
         <textSize value="26px"/>
@@ -491,19 +491,19 @@
         <textUpperCase value="false"/>
     </Profile>
 
-    <Profile name="frYieldKpiValueNA" extends="frYieldKpiValue">
+    <Profile name="frFieldKpiValueNA" extends="frFieldKpiValue">
         <textColor value="$preset_fs25_colorGrey"/>
     </Profile>
 
     <!-- Compact value for KPIs that carry composed text ("(<stage>) · <tool>"
          for the weed KPI, "(X/Y) · <tier>" for the growth KPI). 26px would
          clip on a 393px-wide cell with one line; 18px keeps both safe. -->
-    <Profile name="frYieldKpiValueSmall" extends="frYieldKpiValue">
+    <Profile name="frFieldKpiValueSmall" extends="frFieldKpiValue">
         <textSize value="18px"/>
     </Profile>
 
     <!-- Thin vertical divider between the two KPIs -->
-    <Profile name="frYieldDivider" extends="baseReference" with="anchorTopCenter">
+    <Profile name="frFieldDivider" extends="baseReference" with="anchorTopCenter">
         <position value="0px -18px"/>
         <size value="1px 46px"/>
         <color value="$preset_fs25_colorGrey"/>
@@ -566,7 +566,7 @@
 
     <!-- Vertical month grid lines. Rendered as RoundCorner (NOT Bitmap): a
          <Bitmap> ignores <color> and draws the default white texture, whereas
-         RoundCorner honours <color> — same proven pattern as frYieldDivider.
+         RoundCorner honours <color> — same proven pattern as frFieldDivider.
          Width is overridden per line in Lua (thin intra-season / thick season). -->
     <Profile name="frCalendarMonthGridLine" extends="baseReference" with="anchorTopLeft">
         <position value="94px -38px"/>

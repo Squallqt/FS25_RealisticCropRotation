@@ -66,8 +66,8 @@
         <!--    Lime / pH      y=-496  h= 54                             -->
         <!--    Section ADVICE y=-574  h= 32                             -->
         <!--    Advice         y=-618  h= 64                             -->
-        <!--    Section YIELD  y=-706  h= 32                             -->
-        <!--    Yield          y=-750  h= 82                             -->
+        <!--    Section FIELD  y=-706  h= 32                             -->
+        <!--    Field card     y=-750  h= 82                             -->
         <!--    Total: 832 px                                             -->
         <!-- ============================================================ -->
         <GuiElement profile="frDetailContainer" id="detailsContainer">
@@ -220,35 +220,35 @@
                 <Text            profile="frAdviceText" id="adviceText" text=""/>
             </GuiElement>
 
-            <!-- == SECTION: YIELD STATUS (y=-706) == -->
+            <!-- == SECTION: FIELD (soil work / weed / growth) (y=-706) == -->
             <GuiElement profile="frSectionBar" position="0px -706px">
                 <RoundCorner profile="frSectionBarBg"/>
-                <RoundCorner profile="frSectionAccentYield" position="14px 0px"/>
-                <Text profile="frSectionTitleYield" text="$l10n_rcr_section_yield"/>
+                <RoundCorner profile="frSectionAccentField" position="14px 0px"/>
+                <Text profile="frSectionTitleField" text="$l10n_rcr_section_field"/>
             </GuiElement>
 
-            <!-- == YIELD CARD (y=-750..832) == -->
-            <GuiElement profile="frYieldCard" position="20px -750px">
-                <RoundCorner     profile="frYieldCardBg"/>
-                <ThreePartBitmap profile="frYieldAccent"/>
+            <!-- == FIELD CARD (y=-750..832) == -->
+            <GuiElement profile="frFieldCard" position="20px -750px">
+                <RoundCorner     profile="frFieldCardBg"/>
+                <ThreePartBitmap profile="frFieldAccent"/>
 
-                <GuiElement profile="frYieldKpi" position="0px 0px">
-                    <Text profile="frYieldKpiLabel" text="$l10n_rcr_action_header"/>
-                    <Text profile="frYieldKpiValueNA" id="requiredActionValue" text="-"/>
+                <GuiElement profile="frFieldKpi" position="0px 0px">
+                    <Text profile="frFieldKpiLabel" text="$l10n_rcr_action_header"/>
+                    <Text profile="frFieldKpiValueNA" id="requiredActionValue" text="-"/>
                 </GuiElement>
 
-                <RoundCorner profile="frYieldDivider" position="-207px -18px"/>
+                <RoundCorner profile="frFieldDivider" position="-207px -18px"/>
 
-                <GuiElement profile="frYieldKpi" position="413px 0px">
-                    <Text profile="frYieldKpiLabel" id="weedHeaderText" text="$l10n_rcr_weed_header"/>
-                    <Text profile="frYieldKpiValueNA" id="yieldPerHaValue" text="-"/>
+                <GuiElement profile="frFieldKpi" position="413px 0px">
+                    <Text profile="frFieldKpiLabel" id="weedHeaderText" text="$l10n_rcr_weed_header"/>
+                    <Text profile="frFieldKpiValueNA" id="weedValue" text="-"/>
                 </GuiElement>
 
-                <RoundCorner profile="frYieldDivider" position="207px -18px"/>
+                <RoundCorner profile="frFieldDivider" position="207px -18px"/>
 
-                <GuiElement profile="frYieldKpi" position="827px 0px">
-                    <Text profile="frYieldKpiLabel" text="$l10n_rcr_yield_stage"/>
-                    <Text profile="frYieldKpiValueNA" id="yieldStageValue" text="-"/>
+                <GuiElement profile="frFieldKpi" position="827px 0px">
+                    <Text profile="frFieldKpiLabel" text="$l10n_rcr_field_growth"/>
+                    <Text profile="frFieldKpiValueNA" id="growthValue" text="-"/>
                 </GuiElement>
             </GuiElement>
 

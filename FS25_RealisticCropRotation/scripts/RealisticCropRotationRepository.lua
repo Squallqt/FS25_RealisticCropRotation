@@ -1,12 +1,14 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
--- CRUD + XML persistence for per-farmland crop history, active crop state,
--- and rotation plans.
+-- CRUD + XML persistence: per-farmland crop history, active crop, rotation plans.
 RealisticCropRotationRepository = {}
 local RealisticCropRotationRepository_mt = Class(RealisticCropRotationRepository)
 
 RealisticCropRotationRepository.SAVE_VERSION = 2
 RealisticCropRotationRepository.MAX_HISTORY = 4
 
+---True when the 4-slot plan has at least one non-empty entry.
+-- @param table plan 4-slot plan array
+-- @return boolean hasData
 local function hasPlanData(plan)
     if plan ~= nil then
         for i = 1, 4 do
@@ -18,6 +20,16 @@ local function hasPlanData(plan)
     return false
 end
 
+---Counts non-empty entities for persistence logging.
+-- @param table history Map farmlandId -> entries
+-- @param table plans Map farmlandId -> plan
+-- @param table coverPlans Map farmlandId -> cover plan
+-- @param table lastKnownActiveCrop Map farmlandId -> crop name
+-- @return integer historyFarmlands
+-- @return integer historyEntries
+-- @return integer planFarmlands
+-- @return integer coverPlanFarmlands
+-- @return integer activeCropFarmlands
 local function getPersistenceCounts(history, plans, coverPlans, lastKnownActiveCrop)
     local historyFarmlands = 0
     local historyEntries = 0
@@ -52,6 +64,8 @@ local function getPersistenceCounts(history, plans, coverPlans, lastKnownActiveC
     return historyFarmlands, historyEntries, planFarmlands, coverPlanFarmlands, activeCropFarmlands
 end
 
+---Creates an empty repository.
+-- @return RealisticCropRotationRepository instance
 function RealisticCropRotationRepository.new()
     local self = setmetatable({}, RealisticCropRotationRepository_mt)
     self.history    = {}
@@ -62,6 +76,7 @@ function RealisticCropRotationRepository.new()
     return self
 end
 
+---Clears all stored history, plans and last-known state.
 function RealisticCropRotationRepository:clear()
     self.history    = {}
     self.plans      = {}
@@ -70,20 +85,26 @@ function RealisticCropRotationRepository:clear()
     self.lastKnownGrowthState = {}
 end
 
+---Returns the history entries for a farmland (empty table when none).
+-- @param integer farmlandId
+-- @return table entries History entries, newest first
 function RealisticCropRotationRepository:getHistory(farmlandId)
     local entries = self.history[farmlandId]
     if entries == nil then return {} end
     return entries
 end
 
-function RealisticCropRotationRepository:getHistoryNoAlloc(farmlandId)
-    return self.history[farmlandId]
-end
-
+---Returns the full history map (farmlandId -> entries).
+-- @return table history
 function RealisticCropRotationRepository:getAllHistory()
     return self.history
 end
 
+---Pushes a crop onto the farmland history (deduped unless allowDuplicate), capped at MAX_HISTORY.
+-- @param integer farmlandId
+-- @param string cropName
+-- @param boolean allowDuplicate Allow repeating the most recent crop
+-- @return boolean changed
 function RealisticCropRotationRepository:pushEntry(farmlandId, cropName, allowDuplicate)
     local entries = self.history[farmlandId]
     if entries == nil then
@@ -104,14 +125,23 @@ function RealisticCropRotationRepository:pushEntry(farmlandId, cropName, allowDu
     return true
 end
 
+---Returns the 4-slot rotation plan for a farmland.
+-- @param integer farmlandId
+-- @return table plan 4-slot plan array
 function RealisticCropRotationRepository:getPlan(farmlandId)
     return self.plans[farmlandId] or {"","","",""}
 end
 
+---Returns the full plan map (farmlandId -> plan).
+-- @return table plans
 function RealisticCropRotationRepository:getAllPlans()
     return self.plans
 end
 
+---Sets one year slot of a farmland's rotation plan.
+-- @param integer farmlandId
+-- @param integer yearIdx Slot 1-4
+-- @param string family Crop family, or "" to clear
 function RealisticCropRotationRepository:setPlanYear(farmlandId, yearIdx, family)
     yearIdx = tonumber(yearIdx) or 0
     if yearIdx < 1 or yearIdx > 4 then return end
@@ -121,14 +151,23 @@ function RealisticCropRotationRepository:setPlanYear(farmlandId, yearIdx, family
     self.plans[farmlandId][yearIdx] = tostring(family or "")
 end
 
+---Returns the 4-slot cover-crop plan for a farmland.
+-- @param integer farmlandId
+-- @return table coverPlan 4-slot cover plan array
 function RealisticCropRotationRepository:getCoverPlan(farmlandId)
     return self.coverPlans[farmlandId] or self.coverPlans[tostring(farmlandId)] or {"","","",""}
 end
 
+---Returns the full cover-plan map (farmlandId -> cover plan).
+-- @return table coverPlans
 function RealisticCropRotationRepository:getAllCoverPlans()
     return self.coverPlans
 end
 
+---Sets one year slot of a farmland's cover-crop plan.
+-- @param integer farmlandId
+-- @param integer yearIdx Slot 1-4
+-- @param string cropName Cover crop name, or "" to clear
 function RealisticCropRotationRepository:setCoverPlanYear(farmlandId, yearIdx, cropName)
     yearIdx = tonumber(yearIdx) or 0
     if yearIdx < 1 or yearIdx > 4 then return end
@@ -138,6 +177,9 @@ function RealisticCropRotationRepository:setCoverPlanYear(farmlandId, yearIdx, c
     self.coverPlans[farmlandId][yearIdx] = tostring(cropName or "")
 end
 
+---Removes a farmland's main and cover plans.
+-- @param integer farmlandId
+-- @return boolean changed
 function RealisticCropRotationRepository:clearPlan(farmlandId)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
@@ -152,22 +194,36 @@ function RealisticCropRotationRepository:clearPlan(farmlandId)
     return changed
 end
 
+---Returns the last-known active crop name for a farmland.
+-- @param integer farmlandId
+-- @return string cropName or nil
 function RealisticCropRotationRepository:getLastKnownActiveCrop(farmlandId)
     return self.lastKnownActiveCrop[farmlandId] or self.lastKnownActiveCrop[tostring(farmlandId)]
 end
 
+---Returns the full last-known active crop map.
+-- @return table lastKnownActiveCrop
 function RealisticCropRotationRepository:getAllLastKnownActiveCrops()
     return self.lastKnownActiveCrop
 end
 
+---Returns the last-known growth state for a farmland.
+-- @param integer farmlandId
+-- @return integer growthState or nil
 function RealisticCropRotationRepository:getLastKnownGrowthState(farmlandId)
     return tonumber(self.lastKnownGrowthState[farmlandId] or self.lastKnownGrowthState[tostring(farmlandId)])
 end
 
+---Returns the full last-known growth-state map.
+-- @return table lastKnownGrowthState
 function RealisticCropRotationRepository:getAllLastKnownGrowthStates()
     return self.lastKnownGrowthState
 end
 
+---Sets the last-known active crop (clears growth state on change; clears both when cropName empty).
+-- @param integer farmlandId
+-- @param string cropName Crop name, or "" to clear
+-- @return boolean changed
 function RealisticCropRotationRepository:setLastKnownActiveCrop(farmlandId, cropName)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
@@ -196,6 +252,10 @@ function RealisticCropRotationRepository:setLastKnownActiveCrop(farmlandId, crop
     return changed
 end
 
+---Sets the last-known growth state (clears it when growthState is nil/negative).
+-- @param integer farmlandId
+-- @param integer growthState
+-- @return boolean changed
 function RealisticCropRotationRepository:setLastKnownGrowthState(farmlandId, growthState)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
@@ -217,6 +277,12 @@ function RealisticCropRotationRepository:setLastKnownGrowthState(farmlandId, gro
     return changed
 end
 
+---Replaces all stored data (used by the client sync).
+-- @param table newHistory
+-- @param table newPlans
+-- @param table newCoverPlans
+-- @param table newLastKnownActiveCrop
+-- @param table newLastKnownGrowthState
 function RealisticCropRotationRepository:replaceAll(newHistory, newPlans, newCoverPlans, newLastKnownActiveCrop, newLastKnownGrowthState)
     self.history    = newHistory or {}
     self.plans      = newPlans or {}
@@ -225,6 +291,8 @@ function RealisticCropRotationRepository:replaceAll(newHistory, newPlans, newCov
     self.lastKnownGrowthState = newLastKnownGrowthState or {}
 end
 
+---Writes the rotation state to realisticCropRotation.xml in the savegame folder.
+-- @param string savegamePath Savegame folder path (trailing slash)
 function RealisticCropRotationRepository:saveToXML(savegamePath)
     if savegamePath == nil or savegamePath == "" then
         Logging.warning("[RealisticCropRotation] Save skipped: savegame path unavailable")
@@ -325,6 +393,8 @@ function RealisticCropRotationRepository:saveToXML(savegamePath)
     delete(xmlFile)
 end
 
+---Loads the rotation state from realisticCropRotation.xml in the savegame folder.
+-- @param string savegamePath Savegame folder path (trailing slash)
 function RealisticCropRotationRepository:loadFromXML(savegamePath)
     if savegamePath == nil or savegamePath == "" then
         Logging.warning("[RealisticCropRotation] Load skipped: savegame path unavailable")

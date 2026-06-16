@@ -1,6 +1,5 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
--- Mod bootstrap: source loading, mission lifecycle hooks, density-map hooks,
--- broadcast coalescing.
+-- Mod bootstrap: source loading, lifecycle + density-map hooks, broadcast coalescing.
 local modDirectory = g_currentModDirectory
 local modName = g_currentModName
 
@@ -26,6 +25,8 @@ RealisticCropRotation.tabListFixApplied = false
 
 -- Loads cropConfig.xml once at mod init.
 -- Returns a config table: { families, nitrogen, coverCrops }.
+---Loads cropConfig.xml into a families/nitrogen/coverCrops table.
+-- @return table config Crop config, or nil on failure
 local function loadCropConfig()
     local filePath = modDirectory .. "cropConfig.xml"
     local xmlFile = loadXMLFile("RealisticCropRotationCropConfig", filePath)
@@ -73,12 +74,15 @@ RealisticCropRotation.broadcastUpdateable = nil
 RealisticCropRotation.farmlandOwnerChangeListener = nil
 RealisticCropRotation.periodChangedListener = nil
 
+---Marks the rotation state dirty so a single coalesced broadcast fires soon (server).
 function RealisticCropRotation.requestBroadcast()
     if g_server == nil then return end
     RealisticCropRotation.broadcastDirty = true
     RealisticCropRotation.broadcastTimerMs = RealisticCropRotation.BROADCAST_DEBOUNCE_MS
 end
 
+---Asks the server for a full rotation snapshot (client).
+-- @param string _reason Diagnostic label (unused)
 function RealisticCropRotation.requestServerSync(_reason)
     if g_client == nil or RCRHistoryRequestEvent == nil then return end
     if type(g_client.getServerConnection) ~= "function" then return end
@@ -88,6 +92,7 @@ function RealisticCropRotation.requestServerSync(_reason)
     end
 end
 
+---Broadcasts the rotation snapshot to all clients now (server).
 local function flushRealisticCropRotationBroadcast()
     RealisticCropRotation.broadcastDirty = false
     RealisticCropRotation.broadcastTimerMs = 0
@@ -98,6 +103,10 @@ end
 
 local refreshRealisticCropRotationFrame
 
+---Clears the rotation plan when a farmland changes owner (not on savegame load).
+-- @param integer farmlandId Farmland whose owner changed
+-- @param integer _farmId New owner farm id (unused)
+-- @param boolean loadFromSavegame True when triggered by savegame load
 local function onFarmlandOwnerChanged(farmlandId, _farmId, loadFromSavegame)
     if loadFromSavegame then return end
     if RealisticCropRotation.manager == nil or type(RealisticCropRotation.manager.clearRotationPlan) ~= "function" then return end
@@ -111,6 +120,7 @@ local function onFarmlandOwnerChanged(farmlandId, _farmId, loadFromSavegame)
     end
 end
 
+---Reconciles active crops for all owned farmlands on a period change (server).
 local function onPeriodChanged()
     if g_currentMission == nil or not g_currentMission:getIsServer() then return end
     if RealisticCropRotation.manager == nil
@@ -132,6 +142,7 @@ local function onPeriodChanged()
     end
 end
 
+---Refreshes the open menu frame after a state change (history or planning tab).
 function refreshRealisticCropRotationFrame()
     if RealisticCropRotation.frame == nil then return end
     local frame = RealisticCropRotation.frame
@@ -153,10 +164,7 @@ function refreshRealisticCropRotationFrame()
     end
 end
 
--- The horizontal tab list only recomputes its item alignment offset while the
--- content is narrower than the bar (SmoothListElement:reloadData, contentOffset>0).
--- Adding a tab fills the bar, skipping that recompute and leaving a stale offset
--- that shifts every tab icon. Force the offset back to 0 on each rebuild.
+---Forces the tab-list alignment offset back to 0 (adding a tab leaves a stale offset).
 local function applyTabListAlignmentFix()
     if RealisticCropRotation.tabListFixApplied then return end
     if InGameMenu == nil or InGameMenu.rebuildTabList == nil then return end
@@ -171,6 +179,10 @@ local function applyTabListAlignmentFix()
 end
 
 ---Injects the RealisticCropRotationFrame as a tab in the InGameMenu paging element.
+-- @param string frameFieldName Field name exposed on g_inGameMenu
+-- @param function predicateFunc Page visibility predicate
+-- @param string|integer insertPosition Tab index, or a sibling page field name to insert after
+-- @return table frame The registered frame, or nil on failure
 function RealisticCropRotation.addInGameMenuPage(frameFieldName, predicateFunc, insertPosition)
     if g_inGameMenu == nil then return nil end
 
@@ -223,6 +235,8 @@ function RealisticCropRotation.addInGameMenuPage(frameFieldName, predicateFunc, 
     return frame
 end
 
+---Resolves the current savegame folder path with a trailing slash.
+-- @return string path Savegame folder path, or nil when unavailable
 local function resolveSavegameFolderPath()
     if g_currentMission == nil or g_currentMission.missionInfo == nil then return nil end
     local path = g_currentMission.missionInfo.savegameDirectory
@@ -238,9 +252,7 @@ local function resolveSavegameFolderPath()
     return path
 end
 
--- Loads GUI profiles (once) and registers the menu icon texture config.
--- Called early at mission load so the slice is ready before any tab render,
--- and again when the page is built. Skipped on dedicated server (no g_gui).
+---Loads GUI profiles + menu icon config (once). Skipped on dedicated server.
 local function loadGuiAssets()
     if g_gui == nil or type(g_gui.loadProfiles) ~= "function" then return end
 
@@ -258,6 +270,7 @@ local function loadGuiAssets()
     end
 end
 
+---Mission-load hook: builds the manager, loads/saves state, wires server listeners.
 local function loadedMission()
     -- Reload crop config here to guarantee the engine XML API is fully ready.
     if RealisticCropRotation.cropConfig == nil then
@@ -329,8 +342,7 @@ local function loadedMission()
     end
 end
 
--- Builds the GUI page + menu icon once the in-game menu is ready.
--- Skipped on dedicated server (g_gui is nil there).
+---Builds the GUI page + menu tab once the in-game menu is ready (skipped on dedicated server).
 local function loadInGameMenuGui()
     if g_gui == nil or type(g_gui.loadProfiles) ~= "function" then return end
     if g_inGameMenu == nil then return end
@@ -360,6 +372,7 @@ local function loadInGameMenuGui()
     end
 end
 
+---Save hook: persists rotation state (server only).
 local function onSaveToXMLFile()
     if g_currentMission == nil or g_currentMission.missionInfo == nil then return end
     if not g_currentMission:getIsServer() then return end
@@ -369,6 +382,9 @@ local function onSaveToXMLFile()
     RealisticCropRotation.manager:saveToXML(savegameFolderPath)
 end
 
+---Sends the initial rotation snapshot to a joining client (server).
+-- @param table _self FSBaseMission instance (unused)
+-- @param Connection connection Joining client connection
 local function sendInitialClientState(_self, connection)
     if g_server == nil then return end
     if connection == nil then return end
@@ -376,10 +392,7 @@ local function sendInitialClientState(_self, connection)
     connection:sendEvent(RCRHistoryResponseEvent.new())
 end
 
--- =========================================================================
--- Init.
--- =========================================================================
-
+---Mod entry point: loads config and installs the engine hooks.
 local function initRealisticCropRotation()
     RealisticCropRotation.cropConfig = loadCropConfig()
 

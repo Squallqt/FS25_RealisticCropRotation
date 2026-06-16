@@ -10,11 +10,19 @@ local VALID_COVER_CROPS = {
     FLOWERINGCATCHCROP = true,
 }
 
+---Creates an empty event instance for deserialization.
+-- @return RCRPlanUpdateEvent instance Empty event
 function RCRPlanUpdateEvent.emptyNew()
     local self = Event.new(RCRPlanUpdateEvent_mt)
     return self
 end
 
+---Creates a plan-update event.
+-- @param integer farmlandId Target farmland id
+-- @param integer yearIdx Rotation year slot (1-4)
+-- @param string cropName Crop name, or "" to clear the slot
+-- @param boolean isCover True for the cover plan, false for the main plan
+-- @return RCRPlanUpdateEvent instance The new event instance
 function RCRPlanUpdateEvent.new(farmlandId, yearIdx, cropName, isCover)
     local self = RCRPlanUpdateEvent.emptyNew()
     self.farmlandId = tonumber(farmlandId) or 0
@@ -24,6 +32,9 @@ function RCRPlanUpdateEvent.new(farmlandId, yearIdx, cropName, isCover)
     return self
 end
 
+---Reads the plan update from the stream and applies it server-side.
+-- @param integer streamId Network stream identifier
+-- @param Connection connection Network connection
 function RCRPlanUpdateEvent:readStream(streamId, connection)
     self.farmlandId = streamReadInt32(streamId)
     self.yearIdx = streamReadInt8(streamId)
@@ -33,6 +44,9 @@ function RCRPlanUpdateEvent:readStream(streamId, connection)
     self:run(connection)
 end
 
+---Writes the plan update to the stream.
+-- @param integer streamId Network stream identifier
+-- @param Connection connection Network connection
 function RCRPlanUpdateEvent:writeStream(streamId, connection)
     streamWriteInt32(streamId, tonumber(self.farmlandId) or 0)
     streamWriteInt8(streamId, tonumber(self.yearIdx) or 0)
@@ -40,6 +54,8 @@ function RCRPlanUpdateEvent:writeStream(streamId, connection)
     streamWriteInt8(streamId, self.isCover and 1 or 0)
 end
 
+---Validates ownership + crop, then applies the plan update (server-authoritative).
+-- @param Connection connection Requesting client connection
 function RCRPlanUpdateEvent:run(connection)
     if g_currentMission == nil or not g_currentMission:getIsServer() then
         return
@@ -56,9 +72,7 @@ function RCRPlanUpdateEvent:run(connection)
 
     self.cropName = string.upper(tostring(self.cropName or ""))
 
-    -- P0-4 auth: resolve the requesting client's farm via the userManager and
-    -- reject the event unless that farm owns the target farmland. Pattern from
-    -- gameSource/objects/WashingStationEvent.lua run().
+    -- Auth: reject unless the requesting client's farm owns the target farmland.
     local userFarmId = nil
     if connection ~= nil and g_currentMission.userManager ~= nil
         and g_currentMission.userManager.getUserIdByConnection ~= nil then

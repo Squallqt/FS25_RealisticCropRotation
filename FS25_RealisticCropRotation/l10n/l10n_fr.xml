@@ -45,7 +45,7 @@
         <e k="rcr_section_history"      v="Historique des Cultures" />
         <e k="rcr_section_nitrogen"     v="Statut Azoté" />
         <e k="rcr_section_advice"       v="Conseil Agronomique" />
-        <e k="rcr_section_yield"        v="Actions, herbes et croissance" />
+        <e k="rcr_section_field"        v="Travaux, herbes et croissance" />
         <e k="rcr_section_lime"         v="Statut Chaux / pH" />
         <e k="rcr_section_plan"         v="Plan de Rotation" />
         <e k="rcr_section_score"        v="Qualité de Rotation" />
@@ -96,11 +96,11 @@
         <e k="rcr_advice_no_current_crop" v="Aucune culture principale actuelle : conseil disponible quand une culture est détectée." />
 
         <!-- Field card — required actions / growth -->
-        <e k="rcr_action_header"        v="Actions requises" />
-        <e k="rcr_action_none"          v="Aucune action" />
-        <e k="rcr_yield_stage"          v="Croissance" />
+        <e k="rcr_action_header"        v="Travaux du sol" />
+        <e k="rcr_action_none"          v="Aucun" />
+        <e k="rcr_field_growth"          v="Croissance" />
 
-        <!-- Yield card — weed column header (singular, matching base game HUD) -->
+        <!-- Field card — weed column header (singular, matching base game HUD) -->
         <e k="rcr_weed_header"          v="Mauvaise herbe" />
 
         <!-- Planning tab — year slots (relative to current year, never stale) -->

@@ -1,12 +1,14 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
--- Server->client full rotation snapshot. Sent on late-join and on explicit
--- RCRHistoryRequestEvent. Payload: history + plans + last known active crops
--- + last known growth states.
+-- Server->client full rotation snapshot (history + plans + last-known crop/growth).
 RCRHistoryResponseEvent = {}
 local RCRHistoryResponseEvent_mt = Class(RCRHistoryResponseEvent, Event)
 
 InitEventClass(RCRHistoryResponseEvent, "RCRHistoryResponseEvent")
 
+---Counts farmlands that have history and the total number of entries.
+-- @param table history Map of farmlandId -> entry list
+-- @return integer farmlandCount Farmlands that have history
+-- @return integer entryCount Total history entries
 local function countHistory(history)
     local farmlandCount = 0
     local entryCount = 0
@@ -19,14 +21,21 @@ local function countHistory(history)
     return farmlandCount, entryCount
 end
 
+---Creates an empty event instance for deserialization.
+-- @return RCRHistoryResponseEvent instance Empty event
 function RCRHistoryResponseEvent.emptyNew()
     return Event.new(RCRHistoryResponseEvent_mt)
 end
 
+---Creates a response event (the payload is built in writeStream).
+-- @return RCRHistoryResponseEvent instance The new event instance
 function RCRHistoryResponseEvent.new()
     return RCRHistoryResponseEvent.emptyNew()
 end
 
+---Reads the rotation snapshot and applies it on the client (buffers it when the manager is not ready yet).
+-- @param integer streamId Network stream identifier
+-- @param Connection _connection Network connection (unused)
 function RCRHistoryResponseEvent:readStream(streamId, _connection)
     local farmlandCount = streamReadInt16(streamId)
     local received = {}
@@ -141,6 +150,9 @@ function RCRHistoryResponseEvent:readStream(streamId, _connection)
     end
 end
 
+---Writes the full rotation snapshot: history, plans, cover plans, active crops, growth states.
+-- @param integer streamId Network stream identifier
+-- @param Connection _connection Network connection (unused)
 function RCRHistoryResponseEvent:writeStream(streamId, _connection)
     local manager = g_currentMission ~= nil and g_currentMission.realisticCropRotationManager or nil
     if manager == nil or manager.service == nil or type(manager.service.getSyncData) ~= "function" then

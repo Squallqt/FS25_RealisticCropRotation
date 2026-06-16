@@ -58,16 +58,10 @@ RealisticCropRotationFrame.COVER_CROP_NAMES = {
     "FLOWERINGCATCHCROP",
 }
 
--- Minimum number of growth-possible months a cover must accumulate (between
--- sowing and destruction) before it can release its nitrogen residue. Growth is
--- counted only in months where the crop actually advances its state -- winter
--- stalls do not count -- and may continue past the sowing window, since sowing
--- (plantingAllowed) and growing (growthMapping) are independent windows.
+-- Min growth-possible months a cover must accumulate before releasing N residue.
 RealisticCropRotationFrame.COVER_MIN_GROWTH_MONTHS = 1
 
--- Rotation score: minimum recommended return interval (in years) per family
--- before the same family should reappear in the plan. FORAGE has no entry
--- (no constraint). Mirrors the agronomic advice text (rcr_advice_after*).
+-- Min recommended return interval (years) per family; FORAGE has no constraint.
 RealisticCropRotationFrame.FAMILY_MIN_INTERVAL = {
     CEREAL    = 2,
     OILSEED   = 3,
@@ -120,6 +114,10 @@ RealisticCropRotationFrame.CALENDAR_MONTH_KEYS = {
     "rcr_calendar_month_12",
 }
 
+---Creates the menu frame element.
+-- @param table i18n
+-- @param table messageCenter
+-- @return RealisticCropRotationFrame instance
 function RealisticCropRotationFrame.new(i18n, messageCenter)
     local self = RealisticCropRotationFrame:superClass().new(nil, RealisticCropRotationFrame_mt)
     self.name          = "RealisticCropRotationFrame"
@@ -138,6 +136,8 @@ function RealisticCropRotationFrame.new(i18n, messageCenter)
     return self
 end
 
+---Copies frame attributes from a cloned source element.
+-- @param table src
 function RealisticCropRotationFrame:copyAttributes(src)
     RealisticCropRotationFrame:superClass().copyAttributes(self, src)
     self.i18n          = src.i18n
@@ -146,12 +146,14 @@ function RealisticCropRotationFrame:copyAttributes(src)
     self.isSubscribedToFarmlandChanges = false
 end
 
+---Unsubscribes and releases the frame.
 function RealisticCropRotationFrame:delete()
     self:unsubscribeFarmlandChanges()
     self.farmlandList = nil
     RealisticCropRotationFrame:superClass().delete(self)
 end
 
+---Wires the list data sources/delegates once the GUI tree is built.
 function RealisticCropRotationFrame:onGuiSetupFinished()
     RealisticCropRotationFrame:superClass().onGuiSetupFinished(self)
     if self.listFields ~= nil then
@@ -165,6 +167,7 @@ function RealisticCropRotationFrame:onGuiSetupFinished()
     self:linkFocusNavigation()
 end
 
+---Builds the sidebar view selector (history/planning tabs).
 function RealisticCropRotationFrame:initialize()
     RealisticCropRotationFrame:superClass().initialize(self)
 
@@ -189,10 +192,11 @@ function RealisticCropRotationFrame:initialize()
 
 end
 
--- onCreate: entry point per spec; actual population deferred to onFrameOpen
+---Frame creation hook; population is deferred to onFrameOpen.
 function RealisticCropRotationFrame:onCreate()
 end
 
+---Reconciles history (server), populates the sidebar and requests a server sync.
 function RealisticCropRotationFrame:onFrameOpen()
     RealisticCropRotationFrame:superClass().onFrameOpen(self)
     self:subscribeFarmlandChanges()
@@ -221,39 +225,37 @@ function RealisticCropRotationFrame:onFrameOpen()
     self:linkFocusNavigation()
 end
 
+---Unsubscribes from farmland change events when the frame closes.
 function RealisticCropRotationFrame:onFrameClose()
     self:unsubscribeFarmlandChanges()
     RealisticCropRotationFrame:superClass().onFrameClose(self)
 end
 
+---Returns the menu button info (no custom buttons).
+-- @return table buttons
 function RealisticCropRotationFrame:getMenuButtonInfo()
     return {}
 end
 
--- ===========================================================================
---  HELPERS
--- ===========================================================================
+-- HELPERS
 
-function RealisticCropRotationFrame:getCurrentFarmId()
-    if g_localPlayer ~= nil and g_localPlayer.farmId ~= nil then
-        return g_localPlayer.farmId
-    end
-    if g_currentMission ~= nil and g_currentMission.getFarmId ~= nil then
-        return g_currentMission:getFarmId()
-    end
-    return -1
-end
-
+---Returns the rotation manager from the current mission.
+-- @return RealisticCropRotationManager manager, or nil
 function RealisticCropRotationFrame:getManager()
     if g_currentMission == nil then return nil end
     return g_currentMission.realisticCropRotationManager
 end
 
+---Returns the active weather object.
+-- @return table weather, or nil
 function RealisticCropRotationFrame:getWeather()
     if g_currentMission == nil or g_currentMission.environment == nil then return nil end
     return g_currentMission.environment.weather
 end
 
+---Returns the WEATHER_TYPES spec matching an engine weather type.
+-- @param integer weatherType
+-- @return table spec, or nil
 function RealisticCropRotationFrame:getWeatherTypeSpec(weatherType)
     if weatherType == nil or WeatherType == nil then return nil end
 
@@ -267,6 +269,10 @@ function RealisticCropRotationFrame:getWeatherTypeSpec(weatherType)
     return nil
 end
 
+---Resolves the weather type of a forecast item.
+-- @param table weather
+-- @param table forecastItem
+-- @return integer weatherType, or nil
 function RealisticCropRotationFrame:getForecastWeatherType(weather, forecastItem)
     if weather == nil or forecastItem == nil or weather.getWeatherObjectByIndex == nil then return nil end
     if forecastItem.season == nil or forecastItem.objectIndex == nil then return nil end
@@ -274,21 +280,35 @@ function RealisticCropRotationFrame:getForecastWeatherType(weather, forecastItem
     return weatherObject ~= nil and weatherObject.weatherType or nil
 end
 
+---Returns the UI icon slice id for a weather type.
+-- @param integer weatherType
+-- @return string sliceId, or nil
 function RealisticCropRotationFrame:getWeatherSliceId(weatherType)
     local spec = self:getWeatherTypeSpec(weatherType)
     return spec ~= nil and spec.sliceId or nil
 end
 
+---Returns the pill RGBA for a weather type (neutral default when unknown).
+-- @param integer weatherType
+-- @return table rgba
 function RealisticCropRotationFrame:getWeatherPillColor(weatherType)
     local spec = self:getWeatherTypeSpec(weatherType)
     return spec ~= nil and spec.color or {0.22, 0.27, 0.30, 0.86}
 end
 
+---Returns the localized label for a weather type.
+-- @param integer weatherType
+-- @return string label, or nil
 function RealisticCropRotationFrame:getWeatherLabel(weatherType)
     local spec = self:getWeatherTypeSpec(weatherType)
     return spec ~= nil and self.i18n:getText(spec.textKey) or nil
 end
 
+---Milliseconds from now to a forecast day/dayTime.
+-- @param table environment
+-- @param integer day Monotonic day
+-- @param integer dayTime Time of day (ms)
+-- @return integer deltaMs, or nil
 function RealisticCropRotationFrame:getForecastDeltaMs(environment, day, dayTime)
     if environment == nil or environment.currentMonotonicDay == nil or environment.dayTime == nil then return nil end
     if day == nil or dayTime == nil then return nil end
@@ -296,6 +316,11 @@ function RealisticCropRotationFrame:getForecastDeltaMs(environment, day, dayTime
         + (dayTime - environment.dayTime)
 end
 
+---Builds a normalized forecast event (start/end + deltas) from a forecast item.
+-- @param table weather
+-- @param table environment
+-- @param table item Forecast item
+-- @return table event, or nil
 function RealisticCropRotationFrame:getForecastEventFromItem(weather, environment, item)
     if item == nil or item.startDay == nil or item.startDayTime == nil then return nil end
 
@@ -329,6 +354,8 @@ function RealisticCropRotationFrame:getForecastEventFromItem(weather, environmen
     }
 end
 
+---Picks the weather event to show: next operational, else current, else next.
+-- @return table event, or nil
 function RealisticCropRotationFrame:getWeatherEvent()
     local weather = self:getWeather()
     if weather == nil or weather.forecastItems == nil or #weather.forecastItems == 0 then return nil end
@@ -369,6 +396,9 @@ function RealisticCropRotationFrame:getWeatherEvent()
     return nextOperationalEvent or currentEvent or nextWeatherEvent
 end
 
+---Formats a day time (ms) as a clock string.
+-- @param integer dayTime Time of day (ms)
+-- @return string text
 function RealisticCropRotationFrame:formatForecastTime(dayTime)
     local normalizedDayTime = (tonumber(dayTime) or 0) % RealisticCropRotationFrame.DAY_LENGTH_MS
     local totalMinutes = math.floor(normalizedDayTime / 60000 + 0.5)
@@ -385,6 +415,9 @@ function RealisticCropRotationFrame:formatForecastTime(dayTime)
     return string.format("%02d:%02d", hour, minute)
 end
 
+---Formats a lead time (ms) as a localized "in Xh Ym" string.
+-- @param integer deltaMs
+-- @return string text
 function RealisticCropRotationFrame:formatForecastLeadTime(deltaMs)
     local minutes = math.max(1, math.floor((tonumber(deltaMs) or 0) / 60000 + 0.5))
     local hours = math.floor(minutes / 60)
@@ -399,6 +432,9 @@ function RealisticCropRotationFrame:formatForecastLeadTime(deltaMs)
     return string.format(self.i18n:getText("rcr_time_hours_minutes"), hours, remainingMinutes)
 end
 
+---Builds the localized weather pill text for an event (current/soon/tomorrow/later).
+-- @param table event
+-- @return string text, or nil
 function RealisticCropRotationFrame:getWeatherPillText(event)
     if event == nil then return nil end
 
@@ -428,6 +464,12 @@ function RealisticCropRotationFrame:getWeatherPillText(event)
     return string.format(self.i18n:getText("rcr_weather_later"), weatherLabel, dayOffset, startTimeText, endTimeText)
 end
 
+---Updates the hero weather pill (text, icon, colour, visibility) and resizes it.
+-- @param table pill
+-- @param table pillBg
+-- @param table pillIcon
+-- @param table pillText
+-- @return number width Resized pill width, or nil when hidden
 function RealisticCropRotationFrame:updateWeatherPill(pill, pillBg, pillIcon, pillText)
     local event = self:getWeatherEvent()
     local text = self:getWeatherPillText(event)
@@ -458,6 +500,11 @@ function RealisticCropRotationFrame:updateWeatherPill(pill, pillBg, pillIcon, pi
     return nil
 end
 
+---Updates the current-state residue pill (history tab) and resizes it.
+-- @param table pillBg
+-- @param table pillText
+-- @param integer farmlandId
+-- @return number width Resized pill width
 function RealisticCropRotationFrame:updateResiduePill(pillBg, pillText, farmlandId)
     local text = self.i18n:getText("rcr_status_current_no_residue")
     if pillBg ~= nil then
@@ -469,6 +516,10 @@ function RealisticCropRotationFrame:updateResiduePill(pillBg, pillText, farmland
     return self:resizeHeroPillToText(pillBg, pillText, text)
 end
 
+---Total planned N residue (kg/ha) from a plan's crops + cover crops.
+-- @param table plan 4-slot crop plan
+-- @param table coverPlan 4-slot cover plan
+-- @return number residueKgHa, or nil when none
 function RealisticCropRotationFrame:getPlanNitrogenResidueKgHa(plan, coverPlan)
     local mgr = self:getManager()
     if mgr == nil or mgr.service == nil then return nil end
@@ -513,12 +564,22 @@ function RealisticCropRotationFrame:getPlanNitrogenResidueKgHa(plan, coverPlan)
     return residueKgHa
 end
 
+---Localized planned-residue label for a plan, or nil when there is none.
+-- @param table plan
+-- @param table coverPlan
+-- @return string text, or nil
 function RealisticCropRotationFrame:getPlanNitrogenResidueText(plan, coverPlan)
     local residueKgHa = self:getPlanNitrogenResidueKgHa(plan, coverPlan)
     if residueKgHa == nil then return nil end
     return string.format(self.i18n:getText("rcr_status_planned_residue"), math.floor(residueKgHa + 0.5))
 end
 
+---Updates the planned-residue pill (planning tab) and resizes it.
+-- @param table pillBg
+-- @param table pillText
+-- @param table plan
+-- @param table coverPlan
+-- @return number width Resized pill width
 function RealisticCropRotationFrame:updatePlannedResiduePill(pillBg, pillText, plan, coverPlan)
     local residueText = self:getPlanNitrogenResidueText(plan, coverPlan)
     local hasBonus = residueText ~= nil
@@ -532,6 +593,9 @@ function RealisticCropRotationFrame:updatePlannedResiduePill(pillBg, pillText, p
     return self:resizeHeroPillToText(pillBg, pillText, text)
 end
 
+---Returns a crop's family from cropConfig.xml.
+-- @param string cropName
+-- @return string family, or "UNKNOWN"
 function RealisticCropRotationFrame:getCropFamily(cropName)
     if cropName == nil or cropName == "" then return "UNKNOWN" end
     local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
@@ -539,15 +603,18 @@ function RealisticCropRotationFrame:getCropFamily(cropName)
     return config.families[string.upper(cropName)] or "UNKNOWN"
 end
 
--- FillTypeManager is the canonical source for display info (title, icon):
--- every fillType has both, whereas a fruitType only has a fillType link
--- when it is harvestable (catch crops like FLOWERINGCATCHCROP have none).
+---Returns the fillType for a crop (title/icon source); nil when not harvestable.
+-- @param string cropName
+-- @return table fillType, or nil
 function RealisticCropRotationFrame:getFillTypeForCrop(cropName)
     if cropName == nil or cropName == "" then return nil end
     if g_fillTypeManager == nil or g_fillTypeManager.getFillTypeByName == nil then return nil end
     return g_fillTypeManager:getFillTypeByName(string.upper(tostring(cropName)))
 end
 
+---Localized display name for a crop (fillType title, else fruitType, else capitalized).
+-- @param string cropName
+-- @return string displayName
 function RealisticCropRotationFrame:getCropDisplayName(cropName)
     if cropName == nil or cropName == "" then return "" end
     local normalizedName = string.upper(tostring(cropName))
@@ -568,16 +635,23 @@ function RealisticCropRotationFrame:getCropDisplayName(cropName)
     return normalizedName:sub(1, 1) .. string.lower(normalizedName:sub(2))
 end
 
+---Returns the owned-farmland rows from the manager.
+-- @return table rows
 function RealisticCropRotationFrame:buildFarmlandList()
     local mgr = self:getManager()
     if mgr == nil or mgr.getOwnedFarmlands == nil then return {} end
     return mgr:getOwnedFarmlands() or {}
 end
 
+---Formats a hectare value as "X.X ha".
+-- @param number areaHa
+-- @return string text
 function RealisticCropRotationFrame:formatAreaHa(areaHa)
     return string.format("%.1f ha", tonumber(areaHa) or 0)
 end
 
+---True when the game's colour-blind mode is enabled.
+-- @return boolean
 function RealisticCropRotationFrame:getIsColorBlindMode()
     if g_gameSettings == nil or GameSettings == nil
         or GameSettings.SETTING == nil
@@ -589,6 +663,9 @@ function RealisticCropRotationFrame:getIsColorBlindMode()
     return g_gameSettings:getValue(GameSettings.SETTING.USE_COLORBLIND_MODE) == true
 end
 
+---Copies a GUI colour (Color object or array) to a plain { r, g, b, a } table.
+-- @param table color
+-- @return table rgba, or nil
 function RealisticCropRotationFrame:copyGuiColor(color)
     if color == nil then return nil end
 
@@ -603,6 +680,9 @@ function RealisticCropRotationFrame:copyGuiColor(color)
     return { r, g, b, a or 1 }
 end
 
+---Returns the map colour for a fruit type (colour-blind aware).
+-- @param table fruitType
+-- @return table rgba, or nil
 function RealisticCropRotationFrame:getFruitTypeMapColor(fruitType)
     if fruitType == nil then return nil end
 
@@ -613,6 +693,9 @@ function RealisticCropRotationFrame:getFruitTypeMapColor(fruitType)
     return self:copyGuiColor(color)
 end
 
+---Returns the native map colour for a ground state (colour-blind aware).
+-- @param integer groundStateIndex GROWTH_STATE_INDEX
+-- @return table rgba, or nil
 function RealisticCropRotationFrame:getGroundStateMapColor(groundStateIndex)
     if groundStateIndex == nil or MapOverlayGenerator == nil
         or MapOverlayGenerator.GROWTH_STATE_INDEX == nil then
@@ -636,6 +719,9 @@ function RealisticCropRotationFrame:getGroundStateMapColor(groundStateIndex)
     return self:copyGuiColor(colorByMode[self:getIsColorBlindMode()])
 end
 
+---Returns the native map colour for a soil state (colour-blind aware).
+-- @param integer soilStateIndex SOIL_STATE_INDEX
+-- @return table rgba, or nil
 function RealisticCropRotationFrame:getSoilStateMapColor(soilStateIndex)
     if soilStateIndex == nil or MapOverlayGenerator == nil
         or MapOverlayGenerator.SOIL_STATE_INDEX == nil then
@@ -659,6 +745,9 @@ function RealisticCropRotationFrame:getSoilStateMapColor(soilStateIndex)
     return self:copyGuiColor(colorByMode[self:getIsColorBlindMode()])
 end
 
+---Sets all colour states of an icon element and makes it visible.
+-- @param table element
+-- @param table color RGBA
 function RealisticCropRotationFrame:applyIconBackgroundColor(element, color)
     if element == nil or color == nil then return end
 
@@ -671,6 +760,9 @@ function RealisticCropRotationFrame:applyIconBackgroundColor(element, color)
     element:setVisible(true)
 end
 
+---Sums the hectares across a farmland list.
+-- @param table farmlandList
+-- @return number totalHa
 function RealisticCropRotationFrame:calculateTotalAreaHa(farmlandList)
     local total = 0
     for _, entry in ipairs(farmlandList or {}) do
@@ -679,12 +771,16 @@ function RealisticCropRotationFrame:calculateTotalAreaHa(farmlandList)
     return total
 end
 
+---Refreshes the overview total-area label.
 function RealisticCropRotationFrame:updateOverviewTotalArea()
     if self.overviewTotalArea == nil then return end
     local label = self.i18n:getText("rcr_overview_total_area")
     self.overviewTotalArea:setText(string.format(label, self.totalAreaHa or 0))
 end
 
+---Returns an element's first-seen size, caching it for later restores.
+-- @param table element
+-- @return table size { w, h }, or nil
 function RealisticCropRotationFrame:getElementOriginalSize(element)
     if element == nil or element.size == nil then return nil end
     if element._frOriginalSize == nil then
@@ -693,6 +789,9 @@ function RealisticCropRotationFrame:getElementOriginalSize(element)
     return element._frOriginalSize
 end
 
+---Returns an element's first-seen position, caching it for later restores.
+-- @param table element
+-- @return table position { x, y }, or nil
 function RealisticCropRotationFrame:getElementOriginalPosition(element)
     if element == nil or element.position == nil then return nil end
     if element._frOriginalPosition == nil then
@@ -701,6 +800,10 @@ function RealisticCropRotationFrame:getElementOriginalPosition(element)
     return element._frOriginalPosition
 end
 
+---Converts a pixel size to normalized screen units.
+-- @param number wPx
+-- @param number hPx
+-- @return table size { w, h } normalized, or nil
 function RealisticCropRotationFrame:getNormalizedPixelSize(wPx, hPx)
     if GuiUtils == nil or GuiUtils.getNormalizedScreenValues == nil then return nil end
     return GuiUtils.getNormalizedScreenValues(string.format(
@@ -710,11 +813,18 @@ function RealisticCropRotationFrame:getNormalizedPixelSize(wPx, hPx)
     ))
 end
 
+---Converts a pixel width to a normalized screen width.
+-- @param number wPx
+-- @return number width normalized
 function RealisticCropRotationFrame:getNormalizedPixelWidth(wPx)
     local size = self:getNormalizedPixelSize(wPx, 0)
     return size ~= nil and size[1] or ((g_pixelSizeScaledX or g_pixelSizeX or 0) * (tonumber(wPx) or 0))
 end
 
+---Measures the rendered width of text in an element's font (normalized units).
+-- @param table textElement
+-- @param string text
+-- @return number width, or nil
 function RealisticCropRotationFrame:getTextRenderWidth(textElement, text)
     if textElement == nil or getTextWidth == nil then return nil end
 
@@ -738,6 +848,12 @@ function RealisticCropRotationFrame:getTextRenderWidth(textElement, text)
     return width
 end
 
+---Resizes a pill (bg + text) to fit its text within padding/min/max/parent bounds.
+-- @param table pillBg
+-- @param table pillText
+-- @param string text
+-- @param table options { paddingPx, minWidthPx, maxWidthPx }
+-- @return number width, or nil
 function RealisticCropRotationFrame:resizePillToText(pillBg, pillText, text, options)
     if pillBg == nil or pillText == nil then return end
     if pillBg.setSize == nil or pillText.setSize == nil then return end
@@ -773,6 +889,11 @@ function RealisticCropRotationFrame:resizePillToText(pillBg, pillText, text, opt
     return width
 end
 
+---Resizes a hero status pill using the hero padding/min/max constants.
+-- @param table pillBg
+-- @param table pillText
+-- @param string text
+-- @return number width, or nil
 function RealisticCropRotationFrame:resizeHeroPillToText(pillBg, pillText, text)
     return self:resizePillToText(pillBg, pillText, text, {
         paddingPx = RealisticCropRotationFrame.HERO_PILL_TEXT_PADDING_PX,
@@ -781,6 +902,13 @@ function RealisticCropRotationFrame:resizeHeroPillToText(pillBg, pillText, text)
     })
 end
 
+---Resizes the weather pill (icon + text) and lays out its inner elements.
+-- @param table pill
+-- @param table pillBg
+-- @param table pillIcon
+-- @param table pillText
+-- @param string text
+-- @return number width, or nil
 function RealisticCropRotationFrame:resizeWeatherPillToText(pill, pillBg, pillIcon, pillText, text)
     if pill == nil or pillBg == nil or pillIcon == nil or pillText == nil then return nil end
     if pill.setSize == nil or pillBg.setSize == nil or pillText.setSize == nil then return nil end
@@ -825,6 +953,10 @@ function RealisticCropRotationFrame:resizeWeatherPillToText(pill, pillBg, pillIc
     return width
 end
 
+---Centres the weather pill and shrinks the title so the hero row never overlaps.
+-- @param table titleElement
+-- @param table weatherPill
+-- @param table statusPillBg
 function RealisticCropRotationFrame:layoutHeroPills(titleElement, weatherPill, statusPillBg)
     local hero = titleElement ~= nil and titleElement.parent or nil
     if hero == nil and weatherPill ~= nil then hero = weatherPill.parent end
@@ -863,19 +995,8 @@ function RealisticCropRotationFrame:layoutHeroPills(titleElement, weatherPill, s
     end
 end
 
--- Calendar legend: each item is "<label> <square>" (square to the RIGHT of
--- the text). The whole block is right-aligned to the legend container's right
--- edge (the container itself is anchorTopRight, flush with the calendar panel).
---
--- Reading order left-to-right is Sowing, Harvest, Cover. To keep the block
--- hugging the right edge while item widths depend on the localized text, items
--- are placed from the right edge leftward in reverse order (Cover first), so
--- the visible result reads Sowing -> Harvest -> Cover with no hardcoded widths.
---
--- All maths are in NORMALIZED screen units (same convention as resizePillToText
--- and layoutGroupBadgeContent): getTextRenderWidth returns normalized widths,
--- and setPosition/setSize consume normalized values directly. Fixed pixel
--- constants are converted once via GuiUtils.getNormalizedScreenValues.
+---Lays out the right-aligned calendar legend (Sowing -> Harvest -> Cover),
+---placed right-to-left so item widths follow the localized text.
 function RealisticCropRotationFrame:layoutCalendarLegend()
     local container = self.calendarLegend
     if container == nil then return end
@@ -940,12 +1061,14 @@ function RealisticCropRotationFrame:layoutCalendarLegend()
     end
 end
 
+---Sets the menu header title from the active tab.
 function RealisticCropRotationFrame:updateMainHeaderTitle()
     if self.menuHeaderTitle == nil then return end
     local key = self:isHistoryTab() and "rcr_tab_history" or "rcr_tab_planning"
     self.menuHeaderTitle:setText(self.i18n:getText(key))
 end
 
+---Subscribes to FARMLAND_OWNER_CHANGED so the sidebar tracks ownership.
 function RealisticCropRotationFrame:subscribeFarmlandChanges()
     if self.isSubscribedToFarmlandChanges then return end
     if self.messageCenter ~= nil and self.messageCenter.subscribe ~= nil
@@ -955,6 +1078,7 @@ function RealisticCropRotationFrame:subscribeFarmlandChanges()
     end
 end
 
+---Unsubscribes from FARMLAND_OWNER_CHANGED.
 function RealisticCropRotationFrame:unsubscribeFarmlandChanges()
     if not self.isSubscribedToFarmlandChanges then return end
     if self.messageCenter ~= nil and self.messageCenter.unsubscribe ~= nil
@@ -964,15 +1088,19 @@ function RealisticCropRotationFrame:unsubscribeFarmlandChanges()
     self.isSubscribedToFarmlandChanges = false
 end
 
+---FARMLAND_OWNER_CHANGED handler: rebuilds the sidebar.
 function RealisticCropRotationFrame:onFarmlandOwnerChanged(_farmlandId, _farmId, _loadFromSavegame)
     self:populateSidebar()
 end
 
+---True when the history tab is the active sidebar view.
+-- @return boolean
 function RealisticCropRotationFrame:isHistoryTab()
     return self.viewSelector == nil
         or self.viewSelector:getState() == RealisticCropRotationFrame.TAB.HISTORY
 end
 
+---Shows/hides the empty, details and planning containers for the active tab.
 function RealisticCropRotationFrame:updateContainerVisibility()
     local hasFields = #(self.farmlandList or {}) > 0
     local isHistory = self:isHistoryTab()
@@ -982,6 +1110,7 @@ function RealisticCropRotationFrame:updateContainerVisibility()
     self:updateMainHeaderTitle()
 end
 
+---Links gamepad focus between the field list and the calendar editor selectors.
 function RealisticCropRotationFrame:linkFocusNavigation()
     if FocusManager == nil then return end
 
@@ -1005,6 +1134,9 @@ function RealisticCropRotationFrame:linkFocusNavigation()
     end
 end
 
+---Returns the 4-slot rotation plan for a farmland (empty plan as fallback).
+-- @param integer farmlandId
+-- @return table plan
 function RealisticCropRotationFrame:getPlanForFarmland(farmlandId)
     local mgr = self:getManager()
     if mgr ~= nil and mgr.getRotationPlan ~= nil then
@@ -1013,6 +1145,9 @@ function RealisticCropRotationFrame:getPlanForFarmland(farmlandId)
     return {"","","",""}
 end
 
+---Returns the 4-slot cover plan for a farmland (empty plan as fallback).
+-- @param integer farmlandId
+-- @return table coverPlan
 function RealisticCropRotationFrame:getCoverPlanForFarmland(farmlandId)
     local mgr = self:getManager()
     if mgr ~= nil and mgr.getRotationCoverPlan ~= nil then
@@ -1021,17 +1156,13 @@ function RealisticCropRotationFrame:getCoverPlanForFarmland(farmlandId)
     return {"","","",""}
 end
 
--- ===========================================================================
---  CROP LIST (built once from fruitTypeManager; drives plan slot selectors)
--- ===========================================================================
+-- CROP LIST (built once from fruitTypeManager; drives plan slot selectors)
 
+---Builds the plantable-crop and cover-crop lists for the editor selectors.
 function RealisticCropRotationFrame:buildPlanCropList()
     self.planCropList = {""}  -- index 1 = no crop
     self.coverCropList = {""}
-    -- Only offer cover crops whose fruitType is actually registered on this map
-    -- (e.g. FLOWERINGCATCHCROP is a map-specific foliage, not present everywhere).
-    -- No fillType/icon requirement here: catch-crop-only fruitTypes have no
-    -- harvest fillType linkage (see getFillTypeForCrop/applySlotCropIcon fallback).
+    -- Only offer cover crops whose fruitType is registered on this map.
     for _, cropName in ipairs(RealisticCropRotationFrame.COVER_CROP_NAMES) do
         local available = g_fruitTypeManager ~= nil and g_fruitTypeManager.getFruitTypeByName ~= nil
             and g_fruitTypeManager:getFruitTypeByName(cropName) ~= nil
@@ -1040,10 +1171,7 @@ function RealisticCropRotationFrame:buildPlanCropList()
         end
     end
 
-    -- Include all plantable crops on this map (including modded ones from any modhub map).
-    -- Filter: next(harvestTransitions) ~= nil ensures the table is non-empty, meaning the
-    -- crop has at least one harvest or forage state defined (FruitTypeDesc.lua line 629).
-    -- Empty {} means decorative/non-harvestable fruit types (trees, weeds, etc.).
+    -- All plantable crops on this map (harvestTransitions non-empty = harvestable).
     if g_fruitTypeManager ~= nil then
         local fruitsTable = g_fruitTypeManager.fruitTypes
         if fruitsTable == nil and g_fruitTypeManager.getFruitTypes ~= nil then
@@ -1103,10 +1231,9 @@ function RealisticCropRotationFrame:buildPlanCropList()
     end
 end
 
--- ===========================================================================
---  SIDEBAR — SmoothList data source
--- ===========================================================================
+-- SIDEBAR — SmoothList data source
 
+---Rebuilds the field list + overview, restoring the prior selection, and refreshes panels.
 function RealisticCropRotationFrame:populateSidebar()
     local previousSelectedId = self.selectedId
     self.farmlandList = self:buildFarmlandList()
@@ -1144,10 +1271,16 @@ function RealisticCropRotationFrame:populateSidebar()
     end
 end
 
+---SmoothList data source: number of sections.
+-- @return integer count
 function RealisticCropRotationFrame:getNumberOfSections()
     return 1
 end
 
+---SmoothList data source: item count for a list/section.
+-- @param table list
+-- @param integer _section
+-- @return integer count
 function RealisticCropRotationFrame:getNumberOfItemsInSection(list, _section)
     if list == self.listPlanOverview then
         return #(self.rotationGroups or {})
@@ -1155,19 +1288,37 @@ function RealisticCropRotationFrame:getNumberOfItemsInSection(list, _section)
     return #(self.farmlandList or {})
 end
 
+---SmoothList data source: cell template id for an item.
+-- @param table list
+-- @param integer _section
+-- @param integer _index
+-- @return string cellType
 function RealisticCropRotationFrame:getCellTypeForItemInSection(list, _section, _index)
     if list == self.listPlanOverview then return "groupRow" end
     return "field"
 end
 
+---SmoothList data source: section header title (none).
+-- @param table _list
+-- @param integer _section
+-- @return string title, or nil
 function RealisticCropRotationFrame:getTitleForSectionHeader(_list, _section)
     return nil
 end
 
+---SmoothList data source: section header height (none).
+-- @param table _list
+-- @param integer _section
+-- @return number height
 function RealisticCropRotationFrame:getSectionHeaderHeight(_list, _section)
     return 0
 end
 
+---SmoothList delegate: fills a cell for an item (group row or field row).
+-- @param table list
+-- @param integer _section
+-- @param integer index
+-- @param table cell
 function RealisticCropRotationFrame:populateCellForItemInSection(list, _section, index, cell)
     if list == self.listPlanOverview then
         self:populateGroupCell(index, cell)
@@ -1186,13 +1337,7 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
     if nameEl ~= nil then nameEl:setText(string.upper(tostring(entry.name or ""))) end
     if areaEl ~= nil then areaEl:setText(string.format("%.1f ha", tonumber(entry.areaHa) or 0)) end
 
-    -- Real-state resolution order, never the history:
-    --   1. Active crop on the parcel (server snapshot on MP clients; density map
-    --      first, then fieldState fallback on the server/local host).
-    --   2. Native ground state on local host/server, looked up via
-    --      MapOverlayGenerator.L10N_SYMBOL.
-    --   3. Neutral "no crop" fallback. NEVER the fallow label — fallow is an
-    --      agronomic choice, not a generic "no crop here" indicator.
+    -- Real state, never history: active crop -> native ground state -> "no crop".
     local activeCropName = nil
     local activeFruitTypeIndex = nil
     if mgr ~= nil and type(mgr.getActiveCropInfo) == "function" then
@@ -1234,9 +1379,7 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
         if not loaded then iconEl:setVisible(false) end
     end
 
-    -- No-crop fields: resolve the single most-important field status (tillage +
-    -- soil condition combined by importance) once, reused for the icon colour and
-    -- the text line. Works on MP clients (live density read; no isPureClient guard).
+    -- No-crop fields: resolve the field status once (icon colour + text), MP-safe.
     local statusLabel, statusKind, statusIndex = nil, nil, nil
     if activeCropName == nil and mgr ~= nil
         and type(mgr.getCurrentFieldStatus) == "function" then
@@ -1273,6 +1416,11 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
     end
 end
 
+---SmoothList delegate: updates the active panel when the field selection changes.
+-- @param table _list
+-- @param integer _section
+-- @param integer index
+-- @param table _cell
 function RealisticCropRotationFrame:onListSelectionChanged(_list, _section, index, _cell)
     if _list ~= self.listFields then return end
     if self.farmlandList == nil then return end
@@ -1287,10 +1435,9 @@ function RealisticCropRotationFrame:onListSelectionChanged(_list, _section, inde
     end
 end
 
--- ===========================================================================
---  TAB SWITCHING
--- ===========================================================================
+-- TAB SWITCHING
 
+---View selector callback: switches the visible panel and restores focus.
 function RealisticCropRotationFrame:onViewChanged()
     self:updateContainerVisibility()
     if self:isHistoryTab() then
@@ -1306,10 +1453,13 @@ function RealisticCropRotationFrame:onViewChanged()
     end
 end
 
--- ===========================================================================
---  DETAIL PANEL (tab 1 — history / current crop / nitrogen / advice / pH)
--- ===========================================================================
+-- DETAIL PANEL (tab 1 — history / current crop / nitrogen / advice / pH)
 
+---Resolves the current timeline slot: active crop, else field status, else "no crop".
+-- @param integer farmlandId
+-- @return string cropName, or nil
+-- @return string family
+-- @return string fallbackText Status/empty text when there is no crop, or nil
 function RealisticCropRotationFrame:getCurrentSlotData(farmlandId)
     local mgr = self:getManager()
     local activeCropName = nil
@@ -1332,6 +1482,8 @@ function RealisticCropRotationFrame:getCurrentSlotData(farmlandId)
     return nil, "UNKNOWN", self.i18n:getText("rcr_sidebar_no_active_crop")
 end
 
+---Refreshes the whole history detail panel for a farmland (title, pills, timeline, gauges).
+-- @param integer farmlandId
 function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
     local farmlandList = self.farmlandList or {}
     if #farmlandList == 0 then return end
@@ -1357,9 +1509,7 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
 
     local history = (mgr ~= nil) and (mgr:getHistory(farmlandId) or {}) or {}
 
-    -- Slot 1 is the current crop (leftmost); slots 2..5 are history N-1..N-4
-    -- (history[1] = N-1), so the strip reads from the present on the left
-    -- back into the past on the right.
+    -- Slot 1 = current crop; slots 2..5 = history N-1..N-4 (present on the left).
     local currentCropName, currentFamily, currentFallbackText = self:getCurrentSlotData(farmlandId)
     local currentBadgeKey = currentFamily == "COVER" and "rcr_cover_crop" or nil
     self:updateTimelineSlot(1, currentCropName, currentFamily, currentFallbackText, currentBadgeKey)
@@ -1373,13 +1523,17 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
     self:updateNitrogenGauge(farmlandId)
     self:updateSoilPHGauge(farmlandId)
     self:updateAdvice(currentFamily)
-    self:updateYieldCard(farmlandId)
+    self:updateFieldCard(farmlandId)
 end
 
--- ---------------------------------------------------------------------------
---  Timeline slot (slotId 1..5) — history tab
--- ---------------------------------------------------------------------------
+-- Timeline slot (slotId 1..5) — history tab
 
+---Fills one history timeline slot (icon, crop name, family badge).
+-- @param integer slotId Slot 1-5 (1 = current)
+-- @param string cropName, or nil
+-- @param string family
+-- @param string fallbackText Text shown when no crop, or nil
+-- @param string badgeTextKey Override badge i18n key, or nil
 function RealisticCropRotationFrame:updateTimelineSlot(slotId, cropName, family, fallbackText, badgeTextKey)
     local pfx = "slot" .. tostring(slotId)
     local iconEl   = self[pfx .. "Icon"]
@@ -1421,10 +1575,11 @@ function RealisticCropRotationFrame:updateTimelineSlot(slotId, cropName, family,
     end
 end
 
--- ---------------------------------------------------------------------------
---  Nitrogen gauge
--- ---------------------------------------------------------------------------
+-- Status bars (shared by the nitrogen and pH gauges)
 
+---Sets a status bar fill width from a 0..1 ratio.
+-- @param table barFill
+-- @param number ratio Clamped to [0, 1]
 function RealisticCropRotationFrame:setStatusBarFill(barFill, ratio)
     ratio = math.max(0, math.min(1, tonumber(ratio) or 0))
 
@@ -1443,10 +1598,10 @@ function RealisticCropRotationFrame:setStatusBarFill(barFill, ratio)
     end
 end
 
--- ---------------------------------------------------------------------------
---  Nitrogen gauge
--- ---------------------------------------------------------------------------
+-- Nitrogen gauge
 
+---Updates the nitrogen gauge: PF average vs crop need, with a vanilla SPRAY_LEVEL fallback.
+-- @param integer farmlandId
 function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId)
     local mgr = self:getManager()
     local ratio = 0
@@ -1510,10 +1665,10 @@ function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId)
     end
 end
 
--- ---------------------------------------------------------------------------
---  Soil pH / lime gauge
--- ---------------------------------------------------------------------------
+-- Soil pH / lime gauge
 
+---Updates the pH gauge: PF average vs soil optimal, with a vanilla LIME_LEVEL fallback.
+-- @param integer farmlandId
 function RealisticCropRotationFrame:updateSoilPHGauge(farmlandId)
     local mgr = self:getManager()
     local ratio = 0
@@ -1575,11 +1730,11 @@ function RealisticCropRotationFrame:updateSoilPHGauge(farmlandId)
     end
 end
 
--- ---------------------------------------------------------------------------
---  Yield card
--- ---------------------------------------------------------------------------
+-- Field card (soil work / weed / growth)
 
-function RealisticCropRotationFrame:updateYieldCard(farmlandId)
+---Updates the field card: required soil work, mirrored weed line, and growth stage.
+-- @param integer farmlandId
+function RealisticCropRotationFrame:updateFieldCard(farmlandId)
     local mgr = self:getManager()
     local info = nil
     if mgr ~= nil and mgr.getFieldCropInfo ~= nil then
@@ -1591,9 +1746,7 @@ function RealisticCropRotationFrame:updateYieldCard(farmlandId)
     local weedText  = hasWeed and info.weedActionText or "-"
     local stageText = hasStage and info.growthStageText or "-"
 
-    -- Required-action KPI (replaces the former yield KPI): the top field-prep
-    -- action the player still has to do on the parcel (needs plowing / rolling),
-    -- or "no action" when the field is ready. Uses the native GIANTS labels.
+    -- Soil-work KPI: top field-prep action (native label), or "none".
     local actionLabel = nil
     if mgr ~= nil and type(mgr.getRequiredFieldActionLabel) == "function" then
         actionLabel = mgr:getRequiredFieldActionLabel(farmlandId)
@@ -1603,19 +1756,12 @@ function RealisticCropRotationFrame:updateYieldCard(farmlandId)
 
     if self.requiredActionValue ~= nil then
         if self.requiredActionValue.applyProfile ~= nil then
-            self.requiredActionValue:applyProfile(hasAction and "frYieldKpiValueSmall" or "frYieldKpiValueNA")
+            self.requiredActionValue:applyProfile(hasAction and "frFieldKpiValueSmall" or "frFieldKpiValueNA")
         end
         self.requiredActionValue:setText(actionText)
     end
 
-    -- Weed and stage KPIs use a smaller dedicated profile because their text
-    -- (the weed tool name, and "(X/Y) · <tier>" for stage) would not fit one
-    -- line at the default 26px size.
-    --
-    -- The weed KPI mirrors the on-foot HUD line: its header carries the game's
-    -- weed stage label (info.weedHeader) and its value the game's tool
-    -- recommendation (info.weedActionText). When no weed applies, the header
-    -- falls back to the static "rcr_weed_header" caption.
+    -- Weed KPI mirrors the on-foot HUD line: header = game stage label, value = tool.
     if self.weedHeaderText ~= nil then
         local headerText = (hasWeed and info.weedHeader ~= nil)
             and info.weedHeader
@@ -1623,25 +1769,25 @@ function RealisticCropRotationFrame:updateYieldCard(farmlandId)
         self.weedHeaderText:setText(headerText)
     end
 
-    if self.yieldPerHaValue ~= nil then
-        if self.yieldPerHaValue.applyProfile ~= nil then
-            self.yieldPerHaValue:applyProfile(hasWeed and "frYieldKpiValueSmall" or "frYieldKpiValueNA")
+    if self.weedValue ~= nil then
+        if self.weedValue.applyProfile ~= nil then
+            self.weedValue:applyProfile(hasWeed and "frFieldKpiValueSmall" or "frFieldKpiValueNA")
         end
-        self.yieldPerHaValue:setText(weedText)
+        self.weedValue:setText(weedText)
     end
 
-    if self.yieldStageValue ~= nil then
-        if self.yieldStageValue.applyProfile ~= nil then
-            self.yieldStageValue:applyProfile(hasStage and "frYieldKpiValueSmall" or "frYieldKpiValueNA")
+    if self.growthValue ~= nil then
+        if self.growthValue.applyProfile ~= nil then
+            self.growthValue:applyProfile(hasStage and "frFieldKpiValueSmall" or "frFieldKpiValueNA")
         end
-        self.yieldStageValue:setText(stageText)
+        self.growthValue:setText(stageText)
     end
 end
 
--- ---------------------------------------------------------------------------
---  Agronomic advice
--- ---------------------------------------------------------------------------
+-- Agronomic advice
 
+---Sets the advice line from the current crop's family.
+-- @param string currentFamily
 function RealisticCropRotationFrame:updateAdvice(currentFamily)
     if self.adviceText == nil then return end
     local key = RealisticCropRotationFrame.ADVICE_KEY[currentFamily]
@@ -1650,10 +1796,10 @@ function RealisticCropRotationFrame:updateAdvice(currentFamily)
                    or self.i18n:getText("rcr_advice_no_current_crop"))
 end
 
--- ===========================================================================
---  PLANNING PANEL (tab 2)
--- ===========================================================================
+-- PLANNING PANEL (tab 2)
 
+---Refreshes the planning panel for a farmland (title, calendar, score, pills).
+-- @param integer farmlandId
 function RealisticCropRotationFrame:updatePlanningPanel(farmlandId)
     local farmlandList = self.farmlandList or {}
     if #farmlandList == 0 then return end
@@ -1681,10 +1827,12 @@ function RealisticCropRotationFrame:updatePlanningPanel(farmlandId)
     self:layoutHeroPills(self.planTitle, self.planWeatherPill, self.planStatusPillBg)
 end
 
--- ---------------------------------------------------------------------------
---  Annual calendar — crop selector + sow window + cover marker
--- ---------------------------------------------------------------------------
+-- Annual calendar — crop selector + sow window + cover marker
 
+---Sets an element's position from pixel coordinates (y is downward).
+-- @param table element
+-- @param number xPx
+-- @param number yPx
 function RealisticCropRotationFrame:setElementPixelPosition(element, xPx, yPx)
     if element == nil or element.setPosition == nil
         or GuiUtils == nil or GuiUtils.getNormalizedScreenValues == nil then
@@ -1699,6 +1847,10 @@ function RealisticCropRotationFrame:setElementPixelPosition(element, xPx, yPx)
     element:setPosition(pos[1], pos[2])
 end
 
+---Sets an element's size from pixel dimensions.
+-- @param table element
+-- @param number wPx
+-- @param number hPx
 function RealisticCropRotationFrame:setElementPixelSize(element, wPx, hPx)
     if element == nil or element.setSize == nil
         or GuiUtils == nil or GuiUtils.getNormalizedScreenValues == nil then
@@ -1713,6 +1865,9 @@ function RealisticCropRotationFrame:setElementPixelSize(element, wPx, hPx)
     element:setSize(size[1], size[2])
 end
 
+---Resolves the number of calendar periods/year and the first period index.
+-- @return integer periodCount
+-- @return integer firstPeriod
 function RealisticCropRotationFrame:getCalendarPeriodInfo()
     local env = g_currentMission ~= nil and g_currentMission.environment or nil
     local candidates = {
@@ -1744,6 +1899,10 @@ function RealisticCropRotationFrame:getCalendarPeriodInfo()
     return 12, 1
 end
 
+---Returns the current month's column index (1..periodCount) in the calendar.
+-- @param integer periodCount
+-- @param integer firstPeriod
+-- @return integer index
 function RealisticCropRotationFrame:getCurrentCalendarPeriodIndex(periodCount, firstPeriod)
     local env = g_currentMission ~= nil and g_currentMission.environment or nil
     local currentPeriod = env ~= nil and tonumber(env.currentPeriod) or nil
@@ -1757,13 +1916,12 @@ function RealisticCropRotationFrame:getCurrentCalendarPeriodIndex(periodCount, f
     return math.max(1, math.min(periodCount, math.floor(index)))
 end
 
-function RealisticCropRotationFrame:getCalendarGrowthMode()
-    return g_currentMission ~= nil
-        and g_currentMission.missionInfo ~= nil
-        and g_currentMission.missionInfo.growthMode
-        or nil
-end
-
+---Per-period planting/harvest flags for a crop (calendar column order).
+-- @param string cropName
+-- @param integer periodCount
+-- @param integer firstPeriod
+-- @return table plant Booleans per column, or nil
+-- @return table harvest Booleans per column, or nil
 function RealisticCropRotationFrame:getCropPeriodFlags(cropName, periodCount, firstPeriod)
     if cropName == nil or cropName == "" then return nil, nil end
     if g_fruitTypeManager == nil or type(g_fruitTypeManager.getFruitTypeByName) ~= "function" then return nil, nil end
@@ -1786,21 +1944,12 @@ function RealisticCropRotationFrame:getCropPeriodFlags(cropName, periodCount, fi
     return plant, harvest
 end
 
--- Per calendar flags index, whether the cover crop is actively growing toward
--- harvest in that period -- i.e. the period is inside its growing season, not
--- winter dormancy. Derived from the game's own data:
---   * harvest-ready state = fruitType.minHarvestingGrowthState (radish=2, the
---     flowering catch crop=4 in vanilla data);
---   * a period qualifies when a plant one step below that state advances into it
---     (growthDataSeasonal.periods[p].growthMapping[minHarvest-1] >= minHarvest).
--- This single rule fits both shapes of cover: the radish, whose harvest-ready
--- state IS its first visible state (so germinating 1->2 is its growth, possible
--- only Mar-Oct), and the catch crop, which needs real vegetative growth 3->4
--- (possible only Apr-Nov). Winter periods stall or regress that final step.
---
--- Returns nil when the growth data cannot be read (no growthMapping, or no such
--- transition anywhere) so callers treat it as "unknown" and skip the growth
--- constraint rather than hiding the cover.
+---Per-period "growing toward harvest" flags for a crop (growthDataSeasonal /
+---minHarvestingGrowthState). nil when the data can't be read.
+-- @param string cropName
+-- @param integer periodCount
+-- @param integer firstPeriod
+-- @return table growing Booleans per column, or nil
 function RealisticCropRotationFrame:getCropGrowthPeriods(cropName, periodCount, firstPeriod)
     if cropName == nil or cropName == "" then return nil end
     if g_fruitTypeManager == nil or type(g_fruitTypeManager.getFruitTypeByName) ~= "function" then return nil end
@@ -1835,6 +1984,10 @@ function RealisticCropRotationFrame:getCropGrowthPeriods(cropName, periodCount, 
     return grow
 end
 
+---Returns contiguous true-runs in a flag array as { start, len } entries.
+-- @param table flags
+-- @param integer periodCount
+-- @return table runs
 function RealisticCropRotationFrame:getFlagRuns(flags, periodCount)
     local runs = {}
     if type(flags) ~= "table" then return runs end
@@ -1855,6 +2008,12 @@ function RealisticCropRotationFrame:getFlagRuns(flags, periodCount)
     return runs
 end
 
+---Longest contiguous planting window for a crop.
+-- @param string cropName
+-- @param integer periodCount
+-- @param integer firstPeriod
+-- @return integer start Column, or nil
+-- @return integer len Length in columns
 function RealisticCropRotationFrame:getCropPlantingWindow(cropName, periodCount, firstPeriod)
     local plant = self:getCropPeriodFlags(cropName, periodCount, firstPeriod)
     if plant == nil then return nil end
@@ -1870,6 +2029,12 @@ function RealisticCropRotationFrame:getCropPlantingWindow(cropName, periodCount,
     return bestStart, bestLen
 end
 
+---Longest contiguous harvest window for a crop.
+-- @param string cropName
+-- @param integer periodCount
+-- @param integer firstPeriod
+-- @return integer start Column, or nil
+-- @return integer len Length in columns
 function RealisticCropRotationFrame:getCropHarvestWindow(cropName, periodCount, firstPeriod)
     local _, harvest = self:getCropPeriodFlags(cropName, periodCount, firstPeriod)
     if harvest == nil then return nil end
@@ -1885,8 +2050,9 @@ function RealisticCropRotationFrame:getCropHarvestWindow(cropName, periodCount, 
     return bestStart, bestLen
 end
 
--- Thick on season boundaries (every CALENDAR_SEASON_LEN-th line: 1,4,7,10,13),
--- thin otherwise. Index is 1-based across the 13 grid lines.
+---Grid line width: thick on season boundaries (every CALENDAR_SEASON_LEN-th line), thin otherwise.
+-- @param integer i 1-based grid line index
+-- @return integer widthPx
 function RealisticCropRotationFrame:getCalendarGridLineWidth(i)
     local seasonLen = RealisticCropRotationFrame.CALENDAR_SEASON_LEN
     if seasonLen >= 1 and ((i - 1) % seasonLen) == 0 then
@@ -1895,6 +2061,10 @@ function RealisticCropRotationFrame:getCalendarGridLineWidth(i)
     return RealisticCropRotationFrame.CALENDAR_GRID_W_THIN
 end
 
+---Lays out the calendar axis (month labels, grid lines, today marker).
+-- @return integer periodCount
+-- @return integer firstPeriod
+-- @return number periodW Column width in pixels
 function RealisticCropRotationFrame:updateCalendarAxis()
     local periodCount, firstPeriod = self:getCalendarPeriodInfo()
     local periodW = RealisticCropRotationFrame.CALENDAR_AXIS_W / math.max(1, periodCount)
@@ -1950,9 +2120,7 @@ function RealisticCropRotationFrame:updateCalendarAxis()
     local marker = self.calendarTodayMarker
     if marker ~= nil then
         local todayIndex = self:getCurrentCalendarPeriodIndex(periodCount, firstPeriod)
-        -- Fraction of the way through the current month. Defaults to mid-column
-        -- (0.5) and is refined to the real day-in-period when the environment
-        -- exposes it (env.plannedDaysPerPeriod + env:getDayInPeriodFromDay).
+        -- Fraction through the current month (0.5 default, refined from env day-in-period).
         local dayFrac = 0.5
         local env = g_currentMission ~= nil and g_currentMission.environment or nil
         if env ~= nil and env.getDayInPeriodFromDay ~= nil then
@@ -1973,6 +2141,13 @@ function RealisticCropRotationFrame:updateCalendarAxis()
     return periodCount, firstPeriod, periodW
 end
 
+---Renders one calendar row: row bg, crop/cover icons, sow/harvest/cover bars.
+-- @param integer slotIdx Row 1-4
+-- @param string cropName
+-- @param string coverCropName
+-- @param integer periodCount
+-- @param integer firstPeriod
+-- @param number periodW Column width in pixels
 function RealisticCropRotationFrame:applyCalendarRow(slotIdx, cropName, coverCropName, periodCount, firstPeriod, periodW)
     local rowBg = self.calendarRowBg ~= nil and self.calendarRowBg[slotIdx] or nil
     local cropIcon = self.calendarCropIcon ~= nil and self.calendarCropIcon[slotIdx] or nil
@@ -2015,9 +2190,7 @@ function RealisticCropRotationFrame:applyCalendarRow(slotIdx, cropName, coverCro
         local show = visible and startP ~= nil and lenP ~= nil and lenP > 0
         bar:setVisible(show)
         if show then
-            -- Inset each end by the width of the grid line that bounds it, so the
-            -- bar ends sit cleanly between the lines instead of under them. The
-            -- bounding lines are at indices startP (left) and startP+lenP (right).
+            -- Inset each end by its bounding grid-line width so the bar sits between lines.
             local leftInset  = self:getCalendarGridLineWidth(startP)
             local rightInset = self:getCalendarGridLineWidth(startP + lenP)
             local x = axisX + ((startP - 1) * periodW) + leftInset
@@ -2025,11 +2198,7 @@ function RealisticCropRotationFrame:applyCalendarRow(slotIdx, cropName, coverCro
             self:setElementPixelPosition(bar, x, y)
             self:setElementPixelSize(bar, math.max(4, w), LANE_H)
 
-            -- The pixel-based x/w above are rounded independently from the grid
-            -- lines' own positions, which can leave a 1px mismatch between a bar
-            -- edge and its bounding line (e.g. flush on one side, a 1px gap on
-            -- the other). Snap the bar's left/right edges to the bounding grid
-            -- lines' actual rendered edges so both sides line up identically.
+            -- Snap the bar edges to the bounding grid lines (avoids 1px rounding mismatch).
             local leftLine  = self.calendarMonthGridLine ~= nil and self.calendarMonthGridLine[startP] or nil
             local rightLine = self.calendarMonthGridLine ~= nil and self.calendarMonthGridLine[startP + lenP] or nil
             if leftLine ~= nil and rightLine ~= nil and bar.parent ~= nil then
@@ -2061,6 +2230,9 @@ function RealisticCropRotationFrame:applyCalendarRow(slotIdx, cropName, coverCro
     end
 end
 
+---Returns a defensive 4-slot copy of a plan (empty strings for gaps).
+-- @param table plan
+-- @return table copy
 function RealisticCropRotationFrame:copyFourSlotPlan(plan)
     local copy = {"", "", "", ""}
     for i = 1, 4 do
@@ -2069,6 +2241,8 @@ function RealisticCropRotationFrame:copyFourSlotPlan(plan)
     return copy
 end
 
+---Returns the clamped calendar editor slot index (1-4).
+-- @return integer slotIdx
 function RealisticCropRotationFrame:getCalendarEditSlotIndex()
     local slotIdx = math.floor(tonumber(self.calendarEditSlotIdx) or 1)
     slotIdx = math.max(1, math.min(4, slotIdx))
@@ -2076,6 +2250,10 @@ function RealisticCropRotationFrame:getCalendarEditSlotIndex()
     return slotIdx
 end
 
+---Sets a selector's state to the index of a crop in its list (1 when absent).
+-- @param table selector
+-- @param table list Crop name list
+-- @param string cropName
 function RealisticCropRotationFrame:setSelectorStateFromCrop(selector, list, cropName)
     if selector == nil or list == nil then return end
     local state = 1
@@ -2085,6 +2263,7 @@ function RealisticCropRotationFrame:setSelectorStateFromCrop(selector, list, cro
     selector:setState(state, false)
 end
 
+---Syncs the crop/cover editor selectors to the active slot's local plan.
 function RealisticCropRotationFrame:updateCalendarEditorSelectorsFromSlot()
     local slotIdx = self:getCalendarEditSlotIndex()
     self:setSelectorStateFromCrop(
@@ -2099,6 +2278,7 @@ function RealisticCropRotationFrame:updateCalendarEditorSelectorsFromSlot()
     )
 end
 
+---Redraws the calendar axis + 4 rows from the local plans and refreshes score/pill.
 function RealisticCropRotationFrame:renderCalendarFromLocalPlans()
     local plan = self.calendarLocalPlan or {"", "", "", ""}
     local coverPlan = self.calendarLocalCoverPlan or {"", "", "", ""}
@@ -2113,6 +2293,8 @@ function RealisticCropRotationFrame:renderCalendarFromLocalPlans()
     self:layoutHeroPills(self.planTitle, self.planWeatherPill, self.planStatusPillBg)
 end
 
+---Loads a farmland's plans into the local editor state and renders the calendar.
+-- @param integer farmlandId
 function RealisticCropRotationFrame:updateCalendar(farmlandId)
     self.calendarLocalPlan = self:copyFourSlotPlan(self:getPlanForFarmland(farmlandId))
     self.calendarLocalCoverPlan = self:copyFourSlotPlan(self:getCoverPlanForFarmland(farmlandId))
@@ -2120,6 +2302,8 @@ function RealisticCropRotationFrame:updateCalendar(farmlandId)
     self:renderCalendarFromLocalPlans()
 end
 
+---Builds the main plan with the active slot overridden by the crop selector.
+-- @return table plan
 function RealisticCropRotationFrame:getPlanFromSelectors()
     local sourcePlan = self.calendarLocalPlan
     if sourcePlan == nil and self.selectedId ~= nil then
@@ -2134,6 +2318,8 @@ function RealisticCropRotationFrame:getPlanFromSelectors()
     return plan
 end
 
+---Builds the cover plan with the active slot overridden by the cover selector.
+-- @return table coverPlan
 function RealisticCropRotationFrame:getCoverPlanFromSelectors()
     local sourceCoverPlan = self.calendarLocalCoverPlan
     if sourceCoverPlan == nil and self.selectedId ~= nil then
@@ -2148,12 +2334,14 @@ function RealisticCropRotationFrame:getCoverPlanFromSelectors()
     return coverPlan
 end
 
+---Rebuilds local plans from the selectors and redraws the calendar (no save).
 function RealisticCropRotationFrame:updateCalendarVisualsFromSelectors()
     self.calendarLocalPlan = self:getPlanFromSelectors()
     self.calendarLocalCoverPlan = self:getCoverPlanFromSelectors()
     self:renderCalendarFromLocalPlans()
 end
 
+---Applies a server snapshot: rebuilds the history tab, but never disrupts the planner mid-edit.
 function RealisticCropRotationFrame:onServerSyncReceived()
     if self.isApplyingServerSync then
         return
@@ -2161,12 +2349,8 @@ function RealisticCropRotationFrame:onServerSyncReceived()
 
     self.isApplyingServerSync = true
 
-    -- In the history tab it is safe to rebuild the sidebar/details from the
-    -- authoritative server snapshot.
-    -- In the planner tab, do NOT call populateSidebar/updateCalendar here:
-    -- server snapshots can arrive while the user is clicking MultiTextOption
-    -- arrows. Re-setting selector state during that interaction makes the
-    -- control appear to skip crops or fail to advance.
+    -- History tab: safe to rebuild from the server snapshot. Planner tab: do NOT
+    -- rebuild here -- a snapshot mid-interaction would disrupt the MultiTextOption.
     if self:isHistoryTab() then
         self:populateSidebar()
     else
@@ -2180,6 +2364,9 @@ function RealisticCropRotationFrame:onServerSyncReceived()
     self.isApplyingServerSync = false
 end
 
+---Sets a crop icon element to the crop's HUD overlay, or hides it.
+-- @param table iconEl
+-- @param string cropName
 function RealisticCropRotationFrame:applySlotCropIcon(iconEl, cropName)
     if iconEl == nil then return end
     if cropName == nil or cropName == "" then
@@ -2213,10 +2400,9 @@ function RealisticCropRotationFrame:applySlotCropIcon(iconEl, cropName)
     if not loaded then iconEl:setVisible(false) end
 end
 
--- ---------------------------------------------------------------------------
---  Calendar editor onClick handlers
--- ---------------------------------------------------------------------------
+-- Calendar editor onClick handlers
 
+---Edit-slot selector callback: re-syncs the editor selectors and redraws.
 function RealisticCropRotationFrame:onChangeCalendarEditStep()
     if self.isApplyingServerSync then return end
     self.calendarEditSlotIdx = self:getCalendarEditSlotIndex()
@@ -2224,7 +2410,8 @@ function RealisticCropRotationFrame:onChangeCalendarEditStep()
     self:renderCalendarFromLocalPlans()
 end
 
--- Lets the user select a calendar row by clicking it directly
+---Selects a calendar row when its row button is clicked.
+-- @param table button The clicked row button
 function RealisticCropRotationFrame:onCalendarRowClicked(button)
     if self.isApplyingServerSync or self.calendarRowButton == nil then return end
 
@@ -2237,14 +2424,18 @@ function RealisticCropRotationFrame:onCalendarRowClicked(button)
     end
 end
 
+---Crop selector callback: applies the change to the active slot.
 function RealisticCropRotationFrame:onChangeCalendarEditCrop()
     self:handleCalendarCropChange(self:getCalendarEditSlotIndex())
 end
 
+---Cover selector callback: applies the change to the active slot.
 function RealisticCropRotationFrame:onChangeCalendarEditCover()
     self:handleCalendarCoverChange(self:getCalendarEditSlotIndex())
 end
 
+---Writes a slot's main crop (event on MP client, direct on server) and refreshes the UI.
+-- @param integer slotIdx Slot 1-4
 function RealisticCropRotationFrame:handleCalendarCropChange(slotIdx)
     if self.isApplyingServerSync then return end
     if self.selectedId == nil then return end
@@ -2281,15 +2472,15 @@ function RealisticCropRotationFrame:handleCalendarCropChange(slotIdx)
 
     self:renderCalendarFromLocalPlans()
 
-    -- Keep the overview refreshed from the repository. On MP clients this may
-    -- lag one server snapshot behind, but it avoids using local optimistic data
-    -- as saved truth. The calendar itself is updated directly above.
+    -- Refresh the overview from the repository (may lag one MP snapshot, never optimistic data).
     self:buildRotationGroups()
     if self.listPlanOverview ~= nil then
         self.listPlanOverview:reloadData()
     end
 end
 
+---Writes a slot's cover crop (event on MP client, direct on server) and refreshes the UI.
+-- @param integer slotIdx Slot 1-4
 function RealisticCropRotationFrame:handleCalendarCoverChange(slotIdx)
     if self.isApplyingServerSync then return end
     if self.selectedId == nil then return end
@@ -2332,10 +2523,11 @@ function RealisticCropRotationFrame:handleCalendarCoverChange(slotIdx)
     end
 end
 
--- ---------------------------------------------------------------------------
---  Score card
--- ---------------------------------------------------------------------------
+-- Score card
 
+---Updates the rotation score card (number + label) from a plan.
+-- @param table plan
+-- @param table coverPlan
 function RealisticCropRotationFrame:updateScoreCard(plan, coverPlan)
     if self.scoreText == nil then return end
     plan = plan or {"","","",""}
@@ -2345,9 +2537,7 @@ function RealisticCropRotationFrame:updateScoreCard(plan, coverPlan)
     local scoreKey = self:getScoreTextKey(score, plan)
     self.scoreText:setText(self.i18n:getText(scoreKey))
 
-    -- Cursor positioner: width = f(score) moves the cursor dot along the track
-    -- Track width=400px, cursor=14px → positioner range: 14..400px
-    -- positionerW = (score/100) * (400-14) + 14
+    -- Cursor x = (score/100)*(400-14)+14 px along the 400px track (14px cursor).
     if self.scoreCursorPos ~= nil and self.scoreCursorPos.setSize ~= nil then
         local trackW   = 400
         local cursorW  = 14
@@ -2369,6 +2559,10 @@ function RealisticCropRotationFrame:updateScoreCard(plan, coverPlan)
     end
 end
 
+---Scores a rotation 0-100 from family spacing, legume->cereal bonus, diversity and residue.
+-- @param table plan
+-- @param table coverPlan
+-- @return integer score
 function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
     local families = {}
     for i = 1, 4 do
@@ -2385,18 +2579,10 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
     for _ in pairs(families) do filledCount = filledCount + 1 end
     if filledCount < 2 then return 0 end
 
-    -- With only 2 slots filled, there is a single transition and not enough
-    -- information to call the rotation "excellent" yet (years 3-4 are still
-    -- unknown). Cap the starting score so such plans land in "good" at best;
-    -- penalties still apply in full. From 3 filled slots on, a real rotation
-    -- pattern exists and the full 0..100 range (incl. bonuses) is available.
+    -- < 3 filled slots: no real rotation pattern yet -- cap the start score at "good".
     local score = (filledCount >= 3) and 100 or 70
 
-    -- Family return-interval penalty: for every pair of slots sharing the
-    -- same family, penalize if they are closer together than the family's
-    -- minimum recommended interval. A cover crop right after the earlier
-    -- slot halves the penalty (it helps break the cycle). No wraparound:
-    -- the plan is a 4-year window, not a repeating cycle.
+    -- Penalize same-family slots closer than the family's min interval (a cover halves it).
     for i = 1, 3 do
         for j = i + 1, 4 do
             local fam = families[i]
@@ -2433,11 +2619,7 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
         score = score + (uniqueCount / filledCount) * RealisticCropRotationFrame.SCORE_DIVERSITY_BONUS_MAX
     end
 
-    -- A rotation that returns zero nitrogen to the soil (no legume/forage
-    -- credit, no cover crop) cannot be "excellent" regardless of family
-    -- diversity or interval spacing: the mod's whole premise is that good
-    -- rotations build up a residue. Cap such plans at the same ceiling as
-    -- incomplete (2-slot) plans, i.e. "good" at best.
+    -- No nitrogen returned to the soil -> cap at "good" (good rotations build residue).
     if self:getPlanNitrogenResidueKgHa(plan, coverPlan) == nil then
         score = math.min(score, 70)
     end
@@ -2445,6 +2627,10 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
     return math.max(0, math.min(100, math.floor(score + 0.5)))
 end
 
+---Returns the long score-description i18n key for a score/plan.
+-- @param integer score
+-- @param table plan
+-- @return string i18nKey
 function RealisticCropRotationFrame:getScoreTextKey(score, plan)
     local anyFilled = false
     for i = 1, 4 do if (plan[i] or "") ~= "" then anyFilled = true; break end end
@@ -2456,6 +2642,12 @@ function RealisticCropRotationFrame:getScoreTextKey(score, plan)
     return "rcr_score_poor"
 end
 
+---Returns the short score badge key + RGB colour for a score.
+-- @param integer score
+-- @return string i18nKey, or nil
+-- @return number r
+-- @return number g
+-- @return number b
 function RealisticCropRotationFrame:getScoreLabel(score)
     if score >= 80 then return "rcr_score_short_optimal", 0.325, 0.565, 0.071
     elseif score >= 60 then return "rcr_score_short_good",  0.95,  0.85, 0.05
@@ -2465,10 +2657,9 @@ function RealisticCropRotationFrame:getScoreLabel(score)
     end
 end
 
--- ===========================================================================
---  ROTATION GROUPS — overview of fields sharing the same crop rotation
--- ===========================================================================
+-- ROTATION GROUPS — overview of fields sharing the same crop rotation
 
+---Groups owned fields by identical plan+cover sequence and sorts them for the overview.
 function RealisticCropRotationFrame:buildRotationGroups()
     local groups   = {}
     local groupMap = {}
@@ -2511,6 +2702,9 @@ function RealisticCropRotationFrame:buildRotationGroups()
     self.rotationGroups = groups
 end
 
+---Joins field names into one upper-cased "A | B | C" string.
+-- @param table fieldNames
+-- @return string text
 function RealisticCropRotationFrame:getCompactGroupFieldNames(fieldNames)
     local parts = {}
     for i = 1, #(fieldNames or {}) do
@@ -2520,10 +2714,11 @@ function RealisticCropRotationFrame:getCompactGroupFieldNames(fieldNames)
     return table.concat(parts, "  |  ")
 end
 
--- Formats a planting window [start, start+len-1] (period indices, possibly
--- wrapping past periodCount) as a month range (e.g. "Sep-Oct"), using the
--- same month-key mapping as the calendar tab axis (flags index i <->
--- CALENDAR_MONTH_KEYS[i]).
+---Formats a window (period indices, may wrap) as a month range, e.g. "Sep-Oct".
+-- @param integer start Start column
+-- @param integer len Length in columns
+-- @param integer periodCount
+-- @return string text
 function RealisticCropRotationFrame:formatCalendarPeriodRange(start, len, periodCount)
     if start == nil or len == nil or len <= 0 then return "" end
 
@@ -2537,22 +2732,13 @@ function RealisticCropRotationFrame:formatCalendarPeriodRange(start, len, period
     return startLabel .. "-" .. endLabel
 end
 
--- Cover crop sowing window for a rotation slot, derived entirely from game data
--- (no hard-coded dates). For each candidate month it answers one question: "if
--- the cover is sown this month, can it still accumulate its minimum growth before
--- the next main crop is sown (and so release its residue)?". A month qualifies
--- when all of:
---   (1) it is in the free window between this slot's crop being harvested and the
---       next crop being sown. The rotation cycles, so "next" is the next NON-EMPTY
---       slot going forward (in a 3-crop plan, slot 3's next is slot 1).
---   (2) the cover may be sown that month (growthDataSeasonal.plantingAllowed).
---   (3) at least COVER_MIN_GROWTH_MONTHS growth-possible months remain before the
---       next crop is sown (growthDataSeasonal.growthMapping). Growth is counted
---       only in months where the crop actually advances -- winter stalls do not
---       count -- and may run past the sowing window, since sowing and growing are
---       separate windows.
--- Constraints whose runtime data the engine does not expose are skipped, so a
--- cover is never hidden merely for lack of that data.
+---Cover sowing window for a slot (game data only): the free window between this slot's
+---harvest and the next sowing, requiring >= COVER_MIN_GROWTH_MONTHS of growth.
+-- @param table group
+-- @param integer slotIndex
+-- @param integer periodCount
+-- @param integer firstPeriod
+-- @return string text
 function RealisticCropRotationFrame:getRotationAwareCoverSowingText(group, slotIndex, periodCount, firstPeriod)
     local coverName = group.coverPlan[slotIndex] or ""
     if coverName == "" then return "" end
@@ -2563,9 +2749,7 @@ function RealisticCropRotationFrame:getRotationAwareCoverSowingText(group, slotI
     if harvestStart == nil then return "" end
     local fieldFreeStart = ((harvestStart - 1 + harvestLen) % periodCount) + 1
 
-    -- (1b) The destruction deadline is when the next main crop is sown. The
-    -- rotation cycles, so "next" is the next non-empty slot going forward (a
-    -- 3-crop plan's slot 3 wraps to slot 1, not the empty slot 4).
+    -- (1b) Deadline = when the next non-empty slot is sown (wraps in a <4-crop plan).
     local nextCrop = ""
     for step = 1, 3 do
         local idx = ((slotIndex - 1 + step) % 4) + 1
@@ -2581,10 +2765,8 @@ function RealisticCropRotationFrame:getRotationAwareCoverSowingText(group, slotI
     local plantable = self:getCropPeriodFlags(coverName, periodCount, firstPeriod)
     local growsIn = self:getCropGrowthPeriods(coverName, periodCount, firstPeriod)
 
-    -- Growth-possible months still available from a candidate sowing month up to
-    -- the deadline. Growth happens only in growth-possible months and may continue
-    -- after the sowing window has closed. If the engine did not expose growth data
-    -- for this cover, do not restrict on it.
+    -- Growth-possible months from a candidate sowing month to the deadline (no restriction
+    -- when the engine exposes no growth data).
     local function growthMonthsAvailable(fromOffset)
         if growsIn == nil then
             return RealisticCropRotationFrame.COVER_MIN_GROWTH_MONTHS
@@ -2618,9 +2800,9 @@ function RealisticCropRotationFrame:getRotationAwareCoverSowingText(group, slotI
     return self:formatCalendarPeriodRange(sowStart, sowLen, periodCount)
 end
 
--- Cover crop recap, displayed on its own line. For each rotation slot with
--- a planned cover crop, states the cover crop's name and its rotation-aware
--- sowing period (month range), so the player knows when to sow it.
+---Cover recap line: each slot's cover crop name + its rotation-aware sowing month range.
+-- @param table group
+-- @return string text
 function RealisticCropRotationFrame:getGroupCoverRecapText(group)
     if group == nil or group.coverPlan == nil then return "" end
 
@@ -2646,6 +2828,10 @@ function RealisticCropRotationFrame:getGroupCoverRecapText(group)
     return table.concat(parts, "   ·   ")
 end
 
+---Returns the first and last filled slot indices of a plan.
+-- @param table plan
+-- @return integer firstFilled, or nil
+-- @return integer lastFilled, or nil
 function RealisticCropRotationFrame:getGroupPlanBounds(plan)
     local firstFilled, lastFilled = nil, nil
     for i = 1, 4 do
@@ -2657,6 +2843,15 @@ function RealisticCropRotationFrame:getGroupPlanBounds(plan)
     return firstFilled, lastFilled
 end
 
+---Resolves how one overview slot renders: crop badge, inner "none" gap, or hidden.
+-- @param table group
+-- @param integer slotIndex
+-- @param integer firstFilled
+-- @param integer lastFilled
+-- @return boolean showSlot
+-- @return boolean hasCrop
+-- @return string displayText
+-- @return string cropName
 function RealisticCropRotationFrame:getGroupSlotDisplay(group, slotIndex, firstFilled, lastFilled)
     local plan = group ~= nil and group.plan or nil
     local cropName = plan ~= nil and (plan[slotIndex] or "") or ""
@@ -2672,6 +2867,13 @@ function RealisticCropRotationFrame:getGroupSlotDisplay(group, slotIndex, firstF
     return false, false, "", ""
 end
 
+---Lays out one overview crop badge (icon + centred label) and returns its width.
+-- @param table cell
+-- @param integer slotIndex
+-- @param string displayText
+-- @param number badgeX Override x position, or nil
+-- @param boolean showIcon Defaults to true
+-- @return number badgeWidth, or nil
 function RealisticCropRotationFrame:layoutGroupBadgeContent(cell, slotIndex, displayText, badgeX, showIcon)
     if cell == nil or cell.getAttribute == nil then return end
     if GuiUtils == nil or GuiUtils.getNormalizedScreenValues == nil then return end
@@ -2753,6 +2955,11 @@ function RealisticCropRotationFrame:layoutGroupBadgeContent(cell, slotIndex, dis
     return badgeWidth
 end
 
+---Returns the original gaps before/after a slot's connector arrow (normalized units).
+-- @param table cell
+-- @param integer slotIndex
+-- @return number gapBeforeArrow
+-- @return number gapAfterArrow
 function RealisticCropRotationFrame:getGroupConnectorGaps(cell, slotIndex)
     if cell == nil or cell.getAttribute == nil then return 0, 0 end
 
@@ -2775,6 +2982,9 @@ function RealisticCropRotationFrame:getGroupConnectorGaps(cell, slotIndex)
     return gapBeforeArrow, gapAfterArrow
 end
 
+---Lays out a whole overview group row: badges, connector arrows, packed left-to-right.
+-- @param table cell
+-- @param table group
 function RealisticCropRotationFrame:layoutGroupRow(cell, group)
     if cell == nil or cell.getAttribute == nil or group == nil then return end
 
@@ -2829,6 +3039,9 @@ function RealisticCropRotationFrame:layoutGroupRow(cell, group)
     end
 end
 
+---Fills an overview group cell: badges, count, area, score, field names, cover recap.
+-- @param integer index Group index
+-- @param table cell
 function RealisticCropRotationFrame:populateGroupCell(index, cell)
     if cell == nil or cell.getAttribute == nil then return end
     local group = (self.rotationGroups or {})[index]
