@@ -206,6 +206,89 @@ local function collectFieldDimensionSamples(field, samples)
     end
 end
 
+---Filter restricting density writes to actual field ground (any non-zero ground type, so
+---post-harvest/stubble ground is included; 0 = not a field).
+-- @return table filter DensityMapFilter, or nil when the ground system is unavailable
+local function getFieldGroundFilter()
+    local mission = g_currentMission
+    local fieldGroundSystem = mission ~= nil and mission.fieldGroundSystem or nil
+    if fieldGroundSystem == nil or DensityMapFilter == nil or DensityValueCompareType == nil
+        or FieldDensityMap == nil or FieldDensityMap.GROUND_TYPE == nil
+        or type(fieldGroundSystem.getDensityMapData) ~= "function" then
+        return nil
+    end
+    local mapId, firstChannel, numChannels = fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE)
+    if mapId == nil or numChannels == nil then return nil end
+    local maxGroundValue = (2 ^ numChannels) - 1
+    local filter = DensityMapFilter.new(mapId, firstChannel, numChannels)
+    filter:setValueCompareParams(DensityValueCompareType.BETWEEN, 1, maxGroundValue)
+    return filter
+end
+
+-- Deposit multi-modifiers are built once and cached (keyed by map + state delta), like the
+-- base game caches its density modifiers, so a tool pass allocates nothing.
+local depositMultiModifiers = {}
+local depositExecChanged, depositExecTotal = {}, {}
+
+---Returns a cached multi-modifier that raises each field pixel by addStates, clamped to
+---maxValue. Source states are shifted in descending order so each pixel is raised once.
+-- @param integer mapId
+-- @param integer firstChannel
+-- @param integer numChannels
+-- @param integer maxValue
+-- @param integer addStates
+-- @return table multiModifier, or nil
+local function getDepositMultiModifier(mapId, firstChannel, numChannels, maxValue, addStates)
+    local key = string.format("%s|%s|%s|%s|%s",
+        tostring(mapId), tostring(firstChannel), tostring(numChannels), tostring(maxValue), tostring(addStates))
+    local cached = depositMultiModifiers[key]
+    if cached ~= nil then return cached end
+
+    local modifier = DensityMapModifier.new(mapId, firstChannel, numChannels, g_terrainNode)
+    local multiModifier = DensityMapMultiModifier.new()
+    local fieldFilter = getFieldGroundFilter()
+    for s = maxValue - 1, 0, -1 do
+        local valueFilter = DensityMapFilter.new(mapId, firstChannel, numChannels)
+        valueFilter:setValueCompareParams(DensityValueCompareType.EQUAL, s)
+        local target = math.min(s + addStates, maxValue)
+        if fieldFilter ~= nil then
+            multiModifier:addExecuteSet(target, modifier, valueFilter, fieldFilter)
+        else
+            multiModifier:addExecuteSet(target, modifier, valueFilter)
+        end
+    end
+
+    depositMultiModifiers[key] = multiModifier
+    return multiModifier
+end
+
+---Adds a state delta to a bit-vector value map over field parallelograms (server side):
+---a cached modifier is just re-pointed at the worked area and executed (one traversal each).
+-- @param integer mapId
+-- @param integer firstChannel
+-- @param integer numChannels
+-- @param integer maxValue
+-- @param integer addStates Delta to add
+-- @param table parallelograms World-coord parallelograms
+local function depositStatesOverField(mapId, firstChannel, numChannels, maxValue, addStates, parallelograms)
+    if mapId == nil or DensityMapModifier == nil or DensityMapMultiModifier == nil
+        or DensityMapFilter == nil or g_terrainNode == nil
+        or DensityCoordType == nil or DensityValueCompareType == nil then
+        return
+    end
+    addStates = math.floor(tonumber(addStates) or 0)
+    maxValue = math.floor(tonumber(maxValue) or 0)
+    if addStates <= 0 or maxValue <= 0 then return end
+
+    local multiModifier = getDepositMultiModifier(mapId, firstChannel, numChannels, maxValue, addStates)
+    if multiModifier == nil then return end
+
+    for _, p in ipairs(parallelograms) do
+        multiModifier:updateParallelogramWorldCoords(p.sx, p.sz, p.wx, p.wz, p.hx, p.hz, DensityCoordType.POINT_POINT_POINT)
+        multiModifier:execute(nil, depositExecChanged, depositExecTotal)
+    end
+end
+
 ---Majority fruit type over field samples from the density map.
 -- @param table field
 -- @return integer fruitTypeIndex, or nil
@@ -843,6 +926,75 @@ function RealisticCropRotationManager:invalidateActiveCropCache(farmlandId)
     local n = tonumber(farmlandId)
     if n == nil then return end
     self.activeCropNameCache[n] = nil
+end
+
+---Samples the depositable main crop at a tool work area's centre (server only); call
+---BEFORE the tool destroys the crop. Returns nil for empty or cover crops (the game
+---deposits cover residue itself).
+-- @param number sx
+-- @param number sz
+-- @param number wx
+-- @param number wz
+-- @param number hx
+-- @param number hz
+-- @return string cropName, or nil
+function RealisticCropRotationManager:captureToolAreaCrop(sx, sz, wx, wz, hx, hz)
+    if isPureClient() then return nil end
+    if type(sx) ~= "number" or type(wx) ~= "number" or type(hx) ~= "number" then return nil end
+
+    local cx = sx + (wx - sx) * 0.5 + (hx - sx) * 0.5
+    local cz = sz + (wz - sz) * 0.5 + (hz - sz) * 0.5
+    local fruitTypeIndex = getFruitTypeIndexAtWorldPos(cx, cz)
+    if fruitTypeIndex == nil then return nil end
+
+    if g_fruitTypeManager == nil or type(g_fruitTypeManager.getFruitTypeByIndex) ~= "function" then return nil end
+    local fruitType = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
+    if fruitType == nil or fruitType.name == nil or fruitType.name == "" then return nil end
+    if fruitType.isCatchCrop == true then return nil end
+
+    return string.upper(tostring(fruitType.name))
+end
+
+---Deposits a terminated crop's nitrogen residue over a tool work area (server only),
+---the game's tool-pass write: PF nitrogen states with PF, vanilla fertilization otherwise.
+---Call AFTER the tool ran. Idempotent in practice: the crop is gone, so re-working deposits nothing.
+-- @param number sx
+-- @param number sz
+-- @param number wx
+-- @param number wz
+-- @param number hx
+-- @param number hz
+-- @param string cropName Crop terminated on this area (from captureToolAreaCrop)
+function RealisticCropRotationManager:depositResidueAtArea(sx, sz, wx, wz, hx, hz, cropName)
+    if isPureClient() or self.service == nil then return end
+    if type(sx) ~= "number" or cropName == nil then return end
+
+    local fm = g_farmlandManager
+    if fm == nil or type(fm.getFarmlandIdAtWorldPosition) ~= "function" then return end
+    local cx = sx + (wx - sx) * 0.5 + (hx - sx) * 0.5
+    local cz = sz + (wz - sz) * 0.5 + (hz - sz) * 0.5
+    local farmlandId = fm:getFarmlandIdAtWorldPosition(cx, cz)
+    if farmlandId == nil then return end
+
+    local states = self.service:getResidueStatesForTermination(farmlandId, cropName)
+    if states <= 0 then return end
+
+    local parallelograms = { { sx = sx, sz = sz, wx = wx, wz = wz, hx = hx, hz = hz } }
+    local pf = self:getPrecisionFarming()
+    local nMap = pf ~= nil and pf.nitrogenMap or nil
+    if nMap ~= nil and tonumber(nMap.bitVectorMap) ~= nil then
+        -- PF present: add states into its nitrogen map (as getLevelAtWorldPos reads it).
+        local maxValue = tonumber(nMap.maxValue) or 45
+        depositStatesOverField(nMap.bitVectorMap, nMap.firstChannel, nMap.numChannels, maxValue,
+            states, parallelograms)
+        if type(nMap.setMinimapRequiresUpdate) == "function" then
+            nMap:setMinimapRequiresUpdate(true)
+        end
+    elseif FSDensityMapUtil ~= nil and type(FSDensityMapUtil.updateSprayArea) == "function"
+        and SprayType ~= nil and SprayType.FERTILIZER ~= nil then
+        -- Vanilla: one fertilizer application over the worked area (FertilizingCultivator pattern).
+        FSDensityMapUtil.updateSprayArea(sx, sz, wx, wz, hx, hz, SprayType.FERTILIZER, 1)
+    end
 end
 
 ---Reconciles stored history with the live active crop (server only).

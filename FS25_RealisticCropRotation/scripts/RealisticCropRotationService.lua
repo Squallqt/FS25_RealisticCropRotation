@@ -1,13 +1,11 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
--- Business logic: legume detection, history recording, and legacy rotation residue metadata.
+-- Business logic: legume detection, history recording, and rotation residue estimates.
 RealisticCropRotationService = {}
 local RealisticCropRotationService_mt = Class(RealisticCropRotationService)
 
 -- Crop data (families, nitrogen, cover flags) comes from cropConfig.xml (loaded at init).
--- Legacy conversion: 1 state = 5 kg N/ha; no nitrogen/PF write path is active.
+-- Conversion: 1 state = 5 kg N/ha (source: PrecisionFarming.xml amountPerState=5).
 RealisticCropRotationService.PF_STATE_PER_UNIT = 5
-RealisticCropRotationService.NITROGEN_DEPOSIT_LOCK_CHANNELS = 8
-RealisticCropRotationService.NITROGEN_DEPOSIT_LOCK_MAX_VALUE = (2 ^ RealisticCropRotationService.NITROGEN_DEPOSIT_LOCK_CHANNELS) - 1
 
 -- PF applies +25 kg N/ha when a catch-crop cover is destroyed; the planner reflects
 -- it as an estimate (the mod never deposits it itself).
@@ -20,19 +18,12 @@ function RealisticCropRotationService.new(repository)
     local self = setmetatable({}, RealisticCropRotationService_mt)
     self.repository = repository
     self.cropNameByFruitTypeIndex = {}
-    self.residueCycleByFarmland = {}  -- farmlandId -> current residue lock generation
-    self.nitrogenDepositLock = nil    -- legacy inactive deposit lock; no current runtime path creates it
     return self
 end
 
----Resets caches and the legacy nitrogen deposit lock.
+---Resets caches.
 function RealisticCropRotationService:reset()
     self.cropNameByFruitTypeIndex = {}
-    self.residueCycleByFarmland = {}
-    if self.nitrogenDepositLock ~= nil and delete ~= nil then
-        pcall(delete, self.nitrogenDepositLock)
-    end
-    self.nitrogenDepositLock = nil
 end
 
 ---Converts a legacy state change into kg N/ha.
@@ -82,6 +73,22 @@ function RealisticCropRotationService:getResidueEntry(cropName)
     local entry = config.nitrogen[cropName]
     if entry ~= nil and ((entry.n1 or 0) > 0 or (entry.n2 or 0) > 0) then return entry end
     return nil
+end
+
+---Nitrogen residue to deposit when a crop is terminated by tillage, in PF states:
+---the terminated crop's n1 (year 1) plus the previously-recorded crop's n2 (year 2).
+-- @param integer farmlandId
+-- @param string terminatedCropName Crop being destroyed by the tool
+-- @return integer states
+function RealisticCropRotationService:getResidueStatesForTermination(farmlandId, terminatedCropName)
+    local states = 0
+    local terminated = self:getResidueEntry(self:normalizeCropName(terminatedCropName))
+    if terminated ~= nil then states = states + (tonumber(terminated.n1) or 0) end
+    local history = self.repository:getHistory(farmlandId) or {}
+    local previous = history[1] ~= nil and self:getResidueEntry(self:normalizeCropName(history[1].crop)) or nil
+    if previous ~= nil then states = states + (tonumber(previous.n2) or 0) end
+    if states < 0 then states = 0 end
+    return math.floor(states)
 end
 
 ---Sums the cover-crop nitrogen residue (kg/ha) over a 4-slot cover plan.
@@ -169,41 +176,6 @@ function RealisticCropRotationService:pushHistoryCrop(farmlandId, cropName, allo
     end
 
     return self.repository:pushEntry(numericFarmlandId, normalizedCropName, allowDuplicate == true)
-end
-
----Returns the current residue cycle generation for a farmland (>= 1).
--- @param integer farmlandId
--- @return integer cycle
-function RealisticCropRotationService:getResidueCycle(farmlandId)
-    local numericFarmlandId = tonumber(farmlandId)
-    if numericFarmlandId == nil or numericFarmlandId <= 0 then return 1 end
-
-    local cycle = tonumber(self.residueCycleByFarmland[numericFarmlandId]
-        or self.residueCycleByFarmland[tostring(numericFarmlandId)]) or 1
-    if cycle < 1 then cycle = 1 end
-    return math.floor(cycle)
-end
-
----Advances and returns the residue cycle for a farmland (wraps at the lock max).
--- @param integer farmlandId
--- @return integer nextCycle
-function RealisticCropRotationService:advanceResidueCycle(farmlandId)
-    local numericFarmlandId = tonumber(farmlandId)
-    if numericFarmlandId == nil or numericFarmlandId <= 0 then return 1 end
-
-    local nextCycle = self:getResidueCycle(numericFarmlandId) + 1
-    if nextCycle > RealisticCropRotationService.NITROGEN_DEPOSIT_LOCK_MAX_VALUE then
-        if self.nitrogenDepositLock ~= nil and delete ~= nil then
-            pcall(delete, self.nitrogenDepositLock)
-        end
-        self.nitrogenDepositLock = nil
-        self.residueCycleByFarmland = {}
-        nextCycle = 1
-    end
-
-    self.residueCycleByFarmland[numericFarmlandId] = nextCycle
-    self.residueCycleByFarmland[tostring(numericFarmlandId)] = nil
-    return nextCycle
 end
 
 ---Normalizes then stores the last-known active crop for a farmland.
@@ -343,18 +315,12 @@ function RealisticCropRotationService:reconcileActiveCrop(farmlandId, currentCro
         end
 
         self.repository:setLastKnownGrowthState(numericFarmlandId, normalizedCurrentGrowthState)
-        if pushed then
-            self:advanceResidueCycle(numericFarmlandId)
-        end
         return pushed
     end
 
     local pushed = self:pushHistoryCrop(numericFarmlandId, lastKnownCrop, true)
     local activeChanged = self.repository:setLastKnownActiveCrop(numericFarmlandId, normalizedCurrentCrop)
     self.repository:setLastKnownGrowthState(numericFarmlandId, normalizedCurrentGrowthState)
-    if pushed or activeChanged then
-        self:advanceResidueCycle(numericFarmlandId)
-    end
     return pushed or activeChanged
 end
 
