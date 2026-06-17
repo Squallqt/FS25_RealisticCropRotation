@@ -22,6 +22,12 @@ RealisticCropRotation.isEnabled = true
 RealisticCropRotation.cropConfig = nil
 RealisticCropRotation.guiProfilesLoaded = false
 RealisticCropRotation.tabListFixApplied = false
+RealisticCropRotation.SPECIAL_CROP_FALLOW = "__FALLOW"
+
+function RealisticCropRotation.isFallowCrop(cropName)
+    return cropName ~= nil
+        and string.upper(tostring(cropName)) == RealisticCropRotation.SPECIAL_CROP_FALLOW
+end
 
 -- Loads cropConfig.xml once at mod init.
 -- Returns a config table: { families, nitrogen, coverCrops }.

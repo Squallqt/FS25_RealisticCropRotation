@@ -69,6 +69,7 @@
         <e k="rcr_family_forage"        v="Fourrage" />
         <e k="rcr_family_cover"         v="Couvert" />
         <e k="rcr_cover_crop"           v="Interculture" />
+        <e k="rcr_fallow"              v="Jachère" />
 
         <!-- Nitrogen gauge -->
         <e k="rcr_n_none"               v="Non fertilisé" />

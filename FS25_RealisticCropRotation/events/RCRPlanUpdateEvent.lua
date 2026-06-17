@@ -96,29 +96,41 @@ function RCRPlanUpdateEvent:run(connection)
         return
     end
 
-    -- P0-4 validation: cropName must be either empty (clear-slot) or a known fruit type.
+    -- cropName must be empty, a known fruit type, or the internal fallow token.
     if self.cropName ~= nil and self.cropName ~= "" then
-        local fruitType = g_fruitTypeManager ~= nil and g_fruitTypeManager.getFruitTypeByName ~= nil
-            and g_fruitTypeManager:getFruitTypeByName(self.cropName)
-            or nil
-        if fruitType == nil then
-            Logging.warning("[RealisticCropRotation][MP] Plan update rejected (unknown crop): farmland=%s crop=%s",
-                tostring(self.farmlandId), tostring(self.cropName))
-            return
-        end
+        local isFallowCrop = RealisticCropRotation ~= nil
+            and type(RealisticCropRotation.isFallowCrop) == "function"
+            and RealisticCropRotation.isFallowCrop(self.cropName)
 
-        local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
-        local family = config ~= nil and config.families ~= nil and config.families[self.cropName] or nil
-        if isCoverUpdate then
-            if not VALID_COVER_CROPS[self.cropName] or family ~= "COVER" then
+        if isFallowCrop then
+            if isCoverUpdate then
                 Logging.warning("[RealisticCropRotation][MP] Cover plan update rejected (invalid cover): farmland=%s crop=%s",
                     tostring(self.farmlandId), tostring(self.cropName))
                 return
             end
-        elseif family == "COVER" or VALID_COVER_CROPS[self.cropName] then
-            Logging.warning("[RealisticCropRotation][MP] Main plan update rejected (cover in main plan): farmland=%s crop=%s",
-                tostring(self.farmlandId), tostring(self.cropName))
-            return
+        else
+            local fruitType = g_fruitTypeManager ~= nil and g_fruitTypeManager.getFruitTypeByName ~= nil
+                and g_fruitTypeManager:getFruitTypeByName(self.cropName)
+                or nil
+            if fruitType == nil then
+                Logging.warning("[RealisticCropRotation][MP] Plan update rejected (unknown crop): farmland=%s crop=%s",
+                    tostring(self.farmlandId), tostring(self.cropName))
+                return
+            end
+
+            local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
+            local family = config ~= nil and config.families ~= nil and config.families[self.cropName] or nil
+            if isCoverUpdate then
+                if not VALID_COVER_CROPS[self.cropName] or family ~= "COVER" then
+                    Logging.warning("[RealisticCropRotation][MP] Cover plan update rejected (invalid cover): farmland=%s crop=%s",
+                        tostring(self.farmlandId), tostring(self.cropName))
+                    return
+                end
+            elseif family == "COVER" or VALID_COVER_CROPS[self.cropName] then
+                Logging.warning("[RealisticCropRotation][MP] Main plan update rejected (cover in main plan): farmland=%s crop=%s",
+                    tostring(self.farmlandId), tostring(self.cropName))
+                return
+            end
         end
     end
 

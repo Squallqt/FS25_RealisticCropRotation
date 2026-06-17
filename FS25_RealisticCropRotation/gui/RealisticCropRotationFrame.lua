@@ -28,6 +28,18 @@ RealisticCropRotationFrame.WEATHER_TYPES = {
     { constant = "THUNDER",          textKey = "rcr_weather_thunder",          sliceId = "gui.icon_weather_thunder",         color = {0.30, 0.22, 0.08, 0.88}, isOperational = true },
 }
 
+local function isFallowCrop(cropName)
+    return RealisticCropRotation ~= nil
+        and type(RealisticCropRotation.isFallowCrop) == "function"
+        and RealisticCropRotation.isFallowCrop(cropName)
+end
+
+local function getFamilyTextKey(family)
+    if family == "COVER" then return "rcr_cover_crop" end
+    if family == "FALLOW" then return "rcr_fallow" end
+    return "rcr_family_" .. string.lower(family)
+end
+
 -- Crop family classification is driven by cropConfig.xml.
 -- RealisticCropRotation.cropConfig is loaded once at mod init by main.lua.
 
@@ -51,6 +63,7 @@ RealisticCropRotationFrame.FAMILY_RGBA = {
     VEGETABLE = {0.180, 0.580, 0.380, 1.0},  -- teal green
     FORAGE    = {0.200, 0.480, 0.280, 1.0},  -- grass green
     COVER     = {0.420, 0.300, 0.100, 1.0},  -- earthy brown
+    FALLOW    = {0.20, 0.20, 0.20, 0.60},    -- neutral, no crop/cover implication
 }
 
 RealisticCropRotationFrame.COVER_CROP_NAMES = {
@@ -533,7 +546,7 @@ function RealisticCropRotationFrame:getPlanNitrogenResidueKgHa(plan, coverPlan)
     local totalStateChange = 0
     for i = 1, 4 do
         local cropName = plan ~= nil and plan[i] or nil
-        if cropName ~= nil and cropName ~= "" then
+        if cropName ~= nil and cropName ~= "" and not isFallowCrop(cropName) then
             local entry = service:getResidueEntry(string.upper(tostring(cropName)))
             if entry ~= nil then
                 totalStateChange = totalStateChange + (tonumber(entry.n1) or 0) + (tonumber(entry.n2) or 0)
@@ -598,6 +611,9 @@ end
 -- @return string family, or "UNKNOWN"
 function RealisticCropRotationFrame:getCropFamily(cropName)
     if cropName == nil or cropName == "" then return "UNKNOWN" end
+    if isFallowCrop(cropName) then
+        return "FALLOW"
+    end
     local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
     if config == nil or config.families == nil then return "UNKNOWN" end
     return config.families[string.upper(cropName)] or "UNKNOWN"
@@ -618,6 +634,9 @@ end
 function RealisticCropRotationFrame:getCropDisplayName(cropName)
     if cropName == nil or cropName == "" then return "" end
     local normalizedName = string.upper(tostring(cropName))
+    if isFallowCrop(normalizedName) then
+        return self.i18n:getText("rcr_fallow")
+    end
 
     local fillType = self:getFillTypeForCrop(normalizedName)
     if fillType ~= nil and fillType.title ~= nil and fillType.title ~= "" then
@@ -1162,6 +1181,10 @@ end
 function RealisticCropRotationFrame:buildPlanCropList()
     self.planCropList = {""}  -- index 1 = no crop
     self.coverCropList = {""}
+    if RealisticCropRotation ~= nil and RealisticCropRotation.SPECIAL_CROP_FALLOW ~= nil then
+        table.insert(self.planCropList, RealisticCropRotation.SPECIAL_CROP_FALLOW)
+    end
+
     -- Only offer cover crops whose fruitType is registered on this map.
     for _, cropName in ipairs(RealisticCropRotationFrame.COVER_CROP_NAMES) do
         local available = g_fruitTypeManager ~= nil and g_fruitTypeManager.getFruitTypeByName ~= nil
@@ -1404,7 +1427,7 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
             local family = self:getCropFamily(activeCropName)
             local line   = self:getCropDisplayName(activeCropName)
             if family ~= "UNKNOWN" then
-                local badgeKey = family == "COVER" and "rcr_cover_crop" or "rcr_family_" .. string.lower(family)
+                local badgeKey = getFamilyTextKey(family)
                 line = line .. "  ·  " .. self.i18n:getText(badgeKey)
             end
             cropLineEl:setText(line)
@@ -1568,7 +1591,7 @@ function RealisticCropRotationFrame:updateTimelineSlot(slotId, cropName, family,
     if badgeTxt ~= nil then
         badgeTxt:setVisible(showBadge)
         if showBadge then
-            local familyText = self.i18n:getText(badgeTextKey or "rcr_family_" .. string.lower(family))
+            local familyText = self.i18n:getText(badgeTextKey or getFamilyTextKey(family))
             badgeTxt:setText(familyText)
             self:resizePillToText(badgeBg, badgeTxt, familyText)
         end
@@ -2373,6 +2396,10 @@ function RealisticCropRotationFrame:applySlotCropIcon(iconEl, cropName)
         iconEl:setVisible(false)
         return
     end
+    if isFallowCrop(cropName) then
+        iconEl:setVisible(false)
+        return
+    end
 
     local hudOverlayFilename = nil
     local fillType = self:getFillTypeForCrop(cropName)
@@ -3003,7 +3030,8 @@ function RealisticCropRotationFrame:layoutGroupRow(cell, group)
                 gapBeforeArrow, gapAfterArrow = self:getGroupConnectorGaps(cell, i)
             end
 
-            local badgeWidth = self:layoutGroupBadgeContent(cell, i, displayName, currentX, hasCrop)
+            local showIcon = hasCrop and not isFallowCrop(group.plan ~= nil and group.plan[i] or nil)
+            local badgeWidth = self:layoutGroupBadgeContent(cell, i, displayName, currentX, showIcon)
 
             if badgeWidth ~= nil and currentX ~= nil and i < 4 then
                 local nextVisible = self:getGroupSlotDisplay(group, i + 1, firstFilled, lastFilled)
