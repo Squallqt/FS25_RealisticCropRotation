@@ -8,23 +8,20 @@
         <fr>Assolement</fr>
     </title>
     <description>
-        <en><![CDATA[Track the crop history of every field and let legumes and green manures return nitrogen to the soil, the way a real crop rotation does.
+        <en><![CDATA[Bring real agronomy to your farm. Realistic Crop Rotation tracks the crop history of every field and lets legumes and green manures return nitrogen to the soil, the way a real rotation does.
 
-Compatible with vanilla farming and with Precision Farming (PF).
+A nitrogen-fixing crop leaves a residue when it is worked into the soil (cultivator, mulcher, disc or plough), the same moment the game returns catch-crop nitrogen -- so it lands when you cultivate the stubble after a harvest, or when you finally plough out a forage stand. The residue comes in two tiers: a strong first-year credit (year +1) where the crop is worked in, plus a lighter second-year carryover (year +2) one crop later. Plan your rotations well and the soil rewards you.
 
-A crop returns its nitrogen residue to the soil when it is worked in by tillage (cultivator, mulcher, disc or plough) -- the same moment Precision Farming returns catch-crop nitrogen. After a combine harvest it lands when the stubble is cultivated; a forage cut does not destroy the stand and returns nothing until it is finally ploughed out.
-
-The residue comes in two tiers: a first-year credit (year +1) applied where the crop is worked in, plus a residual second-year carryover (year +2) that follows one crop later.
-
-With Precision Farming the residue is written to the nitrogen map, so a seeder in auto mode applies less and the total stays at the crop's target. Without PF it adds one vanilla fertilizer level.
+With Precision Farming the residue is written straight to the nitrogen map, so an auto-mode seeder applies less and the total stays at the crop's target. Without PF it adds one fertilizer level. Singleplayer and multiplayer.
 
 Features:
 - Per-field crop history (N-1 to N-4) with an in-game rotation planner
-- Per-field nitrogen, pH, growth and weed information
-- Two-tier residue: a stronger first-year credit (year +1) plus a residual second-year credit (year +2)
+- Per-field nitrogen, pH, growth and weed readouts
+- Two-tier legume nitrogen residue (year +1 / year +2)
+- Full Precision Farming and vanilla support
 - Multiplayer-ready
 
-Nitrogen residue values (kg N/ha, year +1 / year +2):
+Nitrogen residue (kg N/ha, year +1 / year +2):
 - Alfalfa: 80 / 50
 - Vetch-rye: 60 / 20
 - Clover: 50 / 20
@@ -35,23 +32,20 @@ Nitrogen residue values (kg N/ha, year +1 / year +2):
 Issues & suggestions: https://github.com/Squallqt/FS25_RealisticCropRotation
 
 Access via the dedicated tab in the InGame Menu (ESC).]]></en>
-        <de><![CDATA[Verfolge die Fruchtfolge jedes Feldes und lass Leguminosen und Gründüngung Stickstoff in den Boden zurückführen, so wie es eine echte Fruchtfolge tut.
+        <de><![CDATA[Bring echte Agronomie auf deinen Betrieb. Realistic Crop Rotation verfolgt die Fruchtfolge jedes Feldes und lässt Leguminosen und Gründüngung Stickstoff in den Boden zurückführen, so wie es eine echte Fruchtfolge tut.
 
-Kompatibel mit der Standardlandwirtschaft und mit Precision Farming (PF).
+Eine stickstoffbindende Kultur hinterlässt einen Rückstand, wenn sie in den Boden eingearbeitet wird (Grubber, Mulcher, Scheibenegge oder Pflug) -- im selben Moment, in dem das Spiel den Stickstoff von Zwischenfrüchten zurückführt. Er fällt also an, wenn du nach der Ernte das Stoppelfeld kultivierst oder eine Grünlandnarbe endgültig umbrichst. Der Rückstand kommt in zwei Stufen: ein starkes Erstjahres-Guthaben (Jahr +1) dort, wo die Kultur eingearbeitet wird, plus ein leichteres Zweitjahres-Guthaben (Jahr +2) eine Kultur später. Plane deine Fruchtfolge gut und der Boden belohnt dich.
 
-Eine Kultur gibt ihren Stickstoffrückstand an den Boden ab, wenn sie durch Bodenbearbeitung eingearbeitet wird (Grubber, Mulcher, Scheibenegge oder Pflug) -- im selben Moment, in dem Precision Farming den Stickstoff von Zwischenfrüchten zurückführt. Nach einer Mähdrescherernte erfolgt dies beim Kultivieren des Stoppelfelds; ein Futterschnitt zerstört den Bestand nicht und gibt nichts ab, bis er schließlich umgebrochen wird.
-
-Der Rückstand kommt in zwei Stufen: ein Erstjahres-Guthaben (Jahr +1), das beim Einarbeiten angewandt wird, plus ein restliches Zweitjahres-Guthaben (Jahr +2), das eine Kultur später folgt.
-
-Mit Precision Farming wird der Rückstand in die Stickstoffkarte geschrieben: eine Sämaschine im Automatikmodus bringt weniger aus und die Gesamtmenge bleibt beim Kulturziel. Ohne PF wird eine Standard-Düngestufe hinzugefügt.
+Mit Precision Farming wird der Rückstand direkt in die Stickstoffkarte geschrieben: eine Sämaschine im Automatikmodus bringt weniger aus und die Gesamtmenge bleibt beim Kulturziel. Ohne PF wird eine Düngestufe hinzugefügt. Einzel- und Mehrspieler.
 
 Funktionen:
 - Fruchtfolgehistorie pro Feld (N-1 bis N-4) mit Fruchtfolge-Planer im Spiel
-- Stickstoff-, pH-, Wachstums- und Unkraut-Informationen pro Feld
-- Zweistufiger Rückstand: ein stärkeres Erstjahres-Guthaben (Jahr +1) plus ein Restguthaben im zweiten Jahr (Jahr +2)
+- Stickstoff-, pH-, Wachstums- und Unkraut-Anzeige pro Feld
+- Zweistufiger Leguminosen-Stickstoffrückstand (Jahr +1 / Jahr +2)
+- Volle Unterstützung für Precision Farming und Standard
 - Mehrspieler-fähig
 
-Stickstoff-Rückstandswerte (kg N/ha, Jahr +1 / Jahr +2):
+Stickstoffrückstand (kg N/ha, Jahr +1 / Jahr +2):
 - Luzerne: 80 / 50
 - Wicke-Roggen: 60 / 20
 - Klee: 50 / 20
@@ -62,23 +56,20 @@ Stickstoff-Rückstandswerte (kg N/ha, Jahr +1 / Jahr +2):
 Issues & Vorschläge: https://github.com/Squallqt/FS25_RealisticCropRotation
 
 Zugriff über den eigenen Tab im InGame-Menü (ESC).]]></de>
-        <fr><![CDATA[Suivez l'historique des cultures de chaque parcelle et laissez les légumineuses et les engrais verts restituer de l'azote au sol, comme le fait un véritable assolement.
+        <fr><![CDATA[Apportez une vraie agronomie à votre ferme. Realistic Crop Rotation suit l'historique des cultures de chaque parcelle et laisse les légumineuses et les engrais verts restituer de l'azote au sol, comme le fait un véritable assolement.
 
-Compatible avec l'agriculture vanilla et avec Precision Farming (PF).
+Une culture fixatrice d'azote laisse un reliquat lorsqu'elle est enfouie par le travail du sol (cultivateur, broyeur, déchaumeur ou charrue) -- au même moment où le jeu restitue l'azote des couverts -- il tombe donc quand vous déchaumez le chaume après une récolte, ou quand vous retournez enfin une prairie. Le reliquat arrive en deux temps : un crédit de première année important (année +1) là où la culture est enfouie, plus un report plus léger de deuxième année (année +2) une culture plus tard. Soignez votre assolement et le sol vous le rend.
 
-Une culture restitue son reliquat d'azote au sol lorsqu'elle est enfouie par le travail du sol (cultivateur, broyeur, déchaumeur ou charrue) -- au même moment où Precision Farming restitue l'azote des couverts. Après une récolte à la moissonneuse, cela se produit au déchaumage du chaume ; une fauche ne détruit pas le peuplement et ne restitue rien jusqu'au retournement final de la prairie.
-
-Le reliquat arrive en deux temps : un crédit de première année (année +1) appliqué à l'enfouissement, plus un crédit résiduel de deuxième année (année +2) qui suit une culture plus tard.
-
-Avec Precision Farming, le reliquat est écrit sur la carte d'azote : un semoir en mode auto applique moins et le total reste à la cible de la culture. Sans PF, il ajoute un niveau d'engrais vanilla.
+Avec Precision Farming, le reliquat est écrit directement sur la carte d'azote : un semoir en mode auto applique moins et le total reste à la cible de la culture. Sans PF, il ajoute un niveau d'engrais. Solo et multijoueur.
 
 Fonctionnalités :
 - Historique des cultures par parcelle (N-1 à N-4) avec planificateur d'assolement en jeu
-- Informations azote, pH, croissance et adventices par parcelle
-- Reliquat à deux niveaux : un crédit de première année plus important (année +1) et un crédit résiduel de deuxième année (année +2)
+- Affichage azote, pH, croissance et adventices par parcelle
+- Reliquat d'azote des légumineuses à deux niveaux (année +1 / année +2)
+- Prise en charge complète de Precision Farming et du jeu de base
 - Compatible multijoueur
 
-Valeurs de reliquat d'azote (kg N/ha, année +1 / année +2) :
+Reliquat d'azote (kg N/ha, année +1 / année +2) :
 - Luzerne : 80 / 50
 - Vesce-seigle : 60 / 20
 - Trèfle : 50 / 20

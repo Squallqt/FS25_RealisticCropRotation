@@ -430,6 +430,10 @@ local function initRealisticCropRotation()
         RealisticCropRotation.broadcastDirty = false
         RealisticCropRotation.broadcastTimerMs = 0
 
+        if RealisticCropRotationNitrogen ~= nil
+            and type(RealisticCropRotationNitrogen.delete) == "function" then
+            RealisticCropRotationNitrogen.delete()
+        end
         if RealisticCropRotation.manager ~= nil then
             RealisticCropRotation.manager:cleanup()
             RealisticCropRotation.manager = nil

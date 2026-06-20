@@ -2729,6 +2729,7 @@ function RealisticCropRotationFrame:buildRotationGroups()
                 fieldNames = {},
                 areaHa     = 0,
                 score      = self:calcRotationScore(plan, coverPlan),
+                residueText = self:getPlanNitrogenResidueText(plan, coverPlan),
             })
             groupMap[key] = #groups
         end
@@ -3088,7 +3089,7 @@ function RealisticCropRotationFrame:layoutGroupRow(cell, group)
     end
 end
 
----Fills an overview group cell: badges, count, area, score, field names, cover recap.
+---Fills an overview group cell: badges, count, area, score, residue, field names, cover recap.
 -- @param integer index Group index
 -- @param table cell
 function RealisticCropRotationFrame:populateGroupCell(index, cell)
@@ -3165,6 +3166,17 @@ function RealisticCropRotationFrame:populateGroupCell(index, cell)
         scoreEl:setText(scoreLabel)
         if scoreEl.setVisible ~= nil then scoreEl:setVisible(scoreLabel ~= "") end
         scoreEl.textColor = {r, g, b, 1.0}
+    end
+
+    -- Total rotation residue — text and calculation come from the shared planning helper.
+    local residueCardEl = cell:getAttribute("gResidueCard")
+    local residueTextEl = cell:getAttribute("gResidueText")
+    local residueText = group.residueText
+    if residueCardEl ~= nil then
+        residueCardEl:setVisible(residueText ~= nil)
+    end
+    if residueTextEl ~= nil and residueText ~= nil then
+        residueTextEl:setText(residueText)
     end
 
     -- Field names — bottom strip, uses TextElement scrolling for long lists.

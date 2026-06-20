@@ -15,7 +15,7 @@
 
         <!-- Status labels -->
         <e k="rcr_status_bonus"         v="Reliquat Azoté" />
-        <e k="rcr_status_current_residue" v="Reliquat à venir +%d / +%d kg/ha" />
+        <e k="rcr_status_current_residue" v="Reliquat à venir +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="Reliquat total rotation +%d kg/ha" />
         <e k="rcr_status_current_no_residue" v="Pas de reliquat à venir" />
         <e k="rcr_status_planned_no_residue" v="Reliquat total rotation 0 kg/ha" />
@@ -44,7 +44,7 @@
         <e k="rcr_section_history"      v="Historique des Cultures" />
         <e k="rcr_section_nitrogen"     v="Statut Azoté" />
         <e k="rcr_section_advice"       v="Conseil Agronomique" />
-        <e k="rcr_section_field"        v="Travaux, herbes et croissance" />
+        <e k="rcr_section_field"        v="État actuel de la parcelle" />
         <e k="rcr_section_lime"         v="Statut Chaux / pH" />
         <e k="rcr_section_plan"         v="Plan de Rotation" />
         <e k="rcr_section_score"        v="Qualité de Rotation" />
@@ -96,12 +96,12 @@
         <e k="rcr_advice_no_current_crop" v="Aucune culture principale actuelle : conseil disponible quand une culture est détectée." />
 
         <!-- Field card — required actions / growth -->
-        <e k="rcr_action_header"        v="Travaux du sol" />
+        <e k="rcr_action_header"        v="État du sol" />
         <e k="rcr_action_none"          v="Aucun" />
         <e k="rcr_field_growth"          v="Croissance" />
 
         <!-- Field card — weed column header (singular, matching base game HUD) -->
-        <e k="rcr_weed_header"          v="Mauvaise herbe" />
+        <e k="rcr_weed_header"          v="Mauvaises herbes" />
 
         <!-- Planning tab — year slots (relative to current year, never stale) -->
         <e k="rcr_plan_year1"           v="N+1" />

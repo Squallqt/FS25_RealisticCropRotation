@@ -494,6 +494,12 @@
                         <!-- Score -->
                         <Text profile="frOverviewScore" name="gScore" text=""/>
 
+                        <!-- Total rotation nitrogen residue -->
+                        <GuiElement profile="frOverviewResidueCard" name="gResidueCard" visible="false">
+                            <RoundCorner profile="frStatusPillBgBonus" position="0px 0px" size="228px 22px"/>
+                            <Text profile="frStatusPillText" name="gResidueText" position="0px 0px" size="228px 22px" textSize="11px" text=""/>
+                        </GuiElement>
+
                         <!-- Cover crop recap (between badge row and field names) -->
                         <Text profile="frGroupCoverRecap" name="gCoverRecap" text="" visible="false"/>
 

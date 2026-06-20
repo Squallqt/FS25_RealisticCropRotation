@@ -896,10 +896,10 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Score label — right-aligned, y=18 aligns with badge/summary line -->
+    <!-- Score label — right-aligned below the rotation-residue card -->
     <!-- textColor set in Lua -->
     <Profile name="frOverviewScore" extends="fs25_textDefault" with="anchorTopRight">
-        <position value="-26px -18px"/>
+        <position value="-26px -36px"/>
         <size value="120px 22px"/>
         <textSize value="14px"/>
         <textBold value="true"/>
@@ -907,6 +907,12 @@
         <textAlignment value="right"/>
         <textVerticalAlignment value="middle"/>
         <textMaxNumLines value="1"/>
+    </Profile>
+
+    <!-- Layout-only container; its children reuse the existing native-green status-pill profiles. -->
+    <Profile name="frOverviewResidueCard" extends="baseReference" with="anchorTopRight">
+        <position value="-26px -8px"/>
+        <size value="228px 22px"/>
     </Profile>
 
     <Profile name="frGroupPlanSummary" extends="fs25_textDefault" with="anchorTopLeft">
@@ -920,12 +926,10 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Cover crop recap — small line in the gap between the badge row
-         (bottom at y=-48) and the field names line (y=-64), so it does not
-         share a line with the field names and the card stays 80px tall. -->
+    <!-- Cover crop recap — leaves the right lane free for the residue card. -->
     <Profile name="frGroupCoverRecap" extends="fs25_textDefault" with="anchorTopLeft">
         <position value="132px -49px"/>
-        <size value="1046px 14px"/>
+        <size value="806px 14px"/>
         <textSize value="11px"/>
         <textBold value="false"/>
         <textUpperCase value="false"/>

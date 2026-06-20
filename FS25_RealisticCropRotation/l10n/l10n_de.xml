@@ -15,7 +15,7 @@
 
         <!-- Status labels -->
         <e k="rcr_status_bonus"         v="N-Rückstand" />
-        <e k="rcr_status_current_residue" v="Erwarteter Rückstand +%d / +%d kg/ha" />
+        <e k="rcr_status_current_residue" v="Erwarteter Rückstand +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="Rückstand Rotation gesamt +%d kg/ha" />
         <e k="rcr_status_current_no_residue" v="Kein Rückstand zu erwarten" />
         <e k="rcr_status_planned_no_residue" v="Rückstand Rotation gesamt 0 kg/ha" />
@@ -44,7 +44,7 @@
         <e k="rcr_section_history"      v="Anbaugeschichte" />
         <e k="rcr_section_nitrogen"     v="Stickstoffstatus" />
         <e k="rcr_section_advice"       v="Agronomische Empfehlung" />
-        <e k="rcr_section_field"        v="Feldarbeit, Unkraut und Wachstum" />
+        <e k="rcr_section_field"        v="Aktueller Feldzustand" />
         <e k="rcr_section_lime"         v="Kalk-/pH-Status" />
         <e k="rcr_section_plan"         v="Rotationsplan" />
         <e k="rcr_section_score"        v="Rotationsqualität" />
@@ -96,7 +96,7 @@
         <e k="rcr_advice_no_current_crop" v="Keine aktuelle Hauptkultur: Empfehlung verfügbar, sobald eine Kultur erkannt wird." />
 
         <!-- Field card — required actions / growth -->
-        <e k="rcr_action_header"        v="Bodenbearbeitung" />
+        <e k="rcr_action_header"        v="Bodenzustand" />
         <e k="rcr_action_none"          v="Keine" />
         <e k="rcr_field_growth"          v="Wachstum" />
 

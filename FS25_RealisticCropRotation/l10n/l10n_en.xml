@@ -15,7 +15,7 @@
 
         <!-- Status labels -->
         <e k="rcr_status_bonus"         v="N Residue" />
-        <e k="rcr_status_current_residue" v="Expected residue +%d / +%d kg/ha" />
+        <e k="rcr_status_current_residue" v="Expected residue +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="Total rotation residue +%d kg/ha" />
         <e k="rcr_status_current_no_residue" v="No residue to come" />
         <e k="rcr_status_planned_no_residue" v="Total rotation residue 0 kg/ha" />
@@ -44,7 +44,7 @@
         <e k="rcr_section_history"      v="Crop History" />
         <e k="rcr_section_nitrogen"     v="Nitrogen Status" />
         <e k="rcr_section_advice"       v="Agronomic Advice" />
-        <e k="rcr_section_field"        v="Field work, weeds and growth" />
+        <e k="rcr_section_field"        v="Current field status" />
         <e k="rcr_section_lime"         v="Lime / pH Status" />
         <e k="rcr_section_plan"         v="Rotation Plan" />
         <e k="rcr_section_score"        v="Rotation Quality" />
@@ -96,12 +96,12 @@
         <e k="rcr_advice_no_current_crop" v="No current main crop: advice available when a crop is detected." />
 
         <!-- Field card — required actions / growth -->
-        <e k="rcr_action_header"        v="Soil work" />
+        <e k="rcr_action_header"        v="Soil condition" />
         <e k="rcr_action_none"          v="None" />
-        <e k="rcr_field_growth"          v="Growth Stage" />
+        <e k="rcr_field_growth"          v="Growth" />
 
         <!-- Field card — weed column header (singular, matching base game HUD) -->
-        <e k="rcr_weed_header"          v="Weed" />
+        <e k="rcr_weed_header"          v="Weeds" />
 
         <!-- Planning tab — year slots (relative to current year, never stale) -->
         <e k="rcr_plan_year1"           v="N+1" />
