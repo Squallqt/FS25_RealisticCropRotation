@@ -12,12 +12,9 @@
 
 Compatible with vanilla farming and with Precision Farming (PF).
 
-Each crop releases its nitrogen residue at the moment that makes agronomic sense:
-- Grain legumes (soybean, pea, green bean): at harvest, so it is already in the soil before the next sowing.
-- Forage legumes (alfalfa, clover): when the stand is ploughed out, never at a forage cut.
-- Green manures (vetch-rye, mustard): only when destroyed while still green (mulched or cultivated before the harvestable stage); nothing if combined for grain.
+A crop returns its nitrogen residue to the soil when it is worked in by tillage (cultivator, mulcher, disc or plough) -- the same moment Precision Farming returns catch-crop nitrogen. After a combine harvest it lands when the stubble is cultivated; a forage cut does not destroy the stand and returns nothing until it is finally ploughed out.
 
-Combine-harvested crops also take up the soil nitrogen as they grow: the worked area is emptied at harvest, then any residue is restituted on top.
+The residue comes in two tiers: a first-year credit (year +1) applied where the crop is worked in, plus a residual second-year carryover (year +2) that follows one crop later.
 
 With Precision Farming the residue is written to the nitrogen map, so a seeder in auto mode applies less and the total stays at the crop's target. Without PF it adds one vanilla fertilizer level.
 
@@ -34,7 +31,6 @@ Nitrogen residue values (kg N/ha, year +1 / year +2):
 - Soybean: 40 / 10
 - Pea: 40 / 10
 - Green bean: 20 / 5
-- Mustard: 15 / -
 
 Issues & suggestions: https://github.com/Squallqt/FS25_RealisticCropRotation
 
@@ -43,12 +39,9 @@ Access via the dedicated tab in the InGame Menu (ESC).]]></en>
 
 Kompatibel mit der Standardlandwirtschaft und mit Precision Farming (PF).
 
-Jede Kultur gibt ihren Stickstoffrückstand zum agronomisch sinnvollen Zeitpunkt frei:
-- Körnerleguminosen (Sojabohne, Erbse, grüne Bohne): bei der Ernte, also bereits im Boden vor der nächsten Aussaat.
-- Futterleguminosen (Luzerne, Klee): beim Umbruch des Bestands, nie bei einem Schnitt.
-- Gründüngung (Wicke-Roggen, Senf): nur wenn sie noch grün zerstört wird (gemulcht oder vor dem Erntestadium kultiviert); nichts bei der Kornernte.
+Eine Kultur gibt ihren Stickstoffrückstand an den Boden ab, wenn sie durch Bodenbearbeitung eingearbeitet wird (Grubber, Mulcher, Scheibenegge oder Pflug) -- im selben Moment, in dem Precision Farming den Stickstoff von Zwischenfrüchten zurückführt. Nach einer Mähdrescherernte erfolgt dies beim Kultivieren des Stoppelfelds; ein Futterschnitt zerstört den Bestand nicht und gibt nichts ab, bis er schließlich umgebrochen wird.
 
-Mit dem Mähdrescher geerntete Kulturen nehmen außerdem den Bodenstickstoff während des Wachstums auf: die bearbeitete Fläche wird bei der Ernte geleert, danach wird der Rückstand obenauf zurückgeführt.
+Der Rückstand kommt in zwei Stufen: ein Erstjahres-Guthaben (Jahr +1), das beim Einarbeiten angewandt wird, plus ein restliches Zweitjahres-Guthaben (Jahr +2), das eine Kultur später folgt.
 
 Mit Precision Farming wird der Rückstand in die Stickstoffkarte geschrieben: eine Sämaschine im Automatikmodus bringt weniger aus und die Gesamtmenge bleibt beim Kulturziel. Ohne PF wird eine Standard-Düngestufe hinzugefügt.
 
@@ -65,7 +58,6 @@ Stickstoff-Rückstandswerte (kg N/ha, Jahr +1 / Jahr +2):
 - Sojabohne: 40 / 10
 - Erbse: 40 / 10
 - Grüne Bohne: 20 / 5
-- Senf: 15 / -
 
 Issues & Vorschläge: https://github.com/Squallqt/FS25_RealisticCropRotation
 
@@ -74,12 +66,9 @@ Zugriff über den eigenen Tab im InGame-Menü (ESC).]]></de>
 
 Compatible avec l'agriculture vanilla et avec Precision Farming (PF).
 
-Chaque culture libère son reliquat d'azote au moment qui a un sens agronomique :
-- Légumineuses à grain (soja, pois, haricot vert) : à la récolte, donc déjà dans le sol avant le semis suivant.
-- Légumineuses fourragères (luzerne, trèfle) : au retournement de la prairie, jamais à une fauche.
-- Engrais verts (vesce-seigle, moutarde) : uniquement si détruits encore verts (broyés ou cultivés avant le stade récoltable) ; rien s'ils sont récoltés au grain.
+Une culture restitue son reliquat d'azote au sol lorsqu'elle est enfouie par le travail du sol (cultivateur, broyeur, déchaumeur ou charrue) -- au même moment où Precision Farming restitue l'azote des couverts. Après une récolte à la moissonneuse, cela se produit au déchaumage du chaume ; une fauche ne détruit pas le peuplement et ne restitue rien jusqu'au retournement final de la prairie.
 
-Les cultures récoltées à la moissonneuse consomment aussi l'azote du sol pendant leur croissance : la zone travaillée est vidée à la récolte, puis le reliquat éventuel est restitué par-dessus.
+Le reliquat arrive en deux temps : un crédit de première année (année +1) appliqué à l'enfouissement, plus un crédit résiduel de deuxième année (année +2) qui suit une culture plus tard.
 
 Avec Precision Farming, le reliquat est écrit sur la carte d'azote : un semoir en mode auto applique moins et le total reste à la cible de la culture. Sans PF, il ajoute un niveau d'engrais vanilla.
 
@@ -96,7 +85,6 @@ Valeurs de reliquat d'azote (kg N/ha, année +1 / année +2) :
 - Soja : 40 / 10
 - Pois : 40 / 10
 - Haricot vert : 20 / 5
-- Moutarde : 15 / -
 
 Issues & suggestions : https://github.com/Squallqt/FS25_RealisticCropRotation
 

@@ -6,6 +6,7 @@ local modName = g_currentModName
 source(modDirectory .. "scripts/RealisticCropRotationRepository.lua")
 source(modDirectory .. "scripts/RealisticCropRotationService.lua")
 source(modDirectory .. "scripts/RealisticCropRotationManager.lua")
+source(modDirectory .. "scripts/RealisticCropRotationNitrogen.lua")
 source(modDirectory .. "scripts/RealisticCropRotationHud.lua")
 source(modDirectory .. "events/RCRHistoryRequestEvent.lua")
 source(modDirectory .. "events/RCRHistoryResponseEvent.lua")
@@ -316,6 +317,7 @@ local function loadedMission()
         else
             Logging.warning("[RealisticCropRotation] Period change listener unavailable; crop rotation history cannot be reconciled automatically")
         end
+        RealisticCropRotationNitrogen.install(RealisticCropRotation.manager)
     end
 
     g_currentMission.realisticCropRotationManager = RealisticCropRotation.manager
@@ -398,48 +400,6 @@ local function sendInitialClientState(_self, connection)
     connection:sendEvent(RCRHistoryResponseEvent.new())
 end
 
----Resolves the active manager only on the server (deposit is server-authoritative).
--- @return table manager, or nil
-local function getServerManager()
-    if g_currentMission == nil then return nil end
-    if g_currentMission.getIsServer == nil or not g_currentMission:getIsServer() then return nil end
-    return g_currentMission.realisticCropRotationManager
-end
-
----Wraps a tillage density function (coords = args 1..6) to deposit rotation residue on the
----worked area, the way the game deposits cover residue at the tool pass. Uses the native
----Utils.overwrittenFunction: superFunc is passed after the first argument.
--- @param string fnName FSDensityMapUtil function name
-local function hookTillageResidue(fnName)
-    if FSDensityMapUtil == nil or type(FSDensityMapUtil[fnName]) ~= "function" then return end
-    FSDensityMapUtil[fnName] = Utils.overwrittenFunction(FSDensityMapUtil[fnName],
-        function(sx, superFunc, sz, wx, wz, hx, hz, ...)
-            local mgr = getServerManager()
-            local cropName = mgr ~= nil and mgr:captureToolAreaCrop(sx, sz, wx, wz, hx, hz) or nil
-            local changedArea, totalArea = superFunc(sx, sz, wx, wz, hx, hz, ...)
-            if cropName ~= nil then
-                mgr:depositResidueAtArea(sx, sz, wx, wz, hx, hz, cropName)
-            end
-            return changedArea, totalArea
-        end)
-end
-
----Wraps updateDirectSowingArea (first arg is the sown fruit index, coords = args 2..7) so a
----direct seeder that destroys the previous crop also deposits its residue.
-local function hookDirectSowingResidue()
-    if FSDensityMapUtil == nil or type(FSDensityMapUtil.updateDirectSowingArea) ~= "function" then return end
-    FSDensityMapUtil.updateDirectSowingArea = Utils.overwrittenFunction(FSDensityMapUtil.updateDirectSowingArea,
-        function(fruitIndex, superFunc, sx, sz, wx, wz, hx, hz, ...)
-            local mgr = getServerManager()
-            local cropName = mgr ~= nil and mgr:captureToolAreaCrop(sx, sz, wx, wz, hx, hz) or nil
-            local changedArea, totalArea = superFunc(fruitIndex, sx, sz, wx, wz, hx, hz, ...)
-            if cropName ~= nil then
-                mgr:depositResidueAtArea(sx, sz, wx, wz, hx, hz, cropName)
-            end
-            return changedArea, totalArea
-        end)
-end
-
 ---Mod entry point: loads config and installs the engine hooks.
 local function initRealisticCropRotation()
     RealisticCropRotation.cropConfig = loadCropConfig()
@@ -452,15 +412,6 @@ local function initRealisticCropRotation()
 
     FSBaseMission.saveSavegame = Utils.appendedFunction(FSBaseMission.saveSavegame, onSaveToXMLFile)
     FSBaseMission.sendInitialClientState = Utils.appendedFunction(FSBaseMission.sendInitialClientState, sendInitialClientState)
-
-    -- Tool-pass residue deposit (the game's cover-residue pattern, applied to main crops):
-    -- write on the worked area at the tillage/destruction pass. updateDestroyCommonArea is
-    -- NOT hooked (the high-level functions call it internally -> would double-deposit).
-    hookTillageResidue("updateCultivatorArea")
-    hookTillageResidue("updateDiscHarrowArea")
-    hookTillageResidue("updatePlowArea")
-    hookTillageResidue("updateMulcherArea")
-    hookDirectSowingResidue()
 
     BaseMission.delete = Utils.appendedFunction(BaseMission.delete, function()
         if g_currentMission ~= nil and RealisticCropRotation.broadcastUpdateable ~= nil

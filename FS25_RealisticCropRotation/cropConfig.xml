@@ -40,8 +40,7 @@
     <!-- ======================================================== -->
     <crop name="CANOLA"    family="OILSEED" />
     <crop name="SUNFLOWER" family="OILSEED" />
-    <!-- Mustard scavenges/returns N as a green manure only when destroyed green (not when combined). -->
-    <crop name="MUSTARD"   family="OILSEED" n1="3" />
+    <crop name="MUSTARD"   family="OILSEED" />
     <!-- ======================================================== -->
     <!-- LEGUMES  (n1/n2 in PF states; 1 state = 5 kg N/ha)       -->
     <!-- Values follow real first-year N credits: a terminated alfalfa/vetch stand returns far    -->

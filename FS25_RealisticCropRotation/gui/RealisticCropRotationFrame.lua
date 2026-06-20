@@ -513,15 +513,36 @@ function RealisticCropRotationFrame:updateWeatherPill(pill, pillBg, pillIcon, pi
     return nil
 end
 
----Updates the current-state residue pill (history tab) and resizes it.
+---Updates the detail-tab residue pill: the two-tier nitrogen the active crop will return when
+---terminated -- year +1 (n1) then year +2 (n2), in kg/ha. Matches the modDesc per-crop listing
+---and the runtime deposit (n1 first, n2 one cycle later). Data-driven; no per-field tracking.
 -- @param table pillBg
 -- @param table pillText
 -- @param integer farmlandId
 -- @return number width Resized pill width
 function RealisticCropRotationFrame:updateResiduePill(pillBg, pillText, farmlandId)
     local text = self.i18n:getText("rcr_status_current_no_residue")
+    local hasBonus = false
+
+    local mgr = self:getManager()
+    if mgr ~= nil and mgr.service ~= nil and type(mgr.getActiveCropInfo) == "function"
+        and type(mgr.service.getResidueEntry) == "function"
+        and type(mgr.service.getNitrogenKgPerHaFromStateChange) == "function" then
+        local activeCropName = mgr:getActiveCropInfo(farmlandId)
+        if activeCropName ~= nil and activeCropName ~= "" and not isFallowCrop(activeCropName) then
+            local service = mgr.service
+            local entry = service:getResidueEntry(string.upper(tostring(activeCropName)))
+            if entry ~= nil and ((tonumber(entry.n1) or 0) + (tonumber(entry.n2) or 0)) > 0 then
+                local n1Kg = math.floor((service:getNitrogenKgPerHaFromStateChange(tonumber(entry.n1) or 0) or 0) + 0.5)
+                local n2Kg = math.floor((service:getNitrogenKgPerHaFromStateChange(tonumber(entry.n2) or 0) or 0) + 0.5)
+                text = string.format(self.i18n:getText("rcr_status_current_residue"), n1Kg, n2Kg)
+                hasBonus = true
+            end
+        end
+    end
+
     if pillBg ~= nil then
-        pillBg:applyProfile("frStatusPillBg")
+        pillBg:applyProfile(hasBonus and "frStatusPillBgBonus" or "frStatusPillBg")
     end
     if pillText ~= nil then
         pillText:setText(text)

@@ -15,10 +15,9 @@
 
         <!-- Status labels -->
         <e k="rcr_status_bonus"         v="Reliquat Azoté" />
-        <e k="rcr_status_current_residue" v="Reliquat appliqué +%d kg/ha" />
-        <e k="rcr_status_current_residue_vanilla" v="Reliquat appliqué +%d niveau ferti" />
+        <e k="rcr_status_current_residue" v="Reliquat à venir +%d / +%d kg/ha" />
         <e k="rcr_status_planned_residue" v="Reliquat total rotation +%d kg/ha" />
-        <e k="rcr_status_current_no_residue" v="Reliquat appliqué 0" />
+        <e k="rcr_status_current_no_residue" v="Pas de reliquat à venir" />
         <e k="rcr_status_planned_no_residue" v="Reliquat total rotation 0 kg/ha" />
         <e k="rcr_weather_sun" v="Temps clair" />
         <e k="rcr_weather_partially_cloudy" v="Éclaircies" />

@@ -15,10 +15,9 @@
 
         <!-- Status labels -->
         <e k="rcr_status_bonus"         v="N Residue" />
-        <e k="rcr_status_current_residue" v="Applied residue +%d kg/ha" />
-        <e k="rcr_status_current_residue_vanilla" v="Applied residue +%d fert level" />
+        <e k="rcr_status_current_residue" v="Expected residue +%d / +%d kg/ha" />
         <e k="rcr_status_planned_residue" v="Total rotation residue +%d kg/ha" />
-        <e k="rcr_status_current_no_residue" v="Applied residue 0" />
+        <e k="rcr_status_current_no_residue" v="No residue to come" />
         <e k="rcr_status_planned_no_residue" v="Total rotation residue 0 kg/ha" />
         <e k="rcr_weather_sun" v="Clear sky" />
         <e k="rcr_weather_partially_cloudy" v="Sunny spells" />
