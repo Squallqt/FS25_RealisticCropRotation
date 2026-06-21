@@ -403,7 +403,6 @@ function RealisticCropRotationRepository:loadFromXML(savegamePath)
 
     local filePath = savegamePath .. "realisticCropRotation.xml"
     if not fileExists(filePath) then
-        Logging.info("[RealisticCropRotation] No realisticCropRotation.xml found at %s", tostring(filePath))
         return
     end
 
@@ -489,9 +488,5 @@ function RealisticCropRotationRepository:loadFromXML(savegamePath)
         farmlandIndex = farmlandIndex + 1
     end
 
-    local historyFarmlands, historyEntries, planFarmlands, coverPlanFarmlands, activeCropFarmlands =
-        getPersistenceCounts(self.history, self.plans, self.coverPlans, self.lastKnownActiveCrop)
-    Logging.info("[RealisticCropRotation] Loaded realisticCropRotation.xml historyFarmlands=%d entries=%d plans=%d coverPlans=%d activeCrops=%d path=%s (format v%d)",
-        historyFarmlands, historyEntries, planFarmlands, coverPlanFarmlands, activeCropFarmlands, tostring(filePath), version)
     delete(xmlFile)
 end

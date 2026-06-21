@@ -146,9 +146,6 @@ function RCRPlanUpdateEvent:run(connection)
         return
     end
 
-    Logging.info("[RealisticCropRotation][MP] Plan update applied farmland=%s year=%s crop=%s cover=%s",
-        tostring(self.farmlandId), tostring(self.yearIdx), tostring(self.cropName), tostring(isCoverUpdate))
-
     if RealisticCropRotation ~= nil and RealisticCropRotation.requestBroadcast ~= nil then
         RealisticCropRotation.requestBroadcast()
     end

@@ -420,7 +420,8 @@ function RealisticCropRotationNitrogen.install(rcrManager)
     if g_currentMission == nil or type(g_currentMission.getIsServer) ~= "function"
         or not g_currentMission:getIsServer() then return end
     if Utils == nil or type(Utils.overwrittenFunction) ~= "function" or FSDensityMapUtil == nil
-        or type(FSDensityMapUtil.updateDestroyCommonArea) ~= "function" then return end
+        or type(FSDensityMapUtil.updateDestroyCommonArea) ~= "function"
+        or type(FSDensityMapUtil.updateDiscHarrowArea) ~= "function" then return end
 
     installed = true
     FSDensityMapUtil.updateDestroyCommonArea = Utils.overwrittenFunction(
@@ -451,5 +452,31 @@ function RealisticCropRotationNitrogen.install(rcrManager)
             return changedArea, totalArea
         end)
 
-    Logging.info("[RealisticCropRotation] nitrogen residue active (server): transient native mask")
+    FSDensityMapUtil.updateDiscHarrowArea = Utils.overwrittenFunction(
+        FSDensityMapUtil.updateDiscHarrowArea,
+        function(sx, superFunc, sz, wx, wz, hx, hz, ...)
+            local context, active, farmlandId
+            if type(sx) == "number" and type(sz) == "number" and type(wx) == "number"
+                and type(wz) == "number" and type(hx) == "number" and type(hz) == "number" then
+                local ok, preparedContext, preparedActive, preparedFarmlandId =
+                    pcall(prepare, sx, sz, wx, wz, hx, hz)
+                if ok then
+                    context, active, farmlandId = preparedContext, preparedActive, preparedFarmlandId
+                else
+                    Logging.error(
+                        "[RealisticCropRotation] residue mask capture failed: %s",
+                        tostring(preparedContext))
+                end
+            end
+
+            local changedArea, totalArea = superFunc(sx, sz, wx, wz, hx, hz, ...)
+            if context ~= nil and active ~= nil and #active > 0 then
+                local ok, err = pcall(process, context, active, farmlandId, sx, sz, wx, wz, hx, hz)
+                if not ok then
+                    pcall(resetContext, context)
+                    Logging.error("[RealisticCropRotation] residue deposit failed: %s", tostring(err))
+                end
+            end
+            return changedArea, totalArea
+        end)
 end

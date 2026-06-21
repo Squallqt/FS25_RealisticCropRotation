@@ -136,9 +136,6 @@ function RCRHistoryResponseEvent:readStream(streamId, _connection)
         manager.service:applySyncData(received, receivedPlans, receivedCoverPlans, receivedLastKnownActiveCrop, receivedLastKnownGrowthState)
     end
 
-    Logging.info("[RealisticCropRotation][MP] Sync received historyFarmlands=%d entries=%d plans=%d coverPlans=%d activeCrops=%d growthStates=%d",
-        farmlandCount, totalEntries, planCount, coverPlanCount, activeCropCount, growthStateCount)
-
     if RealisticCropRotation ~= nil and RealisticCropRotation.frame ~= nil then
         if type(RealisticCropRotation.frame.onServerSyncReceived) == "function" then
             RealisticCropRotation.frame:onServerSyncReceived()
@@ -262,7 +259,4 @@ function RCRHistoryResponseEvent:writeStream(streamId, _connection)
         streamWriteInt16(streamId, math.max(0, math.floor(growthState + 0.5)))
     end
 
-    local _, entryCount = countHistory(history)
-    Logging.info("[RealisticCropRotation][MP] Sync sent historyFarmlands=%d entries=%d plans=%d coverPlans=%d activeCrops=%d growthStates=%d",
-        #farmlandIds, entryCount, #planFarmlandIds, #coverPlanFarmlandIds, #activeCropFarmlandIds, #growthStateFarmlandIds)
 end

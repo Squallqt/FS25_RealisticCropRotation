@@ -71,7 +71,6 @@ function RCRHistoryRequestEvent:readStream(streamId, connection)
         return
     end
 
-    Logging.info("[RealisticCropRotation][MP] Sync request received")
     connection:sendEvent(RCRHistoryResponseEvent.new())
 end
 

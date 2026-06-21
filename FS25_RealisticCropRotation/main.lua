@@ -68,7 +68,6 @@ local function loadCropConfig()
     end
 
     delete(xmlFile)
-    Logging.info("[RealisticCropRotation] cropConfig.xml loaded: %d crops", i)
     return config
 end
 
@@ -120,8 +119,6 @@ local function onFarmlandOwnerChanged(farmlandId, _farmId, loadFromSavegame)
 
     local changed = RealisticCropRotation.manager:clearRotationPlan(farmlandId)
     if changed then
-        Logging.info("[RealisticCropRotation] Rotation plan cleared after farmland owner change: farmland=%s",
-            tostring(farmlandId))
         refreshRealisticCropRotationFrame()
         RealisticCropRotation.requestBroadcast()
     end
