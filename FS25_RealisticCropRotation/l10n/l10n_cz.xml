@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Osevní postup" />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Pole" />
+        <e k="rcr_sidebar_no_active_crop"  v="Žádná aktivní plodina" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Rotace" />
+        <e k="rcr_tab_planning"         v="Plánování" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Očekávaný zbytek +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Celkový zbytek osevního postupu +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Žádný nadcházející zbytek" />
+        <e k="rcr_status_planned_no_residue" v="Celkový zbytek osevního postupu 0 kg/ha" />
+        <e k="rcr_weather_sun" v="Jasno" />
+        <e k="rcr_weather_partially_cloudy" v="Polojasno" />
+        <e k="rcr_weather_cloudy" v="Zataženo" />
+        <e k="rcr_weather_rain" v="Déšť" />
+        <e k="rcr_weather_snow" v="Sníh" />
+        <e k="rcr_weather_hail" v="Krupobití" />
+        <e k="rcr_weather_twister" v="Tornádo" />
+        <e k="rcr_weather_thunder" v="Bouřka" />
+        <e k="rcr_weather_current_operational" v="%s probíhá · končí %s" />
+        <e k="rcr_weather_current_calm" v="%s · do %s" />
+        <e k="rcr_weather_soon" v="%s %s-%s · za %s" />
+        <e k="rcr_weather_tomorrow" v="%s zítra %s-%s" />
+        <e k="rcr_weather_later" v="%s D+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d min" />
+        <e k="rcr_time_hours" v="%d h" />
+        <e k="rcr_time_hours_minutes" v="%d h %02d" />
+        <e k="rcr_hud_previous_n1"      v="Předchozí plodina (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Plodina předtím (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Historie plodin" />
+        <e k="rcr_section_nitrogen"     v="Stav dusíku" />
+        <e k="rcr_section_advice"       v="Agronomická rada" />
+        <e k="rcr_section_field"        v="Aktuální stav pole" />
+        <e k="rcr_section_lime"         v="Stav vápna / pH" />
+        <e k="rcr_section_plan"         v="Plán osevního postupu" />
+        <e k="rcr_section_score"        v="Kvalita osevního postupu" />
+        <e k="rcr_section_overview"     v="Celkový přehled" />
+        <e k="rcr_overview_total_area"  v="Obdělaná plocha: %.1f ha" />
+
+        <!-- Timeline slot labels and empty state -->
+        <e k="rcr_slot_empty"           v="Neoseto" />
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Aktuální" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Obilnina" />
+        <e k="rcr_family_legume"        v="Luskovina" />
+        <e k="rcr_family_oilseed"       v="Olejnina" />
+        <e k="rcr_family_root"          v="Okopanina" />
+        <e k="rcr_family_vegetable"     v="Zelenina" />
+        <e k="rcr_family_forage"        v="Pícnina" />
+        <e k="rcr_family_cover"         v="Krycí" />
+        <e k="rcr_cover_crop"           v="Meziplodina" />
+        <e k="rcr_fallow"              v="Úhor" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Nehnojeno" />
+        <e k="rcr_n_partial"            v="Částečně" />
+        <e k="rcr_n_full"               v="Plně" />
+        <e k="rcr_n_average_value"      v="Průměrný dusík: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Potřeba plodiny: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Dusík / potřeba plodiny" />
+        <e k="rcr_lime_none"            v="Bez vápna" />
+        <e k="rcr_lime_partial"         v="Částečné vápno" />
+        <e k="rcr_lime_full"            v="Vápno správně" />
+        <e k="rcr_lime_average_pf"      v="Průměrné pH" />
+        <e k="rcr_lime_average_value"   v="Průměrné pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="Cíl: %.3f pH" />
+        <e k="rcr_soil_not_sampled"     v="Půda neanalyzována" />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal"    v="Po Obilnině: počkejte alespoň 2 roky před další Obilninou; Luskovina mezitím dodá dusík." />
+        <e k="rcr_advice_afterLegume"    v="Po Luskovině: Obilnina dobře využije dodaný dusík; počkejte alespoň 3 roky před opětovným setím Luskoviny." />
+        <e k="rcr_advice_afterOilseed"   v="Po Olejnině: počkejte alespoň 3 roky před další Olejninou; Obilnina se dobře hodí mezi ně." />
+        <e k="rcr_advice_afterRoot"      v="Po Okopanině: počkejte alespoň 4 roky před další Okopaninou; Obilnina se dobře hodí mezi ně." />
+        <e k="rcr_advice_afterVegetable" v="Po Zelenině: počkejte alespoň 3 roky před opakováním; Obilnina se dobře hodí mezi ně." />
+        <e k="rcr_advice_afterForage"    v="Po Pícnině: Obilnina se dobře hodí, struktura a dostupné zbytky." />
+        <e k="rcr_advice_no_current_crop" v="Žádná aktuální hlavní plodina: rada dostupná po detekci plodiny." />
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Stav půdy" />
+        <e k="rcr_action_none"          v="Žádná" />
+        <e k="rcr_field_growth"          v="Růst" />
+
+        <!-- Field card — weed column header (singular, matching base game HUD) -->
+        <e k="rcr_weed_header"          v="Plevel" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Neplánováno" />
+
+        <!-- Global overview — cover crop recap (own line) -->
+        <e k="rcr_overview_cover_entry" v="Krycí %s: %s (setí %s)" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Bře" />
+        <e k="rcr_calendar_month_2"     v="Dub" />
+        <e k="rcr_calendar_month_3"     v="Kvě" />
+        <e k="rcr_calendar_month_4"     v="Čvn" />
+        <e k="rcr_calendar_month_5"     v="Čvc" />
+        <e k="rcr_calendar_month_6"     v="Srp" />
+        <e k="rcr_calendar_month_7"     v="Zář" />
+        <e k="rcr_calendar_month_8"     v="Říj" />
+        <e k="rcr_calendar_month_9"     v="Lis" />
+        <e k="rcr_calendar_month_10"    v="Pro" />
+        <e k="rcr_calendar_month_11"    v="Led" />
+        <e k="rcr_calendar_month_12"    v="Úno" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Setí" />
+        <e k="rcr_calendar_legend_harvest" v="Sklizeň" />
+        <e k="rcr_calendar_legend_cover"   v="Setí krycí plodiny" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Neúplný plán" />
+        <e k="rcr_score_excellent"      v="Vynikající osevní postup" />
+        <e k="rcr_score_good"           v="Dobrý osevní postup" />
+        <e k="rcr_score_fair"           v="Průměrný osevní postup" />
+        <e k="rcr_score_poor"           v="Špatný osevní postup" />
+        <e k="rcr_score_label_low"      v="Nízké skóre" />
+        <e k="rcr_score_label_optimal"  v="Optimální skóre" />
+        <e k="rcr_score_short_optimal"  v="OPTIMÁLNÍ" />
+        <e k="rcr_score_short_good"     v="DOBRÝ" />
+        <e k="rcr_score_short_fair"     v="PRŮMĚRNÝ" />
+        <e k="rcr_score_short_poor"     v="NÍZKÝ" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Žádná vlastní pole k zobrazení." />
+    </elements>
+</l10n>

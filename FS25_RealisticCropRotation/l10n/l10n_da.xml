@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Sædskifte" />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Mark" />
+        <e k="rcr_sidebar_no_active_crop"  v="Ingen aktiv afgrøde" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Rotation" />
+        <e k="rcr_tab_planning"         v="Planlægning" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Forventet rest +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Samlet sædskifterest +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Ingen rest på vej" />
+        <e k="rcr_status_planned_no_residue" v="Samlet sædskifterest 0 kg/ha" />
+        <e k="rcr_weather_sun" v="Klar himmel" />
+        <e k="rcr_weather_partially_cloudy" v="Opklaring" />
+        <e k="rcr_weather_cloudy" v="Overskyet" />
+        <e k="rcr_weather_rain" v="Regn" />
+        <e k="rcr_weather_snow" v="Sne" />
+        <e k="rcr_weather_hail" v="Hagl" />
+        <e k="rcr_weather_twister" v="Tornado" />
+        <e k="rcr_weather_thunder" v="Tordenvejr" />
+        <e k="rcr_weather_current_operational" v="%s i gang · slutter %s" />
+        <e k="rcr_weather_current_calm" v="%s · indtil %s" />
+        <e k="rcr_weather_soon" v="%s %s-%s · om %s" />
+        <e k="rcr_weather_tomorrow" v="%s i morgen %s-%s" />
+        <e k="rcr_weather_later" v="%s D+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d min" />
+        <e k="rcr_time_hours" v="%d t" />
+        <e k="rcr_time_hours_minutes" v="%d t %02d" />
+        <e k="rcr_hud_previous_n1"      v="Forrige afgrøde (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Afgrøde før (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Afgrødehistorik" />
+        <e k="rcr_section_nitrogen"     v="Kvælstofstatus" />
+        <e k="rcr_section_advice"       v="Agronomisk råd" />
+        <e k="rcr_section_field"        v="Aktuel markstatus" />
+        <e k="rcr_section_lime"         v="Kalk-/pH-status" />
+        <e k="rcr_section_plan"         v="Sædskifteplan" />
+        <e k="rcr_section_score"        v="Sædskiftekvalitet" />
+        <e k="rcr_section_overview"     v="Samlet oversigt" />
+        <e k="rcr_overview_total_area"  v="Bearbejdet areal: %.1f ha" />
+
+        <!-- Timeline slot labels and empty state -->
+        <e k="rcr_slot_empty"           v="Ikke sået" />
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Aktuel" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Korn" />
+        <e k="rcr_family_legume"        v="Bælgplante" />
+        <e k="rcr_family_oilseed"       v="Olieafgrøde" />
+        <e k="rcr_family_root"          v="Rodfrugt" />
+        <e k="rcr_family_vegetable"     v="Grøntsag" />
+        <e k="rcr_family_forage"        v="Foder" />
+        <e k="rcr_family_cover"         v="Dække" />
+        <e k="rcr_cover_crop"           v="Mellemafgrøde" />
+        <e k="rcr_fallow"              v="Brak" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Ikke gødet" />
+        <e k="rcr_n_partial"            v="Delvis" />
+        <e k="rcr_n_full"               v="Fuld" />
+        <e k="rcr_n_average_value"      v="Gennemsnitligt kvælstof: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Afgrødebehov: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Kvælstof / afgrødebehov" />
+        <e k="rcr_lime_none"            v="Ingen kalk" />
+        <e k="rcr_lime_partial"         v="Delvis kalk" />
+        <e k="rcr_lime_full"            v="Korrekt kalk" />
+        <e k="rcr_lime_average_pf"      v="Gennemsnitlig pH" />
+        <e k="rcr_lime_average_value"   v="Gennemsnitlig pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="Mål: %.3f pH" />
+        <e k="rcr_soil_not_sampled"     v="Jord ikke analyseret" />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal"    v="Efter Korn: vent mindst 2 år før Korn igen; en Bælgplante imellem tilfører kvælstof." />
+        <e k="rcr_advice_afterLegume"    v="Efter Bælgplante: Korn udnytter det tilførte kvælstof godt; vent mindst 3 år før Bælgplante igen." />
+        <e k="rcr_advice_afterOilseed"   v="Efter Olieafgrøde: vent mindst 3 år før Olieafgrøde igen; Korn passer godt imellem." />
+        <e k="rcr_advice_afterRoot"      v="Efter Rodfrugt: vent mindst 4 år før Rodfrugt igen; Korn passer godt imellem." />
+        <e k="rcr_advice_afterVegetable" v="Efter Grøntsag: vent mindst 3 år før gentagelse; Korn passer godt imellem." />
+        <e k="rcr_advice_afterForage"    v="Efter Foder: Korn passer godt, med struktur og tilgængelige rester." />
+        <e k="rcr_advice_no_current_crop" v="Ingen aktuel hovedafgrøde: råd tilgængeligt, når en afgrøde registreres." />
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Jordtilstand" />
+        <e k="rcr_action_none"          v="Ingen" />
+        <e k="rcr_field_growth"          v="Vækst" />
+
+        <!-- Field card — weed column header (singular, matching base game HUD) -->
+        <e k="rcr_weed_header"          v="Ukrudt" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Ikke planlagt" />
+
+        <!-- Global overview — cover crop recap (own line) -->
+        <e k="rcr_overview_cover_entry" v="Dække %s: %s (såning %s)" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Mar" />
+        <e k="rcr_calendar_month_2"     v="Apr" />
+        <e k="rcr_calendar_month_3"     v="Maj" />
+        <e k="rcr_calendar_month_4"     v="Jun" />
+        <e k="rcr_calendar_month_5"     v="Jul" />
+        <e k="rcr_calendar_month_6"     v="Aug" />
+        <e k="rcr_calendar_month_7"     v="Sep" />
+        <e k="rcr_calendar_month_8"     v="Okt" />
+        <e k="rcr_calendar_month_9"     v="Nov" />
+        <e k="rcr_calendar_month_10"    v="Dec" />
+        <e k="rcr_calendar_month_11"    v="Jan" />
+        <e k="rcr_calendar_month_12"    v="Feb" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Såning" />
+        <e k="rcr_calendar_legend_harvest" v="Høst" />
+        <e k="rcr_calendar_legend_cover"   v="Såning af dække" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Ufuldstændig plan" />
+        <e k="rcr_score_excellent"      v="Fremragende sædskifte" />
+        <e k="rcr_score_good"           v="Godt sædskifte" />
+        <e k="rcr_score_fair"           v="Rimeligt sædskifte" />
+        <e k="rcr_score_poor"           v="Dårligt sædskifte" />
+        <e k="rcr_score_label_low"      v="Lav score" />
+        <e k="rcr_score_label_optimal"  v="Optimal score" />
+        <e k="rcr_score_short_optimal"  v="OPTIMAL" />
+        <e k="rcr_score_short_good"     v="GODT" />
+        <e k="rcr_score_short_fair"     v="RIMELIGT" />
+        <e k="rcr_score_short_poor"     v="LAV" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Ingen egne marker at vise." />
+    </elements>
+</l10n>

@@ -6,15 +6,13 @@
 
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Feld" />
-        <e k="rcr_sidebar_last"            v="Letzter:" />
         <e k="rcr_sidebar_no_active_crop"  v="Keine aktive Kultur" />
 
         <!-- Tabs -->
-        <e k="rcr_tab_history"          v="Fruchtfolge" />
+        <e k="rcr_tab_history"          v="Rotation" />
         <e k="rcr_tab_planning"         v="Planung" />
 
         <!-- Status labels -->
-        <e k="rcr_status_bonus"         v="N-Rückstand" />
         <e k="rcr_status_current_residue" v="Erwarteter Rückstand +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="Rückstand Rotation gesamt +%d kg/ha" />
         <e k="rcr_status_current_no_residue" v="Kein Rückstand zu erwarten" />
@@ -37,8 +35,6 @@
         <e k="rcr_time_hours_minutes" v="%d h %02d" />
         <e k="rcr_hud_previous_n1"      v="Vorfrucht (N-1)" />
         <e k="rcr_hud_previous_n2"      v="Vor-Vorfrucht (N-2)" />
-        <e k="rcr_hud_residue_applied"  v="Angewandter Rest" />
-        <e k="rcr_hud_residue_level"    v="+%d Stufe" />
 
         <!-- Section bars -->
         <e k="rcr_section_history"      v="Anbaugeschichte" />
@@ -74,7 +70,6 @@
         <e k="rcr_n_none"               v="Kein Dünger" />
         <e k="rcr_n_partial"            v="Teilweise" />
         <e k="rcr_n_full"               v="Vollständig" />
-        <e k="rcr_n_available"          v="Verfügbarer Stickstoff" />
         <e k="rcr_n_average_value"      v="Durchschnitt Stickstoff: %.0f kg/ha" />
         <e k="rcr_n_crop_need"          v="Kulturbedarf: %.0f kg/ha" />
         <e k="rcr_n_average_pf"         v="Stickstoff / Pflanzenbedarf" />

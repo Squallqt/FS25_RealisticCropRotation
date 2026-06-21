@@ -2,7 +2,7 @@
 <l10n>
     <elements>
         <!-- General -->
-        <e k="realisticCropRotation_menu_title" v="Assolement" />
+        <e k="realisticCropRotation_menu_title" v="Rotation des cultures" />
 
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Parcelle" />

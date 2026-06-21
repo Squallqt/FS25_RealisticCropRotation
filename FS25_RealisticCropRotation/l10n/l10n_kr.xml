@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="작물 윤작" />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="밭" />
+        <e k="rcr_sidebar_no_active_crop"  v="활성 작물 없음" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="윤작" />
+        <e k="rcr_tab_planning"         v="계획" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="예상 잔류량 +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="총 윤작 잔류량 +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="예정된 잔류량 없음" />
+        <e k="rcr_status_planned_no_residue" v="총 윤작 잔류량 0 kg/ha" />
+        <e k="rcr_weather_sun" v="맑음" />
+        <e k="rcr_weather_partially_cloudy" v="가끔 맑음" />
+        <e k="rcr_weather_cloudy" v="흐림" />
+        <e k="rcr_weather_rain" v="비" />
+        <e k="rcr_weather_snow" v="눈" />
+        <e k="rcr_weather_hail" v="우박" />
+        <e k="rcr_weather_twister" v="토네이도" />
+        <e k="rcr_weather_thunder" v="뇌우" />
+        <e k="rcr_weather_current_operational" v="%s 진행 중 · 종료 %s" />
+        <e k="rcr_weather_current_calm" v="%s · %s까지" />
+        <e k="rcr_weather_soon" v="%s %s-%s · %s 후" />
+        <e k="rcr_weather_tomorrow" v="%s 내일 %s-%s" />
+        <e k="rcr_weather_later" v="%s +%d일 %s-%s" />
+        <e k="rcr_time_minutes" v="%d 분" />
+        <e k="rcr_time_hours" v="%d 시간" />
+        <e k="rcr_time_hours_minutes" v="%d 시간 %02d 분" />
+        <e k="rcr_hud_previous_n1"      v="이전 작물 (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="그 이전 작물 (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="작물 이력" />
+        <e k="rcr_section_nitrogen"     v="질소 상태" />
+        <e k="rcr_section_advice"       v="농학적 조언" />
+        <e k="rcr_section_field"        v="현재 밭 상태" />
+        <e k="rcr_section_lime"         v="석회 / pH 상태" />
+        <e k="rcr_section_plan"         v="윤작 계획" />
+        <e k="rcr_section_score"        v="윤작 품질" />
+        <e k="rcr_section_overview"     v="전체 개요" />
+        <e k="rcr_overview_total_area"  v="경작 면적: %.1f ha" />
+
+        <!-- Timeline slot labels and empty state -->
+        <e k="rcr_slot_empty"           v="미파종" />
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="현재" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="곡물" />
+        <e k="rcr_family_legume"        v="콩과" />
+        <e k="rcr_family_oilseed"       v="유료작물" />
+        <e k="rcr_family_root"          v="뿌리채소" />
+        <e k="rcr_family_vegetable"     v="채소" />
+        <e k="rcr_family_forage"        v="사료작물" />
+        <e k="rcr_family_cover"         v="피복" />
+        <e k="rcr_cover_crop"           v="사이짓기" />
+        <e k="rcr_fallow"              v="휴경" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="미시비" />
+        <e k="rcr_n_partial"            v="부분" />
+        <e k="rcr_n_full"               v="완전" />
+        <e k="rcr_n_average_value"      v="평균 질소: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="작물 요구량: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="질소 / 작물 요구량" />
+        <e k="rcr_lime_none"            v="석회 없음" />
+        <e k="rcr_lime_partial"         v="석회 부분" />
+        <e k="rcr_lime_full"            v="석회 적정" />
+        <e k="rcr_lime_average_pf"      v="평균 pH" />
+        <e k="rcr_lime_average_value"   v="평균 pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="목표: %.3f pH" />
+        <e k="rcr_soil_not_sampled"     v="토양 미채취" />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal"    v="곡물 이후: 다음 곡물까지 최소 2년 기다리세요; 사이에 콩과를 심으면 질소가 보충됩니다." />
+        <e k="rcr_advice_afterLegume"    v="콩과 이후: 곡물은 보충된 질소를 잘 활용합니다; 다음 콩과까지 최소 3년 기다리세요." />
+        <e k="rcr_advice_afterOilseed"   v="유료작물 이후: 다음 유료작물까지 최소 3년 기다리세요; 사이에 곡물이 적합합니다." />
+        <e k="rcr_advice_afterRoot"      v="뿌리채소 이후: 다음 뿌리채소까지 최소 4년 기다리세요; 사이에 곡물이 적합합니다." />
+        <e k="rcr_advice_afterVegetable" v="채소 이후: 반복까지 최소 3년 기다리세요; 사이에 곡물이 적합합니다." />
+        <e k="rcr_advice_afterForage"    v="사료작물 이후: 곡물이 적합하며, 구조와 잔류물이 이용 가능합니다." />
+        <e k="rcr_advice_no_current_crop" v="현재 주요 작물 없음: 작물이 감지되면 조언이 제공됩니다." />
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="토양 상태" />
+        <e k="rcr_action_none"          v="없음" />
+        <e k="rcr_field_growth"          v="생장" />
+
+        <!-- Field card — weed column header (singular, matching base game HUD) -->
+        <e k="rcr_weed_header"          v="잡초" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="계획 없음" />
+
+        <!-- Global overview — cover crop recap (own line) -->
+        <e k="rcr_overview_cover_entry" v="피복 %s: %s (파종 %s)" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="3월" />
+        <e k="rcr_calendar_month_2"     v="4월" />
+        <e k="rcr_calendar_month_3"     v="5월" />
+        <e k="rcr_calendar_month_4"     v="6월" />
+        <e k="rcr_calendar_month_5"     v="7월" />
+        <e k="rcr_calendar_month_6"     v="8월" />
+        <e k="rcr_calendar_month_7"     v="9월" />
+        <e k="rcr_calendar_month_8"     v="10월" />
+        <e k="rcr_calendar_month_9"     v="11월" />
+        <e k="rcr_calendar_month_10"    v="12월" />
+        <e k="rcr_calendar_month_11"    v="1월" />
+        <e k="rcr_calendar_month_12"    v="2월" />
+
+        <e k="rcr_calendar_legend_sowing"  v="파종" />
+        <e k="rcr_calendar_legend_harvest" v="수확" />
+        <e k="rcr_calendar_legend_cover"   v="피복 파종" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="불완전한 계획" />
+        <e k="rcr_score_excellent"      v="우수한 윤작" />
+        <e k="rcr_score_good"           v="좋은 윤작" />
+        <e k="rcr_score_fair"           v="보통 윤작" />
+        <e k="rcr_score_poor"           v="미흡한 윤작" />
+        <e k="rcr_score_label_low"      v="낮은 점수" />
+        <e k="rcr_score_label_optimal"  v="최적 점수" />
+        <e k="rcr_score_short_optimal"  v="최적" />
+        <e k="rcr_score_short_good"     v="좋음" />
+        <e k="rcr_score_short_fair"     v="보통" />
+        <e k="rcr_score_short_poor"     v="낮음" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="표시할 보유 밭이 없습니다." />
+    </elements>
+</l10n>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="作物輪作" />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="田塊" />
+        <e k="rcr_sidebar_no_active_crop"  v="無作用中作物" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="輪作" />
+        <e k="rcr_tab_planning"         v="規劃" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="預期殘留 +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="輪作殘留總計 +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="無即將到來的殘留" />
+        <e k="rcr_status_planned_no_residue" v="輪作殘留總計 0 kg/ha" />
+        <e k="rcr_weather_sun" v="晴朗" />
+        <e k="rcr_weather_partially_cloudy" v="多雲時晴" />
+        <e k="rcr_weather_cloudy" v="陰天" />
+        <e k="rcr_weather_rain" v="雨" />
+        <e k="rcr_weather_snow" v="雪" />
+        <e k="rcr_weather_hail" v="冰雹" />
+        <e k="rcr_weather_twister" v="龍捲風" />
+        <e k="rcr_weather_thunder" v="雷暴" />
+        <e k="rcr_weather_current_operational" v="%s 進行中 · 結束 %s" />
+        <e k="rcr_weather_current_calm" v="%s · 直到 %s" />
+        <e k="rcr_weather_soon" v="%s %s-%s · %s 後" />
+        <e k="rcr_weather_tomorrow" v="%s 明天 %s-%s" />
+        <e k="rcr_weather_later" v="%s +%d天 %s-%s" />
+        <e k="rcr_time_minutes" v="%d 分鐘" />
+        <e k="rcr_time_hours" v="%d 小時" />
+        <e k="rcr_time_hours_minutes" v="%d 小時 %02d 分" />
+        <e k="rcr_hud_previous_n1"      v="前茬作物 (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="前前茬作物 (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="作物歷史" />
+        <e k="rcr_section_nitrogen"     v="氮素狀態" />
+        <e k="rcr_section_advice"       v="農藝建議" />
+        <e k="rcr_section_field"        v="目前田塊狀態" />
+        <e k="rcr_section_lime"         v="石灰 / pH 狀態" />
+        <e k="rcr_section_plan"         v="輪作計畫" />
+        <e k="rcr_section_score"        v="輪作品質" />
+        <e k="rcr_section_overview"     v="全域概覽" />
+        <e k="rcr_overview_total_area"  v="耕作面積: %.1f ha" />
+
+        <!-- Timeline slot labels and empty state -->
+        <e k="rcr_slot_empty"           v="未種植" />
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="目前" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="穀物" />
+        <e k="rcr_family_legume"        v="豆科" />
+        <e k="rcr_family_oilseed"       v="油料" />
+        <e k="rcr_family_root"          v="根莖類" />
+        <e k="rcr_family_vegetable"     v="蔬菜" />
+        <e k="rcr_family_forage"        v="飼草" />
+        <e k="rcr_family_cover"         v="覆蓋" />
+        <e k="rcr_cover_crop"           v="間作作物" />
+        <e k="rcr_fallow"              v="休耕" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="未施肥" />
+        <e k="rcr_n_partial"            v="部分" />
+        <e k="rcr_n_full"               v="完全" />
+        <e k="rcr_n_average_value"      v="平均氮素: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="作物需求: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="氮素 / 作物需求" />
+        <e k="rcr_lime_none"            v="無石灰" />
+        <e k="rcr_lime_partial"         v="部分石灰" />
+        <e k="rcr_lime_full"            v="石灰適宜" />
+        <e k="rcr_lime_average_pf"      v="平均 pH" />
+        <e k="rcr_lime_average_value"   v="平均 pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="目標: %.3f pH" />
+        <e k="rcr_soil_not_sampled"     v="土壤未採樣" />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal"    v="穀物之後: 至少間隔 2 年再種穀物; 其間種植豆科可歸還氮素。" />
+        <e k="rcr_advice_afterLegume"    v="豆科之後: 穀物能妥善利用歸還的氮素; 至少間隔 3 年再種豆科。" />
+        <e k="rcr_advice_afterOilseed"   v="油料之後: 至少間隔 3 年再種油料; 其間種植穀物較為適宜。" />
+        <e k="rcr_advice_afterRoot"      v="根莖類之後: 至少間隔 4 年再種根莖類; 其間種植穀物較為適宜。" />
+        <e k="rcr_advice_afterVegetable" v="蔬菜之後: 至少間隔 3 年再次種植; 其間種植穀物較為適宜。" />
+        <e k="rcr_advice_afterForage"    v="飼草之後: 穀物較為適宜, 土壤結構良好且殘留可用。" />
+        <e k="rcr_advice_no_current_crop" v="目前無主要作物: 偵測到作物後將提供建議。" />
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="土壤狀況" />
+        <e k="rcr_action_none"          v="無" />
+        <e k="rcr_field_growth"          v="生長" />
+
+        <!-- Field card — weed column header (singular, matching base game HUD) -->
+        <e k="rcr_weed_header"          v="雜草" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="未規劃" />
+
+        <!-- Global overview — cover crop recap (own line) -->
+        <e k="rcr_overview_cover_entry" v="覆蓋 %s: %s (播種 %s)" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="3月" />
+        <e k="rcr_calendar_month_2"     v="4月" />
+        <e k="rcr_calendar_month_3"     v="5月" />
+        <e k="rcr_calendar_month_4"     v="6月" />
+        <e k="rcr_calendar_month_5"     v="7月" />
+        <e k="rcr_calendar_month_6"     v="8月" />
+        <e k="rcr_calendar_month_7"     v="9月" />
+        <e k="rcr_calendar_month_8"     v="10月" />
+        <e k="rcr_calendar_month_9"     v="11月" />
+        <e k="rcr_calendar_month_10"    v="12月" />
+        <e k="rcr_calendar_month_11"    v="1月" />
+        <e k="rcr_calendar_month_12"    v="2月" />
+
+        <e k="rcr_calendar_legend_sowing"  v="播種" />
+        <e k="rcr_calendar_legend_harvest" v="收穫" />
+        <e k="rcr_calendar_legend_cover"   v="覆蓋播種" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="計畫不完整" />
+        <e k="rcr_score_excellent"      v="輪作優異" />
+        <e k="rcr_score_good"           v="輪作良好" />
+        <e k="rcr_score_fair"           v="輪作尚可" />
+        <e k="rcr_score_poor"           v="輪作較差" />
+        <e k="rcr_score_label_low"      v="評分較低" />
+        <e k="rcr_score_label_optimal"  v="評分最佳" />
+        <e k="rcr_score_short_optimal"  v="最佳" />
+        <e k="rcr_score_short_good"     v="良好" />
+        <e k="rcr_score_short_fair"     v="尚可" />
+        <e k="rcr_score_short_poor"     v="較低" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="沒有可顯示的自有田塊。" />
+    </elements>
+</l10n>

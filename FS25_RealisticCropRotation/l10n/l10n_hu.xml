@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Vetésforgó" />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Tábla" />
+        <e k="rcr_sidebar_no_active_crop"  v="Nincs aktív növény" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Forgó" />
+        <e k="rcr_tab_planning"         v="Tervezés" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Várható maradvány +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Teljes vetésforgó-maradvány +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Nincs várható maradvány" />
+        <e k="rcr_status_planned_no_residue" v="Teljes vetésforgó-maradvány 0 kg/ha" />
+        <e k="rcr_weather_sun" v="Tiszta ég" />
+        <e k="rcr_weather_partially_cloudy" v="Időnként napos" />
+        <e k="rcr_weather_cloudy" v="Borult" />
+        <e k="rcr_weather_rain" v="Eső" />
+        <e k="rcr_weather_snow" v="Hó" />
+        <e k="rcr_weather_hail" v="Jégeső" />
+        <e k="rcr_weather_twister" v="Tornádó" />
+        <e k="rcr_weather_thunder" v="Zivatar" />
+        <e k="rcr_weather_current_operational" v="%s folyamatban · vége %s" />
+        <e k="rcr_weather_current_calm" v="%s · %s-ig" />
+        <e k="rcr_weather_soon" v="%s %s-%s · %s múlva" />
+        <e k="rcr_weather_tomorrow" v="%s holnap %s-%s" />
+        <e k="rcr_weather_later" v="%s N+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d perc" />
+        <e k="rcr_time_hours" v="%d ó" />
+        <e k="rcr_time_hours_minutes" v="%d ó %02d" />
+        <e k="rcr_hud_previous_n1"      v="Előző növény (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Azelőtti növény (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Növénytörténet" />
+        <e k="rcr_section_nitrogen"     v="Nitrogénállapot" />
+        <e k="rcr_section_advice"       v="Agronómiai tanács" />
+        <e k="rcr_section_field"        v="Tábla aktuális állapota" />
+        <e k="rcr_section_lime"         v="Mész-/pH-állapot" />
+        <e k="rcr_section_plan"         v="Vetésforgó-terv" />
+        <e k="rcr_section_score"        v="Vetésforgó minősége" />
+        <e k="rcr_section_overview"     v="Általános áttekintés" />
+        <e k="rcr_overview_total_area"  v="Megművelt terület: %.1f ha" />
+
+        <!-- Timeline slot labels and empty state -->
+        <e k="rcr_slot_empty"           v="Nincs bevetve" />
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Jelenlegi" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Gabona" />
+        <e k="rcr_family_legume"        v="Hüvelyes" />
+        <e k="rcr_family_oilseed"       v="Olajnövény" />
+        <e k="rcr_family_root"          v="Gyökérnövény" />
+        <e k="rcr_family_vegetable"     v="Zöldség" />
+        <e k="rcr_family_forage"        v="Takarmány" />
+        <e k="rcr_family_cover"         v="Takaró" />
+        <e k="rcr_cover_crop"           v="Köztes növény" />
+        <e k="rcr_fallow"              v="Ugar" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Nem trágyázott" />
+        <e k="rcr_n_partial"            v="Részleges" />
+        <e k="rcr_n_full"               v="Teljes" />
+        <e k="rcr_n_average_value"      v="Átlagos nitrogén: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Növény igénye: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Nitrogén / növény igénye" />
+        <e k="rcr_lime_none"            v="Nincs mész" />
+        <e k="rcr_lime_partial"         v="Részleges mész" />
+        <e k="rcr_lime_full"            v="Mész megfelelő" />
+        <e k="rcr_lime_average_pf"      v="Átlagos pH" />
+        <e k="rcr_lime_average_value"   v="Átlagos pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="Cél: %.3f pH" />
+        <e k="rcr_soil_not_sampled"     v="Talaj nincs mintázva" />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal"    v="Gabona után: várj legalább 2 évet az újabb Gabonáig; egy Hüvelyes közéiktatva nitrogént pótol." />
+        <e k="rcr_advice_afterLegume"    v="Hüvelyes után: a Gabona jól hasznosítja a visszapótolt nitrogént; várj legalább 3 évet az újabb Hüvelyesig." />
+        <e k="rcr_advice_afterOilseed"   v="Olajnövény után: várj legalább 3 évet az újabb Olajnövényig; a Gabona jól illik közé." />
+        <e k="rcr_advice_afterRoot"      v="Gyökérnövény után: várj legalább 4 évet az újabb Gyökérnövényig; a Gabona jól illik közé." />
+        <e k="rcr_advice_afterVegetable" v="Zöldség után: várj legalább 3 évet az ismétlésig; a Gabona jól illik közé." />
+        <e k="rcr_advice_afterForage"    v="Takarmány után: a Gabona jól illik, jó szerkezet és elérhető maradványok." />
+        <e k="rcr_advice_no_current_crop" v="Nincs jelenlegi főnövény: a tanács elérhető, ha növényt észlel." />
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Talajállapot" />
+        <e k="rcr_action_none"          v="Nincs" />
+        <e k="rcr_field_growth"          v="Növekedés" />
+
+        <!-- Field card — weed column header (singular, matching base game HUD) -->
+        <e k="rcr_weed_header"          v="Gyom" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Nincs tervezve" />
+
+        <!-- Global overview — cover crop recap (own line) -->
+        <e k="rcr_overview_cover_entry" v="Takaró %s: %s (vetés %s)" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Márc" />
+        <e k="rcr_calendar_month_2"     v="Ápr" />
+        <e k="rcr_calendar_month_3"     v="Máj" />
+        <e k="rcr_calendar_month_4"     v="Jún" />
+        <e k="rcr_calendar_month_5"     v="Júl" />
+        <e k="rcr_calendar_month_6"     v="Aug" />
+        <e k="rcr_calendar_month_7"     v="Szept" />
+        <e k="rcr_calendar_month_8"     v="Okt" />
+        <e k="rcr_calendar_month_9"     v="Nov" />
+        <e k="rcr_calendar_month_10"    v="Dec" />
+        <e k="rcr_calendar_month_11"    v="Jan" />
+        <e k="rcr_calendar_month_12"    v="Feb" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Vetés" />
+        <e k="rcr_calendar_legend_harvest" v="Betakarítás" />
+        <e k="rcr_calendar_legend_cover"   v="Takarónövény vetése" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Hiányos terv" />
+        <e k="rcr_score_excellent"      v="Kiváló vetésforgó" />
+        <e k="rcr_score_good"           v="Jó vetésforgó" />
+        <e k="rcr_score_fair"           v="Megfelelő vetésforgó" />
+        <e k="rcr_score_poor"           v="Gyenge vetésforgó" />
+        <e k="rcr_score_label_low"      v="Alacsony pontszám" />
+        <e k="rcr_score_label_optimal"  v="Optimális pontszám" />
+        <e k="rcr_score_short_optimal"  v="OPTIMÁLIS" />
+        <e k="rcr_score_short_good"     v="JÓ" />
+        <e k="rcr_score_short_fair"     v="MEGFELELŐ" />
+        <e k="rcr_score_short_poor"     v="ALACSONY" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Nincs megjeleníthető saját tábla." />
+    </elements>
+</l10n>

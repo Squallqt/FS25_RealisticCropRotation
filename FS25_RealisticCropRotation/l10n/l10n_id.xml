@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Rotasi Tanaman" />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Lahan" />
+        <e k="rcr_sidebar_no_active_crop"  v="Tidak ada tanaman aktif" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Rotasi" />
+        <e k="rcr_tab_planning"         v="Perencanaan" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Residu diharapkan +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Total residu rotasi +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Tidak ada residu mendatang" />
+        <e k="rcr_status_planned_no_residue" v="Total residu rotasi 0 kg/ha" />
+        <e k="rcr_weather_sun" v="Langit cerah" />
+        <e k="rcr_weather_partially_cloudy" v="Cerah berawan" />
+        <e k="rcr_weather_cloudy" v="Berawan" />
+        <e k="rcr_weather_rain" v="Hujan" />
+        <e k="rcr_weather_snow" v="Salju" />
+        <e k="rcr_weather_hail" v="Hujan es" />
+        <e k="rcr_weather_twister" v="Tornado" />
+        <e k="rcr_weather_thunder" v="Badai petir" />
+        <e k="rcr_weather_current_operational" v="%s berlangsung · berakhir %s" />
+        <e k="rcr_weather_current_calm" v="%s · hingga %s" />
+        <e k="rcr_weather_soon" v="%s %s-%s · dalam %s" />
+        <e k="rcr_weather_tomorrow" v="%s besok %s-%s" />
+        <e k="rcr_weather_later" v="%s H+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d mnt" />
+        <e k="rcr_time_hours" v="%d j" />
+        <e k="rcr_time_hours_minutes" v="%d j %02d" />
+        <e k="rcr_hud_previous_n1"      v="Tanaman sebelumnya (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Tanaman sebelum itu (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Riwayat Tanaman" />
+        <e k="rcr_section_nitrogen"     v="Status Nitrogen" />
+        <e k="rcr_section_advice"       v="Saran Agronomi" />
+        <e k="rcr_section_field"        v="Status lahan saat ini" />
+        <e k="rcr_section_lime"         v="Status Kapur / pH" />
+        <e k="rcr_section_plan"         v="Rencana Rotasi" />
+        <e k="rcr_section_score"        v="Kualitas Rotasi" />
+        <e k="rcr_section_overview"     v="Ikhtisar Global" />
+        <e k="rcr_overview_total_area"  v="Luas digarap: %.1f ha" />
+
+        <!-- Timeline slot labels and empty state -->
+        <e k="rcr_slot_empty"           v="Belum ditanami" />
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Saat ini" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Serealia" />
+        <e k="rcr_family_legume"        v="Kacang-kacangan" />
+        <e k="rcr_family_oilseed"       v="Biji minyak" />
+        <e k="rcr_family_root"          v="Umbi-umbian" />
+        <e k="rcr_family_vegetable"     v="Sayuran" />
+        <e k="rcr_family_forage"        v="Hijauan" />
+        <e k="rcr_family_cover"         v="Penutup" />
+        <e k="rcr_cover_crop"           v="Tanaman sela" />
+        <e k="rcr_fallow"              v="Bera" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Tidak dipupuk" />
+        <e k="rcr_n_partial"            v="Sebagian" />
+        <e k="rcr_n_full"               v="Penuh" />
+        <e k="rcr_n_average_value"      v="Rata-rata nitrogen: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Kebutuhan tanaman: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Nitrogen / kebutuhan tanaman" />
+        <e k="rcr_lime_none"            v="Tanpa kapur" />
+        <e k="rcr_lime_partial"         v="Kapur sebagian" />
+        <e k="rcr_lime_full"            v="Kapur sesuai" />
+        <e k="rcr_lime_average_pf"      v="Rata-rata pH" />
+        <e k="rcr_lime_average_value"   v="Rata-rata pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="Target: %.3f pH" />
+        <e k="rcr_soil_not_sampled"     v="Tanah belum diambil sampel" />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal"    v="Setelah Serealia: tunggu minimal 2 tahun sebelum Serealia lagi; Kacang-kacangan di antaranya mengembalikan nitrogen." />
+        <e k="rcr_advice_afterLegume"    v="Setelah Kacang-kacangan: Serealia memanfaatkan nitrogen yang dikembalikan dengan baik; tunggu minimal 3 tahun sebelum menanam Kacang-kacangan lagi." />
+        <e k="rcr_advice_afterOilseed"   v="Setelah Biji minyak: tunggu minimal 3 tahun sebelum Biji minyak lagi; Serealia cocok di antaranya." />
+        <e k="rcr_advice_afterRoot"      v="Setelah Umbi-umbian: tunggu minimal 4 tahun sebelum Umbi-umbian lagi; Serealia cocok di antaranya." />
+        <e k="rcr_advice_afterVegetable" v="Setelah Sayuran: tunggu minimal 3 tahun sebelum mengulang; Serealia cocok di antaranya." />
+        <e k="rcr_advice_afterForage"    v="Setelah Hijauan: Serealia cocok, dengan struktur dan residu tersedia." />
+        <e k="rcr_advice_no_current_crop" v="Tidak ada tanaman utama saat ini: saran tersedia saat tanaman terdeteksi." />
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Kondisi tanah" />
+        <e k="rcr_action_none"          v="Tidak ada" />
+        <e k="rcr_field_growth"          v="Pertumbuhan" />
+
+        <!-- Field card — weed column header (singular, matching base game HUD) -->
+        <e k="rcr_weed_header"          v="Gulma" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Belum direncanakan" />
+
+        <!-- Global overview — cover crop recap (own line) -->
+        <e k="rcr_overview_cover_entry" v="Penutup %s: %s (tanam %s)" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Mar" />
+        <e k="rcr_calendar_month_2"     v="Apr" />
+        <e k="rcr_calendar_month_3"     v="Mei" />
+        <e k="rcr_calendar_month_4"     v="Jun" />
+        <e k="rcr_calendar_month_5"     v="Jul" />
+        <e k="rcr_calendar_month_6"     v="Agu" />
+        <e k="rcr_calendar_month_7"     v="Sep" />
+        <e k="rcr_calendar_month_8"     v="Okt" />
+        <e k="rcr_calendar_month_9"     v="Nov" />
+        <e k="rcr_calendar_month_10"    v="Des" />
+        <e k="rcr_calendar_month_11"    v="Jan" />
+        <e k="rcr_calendar_month_12"    v="Feb" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Tanam" />
+        <e k="rcr_calendar_legend_harvest" v="Panen" />
+        <e k="rcr_calendar_legend_cover"   v="Tanam penutup" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Rencana tidak lengkap" />
+        <e k="rcr_score_excellent"      v="Rotasi sangat baik" />
+        <e k="rcr_score_good"           v="Rotasi baik" />
+        <e k="rcr_score_fair"           v="Rotasi cukup" />
+        <e k="rcr_score_poor"           v="Rotasi buruk" />
+        <e k="rcr_score_label_low"      v="Skor rendah" />
+        <e k="rcr_score_label_optimal"  v="Skor optimal" />
+        <e k="rcr_score_short_optimal"  v="OPTIMAL" />
+        <e k="rcr_score_short_good"     v="BAIK" />
+        <e k="rcr_score_short_fair"     v="CUKUP" />
+        <e k="rcr_score_short_poor"     v="RENDAH" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Tidak ada lahan milik sendiri untuk ditampilkan." />
+    </elements>
+</l10n>

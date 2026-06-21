@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Rotația Culturilor" />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Parcelă" />
+        <e k="rcr_sidebar_no_active_crop"  v="Nicio cultură activă" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Rotație" />
+        <e k="rcr_tab_planning"         v="Planificare" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Reziduu așteptat +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Reziduu total al rotației +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Niciun reziduu viitor" />
+        <e k="rcr_status_planned_no_residue" v="Reziduu total al rotației 0 kg/ha" />
+        <e k="rcr_weather_sun" v="Cer senin" />
+        <e k="rcr_weather_partially_cloudy" v="Parțial înnorat" />
+        <e k="rcr_weather_cloudy" v="Înnorat" />
+        <e k="rcr_weather_rain" v="Ploaie" />
+        <e k="rcr_weather_snow" v="Ninsoare" />
+        <e k="rcr_weather_hail" v="Grindină" />
+        <e k="rcr_weather_twister" v="Tornadă" />
+        <e k="rcr_weather_thunder" v="Furtună" />
+        <e k="rcr_weather_current_operational" v="%s în curs · se termină %s" />
+        <e k="rcr_weather_current_calm" v="%s · până la %s" />
+        <e k="rcr_weather_soon" v="%s %s-%s · în %s" />
+        <e k="rcr_weather_tomorrow" v="%s mâine %s-%s" />
+        <e k="rcr_weather_later" v="%s Z+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d min" />
+        <e k="rcr_time_hours" v="%d h" />
+        <e k="rcr_time_hours_minutes" v="%d h %02d" />
+        <e k="rcr_hud_previous_n1"      v="Cultura anterioară (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Cultura precedentă (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Istoric Culturi" />
+        <e k="rcr_section_nitrogen"     v="Stare Azot" />
+        <e k="rcr_section_advice"       v="Sfat Agronomic" />
+        <e k="rcr_section_field"        v="Starea actuală a parcelei" />
+        <e k="rcr_section_lime"         v="Stare Var / pH" />
+        <e k="rcr_section_plan"         v="Plan de Rotație" />
+        <e k="rcr_section_score"        v="Calitatea Rotației" />
+        <e k="rcr_section_overview"     v="Prezentare Generală" />
+        <e k="rcr_overview_total_area"  v="Suprafață lucrată: %.1f ha" />
+
+        <!-- Timeline slot labels and empty state -->
+        <e k="rcr_slot_empty"           v="Nesemănat" />
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Curent" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Cereală" />
+        <e k="rcr_family_legume"        v="Leguminoasă" />
+        <e k="rcr_family_oilseed"       v="Oleaginoasă" />
+        <e k="rcr_family_root"          v="Rădăcinoase" />
+        <e k="rcr_family_vegetable"     v="Legumă" />
+        <e k="rcr_family_forage"        v="Furaj" />
+        <e k="rcr_family_cover"         v="Acoperire" />
+        <e k="rcr_cover_crop"           v="Cultură intercalată" />
+        <e k="rcr_fallow"              v="Pârloagă" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Nefertilizat" />
+        <e k="rcr_n_partial"            v="Parțial" />
+        <e k="rcr_n_full"               v="Complet" />
+        <e k="rcr_n_average_value"      v="Azot mediu: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Necesarul culturii: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Azot / necesarul culturii" />
+        <e k="rcr_lime_none"            v="Fără Var" />
+        <e k="rcr_lime_partial"         v="Var parțial" />
+        <e k="rcr_lime_full"            v="Var corect" />
+        <e k="rcr_lime_average_pf"      v="pH mediu" />
+        <e k="rcr_lime_average_value"   v="pH mediu: %.3f pH" />
+        <e k="rcr_lime_target"          v="Țintă: %.3f pH" />
+        <e k="rcr_soil_not_sampled"     v="Sol neanalizat" />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal"    v="După Cereală: așteptați cel puțin 2 ani înainte de altă Cereală; o Leguminoasă intercalată restituie azot." />
+        <e k="rcr_advice_afterLegume"    v="După Leguminoasă: o Cereală valorifică bine azotul restituit; așteptați cel puțin 3 ani înainte de a resemăna o Leguminoasă." />
+        <e k="rcr_advice_afterOilseed"   v="După Oleaginoasă: așteptați cel puțin 3 ani înainte de altă Oleaginoasă; o Cereală se potrivește bine între ele." />
+        <e k="rcr_advice_afterRoot"      v="După Rădăcinoase: așteptați cel puțin 4 ani înainte de noi Rădăcinoase; o Cereală se potrivește bine între ele." />
+        <e k="rcr_advice_afterVegetable" v="După Legumă: așteptați cel puțin 3 ani înainte de a repeta; o Cereală se potrivește bine între ele." />
+        <e k="rcr_advice_afterForage"    v="După Furaj: o Cereală se potrivește bine, cu structură și reziduuri disponibile." />
+        <e k="rcr_advice_no_current_crop" v="Nicio cultură principală actuală: sfat disponibil când este detectată o cultură." />
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Starea solului" />
+        <e k="rcr_action_none"          v="Niciuna" />
+        <e k="rcr_field_growth"          v="Creștere" />
+
+        <!-- Field card — weed column header (singular, matching base game HUD) -->
+        <e k="rcr_weed_header"          v="Buruieni" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Neplanificat" />
+
+        <!-- Global overview — cover crop recap (own line) -->
+        <e k="rcr_overview_cover_entry" v="Acoperire %s: %s (semănat %s)" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Mar" />
+        <e k="rcr_calendar_month_2"     v="Apr" />
+        <e k="rcr_calendar_month_3"     v="Mai" />
+        <e k="rcr_calendar_month_4"     v="Iun" />
+        <e k="rcr_calendar_month_5"     v="Iul" />
+        <e k="rcr_calendar_month_6"     v="Aug" />
+        <e k="rcr_calendar_month_7"     v="Sep" />
+        <e k="rcr_calendar_month_8"     v="Oct" />
+        <e k="rcr_calendar_month_9"     v="Noi" />
+        <e k="rcr_calendar_month_10"    v="Dec" />
+        <e k="rcr_calendar_month_11"    v="Ian" />
+        <e k="rcr_calendar_month_12"    v="Feb" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Semănat" />
+        <e k="rcr_calendar_legend_harvest" v="Recoltare" />
+        <e k="rcr_calendar_legend_cover"   v="Semănat acoperire" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Plan incomplet" />
+        <e k="rcr_score_excellent"      v="Rotație excelentă" />
+        <e k="rcr_score_good"           v="Rotație bună" />
+        <e k="rcr_score_fair"           v="Rotație acceptabilă" />
+        <e k="rcr_score_poor"           v="Rotație slabă" />
+        <e k="rcr_score_label_low"      v="Scor mic" />
+        <e k="rcr_score_label_optimal"  v="Scor optim" />
+        <e k="rcr_score_short_optimal"  v="OPTIM" />
+        <e k="rcr_score_short_good"     v="BUNĂ" />
+        <e k="rcr_score_short_fair"     v="ACCEPTABIL" />
+        <e k="rcr_score_short_poor"     v="SLABĂ" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Nicio parcelă proprie de afișat." />
+    </elements>
+</l10n>

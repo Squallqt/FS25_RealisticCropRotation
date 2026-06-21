@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Płodozmian" />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Pole" />
+        <e k="rcr_sidebar_no_active_crop"  v="Brak aktywnej uprawy" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Rotacja" />
+        <e k="rcr_tab_planning"         v="Planowanie" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Spodziewana pozostałość +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Łączna pozostałość płodozmianu +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Brak nadchodzącej pozostałości" />
+        <e k="rcr_status_planned_no_residue" v="Łączna pozostałość płodozmianu 0 kg/ha" />
+        <e k="rcr_weather_sun" v="Bezchmurnie" />
+        <e k="rcr_weather_partially_cloudy" v="Przejaśnienia" />
+        <e k="rcr_weather_cloudy" v="Zachmurzenie" />
+        <e k="rcr_weather_rain" v="Deszcz" />
+        <e k="rcr_weather_snow" v="Śnieg" />
+        <e k="rcr_weather_hail" v="Grad" />
+        <e k="rcr_weather_twister" v="Tornado" />
+        <e k="rcr_weather_thunder" v="Burza" />
+        <e k="rcr_weather_current_operational" v="%s trwa · koniec %s" />
+        <e k="rcr_weather_current_calm" v="%s · do %s" />
+        <e k="rcr_weather_soon" v="%s %s-%s · za %s" />
+        <e k="rcr_weather_tomorrow" v="%s jutro %s-%s" />
+        <e k="rcr_weather_later" v="%s D+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d min" />
+        <e k="rcr_time_hours" v="%d godz" />
+        <e k="rcr_time_hours_minutes" v="%d godz %02d" />
+        <e k="rcr_hud_previous_n1"      v="Poprzednia uprawa (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Uprawa wcześniejsza (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Historia upraw" />
+        <e k="rcr_section_nitrogen"     v="Stan azotu" />
+        <e k="rcr_section_advice"       v="Porada agronomiczna" />
+        <e k="rcr_section_field"        v="Aktualny stan pola" />
+        <e k="rcr_section_lime"         v="Stan wapna / pH" />
+        <e k="rcr_section_plan"         v="Plan płodozmianu" />
+        <e k="rcr_section_score"        v="Jakość płodozmianu" />
+        <e k="rcr_section_overview"     v="Przegląd ogólny" />
+        <e k="rcr_overview_total_area"  v="Powierzchnia uprawiana: %.1f ha" />
+
+        <!-- Timeline slot labels and empty state -->
+        <e k="rcr_slot_empty"           v="Nieobsiane" />
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Bieżąca" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Zboże" />
+        <e k="rcr_family_legume"        v="Strączkowe" />
+        <e k="rcr_family_oilseed"       v="Oleiste" />
+        <e k="rcr_family_root"          v="Okopowe" />
+        <e k="rcr_family_vegetable"     v="Warzywo" />
+        <e k="rcr_family_forage"        v="Pasza" />
+        <e k="rcr_family_cover"         v="Okrywowa" />
+        <e k="rcr_cover_crop"           v="Międzyplon" />
+        <e k="rcr_fallow"              v="Ugór" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Bez nawożenia" />
+        <e k="rcr_n_partial"            v="Częściowe" />
+        <e k="rcr_n_full"               v="Pełne" />
+        <e k="rcr_n_average_value"      v="Średni azot: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Zapotrzebowanie uprawy: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Azot / zapotrzebowanie uprawy" />
+        <e k="rcr_lime_none"            v="Brak wapna" />
+        <e k="rcr_lime_partial"         v="Częściowe wapno" />
+        <e k="rcr_lime_full"            v="Wapno prawidłowe" />
+        <e k="rcr_lime_average_pf"      v="Średnie pH" />
+        <e k="rcr_lime_average_value"   v="Średnie pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="Cel: %.3f pH" />
+        <e k="rcr_soil_not_sampled"     v="Gleba nieprzebadana" />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal"    v="Po Zbożu: odczekaj co najmniej 2 lata przed kolejnym Zbożem; Strączkowe pomiędzy dostarczają azotu." />
+        <e k="rcr_advice_afterLegume"    v="Po Strączkowych: Zboże dobrze wykorzystuje dostarczony azot; odczekaj co najmniej 3 lata przed ponownym siewem Strączkowych." />
+        <e k="rcr_advice_afterOilseed"   v="Po Oleistych: odczekaj co najmniej 3 lata przed kolejnymi Oleistymi; Zboże dobrze pasuje pomiędzy." />
+        <e k="rcr_advice_afterRoot"      v="Po Okopowych: odczekaj co najmniej 4 lata przed kolejnymi Okopowymi; Zboże dobrze pasuje pomiędzy." />
+        <e k="rcr_advice_afterVegetable" v="Po Warzywach: odczekaj co najmniej 3 lata przed powtórzeniem; Zboże dobrze pasuje pomiędzy." />
+        <e k="rcr_advice_afterForage"    v="Po Paszy: Zboże dobrze pasuje, struktura i dostępne pozostałości." />
+        <e k="rcr_advice_no_current_crop" v="Brak aktualnej uprawy głównej: porada dostępna po wykryciu uprawy." />
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Stan gleby" />
+        <e k="rcr_action_none"          v="Brak" />
+        <e k="rcr_field_growth"          v="Wzrost" />
+
+        <!-- Field card — weed column header (singular, matching base game HUD) -->
+        <e k="rcr_weed_header"          v="Chwasty" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Niezaplanowane" />
+
+        <!-- Global overview — cover crop recap (own line) -->
+        <e k="rcr_overview_cover_entry" v="Okrywa %s: %s (siew %s)" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Mar" />
+        <e k="rcr_calendar_month_2"     v="Kwi" />
+        <e k="rcr_calendar_month_3"     v="Maj" />
+        <e k="rcr_calendar_month_4"     v="Cze" />
+        <e k="rcr_calendar_month_5"     v="Lip" />
+        <e k="rcr_calendar_month_6"     v="Sie" />
+        <e k="rcr_calendar_month_7"     v="Wrz" />
+        <e k="rcr_calendar_month_8"     v="Paź" />
+        <e k="rcr_calendar_month_9"     v="Lis" />
+        <e k="rcr_calendar_month_10"    v="Gru" />
+        <e k="rcr_calendar_month_11"    v="Sty" />
+        <e k="rcr_calendar_month_12"    v="Lut" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Siew" />
+        <e k="rcr_calendar_legend_harvest" v="Zbiór" />
+        <e k="rcr_calendar_legend_cover"   v="Siew okrywowej" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Plan niekompletny" />
+        <e k="rcr_score_excellent"      v="Doskonały płodozmian" />
+        <e k="rcr_score_good"           v="Dobry płodozmian" />
+        <e k="rcr_score_fair"           v="Przeciętny płodozmian" />
+        <e k="rcr_score_poor"           v="Słaby płodozmian" />
+        <e k="rcr_score_label_low"      v="Niski wynik" />
+        <e k="rcr_score_label_optimal"  v="Optymalny wynik" />
+        <e k="rcr_score_short_optimal"  v="OPTYMALNY" />
+        <e k="rcr_score_short_good"     v="DOBRY" />
+        <e k="rcr_score_short_fair"     v="PRZECIĘTNY" />
+        <e k="rcr_score_short_poor"     v="SŁABY" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Brak własnych pól do wyświetlenia." />
+    </elements>
+</l10n>

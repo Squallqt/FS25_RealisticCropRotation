@@ -6,7 +6,6 @@
 
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Field" />
-        <e k="rcr_sidebar_last"            v="Last:" />
         <e k="rcr_sidebar_no_active_crop"  v="No active crop" />
 
         <!-- Tabs -->
@@ -14,7 +13,6 @@
         <e k="rcr_tab_planning"         v="Planning" />
 
         <!-- Status labels -->
-        <e k="rcr_status_bonus"         v="N Residue" />
         <e k="rcr_status_current_residue" v="Expected residue +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="Total rotation residue +%d kg/ha" />
         <e k="rcr_status_current_no_residue" v="No residue to come" />
@@ -37,8 +35,6 @@
         <e k="rcr_time_hours_minutes" v="%d h %02d" />
         <e k="rcr_hud_previous_n1"      v="Previous crop (N-1)" />
         <e k="rcr_hud_previous_n2"      v="Crop before (N-2)" />
-        <e k="rcr_hud_residue_applied"  v="Applied residue" />
-        <e k="rcr_hud_residue_level"    v="+%d level" />
 
         <!-- Section bars -->
         <e k="rcr_section_history"      v="Crop History" />
@@ -74,7 +70,6 @@
         <e k="rcr_n_none"               v="No Fertilizer" />
         <e k="rcr_n_partial"            v="Partial" />
         <e k="rcr_n_full"               v="Full" />
-        <e k="rcr_n_available"          v="Available nitrogen" />
         <e k="rcr_n_average_value"      v="Average nitrogen: %.0f kg/ha" />
         <e k="rcr_n_crop_need"          v="Crop requirement: %.0f kg/ha" />
         <e k="rcr_n_average_pf"         v="Nitrogen / crop need" />

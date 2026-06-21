@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Ekim Nöbeti" />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Tarla" />
+        <e k="rcr_sidebar_no_active_crop"  v="Aktif ekin yok" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Rotasyon" />
+        <e k="rcr_tab_planning"         v="Planlama" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Beklenen kalıntı +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Toplam rotasyon kalıntısı +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Gelecek kalıntı yok" />
+        <e k="rcr_status_planned_no_residue" v="Toplam rotasyon kalıntısı 0 kg/ha" />
+        <e k="rcr_weather_sun" v="Açık gökyüzü" />
+        <e k="rcr_weather_partially_cloudy" v="Parçalı güneşli" />
+        <e k="rcr_weather_cloudy" v="Bulutlu" />
+        <e k="rcr_weather_rain" v="Yağmur" />
+        <e k="rcr_weather_snow" v="Kar" />
+        <e k="rcr_weather_hail" v="Dolu" />
+        <e k="rcr_weather_twister" v="Hortum" />
+        <e k="rcr_weather_thunder" v="Gök gürültülü fırtına" />
+        <e k="rcr_weather_current_operational" v="%s sürüyor · bitiş %s" />
+        <e k="rcr_weather_current_calm" v="%s · %s'e kadar" />
+        <e k="rcr_weather_soon" v="%s %s-%s · %s sonra" />
+        <e k="rcr_weather_tomorrow" v="%s yarın %s-%s" />
+        <e k="rcr_weather_later" v="%s G+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d dk" />
+        <e k="rcr_time_hours" v="%d sa" />
+        <e k="rcr_time_hours_minutes" v="%d sa %02d" />
+        <e k="rcr_hud_previous_n1"      v="Önceki ekin (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Daha önceki ekin (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Ekin Geçmişi" />
+        <e k="rcr_section_nitrogen"     v="Azot Durumu" />
+        <e k="rcr_section_advice"       v="Agronomik Tavsiye" />
+        <e k="rcr_section_field"        v="Mevcut tarla durumu" />
+        <e k="rcr_section_lime"         v="Kireç / pH Durumu" />
+        <e k="rcr_section_plan"         v="Rotasyon Planı" />
+        <e k="rcr_section_score"        v="Rotasyon Kalitesi" />
+        <e k="rcr_section_overview"     v="Genel Bakış" />
+        <e k="rcr_overview_total_area"  v="İşlenen alan: %.1f ha" />
+
+        <!-- Timeline slot labels and empty state -->
+        <e k="rcr_slot_empty"           v="Ekilmedi" />
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Mevcut" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Tahıl" />
+        <e k="rcr_family_legume"        v="Baklagil" />
+        <e k="rcr_family_oilseed"       v="Yağlı tohum" />
+        <e k="rcr_family_root"          v="Kök sebze" />
+        <e k="rcr_family_vegetable"     v="Sebze" />
+        <e k="rcr_family_forage"        v="Yem bitkisi" />
+        <e k="rcr_family_cover"         v="Örtü" />
+        <e k="rcr_cover_crop"           v="Ara ekin" />
+        <e k="rcr_fallow"              v="Nadas" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Gübrelenmemiş" />
+        <e k="rcr_n_partial"            v="Kısmi" />
+        <e k="rcr_n_full"               v="Tam" />
+        <e k="rcr_n_average_value"      v="Ortalama azot: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Ekin ihtiyacı: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Azot / ekin ihtiyacı" />
+        <e k="rcr_lime_none"            v="Kireç yok" />
+        <e k="rcr_lime_partial"         v="Kısmi kireç" />
+        <e k="rcr_lime_full"            v="Kireç uygun" />
+        <e k="rcr_lime_average_pf"      v="Ortalama pH" />
+        <e k="rcr_lime_average_value"   v="Ortalama pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="Hedef: %.3f pH" />
+        <e k="rcr_soil_not_sampled"     v="Toprak örneklenmedi" />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal"    v="Tahıldan sonra: yeni Tahıl için en az 2 yıl bekleyin; arada bir Baklagil azot kazandırır." />
+        <e k="rcr_advice_afterLegume"    v="Baklagilden sonra: Tahıl kazandırılan azotu iyi kullanır; yeni Baklagil için en az 3 yıl bekleyin." />
+        <e k="rcr_advice_afterOilseed"   v="Yağlı tohumdan sonra: yeni Yağlı tohum için en az 3 yıl bekleyin; arada Tahıl iyi uyar." />
+        <e k="rcr_advice_afterRoot"      v="Kök sebzeden sonra: yeni Kök sebze için en az 4 yıl bekleyin; arada Tahıl iyi uyar." />
+        <e k="rcr_advice_afterVegetable" v="Sebzeden sonra: tekrar için en az 3 yıl bekleyin; arada Tahıl iyi uyar." />
+        <e k="rcr_advice_afterForage"    v="Yem bitkisinden sonra: Tahıl iyi uyar, yapı ve kalıntılar mevcut." />
+        <e k="rcr_advice_no_current_crop" v="Mevcut ana ekin yok: bir ekin algılandığında tavsiye sunulur." />
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Toprak durumu" />
+        <e k="rcr_action_none"          v="Yok" />
+        <e k="rcr_field_growth"          v="Büyüme" />
+
+        <!-- Field card — weed column header (singular, matching base game HUD) -->
+        <e k="rcr_weed_header"          v="Yabani otlar" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Planlanmadı" />
+
+        <!-- Global overview — cover crop recap (own line) -->
+        <e k="rcr_overview_cover_entry" v="Örtü %s: %s (ekim %s)" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Mar" />
+        <e k="rcr_calendar_month_2"     v="Nis" />
+        <e k="rcr_calendar_month_3"     v="May" />
+        <e k="rcr_calendar_month_4"     v="Haz" />
+        <e k="rcr_calendar_month_5"     v="Tem" />
+        <e k="rcr_calendar_month_6"     v="Ağu" />
+        <e k="rcr_calendar_month_7"     v="Eyl" />
+        <e k="rcr_calendar_month_8"     v="Eki" />
+        <e k="rcr_calendar_month_9"     v="Kas" />
+        <e k="rcr_calendar_month_10"    v="Ara" />
+        <e k="rcr_calendar_month_11"    v="Oca" />
+        <e k="rcr_calendar_month_12"    v="Şub" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Ekim" />
+        <e k="rcr_calendar_legend_harvest" v="Hasat" />
+        <e k="rcr_calendar_legend_cover"   v="Örtü ekimi" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Eksik plan" />
+        <e k="rcr_score_excellent"      v="Mükemmel rotasyon" />
+        <e k="rcr_score_good"           v="İyi rotasyon" />
+        <e k="rcr_score_fair"           v="Orta rotasyon" />
+        <e k="rcr_score_poor"           v="Zayıf rotasyon" />
+        <e k="rcr_score_label_low"      v="Düşük puan" />
+        <e k="rcr_score_label_optimal"  v="En uygun puan" />
+        <e k="rcr_score_short_optimal"  v="OPTİMAL" />
+        <e k="rcr_score_short_good"     v="İYİ" />
+        <e k="rcr_score_short_fair"     v="ORTA" />
+        <e k="rcr_score_short_poor"     v="DÜŞÜK" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Gösterilecek kendi tarlanız yok." />
+    </elements>
+</l10n>

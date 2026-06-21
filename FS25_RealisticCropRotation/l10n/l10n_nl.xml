@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Vruchtwisseling" />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Veld" />
+        <e k="rcr_sidebar_no_active_crop"  v="Geen actief gewas" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Rotatie" />
+        <e k="rcr_tab_planning"         v="Planning" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Verwacht residu +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Totaal rotatieresidu +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Geen residu op komst" />
+        <e k="rcr_status_planned_no_residue" v="Totaal rotatieresidu 0 kg/ha" />
+        <e k="rcr_weather_sun" v="Heldere hemel" />
+        <e k="rcr_weather_partially_cloudy" v="Opklaringen" />
+        <e k="rcr_weather_cloudy" v="Bewolkt" />
+        <e k="rcr_weather_rain" v="Regen" />
+        <e k="rcr_weather_snow" v="Sneeuw" />
+        <e k="rcr_weather_hail" v="Hagel" />
+        <e k="rcr_weather_twister" v="Wervelwind" />
+        <e k="rcr_weather_thunder" v="Onweer" />
+        <e k="rcr_weather_current_operational" v="%s bezig · eindigt %s" />
+        <e k="rcr_weather_current_calm" v="%s · tot %s" />
+        <e k="rcr_weather_soon" v="%s %s-%s · over %s" />
+        <e k="rcr_weather_tomorrow" v="%s morgen %s-%s" />
+        <e k="rcr_weather_later" v="%s D+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d min" />
+        <e k="rcr_time_hours" v="%d u" />
+        <e k="rcr_time_hours_minutes" v="%d u %02d" />
+        <e k="rcr_hud_previous_n1"      v="Vorig gewas (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Gewas daarvoor (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Gewasgeschiedenis" />
+        <e k="rcr_section_nitrogen"     v="Stikstofstatus" />
+        <e k="rcr_section_advice"       v="Agronomisch advies" />
+        <e k="rcr_section_field"        v="Huidige veldstatus" />
+        <e k="rcr_section_lime"         v="Kalk-/pH-status" />
+        <e k="rcr_section_plan"         v="Rotatieplan" />
+        <e k="rcr_section_score"        v="Rotatiekwaliteit" />
+        <e k="rcr_section_overview"     v="Algemeen overzicht" />
+        <e k="rcr_overview_total_area"  v="Bewerkte oppervlakte: %.1f ha" />
+
+        <!-- Timeline slot labels and empty state -->
+        <e k="rcr_slot_empty"           v="Niet ingezaaid" />
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Huidig" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Graan" />
+        <e k="rcr_family_legume"        v="Peulvrucht" />
+        <e k="rcr_family_oilseed"       v="Oliezaad" />
+        <e k="rcr_family_root"          v="Wortelgewas" />
+        <e k="rcr_family_vegetable"     v="Groente" />
+        <e k="rcr_family_forage"        v="Voeder" />
+        <e k="rcr_family_cover"         v="Bedekking" />
+        <e k="rcr_cover_crop"           v="Tussengewas" />
+        <e k="rcr_fallow"              v="Braak" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Niet bemest" />
+        <e k="rcr_n_partial"            v="Gedeeltelijk" />
+        <e k="rcr_n_full"               v="Volledig" />
+        <e k="rcr_n_average_value"      v="Gemiddelde stikstof: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Gewasbehoefte: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Stikstof / gewasbehoefte" />
+        <e k="rcr_lime_none"            v="Geen kalk" />
+        <e k="rcr_lime_partial"         v="Gedeeltelijk kalk" />
+        <e k="rcr_lime_full"            v="Kalk correct" />
+        <e k="rcr_lime_average_pf"      v="Gemiddelde pH" />
+        <e k="rcr_lime_average_value"   v="Gemiddelde pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="Doel: %.3f pH" />
+        <e k="rcr_soil_not_sampled"     v="Bodem niet bemonsterd" />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal"    v="Na Graan: wacht minstens 2 jaar voor opnieuw Graan; een Peulvrucht ertussen levert stikstof." />
+        <e k="rcr_advice_afterLegume"    v="Na Peulvrucht: een Graan benut de teruggegeven stikstof goed; wacht minstens 3 jaar voor opnieuw een Peulvrucht." />
+        <e k="rcr_advice_afterOilseed"   v="Na Oliezaad: wacht minstens 3 jaar voor opnieuw Oliezaad; een Graan past er goed tussen." />
+        <e k="rcr_advice_afterRoot"      v="Na Wortelgewas: wacht minstens 4 jaar voor opnieuw Wortelgewas; een Graan past er goed tussen." />
+        <e k="rcr_advice_afterVegetable" v="Na Groente: wacht minstens 3 jaar voor herhaling; een Graan past er goed tussen." />
+        <e k="rcr_advice_afterForage"    v="Na Voeder: een Graan past goed, met structuur en beschikbare residuen." />
+        <e k="rcr_advice_no_current_crop" v="Geen huidig hoofdgewas: advies beschikbaar zodra een gewas wordt gedetecteerd." />
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Bodemtoestand" />
+        <e k="rcr_action_none"          v="Geen" />
+        <e k="rcr_field_growth"          v="Groei" />
+
+        <!-- Field card — weed column header (singular, matching base game HUD) -->
+        <e k="rcr_weed_header"          v="Onkruid" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Niet gepland" />
+
+        <!-- Global overview — cover crop recap (own line) -->
+        <e k="rcr_overview_cover_entry" v="Bedekking %s: %s (zaai %s)" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Mrt" />
+        <e k="rcr_calendar_month_2"     v="Apr" />
+        <e k="rcr_calendar_month_3"     v="Mei" />
+        <e k="rcr_calendar_month_4"     v="Jun" />
+        <e k="rcr_calendar_month_5"     v="Jul" />
+        <e k="rcr_calendar_month_6"     v="Aug" />
+        <e k="rcr_calendar_month_7"     v="Sep" />
+        <e k="rcr_calendar_month_8"     v="Okt" />
+        <e k="rcr_calendar_month_9"     v="Nov" />
+        <e k="rcr_calendar_month_10"    v="Dec" />
+        <e k="rcr_calendar_month_11"    v="Jan" />
+        <e k="rcr_calendar_month_12"    v="Feb" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Inzaai" />
+        <e k="rcr_calendar_legend_harvest" v="Oogst" />
+        <e k="rcr_calendar_legend_cover"   v="Bedekking zaaien" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Onvolledig plan" />
+        <e k="rcr_score_excellent"      v="Uitstekende rotatie" />
+        <e k="rcr_score_good"           v="Goede rotatie" />
+        <e k="rcr_score_fair"           v="Redelijke rotatie" />
+        <e k="rcr_score_poor"           v="Slechte rotatie" />
+        <e k="rcr_score_label_low"      v="Lage score" />
+        <e k="rcr_score_label_optimal"  v="Optimale score" />
+        <e k="rcr_score_short_optimal"  v="OPTIMAAL" />
+        <e k="rcr_score_short_good"     v="GOED" />
+        <e k="rcr_score_short_fair"     v="REDELIJK" />
+        <e k="rcr_score_short_poor"     v="LAAG" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Geen eigen velden om weer te geven." />
+    </elements>
+</l10n>

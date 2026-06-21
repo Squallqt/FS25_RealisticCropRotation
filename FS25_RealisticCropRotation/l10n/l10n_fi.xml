@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Viljelykierto" />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Pelto" />
+        <e k="rcr_sidebar_no_active_crop"  v="Ei aktiivista kasvia" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Kierto" />
+        <e k="rcr_tab_planning"         v="Suunnittelu" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Odotettu jäännös +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Viljelykierron kokonaisjäännös +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Ei tulevaa jäännöstä" />
+        <e k="rcr_status_planned_no_residue" v="Viljelykierron kokonaisjäännös 0 kg/ha" />
+        <e k="rcr_weather_sun" v="Selkeää" />
+        <e k="rcr_weather_partially_cloudy" v="Ajoittain aurinkoista" />
+        <e k="rcr_weather_cloudy" v="Pilvistä" />
+        <e k="rcr_weather_rain" v="Sade" />
+        <e k="rcr_weather_snow" v="Lumi" />
+        <e k="rcr_weather_hail" v="Rae" />
+        <e k="rcr_weather_twister" v="Tornado" />
+        <e k="rcr_weather_thunder" v="Ukkonen" />
+        <e k="rcr_weather_current_operational" v="%s käynnissä · päättyy %s" />
+        <e k="rcr_weather_current_calm" v="%s · %s asti" />
+        <e k="rcr_weather_soon" v="%s %s-%s · %s kuluttua" />
+        <e k="rcr_weather_tomorrow" v="%s huomenna %s-%s" />
+        <e k="rcr_weather_later" v="%s P+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d min" />
+        <e k="rcr_time_hours" v="%d t" />
+        <e k="rcr_time_hours_minutes" v="%d t %02d" />
+        <e k="rcr_hud_previous_n1"      v="Edellinen kasvi (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Sitä edeltävä kasvi (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Kasvihistoria" />
+        <e k="rcr_section_nitrogen"     v="Typpitila" />
+        <e k="rcr_section_advice"       v="Agronominen neuvo" />
+        <e k="rcr_section_field"        v="Pellon nykytila" />
+        <e k="rcr_section_lime"         v="Kalkki-/pH-tila" />
+        <e k="rcr_section_plan"         v="Viljelykiertosuunnitelma" />
+        <e k="rcr_section_score"        v="Viljelykierron laatu" />
+        <e k="rcr_section_overview"     v="Yleiskatsaus" />
+        <e k="rcr_overview_total_area"  v="Käsitelty pinta-ala: %.1f ha" />
+
+        <!-- Timeline slot labels and empty state -->
+        <e k="rcr_slot_empty"           v="Ei kylvetty" />
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Nykyinen" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Vilja" />
+        <e k="rcr_family_legume"        v="Palkokasvi" />
+        <e k="rcr_family_oilseed"       v="Öljykasvi" />
+        <e k="rcr_family_root"          v="Juurikasvi" />
+        <e k="rcr_family_vegetable"     v="Vihannes" />
+        <e k="rcr_family_forage"        v="Rehu" />
+        <e k="rcr_family_cover"         v="Kate" />
+        <e k="rcr_cover_crop"           v="Välikasvi" />
+        <e k="rcr_fallow"              v="Kesanto" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Ei lannoitettu" />
+        <e k="rcr_n_partial"            v="Osittain" />
+        <e k="rcr_n_full"               v="Täysi" />
+        <e k="rcr_n_average_value"      v="Keskimääräinen typpi: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Kasvin tarve: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Typpi / kasvin tarve" />
+        <e k="rcr_lime_none"            v="Ei kalkkia" />
+        <e k="rcr_lime_partial"         v="Osittainen kalkki" />
+        <e k="rcr_lime_full"            v="Kalkki kunnossa" />
+        <e k="rcr_lime_average_pf"      v="Keskimääräinen pH" />
+        <e k="rcr_lime_average_value"   v="Keskimääräinen pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="Tavoite: %.3f pH" />
+        <e k="rcr_soil_not_sampled"     v="Maata ei näytteistetty" />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal"    v="Viljan jälkeen: odota vähintään 2 vuotta ennen uutta Viljaa; Palkokasvi välissä palauttaa typpeä." />
+        <e k="rcr_advice_afterLegume"    v="Palkokasvin jälkeen: Vilja hyödyntää palautetun typen hyvin; odota vähintään 3 vuotta ennen Palkokasvin uusintaa." />
+        <e k="rcr_advice_afterOilseed"   v="Öljykasvin jälkeen: odota vähintään 3 vuotta ennen uutta Öljykasvia; Vilja sopii hyvin väliin." />
+        <e k="rcr_advice_afterRoot"      v="Juurikasvin jälkeen: odota vähintään 4 vuotta ennen uutta Juurikasvia; Vilja sopii hyvin väliin." />
+        <e k="rcr_advice_afterVegetable" v="Vihanneksen jälkeen: odota vähintään 3 vuotta ennen toistoa; Vilja sopii hyvin väliin." />
+        <e k="rcr_advice_afterForage"    v="Rehun jälkeen: Vilja sopii hyvin, rakenne ja jäännökset käytettävissä." />
+        <e k="rcr_advice_no_current_crop" v="Ei nykyistä pääkasvia: neuvo saatavilla, kun kasvi havaitaan." />
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Maan tila" />
+        <e k="rcr_action_none"          v="Ei mitään" />
+        <e k="rcr_field_growth"          v="Kasvu" />
+
+        <!-- Field card — weed column header (singular, matching base game HUD) -->
+        <e k="rcr_weed_header"          v="Rikkakasvit" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Ei suunniteltu" />
+
+        <!-- Global overview — cover crop recap (own line) -->
+        <e k="rcr_overview_cover_entry" v="Kate %s: %s (kylvö %s)" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Maa" />
+        <e k="rcr_calendar_month_2"     v="Huh" />
+        <e k="rcr_calendar_month_3"     v="Tou" />
+        <e k="rcr_calendar_month_4"     v="Kes" />
+        <e k="rcr_calendar_month_5"     v="Hei" />
+        <e k="rcr_calendar_month_6"     v="Elo" />
+        <e k="rcr_calendar_month_7"     v="Syy" />
+        <e k="rcr_calendar_month_8"     v="Lok" />
+        <e k="rcr_calendar_month_9"     v="Mar" />
+        <e k="rcr_calendar_month_10"    v="Jou" />
+        <e k="rcr_calendar_month_11"    v="Tam" />
+        <e k="rcr_calendar_month_12"    v="Hel" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Kylvö" />
+        <e k="rcr_calendar_legend_harvest" v="Korjuu" />
+        <e k="rcr_calendar_legend_cover"   v="Katteen kylvö" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Epätäydellinen suunnitelma" />
+        <e k="rcr_score_excellent"      v="Erinomainen viljelykierto" />
+        <e k="rcr_score_good"           v="Hyvä viljelykierto" />
+        <e k="rcr_score_fair"           v="Kohtalainen viljelykierto" />
+        <e k="rcr_score_poor"           v="Huono viljelykierto" />
+        <e k="rcr_score_label_low"      v="Matala pistemäärä" />
+        <e k="rcr_score_label_optimal"  v="Optimaalinen pistemäärä" />
+        <e k="rcr_score_short_optimal"  v="OPTIMAALINEN" />
+        <e k="rcr_score_short_good"     v="HYVÄ" />
+        <e k="rcr_score_short_fair"     v="KOHTALAINEN" />
+        <e k="rcr_score_short_poor"     v="MATALA" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Ei omia peltoja näytettäväksi." />
+    </elements>
+</l10n>

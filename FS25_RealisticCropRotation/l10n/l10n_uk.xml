@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Сівозміна" />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Поле" />
+        <e k="rcr_sidebar_no_active_crop"  v="Немає активної культури" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Ротація" />
+        <e k="rcr_tab_planning"         v="Планування" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Очікуваний залишок +%d (N+1) / +%d (N+2) кг/га" />
+        <e k="rcr_status_planned_residue" v="Загальний залишок сівозміни +%d кг/га" />
+        <e k="rcr_status_current_no_residue" v="Залишок не очікується" />
+        <e k="rcr_status_planned_no_residue" v="Загальний залишок сівозміни 0 кг/га" />
+        <e k="rcr_weather_sun" v="Ясно" />
+        <e k="rcr_weather_partially_cloudy" v="Прояснення" />
+        <e k="rcr_weather_cloudy" v="Хмарно" />
+        <e k="rcr_weather_rain" v="Дощ" />
+        <e k="rcr_weather_snow" v="Сніг" />
+        <e k="rcr_weather_hail" v="Град" />
+        <e k="rcr_weather_twister" v="Смерч" />
+        <e k="rcr_weather_thunder" v="Гроза" />
+        <e k="rcr_weather_current_operational" v="%s триває · кінець %s" />
+        <e k="rcr_weather_current_calm" v="%s · до %s" />
+        <e k="rcr_weather_soon" v="%s %s-%s · через %s" />
+        <e k="rcr_weather_tomorrow" v="%s завтра %s-%s" />
+        <e k="rcr_weather_later" v="%s Д+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d хв" />
+        <e k="rcr_time_hours" v="%d год" />
+        <e k="rcr_time_hours_minutes" v="%d год %02d" />
+        <e k="rcr_hud_previous_n1"      v="Попередня культура (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Культура раніше (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Історія культур" />
+        <e k="rcr_section_nitrogen"     v="Стан азоту" />
+        <e k="rcr_section_advice"       v="Агрономічна порада" />
+        <e k="rcr_section_field"        v="Поточний стан поля" />
+        <e k="rcr_section_lime"         v="Стан вапна / pH" />
+        <e k="rcr_section_plan"         v="План сівозміни" />
+        <e k="rcr_section_score"        v="Якість сівозміни" />
+        <e k="rcr_section_overview"     v="Загальний огляд" />
+        <e k="rcr_overview_total_area"  v="Оброблена площа: %.1f га" />
+
+        <!-- Timeline slot labels and empty state -->
+        <e k="rcr_slot_empty"           v="Не засіяно" />
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Поточна" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Зернові" />
+        <e k="rcr_family_legume"        v="Бобові" />
+        <e k="rcr_family_oilseed"       v="Олійні" />
+        <e k="rcr_family_root"          v="Коренеплоди" />
+        <e k="rcr_family_vegetable"     v="Овочі" />
+        <e k="rcr_family_forage"        v="Кормові" />
+        <e k="rcr_family_cover"         v="Покривні" />
+        <e k="rcr_cover_crop"           v="Проміжна культура" />
+        <e k="rcr_fallow"              v="Пар" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Без добрив" />
+        <e k="rcr_n_partial"            v="Частково" />
+        <e k="rcr_n_full"               v="Повністю" />
+        <e k="rcr_n_average_value"      v="Середній азот: %.0f кг/га" />
+        <e k="rcr_n_crop_need"          v="Потреба культури: %.0f кг/га" />
+        <e k="rcr_n_average_pf"         v="Азот / потреба культури" />
+        <e k="rcr_lime_none"            v="Без вапна" />
+        <e k="rcr_lime_partial"         v="Часткове вапно" />
+        <e k="rcr_lime_full"            v="Вапно в нормі" />
+        <e k="rcr_lime_average_pf"      v="Середній pH" />
+        <e k="rcr_lime_average_value"   v="Середній pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="Ціль: %.3f pH" />
+        <e k="rcr_soil_not_sampled"     v="Ґрунт не проаналізовано" />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal"    v="Після Зернових: зачекайте щонайменше 2 роки перед новими Зерновими; Бобові між ними повертають азот." />
+        <e k="rcr_advice_afterLegume"    v="Після Бобових: Зернові добре використовують повернутий азот; зачекайте щонайменше 3 роки перед повторним посівом Бобових." />
+        <e k="rcr_advice_afterOilseed"   v="Після Олійних: зачекайте щонайменше 3 роки перед новими Олійними; Зернові добре підходять у проміжку." />
+        <e k="rcr_advice_afterRoot"      v="Після Коренеплодів: зачекайте щонайменше 4 роки перед новими Коренеплодами; Зернові добре підходять у проміжку." />
+        <e k="rcr_advice_afterVegetable" v="Після Овочів: зачекайте щонайменше 3 роки перед повторенням; Зернові добре підходять у проміжку." />
+        <e k="rcr_advice_afterForage"    v="Після Кормових: Зернові добре підходять, структура та доступні залишки." />
+        <e k="rcr_advice_no_current_crop" v="Немає поточної основної культури: порада з'явиться після виявлення культури." />
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Стан ґрунту" />
+        <e k="rcr_action_none"          v="Немає" />
+        <e k="rcr_field_growth"          v="Ріст" />
+
+        <!-- Field card — weed column header (singular, matching base game HUD) -->
+        <e k="rcr_weed_header"          v="Бур'яни" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Не заплановано" />
+
+        <!-- Global overview — cover crop recap (own line) -->
+        <e k="rcr_overview_cover_entry" v="Покривна %s: %s (посів %s)" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Бер" />
+        <e k="rcr_calendar_month_2"     v="Кві" />
+        <e k="rcr_calendar_month_3"     v="Тра" />
+        <e k="rcr_calendar_month_4"     v="Чер" />
+        <e k="rcr_calendar_month_5"     v="Лип" />
+        <e k="rcr_calendar_month_6"     v="Сер" />
+        <e k="rcr_calendar_month_7"     v="Вер" />
+        <e k="rcr_calendar_month_8"     v="Жов" />
+        <e k="rcr_calendar_month_9"     v="Лис" />
+        <e k="rcr_calendar_month_10"    v="Гру" />
+        <e k="rcr_calendar_month_11"    v="Січ" />
+        <e k="rcr_calendar_month_12"    v="Лют" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Посів" />
+        <e k="rcr_calendar_legend_harvest" v="Збір" />
+        <e k="rcr_calendar_legend_cover"   v="Посів покривної" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Неповний план" />
+        <e k="rcr_score_excellent"      v="Відмінна сівозміна" />
+        <e k="rcr_score_good"           v="Добра сівозміна" />
+        <e k="rcr_score_fair"           v="Середня сівозміна" />
+        <e k="rcr_score_poor"           v="Погана сівозміна" />
+        <e k="rcr_score_label_low"      v="Низька оцінка" />
+        <e k="rcr_score_label_optimal"  v="Оптимальна оцінка" />
+        <e k="rcr_score_short_optimal"  v="ОПТИМАЛЬНО" />
+        <e k="rcr_score_short_good"     v="ДОБРЕ" />
+        <e k="rcr_score_short_fair"     v="СЕРЕДНЬО" />
+        <e k="rcr_score_short_poor"     v="НИЗЬКО" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Немає власних полів для відображення." />
+    </elements>
+</l10n>

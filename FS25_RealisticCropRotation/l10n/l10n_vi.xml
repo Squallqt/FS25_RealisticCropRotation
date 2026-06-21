@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Luân canh cây trồng" />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Ruộng" />
+        <e k="rcr_sidebar_no_active_crop"  v="Không có cây trồng hoạt động" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Luân canh" />
+        <e k="rcr_tab_planning"         v="Lập kế hoạch" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Tồn dư dự kiến +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Tổng tồn dư luân canh +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Không có tồn dư sắp tới" />
+        <e k="rcr_status_planned_no_residue" v="Tổng tồn dư luân canh 0 kg/ha" />
+        <e k="rcr_weather_sun" v="Trời quang" />
+        <e k="rcr_weather_partially_cloudy" v="Hửng nắng" />
+        <e k="rcr_weather_cloudy" v="Nhiều mây" />
+        <e k="rcr_weather_rain" v="Mưa" />
+        <e k="rcr_weather_snow" v="Tuyết" />
+        <e k="rcr_weather_hail" v="Mưa đá" />
+        <e k="rcr_weather_twister" v="Lốc xoáy" />
+        <e k="rcr_weather_thunder" v="Giông bão" />
+        <e k="rcr_weather_current_operational" v="%s đang diễn ra · kết thúc %s" />
+        <e k="rcr_weather_current_calm" v="%s · đến %s" />
+        <e k="rcr_weather_soon" v="%s %s-%s · sau %s" />
+        <e k="rcr_weather_tomorrow" v="%s ngày mai %s-%s" />
+        <e k="rcr_weather_later" v="%s N+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d phút" />
+        <e k="rcr_time_hours" v="%d giờ" />
+        <e k="rcr_time_hours_minutes" v="%d giờ %02d" />
+        <e k="rcr_hud_previous_n1"      v="Cây trồng trước (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Cây trồng trước đó (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Lịch sử cây trồng" />
+        <e k="rcr_section_nitrogen"     v="Trạng thái đạm" />
+        <e k="rcr_section_advice"       v="Tư vấn nông học" />
+        <e k="rcr_section_field"        v="Trạng thái ruộng hiện tại" />
+        <e k="rcr_section_lime"         v="Trạng thái vôi / pH" />
+        <e k="rcr_section_plan"         v="Kế hoạch luân canh" />
+        <e k="rcr_section_score"        v="Chất lượng luân canh" />
+        <e k="rcr_section_overview"     v="Tổng quan" />
+        <e k="rcr_overview_total_area"  v="Diện tích canh tác: %.1f ha" />
+
+        <!-- Timeline slot labels and empty state -->
+        <e k="rcr_slot_empty"           v="Chưa gieo" />
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Hiện tại" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Ngũ cốc" />
+        <e k="rcr_family_legume"        v="Cây họ đậu" />
+        <e k="rcr_family_oilseed"       v="Cây lấy dầu" />
+        <e k="rcr_family_root"          v="Cây lấy củ" />
+        <e k="rcr_family_vegetable"     v="Rau" />
+        <e k="rcr_family_forage"        v="Cây thức ăn" />
+        <e k="rcr_family_cover"         v="Che phủ" />
+        <e k="rcr_cover_crop"           v="Cây xen canh" />
+        <e k="rcr_fallow"              v="Bỏ hóa" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Chưa bón phân" />
+        <e k="rcr_n_partial"            v="Một phần" />
+        <e k="rcr_n_full"               v="Đầy đủ" />
+        <e k="rcr_n_average_value"      v="Đạm trung bình: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Nhu cầu cây trồng: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Đạm / nhu cầu cây trồng" />
+        <e k="rcr_lime_none"            v="Không có vôi" />
+        <e k="rcr_lime_partial"         v="Vôi một phần" />
+        <e k="rcr_lime_full"            v="Vôi phù hợp" />
+        <e k="rcr_lime_average_pf"      v="pH trung bình" />
+        <e k="rcr_lime_average_value"   v="pH trung bình: %.3f pH" />
+        <e k="rcr_lime_target"          v="Mục tiêu: %.3f pH" />
+        <e k="rcr_soil_not_sampled"     v="Đất chưa lấy mẫu" />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal"    v="Sau Ngũ cốc: chờ ít nhất 2 năm trước khi trồng Ngũ cốc lần nữa; xen một Cây họ đậu sẽ trả lại đạm." />
+        <e k="rcr_advice_afterLegume"    v="Sau Cây họ đậu: Ngũ cốc tận dụng tốt lượng đạm được trả lại; chờ ít nhất 3 năm trước khi gieo lại Cây họ đậu." />
+        <e k="rcr_advice_afterOilseed"   v="Sau Cây lấy dầu: chờ ít nhất 3 năm trước khi trồng Cây lấy dầu lần nữa; Ngũ cốc phù hợp xen giữa." />
+        <e k="rcr_advice_afterRoot"      v="Sau Cây lấy củ: chờ ít nhất 4 năm trước khi trồng Cây lấy củ lần nữa; Ngũ cốc phù hợp xen giữa." />
+        <e k="rcr_advice_afterVegetable" v="Sau Rau: chờ ít nhất 3 năm trước khi lặp lại; Ngũ cốc phù hợp xen giữa." />
+        <e k="rcr_advice_afterForage"    v="Sau Cây thức ăn: Ngũ cốc phù hợp, cấu trúc đất tốt và có tồn dư." />
+        <e k="rcr_advice_no_current_crop" v="Không có cây trồng chính hiện tại: tư vấn sẽ có khi phát hiện cây trồng." />
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Tình trạng đất" />
+        <e k="rcr_action_none"          v="Không có" />
+        <e k="rcr_field_growth"          v="Sinh trưởng" />
+
+        <!-- Field card — weed column header (singular, matching base game HUD) -->
+        <e k="rcr_weed_header"          v="Cỏ dại" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Chưa lên kế hoạch" />
+
+        <!-- Global overview — cover crop recap (own line) -->
+        <e k="rcr_overview_cover_entry" v="Che phủ %s: %s (gieo %s)" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Th3" />
+        <e k="rcr_calendar_month_2"     v="Th4" />
+        <e k="rcr_calendar_month_3"     v="Th5" />
+        <e k="rcr_calendar_month_4"     v="Th6" />
+        <e k="rcr_calendar_month_5"     v="Th7" />
+        <e k="rcr_calendar_month_6"     v="Th8" />
+        <e k="rcr_calendar_month_7"     v="Th9" />
+        <e k="rcr_calendar_month_8"     v="Th10" />
+        <e k="rcr_calendar_month_9"     v="Th11" />
+        <e k="rcr_calendar_month_10"    v="Th12" />
+        <e k="rcr_calendar_month_11"    v="Th1" />
+        <e k="rcr_calendar_month_12"    v="Th2" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Gieo" />
+        <e k="rcr_calendar_legend_harvest" v="Thu hoạch" />
+        <e k="rcr_calendar_legend_cover"   v="Gieo che phủ" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Kế hoạch chưa đầy đủ" />
+        <e k="rcr_score_excellent"      v="Luân canh xuất sắc" />
+        <e k="rcr_score_good"           v="Luân canh tốt" />
+        <e k="rcr_score_fair"           v="Luân canh khá" />
+        <e k="rcr_score_poor"           v="Luân canh kém" />
+        <e k="rcr_score_label_low"      v="Điểm thấp" />
+        <e k="rcr_score_label_optimal"  v="Điểm tối ưu" />
+        <e k="rcr_score_short_optimal"  v="TỐI ƯU" />
+        <e k="rcr_score_short_good"     v="TỐT" />
+        <e k="rcr_score_short_fair"     v="KHÁ" />
+        <e k="rcr_score_short_poor"     v="THẤP" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Không có ruộng sở hữu để hiển thị." />
+    </elements>
+</l10n>

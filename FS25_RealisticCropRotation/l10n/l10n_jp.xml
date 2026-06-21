@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="作物の輪作" />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="畑" />
+        <e k="rcr_sidebar_no_active_crop"  v="作物なし" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="輪作" />
+        <e k="rcr_tab_planning"         v="計画" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="予想残留 +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="輪作の合計残留 +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="今後の残留なし" />
+        <e k="rcr_status_planned_no_residue" v="輪作の合計残留 0 kg/ha" />
+        <e k="rcr_weather_sun" v="快晴" />
+        <e k="rcr_weather_partially_cloudy" v="晴れ時々曇り" />
+        <e k="rcr_weather_cloudy" v="曇り" />
+        <e k="rcr_weather_rain" v="雨" />
+        <e k="rcr_weather_snow" v="雪" />
+        <e k="rcr_weather_hail" v="雹" />
+        <e k="rcr_weather_twister" v="竜巻" />
+        <e k="rcr_weather_thunder" v="雷雨" />
+        <e k="rcr_weather_current_operational" v="%s 進行中 · 終了 %s" />
+        <e k="rcr_weather_current_calm" v="%s · %s まで" />
+        <e k="rcr_weather_soon" v="%s %s-%s · %s 後" />
+        <e k="rcr_weather_tomorrow" v="%s 明日 %s-%s" />
+        <e k="rcr_weather_later" v="%s +%d日 %s-%s" />
+        <e k="rcr_time_minutes" v="%d 分" />
+        <e k="rcr_time_hours" v="%d 時間" />
+        <e k="rcr_time_hours_minutes" v="%d 時間 %02d 分" />
+        <e k="rcr_hud_previous_n1"      v="前作 (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="前々作 (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="作物履歴" />
+        <e k="rcr_section_nitrogen"     v="窒素の状態" />
+        <e k="rcr_section_advice"       v="農学的アドバイス" />
+        <e k="rcr_section_field"        v="現在の畑の状態" />
+        <e k="rcr_section_lime"         v="石灰 / pH の状態" />
+        <e k="rcr_section_plan"         v="輪作計画" />
+        <e k="rcr_section_score"        v="輪作の品質" />
+        <e k="rcr_section_overview"     v="全体概要" />
+        <e k="rcr_overview_total_area"  v="耕作面積: %.1f ha" />
+
+        <!-- Timeline slot labels and empty state -->
+        <e k="rcr_slot_empty"           v="未作付け" />
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="現在" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="穀物" />
+        <e k="rcr_family_legume"        v="マメ科" />
+        <e k="rcr_family_oilseed"       v="油糧作物" />
+        <e k="rcr_family_root"          v="根菜" />
+        <e k="rcr_family_vegetable"     v="野菜" />
+        <e k="rcr_family_forage"        v="飼料作物" />
+        <e k="rcr_family_cover"         v="被覆" />
+        <e k="rcr_cover_crop"           v="間作" />
+        <e k="rcr_fallow"              v="休閑" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="未施肥" />
+        <e k="rcr_n_partial"            v="一部" />
+        <e k="rcr_n_full"               v="完全" />
+        <e k="rcr_n_average_value"      v="平均窒素: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="作物の必要量: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="窒素 / 作物の必要量" />
+        <e k="rcr_lime_none"            v="石灰なし" />
+        <e k="rcr_lime_partial"         v="石灰一部" />
+        <e k="rcr_lime_full"            v="石灰適正" />
+        <e k="rcr_lime_average_pf"      v="平均 pH" />
+        <e k="rcr_lime_average_value"   v="平均 pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="目標: %.3f pH" />
+        <e k="rcr_soil_not_sampled"     v="土壌未採取" />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal"    v="穀物の後: 次の穀物まで少なくとも2年空けてください; 間にマメ科を入れると窒素が補給されます。" />
+        <e k="rcr_advice_afterLegume"    v="マメ科の後: 穀物は補給された窒素をよく利用します; 次のマメ科まで少なくとも3年空けてください。" />
+        <e k="rcr_advice_afterOilseed"   v="油糧作物の後: 次の油糧作物まで少なくとも3年空けてください; 間に穀物が適します。" />
+        <e k="rcr_advice_afterRoot"      v="根菜の後: 次の根菜まで少なくとも4年空けてください; 間に穀物が適します。" />
+        <e k="rcr_advice_afterVegetable" v="野菜の後: 繰り返しまで少なくとも3年空けてください; 間に穀物が適します。" />
+        <e k="rcr_advice_afterForage"    v="飼料作物の後: 穀物が適し, 土壌構造と残留が利用できます。" />
+        <e k="rcr_advice_no_current_crop" v="現在の主要作物なし: 作物が検出されるとアドバイスが表示されます。" />
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="土壌の状態" />
+        <e k="rcr_action_none"          v="なし" />
+        <e k="rcr_field_growth"          v="生育" />
+
+        <!-- Field card — weed column header (singular, matching base game HUD) -->
+        <e k="rcr_weed_header"          v="雑草" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="未計画" />
+
+        <!-- Global overview — cover crop recap (own line) -->
+        <e k="rcr_overview_cover_entry" v="被覆 %s: %s (播種 %s)" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="3月" />
+        <e k="rcr_calendar_month_2"     v="4月" />
+        <e k="rcr_calendar_month_3"     v="5月" />
+        <e k="rcr_calendar_month_4"     v="6月" />
+        <e k="rcr_calendar_month_5"     v="7月" />
+        <e k="rcr_calendar_month_6"     v="8月" />
+        <e k="rcr_calendar_month_7"     v="9月" />
+        <e k="rcr_calendar_month_8"     v="10月" />
+        <e k="rcr_calendar_month_9"     v="11月" />
+        <e k="rcr_calendar_month_10"    v="12月" />
+        <e k="rcr_calendar_month_11"    v="1月" />
+        <e k="rcr_calendar_month_12"    v="2月" />
+
+        <e k="rcr_calendar_legend_sowing"  v="播種" />
+        <e k="rcr_calendar_legend_harvest" v="収穫" />
+        <e k="rcr_calendar_legend_cover"   v="被覆の播種" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="計画が不完全" />
+        <e k="rcr_score_excellent"      v="優れた輪作" />
+        <e k="rcr_score_good"           v="良い輪作" />
+        <e k="rcr_score_fair"           v="まずまずの輪作" />
+        <e k="rcr_score_poor"           v="不十分な輪作" />
+        <e k="rcr_score_label_low"      v="低スコア" />
+        <e k="rcr_score_label_optimal"  v="最適スコア" />
+        <e k="rcr_score_short_optimal"  v="最適" />
+        <e k="rcr_score_short_good"     v="良" />
+        <e k="rcr_score_short_fair"     v="可" />
+        <e k="rcr_score_short_poor"     v="低" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="表示する自分の畑がありません。" />
+    </elements>
+</l10n>
