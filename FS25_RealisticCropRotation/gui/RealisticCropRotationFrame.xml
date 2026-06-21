@@ -491,14 +491,14 @@
                         <Bitmap      profile="frGroupCropIconCard" name="gCropIcon4" position="738px -23px" visible="false"/>
                         <Text        profile="frGroupBadgeLabel" name="gLabel4" position="763px -18px" size="170px 30px" text="" visible="false"/>
 
-                        <!-- Score -->
-                        <Text profile="frOverviewScore" name="gScore" text=""/>
-
-                        <!-- Total rotation nitrogen residue -->
-                        <GuiElement profile="frOverviewResidueCard" name="gResidueCard" visible="false">
-                            <RoundCorner profile="frStatusPillBgBonus" position="0px 0px" size="228px 22px"/>
-                            <Text profile="frStatusPillText" name="gResidueText" position="0px 0px" size="228px 22px" textSize="11px" text=""/>
-                        </GuiElement>
+                        <!-- Right column: total rotation nitrogen residue above score -->
+                        <BoxLayout profile="frOverviewMetaColumn" name="gMetaColumn">
+                            <GuiElement profile="frOverviewResidueCard" name="gResidueCard" visible="false">
+                                <RoundCorner profile="frStatusPillBgBonus" position="0px 0px" size="228px 22px"/>
+                                <Text profile="frStatusPillText" name="gResidueText" position="0px 0px" size="228px 22px" textSize="11px" text=""/>
+                            </GuiElement>
+                            <Text profile="frOverviewScore" name="gScore" text=""/>
+                        </BoxLayout>
 
                         <!-- Cover crop recap (between badge row and field names) -->
                         <Text profile="frGroupCoverRecap" name="gCoverRecap" text="" visible="false"/>

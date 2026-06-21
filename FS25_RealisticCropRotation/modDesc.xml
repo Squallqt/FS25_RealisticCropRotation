@@ -8,78 +8,102 @@
         <fr>Assolement</fr>
     </title>
     <description>
-        <en><![CDATA[Bring real agronomy to your farm. Realistic Crop Rotation tracks the crop history of every field and lets legumes and green manures return nitrogen to the soil, the way a real rotation does.
+        <en><![CDATA[
+Make crop rotations matter.
+Realistic Crop Rotation records each field's crop history and lets you plan the next four crops from a dedicated tab in the in-game menu.
 
-A nitrogen-fixing crop leaves a residue when it is worked into the soil (cultivator, mulcher, disc or plough), the same moment the game returns catch-crop nitrogen -- so it lands when you cultivate the stubble after a harvest, or when you finally plough out a forage stand. The residue comes in two tiers: a strong first-year credit (year +1) where the crop is worked in, plus a lighter second-year carryover (year +2) one crop later. Plan your rotations well and the soil rewards you.
+FIELD MONITORING
 
-With Precision Farming the residue is written straight to the nitrogen map, so an auto-mode seeder applies less and the total stays at the crop's target. Without PF it adds one fertilizer level. Singleplayer and multiplayer.
+View the current crop, growth stage, soil condition, weeds, nitrogen and pH for every field.
+Group fields that share the same rotation and quickly check the quality of each plan.
 
-Features:
-- Per-field crop history (N-1 to N-4) with an in-game rotation planner
-- Per-field nitrogen, pH, growth and weed readouts
-- Two-tier legume nitrogen residue (year +1 / year +2)
-- Full Precision Farming and vanilla support
-- Multiplayer-ready
+NITROGEN RESIDUE
 
-Nitrogen residue (kg N/ha, year +1 / year +2):
-- Alfalfa: 80 / 50
-- Vetch-rye: 60 / 20
-- Clover: 50 / 20
-- Soybean: 40 / 10
-- Pea: 40 / 10
-- Green bean: 20 / 5
+When a legume is destroyed by a tillage tool, it automatically returns nitrogen to the worked area.
+The first share benefits the following crop. A second share remains available for the next rotation.
 
-Issues & suggestions: https://github.com/Squallqt/FS25_RealisticCropRotation
+Nitrogen residue values in kg N/ha:
+- Alfalfa: 80, then 50
+- Vetch-rye: 60, then 20
+- Clover: 50, then 20
+- Soybean: 40, then 10
+- Pea: 40, then 10
+- Green bean: 20, then 5
 
-Access via the dedicated tab in the InGame Menu (ESC).]]></en>
-        <de><![CDATA[Bring echte Agronomie auf deinen Betrieb. Realistic Crop Rotation verfolgt die Fruchtfolge jedes Feldes und lässt Leguminosen und Gründüngung Stickstoff in den Boden zurückführen, so wie es eine echte Fruchtfolge tut.
+COMPATIBILITY
 
-Eine stickstoffbindende Kultur hinterlässt einen Rückstand, wenn sie in den Boden eingearbeitet wird (Grubber, Mulcher, Scheibenegge oder Pflug) -- im selben Moment, in dem das Spiel den Stickstoff von Zwischenfrüchten zurückführt. Er fällt also an, wenn du nach der Ernte das Stoppelfeld kultivierst oder eine Grünlandnarbe endgültig umbrichst. Der Rückstand kommt in zwei Stufen: ein starkes Erstjahres-Guthaben (Jahr +1) dort, wo die Kultur eingearbeitet wird, plus ein leichteres Zweitjahres-Guthaben (Jahr +2) eine Kultur später. Plane deine Fruchtfolge gut und der Boden belohnt dich.
+With Precision Farming, the residue is added directly to the nitrogen map.
+Without Precision Farming, the mod adds one fertilizer level.
+Compatible with singleplayer and multiplayer games.
+Access it from the dedicated tab in the in-game menu (ESC).
 
-Mit Precision Farming wird der Rückstand direkt in die Stickstoffkarte geschrieben: eine Sämaschine im Automatikmodus bringt weniger aus und die Gesamtmenge bleibt beim Kulturziel. Ohne PF wird eine Düngestufe hinzugefügt. Einzel- und Mehrspieler.
+Issues & suggestions:
+https://github.com/Squallqt/FS25_RealisticCropRotation
+]]></en>
+        <de><![CDATA[
+Gib deiner Fruchtfolge eine echte Bedeutung.
+Realistic Crop Rotation speichert die Anbauhistorie jedes Feldes und ermöglicht die Planung der nächsten vier Kulturen über einen eigenen Reiter im Spielmenü.
 
-Funktionen:
-- Fruchtfolgehistorie pro Feld (N-1 bis N-4) mit Fruchtfolge-Planer im Spiel
-- Stickstoff-, pH-, Wachstums- und Unkraut-Anzeige pro Feld
-- Zweistufiger Leguminosen-Stickstoffrückstand (Jahr +1 / Jahr +2)
-- Volle Unterstützung für Precision Farming und Standard
-- Mehrspieler-fähig
+FELDÜBERSICHT
 
-Stickstoffrückstand (kg N/ha, Jahr +1 / Jahr +2):
-- Luzerne: 80 / 50
-- Wicke-Roggen: 60 / 20
-- Klee: 50 / 20
-- Sojabohne: 40 / 10
-- Erbse: 40 / 10
-- Grüne Bohne: 20 / 5
+Sieh für jedes Feld die aktuelle Kultur, den Wachstumsstand, den Bodenzustand, Unkraut, Stickstoff und pH-Wert ein.
+Gruppiere Felder mit derselben Fruchtfolge und prüfe schnell die Qualität jedes Plans.
 
-Issues & Vorschläge: https://github.com/Squallqt/FS25_RealisticCropRotation
+STICKSTOFFRÜCKSTAND
 
-Zugriff über den eigenen Tab im InGame-Menü (ESC).]]></de>
-        <fr><![CDATA[Apportez une vraie agronomie à votre ferme. Realistic Crop Rotation suit l'historique des cultures de chaque parcelle et laisse les légumineuses et les engrais verts restituer de l'azote au sol, comme le fait un véritable assolement.
+Wird eine Leguminose durch ein Bodenbearbeitungsgerät zerstört, führt sie dem bearbeiteten Bereich automatisch Stickstoff zu.
+Der erste Anteil kommt der folgenden Kultur zugute. Ein zweiter Anteil bleibt für die nächste Fruchtfolge verfügbar.
 
-Une culture fixatrice d'azote laisse un reliquat lorsqu'elle est enfouie par le travail du sol (cultivateur, broyeur, déchaumeur ou charrue) -- au même moment où le jeu restitue l'azote des couverts -- il tombe donc quand vous déchaumez le chaume après une récolte, ou quand vous retournez enfin une prairie. Le reliquat arrive en deux temps : un crédit de première année important (année +1) là où la culture est enfouie, plus un report plus léger de deuxième année (année +2) une culture plus tard. Soignez votre assolement et le sol vous le rend.
+Stickstoffrückstand in kg N/ha:
+- Luzerne: 80, danach 50
+- Wicke-Roggen: 60, danach 20
+- Klee: 50, danach 20
+- Sojabohne: 40, danach 10
+- Erbse: 40, danach 10
+- Grüne Bohne: 20, danach 5
 
-Avec Precision Farming, le reliquat est écrit directement sur la carte d'azote : un semoir en mode auto applique moins et le total reste à la cible de la culture. Sans PF, il ajoute un niveau d'engrais. Solo et multijoueur.
+KOMPATIBILITÄT
 
-Fonctionnalités :
-- Historique des cultures par parcelle (N-1 à N-4) avec planificateur d'assolement en jeu
-- Affichage azote, pH, croissance et adventices par parcelle
-- Reliquat d'azote des légumineuses à deux niveaux (année +1 / année +2)
-- Prise en charge complète de Precision Farming et du jeu de base
-- Compatible multijoueur
+Mit Precision Farming wird der Rückstand direkt der Stickstoffkarte hinzugefügt.
+Ohne Precision Farming fügt der Mod eine Düngestufe hinzu.
+Kompatibel mit Einzelspieler- und Mehrspielerpartien.
+Zugriff über den eigenen Reiter im Spielmenü (ESC).
 
-Reliquat d'azote (kg N/ha, année +1 / année +2) :
-- Luzerne : 80 / 50
-- Vesce-seigle : 60 / 20
-- Trèfle : 50 / 20
-- Soja : 40 / 10
-- Pois : 40 / 10
-- Haricot vert : 20 / 5
+Issues & Vorschläge:
+https://github.com/Squallqt/FS25_RealisticCropRotation
+]]></de>
+        <fr><![CDATA[
+Donnez un rôle réel à vos rotations de cultures.
+Realistic Crop Rotation enregistre l'historique de chaque parcelle et vous permet de planifier les quatre prochaines cultures depuis un onglet dédié du menu en jeu.
 
-Issues & suggestions : https://github.com/Squallqt/FS25_RealisticCropRotation
+SUIVI DES PARCELLES
 
-Accès via l'onglet dédié dans le menu en jeu (ECHAP).]]></fr>
+Consultez la culture en place, son stade de croissance, l'état du sol, les mauvaises herbes, l'azote et le pH.
+Regroupez les parcelles partageant la même rotation et vérifiez rapidement la qualité de chaque plan.
+
+RELIQUAT D'AZOTE
+
+Lorsqu'une légumineuse est détruite par un outil de travail du sol, elle restitue automatiquement de l'azote sur la zone travaillée.
+Une première partie profite à la culture suivante. Une seconde partie reste disponible pour la rotation suivante.
+
+Valeurs du reliquat en kg N/ha :
+- Luzerne : 80 puis 50
+- Vesce-seigle : 60 puis 20
+- Trèfle : 50 puis 20
+- Soja : 40 puis 10
+- Pois : 40 puis 10
+- Haricot vert : 20 puis 5
+
+COMPATIBILITÉ
+
+Avec Precision Farming, le reliquat est directement ajouté à la carte d'azote.
+Sans Precision Farming, le mod ajoute un niveau de fertilisation.
+Compatible avec les parties solo et multijoueur.
+Accès depuis l'onglet dédié du menu en jeu (ÉCHAP).
+
+Issues & suggestions :
+https://github.com/Squallqt/FS25_RealisticCropRotation
+]]></fr>
     </description>
     <iconFilename>icon_RealCropRotation.dds</iconFilename>
     <multiplayer supported="true" />

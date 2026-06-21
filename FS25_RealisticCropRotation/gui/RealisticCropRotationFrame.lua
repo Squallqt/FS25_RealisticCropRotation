@@ -2892,7 +2892,7 @@ function RealisticCropRotationFrame:getGroupPlanBounds(plan)
     return firstFilled, lastFilled
 end
 
----Resolves how one overview slot renders: crop badge, inner "none" gap, or hidden.
+---Resolves how one overview slot renders: crop badge, unplanned slot, or hidden empty plan.
 -- @param table group
 -- @param integer slotIndex
 -- @param integer firstFilled
@@ -2908,8 +2908,7 @@ function RealisticCropRotationFrame:getGroupSlotDisplay(group, slotIndex, firstF
         return true, true, self:getCropDisplayName(cropName), cropName
     end
 
-    if firstFilled ~= nil and lastFilled ~= nil
-        and slotIndex > firstFilled and slotIndex < lastFilled then
+    if firstFilled ~= nil and lastFilled ~= nil then
         return true, false, self.i18n:getText("rcr_plan_none"), ""
     end
 
@@ -3177,6 +3176,10 @@ function RealisticCropRotationFrame:populateGroupCell(index, cell)
     end
     if residueTextEl ~= nil and residueText ~= nil then
         residueTextEl:setText(residueText)
+    end
+    local metaColumnEl = cell:getAttribute("gMetaColumn")
+    if metaColumnEl ~= nil and metaColumnEl.invalidateLayout ~= nil then
+        metaColumnEl:invalidateLayout()
     end
 
     -- Field names — bottom strip, uses TextElement scrolling for long lists.

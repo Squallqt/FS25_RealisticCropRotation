@@ -896,11 +896,22 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Score label — right-aligned below the rotation-residue card -->
+    <!-- Right column: 22 + 6 + 22 = 50px, vertically centred in the 80px row. -->
+    <Profile name="frOverviewMetaColumn" extends="emptyPanel" with="anchorTopRight">
+        <position value="-26px 0px"/>
+        <size value="228px 80px"/>
+        <flowDirection value="vertical"/>
+        <alignmentX value="right"/>
+        <alignmentY value="middle"/>
+        <fillDirectionY value="topToBottom"/>
+        <elementSpacing value="6px"/>
+        <autoValidateLayout value="true"/>
+    </Profile>
+
+    <!-- Score label; position is assigned by frOverviewMetaColumn. -->
     <!-- textColor set in Lua -->
-    <Profile name="frOverviewScore" extends="fs25_textDefault" with="anchorTopRight">
-        <position value="-26px -36px"/>
-        <size value="120px 22px"/>
+    <Profile name="frOverviewScore" extends="fs25_textDefault">
+        <size value="228px 22px"/>
         <textSize value="14px"/>
         <textBold value="true"/>
         <textColor value="$preset_fs25_colorGreen"/>
@@ -910,8 +921,7 @@
     </Profile>
 
     <!-- Layout-only container; its children reuse the existing native-green status-pill profiles. -->
-    <Profile name="frOverviewResidueCard" extends="baseReference" with="anchorTopRight">
-        <position value="-26px -8px"/>
+    <Profile name="frOverviewResidueCard" extends="baseReference">
         <size value="228px 22px"/>
     </Profile>
 
