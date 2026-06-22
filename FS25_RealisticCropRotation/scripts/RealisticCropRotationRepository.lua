@@ -3,7 +3,7 @@
 RealisticCropRotationRepository = {}
 local RealisticCropRotationRepository_mt = Class(RealisticCropRotationRepository)
 
-RealisticCropRotationRepository.SAVE_VERSION = 2
+RealisticCropRotationRepository.SAVE_VERSION = 1
 RealisticCropRotationRepository.MAX_HISTORY = 4
 
 ---True when the 4-slot plan has at least one non-empty entry.
