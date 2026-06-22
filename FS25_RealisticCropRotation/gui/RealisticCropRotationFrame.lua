@@ -83,9 +83,13 @@ RealisticCropRotationFrame.FAMILY_MIN_INTERVAL = {
     ROOT      = 4,
 }
 
+RealisticCropRotationFrame.SCORE_BASE_FULL    = 60  -- 3+ crops: a real rotation pattern
+RealisticCropRotationFrame.SCORE_BASE_PARTIAL = 40  -- only 2 crops
 RealisticCropRotationFrame.SCORE_FAMILY_PENALTY_PER_YEAR = 20
-RealisticCropRotationFrame.SCORE_LEGUME_CEREAL_BONUS = 5
-RealisticCropRotationFrame.SCORE_DIVERSITY_BONUS_MAX = 10
+RealisticCropRotationFrame.SCORE_LEGUME_CEREAL_BONUS = 8
+RealisticCropRotationFrame.SCORE_DIVERSITY_BONUS_MAX = 25
+RealisticCropRotationFrame.SCORE_RESIDUE_BONUS = 10  -- N-restoring crop/cover present
+RealisticCropRotationFrame.SCORE_NO_RESIDUE_CAP = 79 -- no N returned: "excellent" stays locked
 
 -- Max pixel widths (must match profile sizes)
 -- N_BAR_MAX_WIDTH: keep in sync with guiProfiles.xml frNitrogenTrack size (1192px)
@@ -2599,8 +2603,10 @@ function RealisticCropRotationFrame:updateScoreCard(plan, coverPlan)
     if self.scoreCursor ~= nil then
         if score >= 80 then
             self.scoreCursor.color = {0.325, 0.565, 0.071, 1.0}
-        elseif score >= 50 then
+        elseif score >= 60 then
             self.scoreCursor.color = {0.95, 0.85, 0.05, 1.0}
+        elseif score >= 40 then
+            self.scoreCursor.color = {0.75, 0.45, 0.05, 1.0}
         else
             self.scoreCursor.color = {0.75, 0.20, 0.05, 1.0}
         end
@@ -2612,38 +2618,41 @@ end
 -- @param table coverPlan
 -- @return integer score
 function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
-    local families = {}
+    -- Ordered ring of scoring families (fallow excluded: it is a neutral break, not a crop).
+    local ring      = {}
+    local ringCover = {}
     for i = 1, 4 do
         local crop = plan[i] or ""
         if crop ~= "" then
             local fam = self:getCropFamily(crop)
-            if fam ~= "UNKNOWN" then
-                families[i] = fam
+            if fam ~= "UNKNOWN" and fam ~= "FALLOW" then
+                ring[#ring + 1] = fam
+                local coverCrop = coverPlan ~= nil and coverPlan[i] or ""
+                ringCover[#ring] = coverCrop ~= nil and coverCrop ~= ""
             end
         end
     end
 
-    local filledCount = 0
-    for _ in pairs(families) do filledCount = filledCount + 1 end
-    if filledCount < 2 then return 0 end
+    local n = #ring
+    if n < 2 then return 0 end
 
-    -- < 3 filled slots: no real rotation pattern yet -- cap the start score at "good".
-    local score = (filledCount >= 3) and 100 or 70
+    -- Build the score upward: a bare rotation is the floor, good agronomy earns points.
+    local score = (n >= 3) and RealisticCropRotationFrame.SCORE_BASE_FULL
+                            or  RealisticCropRotationFrame.SCORE_BASE_PARTIAL
 
-    -- Penalize same-family slots closer than the family's min interval (a cover halves it).
-    for i = 1, 3 do
-        for j = i + 1, 4 do
-            local fam = families[i]
-            if fam ~= nil and fam == families[j] then
-                local minInterval = RealisticCropRotationFrame.FAMILY_MIN_INTERVAL[fam]
+    -- Penalize same-family crops closer than their min return interval, on a cyclic ring.
+    for a = 1, n - 1 do
+        for b = a + 1, n do
+            if ring[a] == ring[b] then
+                local minInterval = RealisticCropRotationFrame.FAMILY_MIN_INTERVAL[ring[a]]
                 if minInterval ~= nil then
-                    local interval = j - i
+                    local forward  = b - a
+                    local interval = math.min(forward, n - forward)
                     if interval < minInterval then
                         local penalty = (minInterval - interval) * RealisticCropRotationFrame.SCORE_FAMILY_PENALTY_PER_YEAR
-                        local coverCrop = coverPlan ~= nil and coverPlan[i] or ""
-                        if coverCrop ~= nil and coverCrop ~= "" then
-                            penalty = penalty / 2
-                        end
+                        -- a cover sown in the shorter gap halves the penalty
+                        local gapStart = (forward <= n - forward) and a or b
+                        if ringCover[gapStart] then penalty = penalty / 2 end
                         score = score - penalty
                     end
                 end
@@ -2651,25 +2660,28 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
         end
     end
 
-    if filledCount >= 3 then
-        -- Legume directly followed by a cereal: the returned nitrogen is put to good use.
-        for i = 1, 3 do
-            if families[i] == "LEGUME" and families[i + 1] == "CEREAL" then
+    if n >= 3 then
+        -- Legume directly followed by a cereal (cyclic): the returned nitrogen is put to use.
+        for k = 1, n do
+            local nextK = (k % n) + 1
+            if ring[k] == "LEGUME" and ring[nextK] == "CEREAL" then
                 score = score + RealisticCropRotationFrame.SCORE_LEGUME_CEREAL_BONUS
             end
         end
 
-        -- Diversity bonus: share of distinct families among filled slots.
+        -- Diversity bonus: share of distinct families among the rotation crops.
         local seen = {}
-        for _, fam in pairs(families) do seen[fam] = true end
+        for _, fam in ipairs(ring) do seen[fam] = true end
         local uniqueCount = 0
         for _ in pairs(seen) do uniqueCount = uniqueCount + 1 end
-        score = score + (uniqueCount / filledCount) * RealisticCropRotationFrame.SCORE_DIVERSITY_BONUS_MAX
+        score = score + (uniqueCount / n) * RealisticCropRotationFrame.SCORE_DIVERSITY_BONUS_MAX
     end
 
-    -- No nitrogen returned to the soil -> cap at "good" (good rotations build residue).
-    if self:getPlanNitrogenResidueKgHa(plan, coverPlan) == nil then
-        score = math.min(score, 70)
+    -- Nitrogen restored (legume/cover) rewards; none keeps "excellent" out of reach.
+    if self:getPlanNitrogenResidueKgHa(plan, coverPlan) ~= nil then
+        score = score + RealisticCropRotationFrame.SCORE_RESIDUE_BONUS
+    else
+        score = math.min(score, RealisticCropRotationFrame.SCORE_NO_RESIDUE_CAP)
     end
 
     return math.max(0, math.min(100, math.floor(score + 0.5)))
@@ -2680,13 +2692,20 @@ end
 -- @param table plan
 -- @return string i18nKey
 function RealisticCropRotationFrame:getScoreTextKey(score, plan)
-    local anyFilled = false
-    for i = 1, 4 do if (plan[i] or "") ~= "" then anyFilled = true; break end end
-    if not anyFilled   then return "rcr_plan_none" end
-    if score == 0      then return "rcr_score_incomplete" end
-    if score >= 80     then return "rcr_score_excellent" end
-    if score >= 60     then return "rcr_score_good" end
-    if score >= 40     then return "rcr_score_fair" end
+    local anyFilled, cropCount = false, 0
+    for i = 1, 4 do
+        local crop = plan[i] or ""
+        if crop ~= "" then
+            anyFilled = true
+            local fam = self:getCropFamily(crop)
+            if fam ~= "UNKNOWN" and fam ~= "FALLOW" then cropCount = cropCount + 1 end
+        end
+    end
+    if not anyFilled then return "rcr_plan_none" end
+    if cropCount < 2 then return "rcr_score_incomplete" end
+    if score >= 80   then return "rcr_score_excellent" end
+    if score >= 60   then return "rcr_score_good" end
+    if score >= 40   then return "rcr_score_fair" end
     return "rcr_score_poor"
 end
 
@@ -2699,7 +2718,7 @@ end
 function RealisticCropRotationFrame:getScoreLabel(score)
     if score >= 80 then return "rcr_score_short_optimal", 0.325, 0.565, 0.071
     elseif score >= 60 then return "rcr_score_short_good",  0.95,  0.85, 0.05
-    elseif score >= 30 then return "rcr_score_short_fair",  0.75,  0.45, 0.05
+    elseif score >= 40 then return "rcr_score_short_fair",  0.75,  0.45, 0.05
     elseif score >  0  then return "rcr_score_short_poor",  0.75,  0.20, 0.05
     else                    return nil,                    0.30,  0.30, 0.30
     end
