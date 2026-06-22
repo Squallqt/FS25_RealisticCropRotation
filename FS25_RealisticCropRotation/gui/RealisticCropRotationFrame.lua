@@ -1669,8 +1669,8 @@ function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId)
             labelKey = "rcr_n_average_pf"
             stateText = string.format(self.i18n:getText("rcr_n_average_value"), actualN)
             if targetN ~= nil and targetN > 0 then
-                -- Crop planted: fill the gauge against the crop's average requirement.
-                ratio = actualN / targetN
+                -- Crop planted: fill against the requirement, full once reached.
+                ratio = math.min(actualN / targetN, 1)
                 valueText = string.format(self.i18n:getText("rcr_n_crop_need"), targetN)
             else
                 -- No crop planted: empty gauge, just the soil's real average N.
@@ -1735,7 +1735,7 @@ function RealisticCropRotationFrame:updateSoilPHGauge(farmlandId)
             maxPH = tonumber(maxPH) or 0
             labelKey = "rcr_lime_average_pf"
             if targetPH ~= nil then
-                ratio = targetPH > 0 and (actualPH / targetPH) or 0
+                ratio = targetPH > 0 and math.min(actualPH / targetPH, 1) or 0
                 stateText = string.format(self.i18n:getText("rcr_lime_average_value"), actualPH)
                 valueText = string.format(self.i18n:getText("rcr_lime_target"), targetPH)
             else

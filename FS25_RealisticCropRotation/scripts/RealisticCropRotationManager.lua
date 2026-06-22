@@ -13,12 +13,6 @@ local SOIL_PF_CACHE_TTL_MS = 10000
 -- Soil scan grid resolution (menu only): FIELD_SCAN_STEPS^2 points over the field.
 local FIELD_SCAN_STEPS = 50
 
--- PF field-info only displays legend values (PrecisionFarming.xml showOnHud): nitrogen
--- per 20 kg/ha, pH per 0.25. The true average is rounded to these so the gauges read
--- identically to PF's field-info (UI coherence; PF cannot show 115 kg or 6.375 pH).
-local PF_N_DISPLAY_STEP = 20
-local PF_PH_DISPLAY_STEP = 0.25
-
 
 ---True on a multiplayer client (not the server/host).
 -- @return boolean isPureClient
@@ -1067,6 +1061,44 @@ end
 
 -- Precision Farming soil reads (nitrogen + pH); vanilla fallback otherwise.
 
+---World-space bounding box of a field from its dimension parallelograms.
+-- @param table field
+-- @return number minX, maxX, minZ, maxZ, or nil when geometry is unavailable
+local function getFieldBoundingBox(field)
+    if field == nil or getWorldTranslation == nil then return nil end
+    local dimensions = field.fieldDimensions or field.dimensions
+    if type(dimensions) ~= "table" then return nil end
+
+    local minX, maxX, minZ, maxZ
+    local function acc(x, z)
+        if minX == nil or x < minX then minX = x end
+        if maxX == nil or x > maxX then maxX = x end
+        if minZ == nil or z < minZ then minZ = z end
+        if maxZ == nil or z > maxZ then maxZ = z end
+    end
+
+    for _, dimension in pairs(dimensions) do
+        local startNode = dimension ~= nil and (dimension.start or dimension.startNode) or nil
+        local widthNode = dimension ~= nil and (dimension.width or dimension.widthNode) or nil
+        local heightNode = dimension ~= nil and (dimension.height or dimension.heightNode) or nil
+        if startNode ~= nil and widthNode ~= nil and heightNode ~= nil then
+            local okStart, sx, _, sz = pcall(getWorldTranslation, startNode)
+            local okWidth, wx, _, wz = pcall(getWorldTranslation, widthNode)
+            local okHeight, hx, _, hz = pcall(getWorldTranslation, heightNode)
+            if okStart and okWidth and okHeight
+                and type(sx) == "number" and type(sz) == "number"
+                and type(wx) == "number" and type(wz) == "number"
+                and type(hx) == "number" and type(hz) == "number" then
+                acc(sx, sz); acc(wx, wz); acc(hx, hz)
+                acc(wx + hx - sx, wz + hz - sz)  -- opposite parallelogram corner
+            end
+        end
+    end
+
+    if minX == nil then return nil end
+    return minX, maxX, minZ, maxZ
+end
+
 ---Builds an { x, z } sample grid over the field bbox, kept to the workable ground of
 ---THIS farmland (terrainDetailId + getFarmlandIdAtWorldPosition) so neighbours never leak in.
 -- @param table field
@@ -1076,12 +1108,19 @@ function RealisticCropRotationManager:buildFieldSampleGrid(field, farmlandId)
     if field == nil then return nil end
     if type(field.posX) ~= "number" or type(field.posZ) ~= "number" then return nil end
 
-    local areaHa = getFieldAreaHa(field)
-    if areaHa <= 0 then areaHa = 1 end
-    local side = math.sqrt(areaHa * 10000)
+    -- Real field bounding box (covers non-square fields); equal-area square is a fallback.
+    local minX, maxX, minZ, maxZ = getFieldBoundingBox(field)
+    if minX == nil then
+        local areaHa = getFieldAreaHa(field)
+        if areaHa <= 0 then areaHa = 1 end
+        local half = math.sqrt(areaHa * 10000) * 0.5
+        minX, maxX = field.posX - half, field.posX + half
+        minZ, maxZ = field.posZ - half, field.posZ + half
+    end
+
     local steps = FIELD_SCAN_STEPS
-    local step = (steps > 1) and (side / (steps - 1)) or 0
-    local startX, startZ = field.posX - side * 0.5, field.posZ - side * 0.5
+    local stepX = (steps > 1) and ((maxX - minX) / (steps - 1)) or 0
+    local stepZ = (steps > 1) and ((maxZ - minZ) / (steps - 1)) or 0
 
     local terrainDetailId = g_currentMission ~= nil and g_currentMission.terrainDetailId or nil
     local canMask = terrainDetailId ~= nil and getDensityAtWorldPos ~= nil
@@ -1092,7 +1131,7 @@ function RealisticCropRotationManager:buildFieldSampleGrid(field, farmlandId)
     local points = {}
     for i = 0, steps - 1 do
         for j = 0, steps - 1 do
-            local x, z = startX + i * step, startZ + j * step
+            local x, z = minX + i * stepX, minZ + j * stepZ
             local onField = not canMask or getDensityAtWorldPos(terrainDetailId, x, 0, z) ~= 0
             if onField and canFarmland then
                 onField = fm:getFarmlandIdAtWorldPosition(x, z) == farmlandId
@@ -1201,14 +1240,15 @@ function RealisticCropRotationManager:getPFNitrogenTargets()
     return self.pfNitrogenTargets
 end
 
----Single cached PF soil scan (one grid pass): nitrogen actual + crop requirement,
----pH actual + optimal. Field averages are snapped to PF's legend step so gauges read like PF.
+---Single cached PF soil scan. Targets (besoin N, optimal pH) come from PF's native per-field
+---soil distribution (exact, over the cultivable surface, no sampling). Actual N + pH are sampled:
+---available N over the cropped ground (tramlines excluded), pH over all soil. Values stay precise.
 -- @param integer farmlandId
 -- @return table record, false when not analysed, or nil when PF is absent
 function RealisticCropRotationManager:scanFieldSoil(farmlandId)
     local pf = self:getPrecisionFarming()
     if pf == nil then return nil end
-    local nMap, phMap, soilMap = pf.nitrogenMap, pf.pHMap, pf.soilMap
+    local nMap, phMap = pf.nitrogenMap, pf.pHMap
     if nMap == nil and phMap == nil then return nil end
 
     local n = tonumber(farmlandId)
@@ -1228,71 +1268,98 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId)
         and type(nMap.getNitrogenValueFromInternalValue) == "function"
     local phCanLevel = phMap ~= nil and type(phMap.getLevelAtWorldPos) == "function"
         and type(phMap.getPhValueFromInternalValue) == "function"
-    local canSoilType = soilMap ~= nil and type(soilMap.getTypeIndexAtWorldPos) == "function"
-    -- Optimal pH per point from its soil type (returns real pH, or internal state >9).
-    local phCanOptimal = phCanLevel and canSoilType
-        and type(phMap.getOptimalPHValueForSoilTypeIndex) == "function"
-
-    -- Besoin: the crop's requirement (kg/ha) per soil type from PF's fruitRequirements
-    -- (authoritative; getTargetLevelAtWorldPos returns it rounded down one state).
-    local nReq = nil
-    if canSoilType then
-        local cropName = self:getActiveCropName(n)
-        if cropName ~= nil then nReq = self:getPFNitrogenTargets()[string.upper(tostring(cropName))] end
-    end
+    local phCanOptimal = phMap ~= nil and type(phMap.getOptimalPHValueForSoilTypeIndex) == "function"
 
     local phMaxInternal = (phMap ~= nil and tonumber(phMap.maxValue)) or 31
     local function phConv(level)
         return tonumber(phMap:getPhValueFromInternalValue(math.max(0, math.min(level, phMaxInternal))))
     end
 
-    local nActSum, nActCnt, nTgtSum, nTgtCnt = 0, 0, 0, 0
-    local phActSum, phActCnt, phOptSum, phOptCnt = 0, 0, 0, 0
+    -- Targets are soil-type properties: weight them by PF's native per-field soil distribution
+    -- (fraction of each soil type over the cultivable surface) instead of sampling a grid.
+    local farmland = getFarmlandById(n)
+    local soilDist = farmland ~= nil and farmland.soilDistribution or nil
+
+    -- Besoin azote: crop's per-soil requirement (PF fruitRequirements), distribution-weighted.
+    local cropName, activeFruitTypeIndex = self:getActiveCropInfo(n)
+    local nTarget = nil
+    if soilDist ~= nil and cropName ~= nil then
+        local nReq = self:getPFNitrogenTargets()[string.upper(tostring(cropName))]
+        if nReq ~= nil then
+            local sum, w = 0, 0
+            for i = 1, #soilDist do
+                local frac = soilDist[i]
+                if frac ~= nil and frac > 0 and nReq[i] ~= nil then
+                    sum = sum + frac * nReq[i]; w = w + frac
+                end
+            end
+            if w > 0 then nTarget = math.floor(sum / w + 0.5) end
+        end
+    end
+
+    -- pH optimal: each soil type's optimal pH, distribution-weighted (independent of the crop).
+    local phTarget = nil
+    if soilDist ~= nil and phCanOptimal then
+        local sum, w = 0, 0
+        for i = 1, #soilDist do
+            local frac = soilDist[i]
+            if frac ~= nil and frac > 0 then
+                local opt = phMap:getOptimalPHValueForSoilTypeIndex(i)
+                if type(opt) == "number" and opt > 0 then
+                    if opt > 9 then opt = phConv(opt) end
+                    if type(opt) == "number" then sum = sum + frac * opt; w = w + frac end
+                end
+            end
+        end
+        if w > 0 then phTarget = sum / w end
+    end
+
+    -- Actual state is dynamic -> sample it. Current pH is a soil property (read over all ground).
+    -- Available N belongs to the crop: keep only pixels deep in the crop -- a crop pixel bordering a
+    -- tramline reads low (coarse N map smears the unfertilised track in), so exclude it.
+    local TRAMLINE_MARGIN = 2.5
+    local nActSum, nActCnt, nCropSum, nCropCnt, phActSum, phActCnt = 0, 0, 0, 0, 0, 0
     local ok = pcall(function()
         for _, p in ipairs(points) do
-            if nCanLevel then
-                local level = nMap:getLevelAtWorldPos(p.x, p.z)
-                if type(level) == "number" then nActSum = nActSum + level; nActCnt = nActCnt + 1 end
-            end
             if phCanLevel then
                 local level = phMap:getLevelAtWorldPos(p.x, p.z)
                 if type(level) == "number" then phActSum = phActSum + level; phActCnt = phActCnt + 1 end
             end
-            if canSoilType and (nReq ~= nil or phCanOptimal) then
-                local st = soilMap:getTypeIndexAtWorldPos(p.x, p.z)
-                if st ~= nil then
-                    if nReq ~= nil and nReq[st] ~= nil then
-                        nTgtSum = nTgtSum + nReq[st]; nTgtCnt = nTgtCnt + 1
-                    end
-                    if phCanOptimal then
-                        local opt = phMap:getOptimalPHValueForSoilTypeIndex(st)
-                        if type(opt) == "number" and opt > 0 then
-                            if opt > 9 then opt = phConv(opt) end
-                            if type(opt) == "number" then phOptSum = phOptSum + opt; phOptCnt = phOptCnt + 1 end
-                        end
+            if nCanLevel and (activeFruitTypeIndex == nil
+                or getFruitTypeIndexAtWorldPos(p.x, p.z) == activeFruitTypeIndex) then
+                local level = nMap:getLevelAtWorldPos(p.x, p.z)
+                if type(level) == "number" then
+                    nCropSum = nCropSum + level; nCropCnt = nCropCnt + 1
+                    local m = TRAMLINE_MARGIN
+                    if activeFruitTypeIndex == nil
+                        or (getFruitTypeIndexAtWorldPos(p.x + m, p.z) ~= nil
+                            and getFruitTypeIndexAtWorldPos(p.x - m, p.z) ~= nil
+                            and getFruitTypeIndexAtWorldPos(p.x, p.z + m) ~= nil
+                            and getFruitTypeIndexAtWorldPos(p.x, p.z - m) ~= nil) then
+                        nActSum = nActSum + level; nActCnt = nActCnt + 1
                     end
                 end
             end
         end
     end)
     if not ok then return nil end
+    -- No deep-crop pixels (tiny or fully-tramlined field): fall back to the whole cropped area.
+    if nActCnt == 0 then nActSum, nActCnt = nCropSum, nCropCnt end
 
-    -- Round the true average to PF's legend step so the gauges read exactly like PF.
-    local function snap(v, step) return v ~= nil and (math.floor(v / step + 0.5) * step) or nil end
+    -- Precise averages (no PF-legend snap) so the gauge fills exactly to the requirement.
     local rec = {}
     if nCanLevel and nActCnt > 0 then
-        -- Clamp to [0, maxValue] before conversion, as the PF sprayer HUD does.
         local nMaxInternal = tonumber(nMap.maxValue) or 45
         local function nConv(level)
             return tonumber(nMap:getNitrogenValueFromInternalValue(math.max(0, math.min(level, nMaxInternal))))
         end
-        rec.nActual = snap(nConv(nActSum / nActCnt), PF_N_DISPLAY_STEP)
-        rec.nTarget = nTgtCnt > 0 and snap(nTgtSum / nTgtCnt, PF_N_DISPLAY_STEP) or nil
+        rec.nActual = nConv(nActSum / nActCnt)
+        rec.nTarget = nTarget
         rec.nMin, rec.nMax = nConv(0) or 0, nConv(nMaxInternal) or 0
     end
     if phCanLevel and phActCnt > 0 then
-        rec.phActual = snap(phConv(phActSum / phActCnt), PF_PH_DISPLAY_STEP)
-        rec.phTarget = phOptCnt > 0 and snap(phOptSum / phOptCnt, PF_PH_DISPLAY_STEP) or nil
+        rec.phActual = phConv(phActSum / phActCnt)
+        rec.phTarget = phTarget
         rec.phMin, rec.phMax = phConv(0) or 0, phConv(phMaxInternal) or 0
     end
 
