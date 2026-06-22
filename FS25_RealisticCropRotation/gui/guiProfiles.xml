@@ -21,9 +21,9 @@
     <!--    Line 2 y=-46: crop · family  muted 12px                 -->
     <!-- ============================================================ -->
 
-    <!-- Field name — line 1 -->
+    <!-- Field name — line 1 (width fits "prefix + number" up to the right-aligned area text) -->
     <Profile name="frSidebarItemName" extends="fs25_subCategoryListItemName">
-        <width value="108px"/>
+        <width value="150px"/>
         <position value="94px -18px"/>
         <textSize value="16px"/>
         <textBold value="true"/>
