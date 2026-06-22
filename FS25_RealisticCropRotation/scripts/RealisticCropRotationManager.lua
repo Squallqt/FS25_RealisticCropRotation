@@ -1381,7 +1381,7 @@ function RealisticCropRotationManager.classifyGrowthStage(fruitType, growthState
     return string.format("(%s) · %s", numbers, tierText)
 end
 
----"X/Y" numeric growth progress (nil for terminal states). Used by the pedestrian HUD.
+---"X/Y" growth progress toward maturity (nil for terminal states). Used by menu card + HUD.
 -- @param table fruitType
 -- @param integer growthState
 -- @return string numbers, or nil
@@ -1397,13 +1397,15 @@ function RealisticCropRotationManager.getGrowthStageNumbers(fruitType, growthSta
         return nil
     end
 
-    local total = tonumber(fruitType.maxHarvestingGrowthState) or 0
-    if total <= 0 then
-        total = tonumber(fruitType.numGrowthStates) or 0
+    -- Denominator = maturity (end of growing tier), so the gauge reads N/N once fully grown.
+    local maturity = tonumber(fruitType.minHarvestingGrowthState) or 0
+    if maturity <= 0 then return nil end
+    local minPrep = tonumber(fruitType.minPreparingGrowthState) or -1
+    if minPrep >= 1 and minPrep < maturity then
+        maturity = minPrep
     end
-    if total <= 0 or growthState > total then return nil end
 
-    return string.format("%d/%d", growthState, total)
+    return string.format("%d/%d", math.min(growthState, maturity), maturity)
 end
 
 ---Per-field card info: growth stage + the mirrored base-game weed line.
