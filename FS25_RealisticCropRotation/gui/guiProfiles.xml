@@ -427,17 +427,17 @@
         <imageColor value="0.95 0.85 0.05 1.0"/>
     </Profile>
 
-    <!-- Advice text — left-aligned, vertically centered -->
+    <!-- Advice text — left-aligned, vertically centered (3 lines: family + disease notes) -->
     <Profile name="frAdviceText" extends="fs25_textDefault" with="anchorMiddleLeft">
         <position value="24px 0px"/>
-        <size value="1190px 42px"/>
-        <textSize value="16px"/>
+        <size value="1190px 60px"/>
+        <textSize value="15px"/>
         <textBold value="false"/>
         <textUpperCase value="false"/>
         <textColor value="$preset_fs25_colorMainLight"/>
         <textAlignment value="left"/>
         <textVerticalAlignment value="middle"/>
-        <textMaxNumLines value="2"/>
+        <textMaxNumLines value="3"/>
     </Profile>
 
     <!-- ============================================================ -->

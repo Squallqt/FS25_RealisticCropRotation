@@ -82,12 +82,14 @@
         <e k="rcr_soil_not_sampled"     v="Đất chưa lấy mẫu" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="Sau Ngũ cốc: chờ ít nhất 2 năm trước khi trồng Ngũ cốc lần nữa; xen một Cây họ đậu sẽ trả lại đạm." />
-        <e k="rcr_advice_afterLegume"    v="Sau Cây họ đậu: Ngũ cốc tận dụng tốt lượng đạm được trả lại; chờ ít nhất 3 năm trước khi gieo lại Cây họ đậu." />
-        <e k="rcr_advice_afterOilseed"   v="Sau Cây lấy dầu: chờ ít nhất 3 năm trước khi trồng Cây lấy dầu lần nữa; Ngũ cốc phù hợp xen giữa." />
-        <e k="rcr_advice_afterRoot"      v="Sau Cây lấy củ: chờ ít nhất 4 năm trước khi trồng Cây lấy củ lần nữa; Ngũ cốc phù hợp xen giữa." />
-        <e k="rcr_advice_afterVegetable" v="Sau Rau: chờ ít nhất 3 năm trước khi lặp lại; Ngũ cốc phù hợp xen giữa." />
-        <e k="rcr_advice_afterForage"    v="Sau Cây thức ăn: Ngũ cốc phù hợp, cấu trúc đất tốt và có tồn dư." />
+        <e k="rcr_advice_afterCereal" v="Sau cây ngũ cốc, gieo cây họ đậu để hoàn trả đạm hoặc cây cắt vụ chống bệnh thối gốc, và giữ khoảng cách hai năm giữa các vụ ngũ cốc." />
+        <e k="rcr_advice_afterLegume" v="Sau cây họ đậu, ngũ cốc tận dụng tốt nhất lượng đạm để lại, và cây họ đậu tiếp theo nên chờ ba năm." />
+        <e k="rcr_advice_afterOilseed" v="Sau cây lấy dầu, để ba năm trước khi bất kỳ cây lấy dầu nào quay lại, với ngũ cốc rồi cây họ đậu là trình tự lý tưởng." />
+        <e k="rcr_advice_afterRoot" v="Sau cây lấy củ, chờ bốn năm trước khi cây lấy củ quay lại, tiếp theo là ngũ cốc để tái tạo cấu trúc đất sau thu hoạch muộn." />
+        <e k="rcr_advice_afterVegetable" v="Sau rau, chờ ba năm trước khi lặp lại, với ngũ cốc làm khoảng nghỉ sạch." />
+        <e k="rcr_advice_afterForage" v="Sau đồng cỏ tạm thời, ngũ cốc tận dụng độ phì và cấu trúc tích lũy dưới lớp cỏ." />
+        <e k="rcr_advice_disease_sclerotinia" v="Cây này là ký chủ của bệnh thối hạch, vì vậy hãy giữ ít nhất ba năm cách cải dầu, hướng dương, đậu tương, đậu Hà Lan và đậu." />
+        <e k="rcr_advice_disease_bcn" v="Cây này là ký chủ của tuyến trùng bào nang củ cải đường, vì vậy hãy giữ củ cải đường và cây họ cải tách biệt rõ." />
         <e k="rcr_advice_no_current_crop" v="Không có cây trồng chính hiện tại: tư vấn sẽ có khi phát hiện cây trồng." />
 
         <!-- Field card — required actions / growth -->

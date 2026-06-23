@@ -82,12 +82,14 @@
         <e k="rcr_soil_not_sampled"     v="Jord ikke analysert" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="Etter Korn: vent minst 2 år før Korn igjen; en Belgvekst imellom tilfører nitrogen." />
-        <e k="rcr_advice_afterLegume"    v="Etter Belgvekst: Korn utnytter det tilførte nitrogenet godt; vent minst 3 år før Belgvekst igjen." />
-        <e k="rcr_advice_afterOilseed"   v="Etter Oljevekst: vent minst 3 år før Oljevekst igjen; Korn passer godt imellom." />
-        <e k="rcr_advice_afterRoot"      v="Etter Rotvekst: vent minst 4 år før Rotvekst igjen; Korn passer godt imellom." />
-        <e k="rcr_advice_afterVegetable" v="Etter Grønnsak: vent minst 3 år før gjentakelse; Korn passer godt imellom." />
-        <e k="rcr_advice_afterForage"    v="Etter Fôr: Korn passer godt, med struktur og tilgjengelige rester." />
+        <e k="rcr_advice_afterCereal" v="Etter et korn sår du en belgvekst for å tilføre nitrogen eller en bruddkultur mot fotsyke, og hold to år mellom kornslag." />
+        <e k="rcr_advice_afterLegume" v="Etter en belgvekst utnytter et korn det etterlatte nitrogenet best, og en ny belgvekst bør vente tre år." />
+        <e k="rcr_advice_afterOilseed" v="Etter en oljevekst lar du det gå tre år før en oljevekst kommer tilbake, med et korn og deretter en belgvekst som ideell rekkefølge." />
+        <e k="rcr_advice_afterRoot" v="Etter en rotvekst venter du fire år før rotvekster kommer tilbake, og følger opp med et korn for å bygge opp strukturen etter den sene opptakingen." />
+        <e k="rcr_advice_afterVegetable" v="Etter en grønnsak venter du tre år før du gjentar den, med et korn som rent avbrudd." />
+        <e k="rcr_advice_afterForage" v="Etter en eng utnytter et korn fruktbarheten og strukturen som er bygd opp under grasdekket." />
+        <e k="rcr_advice_disease_sclerotinia" v="Denne veksten er vert for storknollet råtesopp, så hold minst tre år fra raps, solsikke, soyabønne, ert og bønne." />
+        <e k="rcr_advice_disease_bcn" v="Denne veksten er vert for betecystenematoden, så hold bete og korsblomstrede godt fra hverandre." />
         <e k="rcr_advice_no_current_crop" v="Ingen aktuell hovedvekst: råd tilgjengelig når en vekst oppdages." />
 
         <!-- Field card — required actions / growth -->

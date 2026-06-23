@@ -54,6 +54,9 @@ RealisticCropRotationFrame.ADVICE_KEY = {
     FORAGE    = "rcr_advice_afterForage",
 }
 
+-- Disease notes appended to the family advice, in a stable order, for crops that host them.
+RealisticCropRotationFrame.ADVICE_DISEASE_ORDER = { "SCLEROTINIA", "BCN" }
+
 -- Family badge RGBA — Lua-only (XML constraint does not apply)
 RealisticCropRotationFrame.FAMILY_RGBA = {
     CEREAL    = {0.761, 0.365, 0.000, 1.0},  -- amber
@@ -90,6 +93,8 @@ RealisticCropRotationFrame.SCORE_LEGUME_CEREAL_BONUS = 8
 RealisticCropRotationFrame.SCORE_DIVERSITY_BONUS_MAX = 25
 RealisticCropRotationFrame.SCORE_RESIDUE_BONUS = 10  -- N-restoring crop/cover present
 RealisticCropRotationFrame.SCORE_NO_RESIDUE_CAP = 79 -- no N returned: "excellent" stays locked
+RealisticCropRotationFrame.SCORE_MONOCULTURE_CAP = 30 -- single-family plan: not a rotation, stays "poor"
+RealisticCropRotationFrame.SCORE_DISEASE_PENALTY_PER_YEAR = 10 -- shared-pathogen spacing, cross-family
 
 -- Max pixel widths (must match profile sizes)
 -- N_BAR_MAX_WIDTH: keep in sync with guiProfiles.xml frNitrogenTrack size (1192px)
@@ -642,6 +647,16 @@ function RealisticCropRotationFrame:getCropFamily(cropName)
     local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
     if config == nil or config.families == nil then return "UNKNOWN" end
     return config.families[string.upper(cropName)] or "UNKNOWN"
+end
+
+---Returns the set of shared-pathogen groups a crop hosts (from cropConfig.xml).
+-- @param string cropName
+-- @return table set group->true (empty when none)
+function RealisticCropRotationFrame:getCropDiseases(cropName)
+    if cropName == nil or cropName == "" then return {} end
+    local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
+    if config == nil or config.diseases == nil then return {} end
+    return config.diseases[string.upper(cropName)] or {}
 end
 
 ---Returns the fillType for a crop (title/icon source); nil when not harvestable.
@@ -1570,7 +1585,7 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
 
     self:updateNitrogenGauge(farmlandId)
     self:updateSoilPHGauge(farmlandId)
-    self:updateAdvice(currentFamily)
+    self:updateAdvice(currentFamily, currentCropName)
     self:updateFieldCard(farmlandId)
 end
 
@@ -1834,14 +1849,25 @@ end
 
 -- Agronomic advice
 
----Sets the advice line from the current crop's family.
+---Sets the advice from the current crop's family, plus a note per shared-pathogen group it hosts.
 -- @param string currentFamily
-function RealisticCropRotationFrame:updateAdvice(currentFamily)
+-- @param string currentCropName
+function RealisticCropRotationFrame:updateAdvice(currentFamily, currentCropName)
     if self.adviceText == nil then return end
     local key = RealisticCropRotationFrame.ADVICE_KEY[currentFamily]
-    self.adviceText:setText(
-        key ~= nil and self.i18n:getText(key)
-                   or self.i18n:getText("rcr_advice_no_current_crop"))
+    if key == nil then
+        self.adviceText:setText(self.i18n:getText("rcr_advice_no_current_crop"))
+        return
+    end
+
+    local text = self.i18n:getText(key)
+    local diseases = self:getCropDiseases(currentCropName)
+    for _, group in ipairs(RealisticCropRotationFrame.ADVICE_DISEASE_ORDER) do
+        if diseases[group] then
+            text = text .. " " .. self.i18n:getText("rcr_advice_disease_" .. string.lower(group))
+        end
+    end
+    self.adviceText:setText(text)
 end
 
 -- PLANNING PANEL (tab 2)
@@ -2621,12 +2647,14 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
     -- Ordered ring of scoring families (fallow excluded: it is a neutral break, not a crop).
     local ring      = {}
     local ringCover = {}
+    local ringDis   = {}
     for i = 1, 4 do
         local crop = plan[i] or ""
         if crop ~= "" then
             local fam = self:getCropFamily(crop)
             if fam ~= "UNKNOWN" and fam ~= "FALLOW" then
                 ring[#ring + 1] = fam
+                ringDis[#ring]  = self:getCropDiseases(crop)
                 local coverCrop = coverPlan ~= nil and coverPlan[i] or ""
                 ringCover[#ring] = coverCrop ~= nil and coverCrop ~= ""
             end
@@ -2635,6 +2663,12 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
 
     local n = #ring
     if n < 2 then return 0 end
+
+    -- Distinct families in the rotation.
+    local seen = {}
+    for _, fam in ipairs(ring) do seen[fam] = true end
+    local uniqueCount = 0
+    for _ in pairs(seen) do uniqueCount = uniqueCount + 1 end
 
     -- Build the score upward: a bare rotation is the floor, good agronomy earns points.
     local score = (n >= 3) and RealisticCropRotationFrame.SCORE_BASE_FULL
@@ -2660,6 +2694,33 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
         end
     end
 
+    -- Cross-family disease pressure: crops of DIFFERENT families hosting the same pathogen
+    -- (e.g. sclerotinia in canola/sunflower/soybean) still need spacing. Worst shared-group
+    -- penalty per pair (same-family pairs are already handled above).
+    local diseaseIntervals = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig
+        and RealisticCropRotation.cropConfig.diseaseIntervals or {}
+    for a = 1, n - 1 do
+        for b = a + 1, n do
+            if ring[a] ~= ring[b] then
+                local worst = 0
+                for group in pairs(ringDis[a] or {}) do
+                    if (ringDis[b] or {})[group] then
+                        local minInterval = diseaseIntervals[group]
+                        if minInterval ~= nil then
+                            local forward  = b - a
+                            local interval = math.min(forward, n - forward)
+                            if interval < minInterval then
+                                local pen = (minInterval - interval) * RealisticCropRotationFrame.SCORE_DISEASE_PENALTY_PER_YEAR
+                                if pen > worst then worst = pen end
+                            end
+                        end
+                    end
+                end
+                score = score - worst
+            end
+        end
+    end
+
     if n >= 3 then
         -- Legume directly followed by a cereal (cyclic): the returned nitrogen is put to use.
         for k = 1, n do
@@ -2670,10 +2731,6 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
         end
 
         -- Diversity bonus: share of distinct families among the rotation crops.
-        local seen = {}
-        for _, fam in ipairs(ring) do seen[fam] = true end
-        local uniqueCount = 0
-        for _ in pairs(seen) do uniqueCount = uniqueCount + 1 end
         score = score + (uniqueCount / n) * RealisticCropRotationFrame.SCORE_DIVERSITY_BONUS_MAX
     end
 
@@ -2682,6 +2739,12 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
         score = score + RealisticCropRotationFrame.SCORE_RESIDUE_BONUS
     else
         score = math.min(score, RealisticCropRotationFrame.SCORE_NO_RESIDUE_CAP)
+    end
+
+    -- A single-family plan is a monoculture, not a rotation: it stays "poor" even when its family
+    -- carries no return-interval penalty (e.g. permanent grass/forage scoring "good" otherwise).
+    if uniqueCount == 1 then
+        score = math.min(score, RealisticCropRotationFrame.SCORE_MONOCULTURE_CAP)
     end
 
     return math.max(0, math.min(100, math.floor(score + 0.5)))

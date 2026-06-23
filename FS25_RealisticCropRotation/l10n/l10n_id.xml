@@ -82,12 +82,14 @@
         <e k="rcr_soil_not_sampled"     v="Tanah belum diambil sampel" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="Setelah Serealia: tunggu minimal 2 tahun sebelum Serealia lagi; Kacang-kacangan di antaranya mengembalikan nitrogen." />
-        <e k="rcr_advice_afterLegume"    v="Setelah Kacang-kacangan: Serealia memanfaatkan nitrogen yang dikembalikan dengan baik; tunggu minimal 3 tahun sebelum menanam Kacang-kacangan lagi." />
-        <e k="rcr_advice_afterOilseed"   v="Setelah Biji minyak: tunggu minimal 3 tahun sebelum Biji minyak lagi; Serealia cocok di antaranya." />
-        <e k="rcr_advice_afterRoot"      v="Setelah Umbi-umbian: tunggu minimal 4 tahun sebelum Umbi-umbian lagi; Serealia cocok di antaranya." />
-        <e k="rcr_advice_afterVegetable" v="Setelah Sayuran: tunggu minimal 3 tahun sebelum mengulang; Serealia cocok di antaranya." />
-        <e k="rcr_advice_afterForage"    v="Setelah Hijauan: Serealia cocok, dengan struktur dan residu tersedia." />
+        <e k="rcr_advice_afterCereal" v="Setelah serealia, tanam legum untuk mengembalikan nitrogen atau tanaman jeda melawan penyakit pangkal batang, dan beri jarak dua tahun antar serealia." />
+        <e k="rcr_advice_afterLegume" v="Setelah legum, serealia paling baik memanfaatkan nitrogen yang ditinggalkan, dan legum berikutnya harus menunggu tiga tahun." />
+        <e k="rcr_advice_afterOilseed" v="Setelah tanaman minyak, beri jarak tiga tahun sebelum tanaman minyak mana pun kembali, dengan serealia lalu legum sebagai urutan ideal." />
+        <e k="rcr_advice_afterRoot" v="Setelah tanaman umbi, tunggu empat tahun sebelum umbi kembali, lalu serealia untuk membangun kembali struktur setelah pemanenan akhir." />
+        <e k="rcr_advice_afterVegetable" v="Setelah sayuran, tunggu tiga tahun sebelum mengulanginya, dengan serealia sebagai jeda yang bersih." />
+        <e k="rcr_advice_afterForage" v="Setelah padang rumput sementara, serealia memanfaatkan kesuburan dan struktur yang terbentuk di bawah rumput." />
+        <e k="rcr_advice_disease_sclerotinia" v="Tanaman ini menjadi inang sklerotinia, jadi beri jarak setidaknya tiga tahun dari kanola, bunga matahari, kedelai, kacang polong, dan buncis." />
+        <e k="rcr_advice_disease_bcn" v="Tanaman ini menjadi inang nematoda sista bit, jadi jaga agar bit dan brasika tetap berjauhan." />
         <e k="rcr_advice_no_current_crop" v="Tidak ada tanaman utama saat ini: saran tersedia saat tanaman terdeteksi." />
 
         <!-- Field card — required actions / growth -->

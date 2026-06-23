@@ -30,6 +30,14 @@ Nitrogen residue values in kg N/ha:
 - Pea: 40, then 10
 - Green bean: 20, then 5
 
+ROTATION QUALITY
+
+Each plan is scored on real agronomy: family return intervals, diseases shared between families such as sclerotinia and the beet cyst nematode, the nitrogen a legume passes to the following cereal, and overall crop diversity. A monoculture scores poorly while a varied rotation built around a legume earns the top grade. The planning tab shows the grade and a tailored recommendation for every field.
+
+DISEASE MANAGEMENT
+
+Soilborne diseases build up when host crops come back too soon. The mod follows this pressure across the whole rotation and lets you treat affected fields with the sprayer, so a demanding rotation stays manageable.
+
 COMPATIBILITY
 
 With Precision Farming, the residue is added directly to the nitrogen map.
@@ -62,6 +70,14 @@ Stickstoffrückstand in kg N/ha:
 - Erbse: 40, danach 10
 - Grüne Bohne: 20, danach 5
 
+QUALITÄT DER FRUCHTFOLGE
+
+Jeder Plan wird nach echter Agronomie bewertet: Anbaupausen je Pflanzenfamilie, familienübergreifende Krankheiten wie Sklerotinia und das Rübenzystennematode, der Stickstoff, den eine Leguminose an das folgende Getreide weitergibt, sowie die gesamte Kulturvielfalt. Eine Monokultur schneidet schlecht ab, während eine vielfältige Fruchtfolge rund um eine Leguminose die Bestnote erhält. Der Planungsreiter zeigt die Note und eine passende Empfehlung für jedes Feld.
+
+KRANKHEITSMANAGEMENT
+
+Bodenbürtige Krankheiten bauen sich auf, wenn Wirtskulturen zu früh wiederkehren. Der Mod verfolgt diesen Druck über die gesamte Fruchtfolge und lässt dich betroffene Felder mit der Spritze behandeln, sodass eine anspruchsvolle Fruchtfolge beherrschbar bleibt.
+
 KOMPATIBILITÄT
 
 Mit Precision Farming wird der Rückstand direkt der Stickstoffkarte hinzugefügt.
@@ -93,6 +109,14 @@ Valeurs du reliquat en kg N/ha :
 - Soja : 40 puis 10
 - Pois : 40 puis 10
 - Haricot vert : 20 puis 5
+
+QUALITÉ DE ROTATION
+
+Chaque plan reçoit une note fondée sur l'agronomie réelle : intervalles de retour par famille, maladies partagées entre familles comme le sclérotinia et le nématode à kystes de la betterave, azote qu'une légumineuse transmet à la céréale suivante, et diversité globale des cultures. Une monoculture est mal notée tandis qu'une rotation variée bâtie autour d'une légumineuse obtient la meilleure note. L'onglet de planification affiche la note et une recommandation adaptée pour chaque parcelle.
+
+GESTION DES MALADIES
+
+Les maladies du sol s'accumulent quand les cultures hôtes reviennent trop tôt. Le mod suit cette pression sur toute la rotation et vous laisse traiter les parcelles touchées au pulvérisateur, pour qu'une rotation exigeante reste maîtrisable.
 
 COMPATIBILITÉ
 

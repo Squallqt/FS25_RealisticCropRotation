@@ -82,12 +82,14 @@
         <e k="rcr_soil_not_sampled"     v="Solo não amostrado" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="Após Cereal: aguarde pelo menos 2 anos antes de outro Cereal; uma Leguminosa pelo meio restitui azoto." />
-        <e k="rcr_advice_afterLegume"    v="Após Leguminosa: um Cereal aproveita bem o azoto restituído; aguarde pelo menos 3 anos antes de voltar a semear uma Leguminosa." />
-        <e k="rcr_advice_afterOilseed"   v="Após Oleaginosa: aguarde pelo menos 3 anos antes de outra Oleaginosa; um Cereal encaixa bem pelo meio." />
-        <e k="rcr_advice_afterRoot"      v="Após Raízes: aguarde pelo menos 4 anos antes de novas Raízes; um Cereal encaixa bem pelo meio." />
-        <e k="rcr_advice_afterVegetable" v="Após Hortícola: aguarde pelo menos 3 anos antes de repetir; um Cereal encaixa bem pelo meio." />
-        <e k="rcr_advice_afterForage"    v="Após Forragem: um Cereal encaixa bem, com estrutura e resíduos disponíveis." />
+        <e k="rcr_advice_afterCereal" v="Depois de um cereal, semeie uma leguminosa para repor azoto ou uma cultura de corte contra as doenças do pé, e deixe dois anos entre cereais." />
+        <e k="rcr_advice_afterLegume" v="Depois de uma leguminosa, um cereal aproveita melhor o azoto deixado, e outra leguminosa deve esperar três anos." />
+        <e k="rcr_advice_afterOilseed" v="Depois de uma oleaginosa, deixe três anos antes de qualquer regresso de oleaginosa, com um cereal e depois uma leguminosa como sucessão ideal." />
+        <e k="rcr_advice_afterRoot" v="Depois de uma cultura de raiz, espere quatro anos antes de as raízes voltarem, seguindo com um cereal para refazer a estrutura após o arranque tardio." />
+        <e k="rcr_advice_afterVegetable" v="Depois de um produto hortícola, espere três anos antes de o repetir, com um cereal como corte limpo." />
+        <e k="rcr_advice_afterForage" v="Depois de uma pastagem temporária, um cereal valoriza a fertilidade e a estrutura acumuladas sob o relvado." />
+        <e k="rcr_advice_disease_sclerotinia" v="Esta cultura é hospedeira da esclerotínia, por isso mantenha pelo menos três anos da colza, girassol, soja, ervilha e feijão." />
+        <e k="rcr_advice_disease_bcn" v="Esta cultura é hospedeira do nemátodo de quisto da beterraba, por isso mantenha beterrabas e brássicas bem afastadas." />
         <e k="rcr_advice_no_current_crop" v="Sem cultura principal atual: conselho disponível quando uma cultura for detetada." />
 
         <!-- Field card — required actions / growth -->

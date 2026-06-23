@@ -82,12 +82,14 @@
         <e k="rcr_soil_not_sampled"     v="Sol non analysé" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="Après Céréale : attendez au moins 2 ans avant une nouvelle Céréale ; une Légumineuse entre les deux restitue de l'azote." />
-        <e k="rcr_advice_afterLegume"    v="Après Légumineuse : une Céréale valorise bien l'azote restitué ; attendez au moins 3 ans avant de ressemer une Légumineuse." />
-        <e k="rcr_advice_afterOilseed"   v="Après Oléagineux : attendez au moins 3 ans avant un nouvel Oléagineux ; une Céréale convient entretemps." />
-        <e k="rcr_advice_afterRoot"      v="Après Légumes-racines : attendez au moins 4 ans avant de nouveaux Légumes-racines ; une Céréale convient entretemps." />
-        <e k="rcr_advice_afterVegetable" v="Après Légumes : attendez au moins 3 ans avant répétition ; une Céréale convient entretemps." />
-        <e k="rcr_advice_afterForage"    v="Après Fourrage : une Céréale convient bien, sol structuré et reliquats disponibles." />
+        <e k="rcr_advice_afterCereal"    v="Après une céréale, semez une légumineuse pour restituer l'azote ou une culture de coupure contre le piétin, et gardez deux ans entre céréales." />
+        <e k="rcr_advice_afterLegume"    v="Après une légumineuse, une céréale valorise au mieux l'azote laissé, et une nouvelle légumineuse doit attendre trois ans." />
+        <e k="rcr_advice_afterOilseed"   v="Après un oléagineux, laissez trois ans avant tout retour d'oléagineux, avec une céréale puis une légumineuse comme succession idéale." />
+        <e k="rcr_advice_afterRoot"      v="Après une culture sarclée, attendez quatre ans avant d'y revenir, puis une céréale pour restructurer le sol après l'arrachage tardif." />
+        <e k="rcr_advice_afterVegetable" v="Après un légume, attendez trois ans avant de le répéter, avec une céréale comme coupure nette." />
+        <e k="rcr_advice_afterForage"    v="Après une prairie temporaire, une céréale valorise la fertilité et la structure accumulées sous le couvert." />
+        <e k="rcr_advice_disease_sclerotinia" v="Cette culture héberge le sclérotinia, gardez donc au moins trois ans avec le colza, le tournesol, le soja, le pois et le haricot." />
+        <e k="rcr_advice_disease_bcn"         v="Cette culture héberge le nématode à kystes de la betterave, éloignez donc betteraves et brassicacées." />
         <e k="rcr_advice_no_current_crop" v="Aucune culture principale actuelle : conseil disponible quand une culture est détectée." />
 
         <!-- Field card — required actions / growth -->

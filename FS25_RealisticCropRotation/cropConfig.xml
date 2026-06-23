@@ -10,6 +10,9 @@
         n2       (optional) : nitrogen residue bonus (PF states) when this crop is N-2 in history. Default 0.
                               1 PF state = 5 kg N/ha (source: PrecisionFarming.xml amountPerState=5)
         cover    (optional) : true = excluded from rotation history (cover crop). Default false.
+        disease  (optional) : space-separated shared-pathogen group names this crop hosts. Crops of
+                              DIFFERENT families that host the same group still need spacing in the
+                              rotation (defined in <diseaseGroups> below). Default none.
 
     Notes:
         - isCatchCrop=true crops (OILSEEDRADISH, FLOWERINGCATCHCROP) already receive +25 kg N from
@@ -17,6 +20,17 @@
           Set n1=0 (default) for them.
 -->
 <realisticCropRotationCrops>
+
+    <!-- ======================================================== -->
+    <!-- DISEASE GROUPS (cross-family return intervals, years)      -->
+    <!--   SCLEROTINIA: canola/sunflower/mustard/soybean/pea/bean/  -->
+    <!--                potato/carrot all host Sclerotinia.          -->
+    <!--   BCN: beet cyst nematode hosts beets AND brassicas.        -->
+    <!-- ======================================================== -->
+    <diseaseGroups>
+        <diseaseGroup name="SCLEROTINIA" minInterval="3" />
+        <diseaseGroup name="BCN"         minInterval="3" />
+    </diseaseGroups>
 
     <!-- ======================================================== -->
     <!-- CEREALS                                                    -->
@@ -36,11 +50,11 @@
     <crop name="GREENRYE"      family="CEREAL" />
 
     <!-- ======================================================== -->
-    <!-- OILSEEDS                                                   -->
+    <!-- OILSEEDS  (brassicas also host BCN; all host Sclerotinia)  -->
     <!-- ======================================================== -->
-    <crop name="CANOLA"    family="OILSEED" />
-    <crop name="SUNFLOWER" family="OILSEED" />
-    <crop name="MUSTARD"   family="OILSEED" />
+    <crop name="CANOLA"    family="OILSEED" disease="SCLEROTINIA BCN" />
+    <crop name="SUNFLOWER" family="OILSEED" disease="SCLEROTINIA" />
+    <crop name="MUSTARD"   family="OILSEED" disease="SCLEROTINIA BCN" />
     <!-- ======================================================== -->
     <!-- LEGUMES  (n1/n2 in PF states; 1 state = 5 kg N/ha)       -->
     <!-- Values follow real first-year N credits: a terminated alfalfa/vetch stand returns far    -->
@@ -49,26 +63,26 @@
     <!-- Forage legumes (alfalfa, clover) are multi-cut: their residue is released only at the     -->
     <!-- plough-out, never at a forage cut.                                                        -->
     <!-- ======================================================== -->
-    <crop name="SOYBEAN"   family="LEGUME" n1="8"  n2="2"  />
+    <crop name="SOYBEAN"   family="LEGUME" n1="8"  n2="2"  disease="SCLEROTINIA" />
     <crop name="ALFALFA"   family="LEGUME" n1="16" n2="10" />
     <crop name="CLOVER"    family="LEGUME" n1="10" n2="4"  />
-    <crop name="PEA"       family="LEGUME" n1="8"  n2="2"  />
-    <crop name="GREENBEAN" family="LEGUME" n1="4"  n2="1"  />
+    <crop name="PEA"       family="LEGUME" n1="8"  n2="2"  disease="SCLEROTINIA" />
+    <crop name="GREENBEAN" family="LEGUME" n1="4"  n2="1"  disease="SCLEROTINIA" />
     <crop name="VETCHRYE"  family="LEGUME" n1="12" n2="4"  />
 
     <!-- ======================================================== -->
-    <!-- ROOT VEGETABLES                                            -->
+    <!-- ROOT VEGETABLES  (beets host BCN; potato/carrot Sclerotinia) -->
     <!-- ======================================================== -->
-    <crop name="SUGARBEET" family="ROOT" />
-    <crop name="POTATO"    family="ROOT" />
-    <crop name="CARROT"    family="ROOT" />
+    <crop name="SUGARBEET" family="ROOT" disease="BCN" />
+    <crop name="POTATO"    family="ROOT" disease="SCLEROTINIA" />
+    <crop name="CARROT"    family="ROOT" disease="SCLEROTINIA" />
     <crop name="PARSNIP"   family="ROOT" />
-    <crop name="BEETROOT"  family="ROOT" />
+    <crop name="BEETROOT"  family="ROOT" disease="BCN" />
 
     <!-- ======================================================== -->
     <!-- LEAF / BULB VEGETABLES                                     -->
     <!-- ======================================================== -->
-    <crop name="SPINACH" family="VEGETABLE" />
+    <crop name="SPINACH" family="VEGETABLE" disease="BCN" />
     <crop name="ONION"   family="VEGETABLE" />
 
     <!-- ======================================================== -->

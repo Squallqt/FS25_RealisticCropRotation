@@ -82,12 +82,14 @@
         <e k="rcr_soil_not_sampled"     v="Jord ikke analyseret" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="Efter Korn: vent mindst 2 år før Korn igen; en Bælgplante imellem tilfører kvælstof." />
-        <e k="rcr_advice_afterLegume"    v="Efter Bælgplante: Korn udnytter det tilførte kvælstof godt; vent mindst 3 år før Bælgplante igen." />
-        <e k="rcr_advice_afterOilseed"   v="Efter Olieafgrøde: vent mindst 3 år før Olieafgrøde igen; Korn passer godt imellem." />
-        <e k="rcr_advice_afterRoot"      v="Efter Rodfrugt: vent mindst 4 år før Rodfrugt igen; Korn passer godt imellem." />
-        <e k="rcr_advice_afterVegetable" v="Efter Grøntsag: vent mindst 3 år før gentagelse; Korn passer godt imellem." />
-        <e k="rcr_advice_afterForage"    v="Efter Foder: Korn passer godt, med struktur og tilgængelige rester." />
+        <e k="rcr_advice_afterCereal" v="Efter en kornafgrøde sås en bælgplante for at tilføre kvælstof eller en afbrudsafgrøde mod fodsyge, og hold to år mellem kornafgrøder." />
+        <e k="rcr_advice_afterLegume" v="Efter en bælgplante udnytter en kornafgrøde det efterladte kvælstof bedst, og en ny bælgplante bør vente tre år." />
+        <e k="rcr_advice_afterOilseed" v="Efter en olieafgrøde hold tre år før enhver olieafgrøde vender tilbage, med en kornafgrøde og derefter en bælgplante som ideel rækkefølge." />
+        <e k="rcr_advice_afterRoot" v="Efter en rodafgrøde vent fire år før rodafgrøder vender tilbage, og følg op med en kornafgrøde for at genopbygge strukturen efter den sene optagning." />
+        <e k="rcr_advice_afterVegetable" v="Efter en grøntsag vent tre år før den gentages, med en kornafgrøde som ren afbrydelse." />
+        <e k="rcr_advice_afterForage" v="Efter en kløvergræsmark udnytter en kornafgrøde den frugtbarhed og struktur, der er opbygget under græsset." />
+        <e k="rcr_advice_disease_sclerotinia" v="Denne afgrøde er vært for knoldbægersvamp, så hold mindst tre år fra raps, solsikke, sojabønne, ært og bønne." />
+        <e k="rcr_advice_disease_bcn" v="Denne afgrøde er vært for roecystenematoden, så hold roer og korsblomstrede godt adskilt." />
         <e k="rcr_advice_no_current_crop" v="Ingen aktuel hovedafgrøde: råd tilgængeligt, når en afgrøde registreres." />
 
         <!-- Field card — required actions / growth -->

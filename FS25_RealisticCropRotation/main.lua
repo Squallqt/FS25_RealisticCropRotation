@@ -42,7 +42,7 @@ local function loadCropConfig()
         return nil
     end
 
-    local config = { families = {}, nitrogen = {}, coverCrops = {} }
+    local config = { families = {}, nitrogen = {}, coverCrops = {}, diseases = {}, diseaseIntervals = {} }
     local i = 0
     while true do
         local key = string.format("realisticCropRotationCrops.crop(%d)", i)
@@ -53,6 +53,7 @@ local function loadCropConfig()
         local n1      = getXMLInt(xmlFile,    key .. "#n1") or 0
         local n2      = getXMLInt(xmlFile,    key .. "#n2") or 0
         local cover   = getXMLBool(xmlFile,   key .. "#cover") or false
+        local disease = getXMLString(xmlFile, key .. "#disease")
 
         if name ~= nil and name ~= "" then
             name = string.upper(name)
@@ -63,8 +64,26 @@ local function loadCropConfig()
                 config.nitrogen[name] = { n1 = n1, n2 = n2 }
             end
             if cover then config.coverCrops[name] = true end
+            if disease ~= nil and disease ~= "" then
+                local set = {}
+                for g in string.gmatch(disease, "%S+") do set[string.upper(g)] = true end
+                config.diseases[name] = set
+            end
         end
         i = i + 1
+    end
+
+    -- Shared-pathogen groups: minimum return interval (years) between any two host crops.
+    local j = 0
+    while true do
+        local gkey = string.format("realisticCropRotationCrops.diseaseGroups.diseaseGroup(%d)", j)
+        if not hasXMLProperty(xmlFile, gkey) then break end
+        local gname = getXMLString(xmlFile, gkey .. "#name")
+        local gint  = getXMLInt(xmlFile, gkey .. "#minInterval")
+        if gname ~= nil and gname ~= "" and gint ~= nil then
+            config.diseaseIntervals[string.upper(gname)] = gint
+        end
+        j = j + 1
     end
 
     delete(xmlFile)

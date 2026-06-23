@@ -82,12 +82,14 @@
         <e k="rcr_soil_not_sampled"     v="土壌未採取" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="穀物の後: 次の穀物まで少なくとも2年空けてください; 間にマメ科を入れると窒素が補給されます。" />
-        <e k="rcr_advice_afterLegume"    v="マメ科の後: 穀物は補給された窒素をよく利用します; 次のマメ科まで少なくとも3年空けてください。" />
-        <e k="rcr_advice_afterOilseed"   v="油糧作物の後: 次の油糧作物まで少なくとも3年空けてください; 間に穀物が適します。" />
-        <e k="rcr_advice_afterRoot"      v="根菜の後: 次の根菜まで少なくとも4年空けてください; 間に穀物が適します。" />
-        <e k="rcr_advice_afterVegetable" v="野菜の後: 繰り返しまで少なくとも3年空けてください; 間に穀物が適します。" />
-        <e k="rcr_advice_afterForage"    v="飼料作物の後: 穀物が適し, 土壌構造と残留が利用できます。" />
+        <e k="rcr_advice_afterCereal" v="穀物の後は、窒素を戻すためにマメ科作物を、または立枯病対策に間作作物を播種し、穀物の間は2年あけてください。" />
+        <e k="rcr_advice_afterLegume" v="マメ科作物の後は、穀物が残された窒素を最もよく利用します。次のマメ科作物は3年あけてください。" />
+        <e k="rcr_advice_afterOilseed" v="油糧作物の後は、いかなる油糧作物も戻る前に3年あけ、穀物の次にマメ科作物が理想的な順序です。" />
+        <e k="rcr_advice_afterRoot" v="根菜の後は、根菜が戻るまで4年あけ、遅い収穫の後に土壌構造を回復させるため穀物を続けてください。" />
+        <e k="rcr_advice_afterVegetable" v="野菜の後は、繰り返す前に3年あけ、穀物をきれいな区切りとしてください。" />
+        <e k="rcr_advice_afterForage" v="短期草地の後は、穀物が芝の下に蓄えられた地力と構造を活用します。" />
+        <e k="rcr_advice_disease_sclerotinia" v="この作物は菌核病の宿主です。ナタネ、ヒマワリ、ダイズ、エンドウ、インゲンから少なくとも3年あけてください。" />
+        <e k="rcr_advice_disease_bcn" v="この作物はテンサイシストセンチュウの宿主です。テンサイとアブラナ科作物を十分に離してください。" />
         <e k="rcr_advice_no_current_crop" v="現在の主要作物なし: 作物が検出されるとアドバイスが表示されます。" />
 
         <!-- Field card — required actions / growth -->

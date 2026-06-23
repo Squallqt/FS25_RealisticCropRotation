@@ -82,12 +82,14 @@
         <e k="rcr_soil_not_sampled"     v="Boden nicht beprobt" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="Nach Getreide: mindestens 2 Jahre bis zum nächsten Getreide warten; eine Hülsenfrucht dazwischen liefert Stickstoff." />
-        <e k="rcr_advice_afterLegume"    v="Nach Hülsenfrucht: Getreide nutzt den zurückgeführten Stickstoff gut; mindestens 3 Jahre bis zur nächsten Hülsenfrucht warten." />
-        <e k="rcr_advice_afterOilseed"   v="Nach Ölsaat: mindestens 3 Jahre bis zur nächsten Ölsaat warten; Getreide passt dazwischen gut." />
-        <e k="rcr_advice_afterRoot"      v="Nach Wurzelgemüse: mindestens 4 Jahre bis zum nächsten Wurzelgemüse warten; Getreide passt dazwischen gut." />
-        <e k="rcr_advice_afterVegetable" v="Nach Gemüse: mindestens 3 Jahre bis zur Wiederholung warten; Getreide passt dazwischen gut." />
-        <e k="rcr_advice_afterForage"    v="Nach Futter: Getreide passt gut, mit Struktur und verfügbaren Rückständen." />
+        <e k="rcr_advice_afterCereal"    v="Nach Getreide eine Hülsenfrucht zur Stickstoffrückführung oder eine Blattfrucht gegen Fußkrankheiten säen, und zwei Jahre zwischen zwei Getreidekulturen lassen." />
+        <e k="rcr_advice_afterLegume"    v="Nach einer Hülsenfrucht nutzt Getreide den hinterlassenen Stickstoff am besten, und eine neue Hülsenfrucht sollte drei Jahre warten." />
+        <e k="rcr_advice_afterOilseed"   v="Nach einer Ölsaat drei Jahre bis zur nächsten Ölsaat lassen, mit Getreide und danach einer Hülsenfrucht als idealer Folge." />
+        <e k="rcr_advice_afterRoot"      v="Nach einer Hackfrucht vier Jahre bis zur Wiederkehr lassen, dann Getreide, um die Struktur nach der späten Ernte wieder aufzubauen." />
+        <e k="rcr_advice_afterVegetable" v="Nach Gemüse drei Jahre bis zur Wiederholung warten, mit Getreide als saubere Anbaupause." />
+        <e k="rcr_advice_afterForage"    v="Nach einer Grasphase verwertet Getreide die unter der Grasnarbe aufgebaute Fruchtbarkeit und Struktur." />
+        <e k="rcr_advice_disease_sclerotinia" v="Diese Kultur ist ein Wirt der Sklerotinia, halte daher mindestens drei Jahre Abstand zu Raps, Sonnenblume, Sojabohne, Erbse und Bohne." />
+        <e k="rcr_advice_disease_bcn"         v="Diese Kultur ist ein Wirt des Rübenzystennematoden, halte daher Rüben und Kreuzblütler deutlich auseinander." />
         <e k="rcr_advice_no_current_crop" v="Keine aktuelle Hauptkultur: Empfehlung verfügbar, sobald eine Kultur erkannt wird." />
 
         <!-- Field card — required actions / growth -->

@@ -82,12 +82,14 @@
         <e k="rcr_soil_not_sampled"     v="Maata ei näytteistetty" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="Viljan jälkeen: odota vähintään 2 vuotta ennen uutta Viljaa; Palkokasvi välissä palauttaa typpeä." />
-        <e k="rcr_advice_afterLegume"    v="Palkokasvin jälkeen: Vilja hyödyntää palautetun typen hyvin; odota vähintään 3 vuotta ennen Palkokasvin uusintaa." />
-        <e k="rcr_advice_afterOilseed"   v="Öljykasvin jälkeen: odota vähintään 3 vuotta ennen uutta Öljykasvia; Vilja sopii hyvin väliin." />
-        <e k="rcr_advice_afterRoot"      v="Juurikasvin jälkeen: odota vähintään 4 vuotta ennen uutta Juurikasvia; Vilja sopii hyvin väliin." />
-        <e k="rcr_advice_afterVegetable" v="Vihanneksen jälkeen: odota vähintään 3 vuotta ennen toistoa; Vilja sopii hyvin väliin." />
-        <e k="rcr_advice_afterForage"    v="Rehun jälkeen: Vilja sopii hyvin, rakenne ja jäännökset käytettävissä." />
+        <e k="rcr_advice_afterCereal" v="Viljan jälkeen kylvä palkokasvi typen palauttamiseksi tai katkaisukasvi tyvitauteja vastaan, ja pidä kaksi vuotta viljojen välissä." />
+        <e k="rcr_advice_afterLegume" v="Palkokasvin jälkeen vilja hyödyntää jätetyn typen parhaiten, ja seuraavan palkokasvin tulisi odottaa kolme vuotta." />
+        <e k="rcr_advice_afterOilseed" v="Öljykasvin jälkeen jätä kolme vuotta ennen minkään öljykasvin paluuta, vilja ja sitten palkokasvi ihanteellisena järjestyksenä." />
+        <e k="rcr_advice_afterRoot" v="Juurikasvin jälkeen odota neljä vuotta ennen juurikasvien paluuta, ja jatka viljalla rakenteen palauttamiseksi myöhäisen noston jälkeen." />
+        <e k="rcr_advice_afterVegetable" v="Vihanneksen jälkeen odota kolme vuotta ennen sen toistamista, vilja puhtaana katkona." />
+        <e k="rcr_advice_afterForage" v="Lyhytaikaisen nurmen jälkeen vilja hyödyntää turpeen alle kertyneen viljavuuden ja rakenteen." />
+        <e k="rcr_advice_disease_sclerotinia" v="Tämä kasvi on pahkahomeen isäntä, joten pidä vähintään kolme vuotta väliä rapsiin, auringonkukkaan, soijapapuun, herneeseen ja papuun." />
+        <e k="rcr_advice_disease_bcn" v="Tämä kasvi on juurikkaan ankeroisen isäntä, joten pidä juurikkaat ja ristikukkaiset selvästi erillään." />
         <e k="rcr_advice_no_current_crop" v="Ei nykyistä pääkasvia: neuvo saatavilla, kun kasvi havaitaan." />
 
         <!-- Field card — required actions / growth -->

@@ -82,12 +82,14 @@
         <e k="rcr_soil_not_sampled"     v="Suelo no analizado" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="Después de Cereal: espere al menos 2 años antes de otro Cereal; una Leguminosa intercalada restituye nitrógeno." />
-        <e k="rcr_advice_afterLegume"    v="Después de Leguminosa: un Cereal aprovecha bien el nitrógeno restituido; espere al menos 3 años antes de volver a sembrar una Leguminosa." />
-        <e k="rcr_advice_afterOilseed"   v="Después de Oleaginosa: espere al menos 3 años antes de otra Oleaginosa; un Cereal encaja bien en el medio." />
-        <e k="rcr_advice_afterRoot"      v="Después de Raíces: espere al menos 4 años antes de nuevas Raíces; un Cereal encaja bien en el medio." />
-        <e k="rcr_advice_afterVegetable" v="Después de Hortaliza: espere al menos 3 años antes de repetir; un Cereal encaja bien en el medio." />
-        <e k="rcr_advice_afterForage"    v="Después de Forraje: un Cereal encaja bien, con estructura y residuos disponibles." />
+        <e k="rcr_advice_afterCereal" v="Después de un cereal, siembra una leguminosa para reponer nitrógeno o un cultivo de corte contra las enfermedades del pie, y deja dos años entre cereales." />
+        <e k="rcr_advice_afterLegume" v="Después de una leguminosa, un cereal aprovecha al máximo el nitrógeno que deja, y otra leguminosa debe esperar tres años." />
+        <e k="rcr_advice_afterOilseed" v="Después de una oleaginosa, deja tres años antes de volver a cualquier oleaginosa, con un cereal y luego una leguminosa como sucesión ideal." />
+        <e k="rcr_advice_afterRoot" v="Después de un cultivo de raíz, espera cuatro años antes de que vuelvan las raíces, y sigue con un cereal para rehacer la estructura tras el arranque tardío." />
+        <e k="rcr_advice_afterVegetable" v="Después de una hortaliza, espera tres años antes de repetirla, con un cereal como corte limpio." />
+        <e k="rcr_advice_afterForage" v="Después de una pradera temporal, un cereal aprovecha la fertilidad y la estructura acumuladas bajo la hierba." />
+        <e k="rcr_advice_disease_sclerotinia" v="Este cultivo es huésped de la esclerotinia, así que mantén al menos tres años con la colza, el girasol, la soja, el guisante y la judía." />
+        <e k="rcr_advice_disease_bcn" v="Este cultivo es huésped del nematodo del quiste de la remolacha, así que mantén separadas las remolachas y las crucíferas." />
         <e k="rcr_advice_no_current_crop" v="Sin cultivo principal actual: el consejo estará disponible cuando se detecte un cultivo." />
 
         <!-- Field card — required actions / growth -->

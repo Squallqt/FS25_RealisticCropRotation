@@ -82,12 +82,14 @@
         <e k="rcr_soil_not_sampled"     v="Jord ej provtagen" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="Efter Spannmål: vänta minst 2 år före Spannmål igen; en Baljväxt emellan tillför kväve." />
-        <e k="rcr_advice_afterLegume"    v="Efter Baljväxt: Spannmål utnyttjar det tillförda kvävet väl; vänta minst 3 år före Baljväxt igen." />
-        <e k="rcr_advice_afterOilseed"   v="Efter Oljeväxt: vänta minst 3 år före Oljeväxt igen; Spannmål passar bra emellan." />
-        <e k="rcr_advice_afterRoot"      v="Efter Rotfrukt: vänta minst 4 år före Rotfrukt igen; Spannmål passar bra emellan." />
-        <e k="rcr_advice_afterVegetable" v="Efter Grönsak: vänta minst 3 år före upprepning; Spannmål passar bra emellan." />
-        <e k="rcr_advice_afterForage"    v="Efter Foder: Spannmål passar bra, med struktur och tillgängliga rester." />
+        <e k="rcr_advice_afterCereal" v="Efter en spannmål, så en baljväxt för att återföra kväve eller en avbrottsgröda mot fotsjuka, och håll två år mellan spannmål." />
+        <e k="rcr_advice_afterLegume" v="Efter en baljväxt utnyttjar en spannmål det efterlämnade kvävet bäst, och en ny baljväxt bör vänta tre år." />
+        <e k="rcr_advice_afterOilseed" v="Efter en oljeväxt, låt det gå tre år innan någon oljeväxt återkommer, med en spannmål och sedan en baljväxt som idealisk följd." />
+        <e k="rcr_advice_afterRoot" v="Efter en rotfrukt, vänta fyra år innan rotfrukter återkommer, och följ med en spannmål för att bygga upp strukturen efter den sena upptagningen." />
+        <e k="rcr_advice_afterVegetable" v="Efter en grönsak, vänta tre år innan du upprepar den, med en spannmål som ren avbrott." />
+        <e k="rcr_advice_afterForage" v="Efter en vall utnyttjar en spannmål den bördighet och struktur som byggts upp under grässvålen." />
+        <e k="rcr_advice_disease_sclerotinia" v="Den här grödan är värd för bomullsmögel, så håll minst tre år från raps, solros, sojaböna, ärt och böna." />
+        <e k="rcr_advice_disease_bcn" v="Den här grödan är värd för betcystnematoden, så håll betor och korsblommiga väl åtskilda." />
         <e k="rcr_advice_no_current_crop" v="Ingen aktuell huvudgröda: råd tillgängligt när en gröda upptäcks." />
 
         <!-- Field card — required actions / growth -->

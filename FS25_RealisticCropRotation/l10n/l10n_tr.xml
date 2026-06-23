@@ -82,12 +82,14 @@
         <e k="rcr_soil_not_sampled"     v="Toprak örneklenmedi" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="Tahıldan sonra: yeni Tahıl için en az 2 yıl bekleyin; arada bir Baklagil azot kazandırır." />
-        <e k="rcr_advice_afterLegume"    v="Baklagilden sonra: Tahıl kazandırılan azotu iyi kullanır; yeni Baklagil için en az 3 yıl bekleyin." />
-        <e k="rcr_advice_afterOilseed"   v="Yağlı tohumdan sonra: yeni Yağlı tohum için en az 3 yıl bekleyin; arada Tahıl iyi uyar." />
-        <e k="rcr_advice_afterRoot"      v="Kök sebzeden sonra: yeni Kök sebze için en az 4 yıl bekleyin; arada Tahıl iyi uyar." />
-        <e k="rcr_advice_afterVegetable" v="Sebzeden sonra: tekrar için en az 3 yıl bekleyin; arada Tahıl iyi uyar." />
-        <e k="rcr_advice_afterForage"    v="Yem bitkisinden sonra: Tahıl iyi uyar, yapı ve kalıntılar mevcut." />
+        <e k="rcr_advice_afterCereal" v="Bir tahıldan sonra azotu geri kazandırmak için baklagil veya kök boğazı hastalıklarına karşı bir ara ürün ek, ve tahıllar arasında iki yıl bırak." />
+        <e k="rcr_advice_afterLegume" v="Bir baklagilden sonra tahıl, bırakılan azottan en iyi şekilde yararlanır ve yeni bir baklagil üç yıl beklemelidir." />
+        <e k="rcr_advice_afterOilseed" v="Bir yağlı tohumdan sonra herhangi bir yağlı tohum dönmeden önce üç yıl bırak, ideal sıralama tahıl ve ardından baklagil." />
+        <e k="rcr_advice_afterRoot" v="Bir kök bitkisinden sonra köklerin dönmesinden önce dört yıl bekle, ardından geç hasattan sonra yapıyı yeniden kurmak için bir tahıl." />
+        <e k="rcr_advice_afterVegetable" v="Bir sebzeden sonra tekrarlamadan önce üç yıl bekle, temiz bir ara olarak bir tahıl ile." />
+        <e k="rcr_advice_afterForage" v="Geçici bir çayırdan sonra tahıl, çim örtüsü altında biriken verimlilik ve yapıyı değerlendirir." />
+        <e k="rcr_advice_disease_sclerotinia" v="Bu ürün sklerotinyanın konakçısıdır, bu yüzden kanola, ayçiçeği, soya, bezelye ve fasulyeden en az üç yıl uzak tut." />
+        <e k="rcr_advice_disease_bcn" v="Bu ürün şeker pancarı kist nematodunun konakçısıdır, bu yüzden pancarları ve turpgilleri iyice ayrı tut." />
         <e k="rcr_advice_no_current_crop" v="Mevcut ana ekin yok: bir ekin algılandığında tavsiye sunulur." />
 
         <!-- Field card — required actions / growth -->

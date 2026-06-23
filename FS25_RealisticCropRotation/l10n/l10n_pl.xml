@@ -82,12 +82,14 @@
         <e k="rcr_soil_not_sampled"     v="Gleba nieprzebadana" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="Po Zbożu: odczekaj co najmniej 2 lata przed kolejnym Zbożem; Strączkowe pomiędzy dostarczają azotu." />
-        <e k="rcr_advice_afterLegume"    v="Po Strączkowych: Zboże dobrze wykorzystuje dostarczony azot; odczekaj co najmniej 3 lata przed ponownym siewem Strączkowych." />
-        <e k="rcr_advice_afterOilseed"   v="Po Oleistych: odczekaj co najmniej 3 lata przed kolejnymi Oleistymi; Zboże dobrze pasuje pomiędzy." />
-        <e k="rcr_advice_afterRoot"      v="Po Okopowych: odczekaj co najmniej 4 lata przed kolejnymi Okopowymi; Zboże dobrze pasuje pomiędzy." />
-        <e k="rcr_advice_afterVegetable" v="Po Warzywach: odczekaj co najmniej 3 lata przed powtórzeniem; Zboże dobrze pasuje pomiędzy." />
-        <e k="rcr_advice_afterForage"    v="Po Paszy: Zboże dobrze pasuje, struktura i dostępne pozostałości." />
+        <e k="rcr_advice_afterCereal" v="Po zbożu zasiej roślinę bobowatą, aby przywrócić azot, lub roślinę przerywającą przeciw chorobom podstawy źdźbła, i zachowaj dwa lata między zbożami." />
+        <e k="rcr_advice_afterLegume" v="Po roślinie bobowatej zboże najlepiej wykorzysta pozostawiony azot, a kolejna bobowata powinna poczekać trzy lata." />
+        <e k="rcr_advice_afterOilseed" v="Po roślinie oleistej odczekaj trzy lata przed powrotem jakiejkolwiek oleistej, ze zbożem, a potem bobowatą jako idealnym następstwem." />
+        <e k="rcr_advice_afterRoot" v="Po roślinie okopowej odczekaj cztery lata przed powrotem okopowych, a następnie zboże, aby odbudować strukturę po późnym zbiorze." />
+        <e k="rcr_advice_afterVegetable" v="Po warzywie odczekaj trzy lata przed jego powtórzeniem, ze zbożem jako czystą przerwą." />
+        <e k="rcr_advice_afterForage" v="Po użytku przemiennym z trawą zboże wykorzystuje żyzność i strukturę zgromadzone pod darnią." />
+        <e k="rcr_advice_disease_sclerotinia" v="Ta uprawa jest gospodarzem zgnilizny twardzikowej, więc zachowaj co najmniej trzy lata od rzepaku, słonecznika, soi, grochu i fasoli." />
+        <e k="rcr_advice_disease_bcn" v="Ta uprawa jest gospodarzem mątwika burakowego, więc trzymaj buraki i kapustne z dala od siebie." />
         <e k="rcr_advice_no_current_crop" v="Brak aktualnej uprawy głównej: porada dostępna po wykryciu uprawy." />
 
         <!-- Field card — required actions / growth -->

@@ -82,12 +82,14 @@
         <e k="rcr_soil_not_sampled"     v="Sol neanalizat" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="După Cereală: așteptați cel puțin 2 ani înainte de altă Cereală; o Leguminoasă intercalată restituie azot." />
-        <e k="rcr_advice_afterLegume"    v="După Leguminoasă: o Cereală valorifică bine azotul restituit; așteptați cel puțin 3 ani înainte de a resemăna o Leguminoasă." />
-        <e k="rcr_advice_afterOilseed"   v="După Oleaginoasă: așteptați cel puțin 3 ani înainte de altă Oleaginoasă; o Cereală se potrivește bine între ele." />
-        <e k="rcr_advice_afterRoot"      v="După Rădăcinoase: așteptați cel puțin 4 ani înainte de noi Rădăcinoase; o Cereală se potrivește bine între ele." />
-        <e k="rcr_advice_afterVegetable" v="După Legumă: așteptați cel puțin 3 ani înainte de a repeta; o Cereală se potrivește bine între ele." />
-        <e k="rcr_advice_afterForage"    v="După Furaj: o Cereală se potrivește bine, cu structură și reziduuri disponibile." />
+        <e k="rcr_advice_afterCereal" v="După o cereală, semănă o leguminoasă pentru a reface azotul sau o cultură de întrerupere împotriva bolilor bazei tulpinii, și lasă doi ani între cereale." />
+        <e k="rcr_advice_afterLegume" v="După o leguminoasă, o cereală valorifică cel mai bine azotul lăsat, iar o nouă leguminoasă trebuie să aștepte trei ani." />
+        <e k="rcr_advice_afterOilseed" v="După o oleaginoasă, lasă trei ani înainte de revenirea oricărei oleaginoase, cu o cereală și apoi o leguminoasă ca succesiune ideală." />
+        <e k="rcr_advice_afterRoot" v="După o cultură de rădăcinoase, așteaptă patru ani înainte de revenirea rădăcinoaselor, urmată de o cereală pentru a reface structura după recoltarea târzie." />
+        <e k="rcr_advice_afterVegetable" v="După o legumă, așteaptă trei ani înainte de a o repeta, cu o cereală ca întrerupere curată." />
+        <e k="rcr_advice_afterForage" v="După o pajiște temporară, o cereală valorifică fertilitatea și structura acumulate sub covorul ierbos." />
+        <e k="rcr_advice_disease_sclerotinia" v="Această cultură este gazdă pentru sclerotinia, așa că păstrează cel puțin trei ani față de rapiță, floarea soarelui, soia, mazăre și fasole." />
+        <e k="rcr_advice_disease_bcn" v="Această cultură este gazdă pentru nematodul cu chisturi al sfeclei, așa că ține sfecla și crucifere bine separate." />
         <e k="rcr_advice_no_current_crop" v="Nicio cultură principală actuală: sfat disponibil când este detectată o cultură." />
 
         <!-- Field card — required actions / growth -->

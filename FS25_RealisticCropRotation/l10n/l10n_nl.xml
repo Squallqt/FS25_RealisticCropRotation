@@ -82,12 +82,14 @@
         <e k="rcr_soil_not_sampled"     v="Bodem niet bemonsterd" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="Na Graan: wacht minstens 2 jaar voor opnieuw Graan; een Peulvrucht ertussen levert stikstof." />
-        <e k="rcr_advice_afterLegume"    v="Na Peulvrucht: een Graan benut de teruggegeven stikstof goed; wacht minstens 3 jaar voor opnieuw een Peulvrucht." />
-        <e k="rcr_advice_afterOilseed"   v="Na Oliezaad: wacht minstens 3 jaar voor opnieuw Oliezaad; een Graan past er goed tussen." />
-        <e k="rcr_advice_afterRoot"      v="Na Wortelgewas: wacht minstens 4 jaar voor opnieuw Wortelgewas; een Graan past er goed tussen." />
-        <e k="rcr_advice_afterVegetable" v="Na Groente: wacht minstens 3 jaar voor herhaling; een Graan past er goed tussen." />
-        <e k="rcr_advice_afterForage"    v="Na Voeder: een Graan past goed, met structuur en beschikbare residuen." />
+        <e k="rcr_advice_afterCereal" v="Na een graan zaai je een vlinderbloemige om stikstof terug te geven of een rustgewas tegen voetziekten, en houd twee jaar tussen granen." />
+        <e k="rcr_advice_afterLegume" v="Na een vlinderbloemige benut een graan de achtergelaten stikstof het best, en een volgende vlinderbloemige moet drie jaar wachten." />
+        <e k="rcr_advice_afterOilseed" v="Na een oliehoudend gewas laat je drie jaar voordat opnieuw een oliehoudend gewas terugkomt, met een graan en dan een vlinderbloemige als ideale opvolging." />
+        <e k="rcr_advice_afterRoot" v="Na een hakvrucht wacht je vier jaar voordat wortelgewassen terugkomen, gevolgd door een graan om de structuur na de late oogst te herstellen." />
+        <e k="rcr_advice_afterVegetable" v="Na een groente wacht je drie jaar voordat je ze herhaalt, met een graan als schone onderbreking." />
+        <e k="rcr_advice_afterForage" v="Na een tijdelijk grasland benut een graan de onder de zode opgebouwde vruchtbaarheid en structuur." />
+        <e k="rcr_advice_disease_sclerotinia" v="Dit gewas is een waard van sclerotinia, houd dus minstens drie jaar afstand van koolzaad, zonnebloem, soja, erwt en boon." />
+        <e k="rcr_advice_disease_bcn" v="Dit gewas is een waard van het bietencystenaaltje, houd dus bieten en kruisbloemigen goed uit elkaar." />
         <e k="rcr_advice_no_current_crop" v="Geen huidig hoofdgewas: advies beschikbaar zodra een gewas wordt gedetecteerd." />
 
         <!-- Field card — required actions / growth -->

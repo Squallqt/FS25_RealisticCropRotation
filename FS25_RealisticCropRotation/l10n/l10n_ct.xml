@@ -82,12 +82,14 @@
         <e k="rcr_soil_not_sampled"     v="土壤未採樣" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="穀物之後: 至少間隔 2 年再種穀物; 其間種植豆科可歸還氮素。" />
-        <e k="rcr_advice_afterLegume"    v="豆科之後: 穀物能妥善利用歸還的氮素; 至少間隔 3 年再種豆科。" />
-        <e k="rcr_advice_afterOilseed"   v="油料之後: 至少間隔 3 年再種油料; 其間種植穀物較為適宜。" />
-        <e k="rcr_advice_afterRoot"      v="根莖類之後: 至少間隔 4 年再種根莖類; 其間種植穀物較為適宜。" />
-        <e k="rcr_advice_afterVegetable" v="蔬菜之後: 至少間隔 3 年再次種植; 其間種植穀物較為適宜。" />
-        <e k="rcr_advice_afterForage"    v="飼草之後: 穀物較為適宜, 土壤結構良好且殘留可用。" />
+        <e k="rcr_advice_afterCereal" v="種植穀物後，播種豆科作物以補充氮，或種植隔茬作物以減少基腐病，並在兩次穀物之間間隔兩年。" />
+        <e k="rcr_advice_afterLegume" v="種植豆科作物後，穀物能最好地利用其留下的氮，下一次豆科作物應間隔三年。" />
+        <e k="rcr_advice_afterOilseed" v="種植油料作物後，任何油料作物再次種植前需間隔三年，理想順序是穀物隨後豆科作物。" />
+        <e k="rcr_advice_afterRoot" v="種植塊根作物後，需間隔四年再種塊根，隨後種穀物以在晚收後重建土壤結構。" />
+        <e k="rcr_advice_afterVegetable" v="種植蔬菜後，需間隔三年再重複，以穀物作為乾淨的輪換間隔。" />
+        <e k="rcr_advice_afterForage" v="短期草地之後，穀物可利用草皮下累積的肥力與結構。" />
+        <e k="rcr_advice_disease_sclerotinia" v="此作物是菌核病的寄主，應與油菜、向日葵、大豆、豌豆和菜豆間隔至少三年。" />
+        <e k="rcr_advice_disease_bcn" v="此作物是甜菜孢囊線蟲的寄主，應使甜菜與十字花科作物充分分開。" />
         <e k="rcr_advice_no_current_crop" v="目前無主要作物: 偵測到作物後將提供建議。" />
 
         <!-- Field card — required actions / growth -->

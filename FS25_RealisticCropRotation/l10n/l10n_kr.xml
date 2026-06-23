@@ -82,12 +82,14 @@
         <e k="rcr_soil_not_sampled"     v="토양 미채취" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="곡물 이후: 다음 곡물까지 최소 2년 기다리세요; 사이에 콩과를 심으면 질소가 보충됩니다." />
-        <e k="rcr_advice_afterLegume"    v="콩과 이후: 곡물은 보충된 질소를 잘 활용합니다; 다음 콩과까지 최소 3년 기다리세요." />
-        <e k="rcr_advice_afterOilseed"   v="유료작물 이후: 다음 유료작물까지 최소 3년 기다리세요; 사이에 곡물이 적합합니다." />
-        <e k="rcr_advice_afterRoot"      v="뿌리채소 이후: 다음 뿌리채소까지 최소 4년 기다리세요; 사이에 곡물이 적합합니다." />
-        <e k="rcr_advice_afterVegetable" v="채소 이후: 반복까지 최소 3년 기다리세요; 사이에 곡물이 적합합니다." />
-        <e k="rcr_advice_afterForage"    v="사료작물 이후: 곡물이 적합하며, 구조와 잔류물이 이용 가능합니다." />
+        <e k="rcr_advice_afterCereal" v="곡물 다음에는 질소를 되돌리기 위해 콩과 작물을, 또는 입고병을 줄이기 위해 휴지 작물을 파종하고, 곡물 사이에 2년을 두세요." />
+        <e k="rcr_advice_afterLegume" v="콩과 작물 다음에는 곡물이 남겨진 질소를 가장 잘 활용하며, 다음 콩과 작물은 3년을 기다려야 합니다." />
+        <e k="rcr_advice_afterOilseed" v="유지 작물 다음에는 어떤 유지 작물이든 돌아오기 전에 3년을 두고, 곡물 다음 콩과 작물이 이상적인 순서입니다." />
+        <e k="rcr_advice_afterRoot" v="뿌리 작물 다음에는 뿌리 작물이 돌아오기까지 4년을 기다리고, 늦은 수확 후 토양 구조를 회복하기 위해 곡물을 이어 심으세요." />
+        <e k="rcr_advice_afterVegetable" v="채소 다음에는 반복하기 전에 3년을 기다리고, 곡물을 깔끔한 휴지로 두세요." />
+        <e k="rcr_advice_afterForage" v="단기 초지 다음에는 곡물이 잔디 아래 쌓인 비옥도와 구조를 활용합니다." />
+        <e k="rcr_advice_disease_sclerotinia" v="이 작물은 균핵병의 기주이므로 유채, 해바라기, 대두, 완두, 강낭콩과 최소 3년 간격을 두세요." />
+        <e k="rcr_advice_disease_bcn" v="이 작물은 사탕무씨스트선충의 기주이므로 사탕무와 배추과 작물을 충분히 떨어뜨리세요." />
         <e k="rcr_advice_no_current_crop" v="현재 주요 작물 없음: 작물이 감지되면 조언이 제공됩니다." />
 
         <!-- Field card — required actions / growth -->

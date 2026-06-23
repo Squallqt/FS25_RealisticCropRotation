@@ -82,12 +82,14 @@
         <e k="rcr_soil_not_sampled"     v="Půda neanalyzována" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="Po Obilnině: počkejte alespoň 2 roky před další Obilninou; Luskovina mezitím dodá dusík." />
-        <e k="rcr_advice_afterLegume"    v="Po Luskovině: Obilnina dobře využije dodaný dusík; počkejte alespoň 3 roky před opětovným setím Luskoviny." />
-        <e k="rcr_advice_afterOilseed"   v="Po Olejnině: počkejte alespoň 3 roky před další Olejninou; Obilnina se dobře hodí mezi ně." />
-        <e k="rcr_advice_afterRoot"      v="Po Okopanině: počkejte alespoň 4 roky před další Okopaninou; Obilnina se dobře hodí mezi ně." />
-        <e k="rcr_advice_afterVegetable" v="Po Zelenině: počkejte alespoň 3 roky před opakováním; Obilnina se dobře hodí mezi ně." />
-        <e k="rcr_advice_afterForage"    v="Po Pícnině: Obilnina se dobře hodí, struktura a dostupné zbytky." />
+        <e k="rcr_advice_afterCereal" v="Po obilnině zasej luskovinu pro doplnění dusíku nebo přerušovací plodinu proti chorobám pat stébel a ponech dva roky mezi obilninami." />
+        <e k="rcr_advice_afterLegume" v="Po luskovině obilnina nejlépe využije zanechaný dusík a další luskovina by měla počkat tři roky." />
+        <e k="rcr_advice_afterOilseed" v="Po olejnině ponech tři roky před návratem jakékoli olejniny, s obilninou a poté luskovinou jako ideální posloupností." />
+        <e k="rcr_advice_afterRoot" v="Po okopanině počkej čtyři roky, než se okopaniny vrátí, a poté obilninu pro obnovení struktury po pozdní sklizni." />
+        <e k="rcr_advice_afterVegetable" v="Po zelenině počkej tři roky, než ji zopakuješ, s obilninou jako čistým přerušením." />
+        <e k="rcr_advice_afterForage" v="Po dočasném travním porostu obilnina zhodnotí úrodnost a strukturu nahromaděnou pod drnem." />
+        <e k="rcr_advice_disease_sclerotinia" v="Tato plodina je hostitelem hlízenky, proto dodrž alespoň tři roky od řepky, slunečnice, sóji, hrachu a fazole." />
+        <e k="rcr_advice_disease_bcn" v="Tato plodina je hostitelem háďátka řepného, proto drž řepu a brukvovité dostatečně od sebe." />
         <e k="rcr_advice_no_current_crop" v="Žádná aktuální hlavní plodina: rada dostupná po detekci plodiny." />
 
         <!-- Field card — required actions / growth -->

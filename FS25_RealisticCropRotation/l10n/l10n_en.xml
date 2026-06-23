@@ -82,12 +82,14 @@
         <e k="rcr_soil_not_sampled"     v="Soil not sampled" />
 
         <!-- Agronomic advice -->
-        <e k="rcr_advice_afterCereal"    v="After Cereal: wait at least 2 years before another Cereal; a Legume in between returns nitrogen." />
-        <e k="rcr_advice_afterLegume"    v="After Legume: a Cereal uses the returned nitrogen well; wait at least 3 years before resowing a Legume." />
-        <e k="rcr_advice_afterOilseed"   v="After Oilseed: wait at least 3 years before another Oilseed; a Cereal fits well in between." />
-        <e k="rcr_advice_afterRoot"      v="After Root vegetable: wait at least 4 years before another Root vegetable; a Cereal fits well in between." />
-        <e k="rcr_advice_afterVegetable" v="After Vegetable: wait at least 3 years before repeating; a Cereal fits well in between." />
-        <e k="rcr_advice_afterForage"    v="After Forage: a Cereal fits well, with structure and residues available." />
+        <e k="rcr_advice_afterCereal"    v="After a cereal, sow a legume to restore nitrogen or a break crop to cut foot diseases, and keep two years between cereals." />
+        <e k="rcr_advice_afterLegume"    v="After a legume, a cereal makes the most of the nitrogen it leaves behind, and another legume should wait three years." />
+        <e k="rcr_advice_afterOilseed"   v="After an oilseed, leave three years before any oilseed returns, with a cereal then a legume as the ideal succession." />
+        <e k="rcr_advice_afterRoot"      v="After a root crop, allow four years before roots come back, and follow with a cereal to rebuild structure after the late lifting." />
+        <e k="rcr_advice_afterVegetable" v="After a vegetable, wait three years before repeating it, with a cereal as a clean break." />
+        <e k="rcr_advice_afterForage"    v="After a grass ley, a cereal cashes in the fertility and structure built up under the sward." />
+        <e k="rcr_advice_disease_sclerotinia" v="This crop hosts sclerotinia, so keep at least three years from canola, sunflower, soybean, pea and bean." />
+        <e k="rcr_advice_disease_bcn"         v="This crop hosts the beet cyst nematode, so keep beets and brassicas well apart." />
         <e k="rcr_advice_no_current_crop" v="No current main crop: advice available when a crop is detected." />
 
         <!-- Field card — required actions / growth -->
