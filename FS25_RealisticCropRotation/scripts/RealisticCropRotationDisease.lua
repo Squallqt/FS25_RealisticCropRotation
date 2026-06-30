@@ -22,7 +22,6 @@ RealisticCropRotationDisease.DESTROY_PERLIN_FREQUENCY = 1
 RealisticCropRotationDisease.DESTROY_PERLIN_PERSISTENCE = 0.5
 RealisticCropRotationDisease.DESTROY_PERLIN_MAX = 10000     -- noise value range (GREATER cut is 0..this)
 RealisticCropRotationDisease.DESTROY_DEAD_FRACTION_MAX = 0.90 -- dead share of the parcel at full severity
-RealisticCropRotationDisease.PLOW_INOCULUM_FACTOR = 0.65    -- deep ploughing buries ~35% of sclerotia/cysts
 
 ---Creates the disease layer bound to the rotation manager.
 -- @param table manager
@@ -33,8 +32,6 @@ function RealisticCropRotationDisease.new(manager, grid)
     self.grid = grid
     self.state = {}          -- farmlandId -> group -> { severity, seed } (seed fixes the destruction scatter)
     self.crop = {}           -- farmlandId -> crop name the state belongs to
-    self.plowDiscount = {}   -- farmlandId -> true when deep ploughing was applied this cycle
-    self.cropActive = {}     -- farmlandId -> true while a crop grows; drives the discount reset at harvest
     return self
 end
 
@@ -119,18 +116,11 @@ function RealisticCropRotationDisease:getLoad(farmlandId)
         end
     end
 
-    -- Noise floor first: a load this low means no meaningful inoculum, regardless of ploughing.
-    -- Ploughing then buries surface inoculum (partial, ~35%) but never resets a real load to zero
-    -- -- only a host-free rotation does that. So a ploughed load is clamped to the floor, never dropped.
-    local plowed = self.plowDiscount[farmlandId]
+    -- A load this low means no meaningful inoculum; only host-free rotation decay removes pressure.
     local floor = seed * 0.5
     for group, value in pairs(out) do
         if value < floor then
             out[group] = nil
-        elseif plowed then
-            out[group] = math.max(floor, value * RealisticCropRotationDisease.PLOW_INOCULUM_FACTOR)
-        else
-            out[group] = value
         end
     end
     return out
@@ -347,115 +337,11 @@ function RealisticCropRotationDisease:propagate(farmlandId)
     end
 end
 
----Manages the plough discount lifecycle so the reduction actually covers the next crop. The
----discount must survive the whole crop, since the infection only rolls inside the growth window
----(mid/late growth) -- clearing it at sowing (frac~0) would lose the effect before it matters. So
----it is held while a crop grows and only cleared at harvest (crop -> bare), when the next crop must
----earn a fresh one. The live plough hook (installPlowHook) is the primary detector; the bare-field
----sampling here is a fallback for platforms where the hook cannot install.
--- @param integer farmlandId
-function RealisticCropRotationDisease:checkPlowReduction(farmlandId)
-    if g_server == nil then return end
-    local mgr = self.manager
-    if mgr == nil then return end
-    self.cropActive = self.cropActive or {}
-    local cropName = mgr:getActiveCropInfo(farmlandId)
-
-    -- Crop growing: keep the discount so it still applies during the infection window.
-    if cropName ~= nil then
-        self.cropActive[farmlandId] = true
-        return
-    end
-
-    -- Bare field. If a crop was just harvested, the discount earned for it has done its job (it
-    -- covered that crop's infection window) -- clear it so the next crop must earn a fresh plough.
-    if self.cropActive[farmlandId] then
-        self.plowDiscount[farmlandId] = nil
-        self.cropActive[farmlandId] = nil
-    end
-
-    -- Already discounted this bare-soil period.
-    if self.plowDiscount[farmlandId] then return end
-
-    -- Fallback latch: earn the discount if the bare field is currently ploughed. Also re-latches
-    -- when harvest+plough happened between two ticks (the harvest reset above runs first).
-    if FieldGroundType == nil then return end
-    local field = type(mgr.getFieldByFarmlandId) == "function" and mgr:getFieldByFarmlandId(farmlandId) or nil
-    if field == nil then return end
-
-    local fieldState = type(field.getFieldState) == "function" and field:getFieldState() or field.fieldState
-    if fieldState == nil then return end
-    if fieldState.groundType == FieldGroundType.PLOWED then
-        self.plowDiscount[farmlandId] = true
-        Logging.info("[RealisticCropRotation] Deep ploughing reduced inoculum on farmland %s", tostring(farmlandId))
-    end
-end
-
----Latches the plough inoculum discount for a farmland (server). Idempotent within a crop
----cycle: the discount is earned once and reset at the next sowing (checkPlowReduction).
----Called from the live FSDensityMapUtil.updatePlowArea hook, so it is captured even when the
----player harvests, ploughs and re-sows between two disease ticks.
--- @param integer farmlandId
-function RealisticCropRotationDisease:onPlowed(farmlandId)
-    if g_server == nil then return end
-    local id = tonumber(farmlandId)
-    if id == nil or id <= 0 then return end
-    if self.plowDiscount[id] then return end -- already latched this cycle
-
-    self.plowDiscount[id] = true
-    Logging.info("[RealisticCropRotation] Deep ploughing reduced inoculum on farmland %s", tostring(id))
-    if RealisticCropRotation ~= nil and type(RealisticCropRotation.requestBroadcast) == "function" then
-        RealisticCropRotation.requestBroadcast()
-    end
-end
-
----Installs a server-side hook on the engine plough so the inoculum discount is latched at the
----exact moment a field is ploughed. This hook is a technical necessity: once a field is
----harvested, ploughed and re-sown, the transient PLOWED ground state is gone before the next
----disease tick, so tick-sampling (checkPlowReduction) cannot observe it. One overwrite of the
----existing engine entry point is the lightest reliable capture (the base game already routes all
----ploughing through it). Idempotent; the global disease is resolved at call time so the hook
----survives the disease object being recreated across missions.
-function RealisticCropRotationDisease.installPlowHook()
-    if RealisticCropRotationDisease._plowHookInstalled then return end
-    if g_currentMission == nil or type(g_currentMission.getIsServer) ~= "function"
-        or not g_currentMission:getIsServer() then return end
-    if Utils == nil or type(Utils.overwrittenFunction) ~= "function"
-        or FSDensityMapUtil == nil or type(FSDensityMapUtil.updatePlowArea) ~= "function" then return end
-
-    RealisticCropRotationDisease._plowHookInstalled = true
-    FSDensityMapUtil.updatePlowArea = Utils.overwrittenFunction(
-        FSDensityMapUtil.updatePlowArea,
-        function(sx, superFunc, sz, wx, wz, hx, hz, ...)
-            local changedArea, totalArea = superFunc(sx, sz, wx, wz, hx, hz, ...)
-
-            -- Per-call cost is one native farmland read; onPlowed early-returns once the field is
-            -- latched, so the work happens once per ploughed field per cycle, not per work area.
-            local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
-            local fm = g_farmlandManager
-            if disease ~= nil and fm ~= nil and type(fm.getFarmlandIdAtWorldPosition) == "function"
-                and type(sx) == "number" and type(sz) == "number"
-                and type(wx) == "number" and type(wz) == "number"
-                and type(hx) == "number" and type(hz) == "number" then
-                -- Centroid of the worked parallelogram resolves to the farmland.
-                local cx = sx + ((wx - sx) + (hx - sx)) * 0.5
-                local cz = sz + ((wz - sz) + (hz - sz)) * 0.5
-                local farmlandId = fm:getFarmlandIdAtWorldPosition(cx, cz)
-                if farmlandId ~= nil and farmlandId > 0 then
-                    disease:onPlowed(farmlandId)
-                end
-            end
-
-            return changedArea, totalArea
-        end)
-end
-
 ---Server: one field's per-period disease step (infection gate + propagation/destruction).
 -- @param integer farmlandId
 function RealisticCropRotationDisease:update(farmlandId)
     self:evaluateInfection(farmlandId)
     self:propagate(farmlandId)
-    self:checkPlowReduction(farmlandId)
 end
 
 ---Current infection state for a field (group -> { severity, seed }), or nil.
@@ -519,23 +405,15 @@ function RealisticCropRotationDisease:getSyncData()
         end
     end
 
-    local outPlow = {}
-    for farmlandId, discounted in pairs(self.plowDiscount or {}) do
-        local n = tonumber(farmlandId)
-        if n ~= nil and n > 0 and discounted then outPlow[n] = true end
-    end
-
-    return outState, outCrop, outPlow
+    return outState, outCrop
 end
 
 ---Applies active disease state received from the server.
 -- @param table state
 -- @param table crop
--- @param table plow
-function RealisticCropRotationDisease:applySyncData(state, crop, plow)
+function RealisticCropRotationDisease:applySyncData(state, crop)
     self.state = {}
     self.crop = {}
-    self.plowDiscount = {}
 
     for farmlandId, groups in pairs(state or {}) do
         local n = tonumber(farmlandId)
@@ -555,13 +433,6 @@ function RealisticCropRotationDisease:applySyncData(state, crop, plow)
         local n = tonumber(farmlandId)
         if n ~= nil and n > 0 and cropName ~= nil and cropName ~= "" then
             self.crop[n] = tostring(cropName)
-        end
-    end
-
-    for farmlandId, discounted in pairs(plow or {}) do
-        local n = tonumber(farmlandId)
-        if n ~= nil and n > 0 and discounted then
-            self.plowDiscount[n] = true
         end
     end
 
@@ -640,26 +511,6 @@ function RealisticCropRotationDisease:saveToXML(savegamePath)
         fi = fi + 1
     end
 
-    local pi = 0
-    for farmlandId, discounted in pairs(self.plowDiscount) do
-        if discounted then
-            local pKey = string.format("realisticCropRotationDisease.plowed(%d)", pi)
-            setXMLInt(xmlFile, pKey .. "#id", farmlandId)
-            pi = pi + 1
-        end
-    end
-
-    -- cropActive must persist too: a save taken after harvest but before the cleanup tick would
-    -- otherwise lose it on reload, and the discount would carry to the next crop without a new plough.
-    local ci = 0
-    for farmlandId, active in pairs(self.cropActive or {}) do
-        if active then
-            local cKey = string.format("realisticCropRotationDisease.cropActive(%d)", ci)
-            setXMLInt(xmlFile, cKey .. "#id", farmlandId)
-            ci = ci + 1
-        end
-    end
-
     saveXMLFile(xmlFile)
     delete(xmlFile)
 end
@@ -697,26 +548,6 @@ function RealisticCropRotationDisease:loadFromXML(savegamePath)
             end
         end
         fi = fi + 1
-    end
-
-    self.plowDiscount = {}
-    local pi = 0
-    while true do
-        local pKey = string.format("realisticCropRotationDisease.plowed(%d)", pi)
-        if not hasXMLProperty(xmlFile, pKey) then break end
-        local id = getXMLInt(xmlFile, pKey .. "#id")
-        if id ~= nil then self.plowDiscount[id] = true end
-        pi = pi + 1
-    end
-
-    self.cropActive = {}
-    local ci = 0
-    while true do
-        local cKey = string.format("realisticCropRotationDisease.cropActive(%d)", ci)
-        if not hasXMLProperty(xmlFile, cKey) then break end
-        local id = getXMLInt(xmlFile, cKey .. "#id")
-        if id ~= nil then self.cropActive[id] = true end
-        ci = ci + 1
     end
 
     delete(xmlFile)

@@ -119,7 +119,7 @@ local function infectionStateColor(state, colorBlind)
     if state == RealisticCropRotationDiseaseMap.STATE_SCLEROTINIA then
         return colorFor("FRUIT_COLOR_NEEDS_LIME", colorBlind)
     elseif state == RealisticCropRotationDiseaseMap.STATE_BCN then
-        return colorFor("FRUIT_COLOR_NEEDS_PLOWING", colorBlind)
+        return colorFor("FRUIT_COLOR_WITHERED", colorBlind)
     end
     return colorFor("FRUIT_COLOR_WITHERED", colorBlind)
 end

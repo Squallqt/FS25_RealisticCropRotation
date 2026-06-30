@@ -52,7 +52,7 @@ Prevention:
 - The disease map shows infected fields and the agronomic advice shows the pressure level on each field.
 
 After infection:
-- Harvest what remains, then deep plough the bare field to reduce the soil contamination for the next cycle.
+- Harvest what remains and avoid returning a susceptible host until rotation decay lowers the soil pressure.
 
 CONSOLE COMMANDS
 
@@ -116,7 +116,7 @@ Vorbeugung:
 - Die Krankheitskarte zeigt befallene Felder und der Agrartipp zeigt den Befallsdruck je Feld.
 
 Nach einem Befall:
-- Ernte, was noch übrig ist, und pflüge das leere Feld tief um, um die Bodenbelastung für den nächsten Zyklus zu verringern.
+- Ernte, was noch übrig ist, und baue keine anfällige Kultur erneut an, bis die Fruchtfolge den Befallsdruck im Boden gesenkt hat.
 
 KONSOLENBEFEHLE
 
@@ -180,7 +180,7 @@ Prévention :
 - La carte des maladies montre les champs infectés et le conseil agronomique affiche le niveau de pression sur chaque parcelle.
 
 Après une infection :
-- Récoltez ce qui reste, puis labourez profondément le champ nu pour réduire la contamination du sol pour le cycle suivant.
+- Récoltez ce qui reste et évitez de remettre une culture sensible tant que la rotation n'a pas réduit la pression du sol.
 
 COMMANDES CONSOLE
 

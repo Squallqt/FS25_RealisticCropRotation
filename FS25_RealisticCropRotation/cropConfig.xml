@@ -66,8 +66,8 @@
     <!-- Values follow real first-year N credits: a terminated alfalfa/vetch stand returns far    -->
     <!-- more than grain legumes (soybean/pea), which export most fixed N in the grain.            -->
     <!--   alfalfa 80/50 > vetch 60/20 > clover 50/20 > soybean 40/10 = pea 40/10 > bean 20/5      -->
-    <!-- Forage legumes (alfalfa, clover) are multi-cut: their residue is released only at the     -->
-    <!-- plough-out, never at a forage cut.                                                        -->
+    <!-- Forage legumes (alfalfa, clover) are multi-cut: their residue is released only at stand   -->
+    <!-- termination, never at a forage cut.                                                       -->
     <!-- ======================================================== -->
     <crop name="SOYBEAN"   family="LEGUME" n1="8"  n2="2"  disease="SCLEROTINIA" />
     <crop name="ALFALFA"   family="LEGUME" n1="16" n2="10" />

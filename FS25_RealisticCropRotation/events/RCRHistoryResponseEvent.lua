@@ -135,13 +135,6 @@ function RCRHistoryResponseEvent:readStream(streamId, _connection)
         end
     end
 
-    local receivedDiseasePlow = {}
-    local plowCount = streamReadInt16(streamId)
-    for _ = 1, plowCount do
-        local farmlandId = streamReadInt32(streamId)
-        if farmlandId > 0 then receivedDiseasePlow[farmlandId] = true end
-    end
-
     -- A server replicating its own event back to itself: discard.
     if g_currentMission ~= nil and g_currentMission.getIsServer ~= nil and g_currentMission:getIsServer() then
         return
@@ -158,7 +151,6 @@ function RCRHistoryResponseEvent:readStream(streamId, _connection)
                 lastKnownGrowthState = receivedLastKnownGrowthState,
                 diseaseState = receivedDiseaseState,
                 diseaseCrop = receivedDiseaseCrop,
-                diseasePlow = receivedDiseasePlow,
             }
         end
         Logging.warning("[RealisticCropRotation] RCRHistoryResponseEvent: manager not available, historyFarmlands=%d entries=%d plans=%d coverPlans=%d activeCrops=%d growthStates=%d buffered",
@@ -172,7 +164,7 @@ function RCRHistoryResponseEvent:readStream(streamId, _connection)
     if RealisticCropRotation ~= nil
         and RealisticCropRotation.disease ~= nil
         and type(RealisticCropRotation.disease.applySyncData) == "function" then
-        RealisticCropRotation.disease:applySyncData(receivedDiseaseState, receivedDiseaseCrop, receivedDiseasePlow)
+        RealisticCropRotation.disease:applySyncData(receivedDiseaseState, receivedDiseaseCrop)
     end
 
     if RealisticCropRotation ~= nil and RealisticCropRotation.frame ~= nil then
@@ -193,9 +185,9 @@ function RCRHistoryResponseEvent:writeStream(streamId, _connection)
     local manager = g_currentMission ~= nil and g_currentMission.realisticCropRotationManager or nil
     if manager == nil or manager.service == nil or type(manager.service.getSyncData) ~= "function" then
         -- Empty snapshot: write one zero count per section readStream expects, in order
-        -- (history, plans, coverPlans, activeCrops, growthStates, disease, plow = 7), or the
-        -- client read pointer desyncs on the disease/plow sections.
-        for _ = 1, 7 do
+        -- (history, plans, coverPlans, activeCrops, growthStates, disease = 6), or the
+        -- client read pointer desyncs on the later sections.
+        for _ = 1, 6 do
             streamWriteInt16(streamId, 0)
         end
         return
@@ -299,11 +291,11 @@ function RCRHistoryResponseEvent:writeStream(streamId, _connection)
         streamWriteInt16(streamId, math.max(0, math.floor(growthState + 0.5)))
     end
 
-    local diseaseState, diseaseCrop, diseasePlow = {}, {}, {}
+    local diseaseState, diseaseCrop = {}, {}
     if RealisticCropRotation ~= nil
         and RealisticCropRotation.disease ~= nil
         and type(RealisticCropRotation.disease.getSyncData) == "function" then
-        diseaseState, diseaseCrop, diseasePlow = RealisticCropRotation.disease:getSyncData()
+        diseaseState, diseaseCrop = RealisticCropRotation.disease:getSyncData()
     end
 
     local diseaseFarmlandIds = {}
@@ -334,16 +326,6 @@ function RCRHistoryResponseEvent:writeStream(streamId, _connection)
             streamWriteFloat32(streamId, tonumber(data.severity) or 0)
             streamWriteInt32(streamId, math.floor(tonumber(data.seed) or 0))
         end
-    end
-
-    local plowIds = {}
-    for farmlandId, discounted in pairs(diseasePlow or {}) do
-        local n = tonumber(farmlandId)
-        if n ~= nil and n > 0 and discounted then plowIds[#plowIds + 1] = n end
-    end
-    streamWriteInt16(streamId, #plowIds)
-    for _, farmlandId in ipairs(plowIds) do
-        streamWriteInt32(streamId, farmlandId)
     end
 
 end

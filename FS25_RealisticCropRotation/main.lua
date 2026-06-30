@@ -365,9 +365,6 @@ local function loadedMission()
             Logging.warning("[RealisticCropRotation] Period change listener unavailable; crop rotation history cannot be reconciled automatically")
         end
         RealisticCropRotationNitrogen.install(RealisticCropRotation.manager)
-        if RealisticCropRotation.disease ~= nil and type(RealisticCropRotationDisease.installPlowHook) == "function" then
-            RealisticCropRotationDisease.installPlowHook()
-        end
     end
 
     g_currentMission.realisticCropRotationManager = RealisticCropRotation.manager
@@ -401,7 +398,7 @@ local function loadedMission()
                 pending.lastKnownGrowthState or {})
             if RealisticCropRotation.disease ~= nil
                 and type(RealisticCropRotation.disease.applySyncData) == "function" then
-                RealisticCropRotation.disease:applySyncData(pending.diseaseState or {}, pending.diseaseCrop or {}, pending.diseasePlow or {})
+                RealisticCropRotation.disease:applySyncData(pending.diseaseState or {}, pending.diseaseCrop or {})
             end
             RealisticCropRotation.pendingSyncData = nil
         end

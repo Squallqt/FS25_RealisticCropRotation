@@ -276,7 +276,7 @@ local function capture(context, sx, sz, wx, wz, hx, hz)
     return active
 end
 
----Keeps only transitions into the destroyed state, including final plough-out.
+---Keeps only transitions into the destroyed state, including final crop termination.
 local function retainDestroyed(active)
     for _, crop in ipairs(active) do
         if crop.mulchedState > 0 then
