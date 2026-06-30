@@ -11,6 +11,18 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Ротація" />
         <e k="rcr_tab_planning"         v="Планування" />
+        <e k="rcr_disease_name_sclerotinia" v="Склеротинія" />
+        <e k="rcr_disease_name_bcn"   v="Нематода" />
+        <e k="rcr_section_disease_map"     v="Хвороби" />
+        <e k="rcr_disease_sub_infections" v="Активні осередки" />
+        <e k="rcr_disease_sub_pressure"   v="Тиск хвороб" />
+        <e k="rcr_disease_risk_low"       v="Низький" />
+        <e k="rcr_disease_risk_moderate"  v="Помірний" />
+        <e k="rcr_disease_risk_high"      v="Високий" />
+        <e k="rcr_disease_notification" v="%s виявлено на полі %s" />
+        <e k="rcr_disease_hud_label"    v="Хвороба" />
+        <e k="rcr_disease_hud_active"   v="%s (активна)" />
+        <e k="rcr_disease_hud_none"     v="Немає" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Очікуваний залишок +%d (N+1) / +%d (N+2) кг/га" />
@@ -90,6 +102,10 @@
         <e k="rcr_advice_afterForage" v="Після тимчасового травостою зернова використовує родючість і структуру, накопичені під дерниною." />
         <e k="rcr_advice_disease_sclerotinia" v="Ця культура є господарем склеротиніозу, тож витримуйте щонайменше три роки від ріпаку, соняшнику, сої, гороху та квасолі." />
         <e k="rcr_advice_disease_bcn" v="Ця культура є господарем бурякової цистоутворюючої нематоди, тож тримайте буряки та капустяні подалі одне від одного." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Високий тиск склеротиніозу на цьому полі — уникайте ріпаку, соняшнику, сої, гороху та квасолі щонайменше три роки." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Високий тиск бурякової цистоутворюючої нематоди на цьому полі — уникайте цукрових буряків, столових буряків, ріпаку, гірчиці та шпинату щонайменше три роки." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Помірний тиск склеротиніозу на цьому полі — ретельно плануйте чергування культур-господарів." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Помірний тиск бурякової цистоутворюючої нематоди на цьому полі — ретельно плануйте чергування буряків та хрестоцвітих." />
         <e k="rcr_advice_no_current_crop" v="Немає поточної основної культури: порада з'явиться після виявлення культури." />
 
         <!-- Field card — required actions / growth -->
@@ -108,7 +124,7 @@
         <e k="rcr_plan_none"            v="Не заплановано" />
 
         <!-- Global overview — cover crop recap (own line) -->
-        <e k="rcr_overview_cover_entry" v="Покривна %s: %s (посів %s)" />
+        <e k="rcr_overview_cover_entry" v="Покривна %s: %s" />
 
         <!-- Planning tab — annual calendar -->
         <e k="rcr_calendar_month_1"     v="Бер" />

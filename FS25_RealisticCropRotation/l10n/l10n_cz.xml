@@ -11,6 +11,18 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Rotace" />
         <e k="rcr_tab_planning"         v="Plánování" />
+        <e k="rcr_disease_name_sclerotinia" v="Sklerotinie" />
+        <e k="rcr_disease_name_bcn"   v="Háďátko" />
+        <e k="rcr_section_disease_map"     v="Choroby" />
+        <e k="rcr_disease_sub_infections" v="Aktivní ohniska" />
+        <e k="rcr_disease_sub_pressure"   v="Tlak chorob" />
+        <e k="rcr_disease_risk_low"       v="Nízký" />
+        <e k="rcr_disease_risk_moderate"  v="Střední" />
+        <e k="rcr_disease_risk_high"      v="Vysoký" />
+        <e k="rcr_disease_notification" v="%s zjištěna na poli %s" />
+        <e k="rcr_disease_hud_label"    v="Choroba" />
+        <e k="rcr_disease_hud_active"   v="%s (aktivní)" />
+        <e k="rcr_disease_hud_none"     v="Žádná" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Očekávaný zbytek +%d (N+1) / +%d (N+2) kg/ha" />
@@ -90,6 +102,10 @@
         <e k="rcr_advice_afterForage" v="Po dočasném travním porostu obilnina zhodnotí úrodnost a strukturu nahromaděnou pod drnem." />
         <e k="rcr_advice_disease_sclerotinia" v="Tato plodina je hostitelem hlízenky, proto dodrž alespoň tři roky od řepky, slunečnice, sóji, hrachu a fazole." />
         <e k="rcr_advice_disease_bcn" v="Tato plodina je hostitelem háďátka řepného, proto drž řepu a brukvovité dostatečně od sebe." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="" />
+        <e k="rcr_advice_pressure_high_bcn"           v="" />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="" />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="" />
         <e k="rcr_advice_no_current_crop" v="Žádná aktuální hlavní plodina: rada dostupná po detekci plodiny." />
 
         <!-- Field card — required actions / growth -->
@@ -108,7 +124,7 @@
         <e k="rcr_plan_none"            v="Neplánováno" />
 
         <!-- Global overview — cover crop recap (own line) -->
-        <e k="rcr_overview_cover_entry" v="Krycí %s: %s (setí %s)" />
+        <e k="rcr_overview_cover_entry" v="Krycí %s: %s" />
 
         <!-- Planning tab — annual calendar -->
         <e k="rcr_calendar_month_1"     v="Bře" />

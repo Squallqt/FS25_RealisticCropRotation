@@ -107,6 +107,32 @@ function RealisticCropRotationHud.addHistoryLines(fieldBox, farmlandId)
             end
         end
     end
+
+    RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
+end
+
+---Appends a disease status line to the field-info box when an infection is active.
+-- @param table fieldBox Field-info box with addLine
+-- @param integer farmlandId
+function RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
+    if fieldBox == nil or fieldBox.addLine == nil then return end
+
+    local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
+    if disease == nil or type(disease.getState) ~= "function" then return end
+
+    local groups = disease:getState(farmlandId)
+    if groups == nil then return end
+
+    local label = RealisticCropRotationHud.getText("rcr_disease_hud_label", "Disease")
+    for group, s in pairs(groups) do
+        if (s.severity or 0) > 0 then
+            local nameKey = group == "SCLEROTINIA" and "rcr_disease_name_sclerotinia" or "rcr_disease_name_bcn"
+            local diseaseName = RealisticCropRotationHud.getText(nameKey, group)
+            local value = string.format(RealisticCropRotationHud.getText("rcr_disease_hud_active", "%s (active)"), diseaseName)
+            fieldBox:addLine(label, value, true)
+            return
+        end
+    end
 end
 ---Resolves the (tierText, numbers) override for the on-foot "Croissance:" line.
 -- @param table data Field-info data

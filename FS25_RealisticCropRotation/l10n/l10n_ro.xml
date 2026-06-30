@@ -11,6 +11,18 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Rotație" />
         <e k="rcr_tab_planning"         v="Planificare" />
+        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia" />
+        <e k="rcr_disease_name_bcn"   v="Nematod" />
+        <e k="rcr_section_disease_map"     v="Boli" />
+        <e k="rcr_disease_sub_infections" v="Focare active" />
+        <e k="rcr_disease_sub_pressure"   v="Presiune de boli" />
+        <e k="rcr_disease_risk_low"       v="Scăzută" />
+        <e k="rcr_disease_risk_moderate"  v="Moderată" />
+        <e k="rcr_disease_risk_high"      v="Ridicată" />
+        <e k="rcr_disease_notification" v="%s detectată pe câmpul %s" />
+        <e k="rcr_disease_hud_label"    v="Boală" />
+        <e k="rcr_disease_hud_active"   v="%s (activă)" />
+        <e k="rcr_disease_hud_none"     v="Niciuna" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Reziduu așteptat +%d (N+1) / +%d (N+2) kg/ha" />
@@ -90,6 +102,10 @@
         <e k="rcr_advice_afterForage" v="După o pajiște temporară, o cereală valorifică fertilitatea și structura acumulate sub covorul ierbos." />
         <e k="rcr_advice_disease_sclerotinia" v="Această cultură este gazdă pentru sclerotinia, așa că păstrează cel puțin trei ani față de rapiță, floarea soarelui, soia, mazăre și fasole." />
         <e k="rcr_advice_disease_bcn" v="Această cultură este gazdă pentru nematodul cu chisturi al sfeclei, așa că ține sfecla și crucifere bine separate." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Presiune ridicată de sclerotinia pe această parcelă — evitați rapiță, floarea-soarelui, soia, mazărea și fasolea timp de cel puțin trei ani." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Presiune ridicată de nematod cu chist al sfeclei pe această parcelă — evitați sfecla de zahăr, sfecla roșie, rapiță, muștar și spanac timp de cel puțin trei ani." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Presiune moderată de sclerotinia pe această parcelă — planificați cu grijă rotația culturilor gazdă." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Presiune moderată de nematod cu chist al sfeclei pe această parcelă — planificați cu grijă rotația sfeclei și a crucifere." />
         <e k="rcr_advice_no_current_crop" v="Nicio cultură principală actuală: sfat disponibil când este detectată o cultură." />
 
         <!-- Field card — required actions / growth -->
@@ -108,7 +124,7 @@
         <e k="rcr_plan_none"            v="Neplanificat" />
 
         <!-- Global overview — cover crop recap (own line) -->
-        <e k="rcr_overview_cover_entry" v="Acoperire %s: %s (semănat %s)" />
+        <e k="rcr_overview_cover_entry" v="Acoperire %s: %s" />
 
         <!-- Planning tab — annual calendar -->
         <e k="rcr_calendar_month_1"     v="Mar" />

@@ -22,14 +22,20 @@
 <realisticCropRotationCrops>
 
     <!-- ======================================================== -->
-    <!-- DISEASE GROUPS (cross-family return intervals, years)      -->
-    <!--   SCLEROTINIA: canola/sunflower/mustard/soybean/pea/bean/  -->
-    <!--                potato/carrot all host Sclerotinia.          -->
-    <!--   BCN: beet cyst nematode hosts beets AND brassicas.        -->
+    <!-- DISEASE GROUPS                                             -->
+    <!--   minInterval : cross-family return interval (years). The soil inoculum (sclerotia,    -->
+    <!--                 cysts) survives this long, so a host within it raises the field load.  -->
+    <!--   infectFrom/infectTo : growth window (fraction of growth toward maturity) when a      -->
+    <!--                 living host can be infected. Sclerotinia infects at flowering           -->
+    <!--                 (mid-cycle); the beet cyst nematode invades roots from early growth.   -->
+    <!--   fungal : true for fungal pathogens whose sporulation needs free moisture, so rain    -->
+    <!--                 raises their infection chance. Soil nematodes (BCN) are not rain-driven.-->
+    <!--   Hosts: SCLEROTINIA = canola/sunflower/mustard/soybean/pea/bean/potato/carrot.        -->
+    <!--          BCN = beets and brassicas (canola, mustard) and spinach.                      -->
     <!-- ======================================================== -->
     <diseaseGroups>
-        <diseaseGroup name="SCLEROTINIA" minInterval="3" />
-        <diseaseGroup name="BCN"         minInterval="3" />
+        <diseaseGroup name="SCLEROTINIA" minInterval="3" infectFrom="0.50" infectTo="0.80" fungal="true" />
+        <diseaseGroup name="BCN"         minInterval="3" infectFrom="0.10" infectTo="0.90" fungal="false" />
     </diseaseGroups>
 
     <!-- ======================================================== -->

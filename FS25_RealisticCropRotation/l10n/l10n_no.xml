@@ -11,6 +11,18 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Rotasjon" />
         <e k="rcr_tab_planning"         v="Planlegging" />
+        <e k="rcr_disease_name_sclerotinia" v="Sklerotinia" />
+        <e k="rcr_disease_name_bcn"   v="Nematode" />
+        <e k="rcr_section_disease_map"     v="Sykdommer" />
+        <e k="rcr_disease_sub_infections" v="Aktive angrep" />
+        <e k="rcr_disease_sub_pressure"   v="Sykdomspress" />
+        <e k="rcr_disease_risk_low"       v="Lav" />
+        <e k="rcr_disease_risk_moderate"  v="Moderat" />
+        <e k="rcr_disease_risk_high"      v="Høy" />
+        <e k="rcr_disease_notification" v="%s oppdaget på åker %s" />
+        <e k="rcr_disease_hud_label"    v="Sykdom" />
+        <e k="rcr_disease_hud_active"   v="%s (aktiv)" />
+        <e k="rcr_disease_hud_none"     v="Ingen" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Forventet rest +%d (N+1) / +%d (N+2) kg/ha" />
@@ -90,6 +102,10 @@
         <e k="rcr_advice_afterForage" v="Etter en eng utnytter et korn fruktbarheten og strukturen som er bygd opp under grasdekket." />
         <e k="rcr_advice_disease_sclerotinia" v="Denne veksten er vert for storknollet råtesopp, så hold minst tre år fra raps, solsikke, soyabønne, ert og bønne." />
         <e k="rcr_advice_disease_bcn" v="Denne veksten er vert for betecystenematoden, så hold bete og korsblomstrede godt fra hverandre." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Høyt sclerotinia-press på dette skiftet — unngå raps, solsikke, soyabønne, ert og bønne i minst tre år." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Høyt betecystenematodepress på dette skiftet — unngå sukkerbete, rødbete, raps, sennep og spinat i minst tre år." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderat sclerotinia-press på dette skiftet — planlegg vertsplantene nøye." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Moderat betecystenematodepress på dette skiftet — planlegg beter og korsblomstrede nøye." />
         <e k="rcr_advice_no_current_crop" v="Ingen aktuell hovedvekst: råd tilgjengelig når en vekst oppdages." />
 
         <!-- Field card — required actions / growth -->
@@ -108,7 +124,7 @@
         <e k="rcr_plan_none"            v="Ikke planlagt" />
 
         <!-- Global overview — cover crop recap (own line) -->
-        <e k="rcr_overview_cover_entry" v="Dekke %s: %s (såing %s)" />
+        <e k="rcr_overview_cover_entry" v="Dekke %s: %s" />
 
         <!-- Planning tab — annual calendar -->
         <e k="rcr_calendar_month_1"     v="Mar" />

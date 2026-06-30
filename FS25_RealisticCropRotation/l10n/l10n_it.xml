@@ -11,6 +11,18 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Rotazione" />
         <e k="rcr_tab_planning"         v="Pianificazione" />
+        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia" />
+        <e k="rcr_disease_name_bcn"   v="Nematode" />
+        <e k="rcr_section_disease_map"     v="Malattie" />
+        <e k="rcr_disease_sub_infections" v="Focolai attivi" />
+        <e k="rcr_disease_sub_pressure"   v="Pressione malattie" />
+        <e k="rcr_disease_risk_low"       v="Bassa" />
+        <e k="rcr_disease_risk_moderate"  v="Moderata" />
+        <e k="rcr_disease_risk_high"      v="Alta" />
+        <e k="rcr_disease_notification" v="%s rilevata sul campo %s" />
+        <e k="rcr_disease_hud_label"    v="Malattia" />
+        <e k="rcr_disease_hud_active"   v="%s (attiva)" />
+        <e k="rcr_disease_hud_none"     v="Nessuna" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Residuo previsto +%d (N+1) / +%d (N+2) kg/ha" />
@@ -90,6 +102,10 @@
         <e k="rcr_advice_afterForage" v="Dopo un prato di breve durata, un cereale valorizza la fertilità e la struttura accumulate sotto il cotico." />
         <e k="rcr_advice_disease_sclerotinia" v="Questa coltura ospita la sclerotinia, quindi mantieni almeno tre anni da colza, girasole, soia, pisello e fagiolo." />
         <e k="rcr_advice_disease_bcn" v="Questa coltura ospita il nematode a cisti della barbabietola, quindi tieni ben distanti barbabietole e crucifere." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="" />
+        <e k="rcr_advice_pressure_high_bcn"           v="" />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="" />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="" />
         <e k="rcr_advice_no_current_crop" v="Nessuna coltura principale attuale: consiglio disponibile quando viene rilevata una coltura." />
 
         <!-- Field card — required actions / growth -->
@@ -108,7 +124,7 @@
         <e k="rcr_plan_none"            v="Non pianificato" />
 
         <!-- Global overview — cover crop recap (own line) -->
-        <e k="rcr_overview_cover_entry" v="Copertura %s: %s (semina %s)" />
+        <e k="rcr_overview_cover_entry" v="Copertura %s: %s" />
 
         <!-- Planning tab — annual calendar -->
         <e k="rcr_calendar_month_1"     v="Mar" />

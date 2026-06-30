@@ -11,6 +11,18 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Forgó" />
         <e k="rcr_tab_planning"         v="Tervezés" />
+        <e k="rcr_disease_name_sclerotinia" v="Szklerotínia" />
+        <e k="rcr_disease_name_bcn"   v="Fonálféreg" />
+        <e k="rcr_section_disease_map"     v="Betegségek" />
+        <e k="rcr_disease_sub_infections" v="Aktív gócok" />
+        <e k="rcr_disease_sub_pressure"   v="Betegségnyomás" />
+        <e k="rcr_disease_risk_low"       v="Alacsony" />
+        <e k="rcr_disease_risk_moderate"  v="Mérsékelt" />
+        <e k="rcr_disease_risk_high"      v="Magas" />
+        <e k="rcr_disease_notification" v="%s észlelve a(z) %s. táblán" />
+        <e k="rcr_disease_hud_label"    v="Betegség" />
+        <e k="rcr_disease_hud_active"   v="%s (aktív)" />
+        <e k="rcr_disease_hud_none"     v="Nincs" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Várható maradvány +%d (N+1) / +%d (N+2) kg/ha" />
@@ -90,6 +102,10 @@
         <e k="rcr_advice_afterForage" v="Ideiglenes gyep után a gabona hasznosítja a gyep alatt felhalmozott termékenységet és szerkezetet." />
         <e k="rcr_advice_disease_sclerotinia" v="Ez a növény a fehérpenész gazdája, ezért tarts legalább három évet a repcétől, napraforgótól, szójától, borsótól és babtól." />
         <e k="rcr_advice_disease_bcn" v="Ez a növény a répacisztaféreg gazdája, ezért tartsd jól távol a répát és a keresztesvirágúakat." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="" />
+        <e k="rcr_advice_pressure_high_bcn"           v="" />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="" />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="" />
         <e k="rcr_advice_no_current_crop" v="Nincs jelenlegi főnövény: a tanács elérhető, ha növényt észlel." />
 
         <!-- Field card — required actions / growth -->
@@ -108,7 +124,7 @@
         <e k="rcr_plan_none"            v="Nincs tervezve" />
 
         <!-- Global overview — cover crop recap (own line) -->
-        <e k="rcr_overview_cover_entry" v="Takaró %s: %s (vetés %s)" />
+        <e k="rcr_overview_cover_entry" v="Takaró %s: %s" />
 
         <!-- Planning tab — annual calendar -->
         <e k="rcr_calendar_month_1"     v="Márc" />

@@ -11,6 +11,18 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="윤작" />
         <e k="rcr_tab_planning"         v="계획" />
+        <e k="rcr_disease_name_sclerotinia" v="균핵병" />
+        <e k="rcr_disease_name_bcn"   v="선충" />
+        <e k="rcr_section_disease_map"     v="병해" />
+        <e k="rcr_disease_sub_infections" v="활성 병반" />
+        <e k="rcr_disease_sub_pressure"   v="병해 압력" />
+        <e k="rcr_disease_risk_low"       v="낮음" />
+        <e k="rcr_disease_risk_moderate"  v="보통" />
+        <e k="rcr_disease_risk_high"      v="높음" />
+        <e k="rcr_disease_notification" v="농지 %s에서 %s 발견" />
+        <e k="rcr_disease_hud_label"    v="병해" />
+        <e k="rcr_disease_hud_active"   v="%s (발생 중)" />
+        <e k="rcr_disease_hud_none"     v="없음" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="예상 잔류량 +%d (N+1) / +%d (N+2) kg/ha" />
@@ -90,6 +102,10 @@
         <e k="rcr_advice_afterForage" v="단기 초지 다음에는 곡물이 잔디 아래 쌓인 비옥도와 구조를 활용합니다." />
         <e k="rcr_advice_disease_sclerotinia" v="이 작물은 균핵병의 기주이므로 유채, 해바라기, 대두, 완두, 강낭콩과 최소 3년 간격을 두세요." />
         <e k="rcr_advice_disease_bcn" v="이 작물은 사탕무씨스트선충의 기주이므로 사탕무와 배추과 작물을 충분히 떨어뜨리세요." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="이 포장에서 균핵병 위험이 높습니다 — 최소 3년간 유채, 해바라기, 대두, 완두, 강낭콩 재배를 피하십시오." />
+        <e k="rcr_advice_pressure_high_bcn"           v="이 포장에서 사탕무시스트선충 위험이 높습니다 — 최소 3년간 사탕무, 비트, 유채, 겨자, 시금치 재배를 피하십시오." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="이 포장에서 균핵병 위험이 보통입니다 — 기주작물의 재배 간격에 주의하십시오." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="이 포장에서 사탕무시스트선충 위험이 보통입니다 — 비트류 및 십자화과 작물의 재배 간격에 주의하십시오." />
         <e k="rcr_advice_no_current_crop" v="현재 주요 작물 없음: 작물이 감지되면 조언이 제공됩니다." />
 
         <!-- Field card — required actions / growth -->
@@ -108,7 +124,7 @@
         <e k="rcr_plan_none"            v="계획 없음" />
 
         <!-- Global overview — cover crop recap (own line) -->
-        <e k="rcr_overview_cover_entry" v="피복 %s: %s (파종 %s)" />
+        <e k="rcr_overview_cover_entry" v="피복 %s: %s" />
 
         <!-- Planning tab — annual calendar -->
         <e k="rcr_calendar_month_1"     v="3월" />

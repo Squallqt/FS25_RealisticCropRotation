@@ -11,6 +11,18 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Rotation" />
         <e k="rcr_tab_planning"         v="Planering" />
+        <e k="rcr_disease_name_sclerotinia" v="Bomullsmögel" />
+        <e k="rcr_disease_name_bcn"   v="Nematod" />
+        <e k="rcr_section_disease_map"     v="Sjukdomar" />
+        <e k="rcr_disease_sub_infections" v="Aktiva härdar" />
+        <e k="rcr_disease_sub_pressure"   v="Sjukdomstryck" />
+        <e k="rcr_disease_risk_low"       v="Låg" />
+        <e k="rcr_disease_risk_moderate"  v="Måttlig" />
+        <e k="rcr_disease_risk_high"      v="Hög" />
+        <e k="rcr_disease_notification" v="%s upptäckt på fält %s" />
+        <e k="rcr_disease_hud_label"    v="Växtsjukdom" />
+        <e k="rcr_disease_hud_active"   v="%s (aktiv)" />
+        <e k="rcr_disease_hud_none"     v="Ingen" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Förväntad rest +%d (N+1) / +%d (N+2) kg/ha" />
@@ -90,6 +102,10 @@
         <e k="rcr_advice_afterForage" v="Efter en vall utnyttjar en spannmål den bördighet och struktur som byggts upp under grässvålen." />
         <e k="rcr_advice_disease_sclerotinia" v="Den här grödan är värd för bomullsmögel, så håll minst tre år från raps, solros, sojaböna, ärt och böna." />
         <e k="rcr_advice_disease_bcn" v="Den här grödan är värd för betcystnematoden, så håll betor och korsblommiga väl åtskilda." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Högt sclerotinia-tryck på detta skifte — undvik raps, solros, sojabönor, ärtor och bönor i minst tre år." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Högt betcystnematodtryck på detta skifte — undvik sockerbetor, rödbetor, raps, senap och spenat i minst tre år." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Måttligt sclerotinia-tryck på detta skifte — planera värdväxterna noggrant." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Måttligt betcystnematodtryck på detta skifte — planera betor och korsblommiga noggrant." />
         <e k="rcr_advice_no_current_crop" v="Ingen aktuell huvudgröda: råd tillgängligt när en gröda upptäcks." />
 
         <!-- Field card — required actions / growth -->
@@ -108,7 +124,7 @@
         <e k="rcr_plan_none"            v="Ej planerad" />
 
         <!-- Global overview — cover crop recap (own line) -->
-        <e k="rcr_overview_cover_entry" v="Täcke %s: %s (sådd %s)" />
+        <e k="rcr_overview_cover_entry" v="Täcke %s: %s" />
 
         <!-- Planning tab — annual calendar -->
         <e k="rcr_calendar_month_1"     v="Mar" />

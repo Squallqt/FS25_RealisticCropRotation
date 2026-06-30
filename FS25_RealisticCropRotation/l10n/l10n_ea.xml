@@ -11,6 +11,18 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Rotación" />
         <e k="rcr_tab_planning"         v="Planificación" />
+        <e k="rcr_disease_name_sclerotinia" v="Esclerotinia" />
+        <e k="rcr_disease_name_bcn"   v="Nematodo" />
+        <e k="rcr_section_disease_map"     v="Enfermedades" />
+        <e k="rcr_disease_sub_infections" v="Focos activos" />
+        <e k="rcr_disease_sub_pressure"   v="Presión de enfermedad" />
+        <e k="rcr_disease_risk_low"       v="Baja" />
+        <e k="rcr_disease_risk_moderate"  v="Media" />
+        <e k="rcr_disease_risk_high"      v="Alta" />
+        <e k="rcr_disease_notification" v="%s detectada en el campo %s" />
+        <e k="rcr_disease_hud_label"    v="Enfermedad" />
+        <e k="rcr_disease_hud_active"   v="%s (activa)" />
+        <e k="rcr_disease_hud_none"     v="Ninguna" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Residuo previsto +%d (N+1) / +%d (N+2) kg/ha" />
@@ -90,6 +102,10 @@
         <e k="rcr_advice_afterForage" v="Después de una pradera temporal, un cereal aprovecha la fertilidad y la estructura acumuladas bajo la hierba." />
         <e k="rcr_advice_disease_sclerotinia" v="Este cultivo es huésped de la esclerotinia, así que mantén al menos tres años con la colza, el girasol, la soja, el guisante y la judía." />
         <e k="rcr_advice_disease_bcn" v="Este cultivo es huésped del nematodo del quiste de la remolacha, así que mantén separadas las remolachas y las crucíferas." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="" />
+        <e k="rcr_advice_pressure_high_bcn"           v="" />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="" />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="" />
         <e k="rcr_advice_no_current_crop" v="Sin cultivo principal actual: el consejo estará disponible cuando se detecte un cultivo." />
 
         <!-- Field card — required actions / growth -->
@@ -108,7 +124,7 @@
         <e k="rcr_plan_none"            v="No planificado" />
 
         <!-- Global overview — cover crop recap (own line) -->
-        <e k="rcr_overview_cover_entry" v="Cobertura %s: %s (siembra %s)" />
+        <e k="rcr_overview_cover_entry" v="Cobertura %s: %s" />
 
         <!-- Planning tab — annual calendar -->
         <e k="rcr_calendar_month_1"     v="Mar" />

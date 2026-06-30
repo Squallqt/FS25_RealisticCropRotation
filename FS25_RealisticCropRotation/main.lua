@@ -7,6 +7,9 @@ source(modDirectory .. "scripts/RealisticCropRotationRepository.lua")
 source(modDirectory .. "scripts/RealisticCropRotationService.lua")
 source(modDirectory .. "scripts/RealisticCropRotationManager.lua")
 source(modDirectory .. "scripts/RealisticCropRotationNitrogen.lua")
+source(modDirectory .. "scripts/RealisticCropRotationDisease.lua")
+source(modDirectory .. "scripts/RealisticCropRotationDiseaseGrid.lua")
+source(modDirectory .. "scripts/RealisticCropRotationDiseaseMap.lua")
 source(modDirectory .. "scripts/RealisticCropRotationHud.lua")
 source(modDirectory .. "events/RCRHistoryRequestEvent.lua")
 source(modDirectory .. "events/RCRHistoryResponseEvent.lua")
@@ -17,6 +20,7 @@ RealisticCropRotation = {}
 RealisticCropRotation.modDirectory = modDirectory
 RealisticCropRotation.modName = modName
 RealisticCropRotation.manager = nil
+RealisticCropRotation.disease = nil
 RealisticCropRotation.frame = nil
 RealisticCropRotation.pendingSyncData = nil
 RealisticCropRotation.isEnabled = true
@@ -42,7 +46,7 @@ local function loadCropConfig()
         return nil
     end
 
-    local config = { families = {}, nitrogen = {}, coverCrops = {}, diseases = {}, diseaseIntervals = {} }
+    local config = { families = {}, nitrogen = {}, coverCrops = {}, diseases = {}, diseaseIntervals = {}, diseaseWindows = {}, diseaseFungal = {} }
     local i = 0
     while true do
         local key = string.format("realisticCropRotationCrops.crop(%d)", i)
@@ -81,7 +85,15 @@ local function loadCropConfig()
         local gname = getXMLString(xmlFile, gkey .. "#name")
         local gint  = getXMLInt(xmlFile, gkey .. "#minInterval")
         if gname ~= nil and gname ~= "" and gint ~= nil then
-            config.diseaseIntervals[string.upper(gname)] = gint
+            local upper = string.upper(gname)
+            config.diseaseIntervals[upper] = gint
+            local from = getXMLFloat(xmlFile, gkey .. "#infectFrom")
+            local to   = getXMLFloat(xmlFile, gkey .. "#infectTo")
+            if from ~= nil and to ~= nil then
+                config.diseaseWindows[upper] = { from = from, to = to }
+            end
+            -- Fungal pathogens get the rain bonus; soil nematodes do not.
+            config.diseaseFungal[upper] = getXMLBool(xmlFile, gkey .. "#fungal") == true
         end
         j = j + 1
     end
@@ -153,14 +165,21 @@ local function onPeriodChanged()
     end
 
     local changed = false
+    local diseaseUpdated = false
     for _, farmlandId in ipairs(RealisticCropRotation.manager:getOwnedRotationFarmlandIds()) do
         if RealisticCropRotation.manager:reconcileActiveCropForFarmland(farmlandId) then
             changed = true
+        end
+        if RealisticCropRotation.disease ~= nil then
+            RealisticCropRotation.disease:update(farmlandId)
+            diseaseUpdated = true
         end
     end
 
     if changed then
         refreshRealisticCropRotationFrame()
+    end
+    if changed or diseaseUpdated then
         RealisticCropRotation.requestBroadcast()
     end
 end
@@ -305,10 +324,22 @@ local function loadedMission()
     RealisticCropRotation.manager = RealisticCropRotationManager.new()
     RealisticCropRotation.manager:initialize()
 
+    RealisticCropRotation.grid = RealisticCropRotationDiseaseGrid.new()
+    RealisticCropRotation.disease = RealisticCropRotationDisease.new(RealisticCropRotation.manager, RealisticCropRotation.grid)
+    if type(RealisticCropRotation.disease.registerConsoleCommands) == "function" then
+        RealisticCropRotation.disease:registerConsoleCommands()
+    end
+
     local savegameFolderPath = resolveSavegameFolderPath()
 
     if g_currentMission:getIsServer() then
         RealisticCropRotation.manager:loadFromXML(savegameFolderPath)
+        if RealisticCropRotation.grid ~= nil then
+            RealisticCropRotation.grid:loadMap(savegameFolderPath)
+        end
+        if RealisticCropRotation.disease ~= nil then
+            RealisticCropRotation.disease:loadFromXML(savegameFolderPath)
+        end
         if g_messageCenter ~= nil and MessageType ~= nil and MessageType.FARMLAND_OWNER_CHANGED ~= nil then
             RealisticCropRotation.farmlandOwnerChangeListener = {
                 ownerChanged = function(_self, farmlandId, farmId, loadFromSavegame)
@@ -334,6 +365,9 @@ local function loadedMission()
             Logging.warning("[RealisticCropRotation] Period change listener unavailable; crop rotation history cannot be reconciled automatically")
         end
         RealisticCropRotationNitrogen.install(RealisticCropRotation.manager)
+        if RealisticCropRotation.disease ~= nil and type(RealisticCropRotationDisease.installPlowHook) == "function" then
+            RealisticCropRotationDisease.installPlowHook()
+        end
     end
 
     g_currentMission.realisticCropRotationManager = RealisticCropRotation.manager
@@ -352,6 +386,11 @@ local function loadedMission()
     end
 
     if not g_currentMission:getIsServer() then
+        -- Clients are not sent the .grle; they get an empty grid here and repaint the active-foci
+        -- overlay from the synced disease state (disease:rebuildGridFromState in applySyncData).
+        if RealisticCropRotation.grid ~= nil then
+            RealisticCropRotation.grid:loadMap(nil)
+        end
         if RealisticCropRotation.pendingSyncData ~= nil then
             local pending = RealisticCropRotation.pendingSyncData
             RealisticCropRotation.manager.service:applySyncData(
@@ -360,6 +399,10 @@ local function loadedMission()
                 pending.coverPlans or {},
                 pending.lastKnownActiveCrop or {},
                 pending.lastKnownGrowthState or {})
+            if RealisticCropRotation.disease ~= nil
+                and type(RealisticCropRotation.disease.applySyncData) == "function" then
+                RealisticCropRotation.disease:applySyncData(pending.diseaseState or {}, pending.diseaseCrop or {}, pending.diseasePlow or {})
+            end
             RealisticCropRotation.pendingSyncData = nil
         end
         RealisticCropRotation.requestServerSync("loadedMission")
@@ -370,6 +413,9 @@ end
 local function loadInGameMenuGui()
     if g_gui == nil or type(g_gui.loadProfiles) ~= "function" then return end
     if g_inGameMenu == nil then return end
+    if RealisticCropRotationDiseaseMap ~= nil and type(RealisticCropRotationDiseaseMap.install) == "function" then
+        RealisticCropRotationDiseaseMap:install()
+    end
 
     if g_inGameMenu.pageRealisticCropRotation ~= nil then
         RealisticCropRotation.frame = g_inGameMenu.pageRealisticCropRotation
@@ -404,6 +450,12 @@ local function onSaveToXMLFile()
 
     local savegameFolderPath = resolveSavegameFolderPath()
     RealisticCropRotation.manager:saveToXML(savegameFolderPath)
+    if RealisticCropRotation.grid ~= nil then
+        RealisticCropRotation.grid:saveMap(savegameFolderPath)
+    end
+    if RealisticCropRotation.disease ~= nil then
+        RealisticCropRotation.disease:saveToXML(savegameFolderPath)
+    end
 end
 
 ---Sends the initial rotation snapshot to a joining client (server).
@@ -429,6 +481,10 @@ local function initRealisticCropRotation()
     FSBaseMission.saveSavegame = Utils.appendedFunction(FSBaseMission.saveSavegame, onSaveToXMLFile)
     FSBaseMission.sendInitialClientState = Utils.appendedFunction(FSBaseMission.sendInitialClientState, sendInitialClientState)
 
+    if RealisticCropRotationDiseaseMap ~= nil and type(RealisticCropRotationDiseaseMap.install) == "function" then
+        RealisticCropRotationDiseaseMap:install()
+    end
+
     BaseMission.delete = Utils.appendedFunction(BaseMission.delete, function()
         if g_currentMission ~= nil and RealisticCropRotation.broadcastUpdateable ~= nil
             and type(g_currentMission.removeUpdateable) == "function" then
@@ -450,9 +506,24 @@ local function initRealisticCropRotation()
             and type(RealisticCropRotationNitrogen.delete) == "function" then
             RealisticCropRotationNitrogen.delete()
         end
+        if RealisticCropRotationDiseaseMap ~= nil
+            and type(RealisticCropRotationDiseaseMap.delete) == "function" then
+            RealisticCropRotationDiseaseMap:delete()
+        end
+        if RealisticCropRotation.disease ~= nil
+            and type(RealisticCropRotation.disease.unregisterConsoleCommands) == "function" then
+            RealisticCropRotation.disease:unregisterConsoleCommands()
+        end
         if RealisticCropRotation.manager ~= nil then
             RealisticCropRotation.manager:cleanup()
             RealisticCropRotation.manager = nil
+        end
+        if RealisticCropRotation.disease ~= nil then
+            RealisticCropRotation.disease = nil
+        end
+        if RealisticCropRotation.grid ~= nil then
+            RealisticCropRotation.grid:deleteMap()
+            RealisticCropRotation.grid = nil
         end
         if g_currentMission ~= nil then
             g_currentMission.realisticCropRotationManager = nil

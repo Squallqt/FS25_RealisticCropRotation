@@ -74,9 +74,6 @@ RealisticCropRotationFrame.COVER_CROP_NAMES = {
     "FLOWERINGCATCHCROP",
 }
 
--- Min growth-possible months a cover must accumulate before releasing N residue.
-RealisticCropRotationFrame.COVER_MIN_GROWTH_MONTHS = 1
-
 -- Min recommended return interval (years) per family; FORAGE has no constraint.
 RealisticCropRotationFrame.FAMILY_MIN_INTERVAL = {
     CEREAL    = 2,
@@ -522,9 +519,8 @@ function RealisticCropRotationFrame:updateWeatherPill(pill, pillBg, pillIcon, pi
     return nil
 end
 
----Updates the detail-tab residue pill: the two-tier nitrogen the active crop will return when
----terminated -- year +1 (n1) then year +2 (n2), in kg/ha. Matches the modDesc per-crop listing
----and the runtime deposit (n1 first, n2 one cycle later). Data-driven; no per-field tracking.
+---Updates the detail-tab residue pill: configured crop residue (n1/n2) or catch-crop cover
+---residue, in kg/ha. Matches the runtime deposit source; no per-field tracking.
 -- @param table pillBg
 -- @param table pillText
 -- @param integer farmlandId
@@ -537,15 +533,28 @@ function RealisticCropRotationFrame:updateResiduePill(pillBg, pillText, farmland
     if mgr ~= nil and mgr.service ~= nil and type(mgr.getActiveCropInfo) == "function"
         and type(mgr.service.getResidueEntry) == "function"
         and type(mgr.service.getNitrogenKgPerHaFromStateChange) == "function" then
-        local activeCropName = mgr:getActiveCropInfo(farmlandId)
+        local activeCropName, activeFruitTypeIndex = mgr:getActiveCropInfo(farmlandId)
         if activeCropName ~= nil and activeCropName ~= "" and not isFallowCrop(activeCropName) then
             local service = mgr.service
-            local entry = service:getResidueEntry(string.upper(tostring(activeCropName)))
+            local normalizedCropName = string.upper(tostring(activeCropName))
+            local entry = service:getResidueEntry(normalizedCropName)
             if entry ~= nil and ((tonumber(entry.n1) or 0) + (tonumber(entry.n2) or 0)) > 0 then
                 local n1Kg = math.floor((service:getNitrogenKgPerHaFromStateChange(tonumber(entry.n1) or 0) or 0) + 0.5)
                 local n2Kg = math.floor((service:getNitrogenKgPerHaFromStateChange(tonumber(entry.n2) or 0) or 0) + 0.5)
                 text = string.format(self.i18n:getText("rcr_status_current_residue"), n1Kg, n2Kg)
                 hasBonus = true
+            elseif type(service.isCoverCropForRotationHistory) == "function"
+                and service:isCoverCropForRotationHistory(activeFruitTypeIndex, normalizedCropName) then
+                local coverResidueKg = RealisticCropRotationService ~= nil
+                    and tonumber(RealisticCropRotationService.COVER_CROP_RESIDUE_KG_HA) or 0
+                if coverResidueKg > 0 then
+                    text = string.format(
+                        self.i18n:getText("rcr_status_current_residue"),
+                        math.floor(coverResidueKg + 0.5),
+                        0
+                    )
+                    hasBonus = true
+                end
             end
         end
     end
@@ -1585,7 +1594,7 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
 
     self:updateNitrogenGauge(farmlandId)
     self:updateSoilPHGauge(farmlandId)
-    self:updateAdvice(currentFamily, currentCropName)
+    self:updateAdvice(currentFamily, farmlandId)
     self:updateFieldCard(farmlandId)
 end
 
@@ -1849,10 +1858,10 @@ end
 
 -- Agronomic advice
 
----Sets the advice from the current crop's family, plus a note per shared-pathogen group it hosts.
+---Sets the advice from the current crop's family, plus field-specific disease pressure warnings.
 -- @param string currentFamily
--- @param string currentCropName
-function RealisticCropRotationFrame:updateAdvice(currentFamily, currentCropName)
+-- @param integer farmlandId
+function RealisticCropRotationFrame:updateAdvice(currentFamily, farmlandId)
     if self.adviceText == nil then return end
     local key = RealisticCropRotationFrame.ADVICE_KEY[currentFamily]
     if key == nil then
@@ -1861,12 +1870,20 @@ function RealisticCropRotationFrame:updateAdvice(currentFamily, currentCropName)
     end
 
     local text = self.i18n:getText(key)
-    local diseases = self:getCropDiseases(currentCropName)
-    for _, group in ipairs(RealisticCropRotationFrame.ADVICE_DISEASE_ORDER) do
-        if diseases[group] then
-            text = text .. " " .. self.i18n:getText("rcr_advice_disease_" .. string.lower(group))
+
+    local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
+    if disease ~= nil and farmlandId ~= nil and type(disease.getLoad) == "function" then
+        local load = disease:getLoad(farmlandId)
+        for _, group in ipairs(RealisticCropRotationFrame.ADVICE_DISEASE_ORDER) do
+            local pressure = tonumber(load[group]) or 0
+            if pressure >= 0.50 then
+                text = text .. " " .. self.i18n:getText("rcr_advice_pressure_high_" .. string.lower(group))
+            elseif pressure >= 0.25 then
+                text = text .. " " .. self.i18n:getText("rcr_advice_pressure_moderate_" .. string.lower(group))
+            end
         end
     end
+
     self.adviceText:setText(text)
 end
 
@@ -2018,46 +2035,6 @@ function RealisticCropRotationFrame:getCropPeriodFlags(cropName, periodCount, fi
     return plant, harvest
 end
 
----Per-period "growing toward harvest" flags for a crop (growthDataSeasonal /
----minHarvestingGrowthState). nil when the data can't be read.
--- @param string cropName
--- @param integer periodCount
--- @param integer firstPeriod
--- @return table growing Booleans per column, or nil
-function RealisticCropRotationFrame:getCropGrowthPeriods(cropName, periodCount, firstPeriod)
-    if cropName == nil or cropName == "" then return nil end
-    if g_fruitTypeManager == nil or type(g_fruitTypeManager.getFruitTypeByName) ~= "function" then return nil end
-
-    local fruitDesc = g_fruitTypeManager:getFruitTypeByName(string.upper(tostring(cropName)))
-    if fruitDesc == nil then return nil end
-
-    local data = fruitDesc.growthDataSeasonal
-    if type(data) ~= "table" or type(data.periods) ~= "table" then return nil end
-
-    local mature = tonumber(fruitDesc.minHarvestingGrowthState)
-    if mature == nil or mature < 2 then return nil end
-    local finalStep = mature - 1
-
-    periodCount = math.max(1, tonumber(periodCount) or 12)
-    firstPeriod = tonumber(firstPeriod) or 1
-    local grow = {}
-    local anyGrowth = false
-    for i = 1, periodCount do
-        local period = ((firstPeriod - 1 + i - 1) % periodCount) + 1
-        local pd = data.periods[period]
-        local advances = false
-        if pd ~= nil and type(pd.growthMapping) == "table" then
-            local nextState = pd.growthMapping[finalStep]
-            advances = type(nextState) == "number" and nextState >= mature
-        end
-        grow[i] = advances
-        if advances then anyGrowth = true end
-    end
-
-    if not anyGrowth then return nil end
-    return grow
-end
-
 ---Returns contiguous true-runs in a flag array as { start, len } entries.
 -- @param table flags
 -- @param integer periodCount
@@ -2080,48 +2057,6 @@ function RealisticCropRotationFrame:getFlagRuns(flags, periodCount)
         end
     end
     return runs
-end
-
----Longest contiguous planting window for a crop.
--- @param string cropName
--- @param integer periodCount
--- @param integer firstPeriod
--- @return integer start Column, or nil
--- @return integer len Length in columns
-function RealisticCropRotationFrame:getCropPlantingWindow(cropName, periodCount, firstPeriod)
-    local plant = self:getCropPeriodFlags(cropName, periodCount, firstPeriod)
-    if plant == nil then return nil end
-
-    local bestStart, bestLen = nil, 0
-    for _, run in ipairs(self:getFlagRuns(plant, periodCount)) do
-        if run.len > bestLen then
-            bestStart, bestLen = run.start, run.len
-        end
-    end
-
-    if bestStart == nil or bestLen <= 0 then return nil end
-    return bestStart, bestLen
-end
-
----Longest contiguous harvest window for a crop.
--- @param string cropName
--- @param integer periodCount
--- @param integer firstPeriod
--- @return integer start Column, or nil
--- @return integer len Length in columns
-function RealisticCropRotationFrame:getCropHarvestWindow(cropName, periodCount, firstPeriod)
-    local _, harvest = self:getCropPeriodFlags(cropName, periodCount, firstPeriod)
-    if harvest == nil then return nil end
-
-    local bestStart, bestLen = nil, 0
-    for _, run in ipairs(self:getFlagRuns(harvest, periodCount)) do
-        if run.len > bestLen then
-            bestStart, bestLen = run.start, run.len
-        end
-    end
-
-    if bestStart == nil or bestLen <= 0 then return nil end
-    return bestStart, bestLen
 end
 
 ---Grid line width: thick on season boundaries (every CALENDAR_SEASON_LEN-th line), thin otherwise.
@@ -2789,7 +2724,7 @@ end
 
 -- ROTATION GROUPS — overview of fields sharing the same crop rotation
 
----Groups owned fields by identical plan+cover sequence and sorts them for the overview.
+---Groups owned fields by identical plan+cover sequence for the overview.
 function RealisticCropRotationFrame:buildRotationGroups()
     local groups   = {}
     local groupMap = {}
@@ -2820,16 +2755,7 @@ function RealisticCropRotationFrame:buildRotationGroups()
         group.areaHa = (group.areaHa or 0) + (tonumber(entry.areaHa) or 0)
     end
 
-    -- Sort: non-empty plans first, then by field count (desc), then by score (desc)
-    local emptyKey = "||||||||"
-    table.sort(groups, function(a, b)
-        local aEmpty = (a.key == emptyKey)
-        local bEmpty = (b.key == emptyKey)
-        if aEmpty ~= bEmpty then return not aEmpty end
-        if #a.fieldNames ~= #b.fieldNames then return #a.fieldNames > #b.fieldNames end
-        return a.score > b.score
-    end)
-
+    -- Keep insertion order from farmlandList; the manager already sorts fields by number.
     self.rotationGroups = groups
 end
 
@@ -2845,114 +2771,23 @@ function RealisticCropRotationFrame:getCompactGroupFieldNames(fieldNames)
     return table.concat(parts, "  |  ")
 end
 
----Formats a window (period indices, may wrap) as a month range, e.g. "Sep-Oct".
--- @param integer start Start column
--- @param integer len Length in columns
--- @param integer periodCount
--- @return string text
-function RealisticCropRotationFrame:formatCalendarPeriodRange(start, len, periodCount)
-    if start == nil or len == nil or len <= 0 then return "" end
-
-    local startKey = RealisticCropRotationFrame.CALENDAR_MONTH_KEYS[((start - 1) % 12) + 1]
-    local startLabel = self.i18n:getText(startKey)
-    if len <= 1 then return startLabel end
-
-    local endIndex = ((start - 1 + len - 1) % periodCount) + 1
-    local endKey = RealisticCropRotationFrame.CALENDAR_MONTH_KEYS[((endIndex - 1) % 12) + 1]
-    local endLabel = self.i18n:getText(endKey)
-    return startLabel .. "-" .. endLabel
-end
-
----Cover sowing window for a slot (game data only): the free window between this slot's
----harvest and the next sowing, requiring >= COVER_MIN_GROWTH_MONTHS of growth.
--- @param table group
--- @param integer slotIndex
--- @param integer periodCount
--- @param integer firstPeriod
--- @return string text
-function RealisticCropRotationFrame:getRotationAwareCoverSowingText(group, slotIndex, periodCount, firstPeriod)
-    local coverName = group.coverPlan[slotIndex] or ""
-    if coverName == "" then return "" end
-
-    -- (1a) The field is free only once this slot's own main crop is harvested.
-    local mainCrop = group.plan[slotIndex] or ""
-    local harvestStart, harvestLen = self:getCropHarvestWindow(mainCrop, periodCount, firstPeriod)
-    if harvestStart == nil then return "" end
-    local fieldFreeStart = ((harvestStart - 1 + harvestLen) % periodCount) + 1
-
-    -- (1b) Deadline = when the next non-empty slot is sown (wraps in a <4-crop plan).
-    local nextCrop = ""
-    for step = 1, 3 do
-        local idx = ((slotIndex - 1 + step) % 4) + 1
-        local c = group.plan[idx] or ""
-        if c ~= "" then nextCrop = c; break end
-    end
-    local nextStart = self:getCropPlantingWindow(nextCrop, periodCount, firstPeriod)
-    if nextStart == nil or nextStart == fieldFreeStart then return "" end
-
-    -- Free window [fieldFreeStart .. nextStart-1], walked by offset 0..freeLen-1.
-    local freeLen = ((nextStart - 1 - fieldFreeStart) % periodCount) + 1
-
-    local plantable = self:getCropPeriodFlags(coverName, periodCount, firstPeriod)
-    local growsIn = self:getCropGrowthPeriods(coverName, periodCount, firstPeriod)
-
-    -- Growth-possible months from a candidate sowing month to the deadline (no restriction
-    -- when the engine exposes no growth data).
-    local function growthMonthsAvailable(fromOffset)
-        if growsIn == nil then
-            return RealisticCropRotationFrame.COVER_MIN_GROWTH_MONTHS
-        end
-        local count = 0
-        for o = fromOffset, freeLen - 1 do
-            local p = ((fieldFreeStart - 1 + o) % periodCount) + 1
-            if growsIn[p] then count = count + 1 end
-        end
-        return count
-    end
-
-    -- Keep the contiguous run of months that are both sowable and leave enough
-    -- growth before the deadline. The start slides forward to the first such month.
-    local needed = RealisticCropRotationFrame.COVER_MIN_GROWTH_MONTHS
-    local sowStart, sowLen = nil, 0
-    for offset = 0, freeLen - 1 do
-        local p = ((fieldFreeStart - 1 + offset) % periodCount) + 1
-        local valid = (plantable == nil or plantable[p] == true)
-            and growthMonthsAvailable(offset) >= needed
-
-        if valid then
-            if sowStart == nil then sowStart = p end
-            sowLen = sowLen + 1
-        elseif sowStart ~= nil then
-            break
-        end
-    end
-
-    if sowStart == nil or sowLen <= 0 then return "" end
-    return self:formatCalendarPeriodRange(sowStart, sowLen, periodCount)
-end
-
----Cover recap line: each slot's cover crop name + its rotation-aware sowing month range.
+---Cover recap line: each slot's cover crop name.
 -- @param table group
 -- @return string text
 function RealisticCropRotationFrame:getGroupCoverRecapText(group)
     if group == nil or group.coverPlan == nil then return "" end
 
-    local periodCount, firstPeriod = self:getCalendarPeriodInfo()
     local yearKeys = { "rcr_plan_year1", "rcr_plan_year2", "rcr_plan_year3", "rcr_plan_year4" }
 
     local parts = {}
     for i = 1, 4 do
         local coverName = group.coverPlan[i] or ""
         if coverName ~= "" then
-            local sowingPeriod = self:getRotationAwareCoverSowingText(group, i, periodCount, firstPeriod)
-            if sowingPeriod ~= "" then
-                table.insert(parts, string.format(
-                    self.i18n:getText("rcr_overview_cover_entry"),
-                    self.i18n:getText(yearKeys[i]),
-                    self:getCropDisplayName(coverName),
-                    sowingPeriod
-                ))
-            end
+            table.insert(parts, string.format(
+                self.i18n:getText("rcr_overview_cover_entry"),
+                self.i18n:getText(yearKeys[i]),
+                self:getCropDisplayName(coverName)
+            ))
         end
     end
 

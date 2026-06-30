@@ -11,6 +11,18 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Ротация" />
         <e k="rcr_tab_planning"         v="Планирование" />
+        <e k="rcr_disease_name_sclerotinia" v="Склеротиния" />
+        <e k="rcr_disease_name_bcn"   v="Нематода" />
+        <e k="rcr_section_disease_map"     v="Болезни" />
+        <e k="rcr_disease_sub_infections" v="Активные очаги" />
+        <e k="rcr_disease_sub_pressure"   v="Давление болезней" />
+        <e k="rcr_disease_risk_low"       v="Низкое" />
+        <e k="rcr_disease_risk_moderate"  v="Умеренное" />
+        <e k="rcr_disease_risk_high"      v="Высокое" />
+        <e k="rcr_disease_notification" v="%s обнаружена на поле %s" />
+        <e k="rcr_disease_hud_label"    v="Болезнь" />
+        <e k="rcr_disease_hud_active"   v="%s (активна)" />
+        <e k="rcr_disease_hud_none"     v="Нет" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Ожидаемый остаток +%d (N+1) / +%d (N+2) кг/га" />
@@ -90,6 +102,10 @@
         <e k="rcr_advice_afterForage" v="После временного травостоя зерновая использует плодородие и структуру, накопленные под дерниной." />
         <e k="rcr_advice_disease_sclerotinia" v="Эта культура является хозяином склеротиниоза, поэтому выдерживайте не менее трёх лет от рапса, подсолнечника, сои, гороха и фасоли." />
         <e k="rcr_advice_disease_bcn" v="Эта культура является хозяином свекловичной цистообразующей нематоды, поэтому держите свёклу и крестоцветные подальше друг от друга." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Высокое давление склеротиниоза на этом поле — избегайте рапс, подсолнечник, сою, горох и фасоль как минимум три года." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Высокое давление свекловичной цистообразующей нематоды на этом поле — избегайте сахарную свёклу, столовую свёклу, рапс, горчицу и шпинат как минимум три года." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Умеренное давление склеротиниоза на этом поле — тщательно планируйте чередование культур-хозяев." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Умеренное давление свекловичной цистообразующей нематоды на этом поле — тщательно планируйте чередование свёклы и крестоцветных." />
         <e k="rcr_advice_no_current_crop" v="Нет текущей основной культуры: совет появится при обнаружении культуры." />
 
         <!-- Field card — required actions / growth -->
@@ -108,7 +124,7 @@
         <e k="rcr_plan_none"            v="Не запланировано" />
 
         <!-- Global overview — cover crop recap (own line) -->
-        <e k="rcr_overview_cover_entry" v="Покровная %s: %s (посев %s)" />
+        <e k="rcr_overview_cover_entry" v="Покровная %s: %s" />
 
         <!-- Planning tab — annual calendar -->
         <e k="rcr_calendar_month_1"     v="Мар" />

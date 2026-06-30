@@ -11,6 +11,18 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Rotação" />
         <e k="rcr_tab_planning"         v="Planeamento" />
+        <e k="rcr_disease_name_sclerotinia" v="Esclerotínia" />
+        <e k="rcr_disease_name_bcn"   v="Nemátode" />
+        <e k="rcr_section_disease_map"     v="Doenças" />
+        <e k="rcr_disease_sub_infections" v="Focos ativos" />
+        <e k="rcr_disease_sub_pressure"   v="Pressão de doenças" />
+        <e k="rcr_disease_risk_low"       v="Baixa" />
+        <e k="rcr_disease_risk_moderate"  v="Moderada" />
+        <e k="rcr_disease_risk_high"      v="Alta" />
+        <e k="rcr_disease_notification" v="%s detetada no campo %s" />
+        <e k="rcr_disease_hud_label"    v="Doença" />
+        <e k="rcr_disease_hud_active"   v="%s (ativa)" />
+        <e k="rcr_disease_hud_none"     v="Nenhuma" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Resíduo previsto +%d (N+1) / +%d (N+2) kg/ha" />
@@ -90,6 +102,10 @@
         <e k="rcr_advice_afterForage" v="Depois de uma pastagem temporária, um cereal valoriza a fertilidade e a estrutura acumuladas sob o relvado." />
         <e k="rcr_advice_disease_sclerotinia" v="Esta cultura é hospedeira da esclerotínia, por isso mantenha pelo menos três anos da colza, girassol, soja, ervilha e feijão." />
         <e k="rcr_advice_disease_bcn" v="Esta cultura é hospedeira do nemátodo de quisto da beterraba, por isso mantenha beterrabas e brássicas bem afastadas." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Alta pressão de sclerotinia nesta parcela — evite colza, girassol, soja, ervilha e fava durante pelo menos três anos." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Alta pressão de nemátodo de quisto da beterraba nesta parcela — evite beterraba sacarina, beterraba de mesa, colza, mostarda e espinafre durante pelo menos três anos." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Pressão moderada de sclerotinia nesta parcela — espace as culturas hospedeiras com cuidado." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Pressão moderada de nemátodo de quisto da beterraba nesta parcela — espace beterrabas e brássicas com cuidado." />
         <e k="rcr_advice_no_current_crop" v="Sem cultura principal atual: conselho disponível quando uma cultura for detetada." />
 
         <!-- Field card — required actions / growth -->
@@ -108,7 +124,7 @@
         <e k="rcr_plan_none"            v="Não planeado" />
 
         <!-- Global overview — cover crop recap (own line) -->
-        <e k="rcr_overview_cover_entry" v="Cobertura %s: %s (sementeira %s)" />
+        <e k="rcr_overview_cover_entry" v="Cobertura %s: %s" />
 
         <!-- Planning tab — annual calendar -->
         <e k="rcr_calendar_month_1"     v="Mar" />

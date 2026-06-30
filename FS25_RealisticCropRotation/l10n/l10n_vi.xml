@@ -11,6 +11,18 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Luân canh" />
         <e k="rcr_tab_planning"         v="Lập kế hoạch" />
+        <e k="rcr_disease_name_sclerotinia" v="Bệnh thối hạch" />
+        <e k="rcr_disease_name_bcn"   v="Tuyến trùng" />
+        <e k="rcr_section_disease_map"     v="Bệnh hại" />
+        <e k="rcr_disease_sub_infections" v="Ổ bệnh hoạt động" />
+        <e k="rcr_disease_sub_pressure"   v="Áp lực bệnh hại" />
+        <e k="rcr_disease_risk_low"       v="Thấp" />
+        <e k="rcr_disease_risk_moderate"  v="Trung bình" />
+        <e k="rcr_disease_risk_high"      v="Cao" />
+        <e k="rcr_disease_notification" v="%s được phát hiện trên cánh đồng %s" />
+        <e k="rcr_disease_hud_label"    v="Dịch bệnh" />
+        <e k="rcr_disease_hud_active"   v="%s (đang hoạt động)" />
+        <e k="rcr_disease_hud_none"     v="Không có" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Tồn dư dự kiến +%d (N+1) / +%d (N+2) kg/ha" />
@@ -90,6 +102,10 @@
         <e k="rcr_advice_afterForage" v="Sau đồng cỏ tạm thời, ngũ cốc tận dụng độ phì và cấu trúc tích lũy dưới lớp cỏ." />
         <e k="rcr_advice_disease_sclerotinia" v="Cây này là ký chủ của bệnh thối hạch, vì vậy hãy giữ ít nhất ba năm cách cải dầu, hướng dương, đậu tương, đậu Hà Lan và đậu." />
         <e k="rcr_advice_disease_bcn" v="Cây này là ký chủ của tuyến trùng bào nang củ cải đường, vì vậy hãy giữ củ cải đường và cây họ cải tách biệt rõ." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Áp lực bệnh thối hạch cao trên thửa ruộng này — tránh trồng cải dầu, hướng dương, đậu tương, đậu Hà Lan và đậu cô ve ít nhất ba năm." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Áp lực tuyến trùng bào nang củ cải cao trên thửa ruộng này — tránh trồng củ cải đường, củ dền, cải dầu, cải mù tạt và rau chân vịt ít nhất ba năm." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Áp lực bệnh thối hạch ở mức trung bình trên thửa ruộng này — bố trí luân canh cây ký chủ cẩn thận." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Áp lực tuyến trùng bào nang củ cải ở mức trung bình trên thửa ruộng này — bố trí luân canh cây họ củ cải và cải bắp cẩn thận." />
         <e k="rcr_advice_no_current_crop" v="Không có cây trồng chính hiện tại: tư vấn sẽ có khi phát hiện cây trồng." />
 
         <!-- Field card — required actions / growth -->
@@ -108,7 +124,7 @@
         <e k="rcr_plan_none"            v="Chưa lên kế hoạch" />
 
         <!-- Global overview — cover crop recap (own line) -->
-        <e k="rcr_overview_cover_entry" v="Che phủ %s: %s (gieo %s)" />
+        <e k="rcr_overview_cover_entry" v="Che phủ %s: %s" />
 
         <!-- Planning tab — annual calendar -->
         <e k="rcr_calendar_month_1"     v="Th3" />

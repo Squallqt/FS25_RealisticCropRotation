@@ -11,6 +11,18 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Rotação" />
         <e k="rcr_tab_planning"         v="Planejamento" />
+        <e k="rcr_disease_name_sclerotinia" v="Esclerotínia" />
+        <e k="rcr_disease_name_bcn"   v="Nematoide" />
+        <e k="rcr_section_disease_map"     v="Doenças" />
+        <e k="rcr_disease_sub_infections" v="Focos ativos" />
+        <e k="rcr_disease_sub_pressure"   v="Pressão de doenças" />
+        <e k="rcr_disease_risk_low"       v="Baixa" />
+        <e k="rcr_disease_risk_moderate"  v="Moderada" />
+        <e k="rcr_disease_risk_high"      v="Alta" />
+        <e k="rcr_disease_notification" v="%s detectada no Campo %s" />
+        <e k="rcr_disease_hud_label"    v="Doença" />
+        <e k="rcr_disease_hud_active"   v="%s (ativa)" />
+        <e k="rcr_disease_hud_none"     v="Nenhuma" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Resíduo previsto +%d (N+1) / +%d (N+2) kg/ha" />
@@ -90,6 +102,10 @@
         <e k="rcr_advice_afterForage" v="Depois de uma pastagem temporária, um cereal valoriza a fertilidade e a estrutura acumuladas sob a grama." />
         <e k="rcr_advice_disease_sclerotinia" v="Esta cultura é hospedeira da esclerotínia, então mantenha ao menos três anos da canola, girassol, soja, ervilha e feijão." />
         <e k="rcr_advice_disease_bcn" v="Esta cultura é hospedeira do nematoide de cisto da beterraba, então mantenha beterrabas e brássicas bem afastadas." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="" />
+        <e k="rcr_advice_pressure_high_bcn"           v="" />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="" />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="" />
         <e k="rcr_advice_no_current_crop" v="Sem cultura principal atual: conselho disponível quando uma cultura for detectada." />
 
         <!-- Field card — required actions / growth -->
@@ -108,7 +124,7 @@
         <e k="rcr_plan_none"            v="Não planejado" />
 
         <!-- Global overview — cover crop recap (own line) -->
-        <e k="rcr_overview_cover_entry" v="Cobertura %s: %s (semeadura %s)" />
+        <e k="rcr_overview_cover_entry" v="Cobertura %s: %s" />
 
         <!-- Planning tab — annual calendar -->
         <e k="rcr_calendar_month_1"     v="Mar" />

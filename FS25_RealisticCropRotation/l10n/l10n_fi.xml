@@ -11,6 +11,18 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Kierto" />
         <e k="rcr_tab_planning"         v="Suunnittelu" />
+        <e k="rcr_disease_name_sclerotinia" v="Pahkahome" />
+        <e k="rcr_disease_name_bcn"   v="Ankeroinen" />
+        <e k="rcr_section_disease_map"     v="Taudit" />
+        <e k="rcr_disease_sub_infections" v="Aktiiviset pesäkkeet" />
+        <e k="rcr_disease_sub_pressure"   v="Tautipaine" />
+        <e k="rcr_disease_risk_low"       v="Matala" />
+        <e k="rcr_disease_risk_moderate"  v="Kohtalainen" />
+        <e k="rcr_disease_risk_high"      v="Korkea" />
+        <e k="rcr_disease_notification" v="%s havaittu pellolla %s" />
+        <e k="rcr_disease_hud_label"    v="Kasvitauti" />
+        <e k="rcr_disease_hud_active"   v="%s (aktiivinen)" />
+        <e k="rcr_disease_hud_none"     v="Ei mitään" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Odotettu jäännös +%d (N+1) / +%d (N+2) kg/ha" />
@@ -90,6 +102,10 @@
         <e k="rcr_advice_afterForage" v="Lyhytaikaisen nurmen jälkeen vilja hyödyntää turpeen alle kertyneen viljavuuden ja rakenteen." />
         <e k="rcr_advice_disease_sclerotinia" v="Tämä kasvi on pahkahomeen isäntä, joten pidä vähintään kolme vuotta väliä rapsiin, auringonkukkaan, soijapapuun, herneeseen ja papuun." />
         <e k="rcr_advice_disease_bcn" v="Tämä kasvi on juurikkaan ankeroisen isäntä, joten pidä juurikkaat ja ristikukkaiset selvästi erillään." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="" />
+        <e k="rcr_advice_pressure_high_bcn"           v="" />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="" />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="" />
         <e k="rcr_advice_no_current_crop" v="Ei nykyistä pääkasvia: neuvo saatavilla, kun kasvi havaitaan." />
 
         <!-- Field card — required actions / growth -->
@@ -108,7 +124,7 @@
         <e k="rcr_plan_none"            v="Ei suunniteltu" />
 
         <!-- Global overview — cover crop recap (own line) -->
-        <e k="rcr_overview_cover_entry" v="Kate %s: %s (kylvö %s)" />
+        <e k="rcr_overview_cover_entry" v="Kate %s: %s" />
 
         <!-- Planning tab — annual calendar -->
         <e k="rcr_calendar_month_1"     v="Maa" />

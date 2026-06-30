@@ -11,6 +11,18 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Rotation" />
         <e k="rcr_tab_planning"         v="Planification" />
+        <e k="rcr_disease_name_sclerotinia" v="Sclérotinia" />
+        <e k="rcr_disease_name_bcn"   v="Nématode" />
+        <e k="rcr_section_disease_map"     v="Maladies" />
+        <e k="rcr_disease_sub_infections" v="Foyers actifs" />
+        <e k="rcr_disease_sub_pressure"   v="Pression maladie" />
+        <e k="rcr_disease_risk_low"       v="Faible" />
+        <e k="rcr_disease_risk_moderate"  v="Modérée" />
+        <e k="rcr_disease_risk_high"      v="Élevée" />
+        <e k="rcr_disease_notification" v="%s détecté sur le champ %s" />
+        <e k="rcr_disease_hud_label"    v="Maladie" />
+        <e k="rcr_disease_hud_active"   v="%s (active)" />
+        <e k="rcr_disease_hud_none"     v="Aucune" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Reliquat à venir +%d (N+1) / +%d (N+2) kg/ha" />
@@ -90,6 +102,10 @@
         <e k="rcr_advice_afterForage"    v="Après une prairie temporaire, une céréale valorise la fertilité et la structure accumulées sous le couvert." />
         <e k="rcr_advice_disease_sclerotinia" v="Cette culture héberge le sclérotinia, gardez donc au moins trois ans avec le colza, le tournesol, le soja, le pois et le haricot." />
         <e k="rcr_advice_disease_bcn"         v="Cette culture héberge le nématode à kystes de la betterave, éloignez donc betteraves et brassicacées." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Forte pression sclérotinia sur cette parcelle — évitez colza, tournesol, soja, pois et haricot pendant au moins trois ans." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Forte pression nématode sur cette parcelle — évitez betterave sucrière, betterave rouge, colza, moutarde et épinard pendant au moins trois ans." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Pression sclérotinia modérée sur cette parcelle — espacez les cultures hôtes avec précaution." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Pression nématode modérée sur cette parcelle — espacez betteraves et brassicacées avec précaution." />
         <e k="rcr_advice_no_current_crop" v="Aucune culture principale actuelle : conseil disponible quand une culture est détectée." />
 
         <!-- Field card — required actions / growth -->
@@ -108,7 +124,7 @@
         <e k="rcr_plan_none"            v="Non planifié" />
 
         <!-- Global overview — cover crop recap (own line) -->
-        <e k="rcr_overview_cover_entry" v="Couvert %s : %s (semis %s)" />
+        <e k="rcr_overview_cover_entry" v="Couvert %s : %s" />
 
         <!-- Planning tab — annual calendar -->
         <e k="rcr_calendar_month_1"     v="Mars" />

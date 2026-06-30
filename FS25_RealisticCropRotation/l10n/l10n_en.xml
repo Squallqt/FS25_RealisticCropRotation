@@ -11,6 +11,18 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Rotation" />
         <e k="rcr_tab_planning"         v="Planning" />
+        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia" />
+        <e k="rcr_disease_name_bcn"   v="Nematode" />
+        <e k="rcr_section_disease_map"     v="Diseases" />
+        <e k="rcr_disease_sub_infections" v="Active foci" />
+        <e k="rcr_disease_sub_pressure"   v="Disease pressure" />
+        <e k="rcr_disease_risk_low"       v="Low" />
+        <e k="rcr_disease_risk_moderate"  v="Moderate" />
+        <e k="rcr_disease_risk_high"      v="High" />
+        <e k="rcr_disease_notification" v="%s detected on Field %s" />
+        <e k="rcr_disease_hud_label"    v="Disease" />
+        <e k="rcr_disease_hud_active"   v="%s (active)" />
+        <e k="rcr_disease_hud_none"     v="None" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Expected residue +%d (N+1) / +%d (N+2) kg/ha" />
@@ -90,6 +102,10 @@
         <e k="rcr_advice_afterForage"    v="After a grass ley, a cereal cashes in the fertility and structure built up under the sward." />
         <e k="rcr_advice_disease_sclerotinia" v="This crop hosts sclerotinia, so keep at least three years from canola, sunflower, soybean, pea and bean." />
         <e k="rcr_advice_disease_bcn"         v="This crop hosts the beet cyst nematode, so keep beets and brassicas well apart." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="High sclerotinia pressure on this field — avoid canola, sunflower, soybean, pea and bean for at least three years." />
+        <e k="rcr_advice_pressure_high_bcn"           v="High nematode pressure on this field — avoid sugar beet, beetroot, canola, mustard and spinach for at least three years." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderate sclerotinia pressure on this field — space host crops carefully." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Moderate nematode pressure on this field — space beets and brassicas carefully." />
         <e k="rcr_advice_no_current_crop" v="No current main crop: advice available when a crop is detected." />
 
         <!-- Field card — required actions / growth -->
@@ -108,7 +124,7 @@
         <e k="rcr_plan_none"            v="Not Planned" />
 
         <!-- Global overview — cover crop recap (own line) -->
-        <e k="rcr_overview_cover_entry" v="Cover %s: %s (sow %s)" />
+        <e k="rcr_overview_cover_entry" v="Cover %s: %s" />
 
         <!-- Planning tab — annual calendar -->
         <e k="rcr_calendar_month_1"     v="Mar" />

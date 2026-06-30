@@ -60,6 +60,33 @@ local function isRealFarmOwner(farmId)
     return true
 end
 
+---World-space axis-aligned bounding box of a field from its polygon corner nodes.
+---FS25 Field objects carry `polygonPoints` (a list of transform nodes); there is no
+---`fieldDimensions` triplet structure. Single source of truth for field bounds.
+-- @param table field
+-- @return number minX, maxX, minZ, maxZ, or nil when geometry is unavailable
+local function fieldPolygonBounds(field)
+    if field == nil or getWorldTranslation == nil then return nil end
+    local points = field.polygonPoints
+    if type(points) ~= "table" or #points == 0 then return nil end
+
+    local minX, maxX, minZ, maxZ
+    for _, node in ipairs(points) do
+        if node ~= nil then
+            local ok, x, _, z = pcall(getWorldTranslation, node)
+            if ok and type(x) == "number" and type(z) == "number" then
+                if minX == nil or x < minX then minX = x end
+                if maxX == nil or x > maxX then maxX = x end
+                if minZ == nil or z < minZ then minZ = z end
+                if maxZ == nil or z > maxZ then maxZ = z end
+            end
+        end
+    end
+
+    if minX == nil then return nil end
+    return minX, maxX, minZ, maxZ
+end
+
 ---Returns the first usable Field object attached to a farmland.
 -- @param table farmland
 -- @return table field or nil
@@ -158,14 +185,19 @@ local function getFruitTypeIndexAtWorldPos(x, z)
     return normalizeFruitTypeIndex(fruitTypeIndex), true, tonumber(growthState)
 end
 
----Appends interior sample points (per field dimension, 5 offsets each) to a list.
+---Appends a few interior sample points spread across the field to a list, so the
+---majority-crop vote does not rely on the field centre alone. Points are taken at
+---fixed fractions of the field's polygon bounding box and kept only when they land on
+---worked field ground (terrain-detail mask), so off-field corners of an angled field
+---do not pollute the vote.
 -- @param table field
 -- @param table samples Accumulator of { x, z } points
-local function collectFieldDimensionSamples(field, samples)
-    if field == nil or getWorldTranslation == nil then return end
+local function collectFieldInteriorSamples(field, samples)
+    local minX, maxX, minZ, maxZ = fieldPolygonBounds(field)
+    if minX == nil then return end
 
-    local dimensions = field.fieldDimensions or field.dimensions
-    if type(dimensions) ~= "table" then return end
+    local terrainDetailId = g_currentMission ~= nil and g_currentMission.terrainDetailId or nil
+    local canMask = terrainDetailId ~= nil and getDensityAtWorldPos ~= nil
 
     local offsets = {
         {0.50, 0.50},
@@ -175,27 +207,11 @@ local function collectFieldDimensionSamples(field, samples)
         {0.75, 0.75},
     }
 
-    for _, dimension in pairs(dimensions) do
-        local startNode = dimension ~= nil and (dimension.start or dimension.startNode) or nil
-        local widthNode = dimension ~= nil and (dimension.width or dimension.widthNode) or nil
-        local heightNode = dimension ~= nil and (dimension.height or dimension.heightNode) or nil
-
-        if startNode ~= nil and widthNode ~= nil and heightNode ~= nil then
-            local okStart, sx, _, sz = pcall(getWorldTranslation, startNode)
-            local okWidth, wx, _, wz = pcall(getWorldTranslation, widthNode)
-            local okHeight, hx, _, hz = pcall(getWorldTranslation, heightNode)
-            if okStart and okWidth and okHeight
-                and type(sx) == "number" and type(sz) == "number"
-                and type(wx) == "number" and type(wz) == "number"
-                and type(hx) == "number" and type(hz) == "number" then
-                for _, offset in ipairs(offsets) do
-                    local u, v = offset[1], offset[2]
-                    table.insert(samples, {
-                        x = sx + (wx - sx) * u + (hx - sx) * v,
-                        z = sz + (wz - sz) * u + (hz - sz) * v,
-                    })
-                end
-            end
+    for _, offset in ipairs(offsets) do
+        local x = minX + (maxX - minX) * offset[1]
+        local z = minZ + (maxZ - minZ) * offset[2]
+        if not canMask or getDensityAtWorldPos(terrainDetailId, x, 0, z) ~= 0 then
+            table.insert(samples, { x = x, z = z })
         end
     end
 end
@@ -214,7 +230,7 @@ local function getFieldFruitTypeIndexFromDensityMap(field)
     if field ~= nil and type(field.posX) == "number" and type(field.posZ) == "number" then
         table.insert(samples, { x = field.posX, z = field.posZ })
     end
-    collectFieldDimensionSamples(field, samples)
+    collectFieldInteriorSamples(field, samples)
 
     local sampled = false
     local counts = {}
@@ -355,7 +371,7 @@ local function getFieldGroundTypeFromDensityMap(field)
     if field ~= nil and type(field.posX) == "number" and type(field.posZ) == "number" then
         table.insert(samples, { x = field.posX, z = field.posZ })
     end
-    collectFieldDimensionSamples(field, samples)
+    collectFieldInteriorSamples(field, samples)
     if #samples == 0 then return nil end
 
     local mask = 2 ^ numChannels - 1
@@ -475,7 +491,7 @@ local function getNativeSoilStateIndex(field)
     if type(field.posX) == "number" and type(field.posZ) == "number" then
         table.insert(samples, { x = field.posX, z = field.posZ })
     end
-    collectFieldDimensionSamples(field, samples)
+    collectFieldInteriorSamples(field, samples)
 
     local counts = {}
     if #samples > 0 and FieldState ~= nil then
@@ -899,7 +915,7 @@ function RealisticCropRotationManager:getRequiredFieldActionLabel(farmlandId)
     if type(field.posX) == "number" and type(field.posZ) == "number" then
         samples[#samples + 1] = { x = field.posX, z = field.posZ }
     end
-    collectFieldDimensionSamples(field, samples)
+    collectFieldInteriorSamples(field, samples)
     if #samples == 0 then return nil end
 
     local total, plowCount, rollCount = 0, 0, 0
@@ -1061,55 +1077,17 @@ end
 
 -- Precision Farming soil reads (nitrogen + pH); vanilla fallback otherwise.
 
----World-space bounding box of a field from its dimension parallelograms.
--- @param table field
--- @return number minX, maxX, minZ, maxZ, or nil when geometry is unavailable
-local function getFieldBoundingBox(field)
-    if field == nil or getWorldTranslation == nil then return nil end
-    local dimensions = field.fieldDimensions or field.dimensions
-    if type(dimensions) ~= "table" then return nil end
-
-    local minX, maxX, minZ, maxZ
-    local function acc(x, z)
-        if minX == nil or x < minX then minX = x end
-        if maxX == nil or x > maxX then maxX = x end
-        if minZ == nil or z < minZ then minZ = z end
-        if maxZ == nil or z > maxZ then maxZ = z end
-    end
-
-    for _, dimension in pairs(dimensions) do
-        local startNode = dimension ~= nil and (dimension.start or dimension.startNode) or nil
-        local widthNode = dimension ~= nil and (dimension.width or dimension.widthNode) or nil
-        local heightNode = dimension ~= nil and (dimension.height or dimension.heightNode) or nil
-        if startNode ~= nil and widthNode ~= nil and heightNode ~= nil then
-            local okStart, sx, _, sz = pcall(getWorldTranslation, startNode)
-            local okWidth, wx, _, wz = pcall(getWorldTranslation, widthNode)
-            local okHeight, hx, _, hz = pcall(getWorldTranslation, heightNode)
-            if okStart and okWidth and okHeight
-                and type(sx) == "number" and type(sz) == "number"
-                and type(wx) == "number" and type(wz) == "number"
-                and type(hx) == "number" and type(hz) == "number" then
-                acc(sx, sz); acc(wx, wz); acc(hx, hz)
-                acc(wx + hx - sx, wz + hz - sz)  -- opposite parallelogram corner
-            end
-        end
-    end
-
-    if minX == nil then return nil end
-    return minX, maxX, minZ, maxZ
-end
-
 ---Builds an { x, z } sample grid over the field bbox, kept to the workable ground of
 ---THIS farmland (terrainDetailId + getFarmlandIdAtWorldPosition) so neighbours never leak in.
 -- @param table field
 -- @param integer farmlandId
 -- @return table points, or nil when no point is on the farmland
-function RealisticCropRotationManager:buildFieldSampleGrid(field, farmlandId)
+function RealisticCropRotationManager:buildFieldSampleGrid(field, farmlandId, customSteps)
     if field == nil then return nil end
     if type(field.posX) ~= "number" or type(field.posZ) ~= "number" then return nil end
 
     -- Real field bounding box (covers non-square fields); equal-area square is a fallback.
-    local minX, maxX, minZ, maxZ = getFieldBoundingBox(field)
+    local minX, maxX, minZ, maxZ = fieldPolygonBounds(field)
     if minX == nil then
         local areaHa = getFieldAreaHa(field)
         if areaHa <= 0 then areaHa = 1 end
@@ -1118,7 +1096,7 @@ function RealisticCropRotationManager:buildFieldSampleGrid(field, farmlandId)
         minZ, maxZ = field.posZ - half, field.posZ + half
     end
 
-    local steps = FIELD_SCAN_STEPS
+    local steps = math.max(2, math.floor(tonumber(customSteps) or FIELD_SCAN_STEPS))
     local stepX = (steps > 1) and ((maxX - minX) / (steps - 1)) or 0
     local stepZ = (steps > 1) and ((maxZ - minZ) / (steps - 1)) or 0
 
@@ -1448,7 +1426,7 @@ function RealisticCropRotationManager.classifyGrowthStage(fruitType, growthState
     return string.format("(%s) · %s", numbers, tierText)
 end
 
----"X/Y" growth progress toward maturity (nil for terminal states). Used by menu card + HUD.
+---"X/Y" native growth-state progress (nil for terminal states). Used by menu card + HUD.
 -- @param table fruitType
 -- @param integer growthState
 -- @return string numbers, or nil
@@ -1464,15 +1442,27 @@ function RealisticCropRotationManager.getGrowthStageNumbers(fruitType, growthSta
         return nil
     end
 
-    -- Denominator = maturity (end of growing tier), so the gauge reads N/N once fully grown.
-    local maturity = tonumber(fruitType.minHarvestingGrowthState) or 0
-    if maturity <= 0 then return nil end
-    local minPrep = tonumber(fruitType.minPreparingGrowthState) or -1
-    if minPrep >= 1 and minPrep < maturity then
-        maturity = minPrep
+    if type(fruitType.growthStateToName) == "table" and fruitType.growthStateToName[growthState] == nil then
+        return nil
     end
 
-    return string.format("%d/%d", math.min(growthState, maturity), maturity)
+    local minPreparing = tonumber(fruitType.minPreparingGrowthState) or -1
+    local maxPreparing = tonumber(fruitType.maxPreparingGrowthState) or -1
+    if minPreparing >= 1 and growthState >= minPreparing and growthState <= maxPreparing then
+        return string.format("%d/%d", minPreparing, minPreparing)
+    end
+
+    local maxStage = tonumber(fruitType.numGrowthStates) or 0
+    local maxHarvest = tonumber(fruitType.maxHarvestingGrowthState) or 0
+    if maxHarvest > maxStage then
+        maxStage = maxHarvest
+    end
+
+    if maxStage <= 0 or growthState > maxStage then
+        return nil
+    end
+
+    return string.format("%d/%d", growthState, maxStage)
 end
 
 ---Per-field card info: growth stage + the mirrored base-game weed line.

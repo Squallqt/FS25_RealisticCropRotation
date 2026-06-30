@@ -11,6 +11,18 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="輪作" />
         <e k="rcr_tab_planning"         v="計画" />
+        <e k="rcr_disease_name_sclerotinia" v="菌核病" />
+        <e k="rcr_disease_name_bcn"   v="センチュウ" />
+        <e k="rcr_section_disease_map"     v="病害" />
+        <e k="rcr_disease_sub_infections" v="発生箇所" />
+        <e k="rcr_disease_sub_pressure"   v="病害圧" />
+        <e k="rcr_disease_risk_low"       v="低" />
+        <e k="rcr_disease_risk_moderate"  v="中" />
+        <e k="rcr_disease_risk_high"      v="高" />
+        <e k="rcr_disease_notification" v="%s が圃場 %s で検出されました" />
+        <e k="rcr_disease_hud_label"    v="病害" />
+        <e k="rcr_disease_hud_active"   v="%s（発生中）" />
+        <e k="rcr_disease_hud_none"     v="なし" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="予想残留 +%d (N+1) / +%d (N+2) kg/ha" />
@@ -90,6 +102,10 @@
         <e k="rcr_advice_afterForage" v="短期草地の後は、穀物が芝の下に蓄えられた地力と構造を活用します。" />
         <e k="rcr_advice_disease_sclerotinia" v="この作物は菌核病の宿主です。ナタネ、ヒマワリ、ダイズ、エンドウ、インゲンから少なくとも3年あけてください。" />
         <e k="rcr_advice_disease_bcn" v="この作物はテンサイシストセンチュウの宿主です。テンサイとアブラナ科作物を十分に離してください。" />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="この圃場は菌核病のリスクが高い状態です。最低3年間はナタネ、ヒマワリ、ダイズ、エンドウ、インゲンの作付けを避けてください。" />
+        <e k="rcr_advice_pressure_high_bcn"           v="この圃場はテンサイシストセンチュウのリスクが高い状態です。最低3年間はテンサイ、ビーツ、ナタネ、カラシナ、ホウレンソウの作付けを避けてください。" />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="この圃場は菌核病のリスクがやや高い状態です。宿主作物の作付け間隔に注意してください。" />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="この圃場はテンサイシストセンチュウのリスクがやや高い状態です。テンサイやアブラナ科作物の作付け間隔に注意してください。" />
         <e k="rcr_advice_no_current_crop" v="現在の主要作物なし: 作物が検出されるとアドバイスが表示されます。" />
 
         <!-- Field card — required actions / growth -->
@@ -108,7 +124,7 @@
         <e k="rcr_plan_none"            v="未計画" />
 
         <!-- Global overview — cover crop recap (own line) -->
-        <e k="rcr_overview_cover_entry" v="被覆 %s: %s (播種 %s)" />
+        <e k="rcr_overview_cover_entry" v="被覆 %s: %s" />
 
         <!-- Planning tab — annual calendar -->
         <e k="rcr_calendar_month_1"     v="3月" />

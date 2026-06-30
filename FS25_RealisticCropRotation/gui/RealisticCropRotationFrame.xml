@@ -2,10 +2,11 @@
 <GUI name="RealisticCropRotationFrame">
 
     <!-- ============================ LEFT SIDEBAR ============================ -->
-    <ThreePartBitmap profile="fs25_primaryMenuContainerBg">
-        <Bitmap profile="fs25_menuContainerArrow"/>
+    <ThreePartBitmap profile="fs25_subCategoryContainerBg">
+        <Bitmap profile="fs25_subCategoryContainerArrow"/>
+    </ThreePartBitmap>
 
-        <GuiElement profile="fs25_subCategoryContainer">
+    <GuiElement profile="fs25_subCategoryContainer">
 
             <!-- View tab selector: cycles HISTORY <-> PLANNING -->
             <MultiTextOption profile="fs25_subCategorySelector" id="viewSelector" onClick="onViewChanged"/>
@@ -41,8 +42,7 @@
                 </ThreePartBitmap>
             </GuiElement>
 
-        </GuiElement>
-    </ThreePartBitmap>
+    </GuiElement>
 
     <!-- ============================ RIGHT PANE ============================ -->
     <GuiElement profile="fs25_menuContentContainer">
