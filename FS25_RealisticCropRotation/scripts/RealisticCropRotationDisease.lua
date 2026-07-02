@@ -23,6 +23,13 @@ RealisticCropRotationDisease.DESTROY_PERLIN_PERSISTENCE = 0.5
 RealisticCropRotationDisease.DESTROY_PERLIN_MAX = 10000     -- noise value range (GREATER cut is 0..this)
 RealisticCropRotationDisease.DESTROY_DEAD_FRACTION_MAX = 0.90 -- dead share of the parcel at full severity
 
+-- Predictive-risk band thresholds. The worst pathogen load (getRisk, from the rotation history) is
+-- mapped to a band 1..3 painted into the runtime risk display map (grid.riskMapId) and shown by the
+-- in-game map's pressure view; below the low threshold the field is left unpainted (band 0).
+RealisticCropRotationDisease.RISK_BAND_LOW_THRESHOLD = 0.10
+RealisticCropRotationDisease.RISK_BAND_MODERATE_THRESHOLD = 0.25
+RealisticCropRotationDisease.RISK_BAND_HIGH_THRESHOLD = 0.50
+
 ---Creates the disease layer bound to the rotation manager.
 -- @param table manager
 -- @return RealisticCropRotationDisease instance
@@ -32,6 +39,7 @@ function RealisticCropRotationDisease.new(manager, grid)
     self.grid = grid
     self.state = {}          -- farmlandId -> group -> { severity, seed } (seed fixes the destruction scatter)
     self.crop = {}           -- farmlandId -> crop name the state belongs to
+    self.lastRiskBand = {}   -- farmlandId -> band last painted into the risk display map
     return self
 end
 
@@ -276,6 +284,36 @@ local function applyPerlinDestruction(targetMapId, firstChannel, numChannels, va
     return true
 end
 
+---Erases grid marks that landed outside the worked soil (parcel margins/tracks): the destruction
+---pass paints farmland ∩ Perlin, so some cells fall on unworked parcel ground where no crop ever
+---grew. Clearing them at WRITE time keeps the map overlay clean without any render-time mask (the
+---overlay draws the grid directly, BMP-style). Same 2-filter modifier mechanism as the paint pass.
+-- @param table grid overlay grid wrapper; @param table bbox field world bounds; @param integer farmlandId
+local function clipGridToWorkedSoil(grid, bbox, farmlandId)
+    if grid == nil or grid.mapId == nil or DensityMapModifier == nil or DensityMapFilter == nil
+        or g_terrainNode == nil or g_farmlandManager == nil
+        or type(g_farmlandManager.getLocalMap) ~= "function"
+        or g_currentMission == nil or g_currentMission.fieldGroundSystem == nil
+        or FieldDensityMap == nil or getBitVectorMapNumChannels == nil then
+        return
+    end
+    local groundTypeMapId, groundFirstChannel, groundNumChannels =
+        g_currentMission.fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE)
+    local farmlandLocalMap = g_farmlandManager:getLocalMap()
+    if groundTypeMapId == nil or farmlandLocalMap == nil then return end
+
+    local modifier = DensityMapModifier.new(grid.mapId, 0, grid.numChannels, g_terrainNode)
+    modifier:setParallelogramWorldCoords(bbox.minX, bbox.minZ, bbox.maxX, bbox.minZ, bbox.minX, bbox.maxZ, DensityCoordType.POINT_POINT_POINT)
+
+    local farmlandFilter = DensityMapFilter.new(farmlandLocalMap, 0, getBitVectorMapNumChannels(farmlandLocalMap))
+    farmlandFilter:setValueCompareParams(DensityValueCompareType.EQUAL, farmlandId)
+
+    local unworkedFilter = DensityMapFilter.new(groundTypeMapId, groundFirstChannel, groundNumChannels)
+    unworkedFilter:setValueCompareParams(DensityValueCompareType.EQUAL, 0)
+
+    modifier:executeSet(0, farmlandFilter, unworkedFilter)
+end
+
 ---Applies the current destruction for one infection. On the SERVER it writes 0 into the real crop
 ---density map (server-authoritative, engine-synced to clients); on every machine it writes the
 ---disease state into the overlay grid over the SAME world regions. Idempotent and cheap (one native
@@ -303,9 +341,11 @@ local function destroyCropField(field, farmlandId, seed, severity, diseaseState,
         end
     end
 
-    -- Overlay grid (server and client) over the same world regions.
+    -- Overlay grid (server and client) over the same world regions. The clip pass then erases the
+    -- few marks that fell on unworked parcel ground, so the rendered overlay stays inside the field.
     if grid ~= nil and grid.mapId ~= nil and diseaseState ~= nil and diseaseState > 0 then
         if applyPerlinDestruction(grid.mapId, 0, grid.numChannels, diseaseState, false, bbox, farmlandId, seed, threshold) then
+            clipGridToWorkedSoil(grid, bbox, farmlandId)
             grid.changeRevision = (grid.changeRevision or 0) + 1
         end
     end
@@ -361,6 +401,52 @@ function RealisticCropRotationDisease:getRisk(farmlandId)
         if load > risk then risk = load end
     end
     return risk
+end
+
+---Display band of a field's predictive risk: 0 (none) .. 3 (high). Client-safe like getRisk.
+-- @param integer farmlandId
+-- @return integer band
+function RealisticCropRotationDisease:getRiskBand(farmlandId)
+    local risk = self:getRisk(farmlandId)
+    if risk >= RealisticCropRotationDisease.RISK_BAND_HIGH_THRESHOLD then return 3 end
+    if risk >= RealisticCropRotationDisease.RISK_BAND_MODERATE_THRESHOLD then return 2 end
+    if risk >= RealisticCropRotationDisease.RISK_BAND_LOW_THRESHOLD then return 1 end
+    return 0
+end
+
+---Repaints the runtime risk display map, OFF the UI path (BMP-style: the map overlay only ever
+---renders existing maps; painting happens at gameplay events -- load, period tick, ownership
+---change, MP sync). Incremental by default: only fields whose band changed since the last paint
+---are repainted (usually none, at most a handful of native modifier passes). `force` wipes the map
+---and repaints every owned field (load / ownership changes, where stale cells must be erased).
+-- @param boolean force full wipe + repaint
+function RealisticCropRotationDisease:refreshRiskMap(force)
+    local grid = self.grid
+    local mgr = self.manager
+    if grid == nil or grid.riskMapId == nil or mgr == nil
+        or type(mgr.getOwnedRotationFarmlandIds) ~= "function"
+        or type(mgr.getFieldByFarmlandId) ~= "function"
+        or type(grid.paintFarmlandRisk) ~= "function" then
+        return
+    end
+
+    if force then
+        grid:clearRiskMap()
+        self.lastRiskBand = {}
+    end
+
+    for _, farmlandId in ipairs(mgr:getOwnedRotationFarmlandIds() or {}) do
+        local id = tonumber(farmlandId)
+        if id ~= nil and id > 0 then
+            local band = self:getRiskBand(id)
+            if band ~= self.lastRiskBand[id] then
+                local field = mgr:getFieldByFarmlandId(id)
+                if field ~= nil and grid:paintFarmlandRisk(field, id, band) then
+                    self.lastRiskBand[id] = band
+                end
+            end
+        end
+    end
 end
 
 ---Worst active infection severity on a field, in [0,1] (0 when none). Server-authoritative.
@@ -440,6 +526,9 @@ function RealisticCropRotationDisease:applySyncData(state, crop)
     -- from the synced seed + severity. The server keeps its persistent .grle (the real destruction).
     if g_server == nil then
         self:rebuildGridFromState()
+        -- Risk derives from the synced history, so a sync is the client's "state changed" event:
+        -- repaint the bands that moved (all of them on the first sync, none on most others).
+        self:refreshRiskMap(false)
     end
 end
 

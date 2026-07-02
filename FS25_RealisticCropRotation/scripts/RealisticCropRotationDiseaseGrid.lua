@@ -6,12 +6,22 @@ RealisticCropRotationDiseaseGrid.GRID_SIZE = 2048
 RealisticCropRotationDiseaseGrid.NUM_CHANNELS = 2
 RealisticCropRotationDiseaseGrid.FILENAME = "realisticCropRotationDiseaseGrid.grle"
 
+-- Risk map: a runtime-only display map (never saved) holding the per-field risk band 0..3 on
+-- worked-soil cells. Painted natively off the UI path (load / period tick / ownership / MP sync)
+-- and rendered directly by the map overlay, BMP-style: no mask and no map building at render time.
+RealisticCropRotationDiseaseGrid.RISK_MAP_SIZE = 1024
+RealisticCropRotationDiseaseGrid.RISK_NUM_CHANNELS = 2
+
 function RealisticCropRotationDiseaseGrid.new()
     local self = setmetatable({}, RealisticCropRotationDiseaseGrid_mt)
     self.mapId = nil
     self.size = RealisticCropRotationDiseaseGrid.GRID_SIZE
     self.numChannels = RealisticCropRotationDiseaseGrid.NUM_CHANNELS
     self.changeRevision = 0
+    self.riskMapId = nil
+    self.riskMapSize = RealisticCropRotationDiseaseGrid.RISK_MAP_SIZE
+    self.riskNumChannels = RealisticCropRotationDiseaseGrid.RISK_NUM_CHANNELS
+    self.riskRevision = 0
     return self
 end
 
@@ -58,6 +68,10 @@ function RealisticCropRotationDiseaseGrid:loadMap(savegamePath)
 
     local w = getBitVectorMapSize(self.mapId)
     self.size = tonumber(w) or self.size
+
+    -- Runtime-only risk display map (never saved: risk is derived from the synced history).
+    self.riskMapId = createBitVectorMap("rcrRiskMap")
+    loadBitVectorMapNew(self.riskMapId, self.riskMapSize, self.riskMapSize, self.riskNumChannels, false)
 end
 
 function RealisticCropRotationDiseaseGrid:saveMap(savegamePath)
@@ -70,6 +84,58 @@ function RealisticCropRotationDiseaseGrid:deleteMap()
         delete(self.mapId)
         self.mapId = nil
     end
+    if self.riskMapId ~= nil then
+        delete(self.riskMapId)
+        self.riskMapId = nil
+    end
+end
+
+---Wipes the risk display map (before a full repaint, e.g. on ownership changes).
+function RealisticCropRotationDiseaseGrid:clearRiskMap()
+    if self.riskMapId == nil then return end
+    setBitVectorMapParallelogram(self.riskMapId, 0, 0, self.riskMapSize, 0, 0, self.riskMapSize, 0, self.riskNumChannels, 0)
+    self.riskRevision = (self.riskRevision or 0) + 1
+end
+
+---Paints one field's risk band into the risk display map, on its worked-soil cells only
+---(farmland map EQUAL farmlandId + groundType GREATER 0): the shape is the real cultivable
+---field, like BMP's overlay base, not the cadastral parcel. Same native modifier+filters
+---mechanism as clearField / the destruction pass. band 0 erases the field's cells.
+-- @param table field game Field object (for the world bbox)
+-- @param integer farmlandId
+-- @param integer band risk band 0..3
+function RealisticCropRotationDiseaseGrid:paintFarmlandRisk(field, farmlandId, band)
+    if self.riskMapId == nil or field == nil or g_terrainNode == nil
+        or DensityMapModifier == nil or DensityMapFilter == nil
+        or DensityValueCompareType == nil or DensityCoordType == nil
+        or g_farmlandManager == nil or type(g_farmlandManager.getLocalMap) ~= "function"
+        or getBitVectorMapNumChannels == nil
+        or g_currentMission == nil or g_currentMission.fieldGroundSystem == nil
+        or type(g_currentMission.fieldGroundSystem.getDensityMapData) ~= "function"
+        or FieldDensityMap == nil or FieldDensityMap.GROUND_TYPE == nil then
+        return false
+    end
+
+    local farmlandLocalMap = g_farmlandManager:getLocalMap()
+    local groundTypeMapId, groundFirstChannel, groundNumChannels =
+        g_currentMission.fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE)
+    if farmlandLocalMap == nil or groundTypeMapId == nil then return false end
+
+    local minX, minZ, maxX, maxZ = fieldWorldBounds(field)
+    if minX == nil then return false end
+
+    local modifier = DensityMapModifier.new(self.riskMapId, 0, self.riskNumChannels, g_terrainNode)
+    modifier:setParallelogramWorldCoords(minX, minZ, maxX, minZ, minX, maxZ, DensityCoordType.POINT_POINT_POINT)
+
+    local farmlandFilter = DensityMapFilter.new(farmlandLocalMap, 0, getBitVectorMapNumChannels(farmlandLocalMap))
+    farmlandFilter:setValueCompareParams(DensityValueCompareType.EQUAL, farmlandId)
+
+    local groundFilter = DensityMapFilter.new(groundTypeMapId, groundFirstChannel, groundNumChannels)
+    groundFilter:setValueCompareParams(DensityValueCompareType.GREATER, 0)
+
+    modifier:executeSet(band, farmlandFilter, groundFilter)
+    self.riskRevision = (self.riskRevision or 0) + 1
+    return true
 end
 
 ---Wipes this field's disease marks from the grid (called on crop change / clear).

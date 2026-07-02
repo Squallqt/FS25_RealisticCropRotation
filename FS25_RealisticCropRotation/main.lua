@@ -153,6 +153,13 @@ local function onFarmlandOwnerChanged(farmlandId, _farmId, loadFromSavegame)
         refreshRealisticCropRotationFrame()
         RealisticCropRotation.requestBroadcast()
     end
+
+    -- Ownership changed: wipe + repaint the risk display map so bought fields appear and sold
+    -- fields disappear (clients repaint through the broadcast -> sync path).
+    if RealisticCropRotation.disease ~= nil
+        and type(RealisticCropRotation.disease.refreshRiskMap) == "function" then
+        RealisticCropRotation.disease:refreshRiskMap(true)
+    end
 end
 
 ---Reconciles active crops for all owned farmlands on a period change (server).
@@ -181,6 +188,13 @@ local function onPeriodChanged()
     end
     if changed or diseaseUpdated then
         RealisticCropRotation.requestBroadcast()
+    end
+
+    -- Risk bands drift with the period (history decay): repaint the fields whose band moved
+    -- (usually none or a couple of native passes) so the map page never paints on the UI path.
+    if RealisticCropRotation.disease ~= nil
+        and type(RealisticCropRotation.disease.refreshRiskMap) == "function" then
+        RealisticCropRotation.disease:refreshRiskMap(false)
     end
 end
 
@@ -339,6 +353,10 @@ local function loadedMission()
         end
         if RealisticCropRotation.disease ~= nil then
             RealisticCropRotation.disease:loadFromXML(savegameFolderPath)
+            -- Initial paint of the risk display map, during the loading screen (never on menu open).
+            if type(RealisticCropRotation.disease.refreshRiskMap) == "function" then
+                RealisticCropRotation.disease:refreshRiskMap(true)
+            end
         end
         if g_messageCenter ~= nil and MessageType ~= nil and MessageType.FARMLAND_OWNER_CHANGED ~= nil then
             RealisticCropRotation.farmlandOwnerChangeListener = {

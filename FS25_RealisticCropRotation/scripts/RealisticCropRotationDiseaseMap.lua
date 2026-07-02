@@ -1,11 +1,16 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
 -- Native in-game map disease overlay for Realistic Crop Rotation.
 --
--- Two sub-pages share a single in-game map page:
---   1. "Active infections" — rendered directly from the persistent disease grid
---      (RealisticCropRotation.grid, a BitVectorMap). ZERO Lua pixel iteration.
---   2. "Disease risk"      — a temporary BitVectorMap is filled with field
---      parallelograms coloured by the predictive risk of each owned field.
+-- Two sub-pages share a single in-game map page. The rendering follows the reference
+-- BMP (FS25_CropDiseases) overlay pattern: each view is coloured directly from an
+-- existing BitVectorMap -- nothing but native setDensityMapVisualizationOverlayStateColor
+-- calls and one async GPU generation (no healthy-field base layer, by design choice).
+-- NO map is built or painted here: display maps are maintained off the UI path, at
+-- gameplay events (load / period tick / ownership / MP sync). ZERO Lua pixel iteration.
+--   1. "Active infections" — reads the persistent disease grid
+--      (RealisticCropRotation.grid, clipped to worked soil at write time).
+--   2. "Disease risk"      — reads the runtime risk-band map (grid.riskMapId,
+--      painted on worked soil per owned field by RealisticCropRotationDisease).
 --
 -- Lifecycle: the table MUST survive source() reloads, so it is only created when
 -- absent and constants are assigned individually. Every closure installed by
@@ -15,21 +20,16 @@
 RealisticCropRotationDiseaseMap = RealisticCropRotationDiseaseMap or {}
 
 RealisticCropRotationDiseaseMap.PAGE_FIELD = "rcrDiseaseMapPageIndex"
-RealisticCropRotationDiseaseMap.RISK_OVERLAY_SIZE = 2048
 RealisticCropRotationDiseaseMap.UPDATE_INTERVAL_MS = 1000
 
 -- Grid states (must match Disease.lua: SCLEROTINIA=1, BCN=2).
 RealisticCropRotationDiseaseMap.STATE_SCLEROTINIA = 1
 RealisticCropRotationDiseaseMap.STATE_BCN = 2
 
--- Risk states used by the temporary risk BitVectorMap.
+-- Risk bands (cell values of the runtime risk map, written by Disease:refreshRiskMap).
 RealisticCropRotationDiseaseMap.RISK_LOW = 1
 RealisticCropRotationDiseaseMap.RISK_MODERATE = 2
 RealisticCropRotationDiseaseMap.RISK_HIGH = 3
-
-RealisticCropRotationDiseaseMap.RISK_THRESHOLD_LOW = 0.10
-RealisticCropRotationDiseaseMap.RISK_THRESHOLD_MODERATE = 0.25
-RealisticCropRotationDiseaseMap.RISK_THRESHOLD_HIGH = 0.50
 
 RealisticCropRotationDiseaseMap.SUB_PAGE_INFECTIONS = 1
 RealisticCropRotationDiseaseMap.SUB_PAGE_PRESSURE = 2
@@ -76,42 +76,6 @@ end
 ---The persistent disease grid (BitVectorMap wrapper).
 local function getGrid()
     return RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
-end
-
----The rotation manager.
-local function getManager()
-    if RealisticCropRotation ~= nil and RealisticCropRotation.manager ~= nil then
-        return RealisticCropRotation.manager
-    end
-    return g_currentMission ~= nil and g_currentMission.realisticCropRotationManager or nil
-end
-
----Set of owned rotation farmland ids -> true.
-local function getOwnedRotationMap(manager)
-    local out = {}
-    if manager == nil or type(manager.getOwnedRotationFarmlandIds) ~= "function" then return out end
-    for _, farmlandId in ipairs(manager:getOwnedRotationFarmlandIds() or {}) do
-        local n = tonumber(farmlandId)
-        if n ~= nil and n > 0 then out[n] = true end
-    end
-    return out
-end
-
----Ground-type density map + a bitmask selecting any cultivable-field cell (groundType ~= 0). Used
----to clip the infection overlay to the worked field, matching the real crop damage (which only ever
----lands on cultivable cells). Same signal the base game / reference mods use for the field area.
----Returns (0, 0) when unavailable, i.e. no clipping. NOTE: only for the infection view -- the
----pressure view colours the whole parcel on purpose.
-local function getFieldGroundMask()
-    local mission = g_currentMission
-    if mission == nil or mission.fieldGroundSystem == nil
-        or type(mission.fieldGroundSystem.getDensityMapData) ~= "function"
-        or FieldDensityMap == nil or FieldDensityMap.GROUND_TYPE == nil or bit32 == nil then
-        return 0, 0
-    end
-    local mapId, firstChannel, numChannels = mission.fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE)
-    if mapId == nil or firstChannel == nil or numChannels == nil then return 0, 0 end
-    return mapId, bit32.lshift(bit32.lshift(1, numChannels) - 1, firstChannel)
 end
 
 ---Infection-state colour for the grid overlay.
@@ -222,19 +186,21 @@ end
 -- Runtime objects
 -- ============================================================================
 
----Creates the two visualization overlays. Both views read an existing BitVectorMap
----directly (the infection view from the persistent grid, the risk view from the
----farmland map), so no temporary map is allocated here.
+---Creates the two value overlays once (one per sub-page). A custom BitVectorMap is
+---sampled 1:1 by its overlay, so each overlay uses its source map's exact size
+---(grid / risk map). Nothing else is allocated on the UI path.
 function RealisticCropRotationDiseaseMap:createRuntimeObjects()
-    local size = self.RISK_OVERLAY_SIZE
+    if createDensityMapVisualizationOverlay == nil then return end
+    local grid = getGrid()
+    if grid == nil then return end
 
-    if self.infectionOverlayId == nil and createDensityMapVisualizationOverlay ~= nil then
-        self.infectionOverlayId = createDensityMapVisualizationOverlay("rcrInfectionOverlay", size, size)
+    if self.infectionOverlayId == nil and grid.mapId ~= nil and grid.size ~= nil then
+        self.infectionOverlayId = createDensityMapVisualizationOverlay("rcrInfectionOverlay", grid.size, grid.size)
         self.infectionOverlayReady = false
     end
 
-    if self.riskOverlayId == nil and createDensityMapVisualizationOverlay ~= nil then
-        self.riskOverlayId = createDensityMapVisualizationOverlay("rcrRiskOverlay", size, size)
+    if self.riskOverlayId == nil and grid.riskMapId ~= nil and grid.riskMapSize ~= nil then
+        self.riskOverlayId = createDensityMapVisualizationOverlay("rcrRiskOverlay", grid.riskMapSize, grid.riskMapSize)
         self.riskOverlayReady = false
     end
 end
@@ -258,37 +224,21 @@ end
 -- Build key — decides when the overlay must be regenerated.
 -- ============================================================================
 
-function RealisticCropRotationDiseaseMap:buildKey(manager, disease)
+function RealisticCropRotationDiseaseMap:buildKey()
     local parts = {}
     local subPage = self.activeSubPage or self.SUB_PAGE_INFECTIONS
     parts[#parts + 1] = string.format("P%d", subPage)
     parts[#parts + 1] = self.isColorBlindMode == true and "CB1" or "CB0"
 
+    -- Only the display controls we own: the CONTENT of both views lives in the display maps,
+    -- whose revisions (grid.changeRevision / grid.riskRevision) are tracked in updateOverlay.
     if subPage == self.SUB_PAGE_PRESSURE then
         local rf = self.riskFilter or {}
         parts[#parts + 1] = string.format("%s%s%s",
             rf[1] and "1" or "0", rf[2] and "1" or "0", rf[3] and "1" or "0")
-
-        -- Risk depends on each owned field's predictive load.
-        if manager ~= nil and type(manager.getOwnedRotationFarmlandIds) == "function" and disease ~= nil then
-            local farmlandIds = {}
-            for _, farmlandId in ipairs(manager:getOwnedRotationFarmlandIds() or {}) do
-                local n = tonumber(farmlandId)
-                if n ~= nil and n > 0 then farmlandIds[#farmlandIds + 1] = n end
-            end
-            table.sort(farmlandIds)
-            for _, farmlandId in ipairs(farmlandIds) do
-                local risk = type(disease.getRisk) == "function" and disease:getRisk(farmlandId) or 0
-                parts[#parts + 1] = string.format("R%d:%.3f", farmlandId, tonumber(risk) or 0)
-            end
-        end
     else
         local f = self.filter or {}
         parts[#parts + 1] = string.format("%s%s", f[1] and "1" or "0", f[2] and "1" or "0")
-        -- The infection view reads live from the persistent grid; the grid is
-        -- mutated by gameplay outside our key. updateOverlay() is called with a
-        -- periodic refresh that re-renders regardless, so the key only needs to
-        -- capture the controls we own here.
     end
 
     return table.concat(parts, "|")
@@ -301,7 +251,9 @@ end
 
 function RealisticCropRotationDiseaseMap:renderInfectionOverlay()
     local grid = getGrid()
-    if grid == nil or grid.mapId == nil or self.infectionOverlayId == nil or self.infectionOverlayId == 0 then return false end
+    if grid == nil or grid.mapId == nil or self.infectionOverlayId == nil or self.infectionOverlayId == 0 then
+        return false
+    end
 
     local filter = self.filter or { true, true }
     local colorBlind = self.isColorBlindMode == true
@@ -309,18 +261,16 @@ function RealisticCropRotationDiseaseMap:renderInfectionOverlay()
     resetDensityMapVisualizationOverlay(self.infectionOverlayId)
     setOverlayColor(self.infectionOverlayId, 1, 1, 1, 1)
 
-    -- The grid is painted over the whole source parcel; clip the overlay to cultivable ground so it
-    -- shows only the worked field (matching the real crop damage), not the parcel's margins/tracks.
-    local groundMapId, fieldMask = getFieldGroundMask()
+    -- Grid states drawn directly, no mask (the grid is clipped to worked soil at write time).
     if filter[1] then
         local c = infectionStateColor(self.STATE_SCLEROTINIA, colorBlind)
         setDensityMapVisualizationOverlayStateColor(
-            self.infectionOverlayId, grid.mapId, groundMapId, fieldMask, 0, grid.numChannels, self.STATE_SCLEROTINIA, c[1], c[2], c[3])
+            self.infectionOverlayId, grid.mapId, 0, 0, 0, grid.numChannels, self.STATE_SCLEROTINIA, c[1], c[2], c[3])
     end
     if filter[2] then
         local c = infectionStateColor(self.STATE_BCN, colorBlind)
         setDensityMapVisualizationOverlayStateColor(
-            self.infectionOverlayId, grid.mapId, groundMapId, fieldMask, 0, grid.numChannels, self.STATE_BCN, c[1], c[2], c[3])
+            self.infectionOverlayId, grid.mapId, 0, 0, 0, grid.numChannels, self.STATE_BCN, c[1], c[2], c[3])
     end
 
     generateDensityMapVisualizationOverlay(self.infectionOverlayId)
@@ -330,55 +280,30 @@ end
 
 
 -- ============================================================================
--- Risk view — colour owned farmlands straight from the farmland map.
+-- Risk view — render straight from the runtime risk-band map (no iteration).
 -- ============================================================================
 
----Resolve a risk value to a risk state, honouring the active filter.
-function RealisticCropRotationDiseaseMap:riskToState(risk)
+---Colours the pressure view straight from the runtime risk-band map: one native call per band
+---(1..3). The map's cells already hold each owned field's band on its worked-soil cells only
+---(painted off the UI path by Disease:refreshRiskMap), so there is no per-field loop, no mask and
+---no map work here -- exactly the reference mod's value-overlay pattern.
+function RealisticCropRotationDiseaseMap:renderRiskOverlay()
+    local grid = getGrid()
+    if grid == nil or grid.riskMapId == nil or self.riskOverlayId == nil or self.riskOverlayId == 0 then
+        return false
+    end
+
     local riskFilter = self.riskFilter or { true, true, true }
-    local state = 0
-    if risk >= self.RISK_THRESHOLD_HIGH then
-        state = self.RISK_HIGH
-    elseif risk >= self.RISK_THRESHOLD_MODERATE then
-        state = self.RISK_MODERATE
-    elseif risk >= self.RISK_THRESHOLD_LOW then
-        state = self.RISK_LOW
-    end
-    if state > 0 and riskFilter[state] then
-        return state
-    end
-    return 0
-end
-
----Colours each owned farmland parcel by its disease pressure, reading the farmland map directly
----(every cell holds its farmland id, so colouring by id fills the whole parcel as one block and
----cannot bleed into a neighbouring parcel). Pressure is a per-parcel risk indicator, so the whole
----parcel is coloured -- no field-ground mask, which would punch holes on internal tracks / bare
----strips. No temporary map, no per-pixel Lua work.
-function RealisticCropRotationDiseaseMap:renderRiskOverlay(manager, disease)
-    if self.riskOverlayId == nil or self.riskOverlayId == 0 then return false end
-
-    local fm = g_farmlandManager
-    if fm == nil or type(fm.getLocalMap) ~= "function" or getBitVectorMapNumChannels == nil then return false end
-    local localMap = fm:getLocalMap()
-    if localMap == nil then return false end
-    local numChannels = getBitVectorMapNumChannels(localMap)
 
     resetDensityMapVisualizationOverlay(self.riskOverlayId)
     setOverlayColor(self.riskOverlayId, 1, 1, 1, 1)
 
     local colors = { self.RISK_COLOR_LOW, self.RISK_COLOR_MODERATE, self.RISK_COLOR_HIGH }
-    local owned = getOwnedRotationMap(manager)
-    for farmlandId in pairs(owned) do
-        -- Predictive pressure only: the soil inoculum risk from the rotation history. Active
-        -- infections are shown by the "active foci" view; conflating them here would also leave the
-        -- overlay stale, since buildKey tracks getRisk (history), not the live infection state.
-        local risk = type(disease.getRisk) == "function" and disease:getRisk(farmlandId) or 0
-        local state = self:riskToState(risk)
-        if state > 0 then
-            local c = colors[state]
+    for band = 1, 3 do
+        if riskFilter[band] then
+            local c = colors[band]
             setDensityMapVisualizationOverlayStateColor(
-                self.riskOverlayId, localMap, 0, 0, 0, numChannels, farmlandId, c[1], c[2], c[3])
+                self.riskOverlayId, grid.riskMapId, 0, 0, 0, grid.riskNumChannels, band, c[1], c[2], c[3])
         end
     end
 
@@ -393,50 +318,63 @@ end
 -- ============================================================================
 
 function RealisticCropRotationDiseaseMap:updateOverlay(force)
-    local manager = getManager()
     local disease = getDisease()
-    if disease == nil then return end
+    local grid = getGrid()
+    if disease == nil or grid == nil then return end
 
     self:createRuntimeObjects()
 
-    local buildKey = self:buildKey(manager, disease)
-    local grid = getGrid()
-    local gridRevision = grid ~= nil and grid.changeRevision or 0
-    local cachedRevision = self.lastGridRevision or -1
-    if not force and self.lastBuildKey == buildKey and gridRevision == cachedRevision then return end
+    -- Safety belt: a band can move between gameplay repaints (e.g. a harvest just changed the
+    -- history). Incremental only -- a pure Lua band comparison per owned field (the pre-refactor
+    -- code ran the same getRisk loop every tick), with native passes only for bands that moved.
+    if self:isPressurePage() and type(disease.refreshRiskMap) == "function" then
+        disease:refreshRiskMap(false)
+    end
+
+    local buildKey = self:buildKey()
+    local revision
+    if self:isPressurePage() then
+        revision = grid.riskRevision or 0
+    else
+        revision = grid.changeRevision or 0
+    end
+    if not force and self.lastBuildKey == buildKey and revision == (self.lastRevision or -1) then return end
 
     local ok
     if self:isPressurePage() then
-        if manager == nil then return end
-        ok = self:renderRiskOverlay(manager, disease)
+        ok = self:renderRiskOverlay()
     else
         ok = self:renderInfectionOverlay()
     end
 
     if ok then
         self.lastBuildKey = buildKey
-        self.lastGridRevision = gridRevision
+        self.lastRevision = revision
     end
 end
 
+---Draws the active view's overlay on the map rect. The overlay waits for its async
+---generation once, then keeps rendering (the reference mod's ready-gated draw).
 function RealisticCropRotationDiseaseMap:draw(x, y, width, height)
     local overlayId, ready
     if self:isPressurePage() then
-        overlayId = self.riskOverlayId
-        if overlayId ~= nil and not self.riskOverlayReady and getIsDensityMapVisualizationOverlayReady(overlayId) then
+        if self.riskOverlayId ~= nil and not self.riskOverlayReady
+            and getIsDensityMapVisualizationOverlayReady(self.riskOverlayId) then
             self.riskOverlayReady = true
         end
-        ready = self.riskOverlayReady
+        overlayId, ready = self.riskOverlayId, self.riskOverlayReady
     else
-        overlayId = self.infectionOverlayId
-        if overlayId ~= nil and not self.infectionOverlayReady and getIsDensityMapVisualizationOverlayReady(overlayId) then
+        if self.infectionOverlayId ~= nil and not self.infectionOverlayReady
+            and getIsDensityMapVisualizationOverlayReady(self.infectionOverlayId) then
             self.infectionOverlayReady = true
         end
-        ready = self.infectionOverlayReady
+        overlayId, ready = self.infectionOverlayId, self.infectionOverlayReady
     end
-    if overlayId == nil or overlayId == 0 or not ready then return end
-    setOverlayUVs(overlayId, 0, 0, 0, 1, 1, 0, 1, 1)
-    renderOverlay(overlayId, x, y, width, height)
+
+    if ready and overlayId ~= nil and overlayId ~= 0 then
+        setOverlayUVs(overlayId, 0, 0, 0, 1, 1, 0, 1, 1)
+        renderOverlay(overlayId, x, y, width, height)
+    end
 end
 
 
