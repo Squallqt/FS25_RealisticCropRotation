@@ -249,19 +249,40 @@ local function getTransition(data)
         context.unionFilter:setValueCompareParams(DensityValueCompareType.EQUAL, 1)
     end
 
+    -- Static subset of crops whose own termination residue (n1) is > 0. When the
+    -- previous crop on the farmland has no n2 carry-over, only these crops can
+    -- deposit anything, so capture can skip every other fruit plane entirely.
+    if manager ~= nil and manager.service ~= nil
+        and type(manager.service.getResidueEntry) == "function" then
+        for _, crop in ipairs(context.crops) do
+            local entry = manager.service:getResidueEntry(crop.name)
+            if entry ~= nil and (tonumber(entry.n1) or 0) > 0 then
+                table.insert(context.n1Crops, crop)
+            end
+        end
+    else
+        -- Service unavailable: fall back to scanning everything (previous behavior).
+        context.n1Crops = context.crops
+    end
+
     transition = context
     return transition
 end
 
----Captures crop pixels before native destruction.
-local function capture(context, sx, sz, wx, wz, hx, hz)
-    for _, group in ipairs(context.maskGroups) do
-        setMaskArea(context, group.modifier, sx, sz, wx, wz, hx, hz)
-        group.modifier:executeSet(0)
-    end
+---Captures the given crops' pixels before native destruction. Only the mask groups
+---holding one of those crops are cleared (stamp-deduplicated, no allocation).
+local function capture(context, crops, sx, sz, wx, wz, hx, hz)
+    context.captureStamp = context.captureStamp + 1
+    local stamp = context.captureStamp
 
     local active = {}
-    for _, crop in ipairs(context.crops) do
+    for _, crop in ipairs(crops) do
+        local group = crop.group
+        if group.captureStamp ~= stamp then
+            group.captureStamp = stamp
+            setMaskArea(context, group.modifier, sx, sz, wx, wz, hx, hz)
+            group.modifier:executeSet(0)
+        end
         setMaskArea(context, crop.modifier, sx, sz, wx, wz, hx, hz)
 
         local _, regularPixels
@@ -385,8 +406,16 @@ local function process(context, active, farmlandId, sx, sz, wx, wz, hx, hz)
             depositVanilla(context, active, farmlandId, sx, sz, wx, wz, hx, hz)
         end
     end
-    for _, group in ipairs(context.maskGroups) do
-        group.modifier:executeSet(0)
+    -- Clear only the mask groups the active crops live in (their areas were set in
+    -- capture for this very call); untouched groups are still zero by invariant.
+    context.resetStamp = context.resetStamp + 1
+    local stamp = context.resetStamp
+    for _, crop in ipairs(active) do
+        local group = crop.group
+        if group.resetStamp ~= stamp then
+            group.resetStamp = stamp
+            group.modifier:executeSet(0)
+        end
     end
     if context.unionModifier ~= nil then
         context.unionModifier:executeSet(0)
@@ -403,11 +432,27 @@ local function resetContext(context)
     end
 end
 
+---Cheap pre-filter, then mask capture. Runs no density-map work at all when the
+---area is outside any farmland or when no crop can deposit residue there:
+---  - previous crop carries n2 -> every configured crop can deposit, capture all;
+---  - otherwise only crops with their own n1 > 0 (static subset) are captured.
 local function prepare(sx, sz, wx, wz, hx, hz)
+    if manager == nil or manager.service == nil then return nil end
+    local farmlandId = getFarmlandId(sx, sz, wx, wz, hx, hz)
+    if farmlandId == nil then return nil end
+
     local context = getTransition(getTargetData())
     if context == nil then return nil end
-    return context, capture(context, sx, sz, wx, wz, hx, hz),
-        getFarmlandId(sx, sz, wx, wz, hx, hz)
+
+    local crops
+    if manager.service:getResidueStatesForTermination(farmlandId, nil) > 0 then
+        crops = context.crops
+    else
+        crops = context.n1Crops
+    end
+    if #crops == 0 then return nil end
+
+    return context, capture(context, crops, sx, sz, wx, wz, hx, hz), farmlandId
 end
 
 function RealisticCropRotationNitrogen.delete()
@@ -428,59 +473,42 @@ function RealisticCropRotationNitrogen.install(rcrManager)
         or type(FSDensityMapUtil.updateDiscHarrowArea) ~= "function" then return end
 
     installed = true
+
+    -- Shared wrapper body for both tillage entry points. Same interception point as
+    -- GIANTS' own FS25 Precision Farming mod (its overwrite registry hooks exactly
+    -- FSDensityMapUtil.updateDestroyCommonArea and updateDiscHarrowArea for nitrogen);
+    -- the engine offers no "fruit destroyed" callback. prepare() early-outs with zero
+    -- density-map work when the farmland carries no rotation residue.
+    local function makeTillageWrapper()
+        return function(sx, superFunc, sz, wx, wz, hx, hz, ...)
+            local context, active, farmlandId
+            if type(sx) == "number" and type(sz) == "number" and type(wx) == "number"
+                and type(wz) == "number" and type(hx) == "number" and type(hz) == "number" then
+                local ok, preparedContext, preparedActive, preparedFarmlandId =
+                    pcall(prepare, sx, sz, wx, wz, hx, hz)
+                if ok then
+                    context, active, farmlandId = preparedContext, preparedActive, preparedFarmlandId
+                else
+                    Logging.error(
+                        "[RealisticCropRotation] residue mask capture failed: %s",
+                        tostring(preparedContext))
+                end
+            end
+
+            local changedArea, totalArea = superFunc(sx, sz, wx, wz, hx, hz, ...)
+            if context ~= nil and active ~= nil and #active > 0 then
+                local ok, err = pcall(process, context, active, farmlandId, sx, sz, wx, wz, hx, hz)
+                if not ok then
+                    pcall(resetContext, context)
+                    Logging.error("[RealisticCropRotation] residue deposit failed: %s", tostring(err))
+                end
+            end
+            return changedArea, totalArea
+        end
+    end
+
     FSDensityMapUtil.updateDestroyCommonArea = Utils.overwrittenFunction(
-        FSDensityMapUtil.updateDestroyCommonArea,
-        function(sx, superFunc, sz, wx, wz, hx, hz, ...)
-            local context, active, farmlandId
-            if type(sx) == "number" and type(sz) == "number" and type(wx) == "number"
-                and type(wz) == "number" and type(hx) == "number" and type(hz) == "number" then
-                local ok, preparedContext, preparedActive, preparedFarmlandId =
-                    pcall(prepare, sx, sz, wx, wz, hx, hz)
-                if ok then
-                    context, active, farmlandId = preparedContext, preparedActive, preparedFarmlandId
-                else
-                    Logging.error(
-                        "[RealisticCropRotation] residue mask capture failed: %s",
-                        tostring(preparedContext))
-                end
-            end
-
-            local changedArea, totalArea = superFunc(sx, sz, wx, wz, hx, hz, ...)
-            if context ~= nil and active ~= nil and #active > 0 then
-                local ok, err = pcall(process, context, active, farmlandId, sx, sz, wx, wz, hx, hz)
-                if not ok then
-                    pcall(resetContext, context)
-                    Logging.error("[RealisticCropRotation] residue deposit failed: %s", tostring(err))
-                end
-            end
-            return changedArea, totalArea
-        end)
-
+        FSDensityMapUtil.updateDestroyCommonArea, makeTillageWrapper())
     FSDensityMapUtil.updateDiscHarrowArea = Utils.overwrittenFunction(
-        FSDensityMapUtil.updateDiscHarrowArea,
-        function(sx, superFunc, sz, wx, wz, hx, hz, ...)
-            local context, active, farmlandId
-            if type(sx) == "number" and type(sz) == "number" and type(wx) == "number"
-                and type(wz) == "number" and type(hx) == "number" and type(hz) == "number" then
-                local ok, preparedContext, preparedActive, preparedFarmlandId =
-                    pcall(prepare, sx, sz, wx, wz, hx, hz)
-                if ok then
-                    context, active, farmlandId = preparedContext, preparedActive, preparedFarmlandId
-                else
-                    Logging.error(
-                        "[RealisticCropRotation] residue mask capture failed: %s",
-                        tostring(preparedContext))
-                end
-            end
-
-            local changedArea, totalArea = superFunc(sx, sz, wx, wz, hx, hz, ...)
-            if context ~= nil and active ~= nil and #active > 0 then
-                local ok, err = pcall(process, context, active, farmlandId, sx, sz, wx, wz, hx, hz)
-                if not ok then
-                    pcall(resetContext, context)
-                    Logging.error("[RealisticCropRotation] residue deposit failed: %s", tostring(err))
-                end
-            end
-            return changedArea, totalArea
-        end)
+        FSDensityMapUtil.updateDiscHarrowArea, makeTillageWrapper())
 end

@@ -45,6 +45,11 @@ RealisticCropRotationSprayerProducts.PRODUCT_TREATMENTS = {
 -- at most once per window, NOT every work-area tick. Kept short so a slow pass still re-treats.
 RealisticCropRotationSprayerProducts.TREATMENT_COOLDOWN_MS = 3000
 
+-- Corner-sampling interval (ms) per work area: farmland resolution for the treatment runs at most
+-- 4x/s per section instead of every tick. At working speed this is well under one metre of travel,
+-- far finer than any farmland, and an order of magnitude inside TREATMENT_COOLDOWN_MS.
+RealisticCropRotationSprayerProducts.TREATMENT_SAMPLE_INTERVAL_MS = 250
+
 -- fillTypeIndex -> true; refreshed at every mission load because fillType
 -- indices may shift between savegames with different mod sets.
 local productFillTypeSet = {}
@@ -126,6 +131,14 @@ local function applyTreatment(self, spec, fillType, workArea)
     end
     if getWorldTranslation == nil then return false end
 
+    -- Per-work-area sampling gate: corner reads + farmland resolution run at most once per
+    -- TREATMENT_SAMPLE_INTERVAL_MS per section, not every tick. Stored on the work area itself
+    -- (per vehicle+section, GC'd with the vehicle), so wide multi-section sprayers stay covered.
+    local now = g_time
+    local nextSampleMs = workArea.rcrNextTreatmentSampleMs
+    if nextSampleMs ~= nil and now < nextSampleMs then return false end
+    workArea.rcrNextTreatmentSampleMs = now + RealisticCropRotationSprayerProducts.TREATMENT_SAMPLE_INTERVAL_MS
+
     local treatmentType = RealisticCropRotationSprayerProducts.getProductTreatment(fillType)
     if treatmentType == nil then return false end
 
@@ -149,7 +162,6 @@ local function applyTreatment(self, spec, fillType, workArea)
     collectFarmland(centerX, centerZ, seen, farmlands)
     if #farmlands == 0 then return false end
 
-    local now = g_time
     local window = RealisticCropRotationSprayerProducts.TREATMENT_COOLDOWN_MS
     local cooldown = spec.rcrTreatmentCooldown
     if cooldown == nil then
