@@ -11,8 +11,8 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Rotation" />
         <e k="rcr_tab_planning"         v="Planering" />
-        <e k="rcr_disease_name_sclerotinia" v="Bomullsmögel" />
-        <e k="rcr_disease_name_bcn"   v="Nematod" />
+        <e k="rcr_disease_name_sclerotinia" v="Bomullsmögel (Sclerotinia)" />
+        <e k="rcr_disease_name_bcn"   v="Cystnematod" />
         <e k="rcr_section_disease_map"     v="Sjukdomar" />
         <e k="rcr_disease_sub_infections" v="Aktiva härdar" />
         <e k="rcr_disease_sub_pressure"   v="Sjukdomstryck" />
@@ -102,10 +102,10 @@
         <e k="rcr_advice_afterForage" v="Efter en vall utnyttjar en spannmål den bördighet och struktur som byggts upp under grässvålen." />
         <e k="rcr_advice_disease_sclerotinia" v="Den här grödan är värd för bomullsmögel, så håll minst tre år från raps, solros, sojaböna, ärt och böna." />
         <e k="rcr_advice_disease_bcn" v="Den här grödan är värd för betcystnematoden, så håll betor och korsblommiga väl åtskilda." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Högt sclerotinia-tryck på detta skifte — undvik raps, solros, sojabönor, ärtor och bönor i minst tre år." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Högt betcystnematodtryck på detta skifte — undvik sockerbetor, rödbetor, raps, senap och spenat i minst tre år." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Måttligt sclerotinia-tryck på detta skifte — planera värdväxterna noggrant." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Måttligt betcystnematodtryck på detta skifte — planera betor och korsblommiga noggrant." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Högt bomullsmögeltryck — undvik raps, solros, sojaböna, ärt, böna, potatis och morot i minst 3 år; svampmedel vid blomning i fuktigt väder." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Högt nematodtryck — undvik sockerbeta, rödbeta, raps, senap och spenat i 3 år; nematicid eller resistent fånggröda." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Måttligt bomullsmögeltryck — sprid ut värdgrödorna och håll koll på en fuktig blomning." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Måttligt nematodtryck — sprid ut betor och korsblommiga." />
         <e k="rcr_advice_no_current_crop" v="Ingen aktuell huvudgröda: råd tillgängligt när en gröda upptäcks." />
 
         <!-- Field card — required actions / growth -->
@@ -159,5 +159,49 @@
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Inga egna fält att visa." />
+        <e k="rcr_function_fungicideTank" v="Använd AMISTAR i växtskyddssprutor för att applicera en fungicidbehandling på riskutsatta grödor." />
+        <e k="rcr_function_nematicideTank" v="Använd VELUM PRIME i växtskyddssprutor för att applicera en nematicidbehandling på grödor som utsätts för nematoder." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_phoma" v="Torröta (Phoma)" />
+        <e k="rcr_disease_name_pietin" v="Rotdödare" />
+        <e k="rcr_disease_name_septoriose" v="Svartpricksjuka (Septoria)" />
+        <e k="rcr_disease_name_rouille" v="Rost" />
+        <e k="rcr_disease_name_fusariose" v="Axfusarios (Fusarium)" />
+        <e k="rcr_disease_name_mildiou" v="Potatisbladmögel" />
+        <e k="rcr_disease_name_hernie" v="Klumprotsjuka" />
+        <e k="rcr_disease_desc_sclerotinia" v="Vitröta i oljeväxter, baljväxter och rotfrukter vid blomning; sklerotier överlever i marken i åratal, gynnas av en fuktig blomning." />
+        <e k="rcr_disease_desc_phoma" v="Stjälkröta i raps/senap som sprids med skörderester; kräver ett långt uppehåll från oljeväxter, förvärras av höstfukt." />
+        <e k="rcr_disease_desc_pietin" v="Rotdödare i ensidig spannmålsodling; bryts endast av en icke-värdgröda (havre, baljväxt, oljeväxt). Inget effektivt svampmedel." />
+        <e k="rcr_disease_desc_septoriose" v="Viktigaste bladsjukdomen i vete/korn, sprids med regnstänk från skörderester; explosiv under en våt vår." />
+        <e k="rcr_disease_desc_rouille" v="Brunrost och gulrost i spannmål samt solros/raps; explosiv i milt fuktigt väder, sprids med vinden." />
+        <e k="rcr_disease_desc_fusariose" v="Axfusarios som gynnas av spannmåls- och majsrester (majs→vete); kritisk vid en våt blomning, skrumpnar kärnan." />
+        <e k="rcr_disease_desc_mildiou" v="Potatisbladmögel; drivs av svalt vått väder, litet beroende av växtföljd; förstör grödan på några dagar." />
+        <e k="rcr_disease_desc_bcn" v="Betcystnematod; cystor överlever i marken i åratal, kronisk fläckvis stress; växtföljden är den viktigaste hävstången." />
+        <e k="rcr_disease_desc_hernie" v="Klumprotsjuka; vilsporer överlever i över sex år, kräver ett mycket långt uppehåll från korsblommiga; ingen kemisk behandling." />
+        <e k="rcr_disease_treatment_sclerotinia" v="Svampmedel" />
+        <e k="rcr_disease_treatment_phoma" v="Svampmedel" />
+        <e k="rcr_disease_treatment_pietin" v="Ingen (växtföljd)" />
+        <e k="rcr_disease_treatment_septoriose" v="Svampmedel" />
+        <e k="rcr_disease_treatment_rouille" v="Svampmedel" />
+        <e k="rcr_disease_treatment_fusariose" v="Svampmedel" />
+        <e k="rcr_disease_treatment_mildiou" v="Svampmedel" />
+        <e k="rcr_disease_treatment_bcn" v="Nematicid" />
+        <e k="rcr_fillType_fungicide" v="Svampmedel" />
+        <e k="rcr_fillType_nematicide" v="Nematicid" />
+        <e k="rcr_disease_treatment_hernie" v="Ingen (resistent sort, kalkning, växtföljd)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Högt torrötetryck — undvik raps och senap i cirka 4 år, myllna ned skörderester; höstsvampmedel på mottagliga sorter." />
+        <e k="rcr_advice_pressure_high_pietin" v="Högt rotdödartryck — lägg in en icke-värdgröda som avbrott (havre, baljväxt, oljeväxt); inget svampmedel hjälper, bara växtföljd botar." />
+        <e k="rcr_advice_pressure_high_septoriose" v="Högt svartpricksjuketryck — undvik vete/korn på spannmålsrester, välj en tolerant sort; svampmedel från stråskjutning i ett vått klimat." />
+        <e k="rcr_advice_pressure_high_rouille" v="Högt rosttryck — så en resistent sort och planera ett svampmedel; håll koll på milda fuktiga perioder." />
+        <e k="rcr_advice_pressure_high_fusariose" v="Högt fusariostryck — undvik vete efter majs, myllna ned skörderester; svampmedel vid blomning om vått." />
+        <e k="rcr_advice_pressure_high_mildiou" v="Högt bladmögeltryck — plantera en resistent sort och skydda potatis med svampmedel så snart det blir svalt och vått." />
+        <e k="rcr_advice_pressure_high_hernie" v="Högt klumprotstryck — uppehåll från korsblommiga i över 6 år, kalka för att höja pH och så en resistent sort; ingen kemisk behandling." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Måttligt torrötetryck — förläng uppehållet från raps och hacka sönder stubben." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="Måttligt rotdödartryck — undvik en tredje spannmål i rad." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="Måttligt svartpricksjuketryck — håll koll på vårregn och smitta i skörderester." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="Måttligt rosttryck — leta efter pustler i milt väder." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="Måttligt fusariostryck — sprid ut spannmål och majs, hantera skörderester." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="Måttligt bladmögeltryck — övervaka svalt vått väder och förstör spillplantor." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="Måttligt klumprotstryck — förläng uppehållet från raps och håll koll på surt pH." />
     </elements>
 </l10n>

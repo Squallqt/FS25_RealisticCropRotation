@@ -23,44 +23,125 @@
 
     <!-- ======================================================== -->
     <!-- DISEASE GROUPS                                             -->
-    <!--   minInterval : cross-family return interval (years). The soil inoculum (sclerotia,    -->
-    <!--                 cysts) survives this long, so a host within it raises the field load.  -->
-    <!--   infectFrom/infectTo : growth window (fraction of growth toward maturity) when a      -->
-    <!--                 living host can be infected. Sclerotinia infects at flowering           -->
-    <!--                 (mid-cycle); the beet cyst nematode invades roots from early growth.   -->
-    <!--   fungal : true for fungal pathogens whose sporulation needs free moisture, so rain    -->
-    <!--                 raises their infection chance. Soil nematodes (BCN) are not rain-driven.-->
-    <!--   Hosts: SCLEROTINIA = canola/sunflower/mustard/soybean/pea/bean/potato/carrot.        -->
-    <!--          BCN = beets and brassicas (canola, mustard) and spinach.                      -->
+    <!--   9 real-world French-agronomy pathogens, fully data-driven. Every visible label is an  -->
+    <!--   l10n key (rcr_disease_*): NOTHING here is displayed as raw text.                        -->
+    <!--   state       : STABLE overlay id 1..9 (parsed into config.diseaseStates). The in-game    -->
+    <!--                 map paints EACH disease with its own colour from this id, so diseases are  -->
+    <!--                 individually distinguishable on the parcel (no more fungal/soil merge).   -->
+    <!--   minInterval : cross-family return interval (years). The soil inoculum (sclerotia,      -->
+    <!--                 cysts, resting spores, residue) survives this long, so a host within it   -->
+    <!--                 raises the field load. Long for durable soil pathogens (clubroot=6),      -->
+    <!--                 short for weather-driven foliar ones (rusts/blights=2).                    -->
+    <!--   infectFrom/infectTo : growth window (fraction of growth toward maturity) when a live    -->
+    <!--                 host can be infected. Head/flower diseases infect mid-late (0.5-0.8);      -->
+    <!--                 foliar/root ones from early growth.                                        -->
+    <!--   fungal      : true for fungal pathogens whose sporulation needs free moisture, so rain  -->
+    <!--                 raises BOTH their infection chance AND their daily progression (by         -->
+    <!--                 weatherFactor). Soil animals (BCN nematode) and resting-spore protists     -->
+    <!--                 (clubroot) are NOT rain-driven -> fungal="false", weatherFactor ignored.   -->
+    <!--   weatherFactor : rain multiplier applied to fungal groups (default 1.6). Higher for      -->
+    <!--                 strongly weather-driven diseases (late blight 2.5, rusts 2.4, septoria     -->
+    <!--                 2.3): a wet spell both infects and destroys much faster.                   -->
+    <!--   treatment   : reference product family for the field panel/advice (l10n key             -->
+    <!--                 rcr_disease_treatment_<group>). FUNGICIDE | NEMATICIDE | NONE. NONE means  -->
+    <!--                 no effective chemical exists (take-all, clubroot) -> rotation is the cure. -->
+    <!--                 Sprayer products use this family to decide which active infections they cure. -->
+    <!--   dailyGrowth     : severity gained per IN-GAME DAY once infected. Destruction is a slow  -->
+    <!--                 day-by-day creep. Aggressive blights (late blight 0.08) race; chronic soil -->
+    <!--                 organisms (nematode 0.015) crawl. On a rainy day fungal groups climb       -->
+    <!--                 dailyGrowth x weatherFactor faster.                                         -->
+    <!--   destroySeverity : latent threshold. Below it the pathogen is establishing and NOTHING   -->
+    <!--                 dies yet; above it the dead patches start to appear.                        -->
+    <!--   deadFractionMax : ceiling on the destroyed share of the parcel at full severity. A      -->
+    <!--                 blight can devastate a field (late blight 0.90, sclerotinia 0.85); a       -->
+    <!--                 nematode stunts in patches and rarely wipes it out (0.45).                  -->
+    <!--   (Any omitted numeric attribute falls back to the module defaults in Disease.lua.)        -->
     <!-- ======================================================== -->
     <diseaseGroups>
-        <diseaseGroup name="SCLEROTINIA" minInterval="3" infectFrom="0.50" infectTo="0.80" fungal="true" />
-        <diseaseGroup name="BCN"         minInterval="3" infectFrom="0.10" infectTo="0.90" fungal="false" />
+        <!-- Sclerotinia (Sclerotinia sclerotiorum, fungal): white mould rotting the stem/flower of    -->
+        <!-- oilseeds, legumes and roots at flowering. Sclerotia survive ~3+ yrs; apothecia germinate   -->
+        <!-- in a humid canopy, so a wet flowering is decisive. Aggressive, can flatten a field.         -->
+        <diseaseGroup name="SCLEROTINIA" state="1" minInterval="3" infectFrom="0.50" infectTo="0.80"
+                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.0"
+                      dailyGrowth="0.05"  destroySeverity="0.25" deadFractionMax="0.85" />
+        <!-- Phoma / blackleg (Leptosphaeria maculans, fungal): stem canker of brassica oilseeds carried -->
+        <!-- on canola/mustard residue -> needs a ~4 yr break from oilseed stubble. Autumn leaf spotting  -->
+        <!-- then a stem-base canker that lodges plants in patches. Moisture favours leaf infection.      -->
+        <diseaseGroup name="PHOMA"       state="2" minInterval="4" infectFrom="0.20" infectTo="0.70"
+                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="1.8"
+                      dailyGrowth="0.03"  destroySeverity="0.30" deadFractionMax="0.55" />
+        <!-- Take-all / pietin-echaudage (Gaeumannomyces graminis, fungal, soil-borne): builds up in     -->
+        <!-- back-to-back cereals and is broken ONLY by a non-host year (oats, legume, oilseed) -> no     -->
+        <!-- effective fungicide, rotation is the cure (treatment NONE). Whiteheads, patchy premature     -->
+        <!-- death. Oats are NOT a host (take-all break crop).                                            -->
+        <diseaseGroup name="PIETIN"      state="3" minInterval="3" infectFrom="0.30" infectTo="0.80"
+                      fungal="true"  treatment="NONE"       weatherFactor="1.4"
+                      dailyGrowth="0.035" destroySeverity="0.30" deadFractionMax="0.55" />
+        <!-- Septoria leaf blotch (Zymoseptoria tritici, fungal): the dominant wheat/barley foliar        -->
+        <!-- disease, splash-dispersed from residue -> heavy rain is decisive (high weatherFactor). Short  -->
+        <!-- return interval; defoliates the canopy and cuts yield sharply in a wet spring.                -->
+        <diseaseGroup name="SEPTORIOSE"  state="4" minInterval="2" infectFrom="0.25" infectTo="0.75"
+                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.3"
+                      dailyGrowth="0.045" destroySeverity="0.25" deadFractionMax="0.55" />
+        <!-- Rusts (Puccinia spp., fungal): brown/yellow rust of cereals + rust of sunflower/canola.      -->
+        <!-- Explosive under mild humid weather and dew (high weatherFactor); wind-borne, so rotation only -->
+        <!-- slows it. Pustules strip green leaf area, strong yield loss when early.                        -->
+        <diseaseGroup name="ROUILLE"     state="5" minInterval="2" infectFrom="0.30" infectTo="0.85"
+                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.4"
+                      dailyGrowth="0.05"  destroySeverity="0.25" deadFractionMax="0.60" />
+        <!-- Fusarium head blight (Fusarium spp., fungal): thrives on cereal/MAIZE residue, so maize->     -->
+        <!-- wheat and short breaks raise it; a wet flowering is critical. Shrivels grain (+mycotoxins),   -->
+        <!-- moderate visible field loss.                                                                  -->
+        <diseaseGroup name="FUSARIOSE"   state="6" minInterval="2" infectFrom="0.50" infectTo="0.80"
+                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.0"
+                      dailyGrowth="0.035" destroySeverity="0.30" deadFractionMax="0.45" />
+        <!-- Late blight (Phytophthora infestans, fungal): the potato destroyer. WEATHER-DOMINANT (cool,  -->
+        <!-- wet); low rotation dependence (short interval). Still the most aggressive of the set, but it   -->
+        <!-- no longer wipes the field in a single tick: it needs a few days of pressure (latent 0.28) and  -->
+        <!-- then progresses steadily to a heavy but not total kill (0.70), faster under rain (x2.0).       -->
+        <diseaseGroup name="MILDIOU"     state="7" minInterval="2" infectFrom="0.15" infectTo="0.85"
+                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.0"
+                      dailyGrowth="0.05"  destroySeverity="0.28" deadFractionMax="0.70" />
+        <!-- Beet cyst nematode (Heterodera schachtii, soil animal): slow, chronic, patchy stunting of    -->
+        <!-- beets/brassicas/spinach; cysts survive years -> rotation is the lever. NOT rain-driven.       -->
+        <!-- Controlled by nematicide or resistant/trap crops.                                             -->
+        <diseaseGroup name="BCN"         state="8" minInterval="3" infectFrom="0.10" infectTo="0.90"
+                      fungal="false" treatment="NEMATICIDE"
+                      dailyGrowth="0.015" destroySeverity="0.30" deadFractionMax="0.45" />
+        <!-- Clubroot / hernie des cruciferes (Plasmodiophora brassicae, soil protist): resting spores    -->
+        <!-- persist ~6+ yrs -> needs a LONG brassica break (long minInterval). NO chemical (treatment     -->
+        <!-- NONE) -> resistant varieties + liming + rotation. Root galling, wilting, patchy plant death.  -->
+        <diseaseGroup name="HERNIE"      state="9" minInterval="6" infectFrom="0.10" infectTo="0.60"
+                      fungal="false" treatment="NONE"
+                      dailyGrowth="0.02"  destroySeverity="0.30" deadFractionMax="0.60" />
     </diseaseGroups>
 
     <!-- ======================================================== -->
     <!-- CEREALS                                                    -->
+    <!--   Take-all (PIETIN) + septoria (SEPTORIOSE) + rust (ROUILLE) + fusarium (FUSARIOSE).       -->
+    <!--   Oats break take-all (no PIETIN) and are not a septoria host. Maize/sorghum only carry     -->
+    <!--   fusarium (key residue inoculum for the following wheat). Spelt: take-all + septoria.       -->
     <!-- ======================================================== -->
-    <crop name="WHEAT"         family="CEREAL" />
-    <crop name="BARLEY"        family="CEREAL" />
-    <crop name="OAT"           family="CEREAL" />
-    <crop name="RYE"           family="CEREAL" />
-    <crop name="TRITICALE"     family="CEREAL" />
-    <crop name="SPELT"         family="CEREAL" />
-    <crop name="MAIZE"         family="CEREAL" />
-    <crop name="SORGHUM"       family="CEREAL" />
-    <crop name="WINTERWHEAT"   family="CEREAL" />
-    <crop name="WINTERBARLEY"  family="CEREAL" />
+    <crop name="WHEAT"         family="CEREAL" disease="PIETIN SEPTORIOSE ROUILLE FUSARIOSE" />
+    <crop name="BARLEY"        family="CEREAL" disease="PIETIN SEPTORIOSE ROUILLE FUSARIOSE" />
+    <crop name="OAT"           family="CEREAL" disease="ROUILLE FUSARIOSE" />
+    <crop name="RYE"           family="CEREAL" disease="PIETIN ROUILLE FUSARIOSE" />
+    <crop name="TRITICALE"     family="CEREAL" disease="PIETIN SEPTORIOSE ROUILLE FUSARIOSE" />
+    <crop name="SPELT"         family="CEREAL" disease="PIETIN SEPTORIOSE" />
+    <crop name="MAIZE"         family="CEREAL" disease="FUSARIOSE" />
+    <crop name="SORGHUM"       family="CEREAL" disease="FUSARIOSE" />
+    <crop name="WINTERWHEAT"   family="CEREAL" disease="PIETIN SEPTORIOSE ROUILLE FUSARIOSE" />
+    <crop name="WINTERBARLEY"  family="CEREAL" disease="PIETIN SEPTORIOSE ROUILLE FUSARIOSE" />
     <crop name="RICELONGGRAIN" family="CEREAL" />
-    <crop name="SILAGEMAIZE"   family="CEREAL" />
-    <crop name="GREENRYE"      family="CEREAL" />
+    <crop name="SILAGEMAIZE"   family="CEREAL" disease="FUSARIOSE" />
+    <crop name="GREENRYE"      family="CEREAL" disease="PIETIN" />
 
     <!-- ======================================================== -->
-    <!-- OILSEEDS  (brassicas also host BCN; all host Sclerotinia)  -->
+    <!-- OILSEEDS  (brassicas host phoma/BCN/clubroot; all host Sclerotinia; canola/sunflower rust) -->
     <!-- ======================================================== -->
-    <crop name="CANOLA"    family="OILSEED" disease="SCLEROTINIA BCN" />
-    <crop name="SUNFLOWER" family="OILSEED" disease="SCLEROTINIA" />
-    <crop name="MUSTARD"   family="OILSEED" disease="SCLEROTINIA BCN" />
+    <crop name="CANOLA"    family="OILSEED" disease="SCLEROTINIA PHOMA ROUILLE BCN HERNIE" />
+    <crop name="SUNFLOWER" family="OILSEED" disease="SCLEROTINIA ROUILLE" />
+    <crop name="MUSTARD"   family="OILSEED" disease="SCLEROTINIA PHOMA BCN HERNIE" />
     <!-- ======================================================== -->
     <!-- LEGUMES  (n1/n2 in PF states; 1 state = 5 kg N/ha)       -->
     <!-- Values follow real first-year N credits: a terminated alfalfa/vetch stand returns far    -->
@@ -77,10 +158,10 @@
     <crop name="VETCHRYE"  family="LEGUME" n1="12" n2="4"  />
 
     <!-- ======================================================== -->
-    <!-- ROOT VEGETABLES  (beets host BCN; potato/carrot Sclerotinia) -->
+    <!-- ROOT VEGETABLES  (beets host BCN; potato Sclerotinia + late blight; carrot Sclerotinia) -->
     <!-- ======================================================== -->
     <crop name="SUGARBEET" family="ROOT" disease="BCN" />
-    <crop name="POTATO"    family="ROOT" disease="SCLEROTINIA" />
+    <crop name="POTATO"    family="ROOT" disease="SCLEROTINIA MILDIOU" />
     <crop name="CARROT"    family="ROOT" disease="SCLEROTINIA" />
     <crop name="PARSNIP"   family="ROOT" />
     <crop name="BEETROOT"  family="ROOT" disease="BCN" />

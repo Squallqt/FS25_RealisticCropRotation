@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<vehicle type="pallet" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../shared/xml/schema/vehicle.xsd">
+    <annotation>Copyright (C) GIANTS Software GmbH, All Rights Reserved.</annotation>
+
+    <storeData>
+        <name>Amistar</name>
+        <functions>
+            <function>$l10n_rcr_function_fungicideTank</function>
+        </functions>
+        <specs>
+            <capacity>2000</capacity>
+            <fillTypes>rcr_fungicide</fillTypes>
+            <weight ignore="true"/>
+        </specs>
+        <image>pallets/fungicide/store_amistar.dds</image>
+        <price>3600</price>
+        <allowLeasing>false</allowLeasing>
+        <canBeSold>false</canBeSold>
+        <showInStore>false</showInStore>
+        <rotation>0</rotation>
+        <shopHeight>2</shopHeight>
+        <brand>SYNGENTA</brand>
+        <category>ibc palletFertilizerHerbicide</category>
+        <financeCategory>PURCHASE_FERTILIZER</financeCategory>
+        <vertexBufferMemoryUsage>54784</vertexBufferMemoryUsage>
+        <indexBufferMemoryUsage>18176</indexBufferMemoryUsage>
+        <textureMemoryUsage>458752</textureMemoryUsage>
+        <instanceVertexBufferMemoryUsage>0</instanceVertexBufferMemoryUsage>
+        <instanceIndexBufferMemoryUsage>0</instanceIndexBufferMemoryUsage>
+
+        <storeIconRendering>
+            <settings cameraXRot="-15" cameraYRot="25" />
+        </storeIconRendering>
+        <audioMemoryUsage>0</audioMemoryUsage>
+    </storeData>
+
+    <base>
+        <typeDesc>$l10n_typeDesc_pallet</typeDesc>
+        <filename>pallets/fungicide/fungicideTank.i3d</filename>
+        <size width="1.35" length="1.35" height="1.55" />
+        <input allowed="false"/>
+        <canBeReset>false</canBeReset>
+        <components maxMass="850">
+            <component centerOfMass="0 0.1 0" solverIterationCount="10" mass="100" />
+        </components>
+        <showInVehicleMenu>false</showInVehicleMenu>
+        <mapHotspot available="false" />
+
+        <objectChanges>
+            <objectChange node="helmConfiguration"         visibilityActive="true"/>
+            <objectChange node="decalHelmLiquidHerbicide"  visibilityActive="true"/>
+            <objectChange node="decalHelmLiquidFertilizer" visibilityActive="false"/>
+            <objectChange node="cortevaConfiguration"      visibilityActive="false"/>
+        </objectChanges>
+    </base>
+
+    <fillUnit>
+        <fillUnitConfigurations>
+            <fillUnitConfiguration>
+                <fillUnits removeVehicleIfEmpty="true">
+                    <fillUnit unitTextOverride="$l10n_unit_literShort" fillTypes="RCR_FUNGICIDE" capacity="2000" startFillType="RCR_FUNGICIDE" startFillLevel="2000" ignoreFillLimit="true">
+                        <fillRootNode node="0>" />
+                    </fillUnit>
+                </fillUnits>
+            </fillUnitConfiguration>
+        </fillUnitConfigurations>
+    </fillUnit>
+
+    <fillTriggerVehicle triggerNode="fillTrigger" fillUnitIndex="1" litersPerSecond="200"/>
+
+    <dischargeable requiresTipOcclusionArea="false" />
+
+    <dynamicMount triggerNode="dynamicMountTrigger" triggerForceAcceleration="5" additionalMountDistance="1.5" jointTransY="0.11" jointLimitToRotY="true"/>
+
+    <designConfigurations>
+        <designConfiguration name="$l10n_configuration_valueDefault" price="0">
+            <material sourceMaterialSlotName="herbicide_mat" targetMaterialSlotName="fertilizerTank_mat" />
+        </designConfiguration>
+    </designConfigurations>
+
+    <tensionBeltObject>
+        <meshNodes>
+            <meshNode node="fertilizerTank_vis"/>
+        </meshNodes>
+    </tensionBeltObject>
+
+    <i3dMappings>
+        <i3dMapping id="dynamicMountTrigger" node="0>0|0" />
+        <i3dMapping id="fillTrigger" node="0>0|1" />
+        <i3dMapping id="floorCollision01" node="0>1|0" />
+        <i3dMapping id="floorCollision02" node="0>1|1" />
+        <i3dMapping id="helmConfiguration" node="0>2|0" />
+        <i3dMapping id="decalHelmLiquidHerbicide" node="0>2|0|0" />
+        <i3dMapping id="decalHelmLiquidFertilizer" node="0>2|0|1" />
+        <i3dMapping id="cortevaConfiguration" node="0>2|1" />
+        <i3dMapping id="fertilizerTank_vis" node="0>3|0" />
+        <i3dMapping id="materialHerbicide" node="0>3|1" />
+    </i3dMappings>
+</vehicle>

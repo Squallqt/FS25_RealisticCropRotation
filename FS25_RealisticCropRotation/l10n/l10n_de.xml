@@ -11,8 +11,8 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Rotation" />
         <e k="rcr_tab_planning"         v="Planung" />
-        <e k="rcr_disease_name_sclerotinia" v="Sklerotinia" />
-        <e k="rcr_disease_name_bcn"   v="Nematode" />
+        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia (Weißstängeligkeit)" />
+        <e k="rcr_disease_name_bcn"   v="Zystennematode" />
         <e k="rcr_section_disease_map"     v="Krankheiten" />
         <e k="rcr_disease_sub_infections" v="Aktive Herde" />
         <e k="rcr_disease_sub_pressure"   v="Krankheitsdruck" />
@@ -102,10 +102,10 @@
         <e k="rcr_advice_afterForage"    v="Nach einer Grasphase verwertet Getreide die unter der Grasnarbe aufgebaute Fruchtbarkeit und Struktur." />
         <e k="rcr_advice_disease_sclerotinia" v="Diese Kultur ist ein Wirt der Sklerotinia, halte daher mindestens drei Jahre Abstand zu Raps, Sonnenblume, Sojabohne, Erbse und Bohne." />
         <e k="rcr_advice_disease_bcn"         v="Diese Kultur ist ein Wirt des Rübenzystennematoden, halte daher Rüben und Kreuzblütler deutlich auseinander." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Hoher Sklerotinia-Druck auf diesem Feld — vermeide Raps, Sonnenblume, Sojabohne, Erbse und Bohne für mindestens drei Jahre." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Hoher Nematoden-Druck auf diesem Feld — vermeide Zuckerrübe, Rote Bete, Raps, Senf und Spinat für mindestens drei Jahre." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Mäßiger Sklerotinia-Druck auf diesem Feld — Wirtskulturen sorgfältig einplanen." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Mäßiger Nematoden-Druck auf diesem Feld — Rüben und Kreuzblütler sorgfältig einplanen." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Hoher Sclerotinia-Druck — Raps, Sonnenblume, Soja, Erbse, Bohne, Kartoffel und Möhre mindestens 3 Jahre meiden; Fungizid zur Blüte bei feuchter Witterung." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Hoher Nematoden-Druck — Zuckerrübe, Rote Bete, Raps, Senf und Spinat 3 Jahre meiden; Nematizid oder resistente Fangpflanze." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Mäßiger Sclerotinia-Druck — Wirtskulturen zeitlich strecken und auf eine feuchte Blüte achten." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Mäßiger Nematoden-Druck — Rüben und Kreuzblütler zeitlich strecken." />
         <e k="rcr_advice_no_current_crop" v="Keine aktuelle Hauptkultur: Empfehlung verfügbar, sobald eine Kultur erkannt wird." />
 
         <!-- Field card — required actions / growth -->
@@ -159,5 +159,49 @@
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Keine eigenen Felder anzuzeigen." />
+        <e k="rcr_function_fungicideTank" v="Verwende AMISTAR in Feldspritzen, um eine Fungizidbehandlung auf gefährdeten Kulturen auszubringen." />
+        <e k="rcr_function_nematicideTank" v="Verwende VELUM PRIME in Feldspritzen, um eine Nematizidbehandlung auf nematodengefährdeten Kulturen auszubringen." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_phoma" v="Phoma (Wurzelhalsfäule)" />
+        <e k="rcr_disease_name_pietin" v="Schwarzbeinigkeit" />
+        <e k="rcr_disease_name_septoriose" v="Septoria-Blattdürre" />
+        <e k="rcr_disease_name_rouille" v="Rost" />
+        <e k="rcr_disease_name_fusariose" v="Ährenfusariose" />
+        <e k="rcr_disease_name_mildiou" v="Kraut- und Knollenfäule" />
+        <e k="rcr_disease_name_hernie" v="Kohlhernie" />
+        <e k="rcr_disease_desc_sclerotinia" v="Weißfäule von Ölfrüchten, Leguminosen und Wurzelfrüchten zur Blüte; Sklerotien überdauern jahrelang im Boden, begünstigt durch eine feuchte Blüte." />
+        <e k="rcr_disease_desc_phoma" v="Wurzelhals- und Stängelfäule von Raps/Senf, über Ernterückstände übertragen; erfordert eine lange Anbaupause der Ölfrüchte, verstärkt durch Herbstfeuchte." />
+        <e k="rcr_disease_desc_pietin" v="Schwarzbeinigkeit bei Getreide-Monokultur; nur durch eine Nichtwirtskultur (Hafer, Leguminose, Ölfrucht) zu durchbrechen. Kein wirksames Fungizid." />
+        <e k="rcr_disease_desc_septoriose" v="Wichtigste Blattkrankheit von Weizen/Gerste, durch Regenspritzer von den Rückständen verbreitet; explosionsartig bei nassem Frühjahr." />
+        <e k="rcr_disease_desc_rouille" v="Braun- und Gelbrost von Getreide sowie Sonnenblume/Raps; explosionsartig bei mild-feuchter Witterung, durch Wind verbreitet." />
+        <e k="rcr_disease_desc_fusariose" v="Ährenfusariose, begünstigt durch Getreide- und Maisrückstände (Mais→Weizen); kritisch bei feuchter Blüte, führt zu Kümmerkorn." />
+        <e k="rcr_disease_desc_mildiou" v="Kraut- und Knollenfäule der Kartoffel; von kühl-nasser Witterung getrieben, gering von der Fruchtfolge abhängig; vernichtet den Bestand in wenigen Tagen." />
+        <e k="rcr_disease_desc_bcn" v="Rübenzystennematode; Zysten überdauern jahrelang im Boden, chronischer nesterweiser Befall; die Fruchtfolge ist der wichtigste Hebel." />
+        <e k="rcr_disease_desc_hernie" v="Kohlhernie; Dauersporen überleben über sechs Jahre, erfordert eine sehr lange Anbaupause der Kreuzblütler; keine chemische Bekämpfung." />
+        <e k="rcr_disease_treatment_sclerotinia" v="Fungizid" />
+        <e k="rcr_disease_treatment_phoma" v="Fungizid" />
+        <e k="rcr_disease_treatment_pietin" v="Keine (Fruchtfolge)" />
+        <e k="rcr_disease_treatment_septoriose" v="Fungizid" />
+        <e k="rcr_disease_treatment_rouille" v="Fungizid" />
+        <e k="rcr_disease_treatment_fusariose" v="Fungizid" />
+        <e k="rcr_disease_treatment_mildiou" v="Fungizid" />
+        <e k="rcr_disease_treatment_bcn" v="Nematizid" />
+        <e k="rcr_fillType_fungicide" v="Fungizid" />
+        <e k="rcr_fillType_nematicide" v="Nematizid" />
+        <e k="rcr_disease_treatment_hernie" v="Keine (resistente Sorte, Kalkung, Fruchtfolge)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Hoher Phoma-Druck — Raps und Senf ca. 4 Jahre meiden, Rückstände einarbeiten; Herbstfungizid bei anfälligen Sorten." />
+        <e k="rcr_advice_pressure_high_pietin" v="Hoher Schwarzbeinigkeits-Druck — eine Nichtwirtspause einlegen (Hafer, Leguminose, Ölfrucht); kein wirksames Fungizid, nur die Fruchtfolge hilft." />
+        <e k="rcr_advice_pressure_high_septoriose" v="Hoher Septoria-Druck — Weizen/Gerste nicht auf Getreiderückständen anbauen, tolerante Sorte wählen; Fungizid ab Schossbeginn bei feuchtem Klima." />
+        <e k="rcr_advice_pressure_high_rouille" v="Hoher Rost-Druck — resistente Sorte säen und Fungizid einplanen; auf mild-feuchte Phasen achten." />
+        <e k="rcr_advice_pressure_high_fusariose" v="Hoher Fusarium-Druck — Weizen nicht nach Mais anbauen, Rückstände einarbeiten; Fungizid zur Blüte bei Nässe." />
+        <e k="rcr_advice_pressure_high_mildiou" v="Hoher Krautfäule-Druck — resistente Sorte pflanzen und Kartoffeln mit Fungizid schützen, sobald es kühl und nass wird." />
+        <e k="rcr_advice_pressure_high_hernie" v="Hoher Kohlhernie-Druck — Anbaupause der Kreuzblütler über 6 Jahre, Kalkung zur pH-Anhebung und resistente Sorte säen; keine chemische Bekämpfung." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Mäßiger Phoma-Druck — die Rapspause verlängern und das Stroh häckseln." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="Mäßiger Schwarzbeinigkeits-Druck — eine dritte Getreidefrucht in Folge vermeiden." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="Mäßiger Septoria-Druck — Frühjahrsniederschläge und Inokulum aus den Rückständen beobachten." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="Mäßiger Rost-Druck — bei milder Witterung auf Pusteln kontrollieren." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="Mäßiger Fusarium-Druck — Getreide und Mais zeitlich strecken, Rückstände managen." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="Mäßiger Krautfäule-Druck — kühl-nasse Witterung überwachen und Durchwuchskartoffeln beseitigen." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="Mäßiger Kohlhernie-Druck — die Rapspause verlängern und auf sauren pH achten." />
     </elements>
 </l10n>

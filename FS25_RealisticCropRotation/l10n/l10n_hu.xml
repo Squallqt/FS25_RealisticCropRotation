@@ -11,8 +11,8 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Forgó" />
         <e k="rcr_tab_planning"         v="Tervezés" />
-        <e k="rcr_disease_name_sclerotinia" v="Szklerotínia" />
-        <e k="rcr_disease_name_bcn"   v="Fonálféreg" />
+        <e k="rcr_disease_name_sclerotinia" v="Fehérpenészes rothadás (Sclerotinia)" />
+        <e k="rcr_disease_name_bcn"   v="Cisztaféreg" />
         <e k="rcr_section_disease_map"     v="Betegségek" />
         <e k="rcr_disease_sub_infections" v="Aktív gócok" />
         <e k="rcr_disease_sub_pressure"   v="Betegségnyomás" />
@@ -102,10 +102,10 @@
         <e k="rcr_advice_afterForage" v="Ideiglenes gyep után a gabona hasznosítja a gyep alatt felhalmozott termékenységet és szerkezetet." />
         <e k="rcr_advice_disease_sclerotinia" v="Ez a növény a fehérpenész gazdája, ezért tarts legalább három évet a repcétől, napraforgótól, szójától, borsótól és babtól." />
         <e k="rcr_advice_disease_bcn" v="Ez a növény a répacisztaféreg gazdája, ezért tartsd jól távol a répát és a keresztesvirágúakat." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="" />
-        <e k="rcr_advice_pressure_high_bcn"           v="" />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="" />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="" />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Erős fehérpenész-nyomás — legalább 3 évig kerülje a repcét, napraforgót, szóját, borsót, babot, burgonyát és sárgarépát; nedves időben gombaölő szer virágzáskor." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Erős fonálféreg-nyomás — 3 évig kerülje a cukorrépát, céklát, repcét, mustárt és spenótot; fonálféregölő szer vagy rezisztens csapdanövény." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Mérsékelt fehérpenész-nyomás — ritkítsa a gazdanövényeket és figyelje a nedves virágzást." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Mérsékelt fonálféreg-nyomás — ritkítsa a répát és a keresztesvirágúakat." />
         <e k="rcr_advice_no_current_crop" v="Nincs jelenlegi főnövény: a tanács elérhető, ha növényt észlel." />
 
         <!-- Field card — required actions / growth -->
@@ -159,5 +159,49 @@
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Nincs megjeleníthető saját tábla." />
+        <e k="rcr_function_fungicideTank" v="Használd az AMISTAR-t permetezőkben a veszélyeztetett kultúrák gombaölő kezeléséhez." />
+        <e k="rcr_function_nematicideTank" v="Használd a VELUM PRIME-ot permetezőkben a fonálférgeknek kitett kultúrák nematicid kezeléséhez." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_phoma" v="Fómás szárrothadás (Phoma)" />
+        <e k="rcr_disease_name_pietin" v="Gyökér- és szártőfeketedés" />
+        <e k="rcr_disease_name_septoriose" v="Szeptóriás levélfoltosság" />
+        <e k="rcr_disease_name_rouille" v="Rozsda" />
+        <e k="rcr_disease_name_fusariose" v="Kalászfuzáriózis" />
+        <e k="rcr_disease_name_mildiou" v="Burgonyavész" />
+        <e k="rcr_disease_name_hernie" v="Káposztafélék gyökérgolyvája" />
+        <e k="rcr_disease_desc_sclerotinia" v="Az olajnövények, hüvelyesek és gyökérnövények fehérpenészes rothadása virágzáskor; a szkleróciumok évekig fennmaradnak a talajban, a nedves virágzás kedvez neki." />
+        <e k="rcr_disease_desc_phoma" v="A repce és a mustár tarlómaradványokkal terjedő szárrothadása; hosszú olajnövény-kihagyást igényel, az őszi nedvesség súlyosbítja." />
+        <e k="rcr_disease_desc_pietin" v="A folyamatosan termesztett gabona gyökér- és szártőfeketedése; csak nem gazdanövénnyel (zab, hüvelyes, olajnövény) szakítható meg. Nincs hatékony gombaölő szer." />
+        <e k="rcr_disease_desc_septoriose" v="A búza és az árpa fő levélbetegsége, a tarlómaradványokról esőcseppekkel fröccsenve terjed; nedves tavaszon robbanásszerűen jelentkezik." />
+        <e k="rcr_disease_desc_rouille" v="A gabonafélék, valamint a napraforgó/repce barna- és sárgarozsdája; enyhe, nedves időben gyorsan terjed a széllel." />
+        <e k="rcr_disease_desc_fusariose" v="A kalászfuzáriózist a gabona- és kukoricamaradványok segítik (kukorica→búza); nedves virágzáskor kritikus, aszalja a szemet." />
+        <e k="rcr_disease_desc_mildiou" v="Burgonyavész; a hűvös, nedves időjárás hajtja, a vetésforgótól kevéssé függ; néhány nap alatt tönkreteszi az állományt." />
+        <e k="rcr_disease_desc_bcn" v="Répacisztaféreg; a ciszták évekig fennmaradnak a talajban, tartós, foltszerű stresszt okoznak; a fő eszköz a vetésforgó." />
+        <e k="rcr_disease_desc_hernie" v="Káposztafélék gyökérgolyvája; a nyugvó spórák több mint hat évig fennmaradnak, nagyon hosszú keresztesvirágú-kihagyást igényel; nincs vegyszeres kezelés." />
+        <e k="rcr_disease_treatment_sclerotinia" v="Gombaölő szer" />
+        <e k="rcr_disease_treatment_phoma" v="Gombaölő szer" />
+        <e k="rcr_disease_treatment_pietin" v="Nincs (vetésforgó)" />
+        <e k="rcr_disease_treatment_septoriose" v="Gombaölő szer" />
+        <e k="rcr_disease_treatment_rouille" v="Gombaölő szer" />
+        <e k="rcr_disease_treatment_fusariose" v="Gombaölő szer" />
+        <e k="rcr_disease_treatment_mildiou" v="Gombaölő szer" />
+        <e k="rcr_disease_treatment_bcn" v="Fonálféregölő szer" />
+        <e k="rcr_fillType_fungicide" v="Gombaölő szer" />
+        <e k="rcr_fillType_nematicide" v="Fonálféregölő szer" />
+        <e k="rcr_disease_treatment_hernie" v="Nincs (rezisztens fajta, meszezés, vetésforgó)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Erős fómás nyomás — mintegy 4 évig kerülje a repcét és a mustárt, forgassa be a maradványokat; fogékony fajtán őszi gombaölő szer." />
+        <e k="rcr_advice_pressure_high_pietin" v="Erős szártőfeketedés-nyomás — iktasson be nem gazdanövény kihagyást (zab, hüvelyes, olajnövény); nincs hatékony gombaölő szer, csak a vetésforgó gyógyítja." />
+        <e k="rcr_advice_pressure_high_septoriose" v="Erős szeptória-nyomás — ne termesszen búzát/árpát gabonamaradványon, válasszon toleráns fajtát; nedves éghajlaton gombaölő szer szárba indulástól." />
+        <e k="rcr_advice_pressure_high_rouille" v="Erős rozsdanyomás — vessen rezisztens fajtát és tervezzen gombaölő szert; figyelje az enyhe, nedves időszakokat." />
+        <e k="rcr_advice_pressure_high_fusariose" v="Erős fuzáriózis-nyomás — ne termesszen búzát kukorica után, forgassa be a maradványokat; esős időben gombaölő szer virágzáskor." />
+        <e k="rcr_advice_pressure_high_mildiou" v="Erős burgonyavész-nyomás — telepítsen rezisztens fajtát és védje a burgonyát gombaölő szerrel, amint hűvösre és nedvesre fordul." />
+        <e k="rcr_advice_pressure_high_hernie" v="Erős gyökérgolyva-nyomás — 6 évnél hosszabb keresztesvirágú-kihagyás, meszezéssel emelje a pH-t és vessen rezisztens fajtát; nincs vegyszeres kezelés." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Mérsékelt fómás nyomás — hosszabbítsa meg a repce kihagyását és aprítsa fel a tarlót." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="Mérsékelt szártőfeketedés-nyomás — kerülje a sorban harmadik gabonát." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="Mérsékelt szeptória-nyomás — figyelje a tavaszi esőket és a maradványok fertőző anyagát." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="Mérsékelt rozsdanyomás — enyhe időben figyelje a pusztulák megjelenését." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="Mérsékelt fuzáriózis-nyomás — ritkítsa a gabonát és a kukoricát, kezelje a maradványokat." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="Mérsékelt burgonyavész-nyomás — kövesse a hűvös, nedves időt és irtsa az árvakeléseket." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="Mérsékelt gyökérgolyva-nyomás — hosszabbítsa meg a repce kihagyását és figyelje a savas pH-t." />
     </elements>
 </l10n>

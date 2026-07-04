@@ -11,8 +11,8 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Rotation" />
         <e k="rcr_tab_planning"         v="Planlægning" />
-        <e k="rcr_disease_name_sclerotinia" v="Sklerotinia" />
-        <e k="rcr_disease_name_bcn"   v="Nematode" />
+        <e k="rcr_disease_name_sclerotinia" v="Knoldbægersvamp (Sclerotinia)" />
+        <e k="rcr_disease_name_bcn"   v="Cystenematode" />
         <e k="rcr_section_disease_map"     v="Sygdomme" />
         <e k="rcr_disease_sub_infections" v="Aktive udbrud" />
         <e k="rcr_disease_sub_pressure"   v="Sygdomstryk" />
@@ -102,10 +102,10 @@
         <e k="rcr_advice_afterForage" v="Efter en kløvergræsmark udnytter en kornafgrøde den frugtbarhed og struktur, der er opbygget under græsset." />
         <e k="rcr_advice_disease_sclerotinia" v="Denne afgrøde er vært for knoldbægersvamp, så hold mindst tre år fra raps, solsikke, sojabønne, ært og bønne." />
         <e k="rcr_advice_disease_bcn" v="Denne afgrøde er vært for roecystenematoden, så hold roer og korsblomstrede godt adskilt." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="" />
-        <e k="rcr_advice_pressure_high_bcn"           v="" />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="" />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="" />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Højt sclerotinia-tryk — undgå raps, solsikke, sojabønne, ært, bønne, kartoffel og gulerod i mindst 3 år; svampemiddel ved blomstring i fugtigt vejr." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Højt nematode-tryk — undgå sukkerroe, rødbede, raps, sennep og spinat i 3 år; nematicid eller resistent fangafgrøde." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderat sclerotinia-tryk — spred værtsafgrøderne og hold øje med en fugtig blomstring." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Moderat nematode-tryk — spred roer og korsblomstrede." />
         <e k="rcr_advice_no_current_crop" v="Ingen aktuel hovedafgrøde: råd tilgængeligt, når en afgrøde registreres." />
 
         <!-- Field card — required actions / growth -->
@@ -159,5 +159,49 @@
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Ingen egne marker at vise." />
+        <e k="rcr_function_fungicideTank" v="Brug AMISTAR i marksprøjter til at anvende en svampebehandling på udsatte afgrøder." />
+        <e k="rcr_function_nematicideTank" v="Brug VELUM PRIME i marksprøjter til at anvende en nematodebehandling på afgrøder udsat for nematoder." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_phoma" v="Knæksyge (Phoma)" />
+        <e k="rcr_disease_name_pietin" v="Goldfodsyge" />
+        <e k="rcr_disease_name_septoriose" v="Hvedens bladplet (Septoria)" />
+        <e k="rcr_disease_name_rouille" v="Rust" />
+        <e k="rcr_disease_name_fusariose" v="Aksfusariose (Fusarium)" />
+        <e k="rcr_disease_name_mildiou" v="Kartoffelskimmel" />
+        <e k="rcr_disease_name_hernie" v="Kålbrok" />
+        <e k="rcr_disease_desc_sclerotinia" v="Hvid råd i olieafgrøder, bælgplanter og rodfrugter ved blomstring; sklerotier overlever i jorden i årevis, begunstiget af en fugtig blomstring." />
+        <e k="rcr_disease_desc_phoma" v="Stængelkræft i raps/sennep båret på planterester; kræver en lang pause fra olieafgrøder, forværres af efterårsfugt." />
+        <e k="rcr_disease_desc_pietin" v="Goldfodsyge i vedvarende korn; brydes kun af en ikke-værtsafgrøde (havre, bælgplante, olieafgrøde). Intet effektivt svampemiddel." />
+        <e k="rcr_disease_desc_septoriose" v="Vigtigste bladsygdom i hvede/byg, spredes med regnstænk fra planterester; eksplosiv i et vådt forår." />
+        <e k="rcr_disease_desc_rouille" v="Brun og gul rust i korn samt solsikke/raps; eksplosiv i mildt fugtigt vejr, spredes med vinden." />
+        <e k="rcr_disease_desc_fusariose" v="Aksfusariose begunstiget af korn- og majsrester (majs→hvede); kritisk ved en våd blomstring, skrumper kernen." />
+        <e k="rcr_disease_desc_mildiou" v="Kartoffelskimmel; drevet af køligt vådt vejr, lav afhængighed af sædskifte; ødelægger afgrøden på få dage." />
+        <e k="rcr_disease_desc_bcn" v="Roecystenematode; cyster overlever i jorden i årevis, kronisk pletvis stress; sædskiftet er den vigtigste løftestang." />
+        <e k="rcr_disease_desc_hernie" v="Kålbrok; hvilesporer overlever i over seks år, kræver en meget lang pause fra korsblomstrede; ingen kemisk behandling." />
+        <e k="rcr_disease_treatment_sclerotinia" v="Svampemiddel" />
+        <e k="rcr_disease_treatment_phoma" v="Svampemiddel" />
+        <e k="rcr_disease_treatment_pietin" v="Ingen (sædskifte)" />
+        <e k="rcr_disease_treatment_septoriose" v="Svampemiddel" />
+        <e k="rcr_disease_treatment_rouille" v="Svampemiddel" />
+        <e k="rcr_disease_treatment_fusariose" v="Svampemiddel" />
+        <e k="rcr_disease_treatment_mildiou" v="Svampemiddel" />
+        <e k="rcr_disease_treatment_bcn" v="Nematicid" />
+        <e k="rcr_fillType_fungicide" v="Svampemiddel" />
+        <e k="rcr_fillType_nematicide" v="Nematicid" />
+        <e k="rcr_disease_treatment_hernie" v="Ingen (resistent sort, kalkning, sædskifte)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Højt phoma-tryk — undgå raps og sennep i ca. 4 år, nedmuld planterester; efterårssvampemiddel på modtagelige sorter." />
+        <e k="rcr_advice_pressure_high_pietin" v="Højt goldfodsyge-tryk — indsæt en ikke-værtsafgrøde som pause (havre, bælgplante, olieafgrøde); intet svampemiddel virker, kun sædskifte kurerer." />
+        <e k="rcr_advice_pressure_high_septoriose" v="Højt septoria-tryk — undgå hvede/byg på kornrester, vælg en tolerant sort; svampemiddel fra strækning i et vådt klima." />
+        <e k="rcr_advice_pressure_high_rouille" v="Højt rust-tryk — så en resistent sort og planlæg et svampemiddel; hold øje med milde fugtige perioder." />
+        <e k="rcr_advice_pressure_high_fusariose" v="Højt fusarium-tryk — undgå hvede efter majs, nedmuld planterester; svampemiddel ved blomstring hvis vådt." />
+        <e k="rcr_advice_pressure_high_mildiou" v="Højt kartoffelskimmel-tryk — plant en resistent sort og beskyt kartofler med svampemiddel, så snart det bliver køligt og vådt." />
+        <e k="rcr_advice_pressure_high_hernie" v="Højt kålbrok-tryk — pause fra korsblomstrede i over 6 år, kalk for at hæve pH og så en resistent sort; ingen kemisk behandling." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Moderat phoma-tryk — forlæng pausen fra raps og snit stubben." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="Moderat goldfodsyge-tryk — undgå et tredje korn i træk." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="Moderat septoria-tryk — hold øje med forårsregn og smittekilder i planterester." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="Moderat rust-tryk — spejd efter pustler i mildt vejr." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="Moderat fusarium-tryk — spred korn og majs, håndter planterester." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="Moderat kartoffelskimmel-tryk — overvåg køligt vådt vejr og fjern spildplanter." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="Moderat kålbrok-tryk — forlæng pausen fra raps og hold øje med sur pH." />
     </elements>
 </l10n>

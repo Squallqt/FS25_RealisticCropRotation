@@ -36,19 +36,34 @@ Each plan is scored on real agronomy: family return intervals, diseases shared b
 
 DISEASE MANAGEMENT
 
-Two soil diseases can damage your crops:
-- Sclerotinia (white mold): attacks canola, sunflower, mustard, soybean, pea, green bean, potato, carrot.
-- Beet cyst nematode: attacks sugar beet, beetroot, canola, mustard, spinach.
+Nine realistic diseases can now build up on your fields. Each one is tied to specific host crops and has its own weather sensitivity:
+- Sclerotinia (white mould): canola, sunflower, mustard, soybean, pea, green bean, potato, carrot. Rots stems and flowers at flowering; sclerotia survive for years and a humid flowering is decisive.
+- Phoma (blackleg): canola, mustard. Stem canker carried on oilseed residue; needs a long break from brassica oilseeds and is worsened by autumn moisture.
+- Take-all: wheat, barley, rye, triticale, spelt. Builds up in back-to-back cereals and is broken only by a non-host year (oats, legume, oilseed). No effective fungicide.
+- Septoria leaf blotch: wheat, barley, triticale, spelt. The main cereal foliar disease, splash-dispersed from residue; explosive in a wet spring.
+- Rust: cereals plus sunflower and canola. Wind-borne brown and yellow rust that explodes in mild, humid weather.
+- Fusarium head blight: cereals and maize. Favoured by cereal and maize residue (maize then wheat is the worst case); a wet flowering shrivels the grain.
+- Late blight: potato. Weather-driven rather than rotation-driven; a cool, wet spell can devastate the crop within days.
+- Beet cyst nematode: sugar beet, beetroot, canola, mustard, spinach. Cysts persist in the soil for years and cause chronic, patchy stress; rotation is the main lever.
+- Clubroot: canola, mustard. Resting spores survive over six years, so brassicas need a very long break. No chemical treatment.
 
 Risk factors:
-- Bringing a vulnerable crop back too soon on the same field (less than three years).
-- Rainy weather during the crop's growth window.
+- Bringing a host crop back too soon accumulates soil inoculum and raises the pressure.
+- Rainy, humid weather strongly worsens the fungal diseases. Late blight, septoria and rust are the most rain-sensitive, while the beet cyst nematode is not driven by rain at all.
 
 What happens:
-- An infected crop is progressively destroyed. You receive a notification and the field info shows the active disease.
+- An infected crop is progressively destroyed. You receive a notification and the field info shows the active disease and its pressure level.
+
+Treatment:
+- The fungal diseases (sclerotinia, phoma, septoria, rust, fusarium, late blight) are meant to be controlled with a fungicide (AMISTAR).
+- The beet cyst nematode is meant to be controlled with a nematicide (VELUM PRIME).
+- Take-all and clubroot have NO chemical treatment. They can only be managed agronomically: a non-host crop, a resistant variety, liming and a long enough rotation.
+
+Sprayer treatment:
+- Spray products can now be bought and applied with compatible sprayers. AMISTAR cures active fungal infections that are configured for fungicide treatment, and VELUM PRIME cures the beet cyst nematode. Spraying stops the active infection, but it does not regrow already destroyed crop and it does not erase the soil pressure created by a poor rotation.
 
 Prevention:
-- Space vulnerable crops at least three years apart. The rotation grade and per-field advice warn you before you sow.
+- Space host crops far enough apart. The rotation grade and per-field advice warn you before you sow.
 - The disease map shows infected fields and the agronomic advice shows the pressure level on each field.
 
 After infection:
@@ -61,6 +76,8 @@ The disease tools registered by the mod are:
 - rcrDiseaseInfect <farmlandId> <group> [severity]
 - rcrDiseaseTick [farmlandId]
 - rcrDiseaseClear [farmlandId]
+
+Valid <group> values: SCLEROTINIA, PHOMA, PIETIN, SEPTORIOSE, ROUILLE, FUSARIOSE, MILDIOU, BCN, HERNIE.
 
 COMPATIBILITY
 
@@ -100,19 +117,34 @@ Jeder Plan wird nach echter Agronomie bewertet: Anbaupausen je Pflanzenfamilie, 
 
 KRANKHEITSMANAGEMENT
 
-Zwei Bodenkrankheiten können deine Kulturen schädigen:
-- Sklerotinia (Weißstängeligkeit): befällt Raps, Sonnenblume, Senf, Sojabohne, Erbse, grüne Bohne, Kartoffel, Karotte.
-- Rübenzystennematode: befällt Zuckerrübe, Rote Bete, Raps, Senf, Spinat.
+Neun realistische Krankheiten können sich jetzt auf deinen Feldern aufbauen. Jede ist an bestimmte Wirtskulturen gebunden und hat ihre eigene Wetterempfindlichkeit:
+- Sklerotinia (Weißstängeligkeit): Raps, Sonnenblume, Senf, Sojabohne, Erbse, grüne Bohne, Kartoffel, Karotte. Fäulnis von Stängel und Blüte zur Blütezeit; Sklerotien überdauern Jahre, eine feuchte Blüte ist entscheidend.
+- Phoma (Wurzelhals- und Stängelfäule): Raps, Senf. Stängelkrebs über Ölsaatenrückstände; braucht eine lange Anbaupause von Kreuzblütler-Ölsaaten und wird durch Herbstfeuchte verschlimmert.
+- Schwarzbeinigkeit (Take-all): Weizen, Gerste, Roggen, Triticale, Dinkel. Baut sich in Getreide-Selbstfolge auf und wird nur durch ein Nichtwirtsjahr (Hafer, Leguminose, Ölsaat) unterbrochen. Kein wirksames Fungizid.
+- Septoria-Blattdürre: Weizen, Gerste, Triticale, Dinkel. Die wichtigste Blattkrankheit im Getreide, durch Regenspritzer von Rückständen verbreitet; explosiv in einem feuchten Frühjahr.
+- Rost: Getreide sowie Sonnenblume und Raps. Windbürtiger Braun- und Gelbrost, der bei milder, feuchter Witterung explodiert.
+- Ährenfusariose: Getreide und Mais. Begünstigt durch Getreide- und Maisrückstände (Mais dann Weizen ist der schlimmste Fall); eine feuchte Blüte lässt das Korn verkümmern.
+- Kraut- und Knollenfäule: Kartoffel. Wettergesteuert statt fruchtfolgegesteuert; eine kühle, feuchte Phase kann die Kultur in wenigen Tagen vernichten.
+- Rübenzystennematode: Zuckerrübe, Rote Bete, Raps, Senf, Spinat. Zysten überdauern Jahre im Boden und verursachen chronischen, nesterweisen Stress; die Fruchtfolge ist der Haupthebel.
+- Kohlhernie: Raps, Senf. Dauersporen überleben über sechs Jahre, daher brauchen Kreuzblütler eine sehr lange Anbaupause. Keine chemische Behandlung.
 
 Risikofaktoren:
-- Eine anfällige Kultur kehrt zu früh auf dasselbe Feld zurück (weniger als drei Jahre).
-- Regenwetter während der Wachstumsphase der Kultur.
+- Eine Wirtskultur zu früh zurückzubringen reichert das Bodeninokulum an und erhöht den Druck.
+- Regnerisches, feuchtes Wetter verschlimmert die Pilzkrankheiten stark. Kraut- und Knollenfäule, Septoria und Rost sind am regenempfindlichsten, während die Rübenzystennematode überhaupt nicht vom Regen angetrieben wird.
 
 Was passiert:
-- Eine befallene Kultur wird schrittweise zerstört. Du erhältst eine Benachrichtigung und die Feldanzeige zeigt die aktive Krankheit.
+- Eine befallene Kultur wird schrittweise zerstört. Du erhältst eine Benachrichtigung und die Feldanzeige zeigt die aktive Krankheit und ihren Befallsdruck.
+
+Behandlung:
+- Die Pilzkrankheiten (Sklerotinia, Phoma, Septoria, Rost, Fusariose, Kraut- und Knollenfäule) sollen mit einem Fungizid (AMISTAR) bekämpft werden.
+- Die Rübenzystennematode soll mit einem Nematizid (VELUM PRIME) bekämpft werden.
+- Schwarzbeinigkeit und Kohlhernie haben KEINE chemische Behandlung. Sie lassen sich nur agronomisch steuern: eine Nichtwirtskultur, eine resistente Sorte, Kalkung und eine ausreichend lange Fruchtfolge.
+
+Spritzbehandlung:
+- Spritzmittel können jetzt gekauft und mit kompatiblen Feldspritzen ausgebracht werden. AMISTAR heilt aktive Pilzinfektionen, die für eine Fungizidbehandlung konfiguriert sind, und VELUM PRIME heilt die Rübenzystennematode. Das Spritzen stoppt den aktiven Befall, lässt aber bereits zerstörte Pflanzen nicht nachwachsen und entfernt nicht den Bodendruck einer schlechten Fruchtfolge.
 
 Vorbeugung:
-- Halte mindestens drei Jahre Abstand zwischen anfälligen Kulturen. Die Fruchtfolge-Note und die Empfehlung je Feld warnen dich vor der Aussaat.
+- Halte ausreichend Abstand zwischen Wirtskulturen. Die Fruchtfolge-Note und die Empfehlung je Feld warnen dich vor der Aussaat.
 - Die Krankheitskarte zeigt befallene Felder und der Agrartipp zeigt den Befallsdruck je Feld.
 
 Nach einem Befall:
@@ -125,6 +157,8 @@ Die vom Mod registrierten Krankheitsbefehle sind:
 - rcrDiseaseInfect <farmlandId> <group> [severity]
 - rcrDiseaseTick [farmlandId]
 - rcrDiseaseClear [farmlandId]
+
+Gültige <group>-Werte: SCLEROTINIA, PHOMA, PIETIN, SEPTORIOSE, ROUILLE, FUSARIOSE, MILDIOU, BCN, HERNIE.
 
 KOMPATIBILITÄT
 
@@ -164,19 +198,34 @@ Chaque plan reçoit une note fondée sur l'agronomie réelle : intervalles de re
 
 GESTION DES MALADIES
 
-Deux maladies du sol peuvent endommager vos cultures :
-- Le sclérotinia (pourriture blanche) : attaque colza, tournesol, moutarde, soja, pois, haricot vert, pomme de terre, carotte.
-- Le nématode à kystes de la betterave : attaque betterave sucrière, betterave rouge, colza, moutarde, épinard.
+Neuf maladies réalistes peuvent désormais s'installer sur vos parcelles. Chacune est liée à des cultures hôtes précises et possède sa propre sensibilité à la météo :
+- Sclérotinia (pourriture blanche) : colza, tournesol, moutarde, soja, pois, haricot vert, pomme de terre, carotte. Pourrit la tige et la fleur à la floraison ; les sclérotes persistent plusieurs années et une floraison humide est décisive.
+- Phoma (nécrose du collet) : colza, moutarde. Nécrose du collet transmise par les résidus d'oléagineux ; exige un retour long des oléagineux crucifères et s'aggrave avec l'humidité automnale.
+- Piétin-échaudage : blé, orge, seigle, triticale, épeautre. S'accumule en céréales sur céréales et n'est rompu que par une année non-hôte (avoine, légumineuse, oléagineux). Aucun fongicide efficace.
+- Septoriose : blé, orge, triticale, épeautre. Principale maladie foliaire des céréales, dispersée par les éclaboussures de pluie depuis les résidus ; explosive au printemps humide.
+- Rouille : céréales, plus tournesol et colza. Rouille brune et jaune disséminée par le vent, explosive par temps doux et humide.
+- Fusariose de l'épi : céréales et maïs. Favorisée par les résidus de céréales et de maïs (maïs puis blé est le pire cas) ; une floraison humide échaude le grain.
+- Mildiou : pomme de terre. Dominé par la météo plutôt que par la rotation ; une période fraîche et humide peut ravager la culture en quelques jours.
+- Nématode à kystes de la betterave : betterave sucrière, betterave rouge, colza, moutarde, épinard. Les kystes persistent plusieurs années dans le sol et créent un stress chronique en foyers ; la rotation est le levier principal.
+- Hernie des crucifères : colza, moutarde. Les spores de repos survivent plus de six ans, les crucifères exigent donc un retour très long. Aucun traitement chimique.
 
 Facteurs de risque :
-- Faire revenir une culture sensible trop tôt sur la même parcelle (moins de trois ans).
-- Un temps pluvieux pendant la fenêtre de croissance de la culture.
+- Faire revenir une culture hôte trop tôt accumule l'inoculum du sol et augmente la pression.
+- Un temps pluvieux et humide aggrave fortement les maladies fongiques. Le mildiou, la septoriose et la rouille sont les plus sensibles à la pluie, tandis que le nématode à kystes n'est pas du tout déclenché par la pluie.
 
 Ce qui se passe :
-- Une culture infectée est progressivement détruite. Vous recevez une notification et la fiche du champ affiche la maladie active.
+- Une culture infectée est progressivement détruite. Vous recevez une notification et la fiche du champ affiche la maladie active et son niveau de pression.
+
+Traitement :
+- Les maladies fongiques (sclérotinia, phoma, septoriose, rouille, fusariose, mildiou) doivent être combattues au fongicide (AMISTAR).
+- Le nématode à kystes de la betterave doit être combattu au nématicide (VELUM PRIME).
+- Le piétin-échaudage et la hernie des crucifères n'ont AUCUN traitement chimique. Ils ne se gèrent que par l'agronomie : une culture non-hôte, une variété résistante, le chaulage et une rotation assez longue.
+
+Traitement par pulvérisation :
+- Les produits de pulvérisation peuvent maintenant être achetés et appliqués avec des pulvérisateurs compatibles. AMISTAR soigne les infections fongiques actives configurées pour un traitement fongicide, et VELUM PRIME soigne le nématode à kystes de la betterave. La pulvérisation stoppe l'infection active, mais elle ne fait pas repousser les cultures déjà détruites et n'efface pas la pression du sol créée par une mauvaise rotation.
 
 Prévention :
-- Espacez les cultures sensibles d'au moins trois ans. La note de rotation et le conseil par parcelle vous alertent avant le semis.
+- Espacez suffisamment les cultures hôtes. La note de rotation et le conseil par parcelle vous alertent avant le semis.
 - La carte des maladies montre les champs infectés et le conseil agronomique affiche le niveau de pression sur chaque parcelle.
 
 Après une infection :
@@ -189,6 +238,8 @@ Les commandes maladie enregistrées par le mod sont :
 - rcrDiseaseInfect <farmlandId> <group> [severity]
 - rcrDiseaseTick [farmlandId]
 - rcrDiseaseClear [farmlandId]
+
+Valeurs valides pour <group> : SCLEROTINIA, PHOMA, PIETIN, SEPTORIOSE, ROUILLE, FUSARIOSE, MILDIOU, BCN, HERNIE.
 
 COMPATIBILITÉ
 
@@ -203,6 +254,24 @@ https://github.com/Squallqt/FS25_RealisticCropRotation
     </description>
     <iconFilename>icon_RealCropRotation.dds</iconFilename>
     <multiplayer supported="true" />
+
+    <materialHolders>
+        <materialHolder filename="effects/sprayer/rcrSprayerMeshes_materialHolder.i3d" />
+    </materialHolders>
+
+    <fillTypes filename="fillTypes.xml" />
+
+    <storeItems>
+        <storeItem xmlFilename="pallets/fungicide/fungicideTank.xml" />
+        <storeItem xmlFilename="pallets/fungicide/multiPurchaseLiquidTank_fungicideTank.xml" />
+        <storeItem xmlFilename="pallets/nematicide/nematicideTank.xml" />
+        <storeItem xmlFilename="pallets/nematicide/multiPurchaseLiquidTank_nematicideTank.xml" />
+    </storeItems>
+
+    <brands>
+        <brand name="SYNGENTA" title="Syngenta" image="brands/brand_amistar.dds" />
+        <brand name="BAYER" title="Bayer" image="brands/brand_velumPrime.dds" />
+    </brands>
 
     <extraSourceFiles>
         <sourceFile filename="main.lua" />

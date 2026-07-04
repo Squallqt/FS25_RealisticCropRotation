@@ -11,8 +11,8 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Rotación" />
         <e k="rcr_tab_planning"         v="Planificación" />
-        <e k="rcr_disease_name_sclerotinia" v="Esclerotinia" />
-        <e k="rcr_disease_name_bcn"   v="Nematodo" />
+        <e k="rcr_disease_name_sclerotinia" v="Esclerotinia (podredumbre blanca)" />
+        <e k="rcr_disease_name_bcn"   v="Nematodo del quiste" />
         <e k="rcr_section_disease_map"     v="Enfermedades" />
         <e k="rcr_disease_sub_infections" v="Focos activos" />
         <e k="rcr_disease_sub_pressure"   v="Presión de enfermedad" />
@@ -102,10 +102,10 @@
         <e k="rcr_advice_afterForage" v="Después de una pradera temporal, un cereal aprovecha la fertilidad y la estructura acumuladas bajo la hierba." />
         <e k="rcr_advice_disease_sclerotinia" v="Este cultivo es huésped de la esclerotinia, así que mantén al menos tres años con la colza, el girasol, la soja, el guisante y la judía." />
         <e k="rcr_advice_disease_bcn" v="Este cultivo es huésped del nematodo del quiste de la remolacha, así que mantén separadas las remolachas y las crucíferas." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="" />
-        <e k="rcr_advice_pressure_high_bcn"           v="" />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="" />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="" />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Alta presión de esclerotinia — evita colza, girasol, soja, guisante, judía, patata y zanahoria durante al menos 3 años; fungicida en floración con tiempo húmedo." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Alta presión de nematodo — evita remolacha azucarera, remolacha de mesa, colza, mostaza y espinaca durante 3 años; nematicida o cultivo trampa resistente." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Presión de esclerotinia moderada — espacia los cultivos hospedantes y vigila una floración húmeda." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Presión de nematodo moderada — espacia remolachas y brasicáceas." />
         <e k="rcr_advice_no_current_crop" v="Sin cultivo principal actual: el consejo estará disponible cuando se detecte un cultivo." />
 
         <!-- Field card — required actions / growth -->
@@ -159,5 +159,49 @@
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="No hay parcelas propias que mostrar." />
+        <e k="rcr_function_fungicideTank" v="Usa AMISTAR en pulverizadores para aplicar un tratamiento fungicida en cultivos en riesgo." />
+        <e k="rcr_function_nematicideTank" v="Usa VELUM PRIME en pulverizadores para aplicar un tratamiento nematicida en cultivos expuestos a nematodos." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_phoma" v="Phoma (pie negro)" />
+        <e k="rcr_disease_name_pietin" v="Mal del pie" />
+        <e k="rcr_disease_name_septoriose" v="Septoriosis" />
+        <e k="rcr_disease_name_rouille" v="Roya" />
+        <e k="rcr_disease_name_fusariose" v="Fusariosis de la espiga" />
+        <e k="rcr_disease_name_mildiou" v="Mildiu de la patata" />
+        <e k="rcr_disease_name_hernie" v="Hernia de las crucíferas" />
+        <e k="rcr_disease_desc_sclerotinia" v="Podredumbre blanca de oleaginosas, leguminosas y raíces en floración; los esclerocios persisten años en el suelo, favorecida por una floración húmeda." />
+        <e k="rcr_disease_desc_phoma" v="Chancro del cuello de colza/mostaza transmitido por los restos de cosecha; requiere un intervalo largo entre oleaginosas, agravado por la humedad otoñal." />
+        <e k="rcr_disease_desc_pietin" v="Mal del pie de los cereales en monocultivo; solo se rompe con un cultivo no hospedante (avena, leguminosa, oleaginosa). Ningún fungicida eficaz." />
+        <e k="rcr_disease_desc_septoriose" v="Principal enfermedad foliar de trigo/cebada, dispersada por las salpicaduras de lluvia desde los restos; explosiva en una primavera húmeda." />
+        <e k="rcr_disease_desc_rouille" v="Royas parda y amarilla de los cereales y del girasol/colza; explosivas con tiempo templado y húmedo, diseminadas por el viento." />
+        <e k="rcr_disease_desc_fusariose" v="Fusariosis de la espiga favorecida por los restos de cereal y maíz (maíz→trigo); crítica con una floración húmeda, arruga el grano." />
+        <e k="rcr_disease_desc_mildiou" v="Mildiu de la patata; impulsado por el tiempo fresco y húmedo, poca dependencia de la rotación; arrasa el cultivo en pocos días." />
+        <e k="rcr_disease_desc_bcn" v="Nematodo del quiste de la remolacha; los quistes persisten años en el suelo, estrés crónico en rodales; la rotación es la palanca principal." />
+        <e k="rcr_disease_desc_hernie" v="Hernia de las crucíferas; las esporas de resistencia persisten más de seis años, requiere un intervalo muy largo entre brasicáceas; sin tratamiento químico." />
+        <e k="rcr_disease_treatment_sclerotinia" v="Fungicida" />
+        <e k="rcr_disease_treatment_phoma" v="Fungicida" />
+        <e k="rcr_disease_treatment_pietin" v="Ninguno (rotación)" />
+        <e k="rcr_disease_treatment_septoriose" v="Fungicida" />
+        <e k="rcr_disease_treatment_rouille" v="Fungicida" />
+        <e k="rcr_disease_treatment_fusariose" v="Fungicida" />
+        <e k="rcr_disease_treatment_mildiou" v="Fungicida" />
+        <e k="rcr_disease_treatment_bcn" v="Nematicida" />
+        <e k="rcr_fillType_fungicide" v="Fungicida" />
+        <e k="rcr_fillType_nematicide" v="Nematicida" />
+        <e k="rcr_disease_treatment_hernie" v="Ninguno (variedad resistente, encalado, rotación)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Alta presión de phoma — evita colza y mostaza ~4 años, entierra los restos; fungicida otoñal en variedades sensibles." />
+        <e k="rcr_advice_pressure_high_pietin" v="Alta presión de mal del pie — introduce un corte no hospedante (avena, leguminosa, oleaginosa); ningún fungicida eficaz, solo la rotación lo cura." />
+        <e k="rcr_advice_pressure_high_septoriose" v="Alta presión de septoriosis — evita trigo/cebada sobre restos de cereal, elige una variedad tolerante; fungicida desde el encañado en clima húmedo." />
+        <e k="rcr_advice_pressure_high_rouille" v="Alta presión de roya — siembra una variedad resistente y prevé un fungicida; vigila los periodos templados y húmedos." />
+        <e k="rcr_advice_pressure_high_fusariose" v="Alta presión de fusariosis — evita trigo tras maíz, entierra los restos; fungicida en floración si llueve." />
+        <e k="rcr_advice_pressure_high_mildiou" v="Alta presión de mildiu — planta una variedad resistente y protege las patatas con fungicida en cuanto el tiempo se vuelve fresco y húmedo." />
+        <e k="rcr_advice_pressure_high_hernie" v="Alta presión de hernia — intervalo entre brasicáceas superior a 6 años, encala para subir el pH y siembra una variedad resistente; sin tratamiento químico." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Presión de phoma moderada — alarga el intervalo de la colza y tritura el rastrojo." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="Presión de mal del pie moderada — evita el tercer cereal seguido." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="Presión de septoriosis moderada — vigila las lluvias de primavera y el inóculo de los restos." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="Presión de roya moderada — explora la aparición de pústulas con tiempo templado." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="Presión de fusariosis moderada — espacia cereales y maíz, gestiona los restos." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="Presión de mildiu moderada — vigila el tiempo fresco y húmedo y destruye los rebrotes espontáneos." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="Presión de hernia moderada — alarga el intervalo de la colza y vigila el pH ácido." />
     </elements>
 </l10n>

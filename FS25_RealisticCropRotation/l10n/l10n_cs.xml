@@ -12,7 +12,7 @@
         <e k="rcr_tab_history"          v="轮作" />
         <e k="rcr_tab_planning"         v="规划" />
         <e k="rcr_disease_name_sclerotinia" v="菌核病" />
-        <e k="rcr_disease_name_bcn"   v="线虫" />
+        <e k="rcr_disease_name_bcn"   v="孢囊线虫" />
         <e k="rcr_section_disease_map"     v="疾病" />
         <e k="rcr_disease_sub_infections" v="活跃病灶" />
         <e k="rcr_disease_sub_pressure"   v="病害压力" />
@@ -102,10 +102,10 @@
         <e k="rcr_advice_afterForage" v="短期草地之后，谷物可利用草皮下积累的肥力与结构。" />
         <e k="rcr_advice_disease_sclerotinia" v="此作物是菌核病的寄主，应与油菜、向日葵、大豆、豌豆和菜豆间隔至少三年。" />
         <e k="rcr_advice_disease_bcn" v="此作物是甜菜孢囊线虫的寄主，应使甜菜与十字花科作物充分分开。" />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="" />
-        <e k="rcr_advice_pressure_high_bcn"           v="" />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="" />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="" />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病压力高——至少三年内避免种植油菜、向日葵、大豆、豌豆、菜豆、马铃薯和胡萝卜；潮湿天气下在花期施用杀菌剂。" />
+        <e k="rcr_advice_pressure_high_bcn"           v="线虫压力高——三年内避免种植甜菜、红甜菜、油菜、芥菜和菠菜；使用杀线虫剂或抗病诱捕作物。" />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病压力中等——拉开寄主作物的间隔，并留意潮湿的花期。" />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="线虫压力中等——拉开甜菜与十字花科作物的间隔。" />
         <e k="rcr_advice_no_current_crop" v="当前无主要作物: 检测到作物后将提供建议。" />
 
         <!-- Field card — required actions / growth -->
@@ -159,5 +159,49 @@
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="没有可显示的自有田块。" />
+        <e k="rcr_function_fungicideTank" v="将 AMISTAR 用于喷雾机，为高风险作物施用杀菌剂处理。" />
+        <e k="rcr_function_nematicideTank" v="将 VELUM PRIME 用于喷雾机，为受线虫威胁的作物施用杀线虫剂处理。" />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_phoma" v="黑胫病（茎溃疡）" />
+        <e k="rcr_disease_name_pietin" v="全蚀病" />
+        <e k="rcr_disease_name_septoriose" v="壳针孢叶枯病" />
+        <e k="rcr_disease_name_rouille" v="锈病" />
+        <e k="rcr_disease_name_fusariose" v="赤霉病" />
+        <e k="rcr_disease_name_mildiou" v="晚疫病" />
+        <e k="rcr_disease_name_hernie" v="根肿病" />
+        <e k="rcr_disease_desc_sclerotinia" v="油料作物、豆科作物和块根作物在花期发生的白色霉腐病；菌核在土壤中可存活数年，潮湿花期利于发病。" />
+        <e k="rcr_disease_desc_phoma" v="油菜/芥菜的茎基溃疡病，通过残体传播；需要较长的油料作物间隔，秋季潮湿会加重病情。" />
+        <e k="rcr_disease_desc_pietin" v="连作谷物的全蚀病；只能通过非寄主作物（燕麦、豆科、油料作物）打断，没有有效的杀菌剂。" />
+        <e k="rcr_disease_desc_septoriose" v="小麦/大麦的主要叶部病害，由雨水飞溅从残体传播；在潮湿的春季会暴发。" />
+        <e k="rcr_disease_desc_rouille" v="谷物及向日葵/油菜的褐锈病、黄锈病；在温暖潮湿的天气下暴发，随风传播。" />
+        <e k="rcr_disease_desc_fusariose" v="由谷物和玉米残体（玉米→小麦）诱发的穗部赤霉病；潮湿花期最危险，导致籽粒瘪缩。" />
+        <e k="rcr_disease_desc_mildiou" v="马铃薯晚疫病；由凉爽潮湿的天气主导，对轮作依赖较低；数天内即可毁掉整片作物。" />
+        <e k="rcr_disease_desc_bcn" v="甜菜孢囊线虫；孢囊在土壤中可存活数年，呈斑块状的慢性胁迫；轮作是主要的防控手段。" />
+        <e k="rcr_disease_desc_hernie" v="根肿病；休眠孢子在土壤中可存活六年以上，需要很长的十字花科作物间隔；无化学防治方法。" />
+        <e k="rcr_disease_treatment_sclerotinia" v="杀菌剂" />
+        <e k="rcr_disease_treatment_phoma" v="杀菌剂" />
+        <e k="rcr_disease_treatment_pietin" v="无（轮作）" />
+        <e k="rcr_disease_treatment_septoriose" v="杀菌剂" />
+        <e k="rcr_disease_treatment_rouille" v="杀菌剂" />
+        <e k="rcr_disease_treatment_fusariose" v="杀菌剂" />
+        <e k="rcr_disease_treatment_mildiou" v="杀菌剂" />
+        <e k="rcr_disease_treatment_bcn" v="杀线虫剂" />
+        <e k="rcr_fillType_fungicide" v="杀菌剂" />
+        <e k="rcr_fillType_nematicide" v="杀线虫剂" />
+        <e k="rcr_disease_treatment_hernie" v="无（抗病品种、施石灰、轮作）" />
+        <e k="rcr_advice_pressure_high_phoma" v="黑胫病压力高——约四年内避免种植油菜和芥菜，翻埋残体；感病品种在秋季施用杀菌剂。" />
+        <e k="rcr_advice_pressure_high_pietin" v="全蚀病压力高——插入一茬非寄主作物（燕麦、豆科、油料作物）打断；没有有效杀菌剂，只有轮作才能根治。" />
+        <e k="rcr_advice_pressure_high_septoriose" v="叶枯病压力高——避免在谷物残体上种植小麦/大麦，选用耐病品种；在潮湿气候下从拔节期开始施用杀菌剂。" />
+        <e k="rcr_advice_pressure_high_rouille" v="锈病压力高——播种抗病品种并计划施用杀菌剂；注意温暖潮湿的时段。" />
+        <e k="rcr_advice_pressure_high_fusariose" v="赤霉病压力高——避免玉米后种小麦，翻埋残体；如遇降雨在花期施用杀菌剂。" />
+        <e k="rcr_advice_pressure_high_mildiou" v="晚疫病压力高——种植抗病品种，一旦转为凉爽潮湿即用杀菌剂保护马铃薯。" />
+        <e k="rcr_advice_pressure_high_hernie" v="根肿病压力高——十字花科作物间隔超过六年，施石灰提高pH并播种抗病品种；无化学防治方法。" />
+        <e k="rcr_advice_pressure_moderate_phoma" v="黑胫病压力中等——延长油菜的间隔并粉碎残茬。" />
+        <e k="rcr_advice_pressure_moderate_pietin" v="全蚀病压力中等——避免连续第三茬谷物。" />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="叶枯病压力中等——留意春季降雨和残体中的菌源。" />
+        <e k="rcr_advice_pressure_moderate_rouille" v="锈病压力中等——在温暖天气下注意侦察是否出现夏孢子堆。" />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="赤霉病压力中等——拉开谷物与玉米的间隔，管理好残体。" />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="晚疫病压力中等——监测凉爽潮湿的天气并清除自生苗。" />
+        <e k="rcr_advice_pressure_moderate_hernie" v="根肿病压力中等——延长油菜的间隔并留意酸性pH。" />
     </elements>
 </l10n>

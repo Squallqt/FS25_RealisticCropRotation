@@ -11,8 +11,8 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Rotatie" />
         <e k="rcr_tab_planning"         v="Planning" />
-        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia" />
-        <e k="rcr_disease_name_bcn"   v="Aaltje" />
+        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia (rattenkeutelziekte)" />
+        <e k="rcr_disease_name_bcn"   v="Cystenaaltje" />
         <e k="rcr_section_disease_map"     v="Ziekten" />
         <e k="rcr_disease_sub_infections" v="Actieve haarden" />
         <e k="rcr_disease_sub_pressure"   v="Ziektedruk" />
@@ -102,10 +102,10 @@
         <e k="rcr_advice_afterForage" v="Na een tijdelijk grasland benut een graan de onder de zode opgebouwde vruchtbaarheid en structuur." />
         <e k="rcr_advice_disease_sclerotinia" v="Dit gewas is een waard van sclerotinia, houd dus minstens drie jaar afstand van koolzaad, zonnebloem, soja, erwt en boon." />
         <e k="rcr_advice_disease_bcn" v="Dit gewas is een waard van het bietencystenaaltje, houd dus bieten en kruisbloemigen goed uit elkaar." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Hoge sclerotinia-druk op dit perceel — vermijd koolzaad, zonnebloem, sojaboon, erwt en boon gedurende minstens drie jaar." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Hoge bietencysteaaltjesdruk op dit perceel — vermijd suikerbiet, rode biet, koolzaad, mosterd en spinazie gedurende minstens drie jaar." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Matige sclerotinia-druk op dit perceel — plan waardgewassen zorgvuldig in." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Matige bietencysteaaltjesdruk op dit perceel — plan bieten en kruisbloemigen zorgvuldig in." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Hoge sclerotinia-druk — vermijd koolzaad, zonnebloem, soja, erwt, boon, aardappel en wortel gedurende minstens 3 jaar; fungicide tijdens de bloei bij vochtig weer." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Hoge aaltjesdruk — vermijd suikerbiet, rode biet, koolzaad, mosterd en spinazie gedurende 3 jaar; nematicide of resistent vanggewas." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Matige sclerotinia-druk — spreid de waardgewassen en let op een vochtige bloei." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Matige aaltjesdruk — spreid bieten en koolgewassen." />
         <e k="rcr_advice_no_current_crop" v="Geen huidig hoofdgewas: advies beschikbaar zodra een gewas wordt gedetecteerd." />
 
         <!-- Field card — required actions / growth -->
@@ -159,5 +159,49 @@
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Geen eigen velden om weer te geven." />
+        <e k="rcr_function_fungicideTank" v="Gebruik AMISTAR in veldspuiten om een fungicidebehandeling toe te passen op risicogewassen." />
+        <e k="rcr_function_nematicideTank" v="Gebruik VELUM PRIME in veldspuiten om een nematicidebehandeling toe te passen op gewassen die aan nematoden zijn blootgesteld." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_phoma" v="Phoma (stengelkanker)" />
+        <e k="rcr_disease_name_pietin" v="Tarwehalmdoder" />
+        <e k="rcr_disease_name_septoriose" v="Septoria-bladvlekkenziekte" />
+        <e k="rcr_disease_name_rouille" v="Roest" />
+        <e k="rcr_disease_name_fusariose" v="Aarfusarium" />
+        <e k="rcr_disease_name_mildiou" v="Aardappelziekte (Phytophthora)" />
+        <e k="rcr_disease_name_hernie" v="Knolvoet" />
+        <e k="rcr_disease_desc_sclerotinia" v="Witte schimmel (rattenkeutelziekte) van oliehoudende gewassen, vlinderbloemigen en wortelgewassen tijdens de bloei; sclerotiën blijven jarenlang in de grond, bevorderd door een vochtige bloei." />
+        <e k="rcr_disease_desc_phoma" v="Stengelkanker van koolzaad/mosterd, overgedragen via gewasresten; vereist een lange teeltpauze van oliehoudende gewassen, verergerd door vocht in de herfst." />
+        <e k="rcr_disease_desc_pietin" v="Tarwehalmdoder bij continue graanteelt; alleen te doorbreken met een niet-waardgewas (haver, vlinderbloemige, oliehoudend gewas). Geen werkzaam fungicide." />
+        <e k="rcr_disease_desc_septoriose" v="Belangrijkste bladziekte van tarwe/gerst, verspreid door opspattende regen vanaf de gewasresten; explosief in een nat voorjaar." />
+        <e k="rcr_disease_desc_rouille" v="Bruine en gele roest van granen en zonnebloem/koolzaad; explosief bij zacht en vochtig weer, verspreid door de wind." />
+        <e k="rcr_disease_desc_fusariose" v="Aarfusarium, bevorderd door graan- en maïsresten (maïs→tarwe); kritiek bij een natte bloei, doet de korrel verschrompelen." />
+        <e k="rcr_disease_desc_mildiou" v="Aardappelziekte (Phytophthora); gedreven door koel en nat weer, weinig afhankelijk van de vruchtwisseling; verwoest het gewas binnen enkele dagen." />
+        <e k="rcr_disease_desc_bcn" v="Bietencystenaaltje; cysten blijven jarenlang in de grond, chronische pleksgewijze schade; vruchtwisseling is de belangrijkste maatregel." />
+        <e k="rcr_disease_desc_hernie" v="Knolvoet; rustsporen overleven meer dan zes jaar, vereist een zeer lange teeltpauze van koolgewassen; geen chemische bestrijding." />
+        <e k="rcr_disease_treatment_sclerotinia" v="Fungicide" />
+        <e k="rcr_disease_treatment_phoma" v="Fungicide" />
+        <e k="rcr_disease_treatment_pietin" v="Geen (vruchtwisseling)" />
+        <e k="rcr_disease_treatment_septoriose" v="Fungicide" />
+        <e k="rcr_disease_treatment_rouille" v="Fungicide" />
+        <e k="rcr_disease_treatment_fusariose" v="Fungicide" />
+        <e k="rcr_disease_treatment_mildiou" v="Fungicide" />
+        <e k="rcr_disease_treatment_bcn" v="Nematicide" />
+        <e k="rcr_fillType_fungicide" v="Fungicide" />
+        <e k="rcr_fillType_nematicide" v="Nematicide" />
+        <e k="rcr_disease_treatment_hernie" v="Geen (resistent ras, bekalking, vruchtwisseling)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Hoge phoma-druk — vermijd koolzaad en mosterd ~4 jaar, werk de gewasresten onder; najaarsfungicide op vatbare rassen." />
+        <e k="rcr_advice_pressure_high_pietin" v="Hoge tarwehalmdoder-druk — voeg een niet-waardgewas in (haver, vlinderbloemige, oliehoudend gewas); geen werkzaam fungicide, alleen vruchtwisseling helpt." />
+        <e k="rcr_advice_pressure_high_septoriose" v="Hoge septoria-druk — teel geen tarwe/gerst op graanresten, kies een tolerant ras; fungicide vanaf de stengelstrekking in een vochtig klimaat." />
+        <e k="rcr_advice_pressure_high_rouille" v="Hoge roest-druk — zaai een resistent ras en plan een fungicide; let op zachte en vochtige perioden." />
+        <e k="rcr_advice_pressure_high_fusariose" v="Hoge fusarium-druk — teel geen tarwe na maïs, werk de resten onder; fungicide tijdens de bloei bij nat weer." />
+        <e k="rcr_advice_pressure_high_mildiou" v="Hoge phytophthora-druk — plant een resistent ras en bescherm de aardappelen met fungicide zodra het koel en nat wordt." />
+        <e k="rcr_advice_pressure_high_hernie" v="Hoge knolvoet-druk — teeltpauze van koolgewassen langer dan 6 jaar, bekalk om de pH te verhogen en zaai een resistent ras; geen chemische bestrijding." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Matige phoma-druk — verleng de teeltpauze van koolzaad en klepel de stoppels." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="Matige tarwehalmdoder-druk — vermijd een derde graangewas op rij." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="Matige septoria-druk — let op voorjaarsregens en inoculum uit de gewasresten." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="Matige roest-druk — controleer op puisten bij zacht weer." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="Matige fusarium-druk — spreid granen en maïs, beheer de gewasresten." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="Matige phytophthora-druk — bewaak koel en nat weer en verwijder opslagplanten." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="Matige knolvoet-druk — verleng de teeltpauze van koolzaad en let op een zure pH." />
     </elements>
 </l10n>

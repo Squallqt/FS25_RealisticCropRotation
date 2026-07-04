@@ -11,6 +11,7 @@ source(modDirectory .. "scripts/RealisticCropRotationDisease.lua")
 source(modDirectory .. "scripts/RealisticCropRotationDiseaseGrid.lua")
 source(modDirectory .. "scripts/RealisticCropRotationDiseaseMap.lua")
 source(modDirectory .. "scripts/RealisticCropRotationHud.lua")
+source(modDirectory .. "scripts/RealisticCropRotationSprayerProducts.lua")
 source(modDirectory .. "events/RCRHistoryRequestEvent.lua")
 source(modDirectory .. "events/RCRHistoryResponseEvent.lua")
 source(modDirectory .. "events/RCRPlanUpdateEvent.lua")
@@ -27,6 +28,7 @@ RealisticCropRotation.isEnabled = true
 RealisticCropRotation.cropConfig = nil
 RealisticCropRotation.guiProfilesLoaded = false
 RealisticCropRotation.tabListFixApplied = false
+RealisticCropRotation.sprayerMaterialHolderLoaded = false
 RealisticCropRotation.SPECIAL_CROP_FALLOW = "__FALLOW"
 
 function RealisticCropRotation.isFallowCrop(cropName)
@@ -46,7 +48,7 @@ local function loadCropConfig()
         return nil
     end
 
-    local config = { families = {}, nitrogen = {}, coverCrops = {}, diseases = {}, diseaseIntervals = {}, diseaseWindows = {}, diseaseFungal = {} }
+    local config = { families = {}, nitrogen = {}, coverCrops = {}, diseases = {}, diseaseIntervals = {}, diseaseWindows = {}, diseaseFungal = {}, diseaseCurves = {}, diseaseStates = {}, diseaseTreatments = {}, diseaseWeatherFactors = {} }
     local i = 0
     while true do
         local key = string.format("realisticCropRotationCrops.crop(%d)", i)
@@ -78,7 +80,10 @@ local function loadCropConfig()
     end
 
     -- Shared-pathogen groups: minimum return interval (years) between any two host crops.
+    -- `autoState` gives a deterministic, stable overlay id when a group omits #state (same order
+    -- on every machine, so the client grid rebuild matches the host). An explicit #state wins.
     local j = 0
+    local autoState = 0
     while true do
         local gkey = string.format("realisticCropRotationCrops.diseaseGroups.diseaseGroup(%d)", j)
         if not hasXMLProperty(xmlFile, gkey) then break end
@@ -86,14 +91,35 @@ local function loadCropConfig()
         local gint  = getXMLInt(xmlFile, gkey .. "#minInterval")
         if gname ~= nil and gname ~= "" and gint ~= nil then
             local upper = string.upper(gname)
+            autoState = autoState + 1
             config.diseaseIntervals[upper] = gint
             local from = getXMLFloat(xmlFile, gkey .. "#infectFrom")
             local to   = getXMLFloat(xmlFile, gkey .. "#infectTo")
             if from ~= nil and to ~= nil then
                 config.diseaseWindows[upper] = { from = from, to = to }
             end
-            -- Fungal pathogens get the rain bonus; soil nematodes do not.
+            -- Fungal pathogens get the rain bonus; soil animals/protists do not.
             config.diseaseFungal[upper] = getXMLBool(xmlFile, gkey .. "#fungal") == true
+            -- Stable per-disease overlay id (1..N): the in-game map paints EACH disease with its
+            -- own colour from this id. Falls back to the parse order when #state is omitted.
+            local state = getXMLInt(xmlFile, gkey .. "#state")
+            config.diseaseStates[upper] = (state ~= nil and state > 0) and state or autoState
+            -- Reference treatment family for the field panel/advice and sprayer treatment.
+            -- FUNGICIDE | NEMATICIDE | NONE (default NONE).
+            local treatment = getXMLString(xmlFile, gkey .. "#treatment")
+            config.diseaseTreatments[upper] = (treatment ~= nil and treatment ~= "") and string.upper(treatment) or "NONE"
+            -- Rain multiplier for fungal groups (default RAIN_BONUS in Disease.lua when omitted);
+            -- read only for fungal groups, ignored for soil-borne ones.
+            config.diseaseWeatherFactors[upper] = getXMLFloat(xmlFile, gkey .. "#weatherFactor")
+            -- Daily destruction profile (all optional; nil -> module fallbacks in getCurve):
+            --   dailyGrowth     : severity gained per in-game day (fungal fast, nematode slow)
+            --   destroySeverity : latent threshold below which nothing dies yet
+            --   deadFractionMax : ceiling on the destroyed share at full severity
+            config.diseaseCurves[upper] = {
+                dailyGrowth     = getXMLFloat(xmlFile, gkey .. "#dailyGrowth"),
+                destroySeverity = getXMLFloat(xmlFile, gkey .. "#destroySeverity"),
+                deadFractionMax = getXMLFloat(xmlFile, gkey .. "#deadFractionMax"),
+            }
         end
         j = j + 1
     end
@@ -110,6 +136,7 @@ RealisticCropRotation.broadcastTimerMs = 0
 RealisticCropRotation.broadcastUpdateable = nil
 RealisticCropRotation.farmlandOwnerChangeListener = nil
 RealisticCropRotation.periodChangedListener = nil
+RealisticCropRotation.dayChangedListener = nil
 
 ---Marks the rotation state dirty so a single coalesced broadcast fires soon (server).
 function RealisticCropRotation.requestBroadcast()
@@ -160,6 +187,11 @@ local function onFarmlandOwnerChanged(farmlandId, _farmId, loadFromSavegame)
         and type(RealisticCropRotation.disease.refreshRiskMap) == "function" then
         RealisticCropRotation.disease:refreshRiskMap(true)
     end
+    -- Same for the active-foci display map (twin of the risk map).
+    if RealisticCropRotation.disease ~= nil
+        and type(RealisticCropRotation.disease.refreshInfectionMap) == "function" then
+        RealisticCropRotation.disease:refreshInfectionMap(true)
+    end
 end
 
 ---Reconciles active crops for all owned farmlands on a period change (server).
@@ -178,7 +210,9 @@ local function onPeriodChanged()
             changed = true
         end
         if RealisticCropRotation.disease ~= nil then
-            RealisticCropRotation.disease:update(farmlandId)
+            -- Infection roll + crop-change reset only. Severity progression and crop destruction now
+            -- run day by day (onDayChanged), never in this once-a-period burst.
+            RealisticCropRotation.disease:evaluateInfection(farmlandId)
             diseaseUpdated = true
         end
     end
@@ -195,6 +229,30 @@ local function onPeriodChanged()
     if RealisticCropRotation.disease ~= nil
         and type(RealisticCropRotation.disease.refreshRiskMap) == "function" then
         RealisticCropRotation.disease:refreshRiskMap(false)
+    end
+    -- The infection roll above may have created / reset infections: repaint the active-foci map for
+    -- the fields whose dominant disease moved (twin of the risk repaint, same incremental cost).
+    if RealisticCropRotation.disease ~= nil
+        and type(RealisticCropRotation.disease.refreshInfectionMap) == "function" then
+        RealisticCropRotation.disease:refreshInfectionMap(false)
+    end
+end
+
+---Server: advances every active infection by one in-game day. Only queues the work here (cheap);
+---the native destruction passes are drained a few fields per frame from the broadcast updateable, so
+---no in-game day ever runs all fields at once. Subscribed to MessageType.DAY_CHANGED.
+local function onDayChanged()
+    if g_currentMission == nil or not g_currentMission:getIsServer() then return end
+    if RealisticCropRotation.disease ~= nil
+        and type(RealisticCropRotation.disease.enqueueDailyProgress) == "function" then
+        RealisticCropRotation.disease:enqueueDailyProgress()
+    end
+    -- The active-foci map follows the infection state, which advances day by day (unlike the risk
+    -- map, which follows the history): repaint the fields whose dominant disease moved. Incremental
+    -- (native passes only for what changed), one call per day. Clients repaint via the sync path.
+    if RealisticCropRotation.disease ~= nil
+        and type(RealisticCropRotation.disease.refreshInfectionMap) == "function" then
+        RealisticCropRotation.disease:refreshInfectionMap(false)
     end
 end
 
@@ -326,6 +384,37 @@ local function loadGuiAssets()
     end
 end
 
+---Loads custom sprayer fillType materials through the native material manager.
+local function loadSprayerMaterialHolder()
+    if RealisticCropRotation.sprayerMaterialHolderLoaded then return end
+
+    if g_materialManager == nil
+        or type(g_materialManager.addModMaterialHolder) ~= "function"
+        or type(g_materialManager.loadModMaterialHolders) ~= "function" then
+        Logging.warning("[RealisticCropRotation] Material manager unavailable; sprayer materials were not loaded")
+        return
+    end
+
+    local fungicideFillType = g_fillTypeManager ~= nil and g_fillTypeManager:getFillTypeIndexByName("RCR_FUNGICIDE") or nil
+    local nematicideFillType = g_fillTypeManager ~= nil and g_fillTypeManager:getFillTypeIndexByName("RCR_NEMATICIDE") or nil
+    if fungicideFillType == nil or nematicideFillType == nil then
+        Logging.warning("[RealisticCropRotation] RCR fillTypes unavailable; sprayer materials were not loaded")
+        return
+    end
+
+    if type(g_materialManager.getMaterial) == "function"
+        and g_materialManager:getMaterial(fungicideFillType, "sprayer", 1) ~= nil
+        and g_materialManager:getMaterial(nematicideFillType, "sprayer", 1) ~= nil then
+        RealisticCropRotation.sprayerMaterialHolderLoaded = true
+        return
+    end
+
+    local holderFilename = RealisticCropRotation.modDirectory .. "effects/sprayer/rcrSprayerMeshes_materialHolder.i3d"
+    g_materialManager:addModMaterialHolder(holderFilename)
+    g_materialManager:loadModMaterialHolders()
+    RealisticCropRotation.sprayerMaterialHolderLoaded = true
+end
+
 ---Mission-load hook: builds the manager, loads/saves state, wires server listeners.
 local function loadedMission()
     -- Reload crop config here to guarantee the engine XML API is fully ready.
@@ -334,6 +423,16 @@ local function loadedMission()
     end
 
     loadGuiAssets()
+    loadSprayerMaterialHolder()
+    -- Wires the RCR sprayer products (sprayTypes + fillType set for the
+    -- processSprayerArea hook installed at source time). Without this call the
+    -- products have no engine sprayType: Sprayer:onStartWorkAreaProcessing()
+    -- stores sprayType = nil, the native ground call aborts before
+    -- params.lastSprayTime is refreshed and the colored jet never appears.
+    if RealisticCropRotationSprayerProducts ~= nil
+        and type(RealisticCropRotationSprayerProducts.onMissionLoaded) == "function" then
+        RealisticCropRotationSprayerProducts.onMissionLoaded()
+    end
 
     RealisticCropRotation.manager = RealisticCropRotationManager.new()
     RealisticCropRotation.manager:initialize()
@@ -356,6 +455,10 @@ local function loadedMission()
             -- Initial paint of the risk display map, during the loading screen (never on menu open).
             if type(RealisticCropRotation.disease.refreshRiskMap) == "function" then
                 RealisticCropRotation.disease:refreshRiskMap(true)
+            end
+            -- Initial paint of the active-foci map from the loaded infection state (twin of above).
+            if type(RealisticCropRotation.disease.refreshInfectionMap) == "function" then
+                RealisticCropRotation.disease:refreshInfectionMap(true)
             end
         end
         if g_messageCenter ~= nil and MessageType ~= nil and MessageType.FARMLAND_OWNER_CHANGED ~= nil then
@@ -382,6 +485,18 @@ local function loadedMission()
         else
             Logging.warning("[RealisticCropRotation] Period change listener unavailable; crop rotation history cannot be reconciled automatically")
         end
+        if g_messageCenter ~= nil and MessageType ~= nil and MessageType.DAY_CHANGED ~= nil then
+            RealisticCropRotation.dayChangedListener = {
+                dayChanged = function(_self)
+                    onDayChanged()
+                end,
+            }
+            g_messageCenter:subscribe(MessageType.DAY_CHANGED,
+                RealisticCropRotation.dayChangedListener.dayChanged,
+                RealisticCropRotation.dayChangedListener)
+        else
+            Logging.warning("[RealisticCropRotation] Day change listener unavailable; disease will not progress day by day")
+        end
         RealisticCropRotationNitrogen.install(RealisticCropRotation.manager)
     end
 
@@ -390,6 +505,12 @@ local function loadedMission()
     if g_currentMission:getIsServer() and type(g_currentMission.addUpdateable) == "function" then
         RealisticCropRotation.broadcastUpdateable = {
             update = function(_self, dt)
+                -- Spread the day's disease work across frames: drain a few queued fields per frame
+                -- (native passes only) rather than processing every infected field on the day change.
+                if RealisticCropRotation.disease ~= nil
+                    and type(RealisticCropRotation.disease.processDailyQueue) == "function" then
+                    RealisticCropRotation.disease:processDailyQueue()
+                end
                 if not RealisticCropRotation.broadcastDirty then return end
                 RealisticCropRotation.broadcastTimerMs = (RealisticCropRotation.broadcastTimerMs or 0) - (dt or 0)
                 if RealisticCropRotation.broadcastTimerMs <= 0 then
@@ -511,9 +632,13 @@ local function initRealisticCropRotation()
         if g_messageCenter ~= nil and RealisticCropRotation.periodChangedListener ~= nil then
             g_messageCenter:unsubscribeAll(RealisticCropRotation.periodChangedListener)
         end
+        if g_messageCenter ~= nil and RealisticCropRotation.dayChangedListener ~= nil then
+            g_messageCenter:unsubscribeAll(RealisticCropRotation.dayChangedListener)
+        end
         RealisticCropRotation.broadcastUpdateable = nil
         RealisticCropRotation.farmlandOwnerChangeListener = nil
         RealisticCropRotation.periodChangedListener = nil
+        RealisticCropRotation.dayChangedListener = nil
         RealisticCropRotation.broadcastDirty = false
         RealisticCropRotation.broadcastTimerMs = 0
 
@@ -545,6 +670,11 @@ local function initRealisticCropRotation()
         end
         RealisticCropRotation.frame = nil
         RealisticCropRotation.pendingSyncData = nil
+        RealisticCropRotation.sprayerMaterialHolderLoaded = false
+        if RealisticCropRotationSprayerProducts ~= nil
+            and type(RealisticCropRotationSprayerProducts.onMissionDeleted) == "function" then
+            RealisticCropRotationSprayerProducts.onMissionDeleted()
+        end
     end)
 end
 

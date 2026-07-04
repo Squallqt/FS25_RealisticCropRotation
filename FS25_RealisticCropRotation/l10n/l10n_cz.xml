@@ -11,8 +11,8 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Rotace" />
         <e k="rcr_tab_planning"         v="Plánování" />
-        <e k="rcr_disease_name_sclerotinia" v="Sklerotinie" />
-        <e k="rcr_disease_name_bcn"   v="Háďátko" />
+        <e k="rcr_disease_name_sclerotinia" v="Sklerotiniová hniloba (bílá hniloba)" />
+        <e k="rcr_disease_name_bcn"   v="Háďátko řepné" />
         <e k="rcr_section_disease_map"     v="Choroby" />
         <e k="rcr_disease_sub_infections" v="Aktivní ohniska" />
         <e k="rcr_disease_sub_pressure"   v="Tlak chorob" />
@@ -102,10 +102,10 @@
         <e k="rcr_advice_afterForage" v="Po dočasném travním porostu obilnina zhodnotí úrodnost a strukturu nahromaděnou pod drnem." />
         <e k="rcr_advice_disease_sclerotinia" v="Tato plodina je hostitelem hlízenky, proto dodrž alespoň tři roky od řepky, slunečnice, sóji, hrachu a fazole." />
         <e k="rcr_advice_disease_bcn" v="Tato plodina je hostitelem háďátka řepného, proto drž řepu a brukvovité dostatečně od sebe." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="" />
-        <e k="rcr_advice_pressure_high_bcn"           v="" />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="" />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="" />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Vysoký tlak sklerotinie — nejméně 3 roky nepěstujte řepku, slunečnici, sóju, hrách, fazol, brambory ani mrkev; při vlhkém počasí fungicid v době kvetení." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Vysoký tlak háďátka — 3 roky nepěstujte cukrovku, červenou řepu, řepku, hořčici ani špenát; nematicid nebo odolná chytací plodina." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Střední tlak sklerotinie — proložte hostitelské plodiny a sledujte vlhké kvetení." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Střední tlak háďátka — proložte řepu a brukvovité." />
         <e k="rcr_advice_no_current_crop" v="Žádná aktuální hlavní plodina: rada dostupná po detekci plodiny." />
 
         <!-- Field card — required actions / growth -->
@@ -159,5 +159,49 @@
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Žádná vlastní pole k zobrazení." />
+        <e k="rcr_function_fungicideTank" v="Použijte AMISTAR v postřikovačích k aplikaci fungicidního ošetření na ohrožené plodiny." />
+        <e k="rcr_function_nematicideTank" v="Použijte VELUM PRIME v postřikovačích k aplikaci nematicidního ošetření na plodiny ohrožené háďátky." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_phoma" v="Fomová hniloba (černání stonku řepky)" />
+        <e k="rcr_disease_name_pietin" v="Černání pat stébel" />
+        <e k="rcr_disease_name_septoriose" v="Braničnatka pšeničná (listová skvrnitost)" />
+        <e k="rcr_disease_name_rouille" v="Rez" />
+        <e k="rcr_disease_name_fusariose" v="Fuzarióza klasů" />
+        <e k="rcr_disease_name_mildiou" v="Plíseň bramboru" />
+        <e k="rcr_disease_name_hernie" v="Nádorovitost brukvovitých" />
+        <e k="rcr_disease_desc_sclerotinia" v="Bílá hniloba olejnin, luskovin a okopanin v době kvetení; sklerocia přetrvávají v půdě řadu let, chorobě prospívá vlhké kvetení." />
+        <e k="rcr_disease_desc_phoma" v="Černání stonku řepky a hořčice přenášené posklizňovými zbytky; vyžaduje dlouhý odstup olejnin, zhoršuje ji podzimní vlhko." />
+        <e k="rcr_disease_desc_pietin" v="Černání pat stébel u trvale pěstovaných obilnin; přerušit lze pouze nehostitelskou plodinou (oves, luskovina, olejnina). Žádný účinný fungicid." />
+        <e k="rcr_disease_desc_septoriose" v="Hlavní listová choroba pšenice a ječmene, šíří se rozstřikem dešťových kapek z posklizňových zbytků; ve vlhkém jaru vypukne prudce." />
+        <e k="rcr_disease_desc_rouille" v="Hnědá a žlutá rez obilnin a slunečnice/řepky; při mírném vlhkém počasí se rychle šíří větrem." />
+        <e k="rcr_disease_desc_fusariose" v="Fuzarióza klasů podporovaná zbytky obilnin a kukuřice (kukuřice→pšenice); kritická při vlhkém kvetení, zaschne zrno." />
+        <e k="rcr_disease_desc_mildiou" v="Plíseň bramboru; řídí ji chladné a vlhké počasí, málo závislá na osevním postupu; porost zničí během několika dní." />
+        <e k="rcr_disease_desc_bcn" v="Háďátko řepné; cysty přetrvávají v půdě řadu let, chronický ohniskový stres; hlavní pákou je osevní postup." />
+        <e k="rcr_disease_desc_hernie" v="Nádorovitost brukvovitých; trvalé spory přežívají v půdě přes šest let, vyžaduje velmi dlouhý odstup brukvovitých; žádné chemické ošetření." />
+        <e k="rcr_disease_treatment_sclerotinia" v="Fungicid" />
+        <e k="rcr_disease_treatment_phoma" v="Fungicid" />
+        <e k="rcr_disease_treatment_pietin" v="Žádné (osevní postup)" />
+        <e k="rcr_disease_treatment_septoriose" v="Fungicid" />
+        <e k="rcr_disease_treatment_rouille" v="Fungicid" />
+        <e k="rcr_disease_treatment_fusariose" v="Fungicid" />
+        <e k="rcr_disease_treatment_mildiou" v="Fungicid" />
+        <e k="rcr_disease_treatment_bcn" v="Nematicid" />
+        <e k="rcr_fillType_fungicide" v="Fungicid" />
+        <e k="rcr_fillType_nematicide" v="Nematicid" />
+        <e k="rcr_disease_treatment_hernie" v="Žádné (odolná odrůda, vápnění, osevní postup)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Vysoký tlak fomové hniloby — asi 4 roky nepěstujte řepku a hořčici, zapravte zbytky; u náchylných odrůd podzimní fungicid." />
+        <e k="rcr_advice_pressure_high_pietin" v="Vysoký tlak černání pat stébel — zařaďte nehostitelskou přerušovací plodinu (oves, luskovina, olejnina); žádný fungicid nezabírá, léčí jen osevní postup." />
+        <e k="rcr_advice_pressure_high_septoriose" v="Vysoký tlak braničnatky — nepěstujte pšenici/ječmen na zbytcích obilnin, zvolte tolerantní odrůdu; ve vlhkém klimatu fungicid od sloupkování." />
+        <e k="rcr_advice_pressure_high_rouille" v="Vysoký tlak rzi — zasejte odolnou odrůdu a naplánujte fungicid; sledujte mírné vlhké období." />
+        <e k="rcr_advice_pressure_high_fusariose" v="Vysoký tlak fuzariózy — nepěstujte pšenici po kukuřici, zapravte zbytky; při dešti fungicid v době kvetení." />
+        <e k="rcr_advice_pressure_high_mildiou" v="Vysoký tlak plísně bramboru — vysaďte odolnou odrůdu a chraňte brambory fungicidem, jakmile se ochladí a je vlhko." />
+        <e k="rcr_advice_pressure_high_hernie" v="Vysoký tlak nádorovitosti — odstup brukvovitých přes 6 let, vápněním zvyšte pH a zasejte odolnou odrůdu; žádné chemické ošetření." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Střední tlak fomové hniloby — prodlužte odstup řepky a rozdrťte strniště." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="Střední tlak černání pat stébel — vyhněte se třetí obilnině v řadě." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="Střední tlak braničnatky — sledujte jarní deště a inokulum ve zbytcích." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="Střední tlak rzi — za mírného počasí sledujte výskyt pustul." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="Střední tlak fuzariózy — proložte obilniny a kukuřici, hospodařte se zbytky." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="Střední tlak plísně bramboru — sledujte chladné vlhké počasí a ničte výdrol." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="Střední tlak nádorovitosti — prodlužte odstup řepky a sledujte kyselé pH." />
     </elements>
 </l10n>

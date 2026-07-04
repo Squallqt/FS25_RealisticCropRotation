@@ -54,8 +54,26 @@ RealisticCropRotationFrame.ADVICE_KEY = {
     FORAGE    = "rcr_advice_afterForage",
 }
 
--- Disease notes appended to the family advice, in a stable order, for crops that host them.
-RealisticCropRotationFrame.ADVICE_DISEASE_ORDER = { "SCLEROTINIA", "BCN" }
+-- Disease notes appended to the family advice, for crops that host them. The order is DATA-DRIVEN
+-- from the crop config (getDiseaseOrder, sorted by each disease's stable state id), so a new
+-- <diseaseGroup> appears automatically with no Lua edit. updateAdvice only appends a line whose
+-- rcr_advice_pressure_* key is present, so a disease without advice strings yet never leaks into UI.
+function RealisticCropRotationFrame.getDiseaseOrder()
+    local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
+    local states = config ~= nil and config.diseaseStates or nil
+    local entries = {}
+    if states == nil then return {} end
+    for group, state in pairs(states) do
+        entries[#entries + 1] = { group = group, state = tonumber(state) or 0 }
+    end
+    table.sort(entries, function(a, b)
+        if a.state == b.state then return tostring(a.group) < tostring(b.group) end
+        return a.state < b.state
+    end)
+    local order = {}
+    for _, e in ipairs(entries) do order[#order + 1] = e.group end
+    return order
+end
 
 -- Family badge RGBA — Lua-only (XML constraint does not apply)
 RealisticCropRotationFrame.FAMILY_RGBA = {
@@ -1874,12 +1892,15 @@ function RealisticCropRotationFrame:updateAdvice(currentFamily, farmlandId)
     local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
     if disease ~= nil and farmlandId ~= nil and type(disease.getLoad) == "function" then
         local load = disease:getLoad(farmlandId)
-        for _, group in ipairs(RealisticCropRotationFrame.ADVICE_DISEASE_ORDER) do
+        for _, group in ipairs(RealisticCropRotationFrame.getDiseaseOrder()) do
             local pressure = tonumber(load[group]) or 0
-            if pressure >= 0.50 then
-                text = text .. " " .. self.i18n:getText("rcr_advice_pressure_high_" .. string.lower(group))
-            elseif pressure >= 0.25 then
-                text = text .. " " .. self.i18n:getText("rcr_advice_pressure_moderate_" .. string.lower(group))
+            local suffix = pressure >= 0.50 and "high" or (pressure >= 0.25 and "moderate" or nil)
+            if suffix ~= nil then
+                -- Skip a disease that has no advice string yet, so a missing key never leaks into the UI.
+                local adviceKey = "rcr_advice_pressure_" .. suffix .. "_" .. string.lower(group)
+                if type(self.i18n.hasText) == "function" and self.i18n:hasText(adviceKey) then
+                    text = text .. " " .. self.i18n:getText(adviceKey)
+                end
             end
         end
     end

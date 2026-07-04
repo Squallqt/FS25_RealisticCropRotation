@@ -11,8 +11,8 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Rotasjon" />
         <e k="rcr_tab_planning"         v="Planlegging" />
-        <e k="rcr_disease_name_sclerotinia" v="Sklerotinia" />
-        <e k="rcr_disease_name_bcn"   v="Nematode" />
+        <e k="rcr_disease_name_sclerotinia" v="Storknolla råtesopp (Sclerotinia)" />
+        <e k="rcr_disease_name_bcn"   v="Cystenematode" />
         <e k="rcr_section_disease_map"     v="Sykdommer" />
         <e k="rcr_disease_sub_infections" v="Aktive angrep" />
         <e k="rcr_disease_sub_pressure"   v="Sykdomspress" />
@@ -102,10 +102,10 @@
         <e k="rcr_advice_afterForage" v="Etter en eng utnytter et korn fruktbarheten og strukturen som er bygd opp under grasdekket." />
         <e k="rcr_advice_disease_sclerotinia" v="Denne veksten er vert for storknollet råtesopp, så hold minst tre år fra raps, solsikke, soyabønne, ert og bønne." />
         <e k="rcr_advice_disease_bcn" v="Denne veksten er vert for betecystenematoden, så hold bete og korsblomstrede godt fra hverandre." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Høyt sclerotinia-press på dette skiftet — unngå raps, solsikke, soyabønne, ert og bønne i minst tre år." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Høyt betecystenematodepress på dette skiftet — unngå sukkerbete, rødbete, raps, sennep og spinat i minst tre år." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderat sclerotinia-press på dette skiftet — planlegg vertsplantene nøye." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Moderat betecystenematodepress på dette skiftet — planlegg beter og korsblomstrede nøye." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Høyt sclerotinia-trykk — unngå raps, solsikke, soyabønne, ert, bønne, potet og gulrot i minst 3 år; soppmiddel ved blomstring i fuktig vær." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Høyt nematode-trykk — unngå sukkerbete, rødbete, raps, sennep og spinat i 3 år; nematicid eller resistent fangvekst." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderat sclerotinia-trykk — spre vertsvekstene og følg med på en fuktig blomstring." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Moderat nematode-trykk — spre beter og korsblomstrede." />
         <e k="rcr_advice_no_current_crop" v="Ingen aktuell hovedvekst: råd tilgjengelig når en vekst oppdages." />
 
         <!-- Field card — required actions / growth -->
@@ -159,5 +159,49 @@
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Ingen egne jorder å vise." />
+        <e k="rcr_function_fungicideTank" v="Bruk AMISTAR i åkersprøyter for å påføre en fungicidbehandling på utsatte vekster." />
+        <e k="rcr_function_nematicideTank" v="Bruk VELUM PRIME i åkersprøyter for å påføre en nematicidbehandling på vekster utsatt for nematoder." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_phoma" v="Phoma (rothalsråte)" />
+        <e k="rcr_disease_name_pietin" v="Rotdreper" />
+        <e k="rcr_disease_name_septoriose" v="Hvetebladprikk (Septoria)" />
+        <e k="rcr_disease_name_rouille" v="Rust" />
+        <e k="rcr_disease_name_fusariose" v="Aksfusariose (Fusarium)" />
+        <e k="rcr_disease_name_mildiou" v="Tørråte (potet)" />
+        <e k="rcr_disease_name_hernie" v="Klumprot" />
+        <e k="rcr_disease_desc_sclerotinia" v="Hvitråte i oljevekster, belgvekster og rotvekster ved blomstring; sklerotier overlever i jorda i årevis, begunstiget av en fuktig blomstring." />
+        <e k="rcr_disease_desc_phoma" v="Rothalsråte i raps/sennep som spres med planterester; krever et langt opphold fra oljevekster, forverres av høstfuktighet." />
+        <e k="rcr_disease_desc_pietin" v="Rotdreper i sammenhengende korndyrking; brytes bare av en ikke-vertsvekst (havre, belgvekst, oljevekst). Ingen effektiv soppmiddel." />
+        <e k="rcr_disease_desc_septoriose" v="Viktigste bladsykdom i hvete/bygg, spres med regnsprut fra planterester; eksplosiv i en våt vår." />
+        <e k="rcr_disease_desc_rouille" v="Brunrust og gulrust i korn samt solsikke/raps; eksplosiv i mildt fuktig vær, spres med vinden." />
+        <e k="rcr_disease_desc_fusariose" v="Aksfusariose begunstiget av korn- og maisrester (mais→hvete); kritisk ved en våt blomstring, skrumper kornet." />
+        <e k="rcr_disease_desc_mildiou" v="Tørråte i potet; drevet av kjølig vått vær, lav avhengighet av vekstskifte; ødelegger åkeren på få dager." />
+        <e k="rcr_disease_desc_bcn" v="Betecystenematode; cyster overlever i jorda i årevis, kronisk flekkvis stress; vekstskifte er den viktigste brekkstangen." />
+        <e k="rcr_disease_desc_hernie" v="Klumprot; hvilesporer overlever i over seks år, krever et svært langt opphold fra korsblomstrede; ingen kjemisk behandling." />
+        <e k="rcr_disease_treatment_sclerotinia" v="Soppmiddel" />
+        <e k="rcr_disease_treatment_phoma" v="Soppmiddel" />
+        <e k="rcr_disease_treatment_pietin" v="Ingen (vekstskifte)" />
+        <e k="rcr_disease_treatment_septoriose" v="Soppmiddel" />
+        <e k="rcr_disease_treatment_rouille" v="Soppmiddel" />
+        <e k="rcr_disease_treatment_fusariose" v="Soppmiddel" />
+        <e k="rcr_disease_treatment_mildiou" v="Soppmiddel" />
+        <e k="rcr_disease_treatment_bcn" v="Nematicid" />
+        <e k="rcr_fillType_fungicide" v="Soppmiddel" />
+        <e k="rcr_fillType_nematicide" v="Nematicid" />
+        <e k="rcr_disease_treatment_hernie" v="Ingen (resistent sort, kalking, vekstskifte)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Høyt phoma-trykk — unngå raps og sennep i ca. 4 år, mold ned planterester; soppmiddel om høsten på mottakelige sorter." />
+        <e k="rcr_advice_pressure_high_pietin" v="Høyt rotdreper-trykk — sett inn en ikke-vertsvekst som opphold (havre, belgvekst, oljevekst); ingen soppmiddel virker, bare vekstskifte kurerer." />
+        <e k="rcr_advice_pressure_high_septoriose" v="Høyt septoria-trykk — unngå hvete/bygg på kornrester, velg en tolerant sort; soppmiddel fra stråstrekking i et vått klima." />
+        <e k="rcr_advice_pressure_high_rouille" v="Høyt rust-trykk — så en resistent sort og planlegg et soppmiddel; følg med på milde fuktige perioder." />
+        <e k="rcr_advice_pressure_high_fusariose" v="Høyt fusarium-trykk — unngå hvete etter mais, mold ned planterester; soppmiddel ved blomstring hvis vått." />
+        <e k="rcr_advice_pressure_high_mildiou" v="Høyt tørråte-trykk — plant en resistent sort og beskytt poteter med soppmiddel så snart det blir kjølig og vått." />
+        <e k="rcr_advice_pressure_high_hernie" v="Høyt klumprot-trykk — opphold fra korsblomstrede i over 6 år, kalk for å heve pH og så en resistent sort; ingen kjemisk behandling." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Moderat phoma-trykk — forleng oppholdet fra raps og kutt opp stubben." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="Moderat rotdreper-trykk — unngå et tredje korn på rad." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="Moderat septoria-trykk — følg med på vårregn og smitte i planterester." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="Moderat rust-trykk — se etter pustler i mildt vær." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="Moderat fusarium-trykk — spre korn og mais, håndter planterester." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="Moderat tørråte-trykk — overvåk kjølig vått vær og fjern spillplanter." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="Moderat klumprot-trykk — forleng oppholdet fra raps og følg med på sur pH." />
     </elements>
 </l10n>

@@ -11,8 +11,8 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Rotação" />
         <e k="rcr_tab_planning"         v="Planeamento" />
-        <e k="rcr_disease_name_sclerotinia" v="Esclerotínia" />
-        <e k="rcr_disease_name_bcn"   v="Nemátode" />
+        <e k="rcr_disease_name_sclerotinia" v="Esclerotínia (podridão branca)" />
+        <e k="rcr_disease_name_bcn"   v="Nemátode de quisto" />
         <e k="rcr_section_disease_map"     v="Doenças" />
         <e k="rcr_disease_sub_infections" v="Focos ativos" />
         <e k="rcr_disease_sub_pressure"   v="Pressão de doenças" />
@@ -102,10 +102,10 @@
         <e k="rcr_advice_afterForage" v="Depois de uma pastagem temporária, um cereal valoriza a fertilidade e a estrutura acumuladas sob o relvado." />
         <e k="rcr_advice_disease_sclerotinia" v="Esta cultura é hospedeira da esclerotínia, por isso mantenha pelo menos três anos da colza, girassol, soja, ervilha e feijão." />
         <e k="rcr_advice_disease_bcn" v="Esta cultura é hospedeira do nemátodo de quisto da beterraba, por isso mantenha beterrabas e brássicas bem afastadas." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Alta pressão de sclerotinia nesta parcela — evite colza, girassol, soja, ervilha e fava durante pelo menos três anos." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Alta pressão de nemátodo de quisto da beterraba nesta parcela — evite beterraba sacarina, beterraba de mesa, colza, mostarda e espinafre durante pelo menos três anos." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Pressão moderada de sclerotinia nesta parcela — espace as culturas hospedeiras com cuidado." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Pressão moderada de nemátodo de quisto da beterraba nesta parcela — espace beterrabas e brássicas com cuidado." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Forte pressão de esclerotínia — evite colza, girassol, soja, ervilha, feijão, batata e cenoura durante pelo menos 3 anos; fungicida na floração com tempo húmido." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Forte pressão de nemátode — evite beterraba sacarina, beterraba de mesa, colza, mostarda e espinafre durante 3 anos; nematicida ou cultura-armadilha resistente." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Pressão de esclerotínia moderada — espace as culturas hospedeiras e vigie uma floração húmida." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Pressão de nemátode moderada — espace beterrabas e brássicas." />
         <e k="rcr_advice_no_current_crop" v="Sem cultura principal atual: conselho disponível quando uma cultura for detetada." />
 
         <!-- Field card — required actions / growth -->
@@ -159,5 +159,49 @@
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Sem campos próprios para mostrar." />
+        <e k="rcr_function_fungicideTank" v="Utiliza AMISTAR em pulverizadores para aplicar um tratamento fungicida em culturas sob risco." />
+        <e k="rcr_function_nematicideTank" v="Utiliza VELUM PRIME em pulverizadores para aplicar um tratamento nematicida em culturas expostas a nemátodes." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_phoma" v="Phoma (necrose do colo)" />
+        <e k="rcr_disease_name_pietin" v="Mal-do-pé" />
+        <e k="rcr_disease_name_septoriose" v="Septoriose" />
+        <e k="rcr_disease_name_rouille" v="Ferrugem" />
+        <e k="rcr_disease_name_fusariose" v="Fusariose da espiga" />
+        <e k="rcr_disease_name_mildiou" v="Míldio da batata" />
+        <e k="rcr_disease_name_hernie" v="Hérnia das crucíferas" />
+        <e k="rcr_disease_desc_sclerotinia" v="Podridão branca de oleaginosas, leguminosas e raízes na floração; os esclerócios persistem durante anos no solo, favorecida por uma floração húmida." />
+        <e k="rcr_disease_desc_phoma" v="Necrose do colo de colza/mostarda transmitida pelos resíduos; exige um longo intervalo entre oleaginosas, agravada pela humidade outonal." />
+        <e k="rcr_disease_desc_pietin" v="Mal-do-pé dos cereais em monocultura; só é quebrado por uma cultura não hospedeira (aveia, leguminosa, oleaginosa). Nenhum fungicida eficaz." />
+        <e k="rcr_disease_desc_septoriose" v="Principal doença foliar do trigo/cevada, dispersa pelos salpicos de chuva a partir dos resíduos; explosiva numa primavera húmida." />
+        <e k="rcr_disease_desc_rouille" v="Ferrugens castanha e amarela dos cereais e do girassol/colza; explosivas com tempo ameno e húmido, disseminadas pelo vento." />
+        <e k="rcr_disease_desc_fusariose" v="Fusariose da espiga favorecida pelos resíduos de cereais e milho (milho→trigo); crítica numa floração húmida, encarquilha o grão." />
+        <e k="rcr_disease_desc_mildiou" v="Míldio da batateira; impulsionado pelo tempo fresco e húmido, pouca dependência da rotação; devasta a cultura em poucos dias." />
+        <e k="rcr_disease_desc_bcn" v="Nemátode de quisto da beterraba; os quistos persistem no solo durante anos, stress crónico em manchas; a rotação é a principal alavanca." />
+        <e k="rcr_disease_desc_hernie" v="Hérnia das crucíferas; os esporos de resistência persistem mais de seis anos, exige um intervalo muito longo entre brássicas; sem tratamento químico." />
+        <e k="rcr_disease_treatment_sclerotinia" v="Fungicida" />
+        <e k="rcr_disease_treatment_phoma" v="Fungicida" />
+        <e k="rcr_disease_treatment_pietin" v="Nenhum (rotação)" />
+        <e k="rcr_disease_treatment_septoriose" v="Fungicida" />
+        <e k="rcr_disease_treatment_rouille" v="Fungicida" />
+        <e k="rcr_disease_treatment_fusariose" v="Fungicida" />
+        <e k="rcr_disease_treatment_mildiou" v="Fungicida" />
+        <e k="rcr_disease_treatment_bcn" v="Nematicida" />
+        <e k="rcr_fillType_fungicide" v="Fungicida" />
+        <e k="rcr_fillType_nematicide" v="Nematicida" />
+        <e k="rcr_disease_treatment_hernie" v="Nenhum (variedade resistente, calagem, rotação)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Forte pressão de phoma — evite colza e mostarda ~4 anos, enterre os resíduos; fungicida de outono em variedades sensíveis." />
+        <e k="rcr_advice_pressure_high_pietin" v="Forte pressão de mal-do-pé — introduza um corte não hospedeiro (aveia, leguminosa, oleaginosa); nenhum fungicida eficaz, só a rotação resolve." />
+        <e k="rcr_advice_pressure_high_septoriose" v="Forte pressão de septoriose — evite trigo/cevada sobre resíduos de cereais, escolha uma variedade tolerante; fungicida a partir do encanamento em clima húmido." />
+        <e k="rcr_advice_pressure_high_rouille" v="Forte pressão de ferrugem — semeie uma variedade resistente e preveja um fungicida; vigie os períodos amenos e húmidos." />
+        <e k="rcr_advice_pressure_high_fusariose" v="Forte pressão de fusariose — evite trigo depois de milho, enterre os resíduos; fungicida na floração se chover." />
+        <e k="rcr_advice_pressure_high_mildiou" v="Forte pressão de míldio — plante uma variedade resistente e proteja as batatas com fungicida assim que o tempo ficar fresco e húmido." />
+        <e k="rcr_advice_pressure_high_hernie" v="Forte pressão de hérnia — intervalo entre brássicas superior a 6 anos, faça calagem para subir o pH e semeie uma variedade resistente; sem tratamento químico." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Pressão de phoma moderada — alongue o intervalo da colza e triture o restolho." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="Pressão de mal-do-pé moderada — evite o terceiro cereal seguido." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="Pressão de septoriose moderada — vigie as chuvas de primavera e o inóculo dos resíduos." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="Pressão de ferrugem moderada — observe o aparecimento de pústulas com tempo ameno." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="Pressão de fusariose moderada — espace cereais e milho, faça a gestão dos resíduos." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="Pressão de míldio moderada — monitorize o tempo fresco e húmido e destrua as plantas espontâneas." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="Pressão de hérnia moderada — alongue o intervalo da colza e vigie o pH ácido." />
     </elements>
 </l10n>

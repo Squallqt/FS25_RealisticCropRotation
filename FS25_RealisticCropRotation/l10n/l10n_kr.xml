@@ -12,7 +12,7 @@
         <e k="rcr_tab_history"          v="윤작" />
         <e k="rcr_tab_planning"         v="계획" />
         <e k="rcr_disease_name_sclerotinia" v="균핵병" />
-        <e k="rcr_disease_name_bcn"   v="선충" />
+        <e k="rcr_disease_name_bcn"   v="씨스트선충" />
         <e k="rcr_section_disease_map"     v="병해" />
         <e k="rcr_disease_sub_infections" v="활성 병반" />
         <e k="rcr_disease_sub_pressure"   v="병해 압력" />
@@ -102,10 +102,10 @@
         <e k="rcr_advice_afterForage" v="단기 초지 다음에는 곡물이 잔디 아래 쌓인 비옥도와 구조를 활용합니다." />
         <e k="rcr_advice_disease_sclerotinia" v="이 작물은 균핵병의 기주이므로 유채, 해바라기, 대두, 완두, 강낭콩과 최소 3년 간격을 두세요." />
         <e k="rcr_advice_disease_bcn" v="이 작물은 사탕무씨스트선충의 기주이므로 사탕무와 배추과 작물을 충분히 떨어뜨리세요." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="이 포장에서 균핵병 위험이 높습니다 — 최소 3년간 유채, 해바라기, 대두, 완두, 강낭콩 재배를 피하십시오." />
-        <e k="rcr_advice_pressure_high_bcn"           v="이 포장에서 사탕무시스트선충 위험이 높습니다 — 최소 3년간 사탕무, 비트, 유채, 겨자, 시금치 재배를 피하십시오." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="이 포장에서 균핵병 위험이 보통입니다 — 기주작물의 재배 간격에 주의하십시오." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="이 포장에서 사탕무시스트선충 위험이 보통입니다 — 비트류 및 십자화과 작물의 재배 간격에 주의하십시오." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="균핵병 압력 높음 — 유채, 해바라기, 대두, 완두, 강낭콩, 감자, 당근을 최소 3년간 피하고, 습한 날씨에는 개화기에 살균제를 살포한다." />
+        <e k="rcr_advice_pressure_high_bcn"           v="선충 압력 높음 — 사탕무, 비트, 유채, 겨자, 시금치를 3년간 피하고, 살선충제 또는 저항성 유인작물을 이용한다." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="균핵병 압력 보통 — 기주 작물의 간격을 넓히고 습한 개화기를 주시한다." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="선충 압력 보통 — 사탕무와 배추과 작물의 간격을 넓힌다." />
         <e k="rcr_advice_no_current_crop" v="현재 주요 작물 없음: 작물이 감지되면 조언이 제공됩니다." />
 
         <!-- Field card — required actions / growth -->
@@ -159,5 +159,49 @@
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="표시할 보유 밭이 없습니다." />
+        <e k="rcr_function_fungicideTank" v="AMISTAR를 분무기에 사용하여 위험 작물에 살균제 처리를 적용합니다." />
+        <e k="rcr_function_nematicideTank" v="VELUM PRIME을 분무기에 사용하여 선충에 노출된 작물에 살선충제 처리를 적용합니다." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_phoma" v="검은다리병(줄기궤양)" />
+        <e k="rcr_disease_name_pietin" v="밀 뿌리썩음병" />
+        <e k="rcr_disease_name_septoriose" v="셉토리아 잎마름병" />
+        <e k="rcr_disease_name_rouille" v="녹병" />
+        <e k="rcr_disease_name_fusariose" v="붉은곰팡이병" />
+        <e k="rcr_disease_name_mildiou" v="역병" />
+        <e k="rcr_disease_name_hernie" v="뿌리혹병" />
+        <e k="rcr_disease_desc_sclerotinia" v="유지작물, 콩과 작물, 뿌리작물에서 개화기에 발생하는 흰색 균핵병. 균핵은 토양에서 여러 해 생존하며 습한 개화기에 잘 발생한다." />
+        <e k="rcr_disease_desc_phoma" v="잔재물로 전염되는 유채/겨자의 줄기 궤양병. 유지작물의 긴 휴지기가 필요하며 가을철 습기에 악화된다." />
+        <e k="rcr_disease_desc_pietin" v="연작한 맥류의 뿌리썩음병. 비기주 작물(귀리, 콩과, 유지작물)로만 끊을 수 있으며 효과적인 살균제가 없다." />
+        <e k="rcr_disease_desc_septoriose" v="밀/보리의 주요 잎 병해로, 잔재물에서 빗물 튐으로 전염된다. 습한 봄에 폭발적으로 번진다." />
+        <e k="rcr_disease_desc_rouille" v="맥류와 해바라기/유채의 붉은녹병·노란녹병. 온화하고 습한 날씨에 폭발적으로 늘며 바람으로 퍼진다." />
+        <e k="rcr_disease_desc_fusariose" v="맥류와 옥수수 잔재물(옥수수→밀)로 조장되는 이삭 붉은곰팡이병. 습한 개화기에 가장 위험하며 알곡을 쭉정이로 만든다." />
+        <e k="rcr_disease_desc_mildiou" v="감자 역병. 서늘하고 습한 날씨가 좌우하며 윤작 의존도는 낮다. 며칠 만에 작물을 초토화시킨다." />
+        <e k="rcr_disease_desc_bcn" v="사탕무 씨스트선충. 씨스트는 토양에서 여러 해 생존하며 부분적으로 만성 스트레스를 준다. 윤작이 주된 방제 수단이다." />
+        <e k="rcr_disease_desc_hernie" v="뿌리혹병. 휴면포자가 6년 넘게 토양에 생존하여 배추과 작물의 매우 긴 휴지기가 필요하다. 화학적 방제법이 없다." />
+        <e k="rcr_disease_treatment_sclerotinia" v="살균제" />
+        <e k="rcr_disease_treatment_phoma" v="살균제" />
+        <e k="rcr_disease_treatment_pietin" v="없음(윤작)" />
+        <e k="rcr_disease_treatment_septoriose" v="살균제" />
+        <e k="rcr_disease_treatment_rouille" v="살균제" />
+        <e k="rcr_disease_treatment_fusariose" v="살균제" />
+        <e k="rcr_disease_treatment_mildiou" v="살균제" />
+        <e k="rcr_disease_treatment_bcn" v="살선충제" />
+        <e k="rcr_fillType_fungicide" v="살균제" />
+        <e k="rcr_fillType_nematicide" v="살선충제" />
+        <e k="rcr_disease_treatment_hernie" v="없음(저항성 품종, 석회 시용, 윤작)" />
+        <e k="rcr_advice_pressure_high_phoma" v="검은다리병 압력 높음 — 유채와 겨자를 약 4년간 피하고 잔재물을 매몰하며, 감수성 품종에는 가을에 살균제를 살포한다." />
+        <e k="rcr_advice_pressure_high_pietin" v="뿌리썩음병 압력 높음 — 비기주 작물(귀리, 콩과, 유지작물)을 넣어 끊는다. 효과적인 살균제가 없으며 오직 윤작으로만 치유된다." />
+        <e k="rcr_advice_pressure_high_septoriose" v="잎마름병 압력 높음 — 곡류 잔재물 위에 밀/보리를 심지 말고 내병성 품종을 고르며, 습한 기후에서는 절간신장기부터 살균제를 살포한다." />
+        <e k="rcr_advice_pressure_high_rouille" v="녹병 압력 높음 — 저항성 품종을 파종하고 살균제를 계획하며, 온화하고 습한 시기를 주시한다." />
+        <e k="rcr_advice_pressure_high_fusariose" v="붉은곰팡이병 압력 높음 — 옥수수 뒤에 밀을 심지 말고 잔재물을 매몰하며, 비가 오면 개화기에 살균제를 살포한다." />
+        <e k="rcr_advice_pressure_high_mildiou" v="역병 압력 높음 — 저항성 품종을 심고, 서늘하고 습해지는 즉시 살균제로 감자를 보호한다." />
+        <e k="rcr_advice_pressure_high_hernie" v="뿌리혹병 압력 높음 — 배추과 작물 휴지기를 6년 넘게 두고, 석회로 pH를 높이며 저항성 품종을 파종한다. 화학적 방제법이 없다." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="검은다리병 압력 보통 — 유채 휴지기를 늘리고 그루터기를 분쇄한다." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="뿌리썩음병 압력 보통 — 연속 세 번째 곡류를 피한다." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="잎마름병 압력 보통 — 봄비와 잔재물의 전염원을 주시한다." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="녹병 압력 보통 — 온화한 날씨에 여름포자퇴(병반) 발생을 살핀다." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="붉은곰팡이병 압력 보통 — 곡류와 옥수수의 간격을 넓히고 잔재물을 관리한다." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="역병 압력 보통 — 서늘하고 습한 날씨를 관찰하고 자생주를 제거한다." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="뿌리혹병 압력 보통 — 유채 휴지기를 늘리고 산성 pH를 주시한다." />
     </elements>
 </l10n>

@@ -12,7 +12,7 @@
         <e k="rcr_tab_history"          v="Rotation" />
         <e k="rcr_tab_planning"         v="Planification" />
         <e k="rcr_disease_name_sclerotinia" v="Sclérotinia" />
-        <e k="rcr_disease_name_bcn"   v="Nématode" />
+        <e k="rcr_disease_name_bcn"   v="Nématode à kyste" />
         <e k="rcr_section_disease_map"     v="Maladies" />
         <e k="rcr_disease_sub_infections" v="Foyers actifs" />
         <e k="rcr_disease_sub_pressure"   v="Pression maladie" />
@@ -102,10 +102,10 @@
         <e k="rcr_advice_afterForage" v="Après une prairie temporaire, une céréale valorise la fertilité et la structure accumulées sous le couvert." />
         <e k="rcr_advice_disease_sclerotinia" v="Cette culture héberge le sclérotinia, gardez donc au moins trois ans avec le colza, le tournesol, le soja, le pois et le haricot." />
         <e k="rcr_advice_disease_bcn" v="Cette culture héberge le nématode à kystes de la betterave, éloignez donc betteraves et brassicacées." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="" />
-        <e k="rcr_advice_pressure_high_bcn"           v="" />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="" />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="" />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Forte pression sclérotinia — évitez canola, tournesol, soja, pois, haricot, pomme de terre et carotte pendant au moins 3 ans ; fongicide à la floraison si temps humide." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Forte pression nématode — évitez betterave, betterave rouge, canola, moutarde et épinard 3 ans ; nématicide ou culture-piège résistante." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Pression sclérotinia modérée — espacez les cultures hôtes et surveillez la floraison humide." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Pression nématode modérée — espacez betteraves et brassicacées." />
         <e k="rcr_advice_no_current_crop" v="Aucune culture principale actuelle : conseil disponible quand une culture est détectée." />
 
         <!-- Field card — required actions / growth -->
@@ -159,5 +159,49 @@
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Aucune parcelle possédée à afficher." />
+        <e k="rcr_function_fungicideTank" v="Utilisez AMISTAR dans les pulvérisateurs pour appliquer un traitement fongicide sur les cultures à risque." />
+        <e k="rcr_function_nematicideTank" v="Utilisez VELUM PRIME dans les pulvérisateurs pour appliquer un traitement nématicide sur les cultures exposées aux nématodes." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_phoma" v="Phoma (nécrose du collet)" />
+        <e k="rcr_disease_name_pietin" v="Piétin-échaudage" />
+        <e k="rcr_disease_name_septoriose" v="Septoriose" />
+        <e k="rcr_disease_name_rouille" v="Rouille" />
+        <e k="rcr_disease_name_fusariose" v="Fusariose" />
+        <e k="rcr_disease_name_mildiou" v="Mildiou" />
+        <e k="rcr_disease_name_hernie" v="Hernie des crucifères" />
+        <e k="rcr_disease_desc_sclerotinia" v="Pourriture blanche des oléagineux, légumineuses et racines à la floraison ; sclérotes persistant plusieurs années, favorisée par une floraison humide." />
+        <e k="rcr_disease_desc_phoma" v="Nécrose du collet du canola/moutarde transmise par les résidus ; nécessite un retour long des oléagineux, aggravée par l'humidité automnale." />
+        <e k="rcr_disease_desc_pietin" v="Piétin-échaudage des céréales en monoculture ; rompu uniquement par une culture non-hôte (avoine, légumineuse, oléagineux). Aucun fongicide efficace." />
+        <e k="rcr_disease_desc_septoriose" v="Principale maladie foliaire du blé/orge, dispersée par les éclaboussures de pluie depuis les résidus ; explosive au printemps humide." />
+        <e k="rcr_disease_desc_rouille" v="Rouilles brune/jaune des céréales et du tournesol/canola ; explosives par temps doux et humide, disséminées par le vent." />
+        <e k="rcr_disease_desc_fusariose" v="Fusariose de l'épi favorisée par les résidus de céréales et de maïs (maïs→blé) ; critique par floraison humide, échaude le grain." />
+        <e k="rcr_disease_desc_mildiou" v="Mildiou de la pomme de terre ; dominé par la météo fraîche et humide, faible dépendance à la rotation ; ravage la culture en quelques jours." />
+        <e k="rcr_disease_desc_bcn" v="Nématode à kyste de la betterave ; kystes persistant dans le sol plusieurs années, stress chronique en foyers ; la rotation est le levier principal." />
+        <e k="rcr_disease_desc_hernie" v="Hernie des crucifères ; spores de repos persistant plus de six ans, nécessite un retour très long des brassicacées ; aucun traitement chimique." />
+        <e k="rcr_disease_treatment_sclerotinia" v="Fongicide" />
+        <e k="rcr_disease_treatment_phoma" v="Fongicide" />
+        <e k="rcr_disease_treatment_pietin" v="Aucun (rotation)" />
+        <e k="rcr_disease_treatment_septoriose" v="Fongicide" />
+        <e k="rcr_disease_treatment_rouille" v="Fongicide" />
+        <e k="rcr_disease_treatment_fusariose" v="Fongicide" />
+        <e k="rcr_disease_treatment_mildiou" v="Fongicide" />
+        <e k="rcr_disease_treatment_bcn" v="Nématicide" />
+        <e k="rcr_fillType_fungicide" v="Fongicide" />
+        <e k="rcr_fillType_nematicide" v="Nématicide" />
+        <e k="rcr_disease_treatment_hernie" v="Aucun (variété résistante, chaulage, rotation)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Forte pression phoma — évitez canola et moutarde ~4 ans, enfouissez les résidus ; fongicide d'automne sur variété sensible." />
+        <e k="rcr_advice_pressure_high_pietin" v="Forte pression piétin-échaudage — insérez une coupure non-hôte (avoine, légumineuse, oléagineux) ; aucun fongicide efficace, seule la rotation guérit." />
+        <e k="rcr_advice_pressure_high_septoriose" v="Forte pression septoriose — évitez blé/orge sur résidus de céréales, choisissez une variété tolérante ; fongicide dès la montaison en climat humide." />
+        <e k="rcr_advice_pressure_high_rouille" v="Forte pression rouille — semez une variété résistante et prévoyez un fongicide ; surveillez les périodes douces et humides." />
+        <e k="rcr_advice_pressure_high_fusariose" v="Forte pression fusariose — évitez blé après maïs, enfouissez les résidus ; fongicide à la floraison si pluie." />
+        <e k="rcr_advice_pressure_high_mildiou" v="Forte pression mildiou — plantez une variété résistante et protégez la pomme de terre au fongicide dès qu'il fait frais et humide." />
+        <e k="rcr_advice_pressure_high_hernie" v="Forte pression hernie — retour des brassicacées &gt; 6 ans, chaulez pour remonter le pH et semez une variété résistante ; aucun traitement chimique." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Pression phoma modérée — allongez le retour du canola et broyez les résidus." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="Pression piétin modérée — évitez la troisième céréale d'affilée." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="Pression septoriose modérée — surveillez les pluies de printemps et l'inoculum des résidus." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="Pression rouille modérée — surveillez l'apparition des pustules par temps doux." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="Pression fusariose modérée — espacez céréales et maïs, gérez les résidus." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="Pression mildiou modérée — surveillez la météo fraîche et humide et détruisez les repousses." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="Pression hernie modérée — allongez le retour du canola et surveillez le pH acide." />
     </elements>
 </l10n>

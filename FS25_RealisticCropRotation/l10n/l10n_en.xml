@@ -12,7 +12,7 @@
         <e k="rcr_tab_history"          v="Rotation" />
         <e k="rcr_tab_planning"         v="Planning" />
         <e k="rcr_disease_name_sclerotinia" v="Sclerotinia" />
-        <e k="rcr_disease_name_bcn"   v="Nematode" />
+        <e k="rcr_disease_name_bcn"   v="Cyst nematode" />
         <e k="rcr_section_disease_map"     v="Diseases" />
         <e k="rcr_disease_sub_infections" v="Active foci" />
         <e k="rcr_disease_sub_pressure"   v="Disease pressure" />
@@ -102,10 +102,10 @@
         <e k="rcr_advice_afterForage"    v="After a grass ley, a cereal cashes in the fertility and structure built up under the sward." />
         <e k="rcr_advice_disease_sclerotinia" v="This crop hosts sclerotinia, so keep at least three years from canola, sunflower, soybean, pea and bean." />
         <e k="rcr_advice_disease_bcn"         v="This crop hosts the beet cyst nematode, so keep beets and brassicas well apart." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="High sclerotinia pressure on this field — avoid canola, sunflower, soybean, pea and bean for at least three years." />
-        <e k="rcr_advice_pressure_high_bcn"           v="High nematode pressure on this field — avoid sugar beet, beetroot, canola, mustard and spinach for at least three years." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderate sclerotinia pressure on this field — space host crops carefully." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Moderate nematode pressure on this field — space beets and brassicas carefully." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="High sclerotinia pressure — avoid canola, sunflower, soybean, pea, bean, potato and carrot for at least 3 years; fungicide at flowering in humid weather." />
+        <e k="rcr_advice_pressure_high_bcn"           v="High nematode pressure — avoid sugar beet, beetroot, canola, mustard and spinach for 3 years; nematicide or resistant trap crop." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderate sclerotinia pressure — space host crops and watch for a humid flowering." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Moderate nematode pressure — space beets and brassicas." />
         <e k="rcr_advice_no_current_crop" v="No current main crop: advice available when a crop is detected." />
 
         <!-- Field card — required actions / growth -->
@@ -159,5 +159,49 @@
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="No owned fields to display." />
+        <e k="rcr_function_fungicideTank" v="Use AMISTAR in sprayers to apply a fungicide treatment to at-risk crops." />
+        <e k="rcr_function_nematicideTank" v="Use VELUM PRIME in sprayers to apply a nematicide treatment to crops exposed to nematodes." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_phoma" v="Phoma (blackleg)" />
+        <e k="rcr_disease_name_pietin" v="Take-all" />
+        <e k="rcr_disease_name_septoriose" v="Septoria leaf blotch" />
+        <e k="rcr_disease_name_rouille" v="Rust" />
+        <e k="rcr_disease_name_fusariose" v="Fusarium head blight" />
+        <e k="rcr_disease_name_mildiou" v="Late blight" />
+        <e k="rcr_disease_name_hernie" v="Clubroot" />
+        <e k="rcr_disease_desc_sclerotinia" v="White mould of oilseeds, legumes and roots at flowering; sclerotia persist for years, favoured by a humid flowering." />
+        <e k="rcr_disease_desc_phoma" v="Stem canker of canola/mustard carried on residue; needs a long oilseed break, worsened by autumn moisture." />
+        <e k="rcr_disease_desc_pietin" v="Take-all of continuous cereals; broken only by a non-host crop (oats, legume, oilseed). No effective fungicide." />
+        <e k="rcr_disease_desc_septoriose" v="Main wheat/barley foliar disease, splash-dispersed from residue; explosive in a wet spring." />
+        <e k="rcr_disease_desc_rouille" v="Brown/yellow rusts of cereals and sunflower/canola; explosive in mild humid weather, wind-borne." />
+        <e k="rcr_disease_desc_fusariose" v="Fusarium head blight favoured by cereal and maize residue (maize→wheat); critical in a wet flowering, shrivels the grain." />
+        <e k="rcr_disease_desc_mildiou" v="Potato late blight; driven by cool wet weather, low rotation dependence; devastates the crop within days." />
+        <e k="rcr_disease_desc_bcn" v="Beet cyst nematode; cysts persist in soil for years, chronic patchy stress; rotation is the main lever." />
+        <e k="rcr_disease_desc_hernie" v="Clubroot; resting spores persist over six years, needs a very long brassica break; no chemical treatment." />
+        <e k="rcr_disease_treatment_sclerotinia" v="Fungicide" />
+        <e k="rcr_disease_treatment_phoma" v="Fungicide" />
+        <e k="rcr_disease_treatment_pietin" v="None (rotation)" />
+        <e k="rcr_disease_treatment_septoriose" v="Fungicide" />
+        <e k="rcr_disease_treatment_rouille" v="Fungicide" />
+        <e k="rcr_disease_treatment_fusariose" v="Fungicide" />
+        <e k="rcr_disease_treatment_mildiou" v="Fungicide" />
+        <e k="rcr_disease_treatment_bcn" v="Nematicide" />
+        <e k="rcr_fillType_fungicide" v="Fungicide" />
+        <e k="rcr_fillType_nematicide" v="Nematicide" />
+        <e k="rcr_disease_treatment_hernie" v="None (resistant variety, liming, rotation)" />
+        <e k="rcr_advice_pressure_high_phoma" v="High phoma pressure — avoid canola and mustard for ~4 years, bury residue; autumn fungicide on susceptible varieties." />
+        <e k="rcr_advice_pressure_high_pietin" v="High take-all pressure — insert a non-host break (oats, legume, oilseed); no effective fungicide, only rotation cures it." />
+        <e k="rcr_advice_pressure_high_septoriose" v="High septoria pressure — avoid wheat/barley on cereal residue, pick a tolerant variety; fungicide from stem elongation in a wet climate." />
+        <e k="rcr_advice_pressure_high_rouille" v="High rust pressure — sow a resistant variety and plan a fungicide; watch mild humid spells." />
+        <e k="rcr_advice_pressure_high_fusariose" v="High fusarium pressure — avoid wheat after maize, bury residue; fungicide at flowering if wet." />
+        <e k="rcr_advice_pressure_high_mildiou" v="High late blight pressure — plant a resistant variety and protect potatoes with fungicide as soon as it turns cool and wet." />
+        <e k="rcr_advice_pressure_high_hernie" v="High clubroot pressure — brassica break over 6 years, lime to raise pH and sow a resistant variety; no chemical treatment." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Moderate phoma pressure — lengthen the canola break and chop the stubble." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="Moderate take-all pressure — avoid a third cereal in a row." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="Moderate septoria pressure — watch spring rains and residue inoculum." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="Moderate rust pressure — scout for pustules in mild weather." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="Moderate fusarium pressure — space cereals and maize, manage residue." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="Moderate late blight pressure — monitor cool wet weather and destroy volunteers." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="Moderate clubroot pressure — lengthen the canola break and watch for acid pH." />
     </elements>
 </l10n>

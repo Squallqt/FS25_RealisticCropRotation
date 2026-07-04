@@ -22,9 +22,26 @@ RealisticCropRotationDiseaseMap = RealisticCropRotationDiseaseMap or {}
 RealisticCropRotationDiseaseMap.PAGE_FIELD = "rcrDiseaseMapPageIndex"
 RealisticCropRotationDiseaseMap.UPDATE_INTERVAL_MS = 1000
 
--- Grid states (must match Disease.lua: SCLEROTINIA=1, BCN=2).
-RealisticCropRotationDiseaseMap.STATE_SCLEROTINIA = 1
-RealisticCropRotationDiseaseMap.STATE_BCN = 2
+-- Per-disease overlay colours, keyed by the STABLE state id (cropConfig <diseaseGroup state=>, also
+-- read by Disease.lua diseaseStateForGroup). Each disease is painted with its OWN colour, so the
+-- infection view distinguishes all 9 pathogens on the parcel (no more fungal/soil merge). Two
+-- variants per entry: [false] = default palette, [true] = colour-blind-safe (Okabe-Ito based),
+-- mirroring the base game's colour-blind handling. Hues are well separated for readability.
+--   1 SCLEROTINIA (white mould)  2 PHOMA (brown)     3 PIETIN (violet)   4 SEPTORIOSE (blue)
+--   5 ROUILLE (orange)           6 FUSARIOSE (yellow) 7 MILDIOU (magenta) 8 BCN (teal)  9 HERNIE (red)
+RealisticCropRotationDiseaseMap.STATE_COLORS = {
+    [1] = { [false] = {0.93, 0.93, 0.90, 1}, [true] = {0.95, 0.95, 0.95, 1} },
+    [2] = { [false] = {0.60, 0.40, 0.18, 1}, [true] = {0.80, 0.40, 0.00, 1} },
+    [3] = { [false] = {0.58, 0.32, 0.80, 1}, [true] = {0.80, 0.60, 0.70, 1} },
+    [4] = { [false] = {0.15, 0.50, 0.90, 1}, [true] = {0.00, 0.45, 0.70, 1} },
+    [5] = { [false] = {0.95, 0.55, 0.05, 1}, [true] = {0.90, 0.60, 0.00, 1} },
+    [6] = { [false] = {0.95, 0.85, 0.22, 1}, [true] = {0.95, 0.90, 0.25, 1} },
+    [7] = { [false] = {0.87, 0.15, 0.72, 1}, [true] = {0.35, 0.70, 0.90, 1} },
+    [8] = { [false] = {0.10, 0.68, 0.62, 1}, [true] = {0.00, 0.60, 0.50, 1} },
+    [9] = { [false] = {0.78, 0.13, 0.13, 1}, [true] = {0.60, 0.10, 0.10, 1} },
+}
+-- Last-resort colour for a state id beyond the palette (a 10th+ disease added without a colour).
+RealisticCropRotationDiseaseMap.STATE_COLOR_FALLBACK = { [false] = {0.86, 0.17, 0.14, 1}, [true] = {0.80, 0.40, 0.00, 1} }
 
 -- Risk bands (cell values of the runtime risk map, written by Disease:refreshRiskMap).
 RealisticCropRotationDiseaseMap.RISK_LOW = 1
@@ -56,16 +73,28 @@ local function getText(key, fallback)
     return fallback or key
 end
 
----Reads a colour table from MapOverlayGenerator[name][colorBlind].
-local function colorFor(name, colorBlind)
-    if MapOverlayGenerator ~= nil then
-        local byMode = MapOverlayGenerator[name]
-        if byMode ~= nil then
-            local color = byMode[colorBlind == true] or byMode[false] or byMode[true]
-            if color ~= nil then return color end
-        end
+---Pathogen groups ordered by their stable overlay state id, straight from the crop config
+---(data-driven: adding a <diseaseGroup> makes it appear here automatically). Client-safe:
+---diseaseStates is static config, loaded on every machine at mod init.
+-- @return table list array of { group = <NAME>, state = <id> } sorted by state id then name
+local function orderedDiseaseGroups()
+    local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
+    local states = config ~= nil and config.diseaseStates or nil
+    local out = {}
+    if states == nil then return out end
+    for group, state in pairs(states) do
+        out[#out + 1] = { group = group, state = tonumber(state) or 0 }
     end
-    return {1, 1, 1, 1}
+    table.sort(out, function(a, b)
+        if a.state == b.state then return tostring(a.group) < tostring(b.group) end
+        return a.state < b.state
+    end)
+    return out
+end
+
+---Number of pathogen groups the infection view lists (one filter row + one colour each).
+local function diseaseCount()
+    return #orderedDiseaseGroups()
 end
 
 ---The disease model (client-safe reads only).
@@ -78,24 +107,31 @@ local function getGrid()
     return RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
 end
 
----Infection-state colour for the grid overlay.
+---Overlay colour for a disease's grid state id, honouring colour-blind mode. Falls back to a
+---generic colour for any state id beyond the defined palette.
 local function infectionStateColor(state, colorBlind)
-    if state == RealisticCropRotationDiseaseMap.STATE_SCLEROTINIA then
-        return colorFor("FRUIT_COLOR_NEEDS_LIME", colorBlind)
-    elseif state == RealisticCropRotationDiseaseMap.STATE_BCN then
-        return colorFor("FRUIT_COLOR_WITHERED", colorBlind)
-    end
-    return colorFor("FRUIT_COLOR_WITHERED", colorBlind)
+    local entry = RealisticCropRotationDiseaseMap.STATE_COLORS[state]
+        or RealisticCropRotationDiseaseMap.STATE_COLOR_FALLBACK
+    return entry[colorBlind == true] or entry[false] or {1, 1, 1, 1}
 end
 
----Filter list rows for the infection sub-page.
+---Filter list rows for the infection sub-page: ONE row per disease, built dynamically from the
+---config (name via l10n through the disease model, colour by the disease's stable state id). The
+---row order matches self.filter and renderInfectionOverlay (both walk orderedDiseaseGroups).
 local function getInfectionDisplayItems(colorBlind)
-    local sclerotiniaColor = infectionStateColor(RealisticCropRotationDiseaseMap.STATE_SCLEROTINIA, colorBlind)
-    local bcnColor = infectionStateColor(RealisticCropRotationDiseaseMap.STATE_BCN, colorBlind)
-    return {
-        { colors = { [false] = {sclerotiniaColor}, [true] = {sclerotiniaColor} }, description = getText("rcr_disease_name_sclerotinia", "Sclerotinia"), isActive = true },
-        { colors = { [false] = {bcnColor},         [true] = {bcnColor} },         description = getText("rcr_disease_name_bcn", "Nematode"),         isActive = true },
-    }
+    local disease = getDisease()
+    local items = {}
+    for _, entry in ipairs(orderedDiseaseGroups()) do
+        local color = infectionStateColor(entry.state, colorBlind)
+        local name = (disease ~= nil and type(disease.getDisplayName) == "function")
+            and disease:getDisplayName(entry.group) or tostring(entry.group)
+        items[#items + 1] = {
+            colors = { [false] = {color}, [true] = {color} },
+            description = name,
+            isActive = true,
+        }
+    end
+    return items
 end
 
 ---Filter list rows for the risk sub-page.
@@ -104,9 +140,9 @@ local function getRiskDisplayItems()
     local mod = RealisticCropRotationDiseaseMap.RISK_COLOR_MODERATE
     local high = RealisticCropRotationDiseaseMap.RISK_COLOR_HIGH
     return {
-        { colors = { [false] = {low},  [true] = {low} },  description = getText("rcr_disease_risk_low", "Low risk"),           isActive = true },
-        { colors = { [false] = {mod},  [true] = {mod} },  description = getText("rcr_disease_risk_moderate", "Moderate risk"), isActive = true },
-        { colors = { [false] = {high}, [true] = {high} }, description = getText("rcr_disease_risk_high", "High risk"),         isActive = true },
+        { colors = { [false] = {low},  [true] = {low} },  description = getText("rcr_disease_risk_low"),      isActive = true },
+        { colors = { [false] = {mod},  [true] = {mod} },  description = getText("rcr_disease_risk_moderate"), isActive = true },
+        { colors = { [false] = {high}, [true] = {high} }, description = getText("rcr_disease_risk_high"),     isActive = true },
     }
 end
 
@@ -154,6 +190,23 @@ end
 -- Filter data sync
 -- ============================================================================
 
+---Ensures self.filter is a boolean array of exactly n entries: new diseases default to shown,
+---removed ones are trimmed. Keeps the filter list rows, self.filter and the overlay index-aligned
+---(all three walk orderedDiseaseGroups in the same order).
+-- @param integer n current disease count
+-- @return table filter
+function RealisticCropRotationDiseaseMap:ensureInfectionFilter(n)
+    local filter = self.filter or {}
+    for i = 1, n do
+        if filter[i] == nil then filter[i] = true end
+    end
+    for i = #filter, n + 1, -1 do
+        filter[i] = nil
+    end
+    self.filter = filter
+    return filter
+end
+
 function RealisticCropRotationDiseaseMap:syncFilterData(frame)
     local pageIndex = self:getPageIndex(frame)
     if frame == nil or pageIndex == nil then return end
@@ -167,10 +220,12 @@ function RealisticCropRotationDiseaseMap:syncFilterData(frame)
         frame.filterStates[pageIndex] = self.riskFilter
         frame.numSelectedFilters[pageIndex] = countSelected(self.riskFilter, 3)
     else
-        self.filter = self.filter or { true, true }
-        frame.dataTables[pageIndex] = getInfectionDisplayItems(self.isColorBlindMode == true)
-        frame.filterStates[pageIndex] = self.filter
-        frame.numSelectedFilters[pageIndex] = countSelected(self.filter, 2)
+        local items = getInfectionDisplayItems(self.isColorBlindMode == true)
+        local n = #items
+        local filter = self:ensureInfectionFilter(n)
+        frame.dataTables[pageIndex] = items
+        frame.filterStates[pageIndex] = filter
+        frame.numSelectedFilters[pageIndex] = countSelected(filter, n)
     end
 
     if frame.buttonDeselectAllText ~= nil and InGameMenuMapFrame ~= nil and InGameMenuMapFrame.L10N_SYMBOL ~= nil then
@@ -238,7 +293,10 @@ function RealisticCropRotationDiseaseMap:buildKey()
             rf[1] and "1" or "0", rf[2] and "1" or "0", rf[3] and "1" or "0")
     else
         local f = self.filter or {}
-        parts[#parts + 1] = string.format("%s%s", f[1] and "1" or "0", f[2] and "1" or "0")
+        local n = diseaseCount()
+        local bits = {}
+        for i = 1, n do bits[i] = f[i] and "1" or "0" end
+        parts[#parts + 1] = table.concat(bits)
     end
 
     return table.concat(parts, "|")
@@ -255,22 +313,23 @@ function RealisticCropRotationDiseaseMap:renderInfectionOverlay()
         return false
     end
 
-    local filter = self.filter or { true, true }
+    local filter = self.filter or {}
     local colorBlind = self.isColorBlindMode == true
 
     resetDensityMapVisualizationOverlay(self.infectionOverlayId)
     setOverlayColor(self.infectionOverlayId, 1, 1, 1, 1)
 
-    -- Grid states drawn directly, no mask (the grid is clipped to worked soil at write time).
-    if filter[1] then
-        local c = infectionStateColor(self.STATE_SCLEROTINIA, colorBlind)
-        setDensityMapVisualizationOverlayStateColor(
-            self.infectionOverlayId, grid.mapId, 0, 0, 0, grid.numChannels, self.STATE_SCLEROTINIA, c[1], c[2], c[3])
-    end
-    if filter[2] then
-        local c = infectionStateColor(self.STATE_BCN, colorBlind)
-        setDensityMapVisualizationOverlayStateColor(
-            self.infectionOverlayId, grid.mapId, 0, 0, 0, grid.numChannels, self.STATE_BCN, c[1], c[2], c[3])
+    -- One native paint per enabled disease, straight from the destruction grid (grid.mapId), so the
+    -- foci view shows the REAL organic disease patches (Perlin destruction, clipped to worked soil at
+    -- write time) rather than a solid fill -- localised irregular outbreaks, not a full block. Each
+    -- disease uses its own stable state id and colour. Row order == orderedDiseaseGroups (same as the
+    -- filter list), so filter[i] gates disease i. Uninitialised entries (nil) default to shown.
+    for i, entry in ipairs(orderedDiseaseGroups()) do
+        if filter[i] ~= false then
+            local c = infectionStateColor(entry.state, colorBlind)
+            setDensityMapVisualizationOverlayStateColor(
+                self.infectionOverlayId, grid.mapId, 0, 0, 0, grid.numChannels, entry.state, c[1], c[2], c[3])
+        end
     end
 
     generateDensityMapVisualizationOverlay(self.infectionOverlayId)
@@ -324,9 +383,10 @@ function RealisticCropRotationDiseaseMap:updateOverlay(force)
 
     self:createRuntimeObjects()
 
-    -- Safety belt: a band can move between gameplay repaints (e.g. a harvest just changed the
-    -- history). Incremental only -- a pure Lua band comparison per owned field (the pre-refactor
-    -- code ran the same getRisk loop every tick), with native passes only for bands that moved.
+    -- Safety belt (pressure view only): a risk band can move between gameplay repaints (e.g. a harvest
+    -- just changed the history). Incremental -- a pure Lua comparison per owned field, native passes
+    -- only for what moved. The foci view reads the destruction grid directly, mutated by the daily
+    -- destruction pass, so it is tracked by grid.changeRevision instead.
     if self:isPressurePage() and type(disease.refreshRiskMap) == "function" then
         disease:refreshRiskMap(false)
     end
@@ -448,17 +508,18 @@ function RealisticCropRotationDiseaseMap:ensureMapPage(frame)
     if frame.mapSelectorTexts == nil or frame.mapOverviewSelector == nil then return end
     if frame.dataTables == nil or frame.filterStates == nil or frame.numSelectedFilters == nil then return end
 
-    table.insert(frame.mapSelectorTexts, getText("rcr_section_disease_map", "Diseases"))
+    table.insert(frame.mapSelectorTexts, getText("rcr_section_disease_map"))
     local pageIndex = #frame.mapSelectorTexts
     frame[self.PAGE_FIELD] = pageIndex
     frame.mapOverviewSelector:setTexts(frame.mapSelectorTexts)
 
-    self.filter = self.filter or { true, true }
+    local diseaseN = diseaseCount()
+    self.filter = self:ensureInfectionFilter(diseaseN)
     self.riskFilter = self.riskFilter or { true, true, true }
 
     frame.dataTables[pageIndex] = {}
     frame.filterStates[pageIndex] = self.filter
-    frame.numSelectedFilters[pageIndex] = countSelected(self.filter, 2)
+    frame.numSelectedFilters[pageIndex] = countSelected(self.filter, diseaseN)
 
     -- Add a dot to the main category dot box for our new top-level page.
     if frame.subCategoryDotBox ~= nil and frame.subCategoryDotBox.elements ~= nil and #frame.subCategoryDotBox.elements > 0 then
@@ -490,8 +551,8 @@ function RealisticCropRotationDiseaseMap:ensureMapPage(frame)
     if frame.filterBox ~= nil and frame.mapOverviewSelector ~= nil then
         self.subSelector = frame.mapOverviewSelector:clone(frame.filterBox)
         self.subSelector:setTexts({
-            getText("rcr_disease_sub_infections", "Active infections"),
-            getText("rcr_disease_sub_pressure", "Disease risk"),
+            getText("rcr_disease_sub_infections"),
+            getText("rcr_disease_sub_pressure"),
         })
         self.subSelectorBaseY = self.subSelector.position[2]
         function self.subSelector.onClickCallback(_, subState)
@@ -539,7 +600,8 @@ end
 function RealisticCropRotationDiseaseMap:install()
     if RealisticCropRotationDiseaseMap._overwrites_installed or InGameMenuMapFrame == nil or Utils == nil then return end
 
-    RealisticCropRotationDiseaseMap.filter = RealisticCropRotationDiseaseMap.filter or { true, true }
+    -- Sized to the disease count lazily (ensureInfectionFilter) once the config/page exist.
+    RealisticCropRotationDiseaseMap.filter = RealisticCropRotationDiseaseMap.filter or {}
     RealisticCropRotationDiseaseMap.riskFilter = RealisticCropRotationDiseaseMap.riskFilter or { true, true, true }
     RealisticCropRotationDiseaseMap.isColorBlindMode = false
     if g_gameSettings ~= nil and GameSettings ~= nil and GameSettings.SETTING ~= nil then

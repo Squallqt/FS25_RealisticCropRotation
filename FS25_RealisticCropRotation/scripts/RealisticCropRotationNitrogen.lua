@@ -172,10 +172,13 @@ local function getTransition(data)
         mapIds = {},
         maskGroups = {},
         crops = crops,
+        n1Crops = {},
         data = data,
         halfTerrain = terrainSize * 0.5,
         scaleX = sizeX / terrainSize,
         scaleY = sizeY / terrainSize,
+        captureStamp = 0,
+        resetStamp = 0,
     }
     for index, crop in ipairs(crops) do
         local desc = crop.desc
@@ -193,6 +196,7 @@ local function getTransition(data)
             context.maskGroups[groupIndex] = group
         end
 
+        crop.group = group
         crop.mapId = group.mapId
         crop.channel = ((index - 1) % 3) * 2
         crop.modifier = DensityMapModifier.new(crop.mapId, crop.channel, 2, g_terrainNode)

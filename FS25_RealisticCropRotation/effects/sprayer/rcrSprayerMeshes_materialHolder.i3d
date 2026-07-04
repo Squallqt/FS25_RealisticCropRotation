@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<i3D name="rcrSprayerMeshes_materialHolder" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
+  <Files>
+    <File fileId="1" filename="$data/effects/sprayer/water_normal.png" />
+    <File fileId="2" filename="$data/effects/sprayer/water_specular.png" />
+    <File fileId="3" filename="$data/shaders/sprayerShader.xml" />
+    <File fileId="4" filename="rcrFungicideSpray_diffuse.dds" />
+    <File fileId="5" filename="rcrNematicideSpray_diffuse.dds" />
+  </Files>
+
+  <Materials>
+    <Material name="rcrFungicideSpray_mat" materialId="1" alphaBlending="true" customShaderId="3">
+      <CustomParameter name="isFadeAboveTerrain" value="1"/>
+      <Texture fileId="4"/>
+      <Normalmap fileId="1"/>
+      <Glossmap fileId="2"/>
+    </Material>
+    <Material name="rcrNematicideSpray_mat" materialId="2" alphaBlending="true" customShaderId="3">
+      <CustomParameter name="isFadeAboveTerrain" value="1"/>
+      <Texture fileId="5"/>
+      <Normalmap fileId="1"/>
+      <Glossmap fileId="2"/>
+    </Material>
+  </Materials>
+
+  <Shapes externalShapesFile="rcrSprayerMeshes_materialHolder.i3d.shapes">
+  </Shapes>
+
+  <Scene>
+    <TransformGroup name="sprayerEffects" nodeId="1">
+      <TransformGroup name="materials" nodeId="2">
+        <Shape name="rcrFungicideSpray_materialHolder" shapeId="1" castsShadows="true" receiveShadows="true" materialHolder="true" materialIds="1" clipDistance="10" nodeId="3"/>
+        <Shape name="rcrNematicideSpray_materialHolder" shapeId="1" castsShadows="true" receiveShadows="true" materialHolder="true" materialIds="2" clipDistance="10" nodeId="4"/>
+      </TransformGroup>
+    </TransformGroup>
+  </Scene>
+
+  <UserAttributes>
+    <UserAttribute nodeId="3">
+      <Attribute name="onCreate" type="scriptCallback" value="MaterialUtil.onCreateMaterial"/>
+      <Attribute name="fillType" type="string" value="RCR_FUNGICIDE"/>
+      <Attribute name="materialType" type="string" value="sprayer"/>
+      <Attribute name="materialIndex" type="string" value="1"/>
+    </UserAttribute>
+    <UserAttribute nodeId="4">
+      <Attribute name="onCreate" type="scriptCallback" value="MaterialUtil.onCreateMaterial"/>
+      <Attribute name="fillType" type="string" value="RCR_NEMATICIDE"/>
+      <Attribute name="materialType" type="string" value="sprayer"/>
+      <Attribute name="materialIndex" type="string" value="1"/>
+    </UserAttribute>
+  </UserAttributes>
+</i3D>

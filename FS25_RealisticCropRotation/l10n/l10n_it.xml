@@ -11,8 +11,8 @@
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Rotazione" />
         <e k="rcr_tab_planning"         v="Pianificazione" />
-        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia" />
-        <e k="rcr_disease_name_bcn"   v="Nematode" />
+        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia (muffa bianca)" />
+        <e k="rcr_disease_name_bcn"   v="Nematode a cisti" />
         <e k="rcr_section_disease_map"     v="Malattie" />
         <e k="rcr_disease_sub_infections" v="Focolai attivi" />
         <e k="rcr_disease_sub_pressure"   v="Pressione malattie" />
@@ -102,10 +102,10 @@
         <e k="rcr_advice_afterForage" v="Dopo un prato di breve durata, un cereale valorizza la fertilità e la struttura accumulate sotto il cotico." />
         <e k="rcr_advice_disease_sclerotinia" v="Questa coltura ospita la sclerotinia, quindi mantieni almeno tre anni da colza, girasole, soia, pisello e fagiolo." />
         <e k="rcr_advice_disease_bcn" v="Questa coltura ospita il nematode a cisti della barbabietola, quindi tieni ben distanti barbabietole e crucifere." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="" />
-        <e k="rcr_advice_pressure_high_bcn"           v="" />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="" />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="" />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Forte pressione di sclerotinia — evita colza, girasole, soia, pisello, fagiolo, patata e carota per almeno 3 anni; fungicida alla fioritura con clima umido." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Forte pressione di nematode — evita barbabietola da zucchero, barbabietola rossa, colza, senape e spinacio per 3 anni; nematocida o coltura-trappola resistente." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Pressione di sclerotinia moderata — distanzia le colture ospiti e sorveglia le fioriture umide." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Pressione di nematode moderata — distanzia barbabietole e brassicacee." />
         <e k="rcr_advice_no_current_crop" v="Nessuna coltura principale attuale: consiglio disponibile quando viene rilevata una coltura." />
 
         <!-- Field card — required actions / growth -->
@@ -159,5 +159,49 @@
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Nessun campo di proprietà da mostrare." />
+        <e k="rcr_function_fungicideTank" v="Usa AMISTAR negli irroratori per applicare un trattamento fungicida sulle colture a rischio." />
+        <e k="rcr_function_nematicideTank" v="Usa VELUM PRIME negli irroratori per applicare un trattamento nematocida sulle colture esposte ai nematodi." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_phoma" v="Phoma (cancro del colletto)" />
+        <e k="rcr_disease_name_pietin" v="Mal del piede" />
+        <e k="rcr_disease_name_septoriose" v="Septoriosi" />
+        <e k="rcr_disease_name_rouille" v="Ruggine" />
+        <e k="rcr_disease_name_fusariose" v="Fusariosi della spiga" />
+        <e k="rcr_disease_name_mildiou" v="Peronospora della patata" />
+        <e k="rcr_disease_name_hernie" v="Ernia delle crucifere" />
+        <e k="rcr_disease_desc_sclerotinia" v="Muffa bianca di oleaginose, leguminose e colture da radice alla fioritura; gli sclerozi persistono per anni nel terreno, favorita da una fioritura umida." />
+        <e k="rcr_disease_desc_phoma" v="Cancro del colletto di colza/senape trasmesso dai residui; richiede un lungo intervallo tra le oleaginose, aggravato dall'umidità autunnale." />
+        <e k="rcr_disease_desc_pietin" v="Mal del piede dei cereali in monocoltura; interrotto solo da una coltura non ospite (avena, leguminosa, oleaginosa). Nessun fungicida efficace." />
+        <e k="rcr_disease_desc_septoriose" v="Principale malattia fogliare di frumento/orzo, diffusa dagli schizzi di pioggia dai residui; esplosiva in una primavera piovosa." />
+        <e k="rcr_disease_desc_rouille" v="Ruggini bruna e gialla dei cereali e di girasole/colza; esplosive con clima mite e umido, disseminate dal vento." />
+        <e k="rcr_disease_desc_fusariose" v="Fusariosi della spiga favorita dai residui di cereali e mais (mais→frumento); critica con fioritura umida, provoca cariossidi striminzite." />
+        <e k="rcr_disease_desc_mildiou" v="Peronospora della patata; guidata dal clima fresco e umido, scarsa dipendenza dalla rotazione; distrugge la coltura in pochi giorni." />
+        <e k="rcr_disease_desc_bcn" v="Nematode a cisti della barbabietola; le cisti persistono nel terreno per anni, stress cronico a chiazze; la rotazione è la leva principale." />
+        <e k="rcr_disease_desc_hernie" v="Ernia delle crucifere; le spore di resistenza persistono oltre sei anni, richiede un intervallo molto lungo tra le brassicacee; nessun trattamento chimico." />
+        <e k="rcr_disease_treatment_sclerotinia" v="Fungicida" />
+        <e k="rcr_disease_treatment_phoma" v="Fungicida" />
+        <e k="rcr_disease_treatment_pietin" v="Nessuno (rotazione)" />
+        <e k="rcr_disease_treatment_septoriose" v="Fungicida" />
+        <e k="rcr_disease_treatment_rouille" v="Fungicida" />
+        <e k="rcr_disease_treatment_fusariose" v="Fungicida" />
+        <e k="rcr_disease_treatment_mildiou" v="Fungicida" />
+        <e k="rcr_disease_treatment_bcn" v="Nematocida" />
+        <e k="rcr_fillType_fungicide" v="Fungicida" />
+        <e k="rcr_fillType_nematicide" v="Nematocida" />
+        <e k="rcr_disease_treatment_hernie" v="Nessuno (varietà resistente, calcitazione, rotazione)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Forte pressione di phoma — evita colza e senape per ~4 anni, interra i residui; fungicida autunnale sulle varietà sensibili." />
+        <e k="rcr_advice_pressure_high_pietin" v="Forte pressione di mal del piede — inserisci un'interruzione non ospite (avena, leguminosa, oleaginosa); nessun fungicida efficace, solo la rotazione risolve." />
+        <e k="rcr_advice_pressure_high_septoriose" v="Forte pressione di septoriosi — evita frumento/orzo sui residui di cereali, scegli una varietà tollerante; fungicida dalla levata in clima umido." />
+        <e k="rcr_advice_pressure_high_rouille" v="Forte pressione di ruggine — semina una varietà resistente e prevedi un fungicida; sorveglia i periodi miti e umidi." />
+        <e k="rcr_advice_pressure_high_fusariose" v="Forte pressione di fusariosi — evita frumento dopo mais, interra i residui; fungicida alla fioritura se piove." />
+        <e k="rcr_advice_pressure_high_mildiou" v="Forte pressione di peronospora — pianta una varietà resistente e proteggi le patate con fungicida appena il clima diventa fresco e umido." />
+        <e k="rcr_advice_pressure_high_hernie" v="Forte pressione di ernia — intervallo tra le brassicacee oltre 6 anni, calcitazione per alzare il pH e semina di una varietà resistente; nessun trattamento chimico." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Pressione di phoma moderata — allunga l'intervallo della colza e trincia le stoppie." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="Pressione di mal del piede moderata — evita il terzo cereale consecutivo." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="Pressione di septoriosi moderata — sorveglia le piogge primaverili e l'inoculo dei residui." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="Pressione di ruggine moderata — controlla la comparsa delle pustole con clima mite." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="Pressione di fusariosi moderata — distanzia cereali e mais, gestisci i residui." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="Pressione di peronospora moderata — monitora il clima fresco e umido ed elimina i ricacci spontanei." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="Pressione di ernia moderata — allunga l'intervallo della colza e sorveglia il pH acido." />
     </elements>
 </l10n>
