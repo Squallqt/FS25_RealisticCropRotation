@@ -54,10 +54,9 @@ RealisticCropRotationFrame.ADVICE_KEY = {
     FORAGE    = "rcr_advice_afterForage",
 }
 
--- Disease notes appended to the family advice, for crops that host them. The order is DATA-DRIVEN
--- from the crop config (getDiseaseOrder, sorted by each disease's stable state id), so a new
--- <diseaseGroup> appears automatically with no Lua edit. updateAdvice only appends a line whose
--- rcr_advice_pressure_* key is present, so a disease without advice strings yet never leaks into UI.
+-- Disease notes appended to the family advice. The order is DATA-DRIVEN from the crop config
+-- (getDiseaseOrder, sorted by each disease's stable state id), so a new <diseaseGroup> appears
+-- automatically with no Lua edit.
 function RealisticCropRotationFrame.getDiseaseOrder()
     local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
     local states = config ~= nil and config.diseaseStates or nil
@@ -109,7 +108,7 @@ RealisticCropRotationFrame.SCORE_DIVERSITY_BONUS_MAX = 25
 RealisticCropRotationFrame.SCORE_RESIDUE_BONUS = 10  -- N-restoring crop/cover present
 RealisticCropRotationFrame.SCORE_NO_RESIDUE_CAP = 79 -- no N returned: "excellent" stays locked
 RealisticCropRotationFrame.SCORE_MONOCULTURE_CAP = 30 -- single-family plan: not a rotation, stays "poor"
-RealisticCropRotationFrame.SCORE_DISEASE_PENALTY_PER_YEAR = 10 -- shared-pathogen spacing, cross-family
+RealisticCropRotationFrame.SCORE_DISEASE_PENALTY_PER_YEAR = 10 -- shared-pathogen spacing
 
 -- Max pixel widths (must match profile sizes)
 -- N_BAR_MAX_WIDTH: keep in sync with guiProfiles.xml frNitrogenTrack size (1192px)
@@ -1612,7 +1611,7 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
 
     self:updateNitrogenGauge(farmlandId)
     self:updateSoilPHGauge(farmlandId)
-    self:updateAdvice(currentFamily, farmlandId)
+    self:updateAdvice(currentFamily, farmlandId, currentCropName)
     self:updateFieldCard(farmlandId)
 end
 
@@ -1879,7 +1878,8 @@ end
 ---Sets the advice from the current crop's family, plus field-specific disease pressure warnings.
 -- @param string currentFamily
 -- @param integer farmlandId
-function RealisticCropRotationFrame:updateAdvice(currentFamily, farmlandId)
+-- @param string currentCropName
+function RealisticCropRotationFrame:updateAdvice(currentFamily, farmlandId, currentCropName)
     if self.adviceText == nil then return end
     local key = RealisticCropRotationFrame.ADVICE_KEY[currentFamily]
     if key == nil then
@@ -1888,6 +1888,34 @@ function RealisticCropRotationFrame:updateAdvice(currentFamily, farmlandId)
     end
 
     local text = self.i18n:getText(key)
+
+    local cropDiseases = self:getCropDiseases(currentCropName)
+    if next(cropDiseases) ~= nil then
+        local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
+        local diseaseIntervals = config ~= nil and config.diseaseIntervals or {}
+        local parts = {}
+
+        for _, group in ipairs(RealisticCropRotationFrame.getDiseaseOrder()) do
+            if cropDiseases[group] then
+                local nameKey = "rcr_disease_name_" .. string.lower(group)
+                local diseaseName = type(self.i18n.hasText) == "function" and self.i18n:hasText(nameKey)
+                    and self.i18n:getText(nameKey) or tostring(group)
+                local interval = tonumber(diseaseIntervals[group])
+                if interval ~= nil and interval > 0 then
+                    parts[#parts + 1] = string.format("%s %d", diseaseName, interval)
+                else
+                    parts[#parts + 1] = diseaseName
+                end
+            end
+        end
+
+        if #parts > 0 then
+            local hostAdviceKey = "rcr_advice_current_crop_disease_hosts"
+            if type(self.i18n.hasText) ~= "function" or self.i18n:hasText(hostAdviceKey) then
+                text = text .. " " .. string.format(self.i18n:getText(hostAdviceKey), table.concat(parts, ", "))
+            end
+        end
+    end
 
     local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
     if disease ~= nil and farmlandId ~= nil and type(disease.getLoad) == "function" then
@@ -2595,7 +2623,7 @@ function RealisticCropRotationFrame:updateScoreCard(plan, coverPlan)
     end
 end
 
----Scores a rotation 0-100 from family spacing, legume->cereal bonus, diversity and residue.
+---Scores a rotation 0-100 from family/pathogen spacing, legume->cereal bonus, diversity and residue.
 -- @param table plan
 -- @param table coverPlan
 -- @return integer score
@@ -2650,30 +2678,28 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
         end
     end
 
-    -- Cross-family disease pressure: crops of DIFFERENT families hosting the same pathogen
-    -- (e.g. sclerotinia in canola/sunflower/soybean) still need spacing. Worst shared-group
-    -- penalty per pair (same-family pairs are already handled above).
+    -- Shared-pathogen pressure: any two crops hosting the same disease group need the group's
+    -- configured spacing. Same-family pairs already pay the generic family penalty above; here
+    -- they only pay the extra disease interval beyond that family rule.
     local diseaseIntervals = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig
         and RealisticCropRotation.cropConfig.diseaseIntervals or {}
     for a = 1, n - 1 do
         for b = a + 1, n do
-            if ring[a] ~= ring[b] then
-                local worst = 0
-                for group in pairs(ringDis[a] or {}) do
-                    if (ringDis[b] or {})[group] then
-                        local minInterval = diseaseIntervals[group]
-                        if minInterval ~= nil then
-                            local forward  = b - a
-                            local interval = math.min(forward, n - forward)
-                            if interval < minInterval then
-                                local pen = (minInterval - interval) * RealisticCropRotationFrame.SCORE_DISEASE_PENALTY_PER_YEAR
-                                if pen > worst then worst = pen end
-                            end
-                        end
+            local forward  = b - a
+            local interval = math.min(forward, n - forward)
+            local familyMinInterval = ring[a] == ring[b] and RealisticCropRotationFrame.FAMILY_MIN_INTERVAL[ring[a]] or nil
+            local diseaseBaseline = familyMinInterval ~= nil and math.max(interval, familyMinInterval) or interval
+            local worst = 0
+            for group in pairs(ringDis[a] or {}) do
+                if (ringDis[b] or {})[group] then
+                    local minInterval = diseaseIntervals[group]
+                    if minInterval ~= nil and diseaseBaseline < minInterval then
+                        local pen = (minInterval - diseaseBaseline) * RealisticCropRotationFrame.SCORE_DISEASE_PENALTY_PER_YEAR
+                        if pen > worst then worst = pen end
                     end
                 end
-                score = score - worst
             end
+            score = score - worst
         end
     end
 

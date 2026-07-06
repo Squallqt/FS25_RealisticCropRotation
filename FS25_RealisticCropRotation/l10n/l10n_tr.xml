@@ -100,8 +100,7 @@
         <e k="rcr_advice_afterRoot" v="Bir kök bitkisinden sonra köklerin dönmesinden önce dört yıl bekle, ardından geç hasattan sonra yapıyı yeniden kurmak için bir tahıl." />
         <e k="rcr_advice_afterVegetable" v="Bir sebzeden sonra tekrarlamadan önce üç yıl bekle, temiz bir ara olarak bir tahıl ile." />
         <e k="rcr_advice_afterForage" v="Geçici bir çayırdan sonra tahıl, çim örtüsü altında biriken verimlilik ve yapıyı değerlendirir." />
-        <e k="rcr_advice_disease_sclerotinia" v="Bu ürün sklerotinyanın konakçısıdır, bu yüzden kanola, ayçiçeği, soya, bezelye ve fasulyeden en az üç yıl uzak tut." />
-        <e k="rcr_advice_disease_bcn" v="Bu ürün şeker pancarı kist nematodunun konakçısıdır, bu yüzden pancarları ve turpgilleri iyice ayrı tut." />
+        <e k="rcr_advice_current_crop_disease_hosts" v="Bu ürün için hastalığa göre dönüş aralıkları (yıl): %s." />
         <e k="rcr_advice_pressure_high_sclerotinia"   v="Sklerotinya baskısı yüksek — kanola, ayçiçeği, soya, bezelye, fasulye, patates ve havucu en az 3 yıl ekmeyin; nemli havada çiçeklenmede fungisit uygulayın." />
         <e k="rcr_advice_pressure_high_bcn"           v="Nematod baskısı yüksek — şeker pancarı, kırmızı pancar, kanola, hardal ve ıspanağı 3 yıl ekmeyin; nematisit ya da dayanıklı tuzak bitki kullanın." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Sklerotinya baskısı orta — konukçu bitkilerin arasını açın ve nemli çiçeklenmeye dikkat edin." />

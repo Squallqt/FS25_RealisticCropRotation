@@ -100,8 +100,7 @@
         <e k="rcr_advice_afterRoot" v="Po okopanině počkej čtyři roky, než se okopaniny vrátí, a poté obilninu pro obnovení struktury po pozdní sklizni." />
         <e k="rcr_advice_afterVegetable" v="Po zelenině počkej tři roky, než ji zopakuješ, s obilninou jako čistým přerušením." />
         <e k="rcr_advice_afterForage" v="Po dočasném travním porostu obilnina zhodnotí úrodnost a strukturu nahromaděnou pod drnem." />
-        <e k="rcr_advice_disease_sclerotinia" v="Tato plodina je hostitelem hlízenky, proto dodrž alespoň tři roky od řepky, slunečnice, sóji, hrachu a fazole." />
-        <e k="rcr_advice_disease_bcn" v="Tato plodina je hostitelem háďátka řepného, proto drž řepu a brukvovité dostatečně od sebe." />
+        <e k="rcr_advice_current_crop_disease_hosts" v="Intervaly návratu podle chorob pro tuto plodinu (roky): %s." />
         <e k="rcr_advice_pressure_high_sclerotinia"   v="Vysoký tlak sklerotinie — nejméně 3 roky nepěstujte řepku, slunečnici, sóju, hrách, fazol, brambory ani mrkev; při vlhkém počasí fungicid v době kvetení." />
         <e k="rcr_advice_pressure_high_bcn"           v="Vysoký tlak háďátka — 3 roky nepěstujte cukrovku, červenou řepu, řepku, hořčici ani špenát; nematicid nebo odolná chytací plodina." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Střední tlak sklerotinie — proložte hostitelské plodiny a sledujte vlhké kvetení." />

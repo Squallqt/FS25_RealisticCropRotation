@@ -100,8 +100,7 @@
         <e k="rcr_advice_afterRoot" v="根菜の後は、根菜が戻るまで4年あけ、遅い収穫の後に土壌構造を回復させるため穀物を続けてください。" />
         <e k="rcr_advice_afterVegetable" v="野菜の後は、繰り返す前に3年あけ、穀物をきれいな区切りとしてください。" />
         <e k="rcr_advice_afterForage" v="短期草地の後は、穀物が芝の下に蓄えられた地力と構造を活用します。" />
-        <e k="rcr_advice_disease_sclerotinia" v="この作物は菌核病の宿主です。ナタネ、ヒマワリ、ダイズ、エンドウ、インゲンから少なくとも3年あけてください。" />
-        <e k="rcr_advice_disease_bcn" v="この作物はテンサイシストセンチュウの宿主です。テンサイとアブラナ科作物を十分に離してください。" />
+        <e k="rcr_advice_current_crop_disease_hosts" v="この作物の病害別輪作間隔（年）：%s。" />
         <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病の圧力が高い——ナタネ、ヒマワリ、ダイズ、エンドウ、インゲン、ジャガイモ、ニンジンを最低3年は避ける。多湿なら開花期に殺菌剤を散布する。" />
         <e k="rcr_advice_pressure_high_bcn"           v="センチュウの圧力が高い——テンサイ、ビート、ナタネ、カラシナ、ホウレンソウを3年避ける。殺線虫剤または抵抗性のおとり作物を用いる。" />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病の圧力は中程度——宿主作物の間隔をあけ、多湿な開花期に注意する。" />

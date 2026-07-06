@@ -100,8 +100,7 @@
         <e k="rcr_advice_afterRoot" v="Sau cây lấy củ, chờ bốn năm trước khi cây lấy củ quay lại, tiếp theo là ngũ cốc để tái tạo cấu trúc đất sau thu hoạch muộn." />
         <e k="rcr_advice_afterVegetable" v="Sau rau, chờ ba năm trước khi lặp lại, với ngũ cốc làm khoảng nghỉ sạch." />
         <e k="rcr_advice_afterForage" v="Sau đồng cỏ tạm thời, ngũ cốc tận dụng độ phì và cấu trúc tích lũy dưới lớp cỏ." />
-        <e k="rcr_advice_disease_sclerotinia" v="Cây này là ký chủ của bệnh thối hạch, vì vậy hãy giữ ít nhất ba năm cách cải dầu, hướng dương, đậu tương, đậu Hà Lan và đậu." />
-        <e k="rcr_advice_disease_bcn" v="Cây này là ký chủ của tuyến trùng bào nang củ cải đường, vì vậy hãy giữ củ cải đường và cây họ cải tách biệt rõ." />
+        <e k="rcr_advice_current_crop_disease_hosts" v="Khoảng cách luân canh theo bệnh cho cây trồng này (năm): %s." />
         <e k="rcr_advice_pressure_high_sclerotinia"   v="Áp lực thối hạch cao — tránh cải dầu, hướng dương, đậu tương, đậu Hà Lan, đậu, khoai tây và cà rốt ít nhất 3 năm; phun thuốc trừ nấm khi ra hoa gặp thời tiết ẩm." />
         <e k="rcr_advice_pressure_high_bcn"           v="Áp lực tuyến trùng cao — tránh củ cải đường, củ dền, cải dầu, mù tạt và rau chân vịt trong 3 năm; dùng thuốc trừ tuyến trùng hoặc cây bẫy kháng bệnh." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Áp lực thối hạch trung bình — giãn cách các cây ký chủ và theo dõi thời kỳ ra hoa ẩm ướt." />

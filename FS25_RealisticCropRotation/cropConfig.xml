@@ -10,9 +10,9 @@
         n2       (optional) : nitrogen residue bonus (PF states) when this crop is N-2 in history. Default 0.
                               1 PF state = 5 kg N/ha (source: PrecisionFarming.xml amountPerState=5)
         cover    (optional) : true = excluded from rotation history (cover crop). Default false.
-        disease  (optional) : space-separated shared-pathogen group names this crop hosts. Crops of
-                              DIFFERENT families that host the same group still need spacing in the
-                              rotation (defined in <diseaseGroups> below). Default none.
+        disease  (optional) : space-separated shared-pathogen group names this crop hosts. Any crops
+                              that host the same group need spacing in the rotation (defined in
+                              <diseaseGroups> below), including crops from different families.
 
     Notes:
         - isCatchCrop=true crops (OILSEEDRADISH, FLOWERINGCATCHCROP) already receive +25 kg N from
@@ -28,7 +28,7 @@
     <!--   state       : STABLE overlay id 1..9 (parsed into config.diseaseStates). The in-game    -->
     <!--                 map paints EACH disease with its own colour from this id, so diseases are  -->
     <!--                 individually distinguishable on the parcel (no more fungal/soil merge).   -->
-    <!--   minInterval : cross-family return interval (years). The soil inoculum (sclerotia,      -->
+    <!--   minInterval : host-crop return interval (years). The soil inoculum (sclerotia,         -->
     <!--                 cysts, resting spores, residue) survives this long, so a host within it   -->
     <!--                 raises the field load. Long for durable soil pathogens (clubroot=6),      -->
     <!--                 short for weather-driven foliar ones (rusts/blights=2).                    -->

@@ -100,8 +100,7 @@
         <e k="rcr_advice_afterRoot"      v="Nach einer Hackfrucht vier Jahre bis zur Wiederkehr lassen, dann Getreide, um die Struktur nach der späten Ernte wieder aufzubauen." />
         <e k="rcr_advice_afterVegetable" v="Nach Gemüse drei Jahre bis zur Wiederholung warten, mit Getreide als saubere Anbaupause." />
         <e k="rcr_advice_afterForage"    v="Nach einer Grasphase verwertet Getreide die unter der Grasnarbe aufgebaute Fruchtbarkeit und Struktur." />
-        <e k="rcr_advice_disease_sclerotinia" v="Diese Kultur ist ein Wirt der Sklerotinia, halte daher mindestens drei Jahre Abstand zu Raps, Sonnenblume, Sojabohne, Erbse und Bohne." />
-        <e k="rcr_advice_disease_bcn"         v="Diese Kultur ist ein Wirt des Rübenzystennematoden, halte daher Rüben und Kreuzblütler deutlich auseinander." />
+        <e k="rcr_advice_current_crop_disease_hosts" v="Krankheitsbedingte Anbaupausen für diese Kultur (Jahre): %s." />
         <e k="rcr_advice_pressure_high_sclerotinia"   v="Hoher Sclerotinia-Druck — Raps, Sonnenblume, Soja, Erbse, Bohne, Kartoffel und Möhre mindestens 3 Jahre meiden; Fungizid zur Blüte bei feuchter Witterung." />
         <e k="rcr_advice_pressure_high_bcn"           v="Hoher Nematoden-Druck — Zuckerrübe, Rote Bete, Raps, Senf und Spinat 3 Jahre meiden; Nematizid oder resistente Fangpflanze." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Mäßiger Sclerotinia-Druck — Wirtskulturen zeitlich strecken und auf eine feuchte Blüte achten." />

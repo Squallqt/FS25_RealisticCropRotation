@@ -100,8 +100,7 @@
         <e k="rcr_advice_afterRoot" v="Dopo una coltura da radice, attendi quattro anni prima che le radici tornino, poi un cereale per ricostruire la struttura dopo la raccolta tardiva." />
         <e k="rcr_advice_afterVegetable" v="Dopo un ortaggio, attendi tre anni prima di ripeterlo, con un cereale come rottura netta." />
         <e k="rcr_advice_afterForage" v="Dopo un prato di breve durata, un cereale valorizza la fertilità e la struttura accumulate sotto il cotico." />
-        <e k="rcr_advice_disease_sclerotinia" v="Questa coltura ospita la sclerotinia, quindi mantieni almeno tre anni da colza, girasole, soia, pisello e fagiolo." />
-        <e k="rcr_advice_disease_bcn" v="Questa coltura ospita il nematode a cisti della barbabietola, quindi tieni ben distanti barbabietole e crucifere." />
+        <e k="rcr_advice_current_crop_disease_hosts" v="Intervalli di ritorno per malattia per questa coltura (anni): %s." />
         <e k="rcr_advice_pressure_high_sclerotinia"   v="Forte pressione di sclerotinia — evita colza, girasole, soia, pisello, fagiolo, patata e carota per almeno 3 anni; fungicida alla fioritura con clima umido." />
         <e k="rcr_advice_pressure_high_bcn"           v="Forte pressione di nematode — evita barbabietola da zucchero, barbabietola rossa, colza, senape e spinacio per 3 anni; nematocida o coltura-trappola resistente." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Pressione di sclerotinia moderata — distanzia le colture ospiti e sorveglia le fioriture umide." />

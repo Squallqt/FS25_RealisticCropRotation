@@ -100,8 +100,7 @@
         <e k="rcr_advice_afterRoot"      v="After a root crop, allow four years before roots come back, and follow with a cereal to rebuild structure after the late lifting." />
         <e k="rcr_advice_afterVegetable" v="After a vegetable, wait three years before repeating it, with a cereal as a clean break." />
         <e k="rcr_advice_afterForage"    v="After a grass ley, a cereal cashes in the fertility and structure built up under the sward." />
-        <e k="rcr_advice_disease_sclerotinia" v="This crop hosts sclerotinia, so keep at least three years from canola, sunflower, soybean, pea and bean." />
-        <e k="rcr_advice_disease_bcn"         v="This crop hosts the beet cyst nematode, so keep beets and brassicas well apart." />
+        <e k="rcr_advice_current_crop_disease_hosts" v="Disease return intervals for this crop (years): %s." />
         <e k="rcr_advice_pressure_high_sclerotinia"   v="High sclerotinia pressure — avoid canola, sunflower, soybean, pea, bean, potato and carrot for at least 3 years; fungicide at flowering in humid weather." />
         <e k="rcr_advice_pressure_high_bcn"           v="High nematode pressure — avoid sugar beet, beetroot, canola, mustard and spinach for 3 years; nematicide or resistant trap crop." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderate sclerotinia pressure — space host crops and watch for a humid flowering." />

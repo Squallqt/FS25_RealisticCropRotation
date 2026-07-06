@@ -100,8 +100,7 @@
         <e k="rcr_advice_afterRoot" v="Kapásnövény után várj négy évet a kapások visszatéréséig, majd gabonát a szerkezet helyreállítására a késői betakarítás után." />
         <e k="rcr_advice_afterVegetable" v="Zöldség után várj három évet az ismétlése előtt, gabonával mint tiszta megszakítás." />
         <e k="rcr_advice_afterForage" v="Ideiglenes gyep után a gabona hasznosítja a gyep alatt felhalmozott termékenységet és szerkezetet." />
-        <e k="rcr_advice_disease_sclerotinia" v="Ez a növény a fehérpenész gazdája, ezért tarts legalább három évet a repcétől, napraforgótól, szójától, borsótól és babtól." />
-        <e k="rcr_advice_disease_bcn" v="Ez a növény a répacisztaféreg gazdája, ezért tartsd jól távol a répát és a keresztesvirágúakat." />
+        <e k="rcr_advice_current_crop_disease_hosts" v="A növény betegség szerinti visszatérési intervallumai (év): %s." />
         <e k="rcr_advice_pressure_high_sclerotinia"   v="Erős fehérpenész-nyomás — legalább 3 évig kerülje a repcét, napraforgót, szóját, borsót, babot, burgonyát és sárgarépát; nedves időben gombaölő szer virágzáskor." />
         <e k="rcr_advice_pressure_high_bcn"           v="Erős fonálféreg-nyomás — 3 évig kerülje a cukorrépát, céklát, repcét, mustárt és spenótot; fonálféregölő szer vagy rezisztens csapdanövény." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Mérsékelt fehérpenész-nyomás — ritkítsa a gazdanövényeket és figyelje a nedves virágzást." />

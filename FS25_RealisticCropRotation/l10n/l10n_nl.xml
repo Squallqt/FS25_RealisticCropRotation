@@ -100,8 +100,7 @@
         <e k="rcr_advice_afterRoot" v="Na een hakvrucht wacht je vier jaar voordat wortelgewassen terugkomen, gevolgd door een graan om de structuur na de late oogst te herstellen." />
         <e k="rcr_advice_afterVegetable" v="Na een groente wacht je drie jaar voordat je ze herhaalt, met een graan als schone onderbreking." />
         <e k="rcr_advice_afterForage" v="Na een tijdelijk grasland benut een graan de onder de zode opgebouwde vruchtbaarheid en structuur." />
-        <e k="rcr_advice_disease_sclerotinia" v="Dit gewas is een waard van sclerotinia, houd dus minstens drie jaar afstand van koolzaad, zonnebloem, soja, erwt en boon." />
-        <e k="rcr_advice_disease_bcn" v="Dit gewas is een waard van het bietencystenaaltje, houd dus bieten en kruisbloemigen goed uit elkaar." />
+        <e k="rcr_advice_current_crop_disease_hosts" v="Ziektegerichte terugkeerintervallen voor dit gewas (jaren): %s." />
         <e k="rcr_advice_pressure_high_sclerotinia"   v="Hoge sclerotinia-druk — vermijd koolzaad, zonnebloem, soja, erwt, boon, aardappel en wortel gedurende minstens 3 jaar; fungicide tijdens de bloei bij vochtig weer." />
         <e k="rcr_advice_pressure_high_bcn"           v="Hoge aaltjesdruk — vermijd suikerbiet, rode biet, koolzaad, mosterd en spinazie gedurende 3 jaar; nematicide of resistent vanggewas." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Matige sclerotinia-druk — spreid de waardgewassen en let op een vochtige bloei." />

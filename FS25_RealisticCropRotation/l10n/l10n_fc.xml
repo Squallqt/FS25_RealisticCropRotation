@@ -100,8 +100,7 @@
         <e k="rcr_advice_afterRoot" v="Après une culture sarclée, attendez quatre ans avant d'y revenir, puis une céréale pour restructurer le sol après l'arrachage tardif." />
         <e k="rcr_advice_afterVegetable" v="Après un légume, attendez trois ans avant de le répéter, avec une céréale comme coupure nette." />
         <e k="rcr_advice_afterForage" v="Après une prairie temporaire, une céréale valorise la fertilité et la structure accumulées sous le couvert." />
-        <e k="rcr_advice_disease_sclerotinia" v="Cette culture héberge le sclérotinia, gardez donc au moins trois ans avec le colza, le tournesol, le soja, le pois et le haricot." />
-        <e k="rcr_advice_disease_bcn" v="Cette culture héberge le nématode à kystes de la betterave, éloignez donc betteraves et brassicacées." />
+        <e k="rcr_advice_current_crop_disease_hosts" v="Intervalles maladie pour cette culture (années) : %s." />
         <e k="rcr_advice_pressure_high_sclerotinia"   v="Forte pression sclérotinia — évitez canola, tournesol, soja, pois, haricot, pomme de terre et carotte pendant au moins 3 ans ; fongicide à la floraison si temps humide." />
         <e k="rcr_advice_pressure_high_bcn"           v="Forte pression nématode — évitez betterave, betterave rouge, canola, moutarde et épinard 3 ans ; nématicide ou culture-piège résistante." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Pression sclérotinia modérée — espacez les cultures hôtes et surveillez la floraison humide." />

@@ -100,8 +100,7 @@
         <e k="rcr_advice_afterRoot" v="种植块根作物后，需间隔四年再种块根，随后种谷物以在晚收后重建土壤结构。" />
         <e k="rcr_advice_afterVegetable" v="种植蔬菜后，需间隔三年再重复，以谷物作为干净的轮换间隔。" />
         <e k="rcr_advice_afterForage" v="短期草地之后，谷物可利用草皮下积累的肥力与结构。" />
-        <e k="rcr_advice_disease_sclerotinia" v="此作物是菌核病的寄主，应与油菜、向日葵、大豆、豌豆和菜豆间隔至少三年。" />
-        <e k="rcr_advice_disease_bcn" v="此作物是甜菜孢囊线虫的寄主，应使甜菜与十字花科作物充分分开。" />
+        <e k="rcr_advice_current_crop_disease_hosts" v="该作物的病害轮作间隔（年）：%s。" />
         <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病压力高——至少三年内避免种植油菜、向日葵、大豆、豌豆、菜豆、马铃薯和胡萝卜；潮湿天气下在花期施用杀菌剂。" />
         <e k="rcr_advice_pressure_high_bcn"           v="线虫压力高——三年内避免种植甜菜、红甜菜、油菜、芥菜和菠菜；使用杀线虫剂或抗病诱捕作物。" />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病压力中等——拉开寄主作物的间隔，并留意潮湿的花期。" />

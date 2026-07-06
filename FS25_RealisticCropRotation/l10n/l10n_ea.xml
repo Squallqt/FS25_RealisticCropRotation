@@ -100,8 +100,7 @@
         <e k="rcr_advice_afterRoot" v="Después de un cultivo de raíz, espera cuatro años antes de que vuelvan las raíces, y sigue con un cereal para rehacer la estructura tras el arranque tardío." />
         <e k="rcr_advice_afterVegetable" v="Después de una hortaliza, espera tres años antes de repetirla, con un cereal como corte limpio." />
         <e k="rcr_advice_afterForage" v="Después de una pradera temporal, un cereal aprovecha la fertilidad y la estructura acumuladas bajo la hierba." />
-        <e k="rcr_advice_disease_sclerotinia" v="Este cultivo es huésped de la esclerotinia, así que mantén al menos tres años con la colza, el girasol, la soja, el guisante y la judía." />
-        <e k="rcr_advice_disease_bcn" v="Este cultivo es huésped del nematodo del quiste de la remolacha, así que mantén separadas las remolachas y las crucíferas." />
+        <e k="rcr_advice_current_crop_disease_hosts" v="Intervalos de retorno por enfermedad para este cultivo (años): %s." />
         <e k="rcr_advice_pressure_high_sclerotinia"   v="Alta presión de esclerotinia — evita canola, girasol, soja, arveja, frijol, papa y zanahoria durante al menos 3 años; fungicida en floración con clima húmedo." />
         <e k="rcr_advice_pressure_high_bcn"           v="Alta presión de nematodo — evita remolacha azucarera, remolacha de mesa, canola, mostaza y espinaca durante 3 años; nematicida o cultivo trampa resistente." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Presión de esclerotinia moderada — espacia los cultivos hospedantes y monitorea una floración húmeda." />

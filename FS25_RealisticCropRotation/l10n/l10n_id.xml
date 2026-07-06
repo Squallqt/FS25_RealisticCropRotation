@@ -100,8 +100,7 @@
         <e k="rcr_advice_afterRoot" v="Setelah tanaman umbi, tunggu empat tahun sebelum umbi kembali, lalu serealia untuk membangun kembali struktur setelah pemanenan akhir." />
         <e k="rcr_advice_afterVegetable" v="Setelah sayuran, tunggu tiga tahun sebelum mengulanginya, dengan serealia sebagai jeda yang bersih." />
         <e k="rcr_advice_afterForage" v="Setelah padang rumput sementara, serealia memanfaatkan kesuburan dan struktur yang terbentuk di bawah rumput." />
-        <e k="rcr_advice_disease_sclerotinia" v="Tanaman ini menjadi inang sklerotinia, jadi beri jarak setidaknya tiga tahun dari kanola, bunga matahari, kedelai, kacang polong, dan buncis." />
-        <e k="rcr_advice_disease_bcn" v="Tanaman ini menjadi inang nematoda sista bit, jadi jaga agar bit dan brasika tetap berjauhan." />
+        <e k="rcr_advice_current_crop_disease_hosts" v="Interval kembali berdasarkan penyakit untuk tanaman ini (tahun): %s." />
         <e k="rcr_advice_pressure_high_sclerotinia"   v="Tekanan sclerotinia tinggi — hindari kanola, bunga matahari, kedelai, kacang polong, buncis, kentang, dan wortel selama minimal 3 tahun; fungisida saat pembungaan bila cuaca lembap." />
         <e k="rcr_advice_pressure_high_bcn"           v="Tekanan nematoda tinggi — hindari bit gula, bit merah, kanola, sesawi, dan bayam selama 3 tahun; nematisida atau tanaman perangkap yang tahan." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Tekanan sclerotinia sedang — beri jarak tanaman inang dan waspadai pembungaan yang lembap." />

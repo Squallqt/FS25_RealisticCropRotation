@@ -100,8 +100,7 @@
         <e k="rcr_advice_afterRoot" v="Po roślinie okopowej odczekaj cztery lata przed powrotem okopowych, a następnie zboże, aby odbudować strukturę po późnym zbiorze." />
         <e k="rcr_advice_afterVegetable" v="Po warzywie odczekaj trzy lata przed jego powtórzeniem, ze zbożem jako czystą przerwą." />
         <e k="rcr_advice_afterForage" v="Po użytku przemiennym z trawą zboże wykorzystuje żyzność i strukturę zgromadzone pod darnią." />
-        <e k="rcr_advice_disease_sclerotinia" v="Ta uprawa jest gospodarzem zgnilizny twardzikowej, więc zachowaj co najmniej trzy lata od rzepaku, słonecznika, soi, grochu i fasoli." />
-        <e k="rcr_advice_disease_bcn" v="Ta uprawa jest gospodarzem mątwika burakowego, więc trzymaj buraki i kapustne z dala od siebie." />
+        <e k="rcr_advice_current_crop_disease_hosts" v="Odstępy powrotu według chorób dla tej uprawy (lata): %s." />
         <e k="rcr_advice_pressure_high_sclerotinia"   v="Wysoka presja zgnilizny twardzikowej — przez co najmniej 3 lata unikaj rzepaku, słonecznika, soi, grochu, fasoli, ziemniaka i marchwi; fungicyd w czasie kwitnienia przy wilgotnej pogodzie." />
         <e k="rcr_advice_pressure_high_bcn"           v="Wysoka presja mątwika — przez 3 lata unikaj buraka cukrowego, buraka ćwikłowego, rzepaku, gorczycy i szpinaku; nematocyd lub odporna roślina pułapkowa." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Umiarkowana presja zgnilizny twardzikowej — rozłóż w czasie rośliny żywicielskie i obserwuj wilgotne kwitnienie." />

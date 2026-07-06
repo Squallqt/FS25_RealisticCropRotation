@@ -100,8 +100,7 @@
         <e k="rcr_advice_afterRoot" v="Etter en rotvekst venter du fire år før rotvekster kommer tilbake, og følger opp med et korn for å bygge opp strukturen etter den sene opptakingen." />
         <e k="rcr_advice_afterVegetable" v="Etter en grønnsak venter du tre år før du gjentar den, med et korn som rent avbrudd." />
         <e k="rcr_advice_afterForage" v="Etter en eng utnytter et korn fruktbarheten og strukturen som er bygd opp under grasdekket." />
-        <e k="rcr_advice_disease_sclerotinia" v="Denne veksten er vert for storknollet råtesopp, så hold minst tre år fra raps, solsikke, soyabønne, ert og bønne." />
-        <e k="rcr_advice_disease_bcn" v="Denne veksten er vert for betecystenematoden, så hold bete og korsblomstrede godt fra hverandre." />
+        <e k="rcr_advice_current_crop_disease_hosts" v="Sykdomsbaserte returintervaller for denne veksten (år): %s." />
         <e k="rcr_advice_pressure_high_sclerotinia"   v="Høyt sclerotinia-trykk — unngå raps, solsikke, soyabønne, ert, bønne, potet og gulrot i minst 3 år; soppmiddel ved blomstring i fuktig vær." />
         <e k="rcr_advice_pressure_high_bcn"           v="Høyt nematode-trykk — unngå sukkerbete, rødbete, raps, sennep og spinat i 3 år; nematicid eller resistent fangvekst." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderat sclerotinia-trykk — spre vertsvekstene og følg med på en fuktig blomstring." />

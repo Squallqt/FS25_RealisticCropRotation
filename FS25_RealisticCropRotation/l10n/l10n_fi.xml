@@ -100,8 +100,7 @@
         <e k="rcr_advice_afterRoot" v="Juurikasvin jälkeen odota neljä vuotta ennen juurikasvien paluuta, ja jatka viljalla rakenteen palauttamiseksi myöhäisen noston jälkeen." />
         <e k="rcr_advice_afterVegetable" v="Vihanneksen jälkeen odota kolme vuotta ennen sen toistamista, vilja puhtaana katkona." />
         <e k="rcr_advice_afterForage" v="Lyhytaikaisen nurmen jälkeen vilja hyödyntää turpeen alle kertyneen viljavuuden ja rakenteen." />
-        <e k="rcr_advice_disease_sclerotinia" v="Tämä kasvi on pahkahomeen isäntä, joten pidä vähintään kolme vuotta väliä rapsiin, auringonkukkaan, soijapapuun, herneeseen ja papuun." />
-        <e k="rcr_advice_disease_bcn" v="Tämä kasvi on juurikkaan ankeroisen isäntä, joten pidä juurikkaat ja ristikukkaiset selvästi erillään." />
+        <e k="rcr_advice_current_crop_disease_hosts" v="Tämän kasvin tautikohtaiset paluuvälit (vuotta): %s." />
         <e k="rcr_advice_pressure_high_sclerotinia"   v="Korkea pahkahomeen paine — vältä rapsia, auringonkukkaa, soijapapua, hernettä, papua, perunaa ja porkkanaa vähintään 3 vuotta; sienitorjunta-aine kukinnan aikaan kostealla säällä." />
         <e k="rcr_advice_pressure_high_bcn"           v="Korkea ankeroisen paine — vältä sokerijuurikasta, punajuurta, rapsia, sinappia ja pinaattia 3 vuotta; ankeroistorjunta-aine tai kestävä pyydyskasvi." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Kohtalainen pahkahomeen paine — harvenna isäntäkasveja ja tarkkaile kosteaa kukintaa." />

@@ -100,8 +100,7 @@
         <e k="rcr_advice_afterRoot" v="뿌리 작물 다음에는 뿌리 작물이 돌아오기까지 4년을 기다리고, 늦은 수확 후 토양 구조를 회복하기 위해 곡물을 이어 심으세요." />
         <e k="rcr_advice_afterVegetable" v="채소 다음에는 반복하기 전에 3년을 기다리고, 곡물을 깔끔한 휴지로 두세요." />
         <e k="rcr_advice_afterForage" v="단기 초지 다음에는 곡물이 잔디 아래 쌓인 비옥도와 구조를 활용합니다." />
-        <e k="rcr_advice_disease_sclerotinia" v="이 작물은 균핵병의 기주이므로 유채, 해바라기, 대두, 완두, 강낭콩과 최소 3년 간격을 두세요." />
-        <e k="rcr_advice_disease_bcn" v="이 작물은 사탕무씨스트선충의 기주이므로 사탕무와 배추과 작물을 충분히 떨어뜨리세요." />
+        <e k="rcr_advice_current_crop_disease_hosts" v="이 작물의 병해별 재배 간격(년): %s." />
         <e k="rcr_advice_pressure_high_sclerotinia"   v="균핵병 압력 높음 — 유채, 해바라기, 대두, 완두, 강낭콩, 감자, 당근을 최소 3년간 피하고, 습한 날씨에는 개화기에 살균제를 살포한다." />
         <e k="rcr_advice_pressure_high_bcn"           v="선충 압력 높음 — 사탕무, 비트, 유채, 겨자, 시금치를 3년간 피하고, 살선충제 또는 저항성 유인작물을 이용한다." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="균핵병 압력 보통 — 기주 작물의 간격을 넓히고 습한 개화기를 주시한다." />

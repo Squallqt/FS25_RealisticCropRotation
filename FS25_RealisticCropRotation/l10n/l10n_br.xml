@@ -100,8 +100,7 @@
         <e k="rcr_advice_afterRoot" v="Depois de uma cultura de raiz, espere quatro anos antes de as raízes voltarem, seguindo com um cereal para refazer a estrutura após a colheita tardia." />
         <e k="rcr_advice_afterVegetable" v="Depois de uma hortaliça, espere três anos antes de repeti-la, com um cereal como corte limpo." />
         <e k="rcr_advice_afterForage" v="Depois de uma pastagem temporária, um cereal valoriza a fertilidade e a estrutura acumuladas sob a grama." />
-        <e k="rcr_advice_disease_sclerotinia" v="Esta cultura é hospedeira da esclerotínia, então mantenha ao menos três anos da canola, girassol, soja, ervilha e feijão." />
-        <e k="rcr_advice_disease_bcn" v="Esta cultura é hospedeira do nematoide de cisto da beterraba, então mantenha beterrabas e brássicas bem afastadas." />
+        <e k="rcr_advice_current_crop_disease_hosts" v="Intervalos de retorno por doença para esta cultura (anos): %s." />
         <e k="rcr_advice_pressure_high_sclerotinia"   v="Forte pressão de mofo-branco — evite canola, girassol, soja, ervilha, feijão, batata e cenoura por pelo menos 3 anos; fungicida na floração com tempo úmido." />
         <e k="rcr_advice_pressure_high_bcn"           v="Forte pressão de nematoide — evite beterraba açucareira, beterraba de mesa, canola, mostarda e espinafre por 3 anos; nematicida ou cultura-armadilha resistente." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Pressão de mofo-branco moderada — espace as culturas hospedeiras e fique atento a uma floração úmida." />

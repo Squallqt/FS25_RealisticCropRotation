@@ -100,8 +100,7 @@
         <e k="rcr_advice_afterRoot" v="Efter en rodafgrøde vent fire år før rodafgrøder vender tilbage, og følg op med en kornafgrøde for at genopbygge strukturen efter den sene optagning." />
         <e k="rcr_advice_afterVegetable" v="Efter en grøntsag vent tre år før den gentages, med en kornafgrøde som ren afbrydelse." />
         <e k="rcr_advice_afterForage" v="Efter en kløvergræsmark udnytter en kornafgrøde den frugtbarhed og struktur, der er opbygget under græsset." />
-        <e k="rcr_advice_disease_sclerotinia" v="Denne afgrøde er vært for knoldbægersvamp, så hold mindst tre år fra raps, solsikke, sojabønne, ært og bønne." />
-        <e k="rcr_advice_disease_bcn" v="Denne afgrøde er vært for roecystenematoden, så hold roer og korsblomstrede godt adskilt." />
+        <e k="rcr_advice_current_crop_disease_hosts" v="Sygdomsbetingede tilbagevendingsintervaller for denne afgrøde (år): %s." />
         <e k="rcr_advice_pressure_high_sclerotinia"   v="Højt sclerotinia-tryk — undgå raps, solsikke, sojabønne, ært, bønne, kartoffel og gulerod i mindst 3 år; svampemiddel ved blomstring i fugtigt vejr." />
         <e k="rcr_advice_pressure_high_bcn"           v="Højt nematode-tryk — undgå sukkerroe, rødbede, raps, sennep og spinat i 3 år; nematicid eller resistent fangafgrøde." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderat sclerotinia-tryk — spred værtsafgrøderne og hold øje med en fugtig blomstring." />

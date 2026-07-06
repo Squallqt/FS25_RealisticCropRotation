@@ -100,8 +100,7 @@
         <e k="rcr_advice_afterRoot" v="După o cultură de rădăcinoase, așteaptă patru ani înainte de revenirea rădăcinoaselor, urmată de o cereală pentru a reface structura după recoltarea târzie." />
         <e k="rcr_advice_afterVegetable" v="După o legumă, așteaptă trei ani înainte de a o repeta, cu o cereală ca întrerupere curată." />
         <e k="rcr_advice_afterForage" v="După o pajiște temporară, o cereală valorifică fertilitatea și structura acumulate sub covorul ierbos." />
-        <e k="rcr_advice_disease_sclerotinia" v="Această cultură este gazdă pentru sclerotinia, așa că păstrează cel puțin trei ani față de rapiță, floarea soarelui, soia, mazăre și fasole." />
-        <e k="rcr_advice_disease_bcn" v="Această cultură este gazdă pentru nematodul cu chisturi al sfeclei, așa că ține sfecla și crucifere bine separate." />
+        <e k="rcr_advice_current_crop_disease_hosts" v="Intervale de revenire pe boli pentru această cultură (ani): %s." />
         <e k="rcr_advice_pressure_high_sclerotinia"   v="Presiune mare de putregai alb — evitați rapița, floarea-soarelui, soia, mazărea, fasolea, cartoful și morcovul cel puțin 3 ani; fungicid la înflorire pe vreme umedă." />
         <e k="rcr_advice_pressure_high_bcn"           v="Presiune mare de nematozi — evitați sfecla de zahăr, sfecla roșie, rapița, muștarul și spanacul 3 ani; nematicid sau cultură-capcană rezistentă." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Presiune moderată de putregai alb — răriți culturile gazdă și supravegheați o înflorire umedă." />
