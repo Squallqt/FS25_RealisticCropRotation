@@ -314,7 +314,7 @@ end
 ---grow and merge organically over the days; the convex ramp keeps early destruction to a few spots.
 -- @param number severity current infection severity [0,1]
 -- @param table curve { destroySeverity, deadFractionMax, power }, or nil for the module fallbacks
-local function severityThreshold(severity, curve)
+local function severityThreshold(severity, curve, cure)
     local D = RealisticCropRotationDisease
     local destroySeverity = curve ~= nil and curve.destroySeverity or D.DESTROY_SEVERITY
     local deadFractionMax = curve ~= nil and curve.deadFractionMax or D.DESTROY_DEAD_FRACTION_MAX
@@ -322,6 +322,13 @@ local function severityThreshold(severity, curve)
     local sev = tonumber(severity) or 0
     local frac = math.max(0, math.min(1, (sev - destroySeverity) / math.max(1e-6, 1 - destroySeverity)))
     local deadFraction = deadFractionMax * (frac ^ power)
+    -- Curative coverage (0..1, raised by an RCR sprayer passing over the field) shrinks the painted /
+    -- destroyed footprint: the effective dead fraction is scaled by (1 - cure), so RAISING the Perlin
+    -- cut makes the foci recede from their edges toward their cores (small patches vanish first) until
+    -- nothing is painted at full cure. Purely a function of (severity, seed, cure) + the static ground
+    -- map, so server and every client compute the identical shrunk area from the synced scalar.
+    local cureFactor = 1 - math.max(0, math.min(1, tonumber(cure) or 0))
+    deadFraction = deadFraction * cureFactor
     return math.floor((1 - deadFraction) * D.DESTROY_PERLIN_MAX)
 end
 
@@ -421,12 +428,12 @@ end
 -- @param table field game Field object carrying the crop
 -- @param integer farmlandId, seed; @param number severity; @param table curve pathogen destruction curve
 -- @param integer diseaseState; @param table grid
-local function destroyCropField(field, farmlandId, seed, severity, curve, diseaseState, grid)
+local function destroyCropField(field, farmlandId, seed, severity, curve, diseaseState, grid, cure)
     if field == nil then return end
     local minX, minZ, maxX, maxZ = fieldWorldBounds(field)
     if minX == nil then return end
     local bbox = { minX = minX, minZ = minZ, maxX = maxX, maxZ = maxZ }
-    local threshold = severityThreshold(severity, curve)
+    local threshold = severityThreshold(severity, curve, cure)
 
     -- Real crop (server only; the engine replicates the density change to clients).
     if g_server ~= nil and g_fruitTypeManager ~= nil then
@@ -475,7 +482,7 @@ function RealisticCropRotationDisease:propagate(farmlandId)
             s.severity = math.min(1, (s.severity or 0) + growth)
             if s.severity >= curve.destroySeverity then
                 local diseaseState = diseaseStateForGroup(group)
-                destroyCropField(field, farmlandId, s.seed, s.severity, curve, diseaseState, self.grid)
+                destroyCropField(field, farmlandId, s.seed, s.severity, curve, diseaseState, self.grid, s.cure)
             end
         end
     end
@@ -486,19 +493,27 @@ end
 ---the fungal groups, a nematicide clears the nematode (BCN). Groups whose treatment is "NONE" (take-all
 ---piétin, clubroot hernie) are never soigned by any product -- only the rotation manages them.
 ---
----Curative == full control of the active infection instance: the matching group is REMOVED from the
----field state, which stops its day-by-day progression and clears its "active foci" from the overlay.
----It never touches the real crop density map, so crop already killed by the disease does NOT regrow
----(a fungicide protects/stops, it does not resurrect dead tissue) and yield already lost stays lost.
----The soil inoculum LOAD (rotation history) is untouched, so the field can be re-infected later if a
+---Curative == PROGRESSIVE control of the active infection instance, proportional to the treated area.
+---Each treatment window (an RCR sprayer actively passing over the field, gated per (vehicle, farmland,
+---product) by the sprayer hook) adds `coverage` to the matching group's `cure` accumulator (0..1). As
+---cure climbs the painted foci recede deterministically (severityThreshold scales the dead fraction by
+---1-cure) on the SERVER (this repaint) and on every client (rebuildGridFromState from the synced cure),
+---so the overlay disappears gradually behind the spraying -- not the whole field in one leap. A group is
+---only REMOVED once fully covered (cure >= 1): progression stops and its foci are gone. "NONE" groups
+---(piétin/hernie) match no product family and are never touched (rotation-only).
+---
+---It never touches the real crop density map, so crop already killed by the disease does NOT regrow (a
+---fungicide protects/stops, it does not resurrect dead tissue) and yield already lost stays lost. The
+---soil inoculum LOAD (rotation history) is untouched, so the field can be re-infected later if a
 ---susceptible host returns -- a spray is not a substitute for rotation.
 ---
 ---SERVER ONLY (state is server-authoritative). The caller triggers the existing broadcast so clients
 ---rebuild their overlay from the synced state. O(active groups on the field): no cell/pixel loop.
 -- @param integer farmlandId
 -- @param string treatmentType "FUNGICIDE" | "NEMATICIDE"
--- @return integer treated number of infection groups cured on the field
-function RealisticCropRotationDisease:treatField(farmlandId, treatmentType)
+-- @param number coverage cure added this window (0..1); nil/<=0 means a full one-shot cure (console/debug)
+-- @return integer treated number of matching infection groups advanced (cure raised) this window
+function RealisticCropRotationDisease:treatField(farmlandId, treatmentType, coverage)
     if g_server == nil then return 0 end
     if treatmentType == nil then return 0 end
     local id = tonumber(farmlandId)
@@ -510,25 +525,39 @@ function RealisticCropRotationDisease:treatField(farmlandId, treatmentType)
     local wanted = string.upper(tostring(treatmentType))
     if wanted ~= "FUNGICIDE" and wanted ~= "NEMATICIDE" then return 0 end
 
+    -- Coverage added by this window (fraction of the field cured). nil/<=0 => full cure in one shot,
+    -- so the console/debug one-shot and any legacy caller keep clearing the infection outright.
+    local cov = tonumber(coverage)
+    if cov == nil or cov <= 0 then cov = 1 end
+    cov = math.min(1, cov)
+
     local treated = 0
-    for group in pairs(groups) do
+    for group, s in pairs(groups) do
         -- Only groups whose reference treatment matches the product are cured; "NONE" groups
         -- (piétin/hernie) never match either family, so they are left untouched (rotation-only).
         if self:getTreatment(group) == wanted then
-            groups[group] = nil -- full cure: progression stops, active foci removed
+            s.cure = math.min(1, (s.cure or 0) + cov)
             treated = treated + 1
         end
     end
 
     if treated == 0 then return 0 end
 
+    -- Fully-covered infections are cleared outright (progression stops, active foci gone); the rest
+    -- keep a partial cure that will keep shrinking their foci on the next windows.
+    for group, s in pairs(groups) do
+        if self:getTreatment(group) == wanted and (s.cure or 0) >= 1 then
+            groups[group] = nil
+        end
+    end
+
     local stillActive = next(groups) ~= nil
     if not stillActive then
         self.state[id] = nil
     end
 
-    -- Realign THIS field's overlay foci with the reduced state on the SERVER (clients realign
-    -- themselves from the synced state through applySyncData -> rebuildGridFromState). clearField only
+    -- Realign THIS field's overlay foci with the reduced (cured/shrunk) state on the SERVER (clients
+    -- realign from the synced state through applySyncData -> rebuildGridFromState). clearField only
     -- wipes the disease-foci OVERLAY grid, never the real crop, so cured tissue stays dead on the map.
     local mgr = self.manager
     local field = (mgr ~= nil and type(mgr.getFieldByFarmlandId) == "function")
@@ -536,12 +565,12 @@ function RealisticCropRotationDisease:treatField(farmlandId, treatmentType)
     if field ~= nil and self.grid ~= nil and type(self.grid.clearField) == "function" then
         self.grid:clearField(field)
         if stillActive then
-            -- Repaint the survivors' foci (idempotent: same seed + unchanged severity re-marks the
-            -- exact same dead area, no regrowth, no extra damage) so their overlay is preserved.
+            -- Repaint the survivors' foci at their current cure (idempotent: same seed + unchanged
+            -- severity, higher cure -> a strictly smaller dead area, no regrowth, no extra damage).
             for group, s in pairs(groups) do
                 local curve = self:getCurve(group)
                 if (s.severity or 0) >= curve.destroySeverity then
-                    destroyCropField(field, id, s.seed, s.severity, curve, diseaseStateForGroup(group), self.grid)
+                    destroyCropField(field, id, s.seed, s.severity, curve, diseaseStateForGroup(group), self.grid, s.cure)
                 end
             end
         end
@@ -745,6 +774,7 @@ function RealisticCropRotationDisease:getSyncData()
                 outState[n][groupName] = {
                     severity = tonumber(data.severity) or 0,
                     seed = tonumber(data.seed) or 0,
+                    cure = tonumber(data.cure) or 0,
                 }
             end
         end
@@ -776,6 +806,7 @@ function RealisticCropRotationDisease:applySyncData(state, crop)
                 self.state[n][groupName] = {
                     severity = tonumber(data.severity) or 0,
                     seed = tonumber(data.seed) or 0,
+                    cure = tonumber(data.cure) or 0,
                 }
             end
         end
@@ -810,8 +841,9 @@ function RealisticCropRotationDisease:destructionSignature()
         for group, s in pairs(groups) do
             local severity = tonumber(s.severity) or 0
             if severity >= self:getCurve(group).destroySeverity then
-                -- severity drives the destroyed share; seed fixes the scatter -> both change the grid
-                sig = sig + fid + severity + (tonumber(s.seed) or 0) % 100000
+                -- severity drives the destroyed share; seed fixes the scatter; cure shrinks the foci
+                -- -> all three change the grid, so a treatment window (cure rise) forces a client rebuild
+                sig = sig + fid + severity + (tonumber(s.cure) or 0) * 7 + (tonumber(s.seed) or 0) % 100000
             end
         end
     end
@@ -840,8 +872,9 @@ function RealisticCropRotationDisease:rebuildGridFromState()
             local curve = self:getCurve(group)
             if field ~= nil and (s.severity or 0) >= curve.destroySeverity then
                 local diseaseState = diseaseStateForGroup(group)
-                -- grid only (no fruit) on the client; the field arg of nil for the crop is skipped inside
-                destroyCropField(field, fid, s.seed, s.severity, curve, diseaseState, grid)
+                -- grid only (no fruit) on the client; the field arg of nil for the crop is skipped inside.
+                -- s.cure shrinks the painted foci exactly as the server did (same seed/severity/cure).
+                destroyCropField(field, fid, s.seed, s.severity, curve, diseaseState, grid, s.cure)
             end
         end
     end
@@ -865,6 +898,7 @@ function RealisticCropRotationDisease:saveToXML(savegamePath)
             setXMLString(xmlFile, gKey .. "#name", group)
             setXMLFloat(xmlFile, gKey .. "#severity", s.severity or 0)
             setXMLInt(xmlFile, gKey .. "#seed", math.floor(tonumber(s.seed) or 0))
+            setXMLFloat(xmlFile, gKey .. "#cure", tonumber(s.cure) or 0)
             gi = gi + 1
         end
         fi = fi + 1
@@ -901,6 +935,7 @@ function RealisticCropRotationDisease:loadFromXML(savegamePath)
                     self.state[id][name] = {
                         severity = getXMLFloat(xmlFile, gKey .. "#severity") or 0,
                         seed = getXMLInt(xmlFile, gKey .. "#seed") or math.random(1, 1000000),
+                        cure = getXMLFloat(xmlFile, gKey .. "#cure") or 0,
                     }
                 end
                 gi = gi + 1

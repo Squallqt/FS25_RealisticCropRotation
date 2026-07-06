@@ -50,12 +50,24 @@ RealisticCropRotationSprayerProducts.TREATMENT_COOLDOWN_MS = 3000
 -- far finer than any farmland, and an order of magnitude inside TREATMENT_COOLDOWN_MS.
 RealisticCropRotationSprayerProducts.TREATMENT_SAMPLE_INTERVAL_MS = 250
 
+-- Curative coverage added to a matching infection per treatment window (each TREATMENT_COOLDOWN_MS,
+-- while the sprayer is actually moving over the field). cure rises 0->1 across ~5 windows (~15 s of
+-- active spraying), so the disease overlay recedes gradually behind the pass rather than in one leap,
+-- and the infection is fully cleared once cure reaches 1. Synced/saved via the disease state, so the
+-- recession is identical on the host and every client (RealisticCropRotationDisease.treatField).
+RealisticCropRotationSprayerProducts.TREATMENT_CURE_PER_WINDOW = 0.2
+
+-- Minimum ground speed (m/s) for a window to count as "treating": ties the cure accumulation to real
+-- coverage (a parked, turned-on sprayer does not keep curing) and mirrors Sprayer.isWorking (speed>1).
+RealisticCropRotationSprayerProducts.TREATMENT_MIN_SPEED = 1
+
 -- fillTypeIndex -> true; refreshed at every mission load because fillType
 -- indices may shift between savegames with different mod sets.
 local productFillTypeSet = {}
 -- fillTypeIndex -> "FUNGICIDE" | "NEMATICIDE"; same lifecycle as productFillTypeSet.
 local productTreatmentByFillType = {}
 local hookInstalled = false
+local aiHookInstalled = false
 
 ---Returns true when the given fillType index is one of the RCR sprayer products.
 -- @param integer fillTypeIndex fillType index (may be nil)
@@ -131,6 +143,13 @@ local function applyTreatment(self, spec, fillType, workArea)
     end
     if getWorldTranslation == nil then return false end
 
+    -- Tie the curative coverage to real work: skip when the sprayer is not actually moving over the
+    -- field, so a parked-but-turned-on tool does not keep curing (cure ~ area covered, not time).
+    if type(self.getLastSpeed) == "function"
+        and self:getLastSpeed() < RealisticCropRotationSprayerProducts.TREATMENT_MIN_SPEED then
+        return false
+    end
+
     -- Per-work-area sampling gate: corner reads + farmland resolution run at most once per
     -- TREATMENT_SAMPLE_INTERVAL_MS per section, not every tick. Stored on the work area itself
     -- (per vehicle+section, GC'd with the vehicle), so wide multi-section sprayers stay covered.
@@ -184,13 +203,83 @@ local function applyTreatment(self, spec, fillType, workArea)
         local last = cooldown[key]
         if last == nil or now - last >= window then
             cooldown[key] = now -- gate future ticks even when this field carries no matching infection
-            if disease:treatField(farmlandId, treatmentType) > 0 then
+            -- Progressive curative coverage: each window adds TREATMENT_CURE_PER_WINDOW to the matching
+            -- infection's cure accumulator, so the disease overlay recedes gradually behind the pass and
+            -- the infection clears only once fully covered (see RealisticCropRotationDisease.treatField).
+            if disease:treatField(farmlandId, treatmentType,
+                    RealisticCropRotationSprayerProducts.TREATMENT_CURE_PER_WINDOW) > 0 then
                 treatedAny = true
             end
         end
     end
 
     return treatedAny
+end
+
+---Overwrites Sprayer.setSprayerAITerrainDetailProhibitedRange so an AI worker recognises the WHOLE
+---cultivated field as work for an RCR product -- WITHOUT the native side effects the three engine
+---spray types imply.
+---
+---GIANTS truth (dataS/scripts, verified against sdk/debugger/gameSource.zip):
+--- * SprayTypeManager only accepts FERTILIZER / HERBICIDE / LIME (misc/SprayTypeManager.lua:111-118),
+---   so our product is registered as HERBICIDE. Sprayer:setSprayerAITerrainDetailProhibitedRange then
+---   takes the isHerbicide branch (Sprayer.lua:697-721), which requires WEEDS to be present and implies
+---   removing them -- the AI would only work weed patches and expects a weed change we must not do.
+--- * The AI's notion of "work to do" is the FieldCropsQuery this function builds (Sprayer.lua ->
+---   AIImplement.createFieldCropsQuery, AIImplement.lua:1165); job COMPLETION is purely GEOMETRIC: the
+---   field course is generated once from the segmentAreaValidityFunction (ai/AIDriveStrategyFieldCourse
+---   .lua:187-196) then driven to its end -- AIFieldWorker.updateAIFieldWorker (AIFieldWorker.lua:337-340)
+---   ends with AIMessageSuccessFinishedJob when the strategy returns tX==nil, never re-reading the ground.
+--- * The fertilizer/lime branches (Sprayer.lua:722-737) recognise the field with
+---   addAIGroundTypeRequirements(Sprayer.AI_REQUIRED_GROUND_TYPES); their EXTRA spray-level/ground-type
+---   PROHIBITIONS are what tie them to a written SPRAY_LEVEL (= the yield state, FSDensityMapUtil harvest
+---   path: Cutter.lua:786/827 sprayFactor -> getHarvestScaleMultiplier) which we must never write.
+---
+---So requiring ONLY the field ground type (the fertilizer/lime field-recognition, minus the yield-tied
+---prohibitions and minus the herbicide weed requirement) makes the AI cover the entire field and finish,
+---while our processSprayerArea hook writes NO ground state at all (no weed removal, no spray level, no
+---fertilizer). Server-only, exactly like the native call site (onStartWorkAreaProcessing, self.isServer).
+local function installAITerrainDetailHook()
+    if aiHookInstalled then
+        return
+    end
+
+    if Sprayer == nil or Sprayer.setSprayerAITerrainDetailProhibitedRange == nil then
+        Logging.warning("[RealisticCropRotation] Sprayer AI setup unavailable; RCR AI field-work hook was not installed")
+        return
+    end
+
+    Sprayer.setSprayerAITerrainDetailProhibitedRange = Utils.overwrittenFunction(
+        Sprayer.setSprayerAITerrainDetailProhibitedRange,
+        function(self, superFunc, fillType)
+            if not RealisticCropRotationSprayerProducts.isProductFillType(fillType) then
+                return superFunc(self, fillType)
+            end
+
+            -- Same guard as the native function: only touch the query when this vehicle drives AI
+            -- requirements and exposes the AIImplement API.
+            if type(self.getUseSprayerAIRequirements) == "function" and not self:getUseSprayerAIRequirements() then
+                return
+            end
+            if self.addAITerrainDetailProhibitedRange == nil then
+                return
+            end
+
+            -- Rebuild the AI field-crops query as "the whole cultivable field is work": clear every
+            -- native requirement/prohibition (the herbicide weed requirement, any spray-level range),
+            -- then require ONLY the field ground type. No prohibition is tied to a written state, so the
+            -- AI never needs the ground to change to consider the field done -- it finishes on course end.
+            self:clearAITerrainDetailRequiredRange()
+            self:clearAITerrainDetailProhibitedRange()
+            self:clearAIFruitRequirements()
+            self:clearAIFruitProhibitions()
+
+            if Sprayer.AI_REQUIRED_GROUND_TYPES ~= nil and self.addAIGroundTypeRequirements ~= nil then
+                self:addAIGroundTypeRequirements(Sprayer.AI_REQUIRED_GROUND_TYPES)
+            end
+        end)
+
+    aiHookInstalled = true
 end
 
 ---Overwrites Sprayer.processSprayerArea once per game session.
@@ -217,6 +306,15 @@ local function installSprayerHook()
         -- RCR product: replicate the native activation guards, but never call
         -- FSDensityMapUtil.updateSprayArea (no native herbicide ground treatment).
         if params.sprayFillLevel <= 0 then
+            -- Mirror the native processSprayerArea AI guard: an AI worker that ran out of product must
+            -- end its job cleanly (otherwise it would keep driving the course spraying nothing).
+            if self.isServer and self:getIsAIActive() then
+                local rootVehicle = self.rootVehicle
+                if rootVehicle ~= nil and type(rootVehicle.stopCurrentAIJob) == "function"
+                    and AIMessageErrorOutOfFill ~= nil then
+                    rootVehicle:stopCurrentAIJob(AIMessageErrorOutOfFill.new())
+                end
+            end
             return 0, 0
         end
 
@@ -252,9 +350,10 @@ function RealisticCropRotationSprayerProducts.onMissionLoaded()
     productFillTypeSet = {}
     productTreatmentByFillType = {}
     ensureSprayTypes()
-    -- Safety net only: the hook is normally installed at source time below
-    -- (before TypeManager:finalizeTypes snapshots Sprayer.processSprayerArea).
+    -- Safety net only: the hooks are normally installed at source time below
+    -- (before TypeManager:finalizeTypes snapshots the Sprayer functions by value).
     installSprayerHook()
+    installAITerrainDetailHook()
 end
 
 ---Mission teardown: forget the mission-scoped fillType indices.
@@ -267,6 +366,7 @@ end
 -- sourced before the mission's TypeManager:finalizeTypes() run, so this is the
 -- only moment the overwritten Sprayer.processSprayerArea is guaranteed to be
 -- copied into every sprayer vehicleType and captured by its work areas.
--- Until onMissionLoaded() fills productFillTypeSet the wrapper is a pure
--- passthrough, so native fillTypes are never affected.
+-- Until onMissionLoaded() fills productFillTypeSet the wrappers are pure
+-- passthroughs, so native fillTypes are never affected.
 installSprayerHook()
+installAITerrainDetailHook()
