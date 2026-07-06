@@ -129,11 +129,8 @@ function RCRHistoryResponseEvent:readStream(streamId, _connection)
             local groupName = streamReadString(streamId)
             local severity = streamReadFloat32(streamId)
             local seed = streamReadInt32(streamId)
-            -- Curative coverage 0..1 (raised by an RCR sprayer): drives the deterministic client-side
-            -- recession of the foci in rebuildGridFromState. Must be read in the exact writeStream order.
-            local cure = streamReadFloat32(streamId)
             if farmlandId > 0 and groupName ~= nil and groupName ~= "" then
-                receivedDiseaseState[farmlandId][groupName] = { severity = severity or 0, seed = seed or 0, cure = cure or 0 }
+                receivedDiseaseState[farmlandId][groupName] = { severity = severity or 0, seed = seed or 0 }
             end
         end
     end
@@ -328,9 +325,6 @@ function RCRHistoryResponseEvent:writeStream(streamId, _connection)
             streamWriteString(streamId, groupName)
             streamWriteFloat32(streamId, tonumber(data.severity) or 0)
             streamWriteInt32(streamId, math.floor(tonumber(data.seed) or 0))
-            -- Curative coverage 0..1 (read back in the same order): lets each client reproduce the
-            -- exact shrunk foci the server painted (severity + seed + cure -> identical Perlin cut).
-            streamWriteFloat32(streamId, tonumber(data.cure) or 0)
         end
     end
 
