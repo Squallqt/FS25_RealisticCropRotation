@@ -21,8 +21,8 @@
 --      HERBICIDE-typed sprayType never reaches the native ground treatment
 --      (no weed replacement, no native spray overlay), while still setting
 --      params.isActive / params.lastSprayTime so consumption and the spray
---      effect run like a native product. The curative disease treatment is
---      applied inside this same hook (server-only, see applyTreatment).
+--      effect run like a native product. The curative+preventive disease protection
+--      paint is applied inside this same hook (server-only, see paintDiseaseProtection).
 --
 --      TIMING (GIANTS truth, dataS/scripts): the overwrite MUST be installed
 --      when this file is sourced, NOT at mission load. TypeManager:finalizeTypes()
@@ -36,21 +36,14 @@ RealisticCropRotationSprayerProducts = {}
 
 RealisticCropRotationSprayerProducts.PRODUCT_NAMES = { "RCR_FUNGICIDE", "RCR_NEMATICIDE" }
 
--- Curative treatment family applied by each product on the disease state
--- (RealisticCropRotationDisease:treatField reads config.diseaseTreatments[group]).
+-- Treatment family applied by each product (RealisticCropRotationDisease:getTreatment reads
+-- config.diseaseTreatments[group] to match a disease group to its family). Used by paintDiseaseProtection
+-- to pick which per-cell protection map (grid.fungicideProtectionMapId / .nematicideProtectionMapId)
+-- the sprayed strip marks.
 RealisticCropRotationSprayerProducts.PRODUCT_TREATMENTS = {
     RCR_FUNGICIDE = "FUNGICIDE",
     RCR_NEMATICIDE = "NEMATICIDE",
 }
-
--- Cooldown window (ms of g_time) per (vehicle, farmland, product): the curative treatment is applied
--- at most once per window, NOT every work-area tick. Kept short so a slow pass still re-treats.
-RealisticCropRotationSprayerProducts.TREATMENT_COOLDOWN_MS = 3000
-
--- Corner-sampling interval (ms) per work area: farmland resolution for the treatment runs at most
--- 4x/s per section instead of every tick. At working speed this is well under one metre of travel,
--- far finer than any farmland, and an order of magnitude inside TREATMENT_COOLDOWN_MS.
-RealisticCropRotationSprayerProducts.TREATMENT_SAMPLE_INTERVAL_MS = 250
 
 -- fillTypeIndex -> true; refreshed at every mission load because fillType
 -- indices may shift between savegames with different mod sets.
@@ -59,12 +52,14 @@ local productFillTypeSet = {}
 local productTreatmentByFillType = {}
 local hookInstalled = false
 
--- Treated-ground visual: written into the field WATER_LEVEL detail channel (a damp look). It is NOT a
--- product texture and deposits nothing agronomic -- no fertiliser, no lime, no weed kill; nothing in
--- the game reads or consumes it. Because nothing consumes it, it never clears on its own, so we make
--- it EPHEMERAL ourselves: each painted farmland is tracked (server) and a daily sweep erases it about
--- a month (one season period) after the last treatment.
-local WATER_VISUAL_VALUE = 1
+-- Treated-ground visual: written into the field SPRAY_TYPE detail channel with the base FERTILISER
+-- ground value, so the sprayed strip shows the game's own fertiliser ground rendering. ONLY this visual
+-- channel is written -- never SPRAY_LEVEL / LIME_LEVEL -- so it adds NO fertilisation, NO nitrogen and
+-- NO yield: it is purely the ground look. Because nothing consumes it, it never clears on its own, so
+-- we make it EPHEMERAL ourselves: each painted farmland is tracked (server) and a daily sweep erases it
+-- about a month (one season period) after the last treatment.
+-- Resolved at mission load from the FERTILISER spray type's ground value (nil disables the paint).
+local treatmentSprayType = nil
 -- farmlandId -> { day = <monotonic day last painted>, minX, minZ, maxX, maxZ = accumulated painted
 -- world bounds }. Server-only; drives the fade sweep. Reset at mission load/teardown.
 local treatedGround = {}
@@ -97,6 +92,15 @@ local function ensureSprayTypes()
     local litersPerSecond = herbicideSprayType ~= nil and herbicideSprayType.litersPerSecond or 0.0081
     local sprayGroundType = herbicideSprayType ~= nil and herbicideSprayType.sprayGroundType or nil
 
+    -- Ground-visual value: reuse the base FERTILISER spray type's ground value so the treated strip
+    -- shows the game's fertiliser ground rendering. Only this visual channel (SPRAY_TYPE) is ever
+    -- written, never SPRAY_LEVEL, so it carries no fertilisation / nitrogen / yield.
+    local fertiliserSprayType = g_sprayTypeManager:getSprayTypeByName("FERTILIZER")
+    treatmentSprayType = fertiliserSprayType ~= nil and fertiliserSprayType.sprayGroundType or nil
+    if treatmentSprayType == nil then
+        Logging.warning("[RealisticCropRotation] FERTILIZER sprayGroundType unavailable; the treated-ground visual is disabled")
+    end
+
     for _, name in ipairs(RealisticCropRotationSprayerProducts.PRODUCT_NAMES) do
         local fillTypeIndex = g_fillTypeManager:getFillTypeIndexByName(name)
         if fillTypeIndex == nil then
@@ -118,7 +122,8 @@ local function ensureSprayTypes()
 end
 
 ---Adds the farmland under (x, z) to `out` once (dedup via `seen`). A farmland id <= 0 (no valid
----parcel, unowned/not-buyable sentinels) is ignored; treatField re-checks the state anyway.
+---parcel, unowned/not-buyable sentinels) is ignored. Used by recordTreatedGround (ground-visual fade
+---tracking); the disease protection paint itself does not need farmland resolution (see paintProtection).
 -- @param number x, z world position; @param table seen dedup set; @param table out farmland id list
 local function collectFarmland(x, z, seen, out)
     if type(x) ~= "number" or type(z) ~= "number" then return end
@@ -130,80 +135,34 @@ local function collectFarmland(x, z, seen, out)
     end
 end
 
----Server-only curative treatment for an RCR product spray tick. Samples a FIXED, small set of points
----of the work area (the 3 corner nodes, the 4th corner and the centre -- O(1), never a dense scan),
----resolves each to a farmland, dedups them, and applies the product's treatment once per farmland per
----cooldown window. The cooldown table lives on the sprayer spec (per-vehicle, GC'd with the vehicle;
----stale keys are pruned opportunistically), so nothing global grows. Returns whether any group was cured.
--- @param table self sprayer vehicle; @param table spec self.spec_sprayer; @param integer fillType RCR product
+---Server: paints curative+preventive protection under the sprayed strip. A cell marked protected is
+---excluded from ALL future disease destruction there (RealisticCropRotationDisease's daily destroy
+---pass reads this SAME map) -- curing whatever is currently destroying it AND shielding it from a
+---future infection, with the SAME per-cell mechanism. Also clears this area's disease-overlay marks
+---immediately (RealisticCropRotationDiseaseGrid:paintProtection), so the overlay recedes as the strip
+---is actually covered (per-bande), never all at once. NEVER touches the real crop map. Runs on the SAME
+---cadence as the ground-visual paint (every qualifying work-area tick, no extra cooldown -- this is a
+---pure geometric paint, like azote/lime, not a farmland-wide bookkeeping operation).
 -- @param table workArea work area whose start/width/height nodes give the sprayed strip
--- @return boolean treatedAny true when at least one infection group was cured (caller broadcasts)
-local function applyTreatment(self, spec, fillType, workArea)
+-- @param integer fillType RCR product fillType
+local function paintDiseaseProtection(workArea, fillType)
     if workArea == nil or workArea.start == nil or workArea.width == nil or workArea.height == nil then
-        return false
+        return
     end
-    if getWorldTranslation == nil then return false end
-
-    -- Per-work-area sampling gate: corner reads + farmland resolution run at most once per
-    -- TREATMENT_SAMPLE_INTERVAL_MS per section, not every tick. Stored on the work area itself
-    -- (per vehicle+section, GC'd with the vehicle), so wide multi-section sprayers stay covered.
-    local now = g_time
-    local nextSampleMs = workArea.rcrNextTreatmentSampleMs
-    if nextSampleMs ~= nil and now < nextSampleMs then return false end
-    workArea.rcrNextTreatmentSampleMs = now + RealisticCropRotationSprayerProducts.TREATMENT_SAMPLE_INTERVAL_MS
+    if getWorldTranslation == nil then return end
 
     local treatmentType = RealisticCropRotationSprayerProducts.getProductTreatment(fillType)
-    if treatmentType == nil then return false end
+    if treatmentType == nil then return end
 
-    local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
-    if disease == nil or type(disease.treatField) ~= "function" then return false end
+    local grid = RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
+    if grid == nil or type(grid.paintProtection) ~= "function" then return end
 
     local sx, _, sz = getWorldTranslation(workArea.start)
     local wx, _, wz = getWorldTranslation(workArea.width)
     local hx, _, hz = getWorldTranslation(workArea.height)
-    if sx == nil or wx == nil or hx == nil then return false end
+    if sx == nil or wx == nil or hx == nil then return end
 
-    -- Parallelogram corners: start, width, height, the opposite corner (width+height-start), and centre.
-    local fourthX, fourthZ = wx + hx - sx, wz + hz - sz
-    local centerX, centerZ = (wx + hx) * 0.5, (wz + hz) * 0.5
-
-    local seen, farmlands = {}, {}
-    collectFarmland(sx, sz, seen, farmlands)
-    collectFarmland(wx, wz, seen, farmlands)
-    collectFarmland(hx, hz, seen, farmlands)
-    collectFarmland(fourthX, fourthZ, seen, farmlands)
-    collectFarmland(centerX, centerZ, seen, farmlands)
-    if #farmlands == 0 then return false end
-
-    local window = RealisticCropRotationSprayerProducts.TREATMENT_COOLDOWN_MS
-    local cooldown = spec.rcrTreatmentCooldown
-    if cooldown == nil then
-        cooldown = {}
-        spec.rcrTreatmentCooldown = cooldown
-    end
-
-    -- Opportunistic prune so a long-lived vehicle crossing many parcels keeps this table bounded.
-    if now - (spec.rcrTreatmentCooldownPruned or 0) > window * 20 then
-        spec.rcrTreatmentCooldownPruned = now
-        for key, last in pairs(cooldown) do
-            if now - last > window * 20 then cooldown[key] = nil end
-        end
-    end
-
-    local treatedAny = false
-    for _, farmlandId in ipairs(farmlands) do
-        -- One key per (farmland, product); the spec table already scopes it to this vehicle.
-        local key = fillType * 100003 + farmlandId
-        local last = cooldown[key]
-        if last == nil or now - last >= window then
-            cooldown[key] = now -- gate future ticks even when this field carries no matching infection
-            if disease:treatField(farmlandId, treatmentType) > 0 then
-                treatedAny = true
-            end
-        end
-    end
-
-    return treatedAny
+    grid:paintProtection(treatmentType, sx, sz, wx, wz, hx, hz)
 end
 
 ---Server: merges the just-painted strip into the per-farmland treated-ground record (accumulated
@@ -242,10 +201,11 @@ local function recordTreatedGround(sx, sz, wx, wz, hx, hz)
     end
 end
 
----Paints the ephemeral "treated" ground look over the sprayed strip: writes value 1 into the field
----WATER_LEVEL detail channel (a damp texture). This is NOT a product texture and deposits nothing
----agronomic -- no fertiliser, no lime, no weed kill; nothing reads it. A field-ground filter
----(groundType > 0) keeps the paint off roads, yards and standing water.
+---Paints the ephemeral "treated" ground look over the sprayed strip: writes the FERTILISER ground
+---value into the field SPRAY_TYPE detail channel, so the strip shows the game's fertiliser ground
+---rendering. ONLY this visual channel is written -- SPRAY_LEVEL is never touched -- so it adds no
+---fertilisation / nitrogen / yield; it is purely the ground look. A field-ground filter (groundType > 0)
+---keeps the paint off roads, yards and standing water.
 ---SERVER-AUTHORITATIVE: the write happens on the server only and the engine synchronises the field
 ---density map to clients, exactly like the disease crop-destruction pass -- no client-side prediction,
 ---so the fade sweep can never diverge between machines. The painted area is recorded per farmland so
@@ -253,6 +213,7 @@ end
 -- @param table self sprayer vehicle; @param table workArea work area giving the sprayed strip corners
 local function paintTreatmentGround(self, workArea)
     if self == nil or not self.isServer then return end
+    if treatmentSprayType == nil then return end
     if DensityMapModifier == nil or DensityMapFilter == nil or g_terrainNode == nil then return end
     if getWorldTranslation == nil or DensityCoordType == nil or DensityValueCompareType == nil then return end
     if workArea == nil or workArea.start == nil or workArea.width == nil or workArea.height == nil then return end
@@ -260,9 +221,9 @@ local function paintTreatmentGround(self, workArea)
     local mission = g_currentMission
     if mission == nil or mission.fieldGroundSystem == nil or FieldDensityMap == nil then return end
 
-    local waterMapId, waterFirstChannel, waterNumChannels =
-        mission.fieldGroundSystem:getDensityMapData(FieldDensityMap.WATER_LEVEL)
-    if waterMapId == nil then return end
+    local sprayTypeMapId, sprayFirstChannel, sprayNumChannels =
+        mission.fieldGroundSystem:getDensityMapData(FieldDensityMap.SPRAY_TYPE)
+    if sprayTypeMapId == nil then return end
     local groundTypeMapId, groundFirstChannel, groundNumChannels =
         mission.fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE)
     if groundTypeMapId == nil then return end
@@ -272,14 +233,15 @@ local function paintTreatmentGround(self, workArea)
     local hx, _, hz = getWorldTranslation(workArea.height)
     if sx == nil or wx == nil or hx == nil then return end
 
-    local modifier = DensityMapModifier.new(waterMapId, waterFirstChannel, waterNumChannels, g_terrainNode)
+    local modifier = DensityMapModifier.new(sprayTypeMapId, sprayFirstChannel, sprayNumChannels, g_terrainNode)
     modifier:setParallelogramWorldCoords(sx, sz, wx, wz, hx, hz, DensityCoordType.POINT_POINT_POINT)
 
     -- Only paint where there is field ground (groundType > 0): never roads, yards or standing water.
     local fieldFilter = DensityMapFilter.new(groundTypeMapId, groundFirstChannel, groundNumChannels)
     fieldFilter:setValueCompareParams(DensityValueCompareType.GREATER, 0)
 
-    modifier:executeSet(WATER_VISUAL_VALUE, fieldFilter)
+    -- SPRAY_TYPE only (the fertiliser ground look); SPRAY_LEVEL is never touched, so no fertilisation.
+    modifier:executeSet(treatmentSprayType, fieldFilter)
 
     -- Track the painted area (server) so the daily sweep can fade it ~a month later.
     recordTreatedGround(sx, sz, wx, wz, hx, hz)
@@ -319,7 +281,7 @@ local function installSprayerHook()
         params.isActive = true
         params.lastSprayTime = g_time
 
-        -- Treated-ground visual: paint the WATER_LEVEL detail (a damp look, visual only, no agronomy)
+        -- Treated-ground visual: paint the SPRAY_TYPE detail = fertiliser look (visual only, no agronomy)
         -- over the sprayed strip so the field visibly shows where the product was applied. Ephemeral --
         -- faded out ~a month later by the server sweep (fadeTreatedGround / onDayChanged).
         paintTreatmentGround(self, workArea)
@@ -328,14 +290,12 @@ local function installSprayerHook()
             spec.isWorking = true
         end
 
-        -- Curative disease treatment: SERVER ONLY (disease state is server-authoritative; clients get
-        -- it through the existing rotation broadcast). Runs off the same tick that drives consumption
-        -- and effects, but is gated by the per-(vehicle, farmland, product) cooldown inside applyTreatment
-        -- and never scans the field densely (fixed sample points -> farmland -> treatField).
-        if self.isServer and applyTreatment(self, spec, sprayFillType, workArea) then
-            if RealisticCropRotation ~= nil and type(RealisticCropRotation.requestBroadcast) == "function" then
-                RealisticCropRotation.requestBroadcast() -- coalesced/debounced; syncs the cured state
-            end
+        -- Curative + preventive disease protection: SERVER ONLY (the protection map gates the
+        -- server-authoritative daily destroy pass; painting it server-side only, like the ground
+        -- visual, avoids any server/client divergence). Runs every qualifying tick, per-bande (only
+        -- the sprayed strip), never touches the real crop.
+        if self.isServer then
+            paintDiseaseProtection(workArea, sprayFillType)
         end
 
         return 0, 0
@@ -344,8 +304,8 @@ local function installSprayerHook()
     hookInstalled = true
 end
 
----Server daily sweep (called from onDayChanged): erases the water visual on farmlands whose last
----treatment has aged past the fade window (~one season period == about a month). Clears WATER_LEVEL
+---Server daily sweep (called from onDayChanged): erases the treated-ground visual on farmlands whose
+---last treatment has aged past the fade window (~one season period == about a month). Clears SPRAY_TYPE
 ---back to 0 over each expired farmland's accumulated bounds, filtered to that farmland so only OUR
 ---marks go (never a neighbouring parcel or a rice paddy), then forgets it. One native pass per expired
 ---farmland, at most once per in-game day.
@@ -368,16 +328,16 @@ function RealisticCropRotationSprayerProducts.fadeTreatedGround()
     local daysPerPeriod = env ~= nil and tonumber(env.plannedDaysPerPeriod) or nil
     local fadeDays = (daysPerPeriod ~= nil and daysPerPeriod > 0) and daysPerPeriod or 3
 
-    local waterMapId, waterFirstChannel, waterNumChannels =
-        mission.fieldGroundSystem:getDensityMapData(FieldDensityMap.WATER_LEVEL)
-    if waterMapId == nil then return end
+    local sprayTypeMapId, sprayFirstChannel, sprayNumChannels =
+        mission.fieldGroundSystem:getDensityMapData(FieldDensityMap.SPRAY_TYPE)
+    if sprayTypeMapId == nil then return end
     local farmlandLocalMap = g_farmlandManager:getLocalMap()
     if farmlandLocalMap == nil then return end
     local farmlandChannels = getBitVectorMapNumChannels(farmlandLocalMap)
 
     for fid, rec in pairs(treatedGround) do
         if day - (rec.day or day) >= fadeDays then
-            local modifier = DensityMapModifier.new(waterMapId, waterFirstChannel, waterNumChannels, g_terrainNode)
+            local modifier = DensityMapModifier.new(sprayTypeMapId, sprayFirstChannel, sprayNumChannels, g_terrainNode)
             modifier:setParallelogramWorldCoords(rec.minX, rec.minZ, rec.maxX, rec.minZ, rec.minX, rec.maxZ, DensityCoordType.POINT_POINT_POINT)
             local farmlandFilter = DensityMapFilter.new(farmlandLocalMap, 0, farmlandChannels)
             farmlandFilter:setValueCompareParams(DensityValueCompareType.EQUAL, fid)
@@ -387,8 +347,8 @@ function RealisticCropRotationSprayerProducts.fadeTreatedGround()
     end
 end
 
----Persists the treated-ground fade tracker (server) so the ephemeral water visual keeps fading across
----save/load instead of leaking marks that never clear. The WATER_LEVEL density map itself is saved by
+---Persists the treated-ground fade tracker (server) so the ephemeral visual keeps fading across
+---save/load instead of leaking marks that never clear. The SPRAY_TYPE density map itself is saved by
 ---the engine; this only saves the per-farmland age/bounds the sweep needs. Mirrors the disease save.
 -- @param string savegamePath savegame folder path (trailing slash)
 function RealisticCropRotationSprayerProducts.saveTreatedGround(savegamePath)

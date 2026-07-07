@@ -10,6 +10,15 @@ RealisticCropRotationDiseaseGrid.GRID_SIZE = 2048
 RealisticCropRotationDiseaseGrid.NUM_CHANNELS = 4
 RealisticCropRotationDiseaseGrid.FILENAME = "realisticCropRotationDiseaseGrid_v2.grle"
 
+-- Per-cell curative/preventive protection, one bitvector per treatment family (0/1, 1 channel each,
+-- same resolution as the main grid so cell-for-cell it lines up 1:1). A cell painted protected is
+-- excluded from ALL future destruction under it (see RealisticCropRotationDisease's destroy filter) --
+-- this covers BOTH curing an existing infection under the sprayed strip AND shielding it from a future
+-- one, with the SAME mechanism. Persisted like the main grid.
+RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS = 1
+RealisticCropRotationDiseaseGrid.FUNGICIDE_PROTECTION_FILENAME = "realisticCropRotationFungicideProtection.grle"
+RealisticCropRotationDiseaseGrid.NEMATICIDE_PROTECTION_FILENAME = "realisticCropRotationNematicideProtection.grle"
+
 -- Risk map: a runtime-only display map (never saved) holding the per-field risk band 0..3 on
 -- worked-soil cells. Painted natively off the UI path (load / period tick / ownership / MP sync)
 -- and rendered directly by the map overlay, BMP-style: no mask and no map building at render time.
@@ -31,6 +40,8 @@ function RealisticCropRotationDiseaseGrid.new()
     self.size = RealisticCropRotationDiseaseGrid.GRID_SIZE
     self.numChannels = RealisticCropRotationDiseaseGrid.NUM_CHANNELS
     self.changeRevision = 0
+    self.fungicideProtectionMapId = nil
+    self.nematicideProtectionMapId = nil
     self.riskMapId = nil
     self.riskMapSize = RealisticCropRotationDiseaseGrid.RISK_MAP_SIZE
     self.riskNumChannels = RealisticCropRotationDiseaseGrid.RISK_NUM_CHANNELS
@@ -86,6 +97,32 @@ function RealisticCropRotationDiseaseGrid:loadMap(savegamePath)
     local w = getBitVectorMapSize(self.mapId)
     self.size = tonumber(w) or self.size
 
+    -- Per-cell protection maps, one per treatment family, loaded/created at the SAME resolution as the
+    -- main grid so they line up 1:1 with it.
+    self.fungicideProtectionMapId = createBitVectorMap("rcrFungicideProtection")
+    local loadedFungProt = false
+    if savegamePath ~= nil and savegamePath ~= "" then
+        local fp = savegamePath .. RealisticCropRotationDiseaseGrid.FUNGICIDE_PROTECTION_FILENAME
+        if fileExists ~= nil and fileExists(fp) then
+            loadedFungProt = loadBitVectorMapFromFile(self.fungicideProtectionMapId, fp, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS)
+        end
+    end
+    if not loadedFungProt then
+        loadBitVectorMapNew(self.fungicideProtectionMapId, self.size, self.size, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, false)
+    end
+
+    self.nematicideProtectionMapId = createBitVectorMap("rcrNematicideProtection")
+    local loadedNemaProt = false
+    if savegamePath ~= nil and savegamePath ~= "" then
+        local np = savegamePath .. RealisticCropRotationDiseaseGrid.NEMATICIDE_PROTECTION_FILENAME
+        if fileExists ~= nil and fileExists(np) then
+            loadedNemaProt = loadBitVectorMapFromFile(self.nematicideProtectionMapId, np, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS)
+        end
+    end
+    if not loadedNemaProt then
+        loadBitVectorMapNew(self.nematicideProtectionMapId, self.size, self.size, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, false)
+    end
+
     -- Runtime-only risk display map (never saved: risk is derived from the synced history).
     self.riskMapId = createBitVectorMap("rcrRiskMap")
     loadBitVectorMapNew(self.riskMapId, self.riskMapSize, self.riskMapSize, self.riskNumChannels, false)
@@ -98,12 +135,26 @@ end
 function RealisticCropRotationDiseaseGrid:saveMap(savegamePath)
     if self.mapId == nil or savegamePath == nil or savegamePath == "" then return end
     saveBitVectorMapToFile(self.mapId, savegamePath .. RealisticCropRotationDiseaseGrid.FILENAME)
+    if self.fungicideProtectionMapId ~= nil then
+        saveBitVectorMapToFile(self.fungicideProtectionMapId, savegamePath .. RealisticCropRotationDiseaseGrid.FUNGICIDE_PROTECTION_FILENAME)
+    end
+    if self.nematicideProtectionMapId ~= nil then
+        saveBitVectorMapToFile(self.nematicideProtectionMapId, savegamePath .. RealisticCropRotationDiseaseGrid.NEMATICIDE_PROTECTION_FILENAME)
+    end
 end
 
 function RealisticCropRotationDiseaseGrid:deleteMap()
     if self.mapId ~= nil then
         delete(self.mapId)
         self.mapId = nil
+    end
+    if self.fungicideProtectionMapId ~= nil then
+        delete(self.fungicideProtectionMapId)
+        self.fungicideProtectionMapId = nil
+    end
+    if self.nematicideProtectionMapId ~= nil then
+        delete(self.nematicideProtectionMapId)
+        self.nematicideProtectionMapId = nil
     end
     if self.riskMapId ~= nil then
         delete(self.riskMapId)
@@ -227,24 +278,83 @@ function RealisticCropRotationDiseaseGrid:clearField(field)
     -- neighbouring field whose bbox overlaps keeps its own marks (native cross-map filter).
     local farmlandId = field.farmland ~= nil and tonumber(field.farmland.id) or nil
     local fm = g_farmlandManager
+    local farmlandFilter = nil
     if farmlandId ~= nil and fm ~= nil and type(fm.getLocalMap) == "function"
         and DensityMapFilter ~= nil and getBitVectorMapNumChannels ~= nil then
         local localMap = fm:getLocalMap()
         if localMap ~= nil then
-            local filter = DensityMapFilter.new(localMap, 0, getBitVectorMapNumChannels(localMap))
-            filter:setValueCompareParams(DensityValueCompareType.EQUAL, farmlandId)
-            modifier:executeSet(0, filter)
-            self.changeRevision = (self.changeRevision or 0) + 1
-            return
+            farmlandFilter = DensityMapFilter.new(localMap, 0, getBitVectorMapNumChannels(localMap))
+            farmlandFilter:setValueCompareParams(DensityValueCompareType.EQUAL, farmlandId)
         end
     end
 
-    modifier:executeSet(0)
+    if farmlandFilter ~= nil then
+        modifier:executeSet(0, farmlandFilter)
+    else
+        modifier:executeSet(0)
+    end
     self.changeRevision = (self.changeRevision or 0) + 1
+
+    -- Protection is crop-cycle scoped: it ends when the crop changes, same as the disease marks above.
+    for _, protectionMapId in ipairs({ self.fungicideProtectionMapId, self.nematicideProtectionMapId }) do
+        if protectionMapId ~= nil then
+            local protModifier = DensityMapModifier.new(protectionMapId, 0, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, g_terrainNode)
+            protModifier:setParallelogramWorldCoords(minX, minZ, maxX, minZ, minX, maxZ, DensityCoordType.POINT_POINT_POINT)
+            if farmlandFilter ~= nil then
+                protModifier:executeSet(0, farmlandFilter)
+            else
+                protModifier:executeSet(0)
+            end
+        end
+    end
 end
 
 function RealisticCropRotationDiseaseGrid:clearAll()
     if self.mapId == nil then return end
     setBitVectorMapParallelogram(self.mapId, 0, 0, self.size, 0, 0, self.size, 0, self.numChannels, 0)
     self.changeRevision = (self.changeRevision or 0) + 1
+end
+
+---Server (+ near clients, matching the native ground-visual paint): marks the sprayed strip as
+---protected for the given treatment family AND clears this area's disease-overlay marks immediately,
+---both restricted to the strip actually sprayed (per-bande). NEVER touches the real crop map. Protection
+---is read by the daily destruction pass (RealisticCropRotationDisease), which excludes protected cells
+---from ALL future destruction there -- this is what makes spraying BOTH cure an existing infection under
+---the strip (it stops being destroyed further) AND prevent a future one (it can never start destroying
+---there), with the SAME mechanism. A field-ground filter (groundType > 0) keeps the paint off roads,
+---yards and standing water, matching the ground-visual paint's own precedent.
+-- @param string family "FUNGICIDE" | "NEMATICIDE"
+-- @param number sx, sz, wx, wz, hx, hz world-space parallelogram corners of the sprayed strip
+function RealisticCropRotationDiseaseGrid:paintProtection(family, sx, sz, wx, wz, hx, hz)
+    local protectionMapId = family == "FUNGICIDE" and self.fungicideProtectionMapId
+        or family == "NEMATICIDE" and self.nematicideProtectionMapId or nil
+    if protectionMapId == nil or self.mapId == nil or g_terrainNode == nil
+        or DensityMapModifier == nil or DensityMapFilter == nil
+        or DensityCoordType == nil or DensityValueCompareType == nil
+        or g_currentMission == nil or g_currentMission.fieldGroundSystem == nil
+        or FieldDensityMap == nil then
+        return
+    end
+
+    local groundTypeMapId, groundFirstChannel, groundNumChannels =
+        g_currentMission.fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE)
+    if groundTypeMapId == nil then return end
+
+    local groundFilter = DensityMapFilter.new(groundTypeMapId, groundFirstChannel, groundNumChannels)
+    groundFilter:setValueCompareParams(DensityValueCompareType.GREATER, 0)
+
+    local protModifier = DensityMapModifier.new(protectionMapId, 0, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, g_terrainNode)
+    protModifier:setParallelogramWorldCoords(sx, sz, wx, wz, hx, hz, DensityCoordType.POINT_POINT_POINT)
+    protModifier:executeSet(1, groundFilter)
+
+    local gridModifier = DensityMapModifier.new(self.mapId, 0, self.numChannels, g_terrainNode)
+    gridModifier:setParallelogramWorldCoords(sx, sz, wx, wz, hx, hz, DensityCoordType.POINT_POINT_POINT)
+    -- executeSetWithStats (same native call BMP's own damage pass uses) reports how many cells actually
+    -- changed. Bumping changeRevision unconditionally on every spray tick -- even over cells that were
+    -- already clean -- forced the map overlay to regenerate (async GPU rebuild) roughly once a second
+    -- while spraying, which reads as flicker. Only a REAL change should trigger a rebuild.
+    local _, changed = gridModifier:executeSetWithStats(0, groundFilter)
+    if (changed or 0) > 0 then
+        self.changeRevision = (self.changeRevision or 0) + 1
+    end
 end

@@ -111,7 +111,33 @@ function RealisticCropRotationHud.addHistoryLines(fieldBox, farmlandId)
     RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
 end
 
----Appends a disease status line to the field-info box when an infection is active.
+---World position -> a grid's local cell coordinates. Same formula the native FarmlandManager uses for
+---its own local map (FarmlandManager:convertWorldToLocalPosition): floor(mapSize * (world + terrainSize
+---/ 2) / terrainSize). Trivial, no loop.
+-- @param number worldX, worldZ; @param integer mapSize
+-- @return integer localX, localZ, or nil when unavailable
+local function worldToGridCell(worldX, worldZ, mapSize)
+    if g_currentMission == nil or g_currentMission.terrainSize == nil or mapSize == nil then return nil end
+    local terrainSize = g_currentMission.terrainSize
+    return math.floor(mapSize * (worldX + terrainSize * 0.5) / terrainSize),
+        math.floor(mapSize * (worldZ + terrainSize * 0.5) / terrainSize)
+end
+
+---True when the given world position is marked protected in the given per-cell map: one native point
+---read (getBitVectorMapPoint), no loop.
+local function isPointProtected(protectionMapId, mapSize, worldX, worldZ)
+    if protectionMapId == nil or getBitVectorMapPoint == nil or worldX == nil then return false end
+    local localX, localZ = worldToGridCell(worldX, worldZ, mapSize)
+    if localX == nil then return false end
+    return (getBitVectorMapPoint(protectionMapId, localX, localZ, 0, 1) or 0) > 0
+end
+
+---Appends a disease status line to the field-info box when an infection is active AND the player is
+---NOT standing on a cell already sprayed for that group's treatment family. Curative/preventive
+---spraying excludes cells from destruction one cell at a time (RealisticCropRotationDiseaseGrid:
+---paintProtection), so the farmland-level severity alone can no longer tell "active" apart from
+---"already treated here" -- checking the player's own position against the SAME per-cell protection map
+---the destroy pass reads is what makes the two agree.
 -- @param table fieldBox Field-info box with addLine
 -- @param integer farmlandId
 function RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
@@ -123,13 +149,30 @@ function RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
     local groups = disease:getState(farmlandId)
     if groups == nil then return end
 
+    local grid = RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
+    local px, pz = nil, nil
+    if g_localPlayer ~= nil and g_localPlayer.rootNode ~= nil and getWorldTranslation ~= nil then
+        px, _, pz = getWorldTranslation(g_localPlayer.rootNode)
+    end
+
     local label = RealisticCropRotationHud.getText("rcr_disease_hud_label", "Disease")
     for group, s in pairs(groups) do
         if (s.severity or 0) > 0 then
-            local diseaseName = (type(disease.getDisplayName) == "function") and disease:getDisplayName(group) or tostring(group)
-            local value = string.format(RealisticCropRotationHud.getText("rcr_disease_hud_active", "%s (active)"), diseaseName)
-            fieldBox:addLine(label, value, true)
-            return
+            local protectedHere = false
+            if grid ~= nil and px ~= nil and type(disease.getTreatment) == "function" then
+                local treatment = disease:getTreatment(group)
+                local protectionMapId = nil
+                if treatment == "FUNGICIDE" then protectionMapId = grid.fungicideProtectionMapId
+                elseif treatment == "NEMATICIDE" then protectionMapId = grid.nematicideProtectionMapId end
+                protectedHere = isPointProtected(protectionMapId, grid.size, px, pz)
+            end
+
+            if not protectedHere then
+                local diseaseName = (type(disease.getDisplayName) == "function") and disease:getDisplayName(group) or tostring(group)
+                local value = string.format(RealisticCropRotationHud.getText("rcr_disease_hud_active", "%s (active)"), diseaseName)
+                fieldBox:addLine(label, value, true)
+                return
+            end
         end
     end
 end

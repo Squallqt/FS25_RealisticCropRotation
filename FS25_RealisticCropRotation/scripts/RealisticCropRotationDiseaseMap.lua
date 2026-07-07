@@ -241,36 +241,52 @@ end
 -- Runtime objects
 -- ============================================================================
 
----Creates the two value overlays once (one per sub-page). A custom BitVectorMap is
----sampled 1:1 by its overlay, so each overlay uses its source map's exact size
----(grid / risk map). Nothing else is allocated on the UI path.
+---Creates TWO value overlays per sub-page (double-buffered) instead of one. A custom BitVectorMap is
+---sampled 1:1 by its overlay, so each overlay uses its source map's exact size (grid / risk map).
+---Nothing else is allocated on the UI path.
+---
+---WHY double-buffered: generateDensityMapVisualizationOverlay() is async (GPU-side); a SINGLE overlay
+---object has no valid texture between "regenerate requested" and "ready", so drawing must skip it
+---meanwhile -- a real blank gap on every content refresh, not just a frequency issue. Regenerating into
+---the OTHER (currently hidden) slot while the ACTIVE one keeps being drawn removes that gap entirely:
+---the map only ever shows a slot that has ALREADY finished generating at least once. Same native calls
+---as before (createDensityMapVisualizationOverlay / generateDensityMapVisualizationOverlay /
+---getIsDensityMapVisualizationOverlayReady), just used twice per view -- no new native surface.
 function RealisticCropRotationDiseaseMap:createRuntimeObjects()
     if createDensityMapVisualizationOverlay == nil then return end
     local grid = getGrid()
     if grid == nil then return end
 
-    if self.infectionOverlayId == nil and grid.mapId ~= nil and grid.size ~= nil then
-        self.infectionOverlayId = createDensityMapVisualizationOverlay("rcrInfectionOverlay", grid.size, grid.size)
-        self.infectionOverlayReady = false
+    if self.infectionOverlayIds == nil and grid.mapId ~= nil and grid.size ~= nil then
+        self.infectionOverlayIds = {
+            createDensityMapVisualizationOverlay("rcrInfectionOverlayA", grid.size, grid.size),
+            createDensityMapVisualizationOverlay("rcrInfectionOverlayB", grid.size, grid.size),
+        }
+        self.infectionActiveSlot = nil  -- nothing generated yet: draw() shows nothing until slot 1 is ready
+        self.infectionPendingSlot = nil
     end
 
-    if self.riskOverlayId == nil and grid.riskMapId ~= nil and grid.riskMapSize ~= nil then
-        self.riskOverlayId = createDensityMapVisualizationOverlay("rcrRiskOverlay", grid.riskMapSize, grid.riskMapSize)
-        self.riskOverlayReady = false
+    if self.riskOverlayIds == nil and grid.riskMapId ~= nil and grid.riskMapSize ~= nil then
+        self.riskOverlayIds = {
+            createDensityMapVisualizationOverlay("rcrRiskOverlayA", grid.riskMapSize, grid.riskMapSize),
+            createDensityMapVisualizationOverlay("rcrRiskOverlayB", grid.riskMapSize, grid.riskMapSize),
+        }
+        self.riskActiveSlot = nil
+        self.riskPendingSlot = nil
     end
 end
 
 function RealisticCropRotationDiseaseMap:delete()
-    if self.infectionOverlayId ~= nil then
-        delete(self.infectionOverlayId)
-        self.infectionOverlayId = nil
+    if self.infectionOverlayIds ~= nil then
+        for _, id in ipairs(self.infectionOverlayIds) do delete(id) end
+        self.infectionOverlayIds = nil
     end
-    if self.riskOverlayId ~= nil then
-        delete(self.riskOverlayId)
-        self.riskOverlayId = nil
+    if self.riskOverlayIds ~= nil then
+        for _, id in ipairs(self.riskOverlayIds) do delete(id) end
+        self.riskOverlayIds = nil
     end
-    self.infectionOverlayReady = false
-    self.riskOverlayReady = false
+    self.infectionActiveSlot, self.infectionPendingSlot = nil, nil
+    self.riskActiveSlot, self.riskPendingSlot = nil, nil
     self.lastBuildKey = nil
 end
 
@@ -309,15 +325,21 @@ end
 
 function RealisticCropRotationDiseaseMap:renderInfectionOverlay()
     local grid = getGrid()
-    if grid == nil or grid.mapId == nil or self.infectionOverlayId == nil or self.infectionOverlayId == 0 then
+    if grid == nil or grid.mapId == nil or self.infectionOverlayIds == nil then
         return false
     end
+
+    -- Regenerate into the slot NOT currently displayed (double-buffered), so the map keeps showing the
+    -- last-good result until the fresh one is ready -- see createRuntimeObjects for why.
+    local slot = (self.infectionActiveSlot == 1) and 2 or 1
+    local overlayId = self.infectionOverlayIds[slot]
+    if overlayId == nil or overlayId == 0 then return false end
 
     local filter = self.filter or {}
     local colorBlind = self.isColorBlindMode == true
 
-    resetDensityMapVisualizationOverlay(self.infectionOverlayId)
-    setOverlayColor(self.infectionOverlayId, 1, 1, 1, 1)
+    resetDensityMapVisualizationOverlay(overlayId)
+    setOverlayColor(overlayId, 1, 1, 1, 1)
 
     -- One native paint per enabled disease, straight from the destruction grid (grid.mapId), so the
     -- foci view shows the REAL organic disease patches (Perlin destruction, clipped to worked soil at
@@ -328,12 +350,12 @@ function RealisticCropRotationDiseaseMap:renderInfectionOverlay()
         if filter[i] ~= false then
             local c = infectionStateColor(entry.state, colorBlind)
             setDensityMapVisualizationOverlayStateColor(
-                self.infectionOverlayId, grid.mapId, 0, 0, 0, grid.numChannels, entry.state, c[1], c[2], c[3])
+                overlayId, grid.mapId, 0, 0, 0, grid.numChannels, entry.state, c[1], c[2], c[3])
         end
     end
 
-    generateDensityMapVisualizationOverlay(self.infectionOverlayId)
-    self.infectionOverlayReady = false
+    generateDensityMapVisualizationOverlay(overlayId)
+    self.infectionPendingSlot = slot
     return true
 end
 
@@ -348,26 +370,31 @@ end
 ---no map work here -- exactly the reference mod's value-overlay pattern.
 function RealisticCropRotationDiseaseMap:renderRiskOverlay()
     local grid = getGrid()
-    if grid == nil or grid.riskMapId == nil or self.riskOverlayId == nil or self.riskOverlayId == 0 then
+    if grid == nil or grid.riskMapId == nil or self.riskOverlayIds == nil then
         return false
     end
 
+    -- Regenerate into the slot NOT currently displayed (double-buffered) -- see renderInfectionOverlay.
+    local slot = (self.riskActiveSlot == 1) and 2 or 1
+    local overlayId = self.riskOverlayIds[slot]
+    if overlayId == nil or overlayId == 0 then return false end
+
     local riskFilter = self.riskFilter or { true, true, true }
 
-    resetDensityMapVisualizationOverlay(self.riskOverlayId)
-    setOverlayColor(self.riskOverlayId, 1, 1, 1, 1)
+    resetDensityMapVisualizationOverlay(overlayId)
+    setOverlayColor(overlayId, 1, 1, 1, 1)
 
     local colors = { self.RISK_COLOR_LOW, self.RISK_COLOR_MODERATE, self.RISK_COLOR_HIGH }
     for band = 1, 3 do
         if riskFilter[band] then
             local c = colors[band]
             setDensityMapVisualizationOverlayStateColor(
-                self.riskOverlayId, grid.riskMapId, 0, 0, 0, grid.riskNumChannels, band, c[1], c[2], c[3])
+                overlayId, grid.riskMapId, 0, 0, 0, grid.riskNumChannels, band, c[1], c[2], c[3])
         end
     end
 
-    generateDensityMapVisualizationOverlay(self.riskOverlayId)
-    self.riskOverlayReady = false
+    generateDensityMapVisualizationOverlay(overlayId)
+    self.riskPendingSlot = slot
     return true
 end
 
@@ -413,25 +440,30 @@ function RealisticCropRotationDiseaseMap:updateOverlay(force)
     end
 end
 
----Draws the active view's overlay on the map rect. The overlay waits for its async
----generation once, then keeps rendering (the reference mod's ready-gated draw).
+---Draws the active view's overlay on the map rect (double-buffered -- see createRuntimeObjects). If the
+---slot currently regenerating in the background has finished, it becomes the new active slot (swap);
+---the map always draws whichever slot last finished successfully, so it is NEVER blank after the first
+---generation -- a refresh only ever swaps between two already-valid textures, no visible gap.
 function RealisticCropRotationDiseaseMap:draw(x, y, width, height)
-    local overlayId, ready
+    local overlayIds, pendingSlotField, activeSlotField
     if self:isPressurePage() then
-        if self.riskOverlayId ~= nil and not self.riskOverlayReady
-            and getIsDensityMapVisualizationOverlayReady(self.riskOverlayId) then
-            self.riskOverlayReady = true
-        end
-        overlayId, ready = self.riskOverlayId, self.riskOverlayReady
+        overlayIds, pendingSlotField, activeSlotField = self.riskOverlayIds, "riskPendingSlot", "riskActiveSlot"
     else
-        if self.infectionOverlayId ~= nil and not self.infectionOverlayReady
-            and getIsDensityMapVisualizationOverlayReady(self.infectionOverlayId) then
-            self.infectionOverlayReady = true
-        end
-        overlayId, ready = self.infectionOverlayId, self.infectionOverlayReady
+        overlayIds, pendingSlotField, activeSlotField = self.infectionOverlayIds, "infectionPendingSlot", "infectionActiveSlot"
+    end
+    if overlayIds == nil then return end
+
+    local pendingSlot = self[pendingSlotField]
+    if pendingSlot ~= nil and getIsDensityMapVisualizationOverlayReady(overlayIds[pendingSlot]) then
+        self[activeSlotField] = pendingSlot
+        self[pendingSlotField] = nil
     end
 
-    if ready and overlayId ~= nil and overlayId ~= 0 then
+    local activeSlot = self[activeSlotField]
+    if activeSlot == nil then return end -- nothing has finished generating yet
+
+    local overlayId = overlayIds[activeSlot]
+    if overlayId ~= nil and overlayId ~= 0 then
         setOverlayUVs(overlayId, 0, 0, 0, 1, 1, 0, 1, 1)
         renderOverlay(overlayId, x, y, width, height)
     end
