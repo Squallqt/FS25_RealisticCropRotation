@@ -33,8 +33,7 @@ function RealisticCropRotationHud.getFruitTypeDisplayName(fruitType)
 end
 
 ---i18n lookup with a fallback when the key is missing.
--- @param string key
--- @param string fallback
+-- @param string key, fallback
 -- @return string text
 function RealisticCropRotationHud.getText(key, fallback)
     if g_i18n ~= nil and g_i18n.getText ~= nil then
@@ -111,9 +110,7 @@ function RealisticCropRotationHud.addHistoryLines(fieldBox, farmlandId)
     RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
 end
 
----World position -> a grid's local cell coordinates. Same formula the native FarmlandManager uses for
----its own local map (FarmlandManager:convertWorldToLocalPosition): floor(mapSize * (world + terrainSize
----/ 2) / terrainSize). Trivial, no loop.
+---World position -> grid cell (matches FarmlandManager:convertWorldToLocalPosition's formula).
 -- @param number worldX, worldZ; @param integer mapSize
 -- @return integer localX, localZ, or nil when unavailable
 local function worldToGridCell(worldX, worldZ, mapSize)
@@ -132,12 +129,8 @@ local function isPointProtected(protectionMapId, mapSize, worldX, worldZ)
     return (getBitVectorMapPoint(protectionMapId, localX, localZ, 0, 1) or 0) > 0
 end
 
----Appends a disease status line to the field-info box when an infection is active AND the player is
----NOT standing on a cell already sprayed for that group's treatment family. Curative/preventive
----spraying excludes cells from destruction one cell at a time (RealisticCropRotationDiseaseGrid:
----paintProtection), so the farmland-level severity alone can no longer tell "active" apart from
----"already treated here" -- checking the player's own position against the SAME per-cell protection map
----the destroy pass reads is what makes the two agree.
+---Appends a disease status line, skipped if the player stands on a cell already protected (severity
+---alone can't tell "active" apart from "already treated here").
 -- @param table fieldBox Field-info box with addLine
 -- @param integer farmlandId
 function RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
@@ -164,7 +157,7 @@ function RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
                 local protectionMapId = nil
                 if treatment == "FUNGICIDE" then protectionMapId = grid.fungicideProtectionMapId
                 elseif treatment == "NEMATICIDE" then protectionMapId = grid.nematicideProtectionMapId end
-                protectedHere = isPointProtected(protectionMapId, grid.size, px, pz)
+                protectedHere = isPointProtected(protectionMapId, grid.protectionMapSize, px, pz)
             end
 
             if not protectedHere then
@@ -178,8 +171,7 @@ function RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
 end
 ---Resolves the (tierText, numbers) override for the on-foot "Croissance:" line.
 -- @param table data Field-info data
--- @return string tierText Tier label, or nil
--- @return string numbers "X/Y" progress, or nil
+-- @return string tierText, numbers Tier label, "X/Y" progress (nil, nil if unavailable)
 local function resolveGrowthOverride(data)
     if data == nil or g_fruitTypeManager == nil then return nil, nil end
     if RealisticCropRotationManager == nil then return nil, nil end
@@ -211,10 +203,7 @@ local function resolveGrowthOverride(data)
 end
 
 ---Overwrite of PlayerHUDUpdater.fieldAddField: injects the numeric growth into the growth row.
--- @param table hudSelf PlayerHUDUpdater instance
--- @param function superFunc Original function
--- @param table data Field-info data
--- @param table fieldBox Field-info box
+-- @param table hudSelf, data, fieldBox; function superFunc HUD updater, field data, field box, original fn
 function RealisticCropRotationHud.fieldAddField(hudSelf, superFunc, data, fieldBox, ...)
     local hookData = data
     local hookFieldBox = fieldBox
@@ -247,10 +236,7 @@ function RealisticCropRotationHud.fieldAddField(hudSelf, superFunc, data, fieldB
 end
 
 ---Overwrite of PlayerHUDUpdater.fieldAddFarmland: appends our rotation history rows.
--- @param table hudSelf PlayerHUDUpdater instance
--- @param function superFunc Original function
--- @param table data Field-info data
--- @param table fieldBox Field-info box
+-- @param table hudSelf, data, fieldBox; function superFunc HUD updater, field data, field box, original fn
 function RealisticCropRotationHud.fieldAddFarmland(hudSelf, superFunc, data, fieldBox)
     RealisticCropRotationHud.hudInstance = hudSelf
     local farmlandId = data ~= nil and data.farmlandId or nil
@@ -274,10 +260,9 @@ end
 -- capture box, read back the exact (label, value). nil when no weed line applies.
 RealisticCropRotationHud.hudInstance = nil
 
----Mirrors the base-game weed row via the real fieldAddWeed + a capture box.
+---Reads the weed row via the real fieldAddWeed + a capture box.
 -- @param table data Field-info data (weedState, fruitTypeIndex, growthState, farmlandId)
--- @return string label Weed stage label, or nil
--- @return string value Tool recommendation, or nil
+-- @return string label, value Weed stage label, tool recommendation (nil, nil if none)
 function RealisticCropRotationHud.getWeedLineFromGame(data)
     if data == nil or PlayerHUDUpdater == nil or PlayerHUDUpdater.fieldAddWeed == nil then
         return nil

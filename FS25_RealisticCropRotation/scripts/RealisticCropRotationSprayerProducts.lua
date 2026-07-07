@@ -6,7 +6,7 @@
 -- not visibly adopt the swapped material for this shader), so it was removed. The mod's
 -- treatment feedback lives on the ground/map layer instead, not the nozzle.
 --
--- Two responsibilities here:
+-- Three responsibilities here:
 --
 --   1. Register an engine sprayType for each product. Without one,
 --      Sprayer:onStartWorkAreaProcessing() stores sprayType = nil and
@@ -23,6 +23,14 @@
 --      params.isActive / params.lastSprayTime so consumption and the spray
 --      effect run like a native product. The curative+preventive disease protection
 --      paint is applied inside this same hook (server-only, see paintDiseaseProtection).
+--
+--   3. AI job completion (setSprayerAITerrainDetailProhibitedRange): our sprayType is registered
+--      under the HERBICIDE family (for responsibility 2's short-circuit), so the AI falls into the
+--      native isHerbicide branch by default, which looks for a weed-replacement map that does not
+--      exist for our custom fillTypes -- no prohibitions ever get set, and the AI never knows the
+--      job is done. Hooked to apply the SAME "prohibit re-working an already-done cell" pattern
+--      native fertilizer/lime AI uses (addAIFruitProhibitions against a density map's value), just
+--      reading our own per-cell protection map instead of SPRAY_LEVEL -- see setAITerrainDetail below.
 --
 --      TIMING (GIANTS truth, dataS/scripts): the overwrite MUST be installed
 --      when this file is sourced, NOT at mission load. TypeManager:finalizeTypes()
@@ -165,6 +173,46 @@ local function paintDiseaseProtection(workArea, fillType)
     grid:paintProtection(treatmentType, sx, sz, wx, wz, hx, hz)
 end
 
+---AI job-completion rule: prohibits re-working an already-protected cell.
+-- @param table self sprayer vehicle; @param function superFunc native implementation; @param integer fillType
+local function setSprayerAITerrainDetailProhibitedRange(self, superFunc, fillType)
+    if not RealisticCropRotationSprayerProducts.isProductFillType(fillType) then
+        return superFunc(self, fillType)
+    end
+
+    if not self:getUseSprayerAIRequirements() then return end
+    if self.addAITerrainDetailProhibitedRange == nil then return end
+
+    self:clearAITerrainDetailRequiredRange()
+    self:clearAITerrainDetailProhibitedRange()
+    self:clearAIFruitRequirements()
+    self:clearAIFruitProhibitions()
+
+    local treatmentType = RealisticCropRotationSprayerProducts.getProductTreatment(fillType)
+    local grid = RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
+    if treatmentType == nil or grid == nil then return end
+
+    local protectionMapId = treatmentType == "FUNGICIDE" and grid.fungicideProtectionMapId
+        or treatmentType == "NEMATICIDE" and grid.nematicideProtectionMapId or nil
+    if protectionMapId == nil or RealisticCropRotationDiseaseGrid == nil then return end
+
+    self:addAIGroundTypeRequirements(Sprayer.AI_REQUIRED_GROUND_TYPES)
+
+    -- Already-protected (value 1) cells are excluded, same overload native fertilizer/lime use.
+    self:addAIFruitProhibitions(0, 1, 1, protectionMapId, 0, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS)
+
+    -- Don't work a field whose crop is already past its harvest-ready growth state.
+    if g_fruitTypeManager ~= nil then
+        for _, fruitType in pairs(g_fruitTypeManager:getFruitTypes()) do
+            if fruitType.terrainDataPlaneId ~= nil and string.lower(fruitType.name) ~= "grass" then
+                if fruitType.minHarvestingGrowthState ~= nil and fruitType.maxHarvestingGrowthState ~= nil then
+                    self:addAIFruitProhibitions(fruitType.index, fruitType.minHarvestingGrowthState, fruitType.maxHarvestingGrowthState)
+                end
+            end
+        end
+    end
+end
+
 ---Server: merges the just-painted strip into the per-farmland treated-ground record (accumulated
 ---bounds + the current day), so the daily fade sweep knows what to erase and when. Uses the strip's
 ---corner and centre points to find the farmland(s), like the curative sampling.
@@ -300,6 +348,15 @@ local function installSprayerHook()
 
         return 0, 0
     end)
+
+    -- AI job completion: without this, our HERBICIDE-family sprayType falls into the native
+    -- isHerbicide branch (no weed-replacement data for a custom fillType -> no prohibitions ever set
+    -- -> the AI never knows the field is done). See setSprayerAITerrainDetailProhibitedRange's own
+    -- header comment for the full reasoning.
+    if Sprayer.setSprayerAITerrainDetailProhibitedRange ~= nil then
+        Sprayer.setSprayerAITerrainDetailProhibitedRange = Utils.overwrittenFunction(
+            Sprayer.setSprayerAITerrainDetailProhibitedRange, setSprayerAITerrainDetailProhibitedRange)
+    end
 
     hookInstalled = true
 end

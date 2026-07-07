@@ -35,8 +35,6 @@ function RealisticCropRotation.isFallowCrop(cropName)
         and string.upper(tostring(cropName)) == RealisticCropRotation.SPECIAL_CROP_FALLOW
 end
 
--- Loads cropConfig.xml once at mod init.
--- Returns a config table: { families, nitrogen, coverCrops }.
 ---Loads cropConfig.xml into a families/nitrogen/coverCrops table.
 -- @return table config Crop config, or nil on failure
 local function loadCropConfig()
@@ -110,10 +108,7 @@ local function loadCropConfig()
             -- Rain multiplier for fungal groups (default RAIN_BONUS in Disease.lua when omitted);
             -- read only for fungal groups, ignored for soil-borne ones.
             config.diseaseWeatherFactors[upper] = getXMLFloat(xmlFile, gkey .. "#weatherFactor")
-            -- Daily destruction profile (all optional; nil -> module fallbacks in getCurve):
-            --   dailyGrowth     : severity gained per in-game day (fungal fast, nematode slow)
-            --   destroySeverity : latent threshold below which nothing dies yet
-            --   deadFractionMax : ceiling on the destroyed share at full severity
+            -- Daily destruction profile (optional; nil -> module fallbacks in getCurve): growth rate, destroy threshold, max destroyed share.
             config.diseaseCurves[upper] = {
                 dailyGrowth     = getXMLFloat(xmlFile, gkey .. "#dailyGrowth"),
                 destroySeverity = getXMLFloat(xmlFile, gkey .. "#destroySeverity"),
@@ -298,9 +293,7 @@ local function applyTabListAlignmentFix()
 end
 
 ---Injects the RealisticCropRotationFrame as a tab in the InGameMenu paging element.
--- @param string frameFieldName Field name exposed on g_inGameMenu
--- @param function predicateFunc Page visibility predicate
--- @param string|integer insertPosition Tab index, or a sibling page field name to insert after
+-- @param string frameFieldName, insertPosition; function predicateFunc Field name, insert position (index or sibling field name), visibility predicate
 -- @return table frame The registered frame, or nil on failure
 function RealisticCropRotation.addInGameMenuPage(frameFieldName, predicateFunc, insertPosition)
     if g_inGameMenu == nil then return nil end
@@ -397,11 +390,8 @@ local function loadedMission()
     end
 
     loadGuiAssets()
-    -- Wires the RCR sprayer products (sprayTypes + fillType set for the
-    -- processSprayerArea hook installed at source time). Without this call the
-    -- products have no engine sprayType: Sprayer:onStartWorkAreaProcessing()
-    -- stores sprayType = nil, the native ground call aborts before
-    -- params.lastSprayTime is refreshed and the spray effect never starts.
+    -- Wires RCR sprayer products; without this, Sprayer:onStartWorkAreaProcessing() gets sprayType
+    -- = nil and the native ground call aborts before the spray effect starts.
     if RealisticCropRotationSprayerProducts ~= nil
         and type(RealisticCropRotationSprayerProducts.onMissionLoaded) == "function" then
         RealisticCropRotationSprayerProducts.onMissionLoaded()

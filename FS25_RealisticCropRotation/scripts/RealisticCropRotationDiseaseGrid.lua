@@ -4,11 +4,9 @@ local RealisticCropRotationDiseaseGrid_mt = Class(RealisticCropRotationDiseaseGr
 
 RealisticCropRotationDiseaseGrid.GRID_SIZE = 2048
 -- 4 channels hold a per-disease state 0..15 (0 = clean), enough for the 9 pathogens (states 1..9)
--- so each disease is painted with its OWN colour on the parcel. The filename carries a version
--- suffix: the channel count changed from the old 2-state (fungal/soil) format, so an old .grle is
--- NOT read back (it would be misinterpreted); the infection overlay simply repaints from live state.
+-- so each disease is painted with its OWN colour on the parcel.
 RealisticCropRotationDiseaseGrid.NUM_CHANNELS = 4
-RealisticCropRotationDiseaseGrid.FILENAME = "realisticCropRotationDiseaseGrid_v2.grle"
+RealisticCropRotationDiseaseGrid.FILENAME = "realisticCropRotationDiseaseGrid.grle"
 
 -- Per-cell curative/preventive protection, one bitvector per treatment family (0/1, 1 channel each,
 -- same resolution as the main grid so cell-for-cell it lines up 1:1). A cell painted protected is
@@ -19,9 +17,8 @@ RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS = 1
 RealisticCropRotationDiseaseGrid.FUNGICIDE_PROTECTION_FILENAME = "realisticCropRotationFungicideProtection.grle"
 RealisticCropRotationDiseaseGrid.NEMATICIDE_PROTECTION_FILENAME = "realisticCropRotationNematicideProtection.grle"
 
--- Risk map: a runtime-only display map (never saved) holding the per-field risk band 0..3 on
--- worked-soil cells. Painted natively off the UI path (load / period tick / ownership / MP sync)
--- and rendered directly by the map overlay, BMP-style: no mask and no map building at render time.
+-- Risk map: runtime-only display map (never saved), painted off the UI path, rendered with no
+-- mask and no map building at render time.
 RealisticCropRotationDiseaseGrid.RISK_MAP_SIZE = 1024
 RealisticCropRotationDiseaseGrid.RISK_NUM_CHANNELS = 2
 
@@ -42,6 +39,7 @@ function RealisticCropRotationDiseaseGrid.new()
     self.changeRevision = 0
     self.fungicideProtectionMapId = nil
     self.nematicideProtectionMapId = nil
+    self.protectionMapSize = self.size  -- overwritten in loadMap once the real ground-detail size is known
     self.protectionRevision = 0
     self.riskMapId = nil
     self.riskMapSize = RealisticCropRotationDiseaseGrid.RISK_MAP_SIZE
@@ -98,8 +96,21 @@ function RealisticCropRotationDiseaseGrid:loadMap(savegamePath)
     local w = getBitVectorMapSize(self.mapId)
     self.size = tonumber(w) or self.size
 
-    -- Per-cell protection maps, one per treatment family, loaded/created at the SAME resolution as the
-    -- main grid so they line up 1:1 with it.
+    -- Protection maps must match the native ground-detail resolution (required by the sprayer AI hook).
+    local protectionMapSize = self.size
+    local protectionSizeResolved = false
+    if g_currentMission ~= nil then
+        local queriedSize = tonumber(g_currentMission.terrainDetailMapSize)
+        if queriedSize ~= nil and queriedSize > 0 then
+            protectionMapSize = queriedSize
+            protectionSizeResolved = true
+        end
+    end
+    if not protectionSizeResolved then
+        Logging.warning("[RealisticCropRotation] Could not read g_currentMission.terrainDetailMapSize; falling back to %d for the protection maps. The sprayer AI prohibitions will fail on this savegame if the real ground-detail resolution differs.", protectionMapSize)
+    end
+    self.protectionMapSize = protectionMapSize
+
     self.fungicideProtectionMapId = createBitVectorMap("rcrFungicideProtection")
     local loadedFungProt = false
     if savegamePath ~= nil and savegamePath ~= "" then
@@ -109,7 +120,7 @@ function RealisticCropRotationDiseaseGrid:loadMap(savegamePath)
         end
     end
     if not loadedFungProt then
-        loadBitVectorMapNew(self.fungicideProtectionMapId, self.size, self.size, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, false)
+        loadBitVectorMapNew(self.fungicideProtectionMapId, protectionMapSize, protectionMapSize, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, false)
     end
 
     self.nematicideProtectionMapId = createBitVectorMap("rcrNematicideProtection")
@@ -121,7 +132,7 @@ function RealisticCropRotationDiseaseGrid:loadMap(savegamePath)
         end
     end
     if not loadedNemaProt then
-        loadBitVectorMapNew(self.nematicideProtectionMapId, self.size, self.size, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, false)
+        loadBitVectorMapNew(self.nematicideProtectionMapId, protectionMapSize, protectionMapSize, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, false)
     end
 
     -- Runtime-only risk display map (never saved: risk is derived from the synced history).
@@ -174,10 +185,7 @@ function RealisticCropRotationDiseaseGrid:clearRiskMap()
     self.riskRevision = (self.riskRevision or 0) + 1
 end
 
----Paints one field's risk band into the risk display map, on its worked-soil cells only
----(farmland map EQUAL farmlandId + groundType GREATER 0): the shape is the real cultivable
----field, like BMP's overlay base, not the cadastral parcel. Same native modifier+filters
----mechanism as clearField / the destruction pass. band 0 erases the field's cells.
+---Paints one field's risk band into the risk display map, on worked-soil cells only. band 0 erases.
 -- @param table field game Field object (for the world bbox)
 -- @param integer farmlandId
 -- @param integer band risk band 0..3
@@ -316,14 +324,8 @@ function RealisticCropRotationDiseaseGrid:clearAll()
     self.changeRevision = (self.changeRevision or 0) + 1
 end
 
----Server (+ near clients, matching the native ground-visual paint): marks the sprayed strip as
----protected for the given treatment family AND clears this area's disease-overlay marks immediately,
----both restricted to the strip actually sprayed (per-bande). NEVER touches the real crop map. Protection
----is read by the daily destruction pass (RealisticCropRotationDisease), which excludes protected cells
----from ALL future destruction there -- this is what makes spraying BOTH cure an existing infection under
----the strip (it stops being destroyed further) AND prevent a future one (it can never start destroying
----there), with the SAME mechanism. A field-ground filter (groundType > 0) keeps the paint off roads,
----yards and standing water, matching the ground-visual paint's own precedent.
+---Marks the sprayed strip protected for the given family and clears its disease marks immediately.
+---The daily destruction pass excludes protected cells, so the SAME write both cures and prevents.
 -- @param string family "FUNGICIDE" | "NEMATICIDE"
 -- @param number sx, sz, wx, wz, hx, hz world-space parallelogram corners of the sprayed strip
 function RealisticCropRotationDiseaseGrid:paintProtection(family, sx, sz, wx, wz, hx, hz)
@@ -355,10 +357,7 @@ function RealisticCropRotationDiseaseGrid:paintProtection(family, sx, sz, wx, wz
 
     local gridModifier = DensityMapModifier.new(self.mapId, 0, self.numChannels, g_terrainNode)
     gridModifier:setParallelogramWorldCoords(sx, sz, wx, wz, hx, hz, DensityCoordType.POINT_POINT_POINT)
-    -- executeSetWithStats (same native call BMP's own damage pass uses) reports how many cells actually
-    -- changed. Bumping changeRevision unconditionally on every spray tick -- even over cells that were
-    -- already clean -- forced the map overlay to regenerate (async GPU rebuild) roughly once a second
-    -- while spraying, which reads as flicker. Only a REAL change should trigger a rebuild.
+    -- Only bump changeRevision on a real change, or every spray tick forces an overlay rebuild (flicker).
     local _, changed = gridModifier:executeSetWithStats(0, groundFilter)
     if (changed or 0) > 0 then
         self.changeRevision = (self.changeRevision or 0) + 1

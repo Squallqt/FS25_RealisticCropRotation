@@ -7,8 +7,7 @@ InitEventClass(RCRHistoryResponseEvent, "RCRHistoryResponseEvent")
 
 ---Counts farmlands that have history and the total number of entries.
 -- @param table history Map of farmlandId -> entry list
--- @return integer farmlandCount Farmlands that have history
--- @return integer entryCount Total history entries
+-- @return integer farmlandCount, entryCount Farmlands with history, total entries
 local function countHistory(history)
     local farmlandCount = 0
     local entryCount = 0

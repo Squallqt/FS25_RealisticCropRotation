@@ -75,8 +75,7 @@ function RealisticCropRotationService:getResidueEntry(cropName)
     return nil
 end
 
----Nitrogen residue to deposit when a crop is terminated by tillage, in PF states:
----the terminated crop's n1 (year 1) plus the previously-recorded crop's n2 (year 2).
+---Nitrogen residue to deposit on termination, in PF states: the crop's own n1 plus the previous crop's carried-over n2.
 -- @param integer farmlandId
 -- @param string terminatedCropName Crop being destroyed by the tool
 -- @return integer states

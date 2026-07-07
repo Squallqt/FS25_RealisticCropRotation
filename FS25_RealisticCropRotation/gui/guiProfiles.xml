@@ -1,25 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <GUIProfiles>
 
-    <!-- ============================================================ -->
-    <!--  Profiles referenced by name from RealisticCropRotationFrame.lua -->
-    <!--  via applyProfile() — renaming any of these breaks the GUI    -->
-    <!--  silently (no XML-side error):                                -->
-    <!--    frStatusPillBg, frStatusPillBgBonus,                       -->
-    <!--    frFieldKpiValue, frFieldKpiValueNA, frFieldKpiValueSmall    -->
-    <!-- ============================================================ -->
+    <!-- Profiles referenced by name from Lua via applyProfile(): renaming breaks the GUI silently -->
 
-    <!-- ============================================================ -->
-    <!--  SIDEBAR                                                      -->
-    <!-- ============================================================ -->
+    <!-- Sidebar -->
 
     <Profile name="frSidebarList" extends="emptyPanel"/>
 
-    <!-- ============================================================ -->
-    <!--  SIDEBAR CELL                                               -->
-    <!--    Line 1 y=-18: field name bold 16px | area right         -->
-    <!--    Line 2 y=-46: crop · family  muted 12px                 -->
-    <!-- ============================================================ -->
+    <!-- Sidebar cell -->
 
     <!-- Field name — line 1 (width fits "prefix + number" up to the right-aligned area text) -->
     <Profile name="frSidebarItemName" extends="fs25_subCategoryListItemName">
@@ -53,18 +41,14 @@
         <textSelectedColor value="$preset_fs25_colorMainDark"/>
     </Profile>
 
-    <!-- ============================================================ -->
-    <!--  DETAIL CONTAINER                                             -->
-    <!-- ============================================================ -->
+    <!-- Detail container -->
 
     <Profile name="frDetailContainer" extends="baseReference" with="anchorTopLeft">
         <width value="1280px"/>
         <position value="0px -28px"/>
     </Profile>
 
-    <!-- ===== Hero card (1240 x 88 px) ===== -->
-    <!--  Row 1 (y=12..56): field name large    -->
-    <!--  Row 2 (y=60..80): ha · season + pill  -->
+    <!-- Hero card (1240 x 88 px) -->
 
     <Profile name="frHeroCard" extends="emptyPanel" with="anchorTopLeft">
         <size value="1280px 56px"/>
@@ -217,18 +201,7 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- ============================================================ -->
-    <!--  TIMELINE STRIP                                               -->
-    <!--                                                               -->
-    <!--  5 slot cards (224 px) + 4 arrow gaps (25 px) = 1220 px      -->
-    <!--  plus 8 px left margin = 1228 px inside 1240 px container     -->
-    <!--  Slot height: 186 px (fills the block). No global rail: each   -->
-    <!--  card owns its bg.                                              -->
-    <!--                                                               -->
-    <!--  Cards read present->past, left to right: CURRENT (left,       -->
-    <!--  anchor) fading to N-4 (right, faintest):                      -->
-    <!--  Current crop 0.58 / N1 0.50 / N2 0.44 / N3 0.32 / N4 0.22     -->
-    <!-- ============================================================ -->
+    <!-- Timeline strip: 5 slot cards + 4 arrow gaps, present-to-past left to right -->
 
     <Profile name="frTimeline" extends="emptyPanel" with="anchorTopLeft">
         <size value="1240px 186px"/>
@@ -344,9 +317,7 @@
         <size value="25px 186px"/>
     </Profile>
 
-    <!-- ============================================================ -->
-    <!--  NITROGEN / LIME GAUGE CARD (1240 x 54 px)                   -->
-    <!-- ============================================================ -->
+    <!-- Nitrogen / lime gauge card (1240 x 54 px) -->
 
     <Profile name="frNitrogenCard" extends="emptyPanel" with="anchorTopLeft">
         <size value="1240px 54px"/>
@@ -385,8 +356,7 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Progress bar track (full width, closer to bottom) -->
-    <!-- keep in sync with RealisticCropRotationFrame.lua N_BAR_MAX_WIDTH (1192) -->
+    <!-- Progress bar track (keep width in sync with N_BAR_MAX_WIDTH in Lua) -->
     <Profile name="frNitrogenTrack" extends="baseReference" with="anchorBottomLeft">
         <position value="24px 10px"/>
         <size value="1192px 14px"/>
@@ -407,9 +377,7 @@
         <color value="$preset_fs25_colorGreen"/>
     </Profile>
 
-    <!-- ============================================================ -->
-    <!--  AGRONOMIC ADVICE CARD (1240 x 64 px)                        -->
-    <!-- ============================================================ -->
+    <!-- Agronomic advice card (1240 x 64 px) -->
 
     <Profile name="frAdviceCard" extends="emptyPanel" with="anchorTopLeft">
         <size value="1240px 64px"/>
@@ -440,9 +408,7 @@
         <textMaxNumLines value="3"/>
     </Profile>
 
-    <!-- ============================================================ -->
-    <!--  FIELD CARD (1240 x 82 px)                                    -->
-    <!-- ============================================================ -->
+    <!-- Field card (1240 x 82 px) -->
 
     <Profile name="frFieldCard" extends="emptyPanel" with="anchorTopLeft">
         <size value="1240px 82px"/>
@@ -495,9 +461,7 @@
         <textColor value="$preset_fs25_colorGrey"/>
     </Profile>
 
-    <!-- Compact value for KPIs that carry composed text ("(<stage>) · <tool>"
-         for the weed KPI, "(X/Y) · <tier>" for the growth KPI). 26px would
-         clip on a 393px-wide cell with one line; 18px keeps both safe. -->
+    <!-- Compact value for KPIs with composed text; smaller size avoids clipping -->
     <Profile name="frFieldKpiValueSmall" extends="frFieldKpiValue">
         <textSize value="18px"/>
     </Profile>
@@ -510,9 +474,7 @@
         <cornerSize value="0.05"/>
     </Profile>
 
-    <!-- ============================================================ -->
-    <!--  PLANNING TAB                                                 -->
-    <!-- ============================================================ -->
+    <!-- Planning tab -->
 
     <!-- Same size/anchor as frDetailContainer — shown in planning tab -->
     <Profile name="frPlanContainer" extends="frDetailContainer"/>
@@ -564,10 +526,7 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Vertical month grid lines. Rendered as RoundCorner (NOT Bitmap): a
-         <Bitmap> ignores <color> and draws the default white texture, whereas
-         RoundCorner honours <color> — same proven pattern as frFieldDivider.
-         Width is overridden per line in Lua (thin intra-season / thick season). -->
+    <!-- Vertical month grid lines: RoundCorner (not Bitmap) so <color> applies -->
     <Profile name="frCalendarMonthGridLine" extends="baseReference" with="anchorTopLeft">
         <position value="94px -38px"/>
         <size value="1px 188px"/>
@@ -654,9 +613,7 @@
         <cornerSize value="0.17"/>
     </Profile>
 
-    <!-- Legend: anchored to the right edge of the timeline, aligned with the editor.
-         Children positions/sizes are computed in Lua (layoutCalendarLegend) since the
-         label widths depend on the localized text. -->
+    <!-- Legend: anchored to timeline right edge; children positioned in Lua -->
     <Profile name="frCalendarLegend" extends="emptyPanel" with="anchorTopRight">
         <position value="-10px -7px"/>
         <size value="460px 24px"/>
@@ -717,8 +674,7 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Cursor track: pill shape (cornerSize 0.5), like BankCredit portfolio bar -->
-    <!-- keep in sync with RealisticCropRotationFrame.lua updateScoreCard (trackW=400) -->
+    <!-- Cursor track: pill shape; keep width in sync with updateScoreCard (trackW=400) -->
     <Profile name="frScoreTrack" extends="baseReference" with="anchorMiddleRight">
         <position value="-24px 0px"/>
         <size value="400px 14px"/>
@@ -726,8 +682,7 @@
         <cornerSize value="0.5"/>
     </Profile>
 
-    <!-- Cursor positioner: transparent, width changes in Lua to move cursor -->
-    <!-- keep in sync with RealisticCropRotationFrame.lua updateScoreCard (trackW=400) -->
+    <!-- Cursor positioner: width set in Lua to move cursor; keep in sync with trackW=400 -->
     <Profile name="frScoreCursorPos" extends="emptyPanel" with="anchorMiddleLeft">
         <position value="816px 0px"/>
         <size value="14px 14px"/>
@@ -740,11 +695,7 @@
         <cornerSize value="0.5"/>
     </Profile>
 
-    <!-- Track labels: scale endpoints.
-         Left label starts exactly under the gauge left edge.
-         Right label ends exactly under the gauge right edge.
-         Vertical offset: 10px below the 14px track. -->
-    <!-- keep in sync with RealisticCropRotationFrame.lua updateScoreCard (trackW=400) -->
+    <!-- Track labels: scale endpoints, aligned to gauge edges (keep in sync with trackW=400) -->
     <Profile name="frScoreLabelLeft" extends="fs25_textDefault" with="anchorMiddleLeft">
         <position value="816px -14px"/>
         <size value="180px 14px"/>
@@ -769,8 +720,7 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- ===== Global overview (1240 x 312 px) ===== -->
-    <!-- wrap y=-520 + h=312 = bottom at y=-832, matching history panel -->
+    <!-- Global overview (1240 x 312 px); wrap bottom matches history panel -->
 
     <Profile name="frOverviewWrap" extends="emptyPanel" with="anchorTopLeft">
         <size value="1240px 312px"/>
@@ -841,8 +791,7 @@
         <size value="20px 20px"/>
     </Profile>
 
-    <!-- Crop name text inside global overview badge.
-         Positioned in Lua so [icon + 10px gap + text] is centered as a group. -->
+    <!-- Crop name text inside global overview badge; positioned in Lua -->
     <Profile name="frGroupBadgeLabel" extends="fs25_textDefault" with="anchorTopLeft">
         <size value="300px 30px"/>
         <textSize value="11px"/>
@@ -908,8 +857,7 @@
         <autoValidateLayout value="true"/>
     </Profile>
 
-    <!-- Score label; position is assigned by frOverviewMetaColumn. -->
-    <!-- textColor set in Lua -->
+    <!-- Score label; position assigned by frOverviewMetaColumn, color set in Lua -->
     <Profile name="frOverviewScore" extends="fs25_textDefault">
         <size value="228px 22px"/>
         <textSize value="14px"/>
@@ -951,9 +899,7 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Field names — bottom strip                                        -->
-    <!-- card=1206 | text_start=132 | left_gap=28 → right_gap=28          -->
-    <!-- text_end = 1206-28 = 1178 | width = 1178-132 = 1046px            -->
+    <!-- Field names — bottom strip -->
     <Profile name="frGroupFieldNames" extends="fs25_textDefault" with="anchorTopLeft">
         <position value="132px -64px"/>
         <size value="1046px 14px"/>
@@ -968,9 +914,7 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- ============================================================ -->
-    <!--  EMPTY STATE                                                   -->
-    <!-- ============================================================ -->
+    <!-- Empty state -->
 
     <Profile name="frEmptyText" extends="fs25_textDefault" with="anchorMiddleCenter">
         <position value="0px 0px"/>

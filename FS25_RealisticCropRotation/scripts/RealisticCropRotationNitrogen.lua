@@ -269,8 +269,7 @@ local function getTransition(data)
     return transition
 end
 
----Captures the given crops' pixels before native destruction. Only the mask groups
----holding one of those crops are cleared (stamp-deduplicated, no allocation).
+---Captures the given crops' pixels before native destruction (only their mask groups are cleared, stamp-deduplicated).
 local function capture(context, crops, sx, sz, wx, wz, hx, hz)
     context.captureStamp = context.captureStamp + 1
     local stamp = context.captureStamp
@@ -432,10 +431,8 @@ local function resetContext(context)
     end
 end
 
----Cheap pre-filter, then mask capture. Runs no density-map work at all when the
----area is outside any farmland or when no crop can deposit residue there:
----  - previous crop carries n2 -> every configured crop can deposit, capture all;
----  - otherwise only crops with their own n1 > 0 (static subset) are captured.
+---Cheap pre-filter before mask capture: skips density-map work entirely off-farmland, and captures
+---only the static n1>0 crop subset unless the previous crop carries n2 (then any crop can deposit).
 local function prepare(sx, sz, wx, wz, hx, hz)
     if manager == nil or manager.service == nil then return nil end
     local farmlandId = getFarmlandId(sx, sz, wx, wz, hx, hz)
@@ -474,11 +471,8 @@ function RealisticCropRotationNitrogen.install(rcrManager)
 
     installed = true
 
-    -- Shared wrapper body for both tillage entry points. Same interception point as
-    -- GIANTS' own FS25 Precision Farming mod (its overwrite registry hooks exactly
-    -- FSDensityMapUtil.updateDestroyCommonArea and updateDiscHarrowArea for nitrogen);
-    -- the engine offers no "fruit destroyed" callback. prepare() early-outs with zero
-    -- density-map work when the farmland carries no rotation residue.
+    -- No native "fruit destroyed" callback exists, so these two functions are hooked directly;
+    -- prepare() no-ops with no rotation residue.
     local function makeTillageWrapper()
         return function(sx, superFunc, sz, wx, wz, hx, hz, ...)
             local context, active, farmlandId

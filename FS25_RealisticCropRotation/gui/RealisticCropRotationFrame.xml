@@ -54,22 +54,7 @@
             <Text profile="fs25_menuHeaderTitle" id="menuHeaderTitle" text="$l10n_realisticCropRotation_menu_title"/>
         </GuiElement>
 
-        <!-- ===================== DETAIL CONTAINER ===================== -->
-        <!--                                                              -->
-        <!--  Balanced layout — leaves room for the FS25 bottom help bar: -->
-        <!--    Hero           y=   0  h= 56                             -->
-        <!--    Section HIST   y= -66  h= 32                             -->
-        <!--    Timeline       y=-112  h=186   gap title/card = 14       -->
-        <!--    Section N      y=-330  h= 32   group gap = 32            -->
-        <!--    N gauge        y=-374  h= 54   gap title/card = 12       -->
-        <!--    Section LIME   y=-452  h= 32   group gap = 24            -->
-        <!--    Lime / pH      y=-496  h= 54                             -->
-        <!--    Section ADVICE y=-574  h= 32                             -->
-        <!--    Advice         y=-618  h= 64                             -->
-        <!--    Section FIELD  y=-706  h= 32                             -->
-        <!--    Field card     y=-750  h= 82                             -->
-        <!--    Total: 832 px                                             -->
-        <!-- ============================================================ -->
+        <!-- Detail container: hero + history/nitrogen/lime/advice/field sections, 832px total -->
         <GuiElement profile="frDetailContainer" id="detailsContainer">
 
             <!-- == HERO CARD (y=0..56) == -->
@@ -93,13 +78,7 @@
                 <Text profile="frSectionTitle" text="$l10n_rcr_section_history"/>
             </GuiElement>
 
-            <!-- == TIMELINE STRIP (y=-112..298) == -->
-            <!--                                                               -->
-            <!--  Slot x-positions (w=224, connector gap=25):                 -->
-            <!--    Slot1 x=8   Conn x=232  Slot2 x=257  Conn x=481           -->
-            <!--    Slot3 x=506 Conn x=730  Slot4 x=755  Conn x=979           -->
-            <!--    Slot5 x=1004                                               -->
-            <!-- ============================================================ -->
+            <!-- == TIMELINE STRIP (y=-112..298): 5 slot cards with connector arrows == -->
             <GuiElement profile="frTimeline" position="20px -112px">
                 <!-- == Slot 1: CURRENT active crop / ground state (leftmost) == -->
                 <GuiElement profile="frSlotCard" position="8px -4px">
@@ -254,18 +233,7 @@
 
         </GuiElement>
 
-        <!-- ===================== PLANNING CONTAINER (tab 2) ===================== -->
-        <!--                                                                        -->
-        <!--  Layout — same y-origin as detailsContainer (y=0 = top of card):      -->
-        <!--    Hero           y=   0  h= 56                                        -->
-        <!--    Section PLAN   y= -66  h= 32                                        -->
-        <!--    Calendar       y=-112  h=238   gap title/card = 14                  -->
-        <!--    Section SCORE  y=-366  h= 32   group gap = 16                       -->
-        <!--    Score card     y=-410  h= 56   gap title/card = 12                  -->
-        <!--    Section GLOBAL y=-476  h= 32   group gap = 10                       -->
-        <!--    Overview       y=-520  h=312   gap title/card = 12                  -->
-        <!--    Total: 832 px                                                        -->
-        <!-- =================================================================== -->
+        <!-- Planning container: hero + plan/score/overview sections, 832px total -->
         <GuiElement profile="frPlanContainer" id="planningContainer" visible="false">
 
             <!-- == HERO CARD (y=0..56) == -->

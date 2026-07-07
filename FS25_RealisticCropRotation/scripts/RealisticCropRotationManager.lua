@@ -60,9 +60,7 @@ local function isRealFarmOwner(farmId)
     return true
 end
 
----World-space axis-aligned bounding box of a field from its polygon corner nodes.
----FS25 Field objects carry `polygonPoints` (a list of transform nodes); there is no
----`fieldDimensions` triplet structure. Single source of truth for field bounds.
+---World-space axis-aligned bounding box of a field's polygon corner nodes (Field has no `fieldDimensions`).
 -- @param table field
 -- @return number minX, maxX, minZ, maxZ, or nil when geometry is unavailable
 local function fieldPolygonBounds(field)
@@ -185,11 +183,7 @@ local function getFruitTypeIndexAtWorldPos(x, z)
     return normalizeFruitTypeIndex(fruitTypeIndex), true, tonumber(growthState)
 end
 
----Appends a few interior sample points spread across the field to a list, so the
----majority-crop vote does not rely on the field centre alone. Points are taken at
----fixed fractions of the field's polygon bounding box and kept only when they land on
----worked field ground (terrain-detail mask), so off-field corners of an angled field
----do not pollute the vote.
+---Appends interior sample points across the field, masked to worked ground so off-field corners of an angled field don't skew the majority-crop vote.
 -- @param table field
 -- @param table samples Accumulator of { x, z } points
 local function collectFieldInteriorSamples(field, samples)
@@ -1077,8 +1071,7 @@ end
 
 -- Precision Farming soil reads (nitrogen + pH); vanilla fallback otherwise.
 
----Builds an { x, z } sample grid over the field bbox, kept to the workable ground of
----THIS farmland (terrainDetailId + getFarmlandIdAtWorldPosition) so neighbours never leak in.
+---Builds an { x, z } sample grid over the field bbox, masked to this farmland's ground so neighbours never leak in.
 -- @param table field
 -- @param integer farmlandId
 -- @return table points, or nil when no point is on the farmland
@@ -1162,8 +1155,7 @@ function RealisticCropRotationManager:getPrecisionFarming()
     return nil
 end
 
----True when a field is not yet soil-analysed: unanalysed fields read back the pH floor
----(internal state <= 1), a real pH never does. One analysis unlocks N + pH + soil type. Fail-open.
+---True when a field is not yet soil-analysed (pH reads back the floor value, which a real pH never does). Fail-open.
 -- @param table pf precisionFarming
 -- @param table field
 -- @return boolean locked
@@ -1177,8 +1169,7 @@ function RealisticCropRotationManager:isPFSoilLocked(pf, field)
     return phInternal <= 1
 end
 
----Loads PF crop nitrogen requirements (kg/ha by soil type) from the installed
----PrecisionFarming.xml, cached. Read at runtime, no hard-coded values.
+---Loads PF crop nitrogen requirements (kg/ha by soil type) from PrecisionFarming.xml at runtime, cached.
 -- @return table targets cropName(upper) -> { [soilTypeIndex]=kgPerHa }
 function RealisticCropRotationManager:getPFNitrogenTargets()
     if self.pfNitrogenTargets ~= nil then return self.pfNitrogenTargets end
@@ -1218,9 +1209,7 @@ function RealisticCropRotationManager:getPFNitrogenTargets()
     return self.pfNitrogenTargets
 end
 
----Single cached PF soil scan. Targets (besoin N, optimal pH) come from PF's native per-field
----soil distribution (exact, over the cultivable surface, no sampling). Actual N + pH are sampled:
----available N over the cropped ground (tramlines excluded), pH over all soil. Values stay precise.
+---Single cached PF soil scan: targets come from PF's native per-field soil distribution; actual N (tramlines excluded) and pH are sampled live.
 -- @param integer farmlandId
 -- @return table record, false when not analysed, or nil when PF is absent
 function RealisticCropRotationManager:scanFieldSoil(farmlandId)

@@ -536,8 +536,7 @@ function RealisticCropRotationFrame:updateWeatherPill(pill, pillBg, pillIcon, pi
     return nil
 end
 
----Updates the detail-tab residue pill: configured crop residue (n1/n2) or catch-crop cover
----residue, in kg/ha. Matches the runtime deposit source; no per-field tracking.
+---Updates the detail-tab residue pill: crop residue (n1/n2) or catch-crop cover residue, in kg/ha.
 -- @param table pillBg
 -- @param table pillText
 -- @param integer farmlandId
@@ -1080,8 +1079,7 @@ function RealisticCropRotationFrame:layoutHeroPills(titleElement, weatherPill, s
     end
 end
 
----Lays out the right-aligned calendar legend (Sowing -> Harvest -> Cover),
----placed right-to-left so item widths follow the localized text.
+---Lays out the right-aligned calendar legend, right-to-left so item widths follow localized text.
 function RealisticCropRotationFrame:layoutCalendarLegend()
     local container = self.calendarLegend
     if container == nil then return end

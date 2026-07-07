@@ -1,8 +1,6 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
--- Server-authoritative disease layer: soil inoculum load from the rotation history, infection gate,
--- per-field state, spreading foci and progressive crop destruction. The load (sclerotia, nematode
--- cysts) persists between crops, even on a bare field; an actual infection needs a living host of
--- that pathogen at its own growth window.
+-- Server-authoritative disease layer: soil inoculum load from rotation history drives an infection gate,
+-- per-field state and progressive crop destruction; inoculum persists on bare soil until a host returns.
 RealisticCropRotationDisease = {}
 local RealisticCropRotationDisease_mt = Class(RealisticCropRotationDisease)
 
@@ -12,24 +10,13 @@ RealisticCropRotationDisease.INOCULUM_SEED = 0.12   -- inoculum a first host est
 RealisticCropRotationDisease.INOCULUM_GROWTH = 2.2  -- population multiplier per back-to-back host year
 RealisticCropRotationDisease.INOCULUM_RESIDUAL = 0.1 -- fraction left after `interval` host-free years
 RealisticCropRotationDisease.INITIAL_SEVERITY = 0.10
--- Severity now advances DAY BY DAY (MessageType.DAY_CHANGED), not per period, so a crop dies in a
--- slow, credible creep instead of monthly leaps. The per-day increment, the latent threshold and the
--- destruction ceiling are PER PATHOGEN (cropConfig <diseaseGroup dailyGrowth/destroySeverity/
--- deadFractionMax>): a fungal blight (SCLEROTINIA) climbs fast and faster still under rain, a soil
--- nematode (BCN) crawls and never wipes the whole field. The constants below are only the fallbacks
--- used when a group omits the attribute.
+-- Severity advances day by day (MessageType.DAY_CHANGED) for a slow, credible creep. Per-pathogen rates
+-- come from cropConfig <diseaseGroup dailyGrowth/destroySeverity/deadFractionMax>; these are fallbacks.
 RealisticCropRotationDisease.DEFAULT_DAILY_GROWTH = 0.04 -- severity gained per in-game day (fallback)
 RealisticCropRotationDisease.DESTROY_SEVERITY = 0.25 -- latent period: damage only above this (fallback)
--- Destruction = one organic Perlin field over the parcel. The noise cut (threshold) drops as the
--- infection progresses, so the dead area grows and merges over the days toward deadFractionMax at
--- full severity (a devastated field). One pass clips the fruit AND the overlay grid to the parcel.
--- The dead share follows a mildly convex ramp (frac^DESTROY_RAMP_POWER) so early infection only
--- scatters a few spots and the field is engulfed gradually rather than in a single leap.
--- PerlinNoiseFilter.new(map, minOctave, numOctave, persistence, seed). minOctave is THE size knob:
--- wavelength ~= terrainSize / 2^minOctave, so 6 -> ~32 m organic patches (real irregular foci),
--- whereas 11 -> ~1 m "salt-and-pepper" speckle (unrealistic; that was a regression). numOctave adds
--- finer layers on top for ROUGH, irregular edges (no circles, no squares). These 32 m rough patches
--- were the user-validated look. Lower minOctave = bigger foci.
+-- Destruction is one organic Perlin field over the parcel; the cut threshold drops as severity climbs,
+-- so the dead area grows and merges over the days (convex ramp keeps early infection to a few spots).
+-- minOctave is the size knob (6 -> ~32 m organic foci, the validated look); numOctave roughens edges.
 RealisticCropRotationDisease.DESTROY_PERLIN_OCTAVES = 6    -- minOctave: ~32 m organic foci (THE size knob; lower = bigger)
 RealisticCropRotationDisease.DESTROY_PERLIN_FREQUENCY = 3  -- numOctave: added detail layers -> rough, irregular edges
 RealisticCropRotationDisease.DESTROY_PERLIN_PERSISTENCE = 0.5
@@ -92,13 +79,9 @@ local function isRaining()
     return env.weather:getIsRaining() == true
 end
 
----Weather modifier for a pathogen group. Rain only amplifies fungal pathogens (sporulation needs
----free moisture); soil animals/protists (BCN, clubroot) are not rain-driven. The multiplier is the
----group's own `weatherFactor` from the config (default RAIN_BONUS), so strongly weather-driven
----diseases (late blight, rusts, septoria) both infect AND destroy much faster in a wet spell.
--- @param boolean raining Current rain state (sampled once per evaluation)
--- @param string group Pathogen group name
--- @return number modifier weatherFactor for fungal groups under rain, else 1
+---Weather modifier for a pathogen group: rain amplifies fungal pathogens only, by the group's weatherFactor.
+-- @param boolean raining, string group Pathogen group name
+-- @return number modifier
 local function weatherModifier(raining, group)
     if not raining then return 1 end
     local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
@@ -109,20 +92,16 @@ local function weatherModifier(raining, group)
 end
 
 ---Stable overlay grid state (1..N) for a pathogen group, from cropConfig <diseaseGroup state=>.
----Each disease gets its OWN id so the in-game map paints it with its own colour (individually
----distinguishable on the parcel). Purely static config data -> identical on every machine, so the
----client grid rebuild reproduces the host's painting deterministically.
 -- @param string group Pathogen group name
--- @return integer state id (>= 1); 1 as a last-resort fallback when the config is unavailable
+-- @return integer state id (>= 1, fallback when config unavailable)
 local function diseaseStateForGroup(group)
     local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
     local state = config ~= nil and config.diseaseStates ~= nil and config.diseaseStates[group] or nil
     return tonumber(state) or 1
 end
 
----Localized display name for a pathogen group. Reads ONLY g_i18n (key rcr_disease_name_<lowergroup>);
----no hardcoded French fallback -- at worst it returns the group name itself when i18n is unavailable.
--- @param string group Pathogen group name
+---Localized display name for a pathogen group (g_i18n key rcr_disease_name_<lowergroup>).
+-- @param string group
 -- @return string name
 local function diseaseDisplayName(group)
     local key = "rcr_disease_name_" .. string.lower(tostring(group))
@@ -132,17 +111,15 @@ local function diseaseDisplayName(group)
     return tostring(group)
 end
 
----Public accessor for a pathogen group's display name (reused by the HUD, notification, panels), so
----no caller re-implements the SCLEROTINIA/BCN/... name mapping.
--- @param string group Pathogen group name
+---Public accessor for a pathogen group's display name, reused by the HUD/notifications/panels.
+-- @param string group
 -- @return string name
 function RealisticCropRotationDisease:getDisplayName(group)
     return diseaseDisplayName(group)
 end
 
 ---Reference treatment family for a pathogen group, from cropConfig (FUNGICIDE | NEMATICIDE | NONE).
----Used by field display/advice and by sprayer products that cure matching active infections.
--- @param string group Pathogen group name
+-- @param string group
 -- @return string treatment ("NONE" when unknown)
 function RealisticCropRotationDisease:getTreatment(group)
     local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
@@ -150,9 +127,8 @@ function RealisticCropRotationDisease:getTreatment(group)
     return t ~= nil and tostring(t) or "NONE"
 end
 
----Localized treatment label for a pathogen group. Reads ONLY g_i18n via key
----rcr_disease_treatment_<lowergroup>; at worst returns the key (no hardcoded final text).
--- @param string group Pathogen group name
+---Localized treatment label for a pathogen group (g_i18n key rcr_disease_treatment_<lowergroup>).
+-- @param string group
 -- @return string label
 function RealisticCropRotationDisease:getTreatmentName(group)
     local key = "rcr_disease_treatment_" .. string.lower(tostring(group))
@@ -162,8 +138,7 @@ function RealisticCropRotationDisease:getTreatmentName(group)
     return key
 end
 
----Soil inoculum load per pathogen, from the field history alone -- it persists between crops, even
----on a bare field. Rises the more recently and the more often a host of that group returned.
+---Soil inoculum load per pathogen from the field's rotation history alone; persists between crops.
 -- @param integer farmlandId
 -- @return table load group -> [0,1]
 function RealisticCropRotationDisease:getLoad(farmlandId)
@@ -179,10 +154,7 @@ function RealisticCropRotationDisease:getLoad(farmlandId)
     local growth = RealisticCropRotationDisease.INOCULUM_GROWTH
     local residual = RealisticCropRotationDisease.INOCULUM_RESIDUAL
 
-    -- Walk the rotation oldest -> newest. A host multiplies the pathogen population; a host-free
-    -- year decays it (decay set so only `residual` survives after `interval` years). A single host
-    -- on clean soil only establishes the low seed level; repeating a host within its interval
-    -- compounds it toward 1, while spacing hosts by the interval keeps it near zero.
+    -- Walk oldest -> newest: a host multiplies the load, a host-free year decays it toward `residual`.
     for step = #history, 1, -1 do
         local crop = history[step] ~= nil and history[step].crop or nil
         local groups = cropDiseaseGroups(crop)
@@ -242,10 +214,7 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId)
         if hostGroups[group] then
             local state = self.state[farmlandId]
             local alreadyInfected = state ~= nil and state[group] ~= nil
-            -- Note: no protection check needed here. A new infection can still "start" (soil pressure /
-            -- pathogen presence is unaffected by spraying), but its destructive consequence is excluded
-            -- cell-by-cell by the daily destroy pass wherever the player has sprayed (see
-            -- destroyCropField) -- the SAME per-cell mechanism serves both curative and preventive.
+            -- No protection check here: spraying excludes the destructive consequence, not the infection start.
             if not alreadyInfected then
                 local w = windows[group]
                 -- Susceptible inside the growth window only; an unreadable stage never blocks.
@@ -275,11 +244,9 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId)
     end
 end
 
----Reads the live crop on a field straight from its field state,
----bypassing the cached, normalised lookup. Returns fruit type index and growth state, or nil.
--- @param table field game Field object
--- @return integer fruitTypeIndex, or nil
--- @return integer growthState
+---Reads the live crop on a field straight from its field state, bypassing the cached lookup.
+-- @param table field
+-- @return integer fruitTypeIndex (or nil), integer growthState
 local function getFieldCrop(field)
     if field == nil then return nil, 0 end
     local fieldState = nil
@@ -313,12 +280,9 @@ local function fieldWorldBounds(field)
     return minX, minZ, maxX, maxZ
 end
 
----Perlin "GREATER" cut for a severity under a pathogen's curve: high (nothing dies) at the latent
----threshold, dropping toward the curve's deadFractionMax of the parcel at full severity along a
----mildly convex ramp (frac^power). Lowering the cut as severity climbs is what makes the dead area
----grow and merge organically over the days; the convex ramp keeps early destruction to a few spots.
--- @param number severity current infection severity [0,1]
--- @param table curve { destroySeverity, deadFractionMax, power }, or nil for the module fallbacks
+---Perlin "GREATER" cut for a severity: high near the latent threshold, dropping toward the curve's
+---deadFractionMax along a convex ramp as severity climbs (grows the dead area organically over days).
+-- @param number severity, table curve (or nil for module fallbacks)
 local function severityThreshold(severity, curve)
     local D = RealisticCropRotationDisease
     local destroySeverity = curve ~= nil and curve.destroySeverity or D.DESTROY_SEVERITY
@@ -330,9 +294,8 @@ local function severityThreshold(severity, curve)
     return math.floor((1 - deadFraction) * D.DESTROY_PERLIN_MAX)
 end
 
----Per-pathogen destruction curve, from cropConfig with module fallbacks. Purely static data, identical
----on every machine, so a client rebuilds the exact same dead area from the synced severity + seed.
--- @param string group Pathogen group name
+---Per-pathogen destruction curve, from cropConfig with module fallbacks.
+-- @param string group
 -- @return table curve { dailyGrowth, destroySeverity, deadFractionMax, power }
 function RealisticCropRotationDisease:getCurve(group)
     local D = RealisticCropRotationDisease
@@ -346,21 +309,9 @@ function RealisticCropRotationDisease:getCurve(group)
     }
 end
 
----Applies one organic destruction pass to a density map: writes `value` wherever a Perlin noise field
----exceeds `threshold`, scoped to the field's REAL polygon shape via field:getDensityMapPolygon() -- the
----native GIANTS API the base game's own field missions use for this exact need (StonePickMission,
----AbstractFieldMission). Using the polygon instead of a bbox+farmland-membership filter is both more
----precise (no rectangular-bbox overlap with a neighbouring parcel -- field polygons don't overlap) and
----frees a filter slot: executeSet is never proven to take more than 2 filters anywhere in the game or
----reference mods, so the freed slot carries an OPTIONAL per-cell protection-exclusion filter, letting
----one native pass express "this field ∩ Perlin-diseased ∩ NOT sprayed" without ever needing 3 filters.
----When protectionMapId is given, cells marked 1 there (sprayed with the matching product) are excluded.
--- @param integer targetMapId, firstChannel, numChannels target density map + channels
--- @param integer value value to write (0 to clear crop, disease state for the grid)
--- @param boolean clearTypeMode true for the fruit plane (clear the type index, as the base game does)
--- @param table field game Field object (for its real polygon shape)
--- @param integer seed, threshold
--- @param integer|nil protectionMapId per-cell exclusion map (1 channel, EQUAL 0 = not sprayed = eligible)
+---Writes `value` into a density map wherever a Perlin noise field exceeds `threshold`, clipped to the
+---field's real polygon (native GIANTS API, as used by the base game's field missions). protectionMapId,
+---when given, excludes already-sprayed cells via the modifier's second filter slot.
 local function applyPerlinDestruction(targetMapId, firstChannel, numChannels, value, clearTypeMode, field, seed, threshold, protectionMapId)
     if targetMapId == nil or field == nil or DensityMapModifier == nil or DensityMapFilter == nil
         or PerlinNoiseFilter == nil or g_terrainNode == nil
@@ -397,11 +348,9 @@ local function applyPerlinDestruction(targetMapId, firstChannel, numChannels, va
     return true
 end
 
----Erases grid marks that landed outside the worked soil (parcel margins/tracks): the destruction
----pass paints farmland ∩ Perlin, so some cells fall on unworked parcel ground where no crop ever
----grew. Clearing them at WRITE time keeps the map overlay clean without any render-time mask (the
----overlay draws the grid directly, BMP-style). Same 2-filter modifier mechanism as the paint pass.
--- @param table grid overlay grid wrapper; @param table bbox field world bounds; @param integer farmlandId
+---Erases grid marks that landed outside the worked soil (parcel margins/tracks), so the overlay stays
+---clean without a render-time mask.
+-- @param table grid, table bbox, integer farmlandId
 local function clipGridToWorkedSoil(grid, bbox, farmlandId)
     if grid == nil or grid.mapId == nil or DensityMapModifier == nil or DensityMapFilter == nil
         or g_terrainNode == nil or g_farmlandManager == nil
@@ -427,19 +376,9 @@ local function clipGridToWorkedSoil(grid, bbox, farmlandId)
     modifier:executeSet(0, farmlandFilter, unworkedFilter)
 end
 
----Applies the current destruction for one infection. On the SERVER it writes 0 into the real crop
----density map (server-authoritative, engine-synced to clients); on every machine it writes the
----disease state into the overlay grid over the SAME world regions. Idempotent and cheap (one native
----modifier pass each); as severity climbs the threshold drops, so re-applying each tick grows the
----dead area. Scoped to the field's real polygon shape (see applyPerlinDestruction); on the fruit it
----also lands only on crop cells (= the cultivable field), since margins/tracks carry no crop to clear.
----protectionMapId (per-cell, 1 channel) excludes any cell the player has sprayed with the matching
----product: this is BOTH the curative effect (an existing dead-heading infection stops spreading there)
----and the preventive effect (a cell can never start being destroyed there), via the SAME exclusion.
--- @param table field game Field object carrying the crop
--- @param integer farmlandId, seed; @param number severity; @param table curve pathogen destruction curve
--- @param integer diseaseState; @param table grid
--- @param integer|nil protectionMapId per-cell sprayed-exclusion map for this group's treatment family
+---Applies the current destruction for one infection: writes 0 into the real crop density map on the
+---server, and the disease state into the overlay grid everywhere, over the same world regions. Idempotent;
+---protectionMapId excludes sprayed cells, serving both the curative and preventive effect via one filter.
 local function destroyCropField(field, farmlandId, seed, severity, curve, diseaseState, grid, protectionMapId)
     if field == nil then return end
     local threshold = severityThreshold(severity, curve)
@@ -469,10 +408,8 @@ local function destroyCropField(field, farmlandId, seed, severity, curve, diseas
     end
 end
 
----Server: advances every infection on a field by ONE in-game day and destroys a little more of the
----crop as the infection progresses (the Perlin cut drops with severity). Called once per day per field
----(drained from the daily queue); re-applying the cheap native pass each day simply grows the dead
----area. The per-day severity gain is the pathogen's own rate, amplified by rain for fungal groups.
+---Server: advances every infection on a field by one in-game day, growing the destroyed area as the
+---Perlin cut drops with severity. Called once per day per field, drained from the daily queue.
 -- @param integer farmlandId
 function RealisticCropRotationDisease:propagate(farmlandId)
     if g_server == nil then return end
@@ -555,7 +492,6 @@ function RealisticCropRotationDisease:getState(farmlandId)
 end
 
 ---Predictive disease risk for a field: the worst pathogen load from the rotation history, in [0,1].
----Client-safe (reads only the synced history), so the map can colour every field before it strikes.
 -- @param integer farmlandId
 -- @return number risk
 function RealisticCropRotationDisease:getRisk(farmlandId)
@@ -577,12 +513,9 @@ function RealisticCropRotationDisease:getRiskBand(farmlandId)
     return 0
 end
 
----Repaints the runtime risk display map, OFF the UI path (BMP-style: the map overlay only ever
----renders existing maps; painting happens at gameplay events -- load, period tick, ownership
----change, MP sync). Incremental by default: only fields whose band changed since the last paint
----are repainted (usually none, at most a handful of native modifier passes). `force` wipes the map
----and repaints every owned field (load / ownership changes, where stale cells must be erased).
--- @param boolean force full wipe + repaint
+---Repaints the runtime risk display map, off the UI path (painted at gameplay events, not on draw).
+---Incremental by default (only fields whose band changed); `force` wipes and repaints every owned field.
+-- @param boolean force
 function RealisticCropRotationDisease:refreshRiskMap(force)
     local grid = self.grid
     local mgr = self.manager
@@ -612,13 +545,9 @@ function RealisticCropRotationDisease:refreshRiskMap(force)
     end
 end
 
----Overlay state id of a field's DOMINANT active infection: the state (1..9) of the group with the
----highest severity, or 0 when the field has no active infection. A field counts as infected as soon
----as it carries ANY active entry (even a latent one, before any destruction) -- that is the meaning
----of "active foci". Reads the synced self.state + static config only, so it is deterministic across
----machines (client and server derive the same dominant state from the same synced state).
+---Overlay state id of a field's dominant (highest-severity) infection; 0 when none, counting even latent entries as active.
 -- @param integer farmlandId
--- @return integer state 0 (none) or the dominant disease's overlay state id
+-- @return integer state
 function RealisticCropRotationDisease:dominantDiseaseState(farmlandId)
     local st = self.state[tonumber(farmlandId) or farmlandId]
     if st == nil then return 0 end
@@ -634,14 +563,9 @@ function RealisticCropRotationDisease:dominantDiseaseState(farmlandId)
     return diseaseStateForGroup(bestGroup)
 end
 
----Repaints the runtime infection display map ("active foci" view), OFF the UI path -- the exact twin
----of refreshRiskMap but driven by the active infection state instead of the predictive risk. Each
----owned field with an active infection is painted FULL in the colour of its DOMINANT disease (crisp
----field border, like the pressure view); a field with no active infection is cleared (state 0).
----Incremental by default: only fields whose dominant state changed since the last paint are repainted
----(usually none, at most a handful of native passes). `force` wipes the map and repaints every owned
----field (load / ownership changes / initial paint, where stale cells must be erased).
--- @param boolean force full wipe + repaint
+---Repaints the runtime infection display map ("active foci"), off the UI path -- twin of refreshRiskMap
+---but driven by dominant infection state instead of predictive risk. Incremental; `force` repaints all.
+-- @param boolean force
 function RealisticCropRotationDisease:refreshInfectionMap(force)
     local grid = self.grid
     local mgr = self.manager
@@ -943,10 +867,9 @@ local function requestDiseaseConsoleBroadcast()
     end
 end
 
----Native aggregate check (executeGet, no cell/pixel Lua loop): fraction of the field's REAL polygon
----area currently marked protected in the given per-cell map. Lets the tester confirm "how much of this
----field is shielded" from the console without inspecting individual cells.
--- @param table field game Field object; @param integer|nil protectionMapId
+---Native aggregate check (executeGet, no Lua pixel loop): fraction of the field's polygon area marked
+---protected in the given per-cell map.
+-- @param table field, integer|nil protectionMapId
 -- @return number coverage fraction [0,1]
 local function getProtectionCoverage(field, protectionMapId)
     if field == nil or protectionMapId == nil or DensityMapModifier == nil or DensityMapFilter == nil
