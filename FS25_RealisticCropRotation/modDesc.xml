@@ -255,10 +255,6 @@ https://github.com/Squallqt/FS25_RealisticCropRotation
     <iconFilename>icon_RealCropRotation.dds</iconFilename>
     <multiplayer supported="true" />
 
-    <materialHolders>
-        <materialHolder filename="effects/sprayer/rcrSprayerMeshes_materialHolder.i3d" />
-    </materialHolders>
-
     <fillTypes filename="fillTypes.xml" />
 
     <storeItems>

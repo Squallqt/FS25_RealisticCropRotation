@@ -1,26 +1,28 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
 -- Sprayer wiring for the RCR consumable products (RCR_FUNGICIDE / RCR_NEMATICIDE).
 --
--- Two responsibilities, both required for the colored spray jet to appear:
+-- JET COLOUR: abandoned. The jet is left as the native white water mist. A per-fillType
+-- "sprayer" material holder was tried and did not recolour the jet in-game (the effect does
+-- not visibly adopt the swapped material for this shader), so it was removed. The mod's
+-- treatment feedback lives on the ground/map layer instead, not the nozzle.
+--
+-- Two responsibilities here:
 --
 --   1. Register an engine sprayType for each product. Without one,
 --      Sprayer:onStartWorkAreaProcessing() stores sprayType = nil and
 --      Sprayer:processSprayerArea() feeds that nil into the engine call
 --      FSDensityMapUtil.updateSprayArea(); the work-area processing then never
 --      reaches params.lastSprayTime, so Sprayer:getAreEffectsVisible() stays
---      false and updateSprayerEffects() never starts the jet effects at all.
---      The jet color itself comes from the per-fillType materials registered by
---      effects/sprayer/rcrSprayerMeshes_materialHolder.i3d (modDesc
---      <materialHolders> + the loadSprayerMaterialHolder() fallback in main.lua).
+--      false and updateSprayerEffects() never starts the spray effect at all.
+--      Registering the sprayType also gives the product a correct consumption
+--      rate instead of the 1 L/s fallback.
 --
 --   2. Short-circuit Sprayer.processSprayerArea for the RCR products so the
 --      HERBICIDE-typed sprayType never reaches the native ground treatment
 --      (no weed replacement, no native spray overlay), while still setting
---      params.isActive / params.lastSprayTime so consumption and jet effects
---      run exactly like a native product (plan: SPRAYER_PRODUCT_RUNTIME_DEBT.md).
---      Only visuals and consumption are handled here; the disease-treatment
---      application is a separate feature and can be added inside this same
---      hook later.
+--      params.isActive / params.lastSprayTime so consumption and the spray
+--      effect run like a native product. The curative disease treatment is
+--      applied inside this same hook (server-only, see applyTreatment).
 --
 --      TIMING (GIANTS truth, dataS/scripts): the overwrite MUST be installed
 --      when this file is sourced, NOT at mission load. TypeManager:finalizeTypes()
@@ -56,6 +58,16 @@ local productFillTypeSet = {}
 -- fillTypeIndex -> "FUNGICIDE" | "NEMATICIDE"; same lifecycle as productFillTypeSet.
 local productTreatmentByFillType = {}
 local hookInstalled = false
+
+-- Treated-ground visual: written into the field WATER_LEVEL detail channel (a damp look). It is NOT a
+-- product texture and deposits nothing agronomic -- no fertiliser, no lime, no weed kill; nothing in
+-- the game reads or consumes it. Because nothing consumes it, it never clears on its own, so we make
+-- it EPHEMERAL ourselves: each painted farmland is tracked (server) and a daily sweep erases it about
+-- a month (one season period) after the last treatment.
+local WATER_VISUAL_VALUE = 1
+-- farmlandId -> { day = <monotonic day last painted>, minX, minZ, maxX, maxZ = accumulated painted
+-- world bounds }. Server-only; drives the fade sweep. Reset at mission load/teardown.
+local treatedGround = {}
 
 ---Returns true when the given fillType index is one of the RCR sprayer products.
 -- @param integer fillTypeIndex fillType index (may be nil)
@@ -102,6 +114,7 @@ local function ensureSprayTypes()
             end
         end
     end
+
 end
 
 ---Adds the farmland under (x, z) to `out` once (dedup via `seen`). A farmland id <= 0 (no valid
@@ -193,6 +206,85 @@ local function applyTreatment(self, spec, fillType, workArea)
     return treatedAny
 end
 
+---Server: merges the just-painted strip into the per-farmland treated-ground record (accumulated
+---bounds + the current day), so the daily fade sweep knows what to erase and when. Uses the strip's
+---corner and centre points to find the farmland(s), like the curative sampling.
+local function recordTreatedGround(sx, sz, wx, wz, hx, hz)
+    local env = g_currentMission ~= nil and g_currentMission.environment or nil
+    local day = env ~= nil and (env.currentMonotonicDay or env.currentDay) or nil
+    if day == nil then return end
+
+    local fourthX, fourthZ = wx + hx - sx, wz + hz - sz
+    local centerX, centerZ = (wx + hx) * 0.5, (wz + hz) * 0.5
+    local minX = math.min(sx, wx, hx, fourthX)
+    local maxX = math.max(sx, wx, hx, fourthX)
+    local minZ = math.min(sz, wz, hz, fourthZ)
+    local maxZ = math.max(sz, wz, hz, fourthZ)
+
+    local seen, farmlands = {}, {}
+    collectFarmland(sx, sz, seen, farmlands)
+    collectFarmland(wx, wz, seen, farmlands)
+    collectFarmland(hx, hz, seen, farmlands)
+    collectFarmland(fourthX, fourthZ, seen, farmlands)
+    collectFarmland(centerX, centerZ, seen, farmlands)
+
+    for _, fid in ipairs(farmlands) do
+        local rec = treatedGround[fid]
+        if rec == nil then
+            treatedGround[fid] = { day = day, minX = minX, minZ = minZ, maxX = maxX, maxZ = maxZ }
+        else
+            rec.day = day
+            if minX < rec.minX then rec.minX = minX end
+            if minZ < rec.minZ then rec.minZ = minZ end
+            if maxX > rec.maxX then rec.maxX = maxX end
+            if maxZ > rec.maxZ then rec.maxZ = maxZ end
+        end
+    end
+end
+
+---Paints the ephemeral "treated" ground look over the sprayed strip: writes value 1 into the field
+---WATER_LEVEL detail channel (a damp texture). This is NOT a product texture and deposits nothing
+---agronomic -- no fertiliser, no lime, no weed kill; nothing reads it. A field-ground filter
+---(groundType > 0) keeps the paint off roads, yards and standing water.
+---SERVER-AUTHORITATIVE: the write happens on the server only and the engine synchronises the field
+---density map to clients, exactly like the disease crop-destruction pass -- no client-side prediction,
+---so the fade sweep can never diverge between machines. The painted area is recorded per farmland so
+---the daily sweep can fade it later.
+-- @param table self sprayer vehicle; @param table workArea work area giving the sprayed strip corners
+local function paintTreatmentGround(self, workArea)
+    if self == nil or not self.isServer then return end
+    if DensityMapModifier == nil or DensityMapFilter == nil or g_terrainNode == nil then return end
+    if getWorldTranslation == nil or DensityCoordType == nil or DensityValueCompareType == nil then return end
+    if workArea == nil or workArea.start == nil or workArea.width == nil or workArea.height == nil then return end
+
+    local mission = g_currentMission
+    if mission == nil or mission.fieldGroundSystem == nil or FieldDensityMap == nil then return end
+
+    local waterMapId, waterFirstChannel, waterNumChannels =
+        mission.fieldGroundSystem:getDensityMapData(FieldDensityMap.WATER_LEVEL)
+    if waterMapId == nil then return end
+    local groundTypeMapId, groundFirstChannel, groundNumChannels =
+        mission.fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE)
+    if groundTypeMapId == nil then return end
+
+    local sx, _, sz = getWorldTranslation(workArea.start)
+    local wx, _, wz = getWorldTranslation(workArea.width)
+    local hx, _, hz = getWorldTranslation(workArea.height)
+    if sx == nil or wx == nil or hx == nil then return end
+
+    local modifier = DensityMapModifier.new(waterMapId, waterFirstChannel, waterNumChannels, g_terrainNode)
+    modifier:setParallelogramWorldCoords(sx, sz, wx, wz, hx, hz, DensityCoordType.POINT_POINT_POINT)
+
+    -- Only paint where there is field ground (groundType > 0): never roads, yards or standing water.
+    local fieldFilter = DensityMapFilter.new(groundTypeMapId, groundFirstChannel, groundNumChannels)
+    fieldFilter:setValueCompareParams(DensityValueCompareType.GREATER, 0)
+
+    modifier:executeSet(WATER_VISUAL_VALUE, fieldFilter)
+
+    -- Track the painted area (server) so the daily sweep can fade it ~a month later.
+    recordTreatedGround(sx, sz, wx, wz, hx, hz)
+end
+
 ---Overwrites Sprayer.processSprayerArea once per game session.
 -- Non-RCR fillTypes go through the untouched native path.
 local function installSprayerHook()
@@ -227,6 +319,11 @@ local function installSprayerHook()
         params.isActive = true
         params.lastSprayTime = g_time
 
+        -- Treated-ground visual: paint the WATER_LEVEL detail (a damp look, visual only, no agronomy)
+        -- over the sprayed strip so the field visibly shows where the product was applied. Ephemeral --
+        -- faded out ~a month later by the server sweep (fadeTreatedGround / onDayChanged).
+        paintTreatmentGround(self, workArea)
+
         if self:getLastSpeed() > 1 then
             spec.isWorking = true
         end
@@ -247,20 +344,123 @@ local function installSprayerHook()
     hookInstalled = true
 end
 
----Mission-load entry point; called from main.lua next to loadSprayerMaterialHolder().
+---Server daily sweep (called from onDayChanged): erases the water visual on farmlands whose last
+---treatment has aged past the fade window (~one season period == about a month). Clears WATER_LEVEL
+---back to 0 over each expired farmland's accumulated bounds, filtered to that farmland so only OUR
+---marks go (never a neighbouring parcel or a rice paddy), then forgets it. One native pass per expired
+---farmland, at most once per in-game day.
+function RealisticCropRotationSprayerProducts.fadeTreatedGround()
+    if next(treatedGround) == nil then return end
+    if g_currentMission == nil or not g_currentMission:getIsServer() then return end
+    if DensityMapModifier == nil or DensityMapFilter == nil or g_terrainNode == nil
+        or DensityCoordType == nil or DensityValueCompareType == nil then return end
+
+    local mission = g_currentMission
+    if mission.fieldGroundSystem == nil or FieldDensityMap == nil then return end
+    if g_farmlandManager == nil or type(g_farmlandManager.getLocalMap) ~= "function"
+        or getBitVectorMapNumChannels == nil then return end
+
+    local env = mission.environment
+    local day = env ~= nil and (env.currentMonotonicDay or env.currentDay) or nil
+    if day == nil then return end
+    -- One in-game month == one season period. plannedDaysPerPeriod is the configured days-per-period
+    -- (same field the GUI reads); fall back to 3 (the base-game default) when it is unavailable.
+    local daysPerPeriod = env ~= nil and tonumber(env.plannedDaysPerPeriod) or nil
+    local fadeDays = (daysPerPeriod ~= nil and daysPerPeriod > 0) and daysPerPeriod or 3
+
+    local waterMapId, waterFirstChannel, waterNumChannels =
+        mission.fieldGroundSystem:getDensityMapData(FieldDensityMap.WATER_LEVEL)
+    if waterMapId == nil then return end
+    local farmlandLocalMap = g_farmlandManager:getLocalMap()
+    if farmlandLocalMap == nil then return end
+    local farmlandChannels = getBitVectorMapNumChannels(farmlandLocalMap)
+
+    for fid, rec in pairs(treatedGround) do
+        if day - (rec.day or day) >= fadeDays then
+            local modifier = DensityMapModifier.new(waterMapId, waterFirstChannel, waterNumChannels, g_terrainNode)
+            modifier:setParallelogramWorldCoords(rec.minX, rec.minZ, rec.maxX, rec.minZ, rec.minX, rec.maxZ, DensityCoordType.POINT_POINT_POINT)
+            local farmlandFilter = DensityMapFilter.new(farmlandLocalMap, 0, farmlandChannels)
+            farmlandFilter:setValueCompareParams(DensityValueCompareType.EQUAL, fid)
+            modifier:executeSet(0, farmlandFilter)
+            treatedGround[fid] = nil
+        end
+    end
+end
+
+---Persists the treated-ground fade tracker (server) so the ephemeral water visual keeps fading across
+---save/load instead of leaking marks that never clear. The WATER_LEVEL density map itself is saved by
+---the engine; this only saves the per-farmland age/bounds the sweep needs. Mirrors the disease save.
+-- @param string savegamePath savegame folder path (trailing slash)
+function RealisticCropRotationSprayerProducts.saveTreatedGround(savegamePath)
+    if savegamePath == nil or savegamePath == "" or createXMLFile == nil then return end
+    local xmlFile = createXMLFile("rcrTreatedGround",
+        savegamePath .. "realisticCropRotationTreatedGround.xml", "realisticCropRotationTreatedGround")
+    if xmlFile == nil or xmlFile == 0 then return end
+
+    local i = 0
+    for fid, rec in pairs(treatedGround) do
+        local key = string.format("realisticCropRotationTreatedGround.farmland(%d)", i)
+        setXMLInt(xmlFile, key .. "#id", fid)
+        setXMLInt(xmlFile, key .. "#day", math.floor(tonumber(rec.day) or 0))
+        setXMLFloat(xmlFile, key .. "#minX", rec.minX)
+        setXMLFloat(xmlFile, key .. "#minZ", rec.minZ)
+        setXMLFloat(xmlFile, key .. "#maxX", rec.maxX)
+        setXMLFloat(xmlFile, key .. "#maxZ", rec.maxZ)
+        i = i + 1
+    end
+
+    saveXMLFile(xmlFile)
+    delete(xmlFile)
+end
+
+---Restores the treated-ground fade tracker from the savegame folder (server). Called after
+---onMissionLoaded() has reset it, so a missing file simply leaves it empty.
+-- @param string savegamePath savegame folder path (trailing slash)
+function RealisticCropRotationSprayerProducts.loadTreatedGround(savegamePath)
+    treatedGround = {}
+    if savegamePath == nil or savegamePath == "" then return end
+    local filePath = savegamePath .. "realisticCropRotationTreatedGround.xml"
+    if fileExists == nil or not fileExists(filePath) then return end
+    local xmlFile = loadXMLFile("rcrTreatedGround", filePath)
+    if xmlFile == nil or xmlFile == 0 then return end
+
+    local i = 0
+    while true do
+        local key = string.format("realisticCropRotationTreatedGround.farmland(%d)", i)
+        if not hasXMLProperty(xmlFile, key) then break end
+        local id = getXMLInt(xmlFile, key .. "#id")
+        local minX = getXMLFloat(xmlFile, key .. "#minX")
+        local minZ = getXMLFloat(xmlFile, key .. "#minZ")
+        local maxX = getXMLFloat(xmlFile, key .. "#maxX")
+        local maxZ = getXMLFloat(xmlFile, key .. "#maxZ")
+        if id ~= nil and minX ~= nil and minZ ~= nil and maxX ~= nil and maxZ ~= nil then
+            treatedGround[id] = {
+                day = getXMLInt(xmlFile, key .. "#day") or 0,
+                minX = minX, minZ = minZ, maxX = maxX, maxZ = maxZ,
+            }
+        end
+        i = i + 1
+    end
+
+    delete(xmlFile)
+end
+
+---Mission-load entry point; called from main.lua after the GUI assets load.
 function RealisticCropRotationSprayerProducts.onMissionLoaded()
     productFillTypeSet = {}
     productTreatmentByFillType = {}
+    treatedGround = {}
     ensureSprayTypes()
     -- Safety net only: the hook is normally installed at source time below
     -- (before TypeManager:finalizeTypes snapshots Sprayer.processSprayerArea).
     installSprayerHook()
 end
 
----Mission teardown: forget the mission-scoped fillType indices.
+---Mission teardown: forget the mission-scoped fillType indices and treated-ground marks.
 function RealisticCropRotationSprayerProducts.onMissionDeleted()
     productFillTypeSet = {}
     productTreatmentByFillType = {}
+    treatedGround = {}
 end
 
 -- Source-time installation (see TIMING note in the header): mod scripts are

@@ -28,7 +28,6 @@ RealisticCropRotation.isEnabled = true
 RealisticCropRotation.cropConfig = nil
 RealisticCropRotation.guiProfilesLoaded = false
 RealisticCropRotation.tabListFixApplied = false
-RealisticCropRotation.sprayerMaterialHolderLoaded = false
 RealisticCropRotation.SPECIAL_CROP_FALLOW = "__FALLOW"
 
 function RealisticCropRotation.isFallowCrop(cropName)
@@ -254,6 +253,12 @@ local function onDayChanged()
         and type(RealisticCropRotation.disease.refreshInfectionMap) == "function" then
         RealisticCropRotation.disease:refreshInfectionMap(false)
     end
+    -- Fade out the ephemeral "treated" ground visual (WATER_LEVEL) painted by the RCR sprayer:
+    -- nothing in the game consumes it, so we clear farmlands whose mark has aged past ~one month.
+    if RealisticCropRotationSprayerProducts ~= nil
+        and type(RealisticCropRotationSprayerProducts.fadeTreatedGround) == "function" then
+        RealisticCropRotationSprayerProducts.fadeTreatedGround()
+    end
 end
 
 ---Refreshes the open menu frame after a state change (history or planning tab).
@@ -384,37 +389,6 @@ local function loadGuiAssets()
     end
 end
 
----Loads custom sprayer fillType materials through the native material manager.
-local function loadSprayerMaterialHolder()
-    if RealisticCropRotation.sprayerMaterialHolderLoaded then return end
-
-    if g_materialManager == nil
-        or type(g_materialManager.addModMaterialHolder) ~= "function"
-        or type(g_materialManager.loadModMaterialHolders) ~= "function" then
-        Logging.warning("[RealisticCropRotation] Material manager unavailable; sprayer materials were not loaded")
-        return
-    end
-
-    local fungicideFillType = g_fillTypeManager ~= nil and g_fillTypeManager:getFillTypeIndexByName("RCR_FUNGICIDE") or nil
-    local nematicideFillType = g_fillTypeManager ~= nil and g_fillTypeManager:getFillTypeIndexByName("RCR_NEMATICIDE") or nil
-    if fungicideFillType == nil or nematicideFillType == nil then
-        Logging.warning("[RealisticCropRotation] RCR fillTypes unavailable; sprayer materials were not loaded")
-        return
-    end
-
-    if type(g_materialManager.getMaterial) == "function"
-        and g_materialManager:getMaterial(fungicideFillType, "sprayer", 1) ~= nil
-        and g_materialManager:getMaterial(nematicideFillType, "sprayer", 1) ~= nil then
-        RealisticCropRotation.sprayerMaterialHolderLoaded = true
-        return
-    end
-
-    local holderFilename = RealisticCropRotation.modDirectory .. "effects/sprayer/rcrSprayerMeshes_materialHolder.i3d"
-    g_materialManager:addModMaterialHolder(holderFilename)
-    g_materialManager:loadModMaterialHolders()
-    RealisticCropRotation.sprayerMaterialHolderLoaded = true
-end
-
 ---Mission-load hook: builds the manager, loads/saves state, wires server listeners.
 local function loadedMission()
     -- Reload crop config here to guarantee the engine XML API is fully ready.
@@ -423,12 +397,11 @@ local function loadedMission()
     end
 
     loadGuiAssets()
-    loadSprayerMaterialHolder()
     -- Wires the RCR sprayer products (sprayTypes + fillType set for the
     -- processSprayerArea hook installed at source time). Without this call the
     -- products have no engine sprayType: Sprayer:onStartWorkAreaProcessing()
     -- stores sprayType = nil, the native ground call aborts before
-    -- params.lastSprayTime is refreshed and the colored jet never appears.
+    -- params.lastSprayTime is refreshed and the spray effect never starts.
     if RealisticCropRotationSprayerProducts ~= nil
         and type(RealisticCropRotationSprayerProducts.onMissionLoaded) == "function" then
         RealisticCropRotationSprayerProducts.onMissionLoaded()
@@ -460,6 +433,10 @@ local function loadedMission()
             if type(RealisticCropRotation.disease.refreshInfectionMap) == "function" then
                 RealisticCropRotation.disease:refreshInfectionMap(true)
             end
+        end
+        if RealisticCropRotationSprayerProducts ~= nil
+            and type(RealisticCropRotationSprayerProducts.loadTreatedGround) == "function" then
+            RealisticCropRotationSprayerProducts.loadTreatedGround(savegameFolderPath)
         end
         if g_messageCenter ~= nil and MessageType ~= nil and MessageType.FARMLAND_OWNER_CHANGED ~= nil then
             RealisticCropRotation.farmlandOwnerChangeListener = {
@@ -592,6 +569,10 @@ local function onSaveToXMLFile()
     if RealisticCropRotation.disease ~= nil then
         RealisticCropRotation.disease:saveToXML(savegameFolderPath)
     end
+    if RealisticCropRotationSprayerProducts ~= nil
+        and type(RealisticCropRotationSprayerProducts.saveTreatedGround) == "function" then
+        RealisticCropRotationSprayerProducts.saveTreatedGround(savegameFolderPath)
+    end
 end
 
 ---Sends the initial rotation snapshot to a joining client (server).
@@ -670,7 +651,6 @@ local function initRealisticCropRotation()
         end
         RealisticCropRotation.frame = nil
         RealisticCropRotation.pendingSyncData = nil
-        RealisticCropRotation.sprayerMaterialHolderLoaded = false
         if RealisticCropRotationSprayerProducts ~= nil
             and type(RealisticCropRotationSprayerProducts.onMissionDeleted) == "function" then
             RealisticCropRotationSprayerProducts.onMissionDeleted()
