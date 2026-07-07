@@ -42,6 +42,7 @@ function RealisticCropRotationDiseaseGrid.new()
     self.changeRevision = 0
     self.fungicideProtectionMapId = nil
     self.nematicideProtectionMapId = nil
+    self.protectionRevision = 0
     self.riskMapId = nil
     self.riskMapSize = RealisticCropRotationDiseaseGrid.RISK_MAP_SIZE
     self.riskNumChannels = RealisticCropRotationDiseaseGrid.RISK_NUM_CHANNELS
@@ -345,7 +346,12 @@ function RealisticCropRotationDiseaseGrid:paintProtection(family, sx, sz, wx, wz
 
     local protModifier = DensityMapModifier.new(protectionMapId, 0, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, g_terrainNode)
     protModifier:setParallelogramWorldCoords(sx, sz, wx, wz, hx, hz, DensityCoordType.POINT_POINT_POINT)
-    protModifier:executeSet(1, groundFilter)
+    -- Same changed-count gating as the grid write below: only bump protectionRevision (drives the
+    -- treatment-coverage map view) when a cell was ACTUALLY newly marked, not on every spray tick.
+    local _, protChanged = protModifier:executeSetWithStats(1, groundFilter)
+    if (protChanged or 0) > 0 then
+        self.protectionRevision = (self.protectionRevision or 0) + 1
+    end
 
     local gridModifier = DensityMapModifier.new(self.mapId, 0, self.numChannels, g_terrainNode)
     gridModifier:setParallelogramWorldCoords(sx, sz, wx, wz, hx, hz, DensityCoordType.POINT_POINT_POINT)

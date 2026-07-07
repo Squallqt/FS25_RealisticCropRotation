@@ -16,6 +16,7 @@
         <e k="rcr_section_disease_map"     v="Penyakit" />
         <e k="rcr_disease_sub_infections" v="Fokus aktif" />
         <e k="rcr_disease_sub_pressure"   v="Tekanan penyakit" />
+        <e k="rcr_disease_sub_treatment"  v="Penyemprotan" />
         <e k="rcr_disease_risk_low"       v="Rendah" />
         <e k="rcr_disease_risk_moderate"  v="Sedang" />
         <e k="rcr_disease_risk_high"      v="Tinggi" />

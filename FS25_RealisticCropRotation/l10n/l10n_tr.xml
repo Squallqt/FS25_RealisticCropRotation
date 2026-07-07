@@ -16,6 +16,7 @@
         <e k="rcr_section_disease_map"     v="Hastalıklar" />
         <e k="rcr_disease_sub_infections" v="Aktif odaklar" />
         <e k="rcr_disease_sub_pressure"   v="Hastalık baskısı" />
+        <e k="rcr_disease_sub_treatment"  v="İlaçlama" />
         <e k="rcr_disease_risk_low"       v="Düşük" />
         <e k="rcr_disease_risk_moderate"  v="Orta" />
         <e k="rcr_disease_risk_high"      v="Yüksek" />

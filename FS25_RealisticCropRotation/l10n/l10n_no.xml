@@ -16,6 +16,7 @@
         <e k="rcr_section_disease_map"     v="Sykdommer" />
         <e k="rcr_disease_sub_infections" v="Aktive angrep" />
         <e k="rcr_disease_sub_pressure"   v="Sykdomspress" />
+        <e k="rcr_disease_sub_treatment"  v="Behandling" />
         <e k="rcr_disease_risk_low"       v="Lav" />
         <e k="rcr_disease_risk_moderate"  v="Moderat" />
         <e k="rcr_disease_risk_high"      v="Høy" />

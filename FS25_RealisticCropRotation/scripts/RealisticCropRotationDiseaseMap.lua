@@ -50,11 +50,18 @@ RealisticCropRotationDiseaseMap.RISK_HIGH = 3
 
 RealisticCropRotationDiseaseMap.SUB_PAGE_INFECTIONS = 1
 RealisticCropRotationDiseaseMap.SUB_PAGE_PRESSURE = 2
+RealisticCropRotationDiseaseMap.SUB_PAGE_TREATMENT = 3
 RealisticCropRotationDiseaseMap.activeSubPage = RealisticCropRotationDiseaseMap.activeSubPage or 1
 
 RealisticCropRotationDiseaseMap.RISK_COLOR_LOW      = {0.13, 0.68, 0.36, 1}
 RealisticCropRotationDiseaseMap.RISK_COLOR_MODERATE = {0.94, 0.62, 0.08, 1}
 RealisticCropRotationDiseaseMap.RISK_COLOR_HIGH     = {0.86, 0.17, 0.14, 1}
+
+-- Treatment-coverage colours: sampled directly from the sprayer products' own HUD fill icons
+-- (hud/hud_fill_fungicide.dds / hud_fill_nematicide.dds dominant panel colour), so the map reads
+-- consistently with the fill-type icon the player already associates with each product.
+RealisticCropRotationDiseaseMap.TREATMENT_COLOR_FUNGICIDE  = {0.00, 0.31, 0.25, 1}
+RealisticCropRotationDiseaseMap.TREATMENT_COLOR_NEMATICIDE = {0.00, 0.25, 0.50, 1}
 
 
 -- ============================================================================
@@ -146,6 +153,18 @@ local function getRiskDisplayItems()
     }
 end
 
+---Filter list rows for the treatment-coverage sub-page: one row per product family, reusing the SAME
+---l10n titles already shipped for the fillTypes (rcr_fillType_fungicide / rcr_fillType_nematicide,
+---translated in all 27 languages already), so no new product-name strings are needed.
+local function getTreatmentDisplayItems()
+    local fung = RealisticCropRotationDiseaseMap.TREATMENT_COLOR_FUNGICIDE
+    local nema = RealisticCropRotationDiseaseMap.TREATMENT_COLOR_NEMATICIDE
+    return {
+        { colors = { [false] = {fung}, [true] = {fung} }, description = getText("rcr_fillType_fungicide"),  isActive = true },
+        { colors = { [false] = {nema}, [true] = {nema} }, description = getText("rcr_fillType_nematicide"), isActive = true },
+    }
+end
+
 ---Count selected filter entries.
 local function countSelected(filter, n)
     local count = 0
@@ -185,6 +204,10 @@ function RealisticCropRotationDiseaseMap:isPressurePage()
     return self.activeSubPage == self.SUB_PAGE_PRESSURE
 end
 
+function RealisticCropRotationDiseaseMap:isTreatmentPage()
+    return self.activeSubPage == self.SUB_PAGE_TREATMENT
+end
+
 
 -- ============================================================================
 -- Filter data sync
@@ -219,6 +242,11 @@ function RealisticCropRotationDiseaseMap:syncFilterData(frame)
         frame.dataTables[pageIndex] = getRiskDisplayItems()
         frame.filterStates[pageIndex] = self.riskFilter
         frame.numSelectedFilters[pageIndex] = countSelected(self.riskFilter, 3)
+    elseif self:isTreatmentPage() then
+        self.treatmentFilter = self.treatmentFilter or { true, true }
+        frame.dataTables[pageIndex] = getTreatmentDisplayItems()
+        frame.filterStates[pageIndex] = self.treatmentFilter
+        frame.numSelectedFilters[pageIndex] = countSelected(self.treatmentFilter, 2)
     else
         local items = getInfectionDisplayItems(self.isColorBlindMode == true)
         local n = #items
@@ -274,6 +302,17 @@ function RealisticCropRotationDiseaseMap:createRuntimeObjects()
         self.riskActiveSlot = nil
         self.riskPendingSlot = nil
     end
+
+    -- Treatment-coverage view: same size/resolution as the main grid (the protection maps are created
+    -- 1:1 with it -- RealisticCropRotationDiseaseGrid:loadMap).
+    if self.treatmentOverlayIds == nil and grid.fungicideProtectionMapId ~= nil and grid.size ~= nil then
+        self.treatmentOverlayIds = {
+            createDensityMapVisualizationOverlay("rcrTreatmentOverlayA", grid.size, grid.size),
+            createDensityMapVisualizationOverlay("rcrTreatmentOverlayB", grid.size, grid.size),
+        }
+        self.treatmentActiveSlot = nil
+        self.treatmentPendingSlot = nil
+    end
 end
 
 function RealisticCropRotationDiseaseMap:delete()
@@ -285,8 +324,13 @@ function RealisticCropRotationDiseaseMap:delete()
         for _, id in ipairs(self.riskOverlayIds) do delete(id) end
         self.riskOverlayIds = nil
     end
+    if self.treatmentOverlayIds ~= nil then
+        for _, id in ipairs(self.treatmentOverlayIds) do delete(id) end
+        self.treatmentOverlayIds = nil
+    end
     self.infectionActiveSlot, self.infectionPendingSlot = nil, nil
     self.riskActiveSlot, self.riskPendingSlot = nil, nil
+    self.treatmentActiveSlot, self.treatmentPendingSlot = nil, nil
     self.lastBuildKey = nil
 end
 
@@ -307,6 +351,9 @@ function RealisticCropRotationDiseaseMap:buildKey()
         local rf = self.riskFilter or {}
         parts[#parts + 1] = string.format("%s%s%s",
             rf[1] and "1" or "0", rf[2] and "1" or "0", rf[3] and "1" or "0")
+    elseif subPage == self.SUB_PAGE_TREATMENT then
+        local tf = self.treatmentFilter or {}
+        parts[#parts + 1] = string.format("%s%s", tf[1] and "1" or "0", tf[2] and "1" or "0")
     else
         local f = self.filter or {}
         local n = diseaseCount()
@@ -400,6 +447,48 @@ end
 
 
 -- ============================================================================
+-- Treatment-coverage view — render straight from the two per-cell protection maps.
+-- ============================================================================
+
+---Colours the treatment-coverage view straight from the two per-cell protection maps written by the
+---sprayer (RealisticCropRotationDiseaseGrid:paintProtection) -- one native paint call per product
+---family, each reading its OWN dedicated map (fungicideProtectionMapId / nematicideProtectionMapId,
+---value 1 = sprayed there). Shows EXACTLY the same per-bande coverage the daily destroy pass excludes,
+---no mask, no Lua iteration.
+function RealisticCropRotationDiseaseMap:renderTreatmentOverlay()
+    local grid = getGrid()
+    if grid == nil or self.treatmentOverlayIds == nil then return false end
+    if grid.fungicideProtectionMapId == nil and grid.nematicideProtectionMapId == nil then return false end
+
+    -- Regenerate into the slot NOT currently displayed (double-buffered) -- see renderInfectionOverlay.
+    local slot = (self.treatmentActiveSlot == 1) and 2 or 1
+    local overlayId = self.treatmentOverlayIds[slot]
+    if overlayId == nil or overlayId == 0 then return false end
+
+    local filter = self.treatmentFilter or { true, true }
+    local protectionChannels = RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS
+
+    resetDensityMapVisualizationOverlay(overlayId)
+    setOverlayColor(overlayId, 1, 1, 1, 1)
+
+    if filter[1] ~= false and grid.fungicideProtectionMapId ~= nil then
+        local c = RealisticCropRotationDiseaseMap.TREATMENT_COLOR_FUNGICIDE
+        setDensityMapVisualizationOverlayStateColor(
+            overlayId, grid.fungicideProtectionMapId, 0, 0, 0, protectionChannels, 1, c[1], c[2], c[3])
+    end
+    if filter[2] ~= false and grid.nematicideProtectionMapId ~= nil then
+        local c = RealisticCropRotationDiseaseMap.TREATMENT_COLOR_NEMATICIDE
+        setDensityMapVisualizationOverlayStateColor(
+            overlayId, grid.nematicideProtectionMapId, 0, 0, 0, protectionChannels, 1, c[1], c[2], c[3])
+    end
+
+    generateDensityMapVisualizationOverlay(overlayId)
+    self.treatmentPendingSlot = slot
+    return true
+end
+
+
+-- ============================================================================
 -- Overlay update / draw
 -- ============================================================================
 
@@ -422,6 +511,8 @@ function RealisticCropRotationDiseaseMap:updateOverlay(force)
     local revision
     if self:isPressurePage() then
         revision = grid.riskRevision or 0
+    elseif self:isTreatmentPage() then
+        revision = grid.protectionRevision or 0
     else
         revision = grid.changeRevision or 0
     end
@@ -430,6 +521,8 @@ function RealisticCropRotationDiseaseMap:updateOverlay(force)
     local ok
     if self:isPressurePage() then
         ok = self:renderRiskOverlay()
+    elseif self:isTreatmentPage() then
+        ok = self:renderTreatmentOverlay()
     else
         ok = self:renderInfectionOverlay()
     end
@@ -448,6 +541,8 @@ function RealisticCropRotationDiseaseMap:draw(x, y, width, height)
     local overlayIds, pendingSlotField, activeSlotField
     if self:isPressurePage() then
         overlayIds, pendingSlotField, activeSlotField = self.riskOverlayIds, "riskPendingSlot", "riskActiveSlot"
+    elseif self:isTreatmentPage() then
+        overlayIds, pendingSlotField, activeSlotField = self.treatmentOverlayIds, "treatmentPendingSlot", "treatmentActiveSlot"
     else
         overlayIds, pendingSlotField, activeSlotField = self.infectionOverlayIds, "infectionPendingSlot", "infectionActiveSlot"
     end
@@ -579,12 +674,13 @@ function RealisticCropRotationDiseaseMap:ensureMapPage(frame)
     local _, btnOffset = getNormalizedScreenValues(0, 16)
     self.buttonDeselectAllAdjustedY = frame.buttonDeselectAllContainer.position[2] + btnOffset
 
-    -- Clone the map-overview selector to build the two-way sub-selector.
+    -- Clone the map-overview selector to build the three-way sub-selector.
     if frame.filterBox ~= nil and frame.mapOverviewSelector ~= nil then
         self.subSelector = frame.mapOverviewSelector:clone(frame.filterBox)
         self.subSelector:setTexts({
             getText("rcr_disease_sub_infections"),
             getText("rcr_disease_sub_pressure"),
+            getText("rcr_disease_sub_treatment"),
         })
         self.subSelectorBaseY = self.subSelector.position[2]
         function self.subSelector.onClickCallback(_, subState)
@@ -599,7 +695,7 @@ function RealisticCropRotationDiseaseMap:ensureMapPage(frame)
         if frame.subCategoryDotBox ~= nil then
             self.subDotBox = frame.subCategoryDotBox:clone(frame.filterBox)
             self.subDotBoxBaseY = self.subDotBox.position[2]
-            local numSubPages = 2
+            local numSubPages = 3
             while #self.subDotBox.elements > numSubPages do
                 self.subDotBox.elements[#self.subDotBox.elements]:delete()
             end

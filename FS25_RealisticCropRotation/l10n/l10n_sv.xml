@@ -16,6 +16,7 @@
         <e k="rcr_section_disease_map"     v="Sjukdomar" />
         <e k="rcr_disease_sub_infections" v="Aktiva härdar" />
         <e k="rcr_disease_sub_pressure"   v="Sjukdomstryck" />
+        <e k="rcr_disease_sub_treatment"  v="Behandling" />
         <e k="rcr_disease_risk_low"       v="Låg" />
         <e k="rcr_disease_risk_moderate"  v="Måttlig" />
         <e k="rcr_disease_risk_high"      v="Hög" />

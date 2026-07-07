@@ -16,6 +16,7 @@
         <e k="rcr_section_disease_map"     v="Ziekten" />
         <e k="rcr_disease_sub_infections" v="Actieve haarden" />
         <e k="rcr_disease_sub_pressure"   v="Ziektedruk" />
+        <e k="rcr_disease_sub_treatment"  v="Behandelingen" />
         <e k="rcr_disease_risk_low"       v="Laag" />
         <e k="rcr_disease_risk_moderate"  v="Matig" />
         <e k="rcr_disease_risk_high"      v="Hoog" />

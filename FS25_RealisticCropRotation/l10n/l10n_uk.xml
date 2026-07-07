@@ -16,6 +16,7 @@
         <e k="rcr_section_disease_map"     v="Хвороби" />
         <e k="rcr_disease_sub_infections" v="Активні осередки" />
         <e k="rcr_disease_sub_pressure"   v="Тиск хвороб" />
+        <e k="rcr_disease_sub_treatment"  v="Обробки" />
         <e k="rcr_disease_risk_low"       v="Низький" />
         <e k="rcr_disease_risk_moderate"  v="Помірний" />
         <e k="rcr_disease_risk_high"      v="Високий" />

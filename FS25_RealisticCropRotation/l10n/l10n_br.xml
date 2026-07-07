@@ -16,6 +16,7 @@
         <e k="rcr_section_disease_map"     v="Doenças" />
         <e k="rcr_disease_sub_infections" v="Focos ativos" />
         <e k="rcr_disease_sub_pressure"   v="Pressão de doenças" />
+        <e k="rcr_disease_sub_treatment"  v="Tratamentos" />
         <e k="rcr_disease_risk_low"       v="Baixa" />
         <e k="rcr_disease_risk_moderate"  v="Moderada" />
         <e k="rcr_disease_risk_high"      v="Alta" />

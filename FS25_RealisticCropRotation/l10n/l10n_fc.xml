@@ -16,6 +16,7 @@
         <e k="rcr_section_disease_map"     v="Maladies" />
         <e k="rcr_disease_sub_infections" v="Foyers actifs" />
         <e k="rcr_disease_sub_pressure"   v="Pression maladie" />
+        <e k="rcr_disease_sub_treatment"  v="Traitements" />
         <e k="rcr_disease_risk_low"       v="Faible" />
         <e k="rcr_disease_risk_moderate"  v="Modérée" />
         <e k="rcr_disease_risk_high"      v="Élevée" />

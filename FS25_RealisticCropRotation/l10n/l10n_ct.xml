@@ -16,6 +16,7 @@
         <e k="rcr_section_disease_map"     v="疾病" />
         <e k="rcr_disease_sub_infections" v="活躍病灶" />
         <e k="rcr_disease_sub_pressure"   v="病害壓力" />
+        <e k="rcr_disease_sub_treatment"  v="防治" />
         <e k="rcr_disease_risk_low"       v="低" />
         <e k="rcr_disease_risk_moderate"  v="中" />
         <e k="rcr_disease_risk_high"      v="高" />

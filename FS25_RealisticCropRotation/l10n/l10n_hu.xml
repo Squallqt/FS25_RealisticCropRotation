@@ -16,6 +16,7 @@
         <e k="rcr_section_disease_map"     v="Betegségek" />
         <e k="rcr_disease_sub_infections" v="Aktív gócok" />
         <e k="rcr_disease_sub_pressure"   v="Betegségnyomás" />
+        <e k="rcr_disease_sub_treatment"  v="Kezelések" />
         <e k="rcr_disease_risk_low"       v="Alacsony" />
         <e k="rcr_disease_risk_moderate"  v="Mérsékelt" />
         <e k="rcr_disease_risk_high"      v="Magas" />

@@ -16,6 +16,7 @@
         <e k="rcr_section_disease_map"     v="Krankheiten" />
         <e k="rcr_disease_sub_infections" v="Aktive Herde" />
         <e k="rcr_disease_sub_pressure"   v="Krankheitsdruck" />
+        <e k="rcr_disease_sub_treatment"  v="Behandlung" />
         <e k="rcr_disease_risk_low"       v="Gering" />
         <e k="rcr_disease_risk_moderate"  v="Mittel" />
         <e k="rcr_disease_risk_high"      v="Hoch" />

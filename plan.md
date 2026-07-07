@@ -21,10 +21,13 @@ Un pulvérisateur RCR (RCR_FUNGICIDE / RCR_NEMATICIDE) qui :
 
 ## Ordre d'implémentation (chaque étape livrée + validée runtime AVANT la suivante)
 1. ~~**Jet coloré**~~ — **ABANDONNÉ** : le shader de pulvé natif rend une brume d'eau blanche et n'adopte pas le matériau échangé en jeu (confirmé runtime + gameSource). Non faisable proprement → assets/holder retirés.
-2. **Effet curatif + préventif fonctionnels** — critère : pulvériser soigne (curatif) et protège (préventif) ; vérifiable état/console.
-3. **Effacement progressif de l'overlay maladie sur la carte** — critère : recule au passage, jamais d'aggravation.
-4. ✅ **Couche visuelle au sol** — **VALIDÉ** : on peint `WATER_LEVEL` (aspect humide) sur la bande pulvérisée. Visuel seul (aucun effet agronomique, rien ne le consomme), éphémère (fade ~1 mois via `onDayChanged`), serveur-autoritaire + persistant (save/load).
+2. ✅ **Effet curatif + préventif fonctionnels** — **VALIDÉ** (commit `14a3c69`). Protection **par cellule** (2 bitvector, une par famille), peinte sous la rampe uniquement (per-bande). Une cellule traitée est exclue *pour toujours* (cycle en cours) de la destruction quotidienne — même mécanisme pour curatif (stoppe une infection active) et préventif (empêche une future infection). Le sprayer ne touche JAMAIS le blé réel (seule la passe journalière `propagate()` détruit). Vérifiable en console (`rcrDisease` affiche `protect={FUNGICIDE=X%,NEMATICIDE=Y%}`) et au HUD à pied (lit la protection à la position du joueur).
+3. ✅ **Effacement progressif de l'overlay maladie sur la carte** — **VALIDÉ, obtenu gratuitement par le point 2** : l'exclusion par cellule efface l'overlay directement sous la rampe au passage (jamais d'aggravation, jamais tout d'un coup). Bonus : bug de scintillement de l'overlay trouvé et corrigé (double buffering natif, `changeRevision` uniquement sur vrai changement).
+4. ✅ **Couche visuelle au sol** — **VALIDÉ**. Peint `SPRAY_TYPE` (rendu fertilisant natif) sur la bande pulvérisée — visuel seul, aucun effet agronomique (jamais `SPRAY_LEVEL`). Éphémère (fade ~1 mois via `onDayChanged`), serveur-autoritaire + persistant (save/load).
 5. **IA (préventif + curatif)** — critère : un ouvrier couvre et termine le champ. Piste : `addAIFruitRequirement` sur la grille maladie (cellules infectées).
+
+## Piste envisagée (à valider avant implémentation) — nouvelle vue carte "traitements déposés"
+Idée : une 3ᵉ sous-vue sur la carte du mod montrant la couverture de protection (comme le fait déjà `rcrDisease` en console). Techniquement faisable nativement : les 2 bitvector de protection existent déjà, il suffirait d'un rendu overlay de plus (même mécanisme que les 2 vues existantes, double-buffered). À creuser avant de coder : utilité réelle vs redondance avec l'overlay maladie qui recule déjà visiblement.
 
 ## Ce qui est HORS de ce chantier (déjà fait, ne pas retoucher)
 Système de 9 maladies, destruction journalière/foyers, overlays carte maladie/pression, l10n 27 langues, modDesc, audit perf. Le chantier ci-dessus ne concerne QUE le pulvérisateur.
