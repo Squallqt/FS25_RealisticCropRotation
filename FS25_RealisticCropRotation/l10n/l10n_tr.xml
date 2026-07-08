@@ -146,10 +146,10 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Eksik plan" />
-        <e k="rcr_score_excellent"      v="Mükemmel rotasyon" />
-        <e k="rcr_score_good"           v="İyi rotasyon" />
-        <e k="rcr_score_fair"           v="Orta rotasyon" />
-        <e k="rcr_score_poor"           v="Zayıf rotasyon" />
+        <e k="rcr_score_excellent"      v="Mükemmel rotasyon — düşük hastalık riski" />
+        <e k="rcr_score_good"           v="İyi rotasyon — hastalık riski kontrol altında" />
+        <e k="rcr_score_fair"           v="Orta rotasyon — artan hastalık riski" />
+        <e k="rcr_score_poor"           v="Zayıf rotasyon — yüksek hastalık riski" />
         <e k="rcr_score_label_low"      v="Düşük puan" />
         <e k="rcr_score_label_optimal"  v="En uygun puan" />
         <e k="rcr_score_short_optimal"  v="OPTİMAL" />

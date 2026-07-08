@@ -146,10 +146,10 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="計畫不完整" />
-        <e k="rcr_score_excellent"      v="輪作優異" />
-        <e k="rcr_score_good"           v="輪作良好" />
-        <e k="rcr_score_fair"           v="輪作尚可" />
-        <e k="rcr_score_poor"           v="輪作較差" />
+        <e k="rcr_score_excellent"      v="輪作優異——病害風險低" />
+        <e k="rcr_score_good"           v="輪作良好——病害風險受控" />
+        <e k="rcr_score_fair"           v="輪作尚可——病害風險上升" />
+        <e k="rcr_score_poor"           v="輪作較差——病害風險高" />
         <e k="rcr_score_label_low"      v="評分較低" />
         <e k="rcr_score_label_optimal"  v="評分最佳" />
         <e k="rcr_score_short_optimal"  v="最佳" />

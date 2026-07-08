@@ -146,10 +146,10 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Plan incomplet" />
-        <e k="rcr_score_excellent"      v="Rotație excelentă" />
-        <e k="rcr_score_good"           v="Rotație bună" />
-        <e k="rcr_score_fair"           v="Rotație acceptabilă" />
-        <e k="rcr_score_poor"           v="Rotație slabă" />
+        <e k="rcr_score_excellent"      v="Rotație excelentă — risc scăzut de boli" />
+        <e k="rcr_score_good"           v="Rotație bună — risc de boli sub control" />
+        <e k="rcr_score_fair"           v="Rotație acceptabilă — risc de boli în creștere" />
+        <e k="rcr_score_poor"           v="Rotație slabă — risc ridicat de boli" />
         <e k="rcr_score_label_low"      v="Scor mic" />
         <e k="rcr_score_label_optimal"  v="Scor optim" />
         <e k="rcr_score_short_optimal"  v="OPTIM" />

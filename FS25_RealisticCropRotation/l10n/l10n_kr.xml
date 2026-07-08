@@ -146,10 +146,10 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="불완전한 계획" />
-        <e k="rcr_score_excellent"      v="우수한 윤작" />
-        <e k="rcr_score_good"           v="좋은 윤작" />
-        <e k="rcr_score_fair"           v="보통 윤작" />
-        <e k="rcr_score_poor"           v="미흡한 윤작" />
+        <e k="rcr_score_excellent"      v="우수한 윤작 — 병해 위험 낮음" />
+        <e k="rcr_score_good"           v="좋은 윤작 — 병해 위험 통제됨" />
+        <e k="rcr_score_fair"           v="보통 윤작 — 병해 위험 증가" />
+        <e k="rcr_score_poor"           v="미흡한 윤작 — 병해 위험 높음" />
         <e k="rcr_score_label_low"      v="낮은 점수" />
         <e k="rcr_score_label_optimal"  v="최적 점수" />
         <e k="rcr_score_short_optimal"  v="최적" />

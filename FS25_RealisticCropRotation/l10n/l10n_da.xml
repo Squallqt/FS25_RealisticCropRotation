@@ -146,10 +146,10 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Ufuldstændig plan" />
-        <e k="rcr_score_excellent"      v="Fremragende sædskifte" />
-        <e k="rcr_score_good"           v="Godt sædskifte" />
-        <e k="rcr_score_fair"           v="Rimeligt sædskifte" />
-        <e k="rcr_score_poor"           v="Dårligt sædskifte" />
+        <e k="rcr_score_excellent"      v="Fremragende sædskifte — lav sygdomsrisiko" />
+        <e k="rcr_score_good"           v="Godt sædskifte — sygdomsrisiko under kontrol" />
+        <e k="rcr_score_fair"           v="Rimeligt sædskifte — stigende sygdomsrisiko" />
+        <e k="rcr_score_poor"           v="Dårligt sædskifte — høj sygdomsrisiko" />
         <e k="rcr_score_label_low"      v="Lav score" />
         <e k="rcr_score_label_optimal"  v="Optimal score" />
         <e k="rcr_score_short_optimal"  v="OPTIMAL" />

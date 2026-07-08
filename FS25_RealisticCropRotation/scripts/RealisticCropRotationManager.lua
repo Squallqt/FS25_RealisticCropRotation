@@ -193,12 +193,12 @@ local function collectFieldInteriorSamples(field, samples)
     local terrainDetailId = g_currentMission ~= nil and g_currentMission.terrainDetailId or nil
     local canMask = terrainDetailId ~= nil and getDensityAtWorldPos ~= nil
 
+    -- Spread from near-edge to near-edge, not just the central band: a localized destruction patch
+    -- (disease, etc.) must not be able to outvote crop still standing near the field's borders.
     local offsets = {
-        {0.50, 0.50},
-        {0.25, 0.25},
-        {0.75, 0.25},
-        {0.25, 0.75},
-        {0.75, 0.75},
+        {0.15, 0.15}, {0.50, 0.15}, {0.85, 0.15},
+        {0.15, 0.50}, {0.50, 0.50}, {0.85, 0.50},
+        {0.15, 0.85}, {0.50, 0.85}, {0.85, 0.85},
     }
 
     for _, offset in ipairs(offsets) do

@@ -146,10 +146,10 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="計画が不完全" />
-        <e k="rcr_score_excellent"      v="優れた輪作" />
-        <e k="rcr_score_good"           v="良い輪作" />
-        <e k="rcr_score_fair"           v="まずまずの輪作" />
-        <e k="rcr_score_poor"           v="不十分な輪作" />
+        <e k="rcr_score_excellent"      v="優れた輪作——病害リスク低" />
+        <e k="rcr_score_good"           v="良い輪作——病害リスク抑制" />
+        <e k="rcr_score_fair"           v="まずまずの輪作——病害リスク上昇" />
+        <e k="rcr_score_poor"           v="不十分な輪作——病害リスク高" />
         <e k="rcr_score_label_low"      v="低スコア" />
         <e k="rcr_score_label_optimal"  v="最適スコア" />
         <e k="rcr_score_short_optimal"  v="最適" />

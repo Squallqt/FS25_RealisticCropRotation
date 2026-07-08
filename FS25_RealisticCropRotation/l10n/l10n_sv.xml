@@ -146,10 +146,10 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Ofullständig plan" />
-        <e k="rcr_score_excellent"      v="Utmärkt växtföljd" />
-        <e k="rcr_score_good"           v="Bra växtföljd" />
-        <e k="rcr_score_fair"           v="Godtagbar växtföljd" />
-        <e k="rcr_score_poor"           v="Dålig växtföljd" />
+        <e k="rcr_score_excellent"      v="Utmärkt växtföljd — låg sjukdomsrisk" />
+        <e k="rcr_score_good"           v="Bra växtföljd — sjukdomsrisk under kontroll" />
+        <e k="rcr_score_fair"           v="Godtagbar växtföljd — ökande sjukdomsrisk" />
+        <e k="rcr_score_poor"           v="Dålig växtföljd — hög sjukdomsrisk" />
         <e k="rcr_score_label_low"      v="Låg poäng" />
         <e k="rcr_score_label_optimal"  v="Optimal poäng" />
         <e k="rcr_score_short_optimal"  v="OPTIMAL" />

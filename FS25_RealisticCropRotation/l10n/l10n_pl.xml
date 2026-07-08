@@ -146,10 +146,10 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Plan niekompletny" />
-        <e k="rcr_score_excellent"      v="Doskonały płodozmian" />
-        <e k="rcr_score_good"           v="Dobry płodozmian" />
-        <e k="rcr_score_fair"           v="Przeciętny płodozmian" />
-        <e k="rcr_score_poor"           v="Słaby płodozmian" />
+        <e k="rcr_score_excellent"      v="Doskonały płodozmian — niskie ryzyko chorób" />
+        <e k="rcr_score_good"           v="Dobry płodozmian — ryzyko chorób pod kontrolą" />
+        <e k="rcr_score_fair"           v="Przeciętny płodozmian — rosnące ryzyko chorób" />
+        <e k="rcr_score_poor"           v="Słaby płodozmian — wysokie ryzyko chorób" />
         <e k="rcr_score_label_low"      v="Niski wynik" />
         <e k="rcr_score_label_optimal"  v="Optymalny wynik" />
         <e k="rcr_score_short_optimal"  v="OPTYMALNY" />

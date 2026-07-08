@@ -146,10 +146,10 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Unvollständiger Plan" />
-        <e k="rcr_score_excellent"      v="Ausgezeichnete Rotation" />
-        <e k="rcr_score_good"           v="Gute Rotation" />
-        <e k="rcr_score_fair"           v="Angemessene Rotation" />
-        <e k="rcr_score_poor"           v="Schlechte Rotation" />
+        <e k="rcr_score_excellent"      v="Ausgezeichnete Rotation — geringes Krankheitsrisiko" />
+        <e k="rcr_score_good"           v="Gute Rotation — Krankheitsrisiko unter Kontrolle" />
+        <e k="rcr_score_fair"           v="Angemessene Rotation — steigendes Krankheitsrisiko" />
+        <e k="rcr_score_poor"           v="Schlechte Rotation — hohes Krankheitsrisiko" />
         <e k="rcr_score_label_low"      v="Niedrige Bewertung" />
         <e k="rcr_score_label_optimal"  v="Optimale Bewertung" />
         <e k="rcr_score_short_optimal"  v="OPTIMAL" />

@@ -146,10 +146,10 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Onvolledig plan" />
-        <e k="rcr_score_excellent"      v="Uitstekende rotatie" />
-        <e k="rcr_score_good"           v="Goede rotatie" />
-        <e k="rcr_score_fair"           v="Redelijke rotatie" />
-        <e k="rcr_score_poor"           v="Slechte rotatie" />
+        <e k="rcr_score_excellent"      v="Uitstekende rotatie — laag ziekterisico" />
+        <e k="rcr_score_good"           v="Goede rotatie — ziekterisico onder controle" />
+        <e k="rcr_score_fair"           v="Redelijke rotatie — oplopend ziekterisico" />
+        <e k="rcr_score_poor"           v="Slechte rotatie — hoog ziekterisico" />
         <e k="rcr_score_label_low"      v="Lage score" />
         <e k="rcr_score_label_optimal"  v="Optimale score" />
         <e k="rcr_score_short_optimal"  v="OPTIMAAL" />

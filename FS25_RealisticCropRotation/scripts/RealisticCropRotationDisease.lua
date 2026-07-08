@@ -10,19 +10,39 @@ RealisticCropRotationDisease.INOCULUM_SEED = 0.12   -- inoculum a first host est
 RealisticCropRotationDisease.INOCULUM_GROWTH = 2.2  -- population multiplier per back-to-back host year
 RealisticCropRotationDisease.INOCULUM_RESIDUAL = 0.1 -- fraction left after `interval` host-free years
 RealisticCropRotationDisease.INITIAL_SEVERITY = 0.10
--- Severity advances day by day (MessageType.DAY_CHANGED) for a slow, credible creep. Per-pathogen rates
--- come from cropConfig <diseaseGroup dailyGrowth/destroySeverity/deadFractionMax>; these are fallbacks.
-RealisticCropRotationDisease.DEFAULT_DAILY_GROWTH = 0.04 -- severity gained per in-game day (fallback)
+-- Severity advances day by day; per-pathogen rates come from cropConfig (dailyGrowth/destroySeverity/
+-- deadFractionMax), these are fallbacks. Both are calibrated at REFERENCE_DAYS_PER_PERIOD and rescaled
+-- by periodScale so the same fraction of the growing calendar elapses regardless of season length.
+RealisticCropRotationDisease.REFERENCE_DAYS_PER_PERIOD = 9 -- calibration baseline for the day-based constants below
+RealisticCropRotationDisease.DEFAULT_DAILY_GROWTH = 0.04 -- severity gained per in-game day at the reference (fallback)
 RealisticCropRotationDisease.DESTROY_SEVERITY = 0.25 -- latent period: damage only above this (fallback)
--- Destruction is one organic Perlin field over the parcel; the cut threshold drops as severity climbs,
--- so the dead area grows and merges over the days (convex ramp keeps early infection to a few spots).
+RealisticCropRotationDisease.LOAD_SPEED_GAIN = 1.0  -- heavy soil inoculum speeds the epidemic (x1..x2 by load)
+RealisticCropRotationDisease.INCUBATION_DAYS = 3    -- warm-weather latent period before severity climbs, at the reference
+-- Fungal favourability by temperature (Celsius): full speed on the optimal plateau, tapering to a floor
+-- at frost/heat. Shared across pathogens; also paces the incubation countdown.
+RealisticCropRotationDisease.TEMP_MIN = 3           -- at/below: coldest favourability (TEMP_FLOOR)
+RealisticCropRotationDisease.TEMP_OPT_LOW = 10
+RealisticCropRotationDisease.TEMP_OPT_HIGH = 25
+RealisticCropRotationDisease.TEMP_MAX = 32          -- at/above: hottest favourability (TEMP_FLOOR)
+RealisticCropRotationDisease.TEMP_FLOOR = 0.5       -- residual favourability at frost/extreme heat
+-- Destruction targets a real area fraction of the parcel (measured via executeGet), so the dead share
+-- follows the curve regardless of the noise distribution; the area grows and merges over the days.
 -- minOctave is the size knob (6 -> ~32 m organic foci, the validated look); numOctave roughens edges.
 RealisticCropRotationDisease.DESTROY_PERLIN_OCTAVES = 6    -- minOctave: ~32 m organic foci (THE size knob; lower = bigger)
 RealisticCropRotationDisease.DESTROY_PERLIN_FREQUENCY = 3  -- numOctave: added detail layers -> rough, irregular edges
 RealisticCropRotationDisease.DESTROY_PERLIN_PERSISTENCE = 0.5
 RealisticCropRotationDisease.DESTROY_PERLIN_MAX = 10000     -- noise value range (GREATER cut is 0..this)
 RealisticCropRotationDisease.DESTROY_DEAD_FRACTION_MAX = 0.90 -- dead share of the parcel at full severity (fallback)
-RealisticCropRotationDisease.DESTROY_RAMP_POWER = 1.6      -- convex severity->dead ramp (gentle near the latent threshold)
+RealisticCropRotationDisease.DESTROY_RAMP_POWER = 1.5      -- gentle convex severity->dead ramp, spread across the range
+RealisticCropRotationDisease.DESTROY_BAND_AREA = 0.06      -- extra area fraction of the scattered transition band
+-- Transition band: an independent, finer-grained Perlin noise selects a random subset of the band's
+-- cells for a full clear, giving a scattered/speckled edge instead of a smooth contour.
+RealisticCropRotationDisease.SPECKLE_FRACTION = 0.5         -- share of the band cleared as scattered cells
+RealisticCropRotationDisease.SPECKLE_PERLIN_OCTAVES = 10    -- minOctave: much finer grain than the main shape
+RealisticCropRotationDisease.SPECKLE_PERLIN_FREQUENCY = 4   -- numOctave: extra detail layers for a scattered look
+RealisticCropRotationDisease.SPECKLE_PERLIN_PERSISTENCE = 0.5
+RealisticCropRotationDisease.DESTROY_SEARCH_ITERATIONS = 14 -- binary-search steps matching area to a Perlin threshold
+RealisticCropRotationDisease.DESTROY_SEARCH_TOLERANCE = 0.01 -- area precision that ends the search early
 RealisticCropRotationDisease.DAILY_BUDGET_PER_FRAME = 1   -- fields whose daily disease step runs per frame (load spreading)
 
 -- Predictive-risk band thresholds. The worst pathogen load (getRisk, from the rotation history) is
@@ -78,16 +98,54 @@ local function isRaining()
     return env.weather:getIsRaining() == true
 end
 
----Weather modifier for a pathogen group: rain amplifies fungal pathogens only, by the group's weatherFactor.
--- @param boolean raining, string group Pathogen group name
+---Current air temperature (Celsius), or nil when the weather is unavailable.
+local function currentTemperature()
+    local env = g_currentMission ~= nil and g_currentMission.environment or nil
+    if env == nil or env.weather == nil or type(env.weather.getCurrentTemperature) ~= "function" then
+        return nil
+    end
+    return env.weather:getCurrentTemperature()
+end
+
+---Temperature favourability [TEMP_FLOOR..1]: 1 on the optimal plateau, tapering to the floor at frost/heat.
+-- @param number temperature Celsius (or nil)
+-- @return number factor
+local function temperatureFactor(temperature)
+    local D = RealisticCropRotationDisease
+    local t = tonumber(temperature)
+    if t == nil then return 1 end
+    if t >= D.TEMP_OPT_LOW and t <= D.TEMP_OPT_HIGH then return 1 end
+    if t < D.TEMP_OPT_LOW then
+        if t <= D.TEMP_MIN then return D.TEMP_FLOOR end
+        return D.TEMP_FLOOR + (1 - D.TEMP_FLOOR) * (t - D.TEMP_MIN) / (D.TEMP_OPT_LOW - D.TEMP_MIN)
+    end
+    if t >= D.TEMP_MAX then return D.TEMP_FLOOR end
+    return D.TEMP_FLOOR + (1 - D.TEMP_FLOOR) * (D.TEMP_MAX - t) / (D.TEMP_MAX - D.TEMP_OPT_HIGH)
+end
+
+---Ratio of the save's real days-per-period to REFERENCE_DAYS_PER_PERIOD; multiply a duration or divide
+---a rate by it so disease timing stays a constant fraction of the growing calendar on any season length.
+-- @return number scale (1 when the setting cannot be read)
+local function periodScale()
+    local env = g_currentMission ~= nil and g_currentMission.environment or nil
+    local actual = env ~= nil and tonumber(env.daysPerPeriod) or nil
+    if actual == nil or actual <= 0 then return 1 end
+    return actual / RealisticCropRotationDisease.REFERENCE_DAYS_PER_PERIOD
+end
+
+---Weather modifier for a pathogen group: rain and temperature both modulate fungal groups only.
+-- @param boolean raining, number temperature Celsius, string group Pathogen group name
 -- @return number modifier
-local function weatherModifier(raining, group)
-    if not raining then return 1 end
+local function weatherModifier(raining, temperature, group)
     local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
     local fungal = config ~= nil and config.diseaseFungal ~= nil and config.diseaseFungal[group] == true
     if not fungal then return 1 end
-    local factor = config ~= nil and config.diseaseWeatherFactors ~= nil and config.diseaseWeatherFactors[group] or nil
-    return tonumber(factor) or RealisticCropRotationDisease.RAIN_BONUS
+    local rain = 1
+    if raining then
+        local factor = config ~= nil and config.diseaseWeatherFactors ~= nil and config.diseaseWeatherFactors[group] or nil
+        rain = tonumber(factor) or RealisticCropRotationDisease.RAIN_BONUS
+    end
+    return rain * temperatureFactor(temperature)
 end
 
 ---Stable overlay grid state (1..N) for a pathogen group, from cropConfig <diseaseGroup state=>.
@@ -190,14 +248,19 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId)
     if mgr == nil then return end
     local cropName, _, growthState = mgr:getActiveCropInfo(farmlandId)
 
-    if self.crop[farmlandId] ~= cropName then
-        self.state[farmlandId] = nil
-        self.crop[farmlandId] = cropName
-        if self.grid ~= nil and type(self.grid.clearField) == "function" then
-            -- Also drops per-cell protection for this field: it is crop-cycle scoped and ends here.
-            local field = type(mgr.getFieldByFarmlandId) == "function" and mgr:getFieldByFarmlandId(farmlandId) or nil
-            if field ~= nil then self.grid:clearField(field) end
+    -- Reset only on a CONFIRMED rotation to a different crop (both names known), never on a momentary
+    -- "no crop" read (disease-caused bare patches, mid-harvest) -- that must not wipe an active infection.
+    local previousCrop = self.crop[farmlandId]
+    if cropName ~= nil then
+        if previousCrop ~= nil and previousCrop ~= cropName then
+            self.state[farmlandId] = nil
+            if self.grid ~= nil and type(self.grid.clearField) == "function" then
+                -- Also drops per-cell protection for this field: it is crop-cycle scoped and ends here.
+                local field = type(mgr.getFieldByFarmlandId) == "function" and mgr:getFieldByFarmlandId(farmlandId) or nil
+                if field ~= nil then self.grid:clearField(field) end
+            end
         end
+        self.crop[farmlandId] = cropName
     end
     if cropName == nil then return end -- no active infection without a living host
 
@@ -209,6 +272,7 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId)
 
     local windows = (RealisticCropRotation.cropConfig and RealisticCropRotation.cropConfig.diseaseWindows) or {}
     local raining = isRaining()
+    local temperature = currentTemperature()
     for group, load in pairs(self:getLoad(farmlandId)) do
         if hostGroups[group] then
             local state = self.state[farmlandId]
@@ -218,7 +282,7 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId)
                 local w = windows[group]
                 -- Susceptible inside the growth window only; an unreadable stage never blocks.
                 if w == nil or frac == nil or (frac >= w.from and frac <= (w.to or 1)) then
-                    local chance = load * RealisticCropRotationDisease.INFECTION_SCALE * weatherModifier(raining, group)
+                    local chance = load * RealisticCropRotationDisease.INFECTION_SCALE * weatherModifier(raining, temperature, group)
                     if math.random() < chance then
                         self.state[farmlandId] = self.state[farmlandId] or {}
                         self.state[farmlandId][group] = {
@@ -226,7 +290,8 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId)
                             -- seeds the Perlin destruction pattern; synced + saved so every client
                             -- regenerates the identical dead area (see applyPerlinDestruction)
                             seed = math.random(1, 1000000),
-                            new = true, -- latent: established this period, no damage until next
+                            -- temperature-paced latent period, scaled to the save's calendar (periodScale)
+                            incubation = RealisticCropRotationDisease.INCUBATION_DAYS * periodScale(),
                         }
                         if g_currentMission ~= nil and type(g_currentMission.addIngameNotification) == "function"
                             and FSBaseMission ~= nil and g_i18n ~= nil then
@@ -277,18 +342,68 @@ local function fieldWorldBounds(field)
     return minX, minZ, maxX, maxZ
 end
 
----Perlin "GREATER" cut for a severity: high near the latent threshold, dropping toward the curve's
----deadFractionMax along a convex ramp as severity climbs (grows the dead area organically over days).
+---Target dead area fraction for a severity: a gentle convex ramp from 0 at the latent threshold to the curve's deadFractionMax at full severity.
 -- @param number severity, table curve (or nil for module fallbacks)
-local function severityThreshold(severity, curve)
+-- @return number fraction [0, deadFractionMax]
+local function deadFractionForSeverity(severity, curve)
     local D = RealisticCropRotationDisease
     local destroySeverity = curve ~= nil and curve.destroySeverity or D.DESTROY_SEVERITY
     local deadFractionMax = curve ~= nil and curve.deadFractionMax or D.DESTROY_DEAD_FRACTION_MAX
     local power = curve ~= nil and curve.power or D.DESTROY_RAMP_POWER
     local sev = tonumber(severity) or 0
     local frac = math.max(0, math.min(1, (sev - destroySeverity) / math.max(1e-6, 1 - destroySeverity)))
-    local deadFraction = deadFractionMax * (frac ^ power)
-    return math.floor((1 - deadFraction) * D.DESTROY_PERLIN_MAX)
+    return deadFractionMax * (frac ^ power)
+end
+
+---Fraction of the field polygon whose Perlin field exceeds `threshold`, counted natively (executeGet, no write).
+-- @param table field, integer seed, integer threshold, integer octaves, frequency; number persistence
+-- @return number fraction [0,1]
+local function perlinAreaFraction(field, seed, threshold, octaves, frequency, persistence)
+    if field == nil or DensityMapModifier == nil or PerlinNoiseFilter == nil or g_terrainNode == nil
+        or DensityValueCompareType == nil or g_currentMission == nil or g_currentMission.fieldGroundSystem == nil
+        or FieldDensityMap == nil or type(field.getDensityMapPolygon) ~= "function" then
+        return 0
+    end
+    local polygon = field:getDensityMapPolygon()
+    if polygon == nil then return 0 end
+    local groundTypeMapId, groundFirstChannel, groundNumChannels =
+        g_currentMission.fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE)
+    if groundTypeMapId == nil then return 0 end
+
+    local modifier = DensityMapModifier.new(groundTypeMapId, groundFirstChannel, groundNumChannels, g_terrainNode)
+    polygon:applyToModifier(modifier)
+    local perlin = PerlinNoiseFilter.new(groundTypeMapId, octaves, frequency, persistence, tonumber(seed) or 1)
+    perlin:setValueCompareParams(DensityValueCompareType.GREATER, threshold)
+
+    local _, hits, total = modifier:executeGet(perlin)
+    if total == nil or total <= 0 then return 0 end
+    return (hits or 0) / total
+end
+
+---Binary-searches the Perlin GREATER threshold selecting `targetFraction` of the field; deterministic, so server and clients derive the same cut from the same seed + target.
+-- @param table field, integer seed, number targetFraction, octaves, frequency, persistence, hiBound
+-- @return integer threshold
+local function perlinThresholdForArea(field, seed, targetFraction, octaves, frequency, persistence, hiBound)
+    local D = RealisticCropRotationDisease
+    if targetFraction <= 0 then return D.DESTROY_PERLIN_MAX end
+    if targetFraction >= 1 then return 0 end
+    local lo, hi = 0, hiBound or D.DESTROY_PERLIN_MAX
+    for _ = 1, D.DESTROY_SEARCH_ITERATIONS do
+        local mid = math.floor((lo + hi) / 2)
+        local area = perlinAreaFraction(field, seed, mid, octaves, frequency, persistence)
+        if math.abs(area - targetFraction) <= D.DESTROY_SEARCH_TOLERANCE then return mid end
+        -- Higher threshold selects fewer cells: too little selected area -> lower the threshold.
+        if area < targetFraction then hi = mid else lo = mid end
+        if hi - lo <= 1 then break end
+    end
+    return lo
+end
+
+---Deterministic second seed for the transition-band speckle noise, derived from the infection seed.
+-- @param integer seed
+-- @return integer
+local function speckleSeedFor(seed)
+    return ((tonumber(seed) or 1) * 7 + 13) % 1000000 + 1
 end
 
 ---Per-pathogen destruction curve, from cropConfig with module fallbacks.
@@ -345,6 +460,61 @@ local function applyPerlinDestruction(targetMapId, firstChannel, numChannels, va
     return true
 end
 
+---Masks band cells that are not protected, then clears a random subset of them via an independent
+---high-frequency Perlin cut just outside the dead core -- a scattered, salt-and-pepper transition.
+local function applyBandSpeckle(targetMapId, firstChannel, numChannels, clearTypeMode, field, seed, bandThreshold, protectionMapId, grid)
+    local D = RealisticCropRotationDisease
+    if grid == nil or grid.speckleMapId == nil or field == nil or targetMapId == nil
+        or DensityMapModifier == nil or DensityMapFilter == nil or PerlinNoiseFilter == nil
+        or g_terrainNode == nil or DensityValueCompareType == nil or DensityCoordType == nil
+        or g_currentMission == nil or g_currentMission.fieldGroundSystem == nil or FieldDensityMap == nil
+        or type(field.getDensityMapPolygon) ~= "function" then
+        return false
+    end
+    local polygon = field:getDensityMapPolygon()
+    if polygon == nil then return false end
+    local groundTypeMapId = select(1, g_currentMission.fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE))
+    if groundTypeMapId == nil then return false end
+    local minX, minZ, maxX, maxZ = fieldWorldBounds(field)
+    if minX == nil then return false end
+
+    -- Recomputed fresh every call: protection can grow mid-epidemic, so a stale mask could let the
+    -- speckle pass hit a cell the player just sprayed.
+    local clearModifier = DensityMapModifier.new(grid.speckleMapId, 0, 1, g_terrainNode)
+    clearModifier:setParallelogramWorldCoords(minX, minZ, maxX, minZ, minX, maxZ, DensityCoordType.POINT_POINT_POINT)
+    clearModifier:executeSet(0)
+
+    local maskModifier = DensityMapModifier.new(grid.speckleMapId, 0, 1, g_terrainNode)
+    polygon:applyToModifier(maskModifier)
+    local bandPerlin = PerlinNoiseFilter.new(groundTypeMapId,
+        D.DESTROY_PERLIN_OCTAVES, D.DESTROY_PERLIN_FREQUENCY, D.DESTROY_PERLIN_PERSISTENCE, tonumber(seed) or 1)
+    bandPerlin:setValueCompareParams(DensityValueCompareType.GREATER, bandThreshold)
+    if protectionMapId ~= nil then
+        local protectionFilter = DensityMapFilter.new(protectionMapId, 0, 1)
+        protectionFilter:setValueCompareParams(DensityValueCompareType.EQUAL, 0)
+        maskModifier:executeSet(1, bandPerlin, protectionFilter)
+    else
+        maskModifier:executeSet(1, bandPerlin)
+    end
+
+    local speckleSeed = speckleSeedFor(seed)
+    local speckleThreshold = perlinThresholdForArea(field, speckleSeed, D.SPECKLE_FRACTION,
+        D.SPECKLE_PERLIN_OCTAVES, D.SPECKLE_PERLIN_FREQUENCY, D.SPECKLE_PERLIN_PERSISTENCE)
+
+    local writeModifier = DensityMapModifier.new(targetMapId, firstChannel, numChannels, g_terrainNode)
+    if clearTypeMode and DensityIndexCompareMode ~= nil then
+        writeModifier:setNewTypeIndexMode(DensityIndexCompareMode.ZERO)
+    end
+    polygon:applyToModifier(writeModifier)
+    local eligibleFilter = DensityMapFilter.new(grid.speckleMapId, 0, 1)
+    eligibleFilter:setValueCompareParams(DensityValueCompareType.EQUAL, 1)
+    local specklePerlin = PerlinNoiseFilter.new(groundTypeMapId,
+        D.SPECKLE_PERLIN_OCTAVES, D.SPECKLE_PERLIN_FREQUENCY, D.SPECKLE_PERLIN_PERSISTENCE, speckleSeed)
+    specklePerlin:setValueCompareParams(DensityValueCompareType.GREATER, speckleThreshold)
+    writeModifier:executeSet(0, eligibleFilter, specklePerlin)
+    return true
+end
+
 ---Erases grid marks that landed outside the worked soil (parcel margins/tracks), so the overlay stays
 ---clean without a render-time mask.
 -- @param table grid, table bbox, integer farmlandId
@@ -373,12 +543,16 @@ local function clipGridToWorkedSoil(grid, bbox, farmlandId)
     modifier:executeSet(0, farmlandFilter, unworkedFilter)
 end
 
----Applies the current destruction for one infection: writes 0 into the real crop density map on the
----server, and the disease state into the overlay grid everywhere, over the same world regions. Idempotent;
----protectionMapId excludes sprayed cells, serving both the curative and preventive effect via one filter.
+---Applies the current destruction for one infection: full clear inside the core, scattered speckle in
+---the band just outside it, and the disease state into the overlay grid over the core. Idempotent;
+---protectionMapId excludes sprayed cells (curative and preventive at once).
 local function destroyCropField(field, farmlandId, seed, severity, curve, diseaseState, grid, protectionMapId)
+    local D = RealisticCropRotationDisease
     if field == nil then return end
-    local threshold = severityThreshold(severity, curve)
+    local dead = deadFractionForSeverity(severity, curve)
+    if dead <= 0 then return end
+    local coreThreshold = perlinThresholdForArea(field, seed, dead,
+        D.DESTROY_PERLIN_OCTAVES, D.DESTROY_PERLIN_FREQUENCY, D.DESTROY_PERLIN_PERSISTENCE)
 
     -- Real crop (server only; the engine replicates the density change to clients).
     if g_server ~= nil and g_fruitTypeManager ~= nil then
@@ -386,16 +560,22 @@ local function destroyCropField(field, farmlandId, seed, severity, curve, diseas
         if fruitTypeIndex ~= nil then
             local desc = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
             if desc ~= nil and desc.terrainDataPlaneId ~= nil then
+                -- Scattered edge: only a random subset of cells in the band just outside the core is cleared.
+                local bandFraction = math.min(1, dead + D.DESTROY_BAND_AREA)
+                local bandThreshold = perlinThresholdForArea(field, seed, bandFraction,
+                    D.DESTROY_PERLIN_OCTAVES, D.DESTROY_PERLIN_FREQUENCY, D.DESTROY_PERLIN_PERSISTENCE, coreThreshold)
+                applyBandSpeckle(desc.terrainDataPlaneId, desc.startStateChannel, desc.numStateChannels,
+                    true, field, seed, bandThreshold, protectionMapId, grid)
                 applyPerlinDestruction(desc.terrainDataPlaneId, desc.startStateChannel, desc.numStateChannels,
-                    0, true, field, seed, threshold, protectionMapId)
+                    0, true, field, seed, coreThreshold, protectionMapId)
             end
         end
     end
 
-    -- Overlay grid (server and client) over the same world regions. The clip pass then erases the
-    -- few marks that fell on unworked parcel ground, so the rendered overlay stays inside the field.
+    -- Overlay grid (server and client) over the dead core. The clip pass then erases the few marks
+    -- that fell on unworked parcel ground, so the rendered overlay stays inside the field.
     if grid ~= nil and grid.mapId ~= nil and diseaseState ~= nil and diseaseState > 0 then
-        if applyPerlinDestruction(grid.mapId, 0, grid.numChannels, diseaseState, false, field, seed, threshold, protectionMapId) then
+        if applyPerlinDestruction(grid.mapId, 0, grid.numChannels, diseaseState, false, field, seed, coreThreshold, protectionMapId) then
             local minX, minZ, maxX, maxZ = fieldWorldBounds(field)
             if minX ~= nil then
                 clipGridToWorkedSoil(grid, { minX = minX, minZ = minZ, maxX = maxX, maxZ = maxZ }, farmlandId)
@@ -417,14 +597,23 @@ function RealisticCropRotationDisease:propagate(farmlandId)
     local field = (mgr ~= nil and type(mgr.getFieldByFarmlandId) == "function")
         and mgr:getFieldByFarmlandId(farmlandId) or nil
     local raining = isRaining()
+    local temperature = currentTemperature()
+    local loads = self:getLoad(farmlandId)
+    -- Rate-type constants (dailyGrowth) are calibrated at REFERENCE_DAYS_PER_PERIOD: dividing by the
+    -- save's real periodScale keeps the severity gained per calendar period constant across configs.
+    local scale = periodScale()
 
     for group, s in pairs(groups) do
-        if s.new then
-            s.new = nil -- established this day; severity only starts climbing the next day
+        if s.incubation ~= nil and s.incubation > 0 then
+            -- Temperature-paced incubation: warm days burn it down fast, frost nearly stalls it.
+            s.incubation = s.incubation - temperatureFactor(temperature)
+            if s.incubation <= 0 then s.incubation = nil end
         else
+            s.incubation = nil
             local curve = self:getCurve(group)
-            -- Fungal groups climb faster on a rainy day (weatherModifier); soil nematodes ignore it.
-            local growth = curve.dailyGrowth * weatherModifier(raining, group)
+            -- Rain + temperature drive fungal speed; heavier soil inoculum accelerates the epidemic.
+            local loadSpeed = 1 + RealisticCropRotationDisease.LOAD_SPEED_GAIN * math.min(1, loads[group] or 0)
+            local growth = (curve.dailyGrowth / scale) * weatherModifier(raining, temperature, group) * loadSpeed
             s.severity = math.min(1, (s.severity or 0) + growth)
             if s.severity >= curve.destroySeverity then
                 local diseaseState = diseaseStateForGroup(group)
@@ -743,6 +932,7 @@ function RealisticCropRotationDisease:registerConsoleCommands()
     addConsoleCommand("rcrDiseaseInfect", "Force a disease infection: rcrDiseaseInfect <farmlandId> <group> [severity]", "consoleInfect", self, "farmlandId; group; [severity]")
     addConsoleCommand("rcrDiseaseTick", "Run one disease update tick: rcrDiseaseTick [farmlandId]", "consoleTick", self, "[farmlandId]")
     addConsoleCommand("rcrDiseaseClear", "Clear disease state: rcrDiseaseClear [farmlandId]", "consoleClear", self, "[farmlandId]")
+    addConsoleCommand("rcrDiseaseSeverityScan", "TEMP diagnostic, read-only: rcrDiseaseSeverityScan <farmlandId> <group>", "consoleSeverityScan", self, "farmlandId; group")
 
     self.consoleCommandsRegistered = true
 end
@@ -754,6 +944,7 @@ function RealisticCropRotationDisease:unregisterConsoleCommands()
     removeConsoleCommand("rcrDiseaseInfect")
     removeConsoleCommand("rcrDiseaseTick")
     removeConsoleCommand("rcrDiseaseClear")
+    removeConsoleCommand("rcrDiseaseSeverityScan")
 
     self.consoleCommandsRegistered = false
 end
@@ -811,8 +1002,7 @@ local function requestDiseaseConsoleBroadcast()
     end
 end
 
----Native aggregate check (executeGet, no Lua pixel loop): fraction of the field's polygon area marked
----protected in the given per-cell map.
+---Native aggregate check (executeGet): fraction of the field's polygon area marked protected.
 -- @param table field, integer|nil protectionMapId
 -- @return number coverage fraction [0,1]
 local function getProtectionCoverage(field, protectionMapId)
@@ -838,6 +1028,11 @@ end
 function RealisticCropRotationDisease:consoleDump(farmlandId)
     local ids = collectDiseaseFarmlandIds(self.manager, farmlandId)
     if #ids == 0 then return "No Realistic Crop Rotation farmland found" end
+
+    local temperature = currentTemperature()
+    print(string.format(
+        "[RealisticCropRotation] weather temperature=%.1fC factor=%.2f raining=%s periodScale=%.2f",
+        temperature, temperatureFactor(temperature), tostring(isRaining()), periodScale()))
 
     for _, id in ipairs(ids) do
         local cropName, _, growthState = nil, nil, nil
@@ -956,4 +1151,39 @@ function RealisticCropRotationDisease:consoleClear(farmlandId)
     end
     requestDiseaseConsoleBroadcast()
     return "Cleared all disease state"
+end
+
+---TEMP diagnostic: read-only (executeGet only). Reads the crop's OWN density map directly (cells at
+---state 0 = destroyed), no Perlin reconstruction involved, to compare against the cumulative target.
+function RealisticCropRotationDisease:consoleSeverityScan(farmlandId, groupName)
+    if g_server == nil then return "rcrDiseaseSeverityScan is available on server/host only" end
+    local id = tonumber(farmlandId)
+    local group = groupName ~= nil and string.upper(tostring(groupName)) or nil
+    if id == nil or id <= 0 or group == nil or group == "" then
+        return "Usage: rcrDiseaseSeverityScan <farmlandId> <group>"
+    end
+    local s = self.state[id] ~= nil and self.state[id][group] or nil
+    if s == nil then return "No active infection for that farmland/group" end
+
+    local mgr = self.manager
+    local field = (mgr ~= nil and type(mgr.getFieldByFarmlandId) == "function") and mgr:getFieldByFarmlandId(id) or nil
+    if field == nil then return "No field found" end
+    if g_fruitTypeManager == nil then return "No fruit type manager" end
+    local fruitTypeIndex = getFieldCrop(field)
+    if fruitTypeIndex == nil then return "No crop on that field" end
+    local desc = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
+    if desc == nil or desc.terrainDataPlaneId == nil then return "No terrain data plane for that crop" end
+
+    local curve = self:getCurve(group)
+    local dead = deadFractionForSeverity(s.severity, curve)
+
+    local cropModifier = DensityMapModifier.new(desc.terrainDataPlaneId, desc.startStateChannel, desc.numStateChannels, g_terrainNode)
+    field:getDensityMapPolygon():applyToModifier(cropModifier)
+    local destroyedFilter = DensityMapFilter.new(desc.terrainDataPlaneId, desc.startStateChannel, desc.numStateChannels)
+    destroyedFilter:setValueCompareParams(DensityValueCompareType.EQUAL, 0)
+    local _, hits, total = cropModifier:executeGet(destroyedFilter)
+    local actual = (total ~= nil and total > 0) and (hits / total) or -1
+
+    return string.format("severity=%.3f target_core=%.1f%% actual_destroyed_on_cropmap=%.1f%% (actual includes the speckled edge band, so a bit above target is expected)",
+        s.severity, dead * 100, actual * 100)
 end

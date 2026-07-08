@@ -146,10 +146,10 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Kế hoạch chưa đầy đủ" />
-        <e k="rcr_score_excellent"      v="Luân canh xuất sắc" />
-        <e k="rcr_score_good"           v="Luân canh tốt" />
-        <e k="rcr_score_fair"           v="Luân canh khá" />
-        <e k="rcr_score_poor"           v="Luân canh kém" />
+        <e k="rcr_score_excellent"      v="Luân canh xuất sắc — nguy cơ bệnh thấp" />
+        <e k="rcr_score_good"           v="Luân canh tốt — nguy cơ bệnh trong tầm kiểm soát" />
+        <e k="rcr_score_fair"           v="Luân canh khá — nguy cơ bệnh đang tăng" />
+        <e k="rcr_score_poor"           v="Luân canh kém — nguy cơ bệnh cao" />
         <e k="rcr_score_label_low"      v="Điểm thấp" />
         <e k="rcr_score_label_optimal"  v="Điểm tối ưu" />
         <e k="rcr_score_short_optimal"  v="TỐI ƯU" />

@@ -146,10 +146,10 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Ufullstendig plan" />
-        <e k="rcr_score_excellent"      v="Utmerket vekstskifte" />
-        <e k="rcr_score_good"           v="Godt vekstskifte" />
-        <e k="rcr_score_fair"           v="Greit vekstskifte" />
-        <e k="rcr_score_poor"           v="Dårlig vekstskifte" />
+        <e k="rcr_score_excellent"      v="Utmerket vekstskifte — lav sykdomsrisiko" />
+        <e k="rcr_score_good"           v="Godt vekstskifte — sykdomsrisiko under kontroll" />
+        <e k="rcr_score_fair"           v="Greit vekstskifte — økende sykdomsrisiko" />
+        <e k="rcr_score_poor"           v="Dårlig vekstskifte — høy sykdomsrisiko" />
         <e k="rcr_score_label_low"      v="Lav poengsum" />
         <e k="rcr_score_label_optimal"  v="Optimal poengsum" />
         <e k="rcr_score_short_optimal"  v="OPTIMAL" />

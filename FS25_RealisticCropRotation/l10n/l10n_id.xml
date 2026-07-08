@@ -146,10 +146,10 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Rencana tidak lengkap" />
-        <e k="rcr_score_excellent"      v="Rotasi sangat baik" />
-        <e k="rcr_score_good"           v="Rotasi baik" />
-        <e k="rcr_score_fair"           v="Rotasi cukup" />
-        <e k="rcr_score_poor"           v="Rotasi buruk" />
+        <e k="rcr_score_excellent"      v="Rotasi sangat baik — risiko penyakit rendah" />
+        <e k="rcr_score_good"           v="Rotasi baik — risiko penyakit terkendali" />
+        <e k="rcr_score_fair"           v="Rotasi cukup — risiko penyakit meningkat" />
+        <e k="rcr_score_poor"           v="Rotasi buruk — risiko penyakit tinggi" />
         <e k="rcr_score_label_low"      v="Skor rendah" />
         <e k="rcr_score_label_optimal"  v="Skor optimal" />
         <e k="rcr_score_short_optimal"  v="OPTIMAL" />

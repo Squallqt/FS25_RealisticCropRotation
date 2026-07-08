@@ -146,10 +146,10 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Epätäydellinen suunnitelma" />
-        <e k="rcr_score_excellent"      v="Erinomainen viljelykierto" />
-        <e k="rcr_score_good"           v="Hyvä viljelykierto" />
-        <e k="rcr_score_fair"           v="Kohtalainen viljelykierto" />
-        <e k="rcr_score_poor"           v="Huono viljelykierto" />
+        <e k="rcr_score_excellent"      v="Erinomainen viljelykierto — pieni tautiriski" />
+        <e k="rcr_score_good"           v="Hyvä viljelykierto — tautiriski hallinnassa" />
+        <e k="rcr_score_fair"           v="Kohtalainen viljelykierto — kasvava tautiriski" />
+        <e k="rcr_score_poor"           v="Huono viljelykierto — korkea tautiriski" />
         <e k="rcr_score_label_low"      v="Matala pistemäärä" />
         <e k="rcr_score_label_optimal"  v="Optimaalinen pistemäärä" />
         <e k="rcr_score_short_optimal"  v="OPTIMAALINEN" />

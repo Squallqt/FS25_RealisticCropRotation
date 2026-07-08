@@ -146,10 +146,10 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Неповний план" />
-        <e k="rcr_score_excellent"      v="Відмінна сівозміна" />
-        <e k="rcr_score_good"           v="Добра сівозміна" />
-        <e k="rcr_score_fair"           v="Середня сівозміна" />
-        <e k="rcr_score_poor"           v="Погана сівозміна" />
+        <e k="rcr_score_excellent"      v="Відмінна сівозміна — низький ризик хвороб" />
+        <e k="rcr_score_good"           v="Добра сівозміна — ризик хвороб під контролем" />
+        <e k="rcr_score_fair"           v="Середня сівозміна — зростаючий ризик хвороб" />
+        <e k="rcr_score_poor"           v="Погана сівозміна — високий ризик хвороб" />
         <e k="rcr_score_label_low"      v="Низька оцінка" />
         <e k="rcr_score_label_optimal"  v="Оптимальна оцінка" />
         <e k="rcr_score_short_optimal"  v="ОПТИМАЛЬНО" />

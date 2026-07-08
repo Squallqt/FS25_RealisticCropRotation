@@ -146,10 +146,10 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Neúplný plán" />
-        <e k="rcr_score_excellent"      v="Vynikající osevní postup" />
-        <e k="rcr_score_good"           v="Dobrý osevní postup" />
-        <e k="rcr_score_fair"           v="Průměrný osevní postup" />
-        <e k="rcr_score_poor"           v="Špatný osevní postup" />
+        <e k="rcr_score_excellent"      v="Vynikající osevní postup — nízké riziko chorob" />
+        <e k="rcr_score_good"           v="Dobrý osevní postup — riziko chorob pod kontrolou" />
+        <e k="rcr_score_fair"           v="Průměrný osevní postup — rostoucí riziko chorob" />
+        <e k="rcr_score_poor"           v="Špatný osevní postup — vysoké riziko chorob" />
         <e k="rcr_score_label_low"      v="Nízké skóre" />
         <e k="rcr_score_label_optimal"  v="Optimální skóre" />
         <e k="rcr_score_short_optimal"  v="OPTIMÁLNÍ" />

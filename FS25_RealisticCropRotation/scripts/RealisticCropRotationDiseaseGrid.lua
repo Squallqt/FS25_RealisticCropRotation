@@ -20,6 +20,10 @@ RealisticCropRotationDiseaseGrid.NEMATICIDE_PROTECTION_FILENAME = "realisticCrop
 -- mask and no map building at render time.
 RealisticCropRotationDiseaseGrid.RISK_NUM_CHANNELS = 2
 
+-- Scratch mask (never saved): recomputed by every destroy call to hold "eligible for transition-band
+-- speckle" cells, then immediately consumed -- see RealisticCropRotationDisease's band speckle pass.
+RealisticCropRotationDiseaseGrid.SPECKLE_NUM_CHANNELS = 1
+
 function RealisticCropRotationDiseaseGrid.new()
     local self = setmetatable({}, RealisticCropRotationDiseaseGrid_mt)
     self.mapId = nil
@@ -34,6 +38,7 @@ function RealisticCropRotationDiseaseGrid.new()
     self.riskMapSize = nil
     self.riskNumChannels = RealisticCropRotationDiseaseGrid.RISK_NUM_CHANNELS
     self.riskRevision = 0
+    self.speckleMapId = nil
     return self
 end
 
@@ -115,6 +120,10 @@ function RealisticCropRotationDiseaseGrid:loadMap(savegamePath)
     -- Runtime-only risk display map (never saved: risk is derived from the synced history).
     self.riskMapId = createBitVectorMap("rcrRiskMap")
     loadBitVectorMapNew(self.riskMapId, self.riskMapSize, self.riskMapSize, self.riskNumChannels, false)
+
+    -- Runtime-only scratch mask (never saved: recomputed by every destroy call).
+    self.speckleMapId = createBitVectorMap("rcrSpeckleMask")
+    loadBitVectorMapNew(self.speckleMapId, self.protectionMapSize, self.protectionMapSize, RealisticCropRotationDiseaseGrid.SPECKLE_NUM_CHANNELS, false)
 end
 
 function RealisticCropRotationDiseaseGrid:saveMap(savegamePath)
@@ -144,6 +153,10 @@ function RealisticCropRotationDiseaseGrid:deleteMap()
     if self.riskMapId ~= nil then
         delete(self.riskMapId)
         self.riskMapId = nil
+    end
+    if self.speckleMapId ~= nil then
+        delete(self.speckleMapId)
+        self.speckleMapId = nil
     end
 end
 

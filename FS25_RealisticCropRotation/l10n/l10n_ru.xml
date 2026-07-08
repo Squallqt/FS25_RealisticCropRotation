@@ -146,10 +146,10 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Неполный план" />
-        <e k="rcr_score_excellent"      v="Отличный севооборот" />
-        <e k="rcr_score_good"           v="Хороший севооборот" />
-        <e k="rcr_score_fair"           v="Средний севооборот" />
-        <e k="rcr_score_poor"           v="Плохой севооборот" />
+        <e k="rcr_score_excellent"      v="Отличный севооборот — низкий риск болезней" />
+        <e k="rcr_score_good"           v="Хороший севооборот — риск болезней под контролем" />
+        <e k="rcr_score_fair"           v="Средний севооборот — растущий риск болезней" />
+        <e k="rcr_score_poor"           v="Плохой севооборот — высокий риск болезней" />
         <e k="rcr_score_label_low"      v="Низкая оценка" />
         <e k="rcr_score_label_optimal"  v="Оптимальная оценка" />
         <e k="rcr_score_short_optimal"  v="ОПТИМАЛЬНО" />
