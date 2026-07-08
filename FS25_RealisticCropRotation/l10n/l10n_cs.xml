@@ -113,7 +113,7 @@
         <e k="rcr_action_none"          v="无" />
         <e k="rcr_field_growth"          v="生长" />
 
-        <!-- Field card — weed column header (singular, matching base game HUD) -->
+        <!-- Field card — weed column header (singular) -->
         <e k="rcr_weed_header"          v="杂草" />
 
         <!-- Planning tab — year slots (relative to current year, never stale) -->

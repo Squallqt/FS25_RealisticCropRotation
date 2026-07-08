@@ -348,7 +348,7 @@ local function sampleFieldStateAtField(field)
     return fieldState
 end
 
----Live majority ground type from the GROUND_TYPE density map (WheelPhysics read pattern).
+---Live majority ground type from the GROUND_TYPE density map.
 -- @param table field
 -- @return table groundType FieldGroundType entry, or nil
 local function getFieldGroundTypeFromDensityMap(field)
@@ -1247,7 +1247,7 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId)
     local farmland = getFarmlandById(n)
     local soilDist = farmland ~= nil and farmland.soilDistribution or nil
 
-    -- Besoin azote: crop's per-soil requirement (PF fruitRequirements), distribution-weighted.
+    -- Nitrogen need: crop's per-soil requirement (PF fruitRequirements), distribution-weighted.
     local cropName, activeFruitTypeIndex = self:getActiveCropInfo(n)
     local nTarget = nil
     if soilDist ~= nil and cropName ~= nil then
@@ -1454,7 +1454,7 @@ function RealisticCropRotationManager.getGrowthStageNumbers(fruitType, growthSta
     return string.format("%d/%d", growthState, maxStage)
 end
 
----Per-field card info: growth stage + the mirrored base-game weed line.
+---Per-field card info: growth stage + the on-foot weed line.
 -- @param integer farmlandId
 -- @return table info { growthStageText, weedHeader, weedActionText }, or nil when no crop
 function RealisticCropRotationManager:getFieldCropInfo(farmlandId)
@@ -1479,7 +1479,7 @@ function RealisticCropRotationManager:getFieldCropInfo(farmlandId)
 
     local growthState = tonumber(fieldState.growthState or fieldState.lastGrowthState) or 0
 
-    -- Mirror the base-game weed line via the real PlayerHUDUpdater:fieldAddWeed.
+    -- Reads the weed line via the real PlayerHUDUpdater:fieldAddWeed.
     fieldState.farmlandId = numericFarmlandId
     local weedHeader, weedValue
     if RealisticCropRotationHud ~= nil and RealisticCropRotationHud.getWeedLineFromGame ~= nil then

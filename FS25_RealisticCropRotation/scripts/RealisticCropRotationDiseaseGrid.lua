@@ -2,7 +2,6 @@
 RealisticCropRotationDiseaseGrid = {}
 local RealisticCropRotationDiseaseGrid_mt = Class(RealisticCropRotationDiseaseGrid)
 
-RealisticCropRotationDiseaseGrid.GRID_SIZE = 4096
 -- 4 channels hold a per-disease state 0..15 (0 = clean), enough for the 9 pathogens (states 1..9)
 -- so each disease is painted with its OWN colour on the parcel.
 RealisticCropRotationDiseaseGrid.NUM_CHANNELS = 4
@@ -19,21 +18,20 @@ RealisticCropRotationDiseaseGrid.NEMATICIDE_PROTECTION_FILENAME = "realisticCrop
 
 -- Risk map: runtime-only display map (never saved), painted off the UI path, rendered with no
 -- mask and no map building at render time.
-RealisticCropRotationDiseaseGrid.RISK_MAP_SIZE = 4096
 RealisticCropRotationDiseaseGrid.RISK_NUM_CHANNELS = 2
 
 function RealisticCropRotationDiseaseGrid.new()
     local self = setmetatable({}, RealisticCropRotationDiseaseGrid_mt)
     self.mapId = nil
-    self.size = RealisticCropRotationDiseaseGrid.GRID_SIZE
+    self.size = nil
     self.numChannels = RealisticCropRotationDiseaseGrid.NUM_CHANNELS
     self.changeRevision = 0
     self.fungicideProtectionMapId = nil
     self.nematicideProtectionMapId = nil
-    self.protectionMapSize = self.size  -- overwritten in loadMap once the real ground-detail size is known
+    self.protectionMapSize = nil
     self.protectionRevision = 0
     self.riskMapId = nil
-    self.riskMapSize = RealisticCropRotationDiseaseGrid.RISK_MAP_SIZE
+    self.riskMapSize = nil
     self.riskNumChannels = RealisticCropRotationDiseaseGrid.RISK_NUM_CHANNELS
     self.riskRevision = 0
     return self
@@ -66,6 +64,11 @@ local function fieldWorldBounds(field)
 end
 
 function RealisticCropRotationDiseaseGrid:loadMap(savegamePath)
+    -- Single real dynamic source for every custom map's size: the native ground-detail resolution.
+    local resolvedSize = tonumber(g_currentMission.terrainDetailMapSize)
+    self.size = resolvedSize
+    self.riskMapSize = resolvedSize
+
     self.mapId = createBitVectorMap("rcrDiseaseGrid")
     local loaded = false
 
@@ -83,20 +86,7 @@ function RealisticCropRotationDiseaseGrid:loadMap(savegamePath)
     local w = getBitVectorMapSize(self.mapId)
     self.size = tonumber(w) or self.size
 
-    -- Protection maps must match the native ground-detail resolution (required by the sprayer AI hook).
-    local protectionMapSize = self.size
-    local protectionSizeResolved = false
-    if g_currentMission ~= nil then
-        local queriedSize = tonumber(g_currentMission.terrainDetailMapSize)
-        if queriedSize ~= nil and queriedSize > 0 then
-            protectionMapSize = queriedSize
-            protectionSizeResolved = true
-        end
-    end
-    if not protectionSizeResolved then
-        Logging.warning("[RealisticCropRotation] Could not read g_currentMission.terrainDetailMapSize; falling back to %d for the protection maps. The sprayer AI prohibitions will fail on this savegame if the real ground-detail resolution differs.", protectionMapSize)
-    end
-    self.protectionMapSize = protectionMapSize
+    self.protectionMapSize = resolvedSize
 
     self.fungicideProtectionMapId = createBitVectorMap("rcrFungicideProtection")
     local loadedFungProt = false
@@ -107,7 +97,7 @@ function RealisticCropRotationDiseaseGrid:loadMap(savegamePath)
         end
     end
     if not loadedFungProt then
-        loadBitVectorMapNew(self.fungicideProtectionMapId, protectionMapSize, protectionMapSize, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, false)
+        loadBitVectorMapNew(self.fungicideProtectionMapId, self.protectionMapSize, self.protectionMapSize, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, false)
     end
 
     self.nematicideProtectionMapId = createBitVectorMap("rcrNematicideProtection")
@@ -119,7 +109,7 @@ function RealisticCropRotationDiseaseGrid:loadMap(savegamePath)
         end
     end
     if not loadedNemaProt then
-        loadBitVectorMapNew(self.nematicideProtectionMapId, protectionMapSize, protectionMapSize, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, false)
+        loadBitVectorMapNew(self.nematicideProtectionMapId, self.protectionMapSize, self.protectionMapSize, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, false)
     end
 
     -- Runtime-only risk display map (never saved: risk is derived from the synced history).

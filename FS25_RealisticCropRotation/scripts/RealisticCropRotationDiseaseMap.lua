@@ -253,9 +253,8 @@ end
 -- Runtime objects
 -- ============================================================================
 
----Overlay TEXTURE size, scaled from OVERLAY_BASE_RESOLUTION by the player's performance profile --
----the exact same math as gameSource's own MapOverlayGenerator:adjustedOverlayResolution. Independent
----of any source data map's own resolution (native overlays never match their source map's size either).
+---Overlay TEXTURE size, scaled from OVERLAY_BASE_RESOLUTION by the player's performance profile.
+---Independent of any source data map's own resolution.
 -- @return integer size
 local function adjustedOverlaySize()
     local base = RealisticCropRotationDiseaseMap.OVERLAY_BASE_RESOLUTION

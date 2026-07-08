@@ -77,8 +77,7 @@ local function loadCropConfig()
     end
 
     -- Shared-pathogen groups: minimum return interval (years) between any two host crops.
-    -- `autoState` gives a deterministic, stable overlay id when a group omits #state (same order
-    -- on every machine, so the client grid rebuild matches the host). An explicit #state wins.
+    -- `autoState` gives a deterministic overlay id (parse order) when a group omits #state.
     local j = 0
     local autoState = 0
     while true do
@@ -221,9 +220,8 @@ local function onPeriodChanged()
     end
 end
 
----Server: advances every active infection by one in-game day. Only queues the work here (cheap);
----the native destruction passes are drained a few fields per frame from the broadcast updateable, so
----no in-game day ever runs all fields at once. Subscribed to MessageType.DAY_CHANGED.
+---Server: queues the day's disease progress (cheap); the work itself is drained a few fields per
+-- frame from the broadcast updateable. Subscribed to MessageType.DAY_CHANGED.
 local function onDayChanged()
     if g_currentMission == nil or not g_currentMission:getIsServer() then return end
     if RealisticCropRotation.disease ~= nil

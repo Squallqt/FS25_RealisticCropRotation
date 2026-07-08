@@ -16,7 +16,7 @@ RealisticCropRotationFrame.HERO_WEATHER_RIGHT_PAD_PX = 16
 RealisticCropRotationFrame.HERO_WEATHER_ICON_TEXT_GAP_PX = 8
 RealisticCropRotationFrame.HERO_TITLE_PILL_GAP_PX = 24
 
--- Vanilla weather types and icon slices, mirrored from GameInfoDisplay.lua.
+-- Vanilla weather types and their icon slices.
 RealisticCropRotationFrame.WEATHER_TYPES = {
     { constant = "SUN",              textKey = "rcr_weather_sun",              sliceId = "gui.icon_weather_sun",             color = {0.34, 0.40, 0.10, 0.86} },
     { constant = "PARTIALLY_CLOUDY", textKey = "rcr_weather_partially_cloudy", sliceId = "gui.icon_weather_partiallyCloudy", color = {0.23, 0.32, 0.34, 0.86} },
@@ -1819,7 +1819,7 @@ end
 
 -- Field card (soil work / weed / growth)
 
----Updates the field card: required soil work, mirrored weed line, and growth stage.
+---Updates the field card: required soil work, weed line, and growth stage.
 -- @param integer farmlandId
 function RealisticCropRotationFrame:updateFieldCard(farmlandId)
     local mgr = self:getManager()
@@ -1848,7 +1848,7 @@ function RealisticCropRotationFrame:updateFieldCard(farmlandId)
         self.requiredActionValue:setText(actionText)
     end
 
-    -- Weed KPI mirrors the on-foot HUD line: header = game stage label, value = tool.
+    -- Weed KPI reuses the on-foot HUD line: header = game stage label, value = tool.
     if self.weedHeaderText ~= nil then
         local headerText = (hasWeed and info.weedHeader ~= nil)
             and info.weedHeader

@@ -256,8 +256,8 @@ if PlayerHUDUpdater ~= nil and Utils ~= nil and Utils.overwrittenFunction ~= nil
     end
 end
 
--- Mirror of the base-game weed row: call the real (stripped) fieldAddWeed with a
--- capture box, read back the exact (label, value). nil when no weed line applies.
+-- Reads the weed row by calling the real (stripped) fieldAddWeed with a capture box, reading back
+-- the exact (label, value). nil when no weed line applies.
 RealisticCropRotationHud.hudInstance = nil
 
 ---Reads the weed row via the real fieldAddWeed + a capture box.

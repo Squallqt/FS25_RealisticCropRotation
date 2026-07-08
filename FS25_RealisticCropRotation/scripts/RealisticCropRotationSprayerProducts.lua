@@ -1,75 +1,30 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
--- Sprayer wiring for the RCR consumable products (RCR_FUNGICIDE / RCR_NEMATICIDE).
---
--- JET COLOUR: abandoned. The jet is left as the native white water mist. A per-fillType
--- "sprayer" material holder was tried and did not recolour the jet in-game (the effect does
--- not visibly adopt the swapped material for this shader), so it was removed. The mod's
--- treatment feedback lives on the ground/map layer instead, not the nozzle.
---
--- Three responsibilities here:
---
---   1. Register an engine sprayType for each product. Without one,
---      Sprayer:onStartWorkAreaProcessing() stores sprayType = nil and
---      Sprayer:processSprayerArea() feeds that nil into the engine call
---      FSDensityMapUtil.updateSprayArea(); the work-area processing then never
---      reaches params.lastSprayTime, so Sprayer:getAreEffectsVisible() stays
---      false and updateSprayerEffects() never starts the spray effect at all.
---      Registering the sprayType also gives the product a correct consumption
---      rate instead of the 1 L/s fallback.
---
---   2. Short-circuit Sprayer.processSprayerArea for the RCR products so the
---      HERBICIDE-typed sprayType never reaches the native ground treatment
---      (no weed replacement, no native spray overlay), while still setting
---      params.isActive / params.lastSprayTime so consumption and the spray
---      effect run like a native product. The curative+preventive disease protection
---      paint is applied inside this same hook (server-only, see paintDiseaseProtection).
---
---   3. AI job completion (setSprayerAITerrainDetailProhibitedRange): our sprayType is registered
---      under the HERBICIDE family (for responsibility 2's short-circuit), so the AI falls into the
---      native isHerbicide branch by default, which looks for a weed-replacement map that does not
---      exist for our custom fillTypes -- no prohibitions ever get set, and the AI never knows the
---      job is done. Hooked to apply the SAME "prohibit re-working an already-done cell" pattern
---      native fertilizer/lime AI uses (addAIFruitProhibitions against a density map's value), just
---      reading our own per-cell protection map instead of SPRAY_LEVEL -- see setAITerrainDetail below.
---
---      TIMING (GIANTS truth, dataS/scripts): the overwrite MUST be installed
---      when this file is sourced, NOT at mission load. TypeManager:finalizeTypes()
---      copies Sprayer.processSprayerArea by value into every vehicleType's
---      functions table during mission loading (SpecializationUtil.registerFunction,
---      SpecializationUtil.lua line 93), and each work area then captures
---      workArea.processingFunction = self[functionName] when the vehicle loads
---      (WorkArea.lua line 404). An overwrite performed at
---      Mission00.loadMission00Finished is therefore seen by nobody.
+-- Sprayer wiring for the RCR consumable products (RCR_FUNGICIDE / RCR_NEMATICIDE): registers their
+-- sprayType, short-circuits the native ground treatment, paints our own disease protection/AI data,
+-- and keeps the jet as the native white mist (a per-fillType recolour was not visible in-game).
+-- processSprayerArea is overwritten at file-source time, not mission load: TypeManager:finalizeTypes()
+-- copies it by value into every vehicleType before any load-time hook would run.
 RealisticCropRotationSprayerProducts = {}
 
 RealisticCropRotationSprayerProducts.PRODUCT_NAMES = { "RCR_FUNGICIDE", "RCR_NEMATICIDE" }
 
--- Treatment family applied by each product (RealisticCropRotationDisease:getTreatment reads
--- config.diseaseTreatments[group] to match a disease group to its family). Used by paintDiseaseProtection
--- to pick which per-cell protection map (grid.fungicideProtectionMapId / .nematicideProtectionMapId)
--- the sprayed strip marks.
+-- Treatment family per product, used to pick which per-cell protection map the sprayed strip marks.
 RealisticCropRotationSprayerProducts.PRODUCT_TREATMENTS = {
     RCR_FUNGICIDE = "FUNGICIDE",
     RCR_NEMATICIDE = "NEMATICIDE",
 }
 
--- fillTypeIndex -> true; refreshed at every mission load because fillType
--- indices may shift between savegames with different mod sets.
+-- fillTypeIndex -> true; refreshed each mission load since fillType indices may shift between savegames.
 local productFillTypeSet = {}
 -- fillTypeIndex -> "FUNGICIDE" | "NEMATICIDE"; same lifecycle as productFillTypeSet.
 local productTreatmentByFillType = {}
 local hookInstalled = false
 
--- Treated-ground visual: written into the field SPRAY_TYPE detail channel with the base FERTILISER
--- ground value, so the sprayed strip shows the game's own fertiliser ground rendering. ONLY this visual
--- channel is written -- never SPRAY_LEVEL / LIME_LEVEL -- so it adds NO fertilisation, NO nitrogen and
--- NO yield: it is purely the ground look. Because nothing consumes it, it never clears on its own, so
--- we make it EPHEMERAL ourselves: each painted farmland is tracked (server) and a daily sweep erases it
--- about a month (one season period) after the last treatment.
+-- Treated-ground visual only (SPRAY_TYPE channel): adds no fertilisation, nitrogen or yield. Nothing
+-- else clears it, so a daily sweep fades each painted farmland about a month after its last treatment.
 -- Resolved at mission load from the FERTILISER spray type's ground value (nil disables the paint).
 local treatmentSprayType = nil
--- farmlandId -> { day = <monotonic day last painted>, minX, minZ, maxX, maxZ = accumulated painted
--- world bounds }. Server-only; drives the fade sweep. Reset at mission load/teardown.
+-- farmlandId -> painted bounds + last-painted day (server-only); drives the fade sweep, reset at mission load/teardown.
 local treatedGround = {}
 
 ---Returns true when the given fillType index is one of the RCR sprayer products.
@@ -86,10 +41,7 @@ function RealisticCropRotationSprayerProducts.getProductTreatment(fillTypeIndex)
     return fillTypeIndex ~= nil and productTreatmentByFillType[fillTypeIndex] or nil
 end
 
----Registers the RCR sprayTypes, copying the native HERBICIDE flow profile.
--- litersPerSecond 0.0081 is the native HERBICIDE rate (maps_sprayTypes.xml);
--- it is kept identical for both products until per-product dosing is decided
--- (SPRAYER_PRODUCT_RUNTIME_DEBT.md, "Stratégie RCR recommandée", point 3).
+---Registers the RCR sprayTypes at the HERBICIDE flow rate, until per-product dosing is decided.
 local function ensureSprayTypes()
     if g_fillTypeManager == nil or g_sprayTypeManager == nil then
         Logging.warning("[RealisticCropRotation] fillType/sprayType managers unavailable; RCR sprayer products were not wired")
@@ -122,16 +74,13 @@ local function ensureSprayTypes()
                 -- liquid (SprayTypeManager only accepts FERTILIZER/HERBICIDE/LIME).
                 -- Its ground-side behavior is neutralized by the hook below.
                 g_sprayTypeManager:addSprayType(name, litersPerSecond, "HERBICIDE", sprayGroundType, false)
-                Logging.info("[RealisticCropRotation] Registered sprayType %s (litersPerSecond=%.4f)", name, litersPerSecond)
             end
         end
     end
 
 end
 
----Adds the farmland under (x, z) to `out` once (dedup via `seen`). A farmland id <= 0 (no valid
----parcel, unowned/not-buyable sentinels) is ignored. Used by recordTreatedGround (ground-visual fade
----tracking); the disease protection paint itself does not need farmland resolution (see paintProtection).
+---Adds the farmland under (x, z) to `out` once (dedup via `seen`); ignores invalid/unowned ids.
 -- @param number x, z world position; @param table seen dedup set; @param table out farmland id list
 local function collectFarmland(x, z, seen, out)
     if type(x) ~= "number" or type(z) ~= "number" then return end
@@ -143,14 +92,9 @@ local function collectFarmland(x, z, seen, out)
     end
 end
 
----Server: paints curative+preventive protection under the sprayed strip. A cell marked protected is
----excluded from ALL future disease destruction there (RealisticCropRotationDisease's daily destroy
----pass reads this SAME map) -- curing whatever is currently destroying it AND shielding it from a
----future infection, with the SAME per-cell mechanism. Also clears this area's disease-overlay marks
----immediately (RealisticCropRotationDiseaseGrid:paintProtection), so the overlay recedes as the strip
----is actually covered (per-bande), never all at once. NEVER touches the real crop map. Runs on the SAME
----cadence as the ground-visual paint (every qualifying work-area tick, no extra cooldown -- this is a
----pure geometric paint, like azote/lime, not a farmland-wide bookkeeping operation).
+---Server: paints curative+preventive protection under the sprayed strip. A protected cell is excluded
+---from all future disease destruction there, curing and shielding it with the same per-cell write; the
+---disease-overlay marks for that area are cleared immediately so the overlay recedes strip by strip.
 -- @param table workArea work area whose start/width/height nodes give the sprayed strip
 -- @param integer fillType RCR product fillType
 local function paintDiseaseProtection(workArea, fillType)
@@ -198,7 +142,7 @@ local function setSprayerAITerrainDetailProhibitedRange(self, superFunc, fillTyp
 
     self:addAIGroundTypeRequirements(Sprayer.AI_REQUIRED_GROUND_TYPES)
 
-    -- Already-protected (value 1) cells are excluded, same overload native fertilizer/lime use.
+    -- Already-protected (value 1) cells are excluded from future AI passes over this fillType.
     self:addAIFruitProhibitions(0, 1, 1, protectionMapId, 0, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS)
 
     -- Don't work a field whose crop is already past its harvest-ready growth state.
@@ -214,8 +158,7 @@ local function setSprayerAITerrainDetailProhibitedRange(self, superFunc, fillTyp
 end
 
 ---Server: merges the just-painted strip into the per-farmland treated-ground record (accumulated
----bounds + the current day), so the daily fade sweep knows what to erase and when. Uses the strip's
----corner and centre points to find the farmland(s), like the curative sampling.
+---bounds + current day) so the daily fade sweep knows what to erase and when.
 local function recordTreatedGround(sx, sz, wx, wz, hx, hz)
     local env = g_currentMission ~= nil and g_currentMission.environment or nil
     local day = env ~= nil and (env.currentMonotonicDay or env.currentDay) or nil
@@ -249,15 +192,9 @@ local function recordTreatedGround(sx, sz, wx, wz, hx, hz)
     end
 end
 
----Paints the ephemeral "treated" ground look over the sprayed strip: writes the FERTILISER ground
----value into the field SPRAY_TYPE detail channel, so the strip shows the game's fertiliser ground
----rendering. ONLY this visual channel is written -- SPRAY_LEVEL is never touched -- so it adds no
----fertilisation / nitrogen / yield; it is purely the ground look. A field-ground filter (groundType > 0)
----keeps the paint off roads, yards and standing water.
----SERVER-AUTHORITATIVE: the write happens on the server only and the engine synchronises the field
----density map to clients, exactly like the disease crop-destruction pass -- no client-side prediction,
----so the fade sweep can never diverge between machines. The painted area is recorded per farmland so
----the daily sweep can fade it later.
+---Paints the ephemeral "treated" ground look over the sprayed strip (SPRAY_TYPE only, never SPRAY_LEVEL,
+---so no fertilisation/nitrogen/yield), off roads/yards/water. Server-only write; the engine replicates
+---the density change to clients, so the fade sweep can never diverge between machines.
 -- @param table self sprayer vehicle; @param table workArea work area giving the sprayed strip corners
 local function paintTreatmentGround(self, workArea)
     if self == nil or not self.isServer then return end
@@ -329,19 +266,15 @@ local function installSprayerHook()
         params.isActive = true
         params.lastSprayTime = g_time
 
-        -- Treated-ground visual: paint the SPRAY_TYPE detail = fertiliser look (visual only, no agronomy)
-        -- over the sprayed strip so the field visibly shows where the product was applied. Ephemeral --
-        -- faded out ~a month later by the server sweep (fadeTreatedGround / onDayChanged).
+        -- Treated-ground visual only (no agronomy effect); faded out ~a month later by the server sweep.
         paintTreatmentGround(self, workArea)
 
         if self:getLastSpeed() > 1 then
             spec.isWorking = true
         end
 
-        -- Curative + preventive disease protection: SERVER ONLY (the protection map gates the
-        -- server-authoritative daily destroy pass; painting it server-side only, like the ground
-        -- visual, avoids any server/client divergence). Runs every qualifying tick, per-bande (only
-        -- the sprayed strip), never touches the real crop.
+        -- Curative + preventive disease protection: server-only, since it gates the server-authoritative
+        -- daily destroy pass. Runs every qualifying tick over just the sprayed strip; never touches the real crop.
         if self.isServer then
             paintDiseaseProtection(workArea, sprayFillType)
         end
@@ -349,10 +282,8 @@ local function installSprayerHook()
         return 0, 0
     end)
 
-    -- AI job completion: without this, our HERBICIDE-family sprayType falls into the native
-    -- isHerbicide branch (no weed-replacement data for a custom fillType -> no prohibitions ever set
-    -- -> the AI never knows the field is done). See setSprayerAITerrainDetailProhibitedRange's own
-    -- header comment for the full reasoning.
+    -- AI job completion: without this, the HERBICIDE-family sprayType has no weed-replacement data for
+    -- a custom fillType, so no prohibitions are ever set and the AI never knows the field is done.
     if Sprayer.setSprayerAITerrainDetailProhibitedRange ~= nil then
         Sprayer.setSprayerAITerrainDetailProhibitedRange = Utils.overwrittenFunction(
             Sprayer.setSprayerAITerrainDetailProhibitedRange, setSprayerAITerrainDetailProhibitedRange)
@@ -361,11 +292,8 @@ local function installSprayerHook()
     hookInstalled = true
 end
 
----Server daily sweep (called from onDayChanged): erases the treated-ground visual on farmlands whose
----last treatment has aged past the fade window (~one season period == about a month). Clears SPRAY_TYPE
----back to 0 over each expired farmland's accumulated bounds, filtered to that farmland so only OUR
----marks go (never a neighbouring parcel or a rice paddy), then forgets it. One native pass per expired
----farmland, at most once per in-game day.
+---Server daily sweep: erases the treated-ground visual on farmlands whose last treatment aged past the
+---fade window (~one season period), clearing SPRAY_TYPE only over that farmland's own bounds.
 function RealisticCropRotationSprayerProducts.fadeTreatedGround()
     if next(treatedGround) == nil then return end
     if g_currentMission == nil or not g_currentMission:getIsServer() then return end
@@ -380,8 +308,7 @@ function RealisticCropRotationSprayerProducts.fadeTreatedGround()
     local env = mission.environment
     local day = env ~= nil and (env.currentMonotonicDay or env.currentDay) or nil
     if day == nil then return end
-    -- One in-game month == one season period. plannedDaysPerPeriod is the configured days-per-period
-    -- (same field the GUI reads); fall back to 3 (the base-game default) when it is unavailable.
+    -- One season period (plannedDaysPerPeriod), falling back to 3 days when unavailable.
     local daysPerPeriod = env ~= nil and tonumber(env.plannedDaysPerPeriod) or nil
     local fadeDays = (daysPerPeriod ~= nil and daysPerPeriod > 0) and daysPerPeriod or 3
 
@@ -404,9 +331,8 @@ function RealisticCropRotationSprayerProducts.fadeTreatedGround()
     end
 end
 
----Persists the treated-ground fade tracker (server) so the ephemeral visual keeps fading across
----save/load instead of leaking marks that never clear. The SPRAY_TYPE density map itself is saved by
----the engine; this only saves the per-farmland age/bounds the sweep needs. Mirrors the disease save.
+---Persists the treated-ground fade tracker so it keeps working across save/load. The SPRAY_TYPE map
+---itself is saved by the engine; this only saves the per-farmland age/bounds the sweep needs.
 -- @param string savegamePath savegame folder path (trailing slash)
 function RealisticCropRotationSprayerProducts.saveTreatedGround(savegamePath)
     if savegamePath == nil or savegamePath == "" or createXMLFile == nil then return end
@@ -480,10 +406,7 @@ function RealisticCropRotationSprayerProducts.onMissionDeleted()
     treatedGround = {}
 end
 
--- Source-time installation (see TIMING note in the header): mod scripts are
--- sourced before the mission's TypeManager:finalizeTypes() run, so this is the
--- only moment the overwritten Sprayer.processSprayerArea is guaranteed to be
--- copied into every sprayer vehicleType and captured by its work areas.
--- Until onMissionLoaded() fills productFillTypeSet the wrapper is a pure
--- passthrough, so native fillTypes are never affected.
+-- Source-time installation: mod scripts are sourced before TypeManager:finalizeTypes() runs, the
+-- only moment the overwritten processSprayerArea is guaranteed to reach every sprayer vehicleType.
+-- Until onMissionLoaded() populates productFillTypeSet, the wrapper is a pure passthrough.
 installSprayerHook()

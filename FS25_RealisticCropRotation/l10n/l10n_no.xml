@@ -113,7 +113,7 @@
         <e k="rcr_action_none"          v="Ingen" />
         <e k="rcr_field_growth"          v="Vekst" />
 
-        <!-- Field card — weed column header (singular, matching base game HUD) -->
+        <!-- Field card — weed column header (singular) -->
         <e k="rcr_weed_header"          v="Ugress" />
 
         <!-- Planning tab — year slots (relative to current year, never stale) -->

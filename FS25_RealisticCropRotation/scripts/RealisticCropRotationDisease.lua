@@ -228,8 +228,6 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId)
                             seed = math.random(1, 1000000),
                             new = true, -- latent: established this period, no damage until next
                         }
-                        Logging.info("[RealisticCropRotation] %s infected farmland %s (load %.2f)",
-                            tostring(group), tostring(farmlandId), load)
                         if g_currentMission ~= nil and type(g_currentMission.addIngameNotification) == "function"
                             and FSBaseMission ~= nil and g_i18n ~= nil then
                             local diseaseName = diseaseDisplayName(group)
@@ -309,8 +307,8 @@ function RealisticCropRotationDisease:getCurve(group)
 end
 
 ---Writes `value` into a density map wherever a Perlin noise field exceeds `threshold`, clipped to the
----field's real polygon (native GIANTS API, as used by the base game's field missions). protectionMapId,
----when given, excludes already-sprayed cells via the modifier's second filter slot.
+---field's real polygon. protectionMapId, when given, excludes already-sprayed cells via the modifier's
+---second filter slot.
 local function applyPerlinDestruction(targetMapId, firstChannel, numChannels, value, clearTypeMode, field, seed, threshold, protectionMapId)
     if targetMapId == nil or field == nil or DensityMapModifier == nil or DensityMapFilter == nil
         or PerlinNoiseFilter == nil or g_terrainNode == nil
@@ -326,7 +324,7 @@ local function applyPerlinDestruction(targetMapId, firstChannel, numChannels, va
 
     local modifier = DensityMapModifier.new(targetMapId, firstChannel, numChannels, g_terrainNode)
     if clearTypeMode and DensityIndexCompareMode ~= nil then
-        modifier:setNewTypeIndexMode(DensityIndexCompareMode.ZERO) -- clears the fruit type, like the base game
+        modifier:setNewTypeIndexMode(DensityIndexCompareMode.ZERO) -- clears the fruit type
     end
     polygon:applyToModifier(modifier)
 
@@ -431,7 +429,7 @@ function RealisticCropRotationDisease:propagate(farmlandId)
             if s.severity >= curve.destroySeverity then
                 local diseaseState = diseaseStateForGroup(group)
                 -- Per-cell exclusion map for this group's treatment family (nil for NONE-treatment
-                -- groups like piétin/hernie, which no product can shield -- rotation-only).
+                -- groups, e.g. foot rot/clubroot, which no product can shield -- rotation-only).
                 local treatment = self:getTreatment(group)
                 local protectionMapId = nil
                 if self.grid ~= nil then
