@@ -150,12 +150,14 @@
         <e k="rcr_score_good"           v="Good rotation — disease risk under control" />
         <e k="rcr_score_fair"           v="Fair rotation — rising disease risk" />
         <e k="rcr_score_poor"           v="Poor rotation — high disease risk" />
-        <e k="rcr_score_label_low"      v="Low score" />
+        <e k="rcr_score_bad"            v="Bad rotation — severe disease risk" />
+        <e k="rcr_score_label_low"      v="Bad score" />
         <e k="rcr_score_label_optimal"  v="Optimal score" />
         <e k="rcr_score_short_optimal"  v="OPTIMAL" />
         <e k="rcr_score_short_good"     v="GOOD" />
         <e k="rcr_score_short_fair"     v="FAIR" />
         <e k="rcr_score_short_poor"     v="LOW" />
+        <e k="rcr_score_short_bad"      v="BAD" />
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="No owned fields to display." />

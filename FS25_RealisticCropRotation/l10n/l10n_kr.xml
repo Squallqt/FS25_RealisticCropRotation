@@ -150,12 +150,14 @@
         <e k="rcr_score_good"           v="좋은 윤작 — 병해 위험 통제됨" />
         <e k="rcr_score_fair"           v="보통 윤작 — 병해 위험 증가" />
         <e k="rcr_score_poor"           v="미흡한 윤작 — 병해 위험 높음" />
-        <e k="rcr_score_label_low"      v="낮은 점수" />
+        <e k="rcr_score_bad"            v="나쁜 윤작 — 병해 위험 심각" />
+        <e k="rcr_score_label_low"      v="나쁜 점수" />
         <e k="rcr_score_label_optimal"  v="최적 점수" />
         <e k="rcr_score_short_optimal"  v="최적" />
         <e k="rcr_score_short_good"     v="좋음" />
         <e k="rcr_score_short_fair"     v="보통" />
         <e k="rcr_score_short_poor"     v="낮음" />
+        <e k="rcr_score_short_bad"      v="나쁨" />
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="표시할 보유 밭이 없습니다." />

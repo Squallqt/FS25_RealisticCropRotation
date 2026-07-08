@@ -150,12 +150,14 @@
         <e k="rcr_score_good"           v="Хороший севооборот — риск болезней под контролем" />
         <e k="rcr_score_fair"           v="Средний севооборот — растущий риск болезней" />
         <e k="rcr_score_poor"           v="Плохой севооборот — высокий риск болезней" />
-        <e k="rcr_score_label_low"      v="Низкая оценка" />
+        <e k="rcr_score_bad"            v="Очень плохой севооборот — очень высокий риск болезней" />
+        <e k="rcr_score_label_low"      v="Плохая оценка" />
         <e k="rcr_score_label_optimal"  v="Оптимальная оценка" />
         <e k="rcr_score_short_optimal"  v="ОПТИМАЛЬНО" />
         <e k="rcr_score_short_good"     v="ХОРОШО" />
         <e k="rcr_score_short_fair"     v="СРЕДНЕ" />
         <e k="rcr_score_short_poor"     v="НИЗКО" />
+        <e k="rcr_score_short_bad"      v="ПЛОХО" />
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Нет собственных полей для отображения." />

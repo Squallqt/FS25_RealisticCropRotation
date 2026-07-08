@@ -150,12 +150,14 @@
         <e k="rcr_score_good"           v="Godt sædskifte — sygdomsrisiko under kontrol" />
         <e k="rcr_score_fair"           v="Rimeligt sædskifte — stigende sygdomsrisiko" />
         <e k="rcr_score_poor"           v="Dårligt sædskifte — høj sygdomsrisiko" />
-        <e k="rcr_score_label_low"      v="Lav score" />
+        <e k="rcr_score_bad"            v="Meget dårligt sædskifte — alvorlig sygdomsrisiko" />
+        <e k="rcr_score_label_low"      v="Dårlig score" />
         <e k="rcr_score_label_optimal"  v="Optimal score" />
         <e k="rcr_score_short_optimal"  v="OPTIMAL" />
         <e k="rcr_score_short_good"     v="GODT" />
         <e k="rcr_score_short_fair"     v="RIMELIGT" />
         <e k="rcr_score_short_poor"     v="LAV" />
+        <e k="rcr_score_short_bad"      v="DÅRLIG" />
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Ingen egne marker at vise." />

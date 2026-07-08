@@ -150,12 +150,14 @@
         <e k="rcr_score_good"           v="Dobrý osevní postup — riziko chorob pod kontrolou" />
         <e k="rcr_score_fair"           v="Průměrný osevní postup — rostoucí riziko chorob" />
         <e k="rcr_score_poor"           v="Špatný osevní postup — vysoké riziko chorob" />
-        <e k="rcr_score_label_low"      v="Nízké skóre" />
+        <e k="rcr_score_bad"            v="Velmi špatný osevní postup — velmi vysoké riziko chorob" />
+        <e k="rcr_score_label_low"      v="Špatné skóre" />
         <e k="rcr_score_label_optimal"  v="Optimální skóre" />
         <e k="rcr_score_short_optimal"  v="OPTIMÁLNÍ" />
         <e k="rcr_score_short_good"     v="DOBRÝ" />
         <e k="rcr_score_short_fair"     v="PRŮMĚRNÝ" />
         <e k="rcr_score_short_poor"     v="NÍZKÝ" />
+        <e k="rcr_score_short_bad"      v="ŠPATNÝ" />
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Žádná vlastní pole k zobrazení." />

@@ -2615,8 +2615,10 @@ function RealisticCropRotationFrame:updateScoreCard(plan, coverPlan)
             self.scoreCursor.color = {0.95, 0.85, 0.05, 1.0}
         elseif score >= 40 then
             self.scoreCursor.color = {0.75, 0.45, 0.05, 1.0}
-        else
+        elseif score >= 20 then
             self.scoreCursor.color = {0.75, 0.20, 0.05, 1.0}
+        else
+            self.scoreCursor.color = {0.55, 0.05, 0.05, 1.0}
         end
     end
 end
@@ -2749,7 +2751,8 @@ function RealisticCropRotationFrame:getScoreTextKey(score, plan)
     if score >= 80   then return "rcr_score_excellent" end
     if score >= 60   then return "rcr_score_good" end
     if score >= 40   then return "rcr_score_fair" end
-    return "rcr_score_poor"
+    if score >= 20   then return "rcr_score_poor" end
+    return "rcr_score_bad"
 end
 
 ---Returns the short score badge key + RGB colour for a score.
@@ -2762,8 +2765,8 @@ function RealisticCropRotationFrame:getScoreLabel(score)
     if score >= 80 then return "rcr_score_short_optimal", 0.325, 0.565, 0.071
     elseif score >= 60 then return "rcr_score_short_good",  0.95,  0.85, 0.05
     elseif score >= 40 then return "rcr_score_short_fair",  0.75,  0.45, 0.05
-    elseif score >  0  then return "rcr_score_short_poor",  0.75,  0.20, 0.05
-    else                    return nil,                    0.30,  0.30, 0.30
+    elseif score >= 20 then return "rcr_score_short_poor",  0.75,  0.20, 0.05
+    else                    return "rcr_score_short_bad",   0.55,  0.05, 0.05
     end
 end
 
@@ -2800,7 +2803,17 @@ function RealisticCropRotationFrame:buildRotationGroups()
         group.areaHa = (group.areaHa or 0) + (tonumber(entry.areaHa) or 0)
     end
 
-    -- Keep insertion order from farmlandList; the manager already sorts fields by number.
+    -- Unplanned rotations always sort last, regardless of field number.
+    for i, group in ipairs(groups) do
+        group.originalIndex = i
+        group.isUnplanned = (group.plan[1] or "") == "" and (group.plan[2] or "") == ""
+            and (group.plan[3] or "") == "" and (group.plan[4] or "") == ""
+    end
+    table.sort(groups, function(a, b)
+        if a.isUnplanned ~= b.isUnplanned then return not a.isUnplanned end
+        return a.originalIndex < b.originalIndex
+    end)
+
     self.rotationGroups = groups
 end
 

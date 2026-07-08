@@ -150,12 +150,14 @@
         <e k="rcr_score_good"           v="Rotație bună — risc de boli sub control" />
         <e k="rcr_score_fair"           v="Rotație acceptabilă — risc de boli în creștere" />
         <e k="rcr_score_poor"           v="Rotație slabă — risc ridicat de boli" />
-        <e k="rcr_score_label_low"      v="Scor mic" />
+        <e k="rcr_score_bad"            v="Rotație foarte slabă — risc foarte ridicat de boli" />
+        <e k="rcr_score_label_low"      v="Scor slab" />
         <e k="rcr_score_label_optimal"  v="Scor optim" />
         <e k="rcr_score_short_optimal"  v="OPTIM" />
         <e k="rcr_score_short_good"     v="BUNĂ" />
         <e k="rcr_score_short_fair"     v="ACCEPTABIL" />
         <e k="rcr_score_short_poor"     v="SLABĂ" />
+        <e k="rcr_score_short_bad"      v="FOARTE SLABĂ" />
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Nicio parcelă proprie de afișat." />

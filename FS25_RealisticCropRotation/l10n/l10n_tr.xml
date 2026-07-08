@@ -150,12 +150,14 @@
         <e k="rcr_score_good"           v="İyi rotasyon — hastalık riski kontrol altında" />
         <e k="rcr_score_fair"           v="Orta rotasyon — artan hastalık riski" />
         <e k="rcr_score_poor"           v="Zayıf rotasyon — yüksek hastalık riski" />
-        <e k="rcr_score_label_low"      v="Düşük puan" />
+        <e k="rcr_score_bad"            v="Çok kötü rotasyon — çok yüksek hastalık riski" />
+        <e k="rcr_score_label_low"      v="Kötü puan" />
         <e k="rcr_score_label_optimal"  v="En uygun puan" />
         <e k="rcr_score_short_optimal"  v="OPTİMAL" />
         <e k="rcr_score_short_good"     v="İYİ" />
         <e k="rcr_score_short_fair"     v="ORTA" />
         <e k="rcr_score_short_poor"     v="DÜŞÜK" />
+        <e k="rcr_score_short_bad"      v="KÖTÜ" />
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Gösterilecek kendi tarlanız yok." />

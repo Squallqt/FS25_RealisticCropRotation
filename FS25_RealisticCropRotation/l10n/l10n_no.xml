@@ -150,12 +150,14 @@
         <e k="rcr_score_good"           v="Godt vekstskifte — sykdomsrisiko under kontroll" />
         <e k="rcr_score_fair"           v="Greit vekstskifte — økende sykdomsrisiko" />
         <e k="rcr_score_poor"           v="Dårlig vekstskifte — høy sykdomsrisiko" />
-        <e k="rcr_score_label_low"      v="Lav poengsum" />
+        <e k="rcr_score_bad"            v="Svært dårlig vekstskifte — alvorlig sykdomsrisiko" />
+        <e k="rcr_score_label_low"      v="Dårlig poengsum" />
         <e k="rcr_score_label_optimal"  v="Optimal poengsum" />
         <e k="rcr_score_short_optimal"  v="OPTIMAL" />
         <e k="rcr_score_short_good"     v="GODT" />
         <e k="rcr_score_short_fair"     v="GREIT" />
         <e k="rcr_score_short_poor"     v="LAV" />
+        <e k="rcr_score_short_bad"      v="DÅRLIG" />
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Ingen egne jorder å vise." />

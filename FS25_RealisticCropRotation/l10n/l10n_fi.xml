@@ -150,12 +150,14 @@
         <e k="rcr_score_good"           v="Hyvä viljelykierto — tautiriski hallinnassa" />
         <e k="rcr_score_fair"           v="Kohtalainen viljelykierto — kasvava tautiriski" />
         <e k="rcr_score_poor"           v="Huono viljelykierto — korkea tautiriski" />
-        <e k="rcr_score_label_low"      v="Matala pistemäärä" />
+        <e k="rcr_score_bad"            v="Erittäin huono viljelykierto — vakava tautiriski" />
+        <e k="rcr_score_label_low"      v="Huono pistemäärä" />
         <e k="rcr_score_label_optimal"  v="Optimaalinen pistemäärä" />
         <e k="rcr_score_short_optimal"  v="OPTIMAALINEN" />
         <e k="rcr_score_short_good"     v="HYVÄ" />
         <e k="rcr_score_short_fair"     v="KOHTALAINEN" />
         <e k="rcr_score_short_poor"     v="MATALA" />
+        <e k="rcr_score_short_bad"      v="HUONO" />
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Ei omia peltoja näytettäväksi." />

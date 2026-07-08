@@ -150,12 +150,14 @@
         <e k="rcr_score_good"           v="Rotasi baik — risiko penyakit terkendali" />
         <e k="rcr_score_fair"           v="Rotasi cukup — risiko penyakit meningkat" />
         <e k="rcr_score_poor"           v="Rotasi buruk — risiko penyakit tinggi" />
-        <e k="rcr_score_label_low"      v="Skor rendah" />
+        <e k="rcr_score_bad"            v="Rotasi sangat buruk — risiko penyakit parah" />
+        <e k="rcr_score_label_low"      v="Skor buruk" />
         <e k="rcr_score_label_optimal"  v="Skor optimal" />
         <e k="rcr_score_short_optimal"  v="OPTIMAL" />
         <e k="rcr_score_short_good"     v="BAIK" />
         <e k="rcr_score_short_fair"     v="CUKUP" />
         <e k="rcr_score_short_poor"     v="RENDAH" />
+        <e k="rcr_score_short_bad"      v="BURUK" />
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Tidak ada lahan milik sendiri untuk ditampilkan." />

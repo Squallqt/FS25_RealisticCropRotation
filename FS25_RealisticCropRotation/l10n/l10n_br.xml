@@ -150,12 +150,14 @@
         <e k="rcr_score_good"           v="Boa rotação — risco de doenças sob controle" />
         <e k="rcr_score_fair"           v="Rotação razoável — risco de doenças crescente" />
         <e k="rcr_score_poor"           v="Rotação ruim — alto risco de doenças" />
-        <e k="rcr_score_label_low"      v="Pontuação baixa" />
+        <e k="rcr_score_bad"            v="Rotação péssima — risco grave de doenças" />
+        <e k="rcr_score_label_low"      v="Pontuação ruim" />
         <e k="rcr_score_label_optimal"  v="Pontuação ótima" />
         <e k="rcr_score_short_optimal"  v="ÓTIMA" />
         <e k="rcr_score_short_good"     v="BOA" />
         <e k="rcr_score_short_fair"     v="RAZOÁVEL" />
         <e k="rcr_score_short_poor"     v="BAIXA" />
+        <e k="rcr_score_short_bad"      v="PÉSSIMA" />
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Nenhum campo próprio para exibir." />

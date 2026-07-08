@@ -150,12 +150,14 @@
         <e k="rcr_score_good"           v="Добра сівозміна — ризик хвороб під контролем" />
         <e k="rcr_score_fair"           v="Середня сівозміна — зростаючий ризик хвороб" />
         <e k="rcr_score_poor"           v="Погана сівозміна — високий ризик хвороб" />
-        <e k="rcr_score_label_low"      v="Низька оцінка" />
+        <e k="rcr_score_bad"            v="Дуже погана сівозміна — дуже високий ризик хвороб" />
+        <e k="rcr_score_label_low"      v="Погана оцінка" />
         <e k="rcr_score_label_optimal"  v="Оптимальна оцінка" />
         <e k="rcr_score_short_optimal"  v="ОПТИМАЛЬНО" />
         <e k="rcr_score_short_good"     v="ДОБРЕ" />
         <e k="rcr_score_short_fair"     v="СЕРЕДНЬО" />
         <e k="rcr_score_short_poor"     v="НИЗЬКО" />
+        <e k="rcr_score_short_bad"      v="ПОГАНО" />
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Немає власних полів для відображення." />

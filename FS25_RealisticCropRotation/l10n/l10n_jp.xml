@@ -150,12 +150,14 @@
         <e k="rcr_score_good"           v="良い輪作——病害リスク抑制" />
         <e k="rcr_score_fair"           v="まずまずの輪作——病害リスク上昇" />
         <e k="rcr_score_poor"           v="不十分な輪作——病害リスク高" />
-        <e k="rcr_score_label_low"      v="低スコア" />
+        <e k="rcr_score_bad"            v="悪い輪作——病害リスク深刻" />
+        <e k="rcr_score_label_low"      v="悪いスコア" />
         <e k="rcr_score_label_optimal"  v="最適スコア" />
         <e k="rcr_score_short_optimal"  v="最適" />
         <e k="rcr_score_short_good"     v="良" />
         <e k="rcr_score_short_fair"     v="可" />
         <e k="rcr_score_short_poor"     v="低" />
+        <e k="rcr_score_short_bad"      v="悪" />
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="表示する自分の畑がありません。" />

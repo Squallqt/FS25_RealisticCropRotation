@@ -150,12 +150,14 @@
         <e k="rcr_score_good"           v="轮作良好——病害风险受控" />
         <e k="rcr_score_fair"           v="轮作尚可——病害风险上升" />
         <e k="rcr_score_poor"           v="轮作较差——病害风险高" />
-        <e k="rcr_score_label_low"      v="评分较低" />
+        <e k="rcr_score_bad"            v="轮作极差——病害风险严重" />
+        <e k="rcr_score_label_low"      v="评分差" />
         <e k="rcr_score_label_optimal"  v="评分最佳" />
         <e k="rcr_score_short_optimal"  v="最佳" />
         <e k="rcr_score_short_good"     v="良好" />
         <e k="rcr_score_short_fair"     v="尚可" />
         <e k="rcr_score_short_poor"     v="较低" />
+        <e k="rcr_score_short_bad"      v="极差" />
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="没有可显示的自有田块。" />

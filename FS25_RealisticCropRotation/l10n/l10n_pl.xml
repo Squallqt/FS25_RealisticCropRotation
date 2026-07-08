@@ -150,12 +150,14 @@
         <e k="rcr_score_good"           v="Dobry płodozmian — ryzyko chorób pod kontrolą" />
         <e k="rcr_score_fair"           v="Przeciętny płodozmian — rosnące ryzyko chorób" />
         <e k="rcr_score_poor"           v="Słaby płodozmian — wysokie ryzyko chorób" />
-        <e k="rcr_score_label_low"      v="Niski wynik" />
+        <e k="rcr_score_bad"            v="Zły płodozmian — poważne ryzyko chorób" />
+        <e k="rcr_score_label_low"      v="Zły wynik" />
         <e k="rcr_score_label_optimal"  v="Optymalny wynik" />
         <e k="rcr_score_short_optimal"  v="OPTYMALNY" />
         <e k="rcr_score_short_good"     v="DOBRY" />
         <e k="rcr_score_short_fair"     v="PRZECIĘTNY" />
         <e k="rcr_score_short_poor"     v="SŁABY" />
+        <e k="rcr_score_short_bad"      v="ZŁY" />
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Brak własnych pól do wyświetlenia." />

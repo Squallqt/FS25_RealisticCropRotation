@@ -150,12 +150,14 @@
         <e k="rcr_score_good"           v="Bra växtföljd — sjukdomsrisk under kontroll" />
         <e k="rcr_score_fair"           v="Godtagbar växtföljd — ökande sjukdomsrisk" />
         <e k="rcr_score_poor"           v="Dålig växtföljd — hög sjukdomsrisk" />
-        <e k="rcr_score_label_low"      v="Låg poäng" />
+        <e k="rcr_score_bad"            v="Mycket dålig växtföljd — mycket hög sjukdomsrisk" />
+        <e k="rcr_score_label_low"      v="Dålig poäng" />
         <e k="rcr_score_label_optimal"  v="Optimal poäng" />
         <e k="rcr_score_short_optimal"  v="OPTIMAL" />
         <e k="rcr_score_short_good"     v="BRA" />
         <e k="rcr_score_short_fair"     v="GODTAGBAR" />
         <e k="rcr_score_short_poor"     v="LÅG" />
+        <e k="rcr_score_short_bad"      v="DÅLIG" />
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Inga egna fält att visa." />

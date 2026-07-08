@@ -150,12 +150,14 @@
         <e k="rcr_score_good"           v="Goede rotatie — ziekterisico onder controle" />
         <e k="rcr_score_fair"           v="Redelijke rotatie — oplopend ziekterisico" />
         <e k="rcr_score_poor"           v="Slechte rotatie — hoog ziekterisico" />
-        <e k="rcr_score_label_low"      v="Lage score" />
+        <e k="rcr_score_bad"            v="Zeer slechte rotatie — ernstig ziekterisico" />
+        <e k="rcr_score_label_low"      v="Slechte score" />
         <e k="rcr_score_label_optimal"  v="Optimale score" />
         <e k="rcr_score_short_optimal"  v="OPTIMAAL" />
         <e k="rcr_score_short_good"     v="GOED" />
         <e k="rcr_score_short_fair"     v="REDELIJK" />
         <e k="rcr_score_short_poor"     v="LAAG" />
+        <e k="rcr_score_short_bad"      v="SLECHT" />
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Geen eigen velden om weer te geven." />

@@ -150,12 +150,14 @@
         <e k="rcr_score_good"           v="Luân canh tốt — nguy cơ bệnh trong tầm kiểm soát" />
         <e k="rcr_score_fair"           v="Luân canh khá — nguy cơ bệnh đang tăng" />
         <e k="rcr_score_poor"           v="Luân canh kém — nguy cơ bệnh cao" />
-        <e k="rcr_score_label_low"      v="Điểm thấp" />
+        <e k="rcr_score_bad"            v="Luân canh rất kém — nguy cơ bệnh rất cao" />
+        <e k="rcr_score_label_low"      v="Điểm kém" />
         <e k="rcr_score_label_optimal"  v="Điểm tối ưu" />
         <e k="rcr_score_short_optimal"  v="TỐI ƯU" />
         <e k="rcr_score_short_good"     v="TỐT" />
         <e k="rcr_score_short_fair"     v="KHÁ" />
         <e k="rcr_score_short_poor"     v="THẤP" />
+        <e k="rcr_score_short_bad"      v="KÉM" />
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Không có ruộng sở hữu để hiển thị." />

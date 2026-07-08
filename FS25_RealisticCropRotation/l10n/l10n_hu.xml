@@ -150,12 +150,14 @@
         <e k="rcr_score_good"           v="Jó vetésforgó — betegségkockázat kordában" />
         <e k="rcr_score_fair"           v="Megfelelő vetésforgó — növekvő betegségkockázat" />
         <e k="rcr_score_poor"           v="Gyenge vetésforgó — magas betegségkockázat" />
-        <e k="rcr_score_label_low"      v="Alacsony pontszám" />
+        <e k="rcr_score_bad"            v="Rossz vetésforgó — súlyos betegségkockázat" />
+        <e k="rcr_score_label_low"      v="Rossz pontszám" />
         <e k="rcr_score_label_optimal"  v="Optimális pontszám" />
         <e k="rcr_score_short_optimal"  v="OPTIMÁLIS" />
         <e k="rcr_score_short_good"     v="JÓ" />
         <e k="rcr_score_short_fair"     v="MEGFELELŐ" />
         <e k="rcr_score_short_poor"     v="ALACSONY" />
+        <e k="rcr_score_short_bad"      v="ROSSZ" />
 
         <!-- Empty state -->
         <e k="rcr_empty_no_fields"      v="Nincs megjeleníthető saját tábla." />
