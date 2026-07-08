@@ -2,7 +2,7 @@
 RealisticCropRotationDiseaseGrid = {}
 local RealisticCropRotationDiseaseGrid_mt = Class(RealisticCropRotationDiseaseGrid)
 
-RealisticCropRotationDiseaseGrid.GRID_SIZE = 2048
+RealisticCropRotationDiseaseGrid.GRID_SIZE = 4096
 -- 4 channels hold a per-disease state 0..15 (0 = clean), enough for the 9 pathogens (states 1..9)
 -- so each disease is painted with its OWN colour on the parcel.
 RealisticCropRotationDiseaseGrid.NUM_CHANNELS = 4
@@ -19,7 +19,7 @@ RealisticCropRotationDiseaseGrid.NEMATICIDE_PROTECTION_FILENAME = "realisticCrop
 
 -- Risk map: runtime-only display map (never saved), painted off the UI path, rendered with no
 -- mask and no map building at render time.
-RealisticCropRotationDiseaseGrid.RISK_MAP_SIZE = 1024
+RealisticCropRotationDiseaseGrid.RISK_MAP_SIZE = 4096
 RealisticCropRotationDiseaseGrid.RISK_NUM_CHANNELS = 2
 
 function RealisticCropRotationDiseaseGrid.new()

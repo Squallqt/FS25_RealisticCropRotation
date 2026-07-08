@@ -30,6 +30,12 @@ RealisticCropRotationDiseaseMap.RISK_LOW = 1
 RealisticCropRotationDiseaseMap.RISK_MODERATE = 2
 RealisticCropRotationDiseaseMap.RISK_HIGH = 3
 
+-- Fallback overlay TEXTURE base resolution, used only if MapOverlayGenerator.OVERLAY_RESOLUTION isn't
+-- available (see adjustedOverlaySize, which reads the real native value first). Matches it anyway
+-- (FIELDS/FOLIAGE_STATE/FARMLANDS all start at 512x512). Display texture only, independent of the
+-- source data maps (grid.mapId etc.).
+RealisticCropRotationDiseaseMap.OVERLAY_BASE_RESOLUTION = 512
+
 RealisticCropRotationDiseaseMap.SUB_PAGE_INFECTIONS = 1
 RealisticCropRotationDiseaseMap.SUB_PAGE_PRESSURE = 2
 RealisticCropRotationDiseaseMap.SUB_PAGE_TREATMENT = 3
@@ -247,34 +253,60 @@ end
 -- Runtime objects
 -- ============================================================================
 
+---Overlay TEXTURE size, scaled from OVERLAY_BASE_RESOLUTION by the player's performance profile --
+---the exact same math as gameSource's own MapOverlayGenerator:adjustedOverlayResolution. Independent
+---of any source data map's own resolution (native overlays never match their source map's size either).
+-- @return integer size
+local function adjustedOverlaySize()
+    local base = RealisticCropRotationDiseaseMap.OVERLAY_BASE_RESOLUTION
+    if MapOverlayGenerator ~= nil and MapOverlayGenerator.OVERLAY_RESOLUTION ~= nil
+        and MapOverlayGenerator.OVERLAY_RESOLUTION.FIELDS ~= nil
+        and type(MapOverlayGenerator.OVERLAY_RESOLUTION.FIELDS[1]) == "number" then
+        base = MapOverlayGenerator.OVERLAY_RESOLUTION.FIELDS[1]
+    end
+    if Utils == nil or type(Utils.getPerformanceClassId) ~= "function"
+        or GS_PROFILE_LOW == nil or GS_PROFILE_HIGH == nil then
+        return base
+    end
+    local profileClass = Utils.getPerformanceClassId()
+    if profileClass <= GS_PROFILE_LOW then
+        return base
+    elseif profileClass >= GS_PROFILE_HIGH and not Platform.isMobile
+        and not (g_currentMission ~= nil and g_currentMission.missionDynamicInfo ~= nil
+            and g_currentMission.missionDynamicInfo.isMultiplayer and g_currentMission:getIsServer()) then
+        return base * 4
+    else
+        return base * 2
+    end
+end
+
 ---Creates two value overlays per sub-page (double-buffered): generation is async (GPU-side), so
 ---regenerating into the hidden slot while the active one keeps drawing avoids a blank gap on refresh.
 function RealisticCropRotationDiseaseMap:createRuntimeObjects()
     if createDensityMapVisualizationOverlay == nil then return end
     local grid = getGrid()
     if grid == nil then return end
+    local size = adjustedOverlaySize()
 
-    if self.infectionOverlayIds == nil and grid.mapId ~= nil and grid.size ~= nil then
+    if self.infectionOverlayIds == nil and grid.mapId ~= nil then
         self.infectionOverlayIds = {
-            createDensityMapVisualizationOverlay("rcrInfectionOverlayA", grid.size, grid.size),
-            createDensityMapVisualizationOverlay("rcrInfectionOverlayB", grid.size, grid.size),
+            createDensityMapVisualizationOverlay("rcrInfectionOverlayA", size, size),
+            createDensityMapVisualizationOverlay("rcrInfectionOverlayB", size, size),
         }
         self.infectionActiveSlot = nil  -- nothing generated yet: draw() shows nothing until slot 1 is ready
         self.infectionPendingSlot = nil
     end
 
-    if self.riskOverlayIds == nil and grid.riskMapId ~= nil and grid.riskMapSize ~= nil then
+    if self.riskOverlayIds == nil and grid.riskMapId ~= nil then
         self.riskOverlayIds = {
-            createDensityMapVisualizationOverlay("rcrRiskOverlayA", grid.riskMapSize, grid.riskMapSize),
-            createDensityMapVisualizationOverlay("rcrRiskOverlayB", grid.riskMapSize, grid.riskMapSize),
+            createDensityMapVisualizationOverlay("rcrRiskOverlayA", size, size),
+            createDensityMapVisualizationOverlay("rcrRiskOverlayB", size, size),
         }
         self.riskActiveSlot = nil
         self.riskPendingSlot = nil
     end
 
-    -- Sized to grid.protectionMapSize, not grid.size: protection maps use the terrain-detail's own resolution.
-    if self.treatmentOverlayIds == nil and grid.fungicideProtectionMapId ~= nil and grid.protectionMapSize ~= nil then
-        local size = grid.protectionMapSize
+    if self.treatmentOverlayIds == nil and grid.fungicideProtectionMapId ~= nil then
         self.treatmentOverlayIds = {
             createDensityMapVisualizationOverlay("rcrTreatmentOverlayA", size, size),
             createDensityMapVisualizationOverlay("rcrTreatmentOverlayB", size, size),
