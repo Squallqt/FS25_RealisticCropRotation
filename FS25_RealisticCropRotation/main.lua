@@ -181,11 +181,6 @@ local function onFarmlandOwnerChanged(farmlandId, _farmId, loadFromSavegame)
         and type(RealisticCropRotation.disease.refreshRiskMap) == "function" then
         RealisticCropRotation.disease:refreshRiskMap(true)
     end
-    -- Same for the active-foci display map (twin of the risk map).
-    if RealisticCropRotation.disease ~= nil
-        and type(RealisticCropRotation.disease.refreshInfectionMap) == "function" then
-        RealisticCropRotation.disease:refreshInfectionMap(true)
-    end
 end
 
 ---Reconciles active crops for all owned farmlands on a period change (server).
@@ -224,12 +219,6 @@ local function onPeriodChanged()
         and type(RealisticCropRotation.disease.refreshRiskMap) == "function" then
         RealisticCropRotation.disease:refreshRiskMap(false)
     end
-    -- The infection roll above may have created / reset infections: repaint the active-foci map for
-    -- the fields whose dominant disease moved (twin of the risk repaint, same incremental cost).
-    if RealisticCropRotation.disease ~= nil
-        and type(RealisticCropRotation.disease.refreshInfectionMap) == "function" then
-        RealisticCropRotation.disease:refreshInfectionMap(false)
-    end
 end
 
 ---Server: advances every active infection by one in-game day. Only queues the work here (cheap);
@@ -240,13 +229,6 @@ local function onDayChanged()
     if RealisticCropRotation.disease ~= nil
         and type(RealisticCropRotation.disease.enqueueDailyProgress) == "function" then
         RealisticCropRotation.disease:enqueueDailyProgress()
-    end
-    -- The active-foci map follows the infection state, which advances day by day (unlike the risk
-    -- map, which follows the history): repaint the fields whose dominant disease moved. Incremental
-    -- (native passes only for what changed), one call per day. Clients repaint via the sync path.
-    if RealisticCropRotation.disease ~= nil
-        and type(RealisticCropRotation.disease.refreshInfectionMap) == "function" then
-        RealisticCropRotation.disease:refreshInfectionMap(false)
     end
     -- Fade out the ephemeral "treated" ground visual (WATER_LEVEL) painted by the RCR sprayer:
     -- nothing in the game consumes it, so we clear farmlands whose mark has aged past ~one month.
@@ -418,10 +400,6 @@ local function loadedMission()
             -- Initial paint of the risk display map, during the loading screen (never on menu open).
             if type(RealisticCropRotation.disease.refreshRiskMap) == "function" then
                 RealisticCropRotation.disease:refreshRiskMap(true)
-            end
-            -- Initial paint of the active-foci map from the loaded infection state (twin of above).
-            if type(RealisticCropRotation.disease.refreshInfectionMap) == "function" then
-                RealisticCropRotation.disease:refreshInfectionMap(true)
             end
         end
         if RealisticCropRotationSprayerProducts ~= nil

@@ -42,7 +42,6 @@ function RealisticCropRotationDisease.new(manager, grid)
     self.state = {}          -- farmlandId -> group -> { severity, seed } (seed fixes the destruction scatter)
     self.crop = {}           -- farmlandId -> crop name the state belongs to
     self.lastRiskBand = {}   -- farmlandId -> band last painted into the risk display map
-    self.lastInfectionState = {} -- farmlandId -> dominant disease state last painted into the infection display map
     self.dayQueue = {}       -- FIFO of farmlandIds awaiting their daily disease step (load spreading)
     self.dayQueued = {}      -- farmlandId -> true, dedupes the queue
     return self
@@ -545,56 +544,6 @@ function RealisticCropRotationDisease:refreshRiskMap(force)
     end
 end
 
----Overlay state id of a field's dominant (highest-severity) infection; 0 when none, counting even latent entries as active.
--- @param integer farmlandId
--- @return integer state
-function RealisticCropRotationDisease:dominantDiseaseState(farmlandId)
-    local st = self.state[tonumber(farmlandId) or farmlandId]
-    if st == nil then return 0 end
-    local bestGroup, bestSeverity = nil, -1
-    for group, s in pairs(st) do
-        local sev = tonumber(s.severity) or 0
-        if sev > bestSeverity then
-            bestSeverity = sev
-            bestGroup = group
-        end
-    end
-    if bestGroup == nil then return 0 end
-    return diseaseStateForGroup(bestGroup)
-end
-
----Repaints the runtime infection display map ("active foci"), off the UI path -- twin of refreshRiskMap
----but driven by dominant infection state instead of predictive risk. Incremental; `force` repaints all.
--- @param boolean force
-function RealisticCropRotationDisease:refreshInfectionMap(force)
-    local grid = self.grid
-    local mgr = self.manager
-    if grid == nil or grid.infectionMapId == nil or mgr == nil
-        or type(mgr.getOwnedRotationFarmlandIds) ~= "function"
-        or type(mgr.getFieldByFarmlandId) ~= "function"
-        or type(grid.paintFarmlandInfection) ~= "function" then
-        return
-    end
-
-    if force then
-        grid:clearInfectionMap()
-        self.lastInfectionState = {}
-    end
-
-    for _, farmlandId in ipairs(mgr:getOwnedRotationFarmlandIds() or {}) do
-        local id = tonumber(farmlandId)
-        if id ~= nil and id > 0 then
-            local state = self:dominantDiseaseState(id)
-            if state ~= self.lastInfectionState[id] then
-                local field = mgr:getFieldByFarmlandId(id)
-                if field ~= nil and grid:paintFarmlandInfection(field, id, state) then
-                    self.lastInfectionState[id] = state
-                end
-            end
-        end
-    end
-end
-
 ---Worst active infection severity on a field, in [0,1] (0 when none). Server-authoritative.
 -- @param integer farmlandId
 -- @return number severity
@@ -675,9 +624,6 @@ function RealisticCropRotationDisease:applySyncData(state, crop)
         -- Risk derives from the synced history, so a sync is the client's "state changed" event:
         -- repaint the bands that moved (all of them on the first sync, none on most others).
         self:refreshRiskMap(false)
-        -- The active-foci view is painted from the same synced infection state (twin of the risk map),
-        -- so a sync is also its "state changed" event: repaint the fields whose dominant disease moved.
-        self:refreshInfectionMap(false)
     end
 end
 

@@ -22,15 +22,6 @@ RealisticCropRotationDiseaseGrid.NEMATICIDE_PROTECTION_FILENAME = "realisticCrop
 RealisticCropRotationDiseaseGrid.RISK_MAP_SIZE = 1024
 RealisticCropRotationDiseaseGrid.RISK_NUM_CHANNELS = 2
 
--- Infection map: a second runtime-only display map (never saved), the exact twin of the risk map but
--- for the "active foci" view. It holds each infected field's DOMINANT disease state 1..9 on its
--- worked-soil cells, painted FULL (farmland EQUAL id + groundType GREATER 0) -- so the foci view gets
--- the same crisp field border as the pressure view instead of the sparse Perlin scatter of grid.mapId.
--- 4 channels (0..15) are needed because disease states run 1..9 (the risk map's 2 channels only hold
--- bands 1..3). Repainted from the synced infection state on every machine, so it is deterministic.
-RealisticCropRotationDiseaseGrid.INFECTION_MAP_SIZE = 1024
-RealisticCropRotationDiseaseGrid.INFECTION_NUM_CHANNELS = 4
-
 function RealisticCropRotationDiseaseGrid.new()
     local self = setmetatable({}, RealisticCropRotationDiseaseGrid_mt)
     self.mapId = nil
@@ -45,10 +36,6 @@ function RealisticCropRotationDiseaseGrid.new()
     self.riskMapSize = RealisticCropRotationDiseaseGrid.RISK_MAP_SIZE
     self.riskNumChannels = RealisticCropRotationDiseaseGrid.RISK_NUM_CHANNELS
     self.riskRevision = 0
-    self.infectionMapId = nil
-    self.infectionMapSize = RealisticCropRotationDiseaseGrid.INFECTION_MAP_SIZE
-    self.infectionNumChannels = RealisticCropRotationDiseaseGrid.INFECTION_NUM_CHANNELS
-    self.infectionRevision = 0
     return self
 end
 
@@ -138,10 +125,6 @@ function RealisticCropRotationDiseaseGrid:loadMap(savegamePath)
     -- Runtime-only risk display map (never saved: risk is derived from the synced history).
     self.riskMapId = createBitVectorMap("rcrRiskMap")
     loadBitVectorMapNew(self.riskMapId, self.riskMapSize, self.riskMapSize, self.riskNumChannels, false)
-
-    -- Runtime-only infection display map (never saved: repainted from the synced infection state).
-    self.infectionMapId = createBitVectorMap("rcrInfectionMap")
-    loadBitVectorMapNew(self.infectionMapId, self.infectionMapSize, self.infectionMapSize, self.infectionNumChannels, false)
 end
 
 function RealisticCropRotationDiseaseGrid:saveMap(savegamePath)
@@ -171,10 +154,6 @@ function RealisticCropRotationDiseaseGrid:deleteMap()
     if self.riskMapId ~= nil then
         delete(self.riskMapId)
         self.riskMapId = nil
-    end
-    if self.infectionMapId ~= nil then
-        delete(self.infectionMapId)
-        self.infectionMapId = nil
     end
 end
 
@@ -220,55 +199,6 @@ function RealisticCropRotationDiseaseGrid:paintFarmlandRisk(field, farmlandId, b
 
     modifier:executeSet(band, farmlandFilter, groundFilter)
     self.riskRevision = (self.riskRevision or 0) + 1
-    return true
-end
-
----Wipes the infection display map (before a full repaint, e.g. on ownership changes). Twin of
----clearRiskMap, on the 4-channel infection map.
-function RealisticCropRotationDiseaseGrid:clearInfectionMap()
-    if self.infectionMapId == nil then return end
-    setBitVectorMapParallelogram(self.infectionMapId, 0, 0, self.infectionMapSize, 0, 0, self.infectionMapSize, 0, self.infectionNumChannels, 0)
-    self.infectionRevision = (self.infectionRevision or 0) + 1
-end
-
----Paints one field's DOMINANT disease state into the infection display map, FULL on its worked-soil
----cells only (farmland map EQUAL farmlandId + groundType GREATER 0): the exact twin of paintFarmlandRisk,
----so the "active foci" view gets the same crisp field border as the pressure view -- only the written
----value differs (a disease state 1..9 instead of a risk band 1..3). state 0 erases the field's cells.
--- @param table field game Field object (for the world bbox)
--- @param integer farmlandId
--- @param integer state disease overlay state 0..15 (0 = no active infection)
-function RealisticCropRotationDiseaseGrid:paintFarmlandInfection(field, farmlandId, state)
-    if self.infectionMapId == nil or field == nil or g_terrainNode == nil
-        or DensityMapModifier == nil or DensityMapFilter == nil
-        or DensityValueCompareType == nil or DensityCoordType == nil
-        or g_farmlandManager == nil or type(g_farmlandManager.getLocalMap) ~= "function"
-        or getBitVectorMapNumChannels == nil
-        or g_currentMission == nil or g_currentMission.fieldGroundSystem == nil
-        or type(g_currentMission.fieldGroundSystem.getDensityMapData) ~= "function"
-        or FieldDensityMap == nil or FieldDensityMap.GROUND_TYPE == nil then
-        return false
-    end
-
-    local farmlandLocalMap = g_farmlandManager:getLocalMap()
-    local groundTypeMapId, groundFirstChannel, groundNumChannels =
-        g_currentMission.fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE)
-    if farmlandLocalMap == nil or groundTypeMapId == nil then return false end
-
-    local minX, minZ, maxX, maxZ = fieldWorldBounds(field)
-    if minX == nil then return false end
-
-    local modifier = DensityMapModifier.new(self.infectionMapId, 0, self.infectionNumChannels, g_terrainNode)
-    modifier:setParallelogramWorldCoords(minX, minZ, maxX, minZ, minX, maxZ, DensityCoordType.POINT_POINT_POINT)
-
-    local farmlandFilter = DensityMapFilter.new(farmlandLocalMap, 0, getBitVectorMapNumChannels(farmlandLocalMap))
-    farmlandFilter:setValueCompareParams(DensityValueCompareType.EQUAL, farmlandId)
-
-    local groundFilter = DensityMapFilter.new(groundTypeMapId, groundFirstChannel, groundNumChannels)
-    groundFilter:setValueCompareParams(DensityValueCompareType.GREATER, 0)
-
-    modifier:executeSet(state, farmlandFilter, groundFilter)
-    self.infectionRevision = (self.infectionRevision or 0) + 1
     return true
 end
 
