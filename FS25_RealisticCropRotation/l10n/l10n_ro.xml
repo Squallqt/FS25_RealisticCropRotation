@@ -24,6 +24,7 @@
         <e k="rcr_disease_hud_label"    v="Boală" />
         <e k="rcr_disease_hud_active"   v="%s (activă)" />
         <e k="rcr_disease_hud_none"     v="Niciuna" />
+        <e k="rcr_treatment_hud_label"  v="Tratament" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Reziduu așteptat +%d (N+1) / +%d (N+2) kg/ha" />

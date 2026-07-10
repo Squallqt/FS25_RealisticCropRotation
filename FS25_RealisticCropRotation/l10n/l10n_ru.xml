@@ -24,6 +24,7 @@
         <e k="rcr_disease_hud_label"    v="Болезнь" />
         <e k="rcr_disease_hud_active"   v="%s (активна)" />
         <e k="rcr_disease_hud_none"     v="Нет" />
+        <e k="rcr_treatment_hud_label"  v="Обработка" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Ожидаемый остаток +%d (N+1) / +%d (N+2) кг/га" />

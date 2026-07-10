@@ -24,6 +24,7 @@
         <e k="rcr_disease_hud_label"    v="Doença" />
         <e k="rcr_disease_hud_active"   v="%s (ativa)" />
         <e k="rcr_disease_hud_none"     v="Nenhuma" />
+        <e k="rcr_treatment_hud_label"  v="Tratamento" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Resíduo previsto +%d (N+1) / +%d (N+2) kg/ha" />

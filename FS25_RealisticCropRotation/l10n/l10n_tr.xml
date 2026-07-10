@@ -24,6 +24,7 @@
         <e k="rcr_disease_hud_label"    v="Hastalık" />
         <e k="rcr_disease_hud_active"   v="%s (aktif)" />
         <e k="rcr_disease_hud_none"     v="Yok" />
+        <e k="rcr_treatment_hud_label"  v="İlaçlama" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Beklenen kalıntı +%d (N+1) / +%d (N+2) kg/ha" />

@@ -194,13 +194,15 @@ local function onPeriodChanged()
     local changed = false
     local diseaseUpdated = false
     for _, farmlandId in ipairs(RealisticCropRotation.manager:getOwnedRotationFarmlandIds()) do
-        if RealisticCropRotation.manager:reconcileActiveCropForFarmland(farmlandId) then
+        local rotationChanged = RealisticCropRotation.manager:reconcileActiveCropForFarmland(farmlandId)
+        if rotationChanged then
             changed = true
         end
         if RealisticCropRotation.disease ~= nil then
             -- Infection roll + crop-change reset only. Severity progression and crop destruction now
-            -- run day by day (onDayChanged), never in this once-a-period burst.
-            RealisticCropRotation.disease:evaluateInfection(farmlandId)
+            -- run day by day (onDayChanged), never in this once-a-period burst. rotationChanged also
+            -- forces the reset on a same-crop replant (monoculture), reusing the rotation-history signal.
+            RealisticCropRotation.disease:evaluateInfection(farmlandId, rotationChanged)
             diseaseUpdated = true
         end
     end

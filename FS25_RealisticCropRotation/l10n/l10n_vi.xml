@@ -24,6 +24,7 @@
         <e k="rcr_disease_hud_label"    v="Dịch bệnh" />
         <e k="rcr_disease_hud_active"   v="%s (đang hoạt động)" />
         <e k="rcr_disease_hud_none"     v="Không có" />
+        <e k="rcr_treatment_hud_label"  v="Phun thuốc" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Tồn dư dự kiến +%d (N+1) / +%d (N+2) kg/ha" />

@@ -24,6 +24,7 @@
         <e k="rcr_disease_hud_label"    v="Choroba" />
         <e k="rcr_disease_hud_active"   v="%s (aktivní)" />
         <e k="rcr_disease_hud_none"     v="Žádná" />
+        <e k="rcr_treatment_hud_label"  v="Ošetření" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Očekávaný zbytek +%d (N+1) / +%d (N+2) kg/ha" />

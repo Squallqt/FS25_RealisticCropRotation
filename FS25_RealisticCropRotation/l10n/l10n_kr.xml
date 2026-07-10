@@ -24,6 +24,7 @@
         <e k="rcr_disease_hud_label"    v="병해" />
         <e k="rcr_disease_hud_active"   v="%s (발생 중)" />
         <e k="rcr_disease_hud_none"     v="없음" />
+        <e k="rcr_treatment_hud_label"  v="방제" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="예상 잔류량 +%d (N+1) / +%d (N+2) kg/ha" />

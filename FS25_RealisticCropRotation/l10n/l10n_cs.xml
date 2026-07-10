@@ -24,6 +24,7 @@
         <e k="rcr_disease_hud_label"    v="病害" />
         <e k="rcr_disease_hud_active"   v="%s（活跃）" />
         <e k="rcr_disease_hud_none"     v="无" />
+        <e k="rcr_treatment_hud_label"  v="防治" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="预期残留 +%d (N+1) / +%d (N+2) kg/ha" />

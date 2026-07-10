@@ -24,6 +24,7 @@
         <e k="rcr_disease_hud_label"    v="Penyakit" />
         <e k="rcr_disease_hud_active"   v="%s (aktif)" />
         <e k="rcr_disease_hud_none"     v="Tidak ada" />
+        <e k="rcr_treatment_hud_label"  v="Penyemprotan" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Residu diharapkan +%d (N+1) / +%d (N+2) kg/ha" />

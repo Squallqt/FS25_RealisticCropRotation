@@ -24,6 +24,7 @@
         <e k="rcr_disease_hud_label"    v="Betegség" />
         <e k="rcr_disease_hud_active"   v="%s (aktív)" />
         <e k="rcr_disease_hud_none"     v="Nincs" />
+        <e k="rcr_treatment_hud_label"  v="Kezelés" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Várható maradvány +%d (N+1) / +%d (N+2) kg/ha" />

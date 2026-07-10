@@ -108,6 +108,7 @@ function RealisticCropRotationHud.addHistoryLines(fieldBox, farmlandId)
     end
 
     RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
+    RealisticCropRotationHud.addTreatmentLine(fieldBox)
 end
 
 ---World position -> grid cell (matches FarmlandManager:convertWorldToLocalPosition's formula).
@@ -129,8 +130,8 @@ local function isPointProtected(protectionMapId, mapSize, worldX, worldZ)
     return (getBitVectorMapPoint(protectionMapId, localX, localZ, 0, 1) or 0) > 0
 end
 
----Appends a disease status line, skipped if the player stands on a cell already protected (severity
----alone can't tell "active" apart from "already treated here").
+---Appends a disease status line for every group with active severity, regardless of protection: the
+---underlying pressure keeps building under a treated cell, so it stays visible next to the treatment line.
 -- @param table fieldBox Field-info box with addLine
 -- @param integer farmlandId
 function RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
@@ -142,32 +143,41 @@ function RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
     local groups = disease:getState(farmlandId)
     if groups == nil then return end
 
+    local label = RealisticCropRotationHud.getText("rcr_disease_hud_label", "Disease")
+    for group, s in pairs(groups) do
+        if (s.severity or 0) > 0 then
+            local diseaseName = (type(disease.getDisplayName) == "function") and disease:getDisplayName(group) or tostring(group)
+            local value = string.format(RealisticCropRotationHud.getText("rcr_disease_hud_active", "%s (active)"), diseaseName)
+            fieldBox:addLine(label, value, true)
+        end
+    end
+end
+
+---Appends a treatment line when the player stands on a cell currently protected (fungicide and/or
+---nematicide), so the on-foot HUD confirms a spray actually took on this cell.
+-- @param table fieldBox Field-info box with addLine
+function RealisticCropRotationHud.addTreatmentLine(fieldBox)
+    if fieldBox == nil or fieldBox.addLine == nil then return end
+
     local grid = RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
+    if grid == nil then return end
+
     local px, pz = nil, nil
     if g_localPlayer ~= nil and g_localPlayer.rootNode ~= nil and getWorldTranslation ~= nil then
         px, _, pz = getWorldTranslation(g_localPlayer.rootNode)
     end
+    if px == nil then return end
 
-    local label = RealisticCropRotationHud.getText("rcr_disease_hud_label", "Disease")
-    for group, s in pairs(groups) do
-        if (s.severity or 0) > 0 then
-            local protectedHere = false
-            if grid ~= nil and px ~= nil and type(disease.getTreatment) == "function" then
-                local treatment = disease:getTreatment(group)
-                local protectionMapId = nil
-                if treatment == "FUNGICIDE" then protectionMapId = grid.fungicideProtectionMapId
-                elseif treatment == "NEMATICIDE" then protectionMapId = grid.nematicideProtectionMapId end
-                protectedHere = isPointProtected(protectionMapId, grid.protectionMapSize, px, pz)
-            end
+    local label = RealisticCropRotationHud.getText("rcr_treatment_hud_label", "Treatment")
 
-            if not protectedHere then
-                local diseaseName = (type(disease.getDisplayName) == "function") and disease:getDisplayName(group) or tostring(group)
-                local value = string.format(RealisticCropRotationHud.getText("rcr_disease_hud_active", "%s (active)"), diseaseName)
-                fieldBox:addLine(label, value, true)
-            end
-        end
+    if isPointProtected(grid.fungicideProtectionMapId, grid.protectionMapSize, px, pz) then
+        fieldBox:addLine(label, RealisticCropRotationHud.getText("rcr_fillType_fungicide", "Fungicide"))
+    end
+    if isPointProtected(grid.nematicideProtectionMapId, grid.protectionMapSize, px, pz) then
+        fieldBox:addLine(label, RealisticCropRotationHud.getText("rcr_fillType_nematicide", "Nematicide"))
     end
 end
+
 ---Resolves the (tierText, numbers) override for the on-foot "Croissance:" line.
 -- @param table data Field-info data
 -- @return string tierText, numbers Tier label, "X/Y" progress (nil, nil if unavailable)

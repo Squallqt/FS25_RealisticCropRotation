@@ -242,23 +242,31 @@ end
 ---Server: a living host of a pathogen, at that pathogen's growth window, may be infected by the
 ---field's load. Rolled once per pathogen per crop cycle; seeds the destruction pattern on infection.
 -- @param integer farmlandId
-function RealisticCropRotationDisease:evaluateInfection(farmlandId)
+-- @param boolean freshCycle True when rotation reconciliation just detected a genuine new planting
+-- (crop change or same-crop replant); only ever consumes the treatment, never the disease state below.
+function RealisticCropRotationDisease:evaluateInfection(farmlandId, freshCycle)
     if g_server == nil then return end
     local mgr = self.manager
     if mgr == nil then return end
     local cropName, _, growthState = mgr:getActiveCropInfo(farmlandId)
 
-    -- Reset only on a CONFIRMED rotation to a different crop (both names known), never on a momentary
-    -- "no crop" read (disease-caused bare patches, mid-harvest) -- that must not wipe an active infection.
+    -- Disease reset stays gated to a CONFIRMED rotation to a different crop, never on a momentary "no
+    -- crop" read (disease-caused bare patches, mid-harvest), which must not wipe an active infection,
+    -- and never on a same-crop replant, where the inoculum load carries over by design.
     local previousCrop = self.crop[farmlandId]
     if cropName ~= nil then
-        if previousCrop ~= nil and previousCrop ~= cropName then
+        local rotated = previousCrop ~= nil and previousCrop ~= cropName
+        if rotated then
             self.state[farmlandId] = nil
             if self.grid ~= nil and type(self.grid.clearField) == "function" then
                 -- Also drops per-cell protection for this field: it is crop-cycle scoped and ends here.
                 local field = type(mgr.getFieldByFarmlandId) == "function" and mgr:getFieldByFarmlandId(farmlandId) or nil
                 if field ~= nil then self.grid:clearField(field) end
             end
+        elseif freshCycle and self.grid ~= nil and type(self.grid.clearFieldProtection) == "function" then
+            -- Same-crop replant: the treatment is consumed by the new stand, disease state is untouched.
+            local field = type(mgr.getFieldByFarmlandId) == "function" and mgr:getFieldByFarmlandId(farmlandId) or nil
+            if field ~= nil then self.grid:clearFieldProtection(field) end
         end
         self.crop[farmlandId] = cropName
     end

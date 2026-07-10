@@ -205,16 +205,13 @@ function RealisticCropRotationDiseaseGrid:paintFarmlandRisk(field, farmlandId, b
     return true
 end
 
----Wipes this field's disease marks from the grid (called on crop change / clear).
-function RealisticCropRotationDiseaseGrid:clearField(field)
-    if self.mapId == nil or field == nil or g_terrainNode == nil or DensityMapModifier == nil then return end
-
+---Bbox + farmland-mask filter for a field's cells, shared by clearField and clearFieldProtection so
+---the bounds are computed once even when both wipe the same field back to back.
+-- @param table field
+-- @return number minX, minZ, maxX, maxZ (nil if the field has no bounds), table farmlandFilter or nil
+local function fieldClearParams(field)
     local minX, minZ, maxX, maxZ = fieldWorldBounds(field)
-    if minX == nil then return end
-
-    local modifier = DensityMapModifier.new(self.mapId, 0, self.numChannels, g_terrainNode)
-    -- Axis-aligned bbox as a parallelogram: start, +X edge, +Z edge (absolute world points).
-    modifier:setParallelogramWorldCoords(minX, minZ, maxX, minZ, minX, maxZ, DensityCoordType.POINT_POINT_POINT)
+    if minX == nil then return nil end
 
     -- Restrict the wipe to THIS farmland's cells, using the farmland map as a mask, so a
     -- neighbouring field whose bbox overlaps keeps its own marks (native cross-map filter).
@@ -229,7 +226,19 @@ function RealisticCropRotationDiseaseGrid:clearField(field)
             farmlandFilter:setValueCompareParams(DensityValueCompareType.EQUAL, farmlandId)
         end
     end
+    return minX, minZ, maxX, maxZ, farmlandFilter
+end
 
+---Wipes this field's disease marks from the grid (called on crop change / clear).
+function RealisticCropRotationDiseaseGrid:clearField(field)
+    if self.mapId == nil or field == nil or g_terrainNode == nil or DensityMapModifier == nil then return end
+
+    local minX, minZ, maxX, maxZ, farmlandFilter = fieldClearParams(field)
+    if minX == nil then return end
+
+    local modifier = DensityMapModifier.new(self.mapId, 0, self.numChannels, g_terrainNode)
+    -- Axis-aligned bbox as a parallelogram: start, +X edge, +Z edge (absolute world points).
+    modifier:setParallelogramWorldCoords(minX, minZ, maxX, minZ, minX, maxZ, DensityCoordType.POINT_POINT_POINT)
     if farmlandFilter ~= nil then
         modifier:executeSet(0, farmlandFilter)
     else
@@ -237,7 +246,22 @@ function RealisticCropRotationDiseaseGrid:clearField(field)
     end
     self.changeRevision = (self.changeRevision or 0) + 1
 
-    -- Protection is crop-cycle scoped: it ends when the crop changes, same as the disease marks above.
+    -- Protection is crop-cycle scoped too: a real rotation ends it, same as the disease marks above.
+    self:clearFieldProtection(field, minX, minZ, maxX, maxZ, farmlandFilter)
+end
+
+---Wipes only this field's curative/preventive protection (fungicide + nematicide), leaving disease
+---marks untouched. Called on every new planting (rotation or same-crop replant): the treatment is
+---consumed by the new stand regardless, while disease reset stays gated to a real rotation.
+-- @param table field
+-- @param number minX, minZ, maxX, maxZ, table farmlandFilter Optional, reused from clearField
+function RealisticCropRotationDiseaseGrid:clearFieldProtection(field, minX, minZ, maxX, maxZ, farmlandFilter)
+    if g_terrainNode == nil or DensityMapModifier == nil then return end
+    if minX == nil then
+        minX, minZ, maxX, maxZ, farmlandFilter = fieldClearParams(field)
+        if minX == nil then return end
+    end
+
     for _, protectionMapId in ipairs({ self.fungicideProtectionMapId, self.nematicideProtectionMapId }) do
         if protectionMapId ~= nil then
             local protModifier = DensityMapModifier.new(protectionMapId, 0, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, g_terrainNode)
@@ -249,6 +273,7 @@ function RealisticCropRotationDiseaseGrid:clearField(field)
             end
         end
     end
+    self.protectionRevision = (self.protectionRevision or 0) + 1
 end
 
 function RealisticCropRotationDiseaseGrid:clearAll()
