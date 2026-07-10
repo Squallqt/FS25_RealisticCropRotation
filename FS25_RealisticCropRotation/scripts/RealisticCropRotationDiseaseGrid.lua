@@ -205,10 +205,9 @@ function RealisticCropRotationDiseaseGrid:paintFarmlandRisk(field, farmlandId, b
     return true
 end
 
----Bbox + farmland-mask filter for a field's cells, shared by clearField and clearFieldProtection so
----the bounds are computed once even when both wipe the same field back to back.
+---Bbox + farmland-mask filter for a field's cells, reused by clearField and clearFieldProtection.
 -- @param table field
--- @return number minX, minZ, maxX, maxZ (nil if the field has no bounds), table farmlandFilter or nil
+-- @return number minX, minZ, maxX, maxZ (nil if unbounded), table farmlandFilter or nil
 local function fieldClearParams(field)
     local minX, minZ, maxX, maxZ = fieldWorldBounds(field)
     if minX == nil then return nil end
@@ -250,9 +249,7 @@ function RealisticCropRotationDiseaseGrid:clearField(field)
     self:clearFieldProtection(field, minX, minZ, maxX, maxZ, farmlandFilter)
 end
 
----Wipes only this field's curative/preventive protection (fungicide + nematicide), leaving disease
----marks untouched. Called on every new planting (rotation or same-crop replant): the treatment is
----consumed by the new stand regardless, while disease reset stays gated to a real rotation.
+---Wipes only this field's curative/preventive protection, leaving disease marks untouched.
 -- @param table field
 -- @param number minX, minZ, maxX, maxZ, table farmlandFilter Optional, reused from clearField
 function RealisticCropRotationDiseaseGrid:clearFieldProtection(field, minX, minZ, maxX, maxZ, farmlandFilter)

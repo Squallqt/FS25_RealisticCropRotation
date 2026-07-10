@@ -3132,11 +3132,15 @@ function RealisticCropRotationFrame:populateGroupCell(index, cell)
         areaEl:setText(self:formatAreaHa(group.areaHa))
     end
 
-    -- Score label
+    -- Unplanned rotations show no badge (calcRotationScore floors to 0, which reads as "Bad").
     local scoreEl = cell:getAttribute("gScore")
     if scoreEl ~= nil then
-        local scoreLabelKey, r, g, b = self:getScoreLabel(group.score)
-        local scoreLabel = scoreLabelKey ~= nil and self.i18n:getText(scoreLabelKey) or ""
+        local scoreLabel, r, g, b = "", 1, 1, 1
+        if not group.isUnplanned then
+            local scoreLabelKey
+            scoreLabelKey, r, g, b = self:getScoreLabel(group.score)
+            scoreLabel = scoreLabelKey ~= nil and self.i18n:getText(scoreLabelKey) or ""
+        end
         scoreEl:setText(scoreLabel)
         if scoreEl.setVisible ~= nil then scoreEl:setVisible(scoreLabel ~= "") end
         scoreEl.textColor = {r, g, b, 1.0}

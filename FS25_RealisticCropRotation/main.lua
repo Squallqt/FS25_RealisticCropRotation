@@ -199,9 +199,8 @@ local function onPeriodChanged()
             changed = true
         end
         if RealisticCropRotation.disease ~= nil then
-            -- Infection roll + crop-change reset only. Severity progression and crop destruction now
-            -- run day by day (onDayChanged), never in this once-a-period burst. rotationChanged also
-            -- forces the reset on a same-crop replant (monoculture), reusing the rotation-history signal.
+            -- Infection roll + reset only here (freshCycle also resets treatment on same-crop replant).
+            -- Severity progression and crop destruction run day by day (onDayChanged), not in this burst.
             RealisticCropRotation.disease:evaluateInfection(farmlandId, rotationChanged)
             diseaseUpdated = true
         end

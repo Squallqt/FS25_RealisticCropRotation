@@ -130,8 +130,7 @@ local function isPointProtected(protectionMapId, mapSize, worldX, worldZ)
     return (getBitVectorMapPoint(protectionMapId, localX, localZ, 0, 1) or 0) > 0
 end
 
----Appends a disease status line for every group with active severity, regardless of protection: the
----underlying pressure keeps building under a treated cell, so it stays visible next to the treatment line.
+---Appends a disease status line for every group with active severity, regardless of protection.
 -- @param table fieldBox Field-info box with addLine
 -- @param integer farmlandId
 function RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
@@ -153,8 +152,7 @@ function RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
     end
 end
 
----Appends a treatment line when the player stands on a cell currently protected (fungicide and/or
----nematicide), so the on-foot HUD confirms a spray actually took on this cell.
+---Appends a treatment line for each protection family active under the player's feet.
 -- @param table fieldBox Field-info box with addLine
 function RealisticCropRotationHud.addTreatmentLine(fieldBox)
     if fieldBox == nil or fieldBox.addLine == nil then return end

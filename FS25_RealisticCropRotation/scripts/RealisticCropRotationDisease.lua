@@ -242,17 +242,15 @@ end
 ---Server: a living host of a pathogen, at that pathogen's growth window, may be infected by the
 ---field's load. Rolled once per pathogen per crop cycle; seeds the destruction pattern on infection.
 -- @param integer farmlandId
--- @param boolean freshCycle True when rotation reconciliation just detected a genuine new planting
--- (crop change or same-crop replant); only ever consumes the treatment, never the disease state below.
+-- @param boolean freshCycle True on any new planting; resets treatment only, never disease state
 function RealisticCropRotationDisease:evaluateInfection(farmlandId, freshCycle)
     if g_server == nil then return end
     local mgr = self.manager
     if mgr == nil then return end
     local cropName, _, growthState = mgr:getActiveCropInfo(farmlandId)
 
-    -- Disease reset stays gated to a CONFIRMED rotation to a different crop, never on a momentary "no
-    -- crop" read (disease-caused bare patches, mid-harvest), which must not wipe an active infection,
-    -- and never on a same-crop replant, where the inoculum load carries over by design.
+    -- Disease reset stays gated to a confirmed rotation to a different crop -- never on a momentary
+    -- "no crop" read, and never on a same-crop replant (inoculum load carries over by design).
     local previousCrop = self.crop[farmlandId]
     if cropName ~= nil then
         local rotated = previousCrop ~= nil and previousCrop ~= cropName
