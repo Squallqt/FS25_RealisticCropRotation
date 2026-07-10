@@ -380,6 +380,9 @@ local function loadedMission()
 
     RealisticCropRotation.manager = RealisticCropRotationManager.new()
     RealisticCropRotation.manager:initialize()
+    if type(RealisticCropRotation.manager.registerConsoleCommands) == "function" then
+        RealisticCropRotation.manager:registerConsoleCommands()
+    end
 
     RealisticCropRotation.grid = RealisticCropRotationDiseaseGrid.new()
     RealisticCropRotation.disease = RealisticCropRotationDisease.new(RealisticCropRotation.manager, RealisticCropRotation.grid)
@@ -603,6 +606,9 @@ local function initRealisticCropRotation()
             RealisticCropRotation.disease:unregisterConsoleCommands()
         end
         if RealisticCropRotation.manager ~= nil then
+            if type(RealisticCropRotation.manager.unregisterConsoleCommands) == "function" then
+                RealisticCropRotation.manager:unregisterConsoleCommands()
+            end
             RealisticCropRotation.manager:cleanup()
             RealisticCropRotation.manager = nil
         end

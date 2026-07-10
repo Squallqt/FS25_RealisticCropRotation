@@ -60,29 +60,60 @@ local function isRealFarmOwner(farmId)
     return true
 end
 
----World-space axis-aligned bounding box of a field's polygon corner nodes (Field has no `fieldDimensions`).
+---World-space polygon vertices for a field, resolved from its scene-graph corner nodes.
 -- @param table field
--- @return number minX, maxX, minZ, maxZ, or nil when geometry is unavailable
-local function fieldPolygonBounds(field)
+-- @return table vertices Array of {x=, z=} world points, or nil when geometry is unavailable
+local function getFieldPolygonVertices(field)
     if field == nil or getWorldTranslation == nil then return nil end
     local points = field.polygonPoints
     if type(points) ~= "table" or #points == 0 then return nil end
 
-    local minX, maxX, minZ, maxZ
+    local vertices = {}
     for _, node in ipairs(points) do
         if node ~= nil then
             local ok, x, _, z = pcall(getWorldTranslation, node)
             if ok and type(x) == "number" and type(z) == "number" then
-                if minX == nil or x < minX then minX = x end
-                if maxX == nil or x > maxX then maxX = x end
-                if minZ == nil or z < minZ then minZ = z end
-                if maxZ == nil or z > maxZ then maxZ = z end
+                table.insert(vertices, { x = x, z = z })
             end
         end
     end
+    if #vertices == 0 then return nil end
+    return vertices
+end
 
-    if minX == nil then return nil end
+---World-space axis-aligned bounding box of a field's polygon corner nodes (Field has no `fieldDimensions`).
+-- @param table field
+-- @return number minX, maxX, minZ, maxZ, or nil when geometry is unavailable
+local function fieldPolygonBounds(field)
+    local vertices = getFieldPolygonVertices(field)
+    if vertices == nil then return nil end
+
+    local minX, maxX, minZ, maxZ
+    for _, v in ipairs(vertices) do
+        if minX == nil or v.x < minX then minX = v.x end
+        if maxX == nil or v.x > maxX then maxX = v.x end
+        if minZ == nil or v.z < minZ then minZ = v.z end
+        if maxZ == nil or v.z > maxZ then maxZ = v.z end
+    end
     return minX, maxX, minZ, maxZ
+end
+
+---True when a 2D point lies inside a polygon (ray-casting / even-odd rule).
+-- @param number x, z; @param table vertices Array of {x=, z=}
+-- @return boolean inside
+local function isPointInPolygon(x, z, vertices)
+    if vertices == nil or #vertices < 3 then return false end
+    local inside = false
+    local j = #vertices
+    for i = 1, #vertices do
+        local vi, vj = vertices[i], vertices[j]
+        if (vi.z > z) ~= (vj.z > z) then
+            local edgeX = vi.x + (vj.x - vi.x) * (z - vi.z) / (vj.z - vi.z)
+            if x < edgeX then inside = not inside end
+        end
+        j = i
+    end
+    return inside
 end
 
 ---Returns the first usable Field object attached to a farmland.
@@ -183,15 +214,13 @@ local function getFruitTypeIndexAtWorldPos(x, z)
     return normalizeFruitTypeIndex(fruitTypeIndex), true, tonumber(growthState)
 end
 
----Appends interior sample points across the field, masked to worked ground so off-field corners of an angled field don't skew the majority-crop vote.
+---Appends interior sample points kept only when truly inside the field's polygon, not just its bounding box.
 -- @param table field
 -- @param table samples Accumulator of { x, z } points
 local function collectFieldInteriorSamples(field, samples)
+    local vertices = getFieldPolygonVertices(field)
     local minX, maxX, minZ, maxZ = fieldPolygonBounds(field)
-    if minX == nil then return end
-
-    local terrainDetailId = g_currentMission ~= nil and g_currentMission.terrainDetailId or nil
-    local canMask = terrainDetailId ~= nil and getDensityAtWorldPos ~= nil
+    if vertices == nil or minX == nil then return end
 
     -- Spread from near-edge to near-edge, not just the central band: a localized destruction patch
     -- (disease, etc.) must not be able to outvote crop still standing near the field's borders.
@@ -204,7 +233,7 @@ local function collectFieldInteriorSamples(field, samples)
     for _, offset in ipairs(offsets) do
         local x = minX + (maxX - minX) * offset[1]
         local z = minZ + (maxZ - minZ) * offset[2]
-        if not canMask or getDensityAtWorldPos(terrainDetailId, x, 0, z) ~= 0 then
+        if isPointInPolygon(x, z, vertices) then
             table.insert(samples, { x = x, z = z })
         end
     end
@@ -227,6 +256,7 @@ local function getFieldFruitTypeIndexFromDensityMap(field)
     collectFieldInteriorSamples(field, samples)
 
     local sampled = false
+    local noneCount = 0
     local counts = {}
     local growthStateCounts = {}
     for _, sample in ipairs(samples) do
@@ -241,14 +271,18 @@ local function getFieldFruitTypeIndexFromDensityMap(field)
                     growthStateCounts[fruitTypeIndex] = growthStateCounts[fruitTypeIndex] or {}
                     growthStateCounts[fruitTypeIndex][growthState] = (growthStateCounts[fruitTypeIndex][growthState] or 0) + 1
                 end
+            else
+                noneCount = noneCount + 1
             end
         end
     end
 
     if not sampled then return nil, false end
 
+    -- "No crop" is itself a vote: a single stray hit must not outvote a field that reads bare
+    -- everywhere else (e.g. a sample point landing just past the field's edge).
     local bestFruitTypeIndex = nil
-    local bestCount = 0
+    local bestCount = noneCount
     for fruitTypeIndex, count in pairs(counts) do
         if count > bestCount then
             bestFruitTypeIndex = fruitTypeIndex
@@ -1491,4 +1525,73 @@ function RealisticCropRotationManager:getFieldCropInfo(farmlandId)
         weedHeader      = weedHeader,
         weedActionText  = weedValue,
     }
+end
+
+---TEMP diagnostic, read-only: prints which field a farmland resolves to (id/position/polygon), every
+---individual sample point the majority-vote crop read draws from, and a cache-bypassed active-crop read.
+-- @param string farmlandId
+-- @return string message
+function RealisticCropRotationManager:consoleFieldDebug(farmlandId)
+    local n = tonumber(farmlandId)
+    if n == nil or n <= 0 then return "Usage: rcrFieldDebug <farmlandId>" end
+
+    local field = self:getFieldByFarmlandId(n)
+    local lines = { string.format("farmlandId=%d", n) }
+    if field == nil then
+        table.insert(lines, "field=nil")
+        local message = table.concat(lines, " | ")
+        Logging.info("[RealisticCropRotation] %s", message)
+        return message
+    end
+
+    local fieldFarmlandId = field.farmland ~= nil and tonumber(field.farmland.id) or nil
+    local polyCount = type(field.polygonPoints) == "table" and #field.polygonPoints or 0
+    table.insert(lines, string.format("field.farmland.id=%s posX=%s posZ=%s polygonPoints=%d",
+        tostring(fieldFarmlandId), tostring(field.posX), tostring(field.posZ), polyCount))
+
+    local minX, maxX, minZ, maxZ = fieldPolygonBounds(field)
+    table.insert(lines, string.format("bounds minX=%s maxX=%s minZ=%s maxZ=%s",
+        tostring(minX), tostring(maxX), tostring(minZ), tostring(maxZ)))
+
+    local samples = {}
+    if type(field.posX) == "number" and type(field.posZ) == "number" then
+        table.insert(samples, { x = field.posX, z = field.posZ })
+    end
+    local centerCount = #samples
+    collectFieldInteriorSamples(field, samples)
+
+    for i, sample in ipairs(samples) do
+        local fruitTypeIndex, sampled, growthState = getFruitTypeIndexAtWorldPos(sample.x, sample.z)
+        local fruitName = "none"
+        if fruitTypeIndex ~= nil and g_fruitTypeManager ~= nil then
+            local ft = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
+            if ft ~= nil and ft.name ~= nil then fruitName = ft.name end
+        end
+        local label = i <= centerCount and "center" or ("interior" .. (i - centerCount))
+        table.insert(lines, string.format("%s(%.1f,%.1f)=%s/gs%s/sampled%s",
+            label, sample.x, sample.z, fruitName, tostring(growthState), tostring(sampled)))
+    end
+
+    self:invalidateActiveCropCache(n)
+    local cropName, fruitTypeIndex, growthState = self:getActiveCropInfo(n)
+    table.insert(lines, string.format("MAJORITY activeCrop=%s fruitTypeIndex=%s growthState=%s",
+        tostring(cropName), tostring(fruitTypeIndex), tostring(growthState)))
+
+    local message = table.concat(lines, " | ")
+    Logging.info("[RealisticCropRotation] %s", message)
+    return message
+end
+
+---Registers rcrFieldDebug (temp diagnostic console command).
+function RealisticCropRotationManager:registerConsoleCommands()
+    if self.consoleCommandsRegistered or type(addConsoleCommand) ~= "function" then return end
+    self.consoleCommandsRegistered = true
+    addConsoleCommand("rcrFieldDebug", "TEMP diagnostic, read-only: rcrFieldDebug <farmlandId>", "consoleFieldDebug", self, "farmlandId")
+end
+
+---Unregisters rcrFieldDebug.
+function RealisticCropRotationManager:unregisterConsoleCommands()
+    if not self.consoleCommandsRegistered then return end
+    self.consoleCommandsRegistered = false
+    removeConsoleCommand("rcrFieldDebug")
 end

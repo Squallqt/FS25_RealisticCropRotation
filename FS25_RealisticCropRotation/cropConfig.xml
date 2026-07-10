@@ -53,6 +53,7 @@
     <crop name="SORGHUM"       family="CEREAL" disease="FUSARIOSE" />
     <crop name="WINTERWHEAT"   family="CEREAL" disease="PIETIN SEPTORIOSE ROUILLE FUSARIOSE" />
     <crop name="WINTERBARLEY"  family="CEREAL" disease="PIETIN SEPTORIOSE ROUILLE FUSARIOSE" />
+    <crop name="RICE"          family="CEREAL" />
     <crop name="RICELONGGRAIN" family="CEREAL" />
     <crop name="SILAGEMAIZE"   family="CEREAL" disease="FUSARIOSE" />
     <crop name="GREENRYE"      family="CEREAL" disease="PIETIN" />
