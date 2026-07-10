@@ -1554,6 +1554,11 @@ function RealisticCropRotationFrame:getCurrentSlotData(farmlandId)
         activeCropName = mgr:getActiveCropName(farmlandId)
     end
 
+    if (activeCropName == nil or activeCropName == "") and RealisticCropRotation ~= nil
+        and mgr ~= nil and type(mgr.isCurrentGapFallow) == "function" and mgr:isCurrentGapFallow(farmlandId) then
+        activeCropName = RealisticCropRotation.SPECIAL_CROP_FALLOW
+    end
+
     if activeCropName ~= nil and activeCropName ~= "" then
         return activeCropName, self:getCropFamily(activeCropName), nil
     end

@@ -56,6 +56,11 @@ function RealisticCropRotationHud.getCropDisplayName(cropName)
 
     local normalizedName = string.upper(tostring(cropName))
 
+    if RealisticCropRotation ~= nil and type(RealisticCropRotation.isFallowCrop) == "function"
+        and RealisticCropRotation.isFallowCrop(normalizedName) then
+        return RealisticCropRotationHud.getText("rcr_fallow", "Fallow")
+    end
+
     if g_fruitTypeManager ~= nil and g_fruitTypeManager.getFruitTypeByName ~= nil then
         local fruitType = g_fruitTypeManager:getFruitTypeByName(normalizedName)
         if fruitType ~= nil then

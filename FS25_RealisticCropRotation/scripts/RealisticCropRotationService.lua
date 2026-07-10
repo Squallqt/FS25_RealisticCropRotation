@@ -283,8 +283,9 @@ end
 -- @param string currentCropName Crop currently on the field
 -- @param integer currentFruitTypeIndex Current fruit type index
 -- @param number currentGrowthState Current growth state
+-- @param boolean groundWorked True when the bare field has been tilled since harvest (ignored while a crop is present)
 -- @return boolean changed
-function RealisticCropRotationService:reconcileActiveCrop(farmlandId, currentCropName, currentFruitTypeIndex, currentGrowthState)
+function RealisticCropRotationService:reconcileActiveCrop(farmlandId, currentCropName, currentFruitTypeIndex, currentGrowthState, groundWorked)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
 
@@ -293,16 +294,15 @@ function RealisticCropRotationService:reconcileActiveCrop(farmlandId, currentCro
     local lastKnownCrop = self.repository:getLastKnownActiveCrop(numericFarmlandId)
     local lastKnownGrowthState = self.repository:getLastKnownGrowthState(numericFarmlandId)
 
-    if lastKnownCrop == nil or lastKnownCrop == "" then
-        local activeChanged = self.repository:setLastKnownActiveCrop(numericFarmlandId, normalizedCurrentCrop)
-        if normalizedCurrentCrop ~= nil then
-            self.repository:setLastKnownGrowthState(numericFarmlandId, normalizedCurrentGrowthState)
-        end
-        return activeChanged
-    end
-
     if lastKnownCrop == normalizedCurrentCrop then
-        if normalizedCurrentCrop == nil or normalizedCurrentGrowthState == nil then
+        if normalizedCurrentCrop == nil then
+            -- Fallow gap closes only once the ground is worked, not merely because it's bare.
+            if groundWorked then
+                return self:pushFallowIfPlanned(numericFarmlandId)
+            end
+            return false
+        end
+        if normalizedCurrentGrowthState == nil then
             return false
         end
 
@@ -317,10 +317,44 @@ function RealisticCropRotationService:reconcileActiveCrop(farmlandId, currentCro
         return pushed
     end
 
+    -- Old crop ended (or this is the first-ever read, when lastKnownCrop is nil and this no-ops).
     local pushed = self:pushHistoryCrop(numericFarmlandId, lastKnownCrop, true)
+    local fallowPushed = false
+    if normalizedCurrentCrop ~= nil then
+        fallowPushed = self:pushFallowIfPlanned(numericFarmlandId)
+    end
     local activeChanged = self.repository:setLastKnownActiveCrop(numericFarmlandId, normalizedCurrentCrop)
-    self.repository:setLastKnownGrowthState(numericFarmlandId, normalizedCurrentGrowthState)
-    return pushed or activeChanged
+    if normalizedCurrentCrop ~= nil then
+        self.repository:setLastKnownGrowthState(numericFarmlandId, normalizedCurrentGrowthState)
+    end
+    return pushed or fallowPushed or activeChanged
+end
+
+---True when the plan slot right after the most recently harvested crop is set to fallow.
+-- @param integer farmlandId
+-- @return boolean isFallow
+function RealisticCropRotationService:isCurrentGapFallow(farmlandId)
+    if RealisticCropRotation == nil or type(RealisticCropRotation.isFallowCrop) ~= "function" then return false end
+
+    local lastEntry = self.repository:getHistory(farmlandId)[1]
+    local lastCrop = lastEntry ~= nil and lastEntry.crop or nil
+    if lastCrop == nil or RealisticCropRotation.isFallowCrop(lastCrop) then return false end
+
+    local plan = self.repository:getPlan(farmlandId)
+    for i = 1, 4 do
+        if plan[i] == lastCrop then
+            return RealisticCropRotation.isFallowCrop(plan[(i % 4) + 1])
+        end
+    end
+    return false
+end
+
+---Pushes a fallow entry when isCurrentGapFallow says so (pushHistoryCrop dedupes).
+-- @param integer farmlandId
+-- @return boolean changed
+function RealisticCropRotationService:pushFallowIfPlanned(farmlandId)
+    if not self:isCurrentGapFallow(farmlandId) then return false end
+    return self:pushHistoryCrop(farmlandId, RealisticCropRotation.SPECIAL_CROP_FALLOW, false)
 end
 
 -- MP sync helpers (server-authoritative).

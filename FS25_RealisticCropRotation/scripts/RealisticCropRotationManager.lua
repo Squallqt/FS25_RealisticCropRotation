@@ -239,6 +239,29 @@ local function collectFieldInteriorSamples(field, samples)
     end
 end
 
+---True when a fruit type's growth state is cut/withered (harvested residue, not a live crop).
+-- @param table fruitType; @param number growthState
+-- @return boolean isDone
+local function isFruitTypeCutOrWithered(fruitType, growthState)
+    if fruitType == nil or growthState == nil then return false end
+
+    if type(fruitType.getIsCut) == "function" then
+        local ok, isCut = pcall(fruitType.getIsCut, fruitType, growthState)
+        if ok and isCut then return true end
+    elseif fruitType.cutState ~= nil and growthState == tonumber(fruitType.cutState) then
+        return true
+    end
+
+    if type(fruitType.getIsWithered) == "function" then
+        local ok, isWithered = pcall(fruitType.getIsWithered, fruitType, growthState)
+        if ok and isWithered then return true end
+    elseif fruitType.witheredState ~= nil and growthState == tonumber(fruitType.witheredState) then
+        return true
+    end
+
+    return false
+end
+
 ---Majority fruit type over field samples from the density map.
 -- @param table field
 -- @return integer fruitTypeIndex, or nil
@@ -263,7 +286,9 @@ local function getFieldFruitTypeIndexFromDensityMap(field)
         local fruitTypeIndex, didSample, growthState = getFruitTypeIndexAtWorldPos(sample.x, sample.z)
         if didSample then
             sampled = true
-            if fruitTypeIndex ~= nil then
+            local fruitType = fruitTypeIndex ~= nil and g_fruitTypeManager ~= nil
+                and g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex) or nil
+            if fruitTypeIndex ~= nil and not isFruitTypeCutOrWithered(fruitType, tonumber(growthState)) then
                 counts[fruitTypeIndex] = (counts[fruitTypeIndex] or 0) + 1
                 growthState = tonumber(growthState)
                 if growthState ~= nil then
@@ -322,23 +347,7 @@ local function getFieldFruitTypeIndexFromFieldState(field)
         fruitType = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
     end
 
-    if fruitType ~= nil then
-        if growthState ~= nil then
-            if type(fruitType.getIsCut) == "function" then
-                local ok, isCut = pcall(fruitType.getIsCut, fruitType, growthState)
-                if ok and isCut then return nil end
-            elseif fruitType.cutState ~= nil and growthState == tonumber(fruitType.cutState) then
-                return nil
-            end
-
-            if type(fruitType.getIsWithered) == "function" then
-                local ok, isWithered = pcall(fruitType.getIsWithered, fruitType, growthState)
-                if ok and isWithered then return nil end
-            elseif fruitType.witheredState ~= nil and growthState == tonumber(fruitType.witheredState) then
-                return nil
-            end
-        end
-    end
+    if isFruitTypeCutOrWithered(fruitType, growthState) then return nil end
 
     return fruitTypeIndex, growthState
 end
@@ -891,11 +900,34 @@ function RealisticCropRotationManager:reconcileActiveCropForFarmland(farmlandId)
     if isPureClient() then return false end
 
     local currentCropName, currentFruitTypeIndex, currentGrowthState = self:getActiveCropInfo(farmlandId)
-    local changed = self.service:reconcileActiveCrop(farmlandId, currentCropName, currentFruitTypeIndex, currentGrowthState)
+    -- Only worth sampling ground state while the field is bare: irrelevant once a crop is growing.
+    local groundWorked = currentCropName == nil and self:isFieldGroundWorked(farmlandId)
+    local changed = self.service:reconcileActiveCrop(farmlandId, currentCropName, currentFruitTypeIndex, currentGrowthState, groundWorked)
     if changed then
         self:invalidateActiveCropCache(farmlandId)
     end
     return changed
+end
+
+---True when the field's native ground state shows real tillage work, not just post-harvest stubble.
+-- @param integer farmlandId
+-- @return boolean isWorked
+function RealisticCropRotationManager:isFieldGroundWorked(farmlandId)
+    local field = self:getFieldByFarmlandId(farmlandId)
+    if field == nil or MapOverlayGenerator == nil or MapOverlayGenerator.GROWTH_STATE_INDEX == nil then
+        return false
+    end
+    local groundIndex = getNativeGroundStateIndex(field)
+    if groundIndex == nil then return false end
+    return groundIndex ~= MapOverlayGenerator.GROWTH_STATE_INDEX.STUBBLE_TILLAGE
+end
+
+---True when this farmland's plan calls the current gap a fallow year.
+-- @param integer farmlandId
+-- @return boolean isFallow
+function RealisticCropRotationManager:isCurrentGapFallow(farmlandId)
+    if self.service == nil or type(self.service.isCurrentGapFallow) ~= "function" then return false end
+    return self.service:isCurrentGapFallow(farmlandId)
 end
 
 ---Most important no-crop field status (tillage + soil merged via fieldStatusRank).
@@ -1527,8 +1559,7 @@ function RealisticCropRotationManager:getFieldCropInfo(farmlandId)
     }
 end
 
----TEMP diagnostic, read-only: prints which field a farmland resolves to (id/position/polygon), every
----individual sample point the majority-vote crop read draws from, and a cache-bypassed active-crop read.
+---TEMP diagnostic, read-only: prints a field's resolved position/polygon and every crop sample.
 -- @param string farmlandId
 -- @return string message
 function RealisticCropRotationManager:consoleFieldDebug(farmlandId)
