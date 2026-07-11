@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="Aktuální stav pole" />
         <e k="rcr_section_lime"         v="Stav vápna / pH" />
         <e k="rcr_section_plan"         v="Plán osevního postupu" />
+        <e k="rcr_clear_plan_button"    v="Vymazat plán" />
+        <e k="rcr_clear_plan_confirm"   v="Vymazat plán osevního postupu pro %s?" />
         <e k="rcr_section_score"        v="Kvalita osevního postupu" />
         <e k="rcr_section_overview"     v="Celkový přehled" />
         <e k="rcr_overview_total_area"  v="Obdělaná plocha: %.1f ha" />

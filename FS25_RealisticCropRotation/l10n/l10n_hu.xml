@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="Tábla aktuális állapota" />
         <e k="rcr_section_lime"         v="Mész-/pH-állapot" />
         <e k="rcr_section_plan"         v="Vetésforgó-terv" />
+        <e k="rcr_clear_plan_button"    v="Terv törlése" />
+        <e k="rcr_clear_plan_confirm"   v="Törli a(z) %s vetésforgó-tervét?" />
         <e k="rcr_section_score"        v="Vetésforgó minősége" />
         <e k="rcr_section_overview"     v="Általános áttekintés" />
         <e k="rcr_overview_total_area"  v="Megművelt terület: %.1f ha" />

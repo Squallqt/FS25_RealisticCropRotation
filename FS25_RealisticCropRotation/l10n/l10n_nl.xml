@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="Huidige veldstatus" />
         <e k="rcr_section_lime"         v="Kalk-/pH-status" />
         <e k="rcr_section_plan"         v="Rotatieplan" />
+        <e k="rcr_clear_plan_button"    v="Plan wissen" />
+        <e k="rcr_clear_plan_confirm"   v="Rotatieplan van %s wissen?" />
         <e k="rcr_section_score"        v="Rotatiekwaliteit" />
         <e k="rcr_section_overview"     v="Algemeen overzicht" />
         <e k="rcr_overview_total_area"  v="Bewerkte oppervlakte: %.1f ha" />

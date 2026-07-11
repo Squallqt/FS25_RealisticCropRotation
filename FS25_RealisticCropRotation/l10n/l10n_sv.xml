@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="Aktuell fältstatus" />
         <e k="rcr_section_lime"         v="Kalk-/pH-status" />
         <e k="rcr_section_plan"         v="Växtföljdsplan" />
+        <e k="rcr_clear_plan_button"    v="Rensa plan" />
+        <e k="rcr_clear_plan_confirm"   v="Rensa växtföljdsplanen för %s?" />
         <e k="rcr_section_score"        v="Växtföljdskvalitet" />
         <e k="rcr_section_overview"     v="Översikt" />
         <e k="rcr_overview_total_area"  v="Bearbetad areal: %.1f ha" />

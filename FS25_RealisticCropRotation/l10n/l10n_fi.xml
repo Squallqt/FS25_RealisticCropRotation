@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="Pellon nykytila" />
         <e k="rcr_section_lime"         v="Kalkki-/pH-tila" />
         <e k="rcr_section_plan"         v="Viljelykiertosuunnitelma" />
+        <e k="rcr_clear_plan_button"    v="Tyhjennä suunnitelma" />
+        <e k="rcr_clear_plan_confirm"   v="Tyhjennetäänkö kohteen %s viljelykiertosuunnitelma?" />
         <e k="rcr_section_score"        v="Viljelykierron laatu" />
         <e k="rcr_section_overview"     v="Yleiskatsaus" />
         <e k="rcr_overview_total_area"  v="Käsitelty pinta-ala: %.1f ha" />

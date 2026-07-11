@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="Status lahan saat ini" />
         <e k="rcr_section_lime"         v="Status Kapur / pH" />
         <e k="rcr_section_plan"         v="Rencana Rotasi" />
+        <e k="rcr_clear_plan_button"    v="Hapus rencana" />
+        <e k="rcr_clear_plan_confirm"   v="Hapus rencana rotasi untuk %s?" />
         <e k="rcr_section_score"        v="Kualitas Rotasi" />
         <e k="rcr_section_overview"     v="Ikhtisar Global" />
         <e k="rcr_overview_total_area"  v="Luas digarap: %.1f ha" />

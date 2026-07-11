@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="Trạng thái ruộng hiện tại" />
         <e k="rcr_section_lime"         v="Trạng thái vôi / pH" />
         <e k="rcr_section_plan"         v="Kế hoạch luân canh" />
+        <e k="rcr_clear_plan_button"    v="Xóa kế hoạch" />
+        <e k="rcr_clear_plan_confirm"   v="Xóa kế hoạch luân canh của %s?" />
         <e k="rcr_section_score"        v="Chất lượng luân canh" />
         <e k="rcr_section_overview"     v="Tổng quan" />
         <e k="rcr_overview_total_area"  v="Diện tích canh tác: %.1f ha" />

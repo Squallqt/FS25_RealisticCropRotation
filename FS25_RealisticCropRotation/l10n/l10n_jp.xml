@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="現在の畑の状態" />
         <e k="rcr_section_lime"         v="石灰 / pH の状態" />
         <e k="rcr_section_plan"         v="輪作計画" />
+        <e k="rcr_clear_plan_button"    v="計画を消去" />
+        <e k="rcr_clear_plan_confirm"   v="%s の輪作計画を消去しますか？" />
         <e k="rcr_section_score"        v="輪作の品質" />
         <e k="rcr_section_overview"     v="全体概要" />
         <e k="rcr_overview_total_area"  v="耕作面積: %.1f ha" />

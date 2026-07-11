@@ -267,10 +267,22 @@ function RealisticCropRotationFrame:onFrameClose()
     RealisticCropRotationFrame:superClass().onFrameClose(self)
 end
 
----Returns the menu button info (no custom buttons).
+---Returns the menu button info: back + page nav always, plus "Clear plan" while Planning is active.
 -- @return table buttons
 function RealisticCropRotationFrame:getMenuButtonInfo()
-    return {}
+    local buttons = {
+        { inputAction = InputAction.MENU_BACK },
+        { inputAction = InputAction.MENU_PAGE_PREV },
+        { inputAction = InputAction.MENU_PAGE_NEXT },
+    }
+    if not self:isHistoryTab() and self.selectedId ~= nil then
+        table.insert(buttons, {
+            text = self.i18n:getText("rcr_clear_plan_button"),
+            inputAction = InputAction.MENU_CANCEL,
+            callback = function() self:onClickClearPlan() end,
+        })
+    end
+    return buttons
 end
 
 -- HELPERS
@@ -1527,6 +1539,7 @@ end
 ---View selector callback: switches the visible panel and restores focus.
 function RealisticCropRotationFrame:onViewChanged()
     self:updateContainerVisibility()
+    self:setMenuButtonInfoDirty()
     if self:isHistoryTab() then
         self:updateDetailPanel(self.selectedId)
     else
@@ -2581,6 +2594,59 @@ function RealisticCropRotationFrame:handleCalendarCoverChange(slotIdx)
     end
 
     self:renderCalendarFromLocalPlans()
+
+    self:buildRotationGroups()
+    if self.listPlanOverview ~= nil then
+        self.listPlanOverview:reloadData()
+    end
+end
+
+---"Effacer le plan" button: confirms before wiping the selected farmland's rotation plan.
+function RealisticCropRotationFrame:onClickClearPlan()
+    if self.selectedId == nil or YesNoDialog == nil then return end
+
+    local farmlandName = tostring(self.selectedId)
+    for _, entry in ipairs(self.farmlandList or {}) do
+        if entry.farmlandId == self.selectedId then farmlandName = entry.name or farmlandName break end
+    end
+
+    local farmlandId = self.selectedId
+    YesNoDialog.show(function(yes)
+        if yes then self:clearPlanForFarmland(farmlandId) end
+    end, self, string.format(self.i18n:getText("rcr_clear_plan_confirm"), farmlandName))
+end
+
+---Clears a farmland's rotation plan (event on MP client, direct on server) and refreshes the UI.
+-- @param integer farmlandId
+function RealisticCropRotationFrame:clearPlanForFarmland(farmlandId)
+    local isClientOnly = g_currentMission ~= nil and g_currentMission.getIsServer ~= nil
+        and not g_currentMission:getIsServer()
+
+    if isClientOnly then
+        if g_client ~= nil and g_client.getServerConnection ~= nil and RCRPlanUpdateEvent ~= nil then
+            local connection = g_client:getServerConnection()
+            if connection ~= nil then
+                for slotIdx = 1, 4 do
+                    connection:sendEvent(RCRPlanUpdateEvent.new(farmlandId, slotIdx, "", false))
+                    connection:sendEvent(RCRPlanUpdateEvent.new(farmlandId, slotIdx, "", true))
+                end
+            end
+        else
+            Logging.warning("[RealisticCropRotation][MP] Plan clear not sent: client connection or event unavailable")
+        end
+    else
+        local mgr = self:getManager()
+        local changed = mgr ~= nil and mgr.clearRotationPlan ~= nil and mgr:clearRotationPlan(farmlandId)
+        if changed and RealisticCropRotation ~= nil and RealisticCropRotation.requestBroadcast ~= nil then
+            RealisticCropRotation.requestBroadcast()
+        end
+    end
+
+    if farmlandId == self.selectedId then
+        self.calendarLocalPlan = {"", "", "", ""}
+        self.calendarLocalCoverPlan = {"", "", "", ""}
+        self:renderCalendarFromLocalPlans()
+    end
 
     self:buildRotationGroups()
     if self.listPlanOverview ~= nil then

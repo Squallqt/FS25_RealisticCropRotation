@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="Поточний стан поля" />
         <e k="rcr_section_lime"         v="Стан вапна / pH" />
         <e k="rcr_section_plan"         v="План сівозміни" />
+        <e k="rcr_clear_plan_button"    v="Очистити план" />
+        <e k="rcr_clear_plan_confirm"   v="Очистити план сівозміни для %s?" />
         <e k="rcr_section_score"        v="Якість сівозміни" />
         <e k="rcr_section_overview"     v="Загальний огляд" />
         <e k="rcr_overview_total_area"  v="Оброблена площа: %.1f га" />

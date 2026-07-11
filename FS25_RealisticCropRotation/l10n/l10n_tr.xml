@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="Mevcut tarla durumu" />
         <e k="rcr_section_lime"         v="Kireç / pH Durumu" />
         <e k="rcr_section_plan"         v="Rotasyon Planı" />
+        <e k="rcr_clear_plan_button"    v="Planı temizle" />
+        <e k="rcr_clear_plan_confirm"   v="%s için rotasyon planı temizlensin mi?" />
         <e k="rcr_section_score"        v="Rotasyon Kalitesi" />
         <e k="rcr_section_overview"     v="Genel Bakış" />
         <e k="rcr_overview_total_area"  v="İşlenen alan: %.1f ha" />

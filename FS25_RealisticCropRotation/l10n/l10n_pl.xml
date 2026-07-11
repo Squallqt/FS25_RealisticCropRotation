@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="Aktualny stan pola" />
         <e k="rcr_section_lime"         v="Stan wapna / pH" />
         <e k="rcr_section_plan"         v="Plan płodozmianu" />
+        <e k="rcr_clear_plan_button"    v="Wyczyść plan" />
+        <e k="rcr_clear_plan_confirm"   v="Wyczyścić plan płodozmianu dla %s?" />
         <e k="rcr_section_score"        v="Jakość płodozmianu" />
         <e k="rcr_section_overview"     v="Przegląd ogólny" />
         <e k="rcr_overview_total_area"  v="Powierzchnia uprawiana: %.1f ha" />

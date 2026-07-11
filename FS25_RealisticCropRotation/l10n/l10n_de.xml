@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="Aktueller Feldzustand" />
         <e k="rcr_section_lime"         v="Kalk-/pH-Status" />
         <e k="rcr_section_plan"         v="Rotationsplan" />
+        <e k="rcr_clear_plan_button"    v="Plan löschen" />
+        <e k="rcr_clear_plan_confirm"   v="Rotationsplan für %s löschen?" />
         <e k="rcr_section_score"        v="Rotationsqualität" />
         <e k="rcr_section_overview"     v="Gesamtübersicht" />
         <e k="rcr_overview_total_area"  v="Bewirtschaftete Fläche: %.1f ha" />

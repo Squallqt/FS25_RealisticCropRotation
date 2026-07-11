@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="Gjeldende jordestatus" />
         <e k="rcr_section_lime"         v="Kalk-/pH-status" />
         <e k="rcr_section_plan"         v="Vekstskifteplan" />
+        <e k="rcr_clear_plan_button"    v="Fjern plan" />
+        <e k="rcr_clear_plan_confirm"   v="Fjerne vekstskifteplanen for %s?" />
         <e k="rcr_section_score"        v="Vekstskiftekvalitet" />
         <e k="rcr_section_overview"     v="Samlet oversikt" />
         <e k="rcr_overview_total_area"  v="Bearbeidet areal: %.1f ha" />

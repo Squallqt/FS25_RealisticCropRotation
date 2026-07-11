@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="当前田块状态" />
         <e k="rcr_section_lime"         v="石灰 / pH 状态" />
         <e k="rcr_section_plan"         v="轮作计划" />
+        <e k="rcr_clear_plan_button"    v="清除计划" />
+        <e k="rcr_clear_plan_confirm"   v="清除 %s 的轮作计划？" />
         <e k="rcr_section_score"        v="轮作质量" />
         <e k="rcr_section_overview"     v="全局概览" />
         <e k="rcr_overview_total_area"  v="耕作面积: %.1f ha" />

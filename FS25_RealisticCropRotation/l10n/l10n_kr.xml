@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="현재 밭 상태" />
         <e k="rcr_section_lime"         v="석회 / pH 상태" />
         <e k="rcr_section_plan"         v="윤작 계획" />
+        <e k="rcr_clear_plan_button"    v="계획 삭제" />
+        <e k="rcr_clear_plan_confirm"   v="%s의 윤작 계획을 삭제하시겠습니까?" />
         <e k="rcr_section_score"        v="윤작 품질" />
         <e k="rcr_section_overview"     v="전체 개요" />
         <e k="rcr_overview_total_area"  v="경작 면적: %.1f ha" />

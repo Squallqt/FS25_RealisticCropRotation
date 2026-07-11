@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="Текущее состояние поля" />
         <e k="rcr_section_lime"         v="Состояние извести / pH" />
         <e k="rcr_section_plan"         v="План севооборота" />
+        <e k="rcr_clear_plan_button"    v="Очистить план" />
+        <e k="rcr_clear_plan_confirm"   v="Очистить план севооборота для %s?" />
         <e k="rcr_section_score"        v="Качество севооборота" />
         <e k="rcr_section_overview"     v="Общий обзор" />
         <e k="rcr_overview_total_area"  v="Обработанная площадь: %.1f га" />

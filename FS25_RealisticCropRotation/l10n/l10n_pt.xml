@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="Estado atual do campo" />
         <e k="rcr_section_lime"         v="Estado Cal / pH" />
         <e k="rcr_section_plan"         v="Plano de Rotação" />
+        <e k="rcr_clear_plan_button"    v="Limpar plano" />
+        <e k="rcr_clear_plan_confirm"   v="Limpar o plano de rotação de %s?" />
         <e k="rcr_section_score"        v="Qualidade da Rotação" />
         <e k="rcr_section_overview"     v="Vista Global" />
         <e k="rcr_overview_total_area"  v="Área trabalhada: %.1f ha" />

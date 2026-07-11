@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="目前田塊狀態" />
         <e k="rcr_section_lime"         v="石灰 / pH 狀態" />
         <e k="rcr_section_plan"         v="輪作計畫" />
+        <e k="rcr_clear_plan_button"    v="清除計畫" />
+        <e k="rcr_clear_plan_confirm"   v="清除 %s 的輪作計畫？" />
         <e k="rcr_section_score"        v="輪作品質" />
         <e k="rcr_section_overview"     v="全域概覽" />
         <e k="rcr_overview_total_area"  v="耕作面積: %.1f ha" />

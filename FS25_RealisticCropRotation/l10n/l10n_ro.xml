@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="Starea actuală a parcelei" />
         <e k="rcr_section_lime"         v="Stare Var / pH" />
         <e k="rcr_section_plan"         v="Plan de Rotație" />
+        <e k="rcr_clear_plan_button"    v="Șterge planul" />
+        <e k="rcr_clear_plan_confirm"   v="Ștergeți planul de rotație pentru %s?" />
         <e k="rcr_section_score"        v="Calitatea Rotației" />
         <e k="rcr_section_overview"     v="Prezentare Generală" />
         <e k="rcr_overview_total_area"  v="Suprafață lucrată: %.1f ha" />

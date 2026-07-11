@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="État actuel de la parcelle" />
         <e k="rcr_section_lime"         v="Statut Chaux / pH" />
         <e k="rcr_section_plan"         v="Plan de Rotation" />
+        <e k="rcr_clear_plan_button"    v="Effacer le plan" />
+        <e k="rcr_clear_plan_confirm"   v="Effacer le plan de rotation de %s?" />
         <e k="rcr_section_score"        v="Qualité de Rotation" />
         <e k="rcr_section_overview"     v="Aperçu Global" />
         <e k="rcr_overview_total_area"  v="Surface exploitée : %.1f ha" />

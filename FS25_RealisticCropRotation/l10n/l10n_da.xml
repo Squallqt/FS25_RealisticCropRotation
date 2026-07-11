@@ -57,6 +57,8 @@
         <e k="rcr_section_field"        v="Aktuel markstatus" />
         <e k="rcr_section_lime"         v="Kalk-/pH-status" />
         <e k="rcr_section_plan"         v="Sædskifteplan" />
+        <e k="rcr_clear_plan_button"    v="Ryd plan" />
+        <e k="rcr_clear_plan_confirm"   v="Ryd sædskifteplanen for %s?" />
         <e k="rcr_section_score"        v="Sædskiftekvalitet" />
         <e k="rcr_section_overview"     v="Samlet oversigt" />
         <e k="rcr_overview_total_area"  v="Bearbejdet areal: %.1f ha" />
