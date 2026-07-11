@@ -229,12 +229,6 @@ local function onDayChanged()
         and type(RealisticCropRotation.disease.enqueueDailyProgress) == "function" then
         RealisticCropRotation.disease:enqueueDailyProgress()
     end
-    -- Fade out the ephemeral "treated" ground visual (WATER_LEVEL) painted by the RCR sprayer:
-    -- nothing in the game consumes it, so we clear farmlands whose mark has aged past ~one month.
-    if RealisticCropRotationSprayerProducts ~= nil
-        and type(RealisticCropRotationSprayerProducts.fadeTreatedGround) == "function" then
-        RealisticCropRotationSprayerProducts.fadeTreatedGround()
-    end
 end
 
 ---Refreshes the open menu frame after a state change (history or planning tab).
@@ -404,10 +398,6 @@ local function loadedMission()
                 RealisticCropRotation.disease:refreshRiskMap(true)
             end
         end
-        if RealisticCropRotationSprayerProducts ~= nil
-            and type(RealisticCropRotationSprayerProducts.loadTreatedGround) == "function" then
-            RealisticCropRotationSprayerProducts.loadTreatedGround(savegameFolderPath)
-        end
         if g_messageCenter ~= nil and MessageType ~= nil and MessageType.FARMLAND_OWNER_CHANGED ~= nil then
             RealisticCropRotation.farmlandOwnerChangeListener = {
                 ownerChanged = function(_self, farmlandId, farmId, loadFromSavegame)
@@ -538,10 +528,6 @@ local function onSaveToXMLFile()
     end
     if RealisticCropRotation.disease ~= nil then
         RealisticCropRotation.disease:saveToXML(savegameFolderPath)
-    end
-    if RealisticCropRotationSprayerProducts ~= nil
-        and type(RealisticCropRotationSprayerProducts.saveTreatedGround) == "function" then
-        RealisticCropRotationSprayerProducts.saveTreatedGround(savegameFolderPath)
     end
 end
 

@@ -1,14 +1,10 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
--- Sprayer wiring for the RCR consumable products (RCR_FUNGICIDE / RCR_NEMATICIDE): registers their
--- sprayType, short-circuits the native ground treatment, paints our own disease protection/AI data,
--- and keeps the jet as the native white mist (a per-fillType recolour was not visible in-game).
--- processSprayerArea is overwritten at file-source time, not mission load: TypeManager:finalizeTypes()
--- copies it by value into every vehicleType before any load-time hook would run.
+-- Sprayer wiring for the RCR consumable products (RCR_FUNGICIDE / RCR_NEMATICIDE): registers their sprayType, ground paint, and disease-protection/AI data.
 RealisticCropRotationSprayerProducts = {}
 
 RealisticCropRotationSprayerProducts.PRODUCT_NAMES = { "RCR_FUNGICIDE", "RCR_NEMATICIDE" }
 
--- Treatment family per product, used to pick which per-cell protection map the sprayed strip marks.
+-- Treatment family per product; selects which per-cell protection map a sprayed strip marks.
 RealisticCropRotationSprayerProducts.PRODUCT_TREATMENTS = {
     RCR_FUNGICIDE = "FUNGICIDE",
     RCR_NEMATICIDE = "NEMATICIDE",
@@ -20,12 +16,9 @@ local productFillTypeSet = {}
 local productTreatmentByFillType = {}
 local hookInstalled = false
 
--- Treated-ground visual only (SPRAY_TYPE channel): adds no fertilisation, nitrogen or yield. Nothing
--- else clears it, so a daily sweep fades each painted farmland about a month after its last treatment.
--- Resolved at mission load from the FERTILISER spray type's ground value (nil disables the paint).
+-- Ground-paint value only (SPRAY_TYPE channel, no fertilisation/nitrogen/yield); the engine clears it
+-- on the crop's next growth-state transition. Resolved at mission load; nil disables the paint.
 local treatmentSprayType = nil
--- farmlandId -> painted bounds + last-painted day (server-only); drives the fade sweep, reset at mission load/teardown.
-local treatedGround = {}
 
 ---Returns true when the given fillType index is one of the RCR sprayer products.
 -- @param integer fillTypeIndex fillType index (may be nil)
@@ -52,9 +45,7 @@ local function ensureSprayTypes()
     local litersPerSecond = herbicideSprayType ~= nil and herbicideSprayType.litersPerSecond or 0.0081
     local sprayGroundType = herbicideSprayType ~= nil and herbicideSprayType.sprayGroundType or nil
 
-    -- Ground-visual value: reuse the base FERTILISER spray type's ground value so the treated strip
-    -- shows the game's fertiliser ground rendering. Only this visual channel (SPRAY_TYPE) is ever
-    -- written, never SPRAY_LEVEL, so it carries no fertilisation / nitrogen / yield.
+    -- Reuses FERTILIZER's ground value for the paint channel (SPRAY_TYPE only, never SPRAY_LEVEL, so no fertilisation/nitrogen/yield).
     local fertiliserSprayType = g_sprayTypeManager:getSprayTypeByName("FERTILIZER")
     treatmentSprayType = fertiliserSprayType ~= nil and fertiliserSprayType.sprayGroundType or nil
     if treatmentSprayType == nil then
@@ -70,9 +61,8 @@ local function ensureSprayTypes()
             productTreatmentByFillType[fillTypeIndex] = RealisticCropRotationSprayerProducts.PRODUCT_TREATMENTS[name]
 
             if g_sprayTypeManager:getSprayTypeByFillTypeIndex(fillTypeIndex) == nil then
-                -- HERBICIDE is the only engine spray type matching a crop-protection
-                -- liquid (SprayTypeManager only accepts FERTILIZER/HERBICIDE/LIME).
-                -- Its ground-side behavior is neutralized by the hook below.
+                -- HERBICIDE is the only engine sprayType accepting a custom fillType (SprayTypeManager
+                -- only allows FERTILIZER/HERBICIDE/LIME); its ground effect is neutralized below.
                 g_sprayTypeManager:addSprayType(name, litersPerSecond, "HERBICIDE", sprayGroundType, false)
             end
         end
@@ -80,21 +70,7 @@ local function ensureSprayTypes()
 
 end
 
----Adds the farmland under (x, z) to `out` once (dedup via `seen`); ignores invalid/unowned ids.
--- @param number x, z world position; @param table seen dedup set; @param table out farmland id list
-local function collectFarmland(x, z, seen, out)
-    if type(x) ~= "number" or type(z) ~= "number" then return end
-    if g_farmlandManager == nil or type(g_farmlandManager.getFarmlandIdAtWorldPosition) ~= "function" then return end
-    local fid = g_farmlandManager:getFarmlandIdAtWorldPosition(x, z)
-    if fid ~= nil and fid > 0 and not seen[fid] then
-        seen[fid] = true
-        out[#out + 1] = fid
-    end
-end
-
----Server: paints curative+preventive protection under the sprayed strip. A protected cell is excluded
----from all future disease destruction there, curing and shielding it with the same per-cell write; the
----disease-overlay marks for that area are cleared immediately so the overlay recedes strip by strip.
+---Server: paints curative/preventive disease protection under the sprayed strip and clears matching overlay marks.
 -- @param table workArea work area whose start/width/height nodes give the sprayed strip
 -- @param integer fillType RCR product fillType
 local function paintDiseaseProtection(workArea, fillType)
@@ -118,7 +94,7 @@ local function paintDiseaseProtection(workArea, fillType)
 end
 
 ---AI job-completion rule: prohibits re-working an already-protected cell.
--- @param table self sprayer vehicle; @param function superFunc native implementation; @param integer fillType
+-- @param table self sprayer vehicle; @param function superFunc original function; @param integer fillType
 local function setSprayerAITerrainDetailProhibitedRange(self, superFunc, fillType)
     if not RealisticCropRotationSprayerProducts.isProductFillType(fillType) then
         return superFunc(self, fillType)
@@ -157,44 +133,7 @@ local function setSprayerAITerrainDetailProhibitedRange(self, superFunc, fillTyp
     end
 end
 
----Server: merges the just-painted strip into the per-farmland treated-ground record (accumulated
----bounds + current day) so the daily fade sweep knows what to erase and when.
-local function recordTreatedGround(sx, sz, wx, wz, hx, hz)
-    local env = g_currentMission ~= nil and g_currentMission.environment or nil
-    local day = env ~= nil and (env.currentMonotonicDay or env.currentDay) or nil
-    if day == nil then return end
-
-    local fourthX, fourthZ = wx + hx - sx, wz + hz - sz
-    local centerX, centerZ = (wx + hx) * 0.5, (wz + hz) * 0.5
-    local minX = math.min(sx, wx, hx, fourthX)
-    local maxX = math.max(sx, wx, hx, fourthX)
-    local minZ = math.min(sz, wz, hz, fourthZ)
-    local maxZ = math.max(sz, wz, hz, fourthZ)
-
-    local seen, farmlands = {}, {}
-    collectFarmland(sx, sz, seen, farmlands)
-    collectFarmland(wx, wz, seen, farmlands)
-    collectFarmland(hx, hz, seen, farmlands)
-    collectFarmland(fourthX, fourthZ, seen, farmlands)
-    collectFarmland(centerX, centerZ, seen, farmlands)
-
-    for _, fid in ipairs(farmlands) do
-        local rec = treatedGround[fid]
-        if rec == nil then
-            treatedGround[fid] = { day = day, minX = minX, minZ = minZ, maxX = maxX, maxZ = maxZ }
-        else
-            rec.day = day
-            if minX < rec.minX then rec.minX = minX end
-            if minZ < rec.minZ then rec.minZ = minZ end
-            if maxX > rec.maxX then rec.maxX = maxX end
-            if maxZ > rec.maxZ then rec.maxZ = maxZ end
-        end
-    end
-end
-
----Paints the ephemeral "treated" ground look over the sprayed strip (SPRAY_TYPE only, never SPRAY_LEVEL,
----so no fertilisation/nitrogen/yield), off roads/yards/water. Server-only write; the engine replicates
----the density change to clients, so the fade sweep can never diverge between machines.
+---Paints the sprayed strip's ground look (SPRAY_TYPE only, no fertilisation/nitrogen/yield effect).
 -- @param table self sprayer vehicle; @param table workArea work area giving the sprayed strip corners
 local function paintTreatmentGround(self, workArea)
     if self == nil or not self.isServer then return end
@@ -227,13 +166,10 @@ local function paintTreatmentGround(self, workArea)
 
     -- SPRAY_TYPE only (the fertiliser ground look); SPRAY_LEVEL is never touched, so no fertilisation.
     modifier:executeSet(treatmentSprayType, fieldFilter)
-
-    -- Track the painted area (server) so the daily sweep can fade it ~a month later.
-    recordTreatedGround(sx, sz, wx, wz, hx, hz)
 end
 
 ---Overwrites Sprayer.processSprayerArea once per game session.
--- Non-RCR fillTypes go through the untouched native path.
+-- Non-RCR fillTypes fall through unchanged to the original function.
 local function installSprayerHook()
     if hookInstalled then
         return
@@ -253,8 +189,8 @@ local function installSprayerHook()
             return superFunc(self, workArea, dt)
         end
 
-        -- RCR product: replicate the native activation guards, but never call
-        -- FSDensityMapUtil.updateSprayArea (no native herbicide ground treatment).
+        -- Replicates the original activation guards but skips FSDensityMapUtil.updateSprayArea
+        -- (no herbicide ground effect from this custom fillType).
         if params.sprayFillLevel <= 0 then
             return 0, 0
         end
@@ -266,7 +202,7 @@ local function installSprayerHook()
         params.isActive = true
         params.lastSprayTime = g_time
 
-        -- Treated-ground visual only (no agronomy effect); faded out ~a month later by the server sweep.
+        -- Treated-ground visual only (no agronomy effect); cleared by the engine on the next growth-state bump.
         paintTreatmentGround(self, workArea)
 
         if self:getLastSpeed() > 1 then
@@ -292,118 +228,20 @@ local function installSprayerHook()
     hookInstalled = true
 end
 
----Server daily sweep: erases the treated-ground visual on farmlands whose last treatment aged past the
----fade window (~one season period), clearing SPRAY_TYPE only over that farmland's own bounds.
-function RealisticCropRotationSprayerProducts.fadeTreatedGround()
-    if next(treatedGround) == nil then return end
-    if g_currentMission == nil or not g_currentMission:getIsServer() then return end
-    if DensityMapModifier == nil or DensityMapFilter == nil or g_terrainNode == nil
-        or DensityCoordType == nil or DensityValueCompareType == nil then return end
-
-    local mission = g_currentMission
-    if mission.fieldGroundSystem == nil or FieldDensityMap == nil then return end
-    if g_farmlandManager == nil or type(g_farmlandManager.getLocalMap) ~= "function"
-        or getBitVectorMapNumChannels == nil then return end
-
-    local env = mission.environment
-    local day = env ~= nil and (env.currentMonotonicDay or env.currentDay) or nil
-    if day == nil then return end
-    -- One season period (plannedDaysPerPeriod), falling back to 3 days when unavailable.
-    local daysPerPeriod = env ~= nil and tonumber(env.plannedDaysPerPeriod) or nil
-    local fadeDays = (daysPerPeriod ~= nil and daysPerPeriod > 0) and daysPerPeriod or 3
-
-    local sprayTypeMapId, sprayFirstChannel, sprayNumChannels =
-        mission.fieldGroundSystem:getDensityMapData(FieldDensityMap.SPRAY_TYPE)
-    if sprayTypeMapId == nil then return end
-    local farmlandLocalMap = g_farmlandManager:getLocalMap()
-    if farmlandLocalMap == nil then return end
-    local farmlandChannels = getBitVectorMapNumChannels(farmlandLocalMap)
-
-    for fid, rec in pairs(treatedGround) do
-        if day - (rec.day or day) >= fadeDays then
-            local modifier = DensityMapModifier.new(sprayTypeMapId, sprayFirstChannel, sprayNumChannels, g_terrainNode)
-            modifier:setParallelogramWorldCoords(rec.minX, rec.minZ, rec.maxX, rec.minZ, rec.minX, rec.maxZ, DensityCoordType.POINT_POINT_POINT)
-            local farmlandFilter = DensityMapFilter.new(farmlandLocalMap, 0, farmlandChannels)
-            farmlandFilter:setValueCompareParams(DensityValueCompareType.EQUAL, fid)
-            modifier:executeSet(0, farmlandFilter)
-            treatedGround[fid] = nil
-        end
-    end
-end
-
----Persists the treated-ground fade tracker so it keeps working across save/load. The SPRAY_TYPE map
----itself is saved by the engine; this only saves the per-farmland age/bounds the sweep needs.
--- @param string savegamePath savegame folder path (trailing slash)
-function RealisticCropRotationSprayerProducts.saveTreatedGround(savegamePath)
-    if savegamePath == nil or savegamePath == "" or createXMLFile == nil then return end
-    local xmlFile = createXMLFile("rcrTreatedGround",
-        savegamePath .. "realisticCropRotationTreatedGround.xml", "realisticCropRotationTreatedGround")
-    if xmlFile == nil or xmlFile == 0 then return end
-
-    local i = 0
-    for fid, rec in pairs(treatedGround) do
-        local key = string.format("realisticCropRotationTreatedGround.farmland(%d)", i)
-        setXMLInt(xmlFile, key .. "#id", fid)
-        setXMLInt(xmlFile, key .. "#day", math.floor(tonumber(rec.day) or 0))
-        setXMLFloat(xmlFile, key .. "#minX", rec.minX)
-        setXMLFloat(xmlFile, key .. "#minZ", rec.minZ)
-        setXMLFloat(xmlFile, key .. "#maxX", rec.maxX)
-        setXMLFloat(xmlFile, key .. "#maxZ", rec.maxZ)
-        i = i + 1
-    end
-
-    saveXMLFile(xmlFile)
-    delete(xmlFile)
-end
-
----Restores the treated-ground fade tracker from the savegame folder (server). Called after
----onMissionLoaded() has reset it, so a missing file simply leaves it empty.
--- @param string savegamePath savegame folder path (trailing slash)
-function RealisticCropRotationSprayerProducts.loadTreatedGround(savegamePath)
-    treatedGround = {}
-    if savegamePath == nil or savegamePath == "" then return end
-    local filePath = savegamePath .. "realisticCropRotationTreatedGround.xml"
-    if fileExists == nil or not fileExists(filePath) then return end
-    local xmlFile = loadXMLFile("rcrTreatedGround", filePath)
-    if xmlFile == nil or xmlFile == 0 then return end
-
-    local i = 0
-    while true do
-        local key = string.format("realisticCropRotationTreatedGround.farmland(%d)", i)
-        if not hasXMLProperty(xmlFile, key) then break end
-        local id = getXMLInt(xmlFile, key .. "#id")
-        local minX = getXMLFloat(xmlFile, key .. "#minX")
-        local minZ = getXMLFloat(xmlFile, key .. "#minZ")
-        local maxX = getXMLFloat(xmlFile, key .. "#maxX")
-        local maxZ = getXMLFloat(xmlFile, key .. "#maxZ")
-        if id ~= nil and minX ~= nil and minZ ~= nil and maxX ~= nil and maxZ ~= nil then
-            treatedGround[id] = {
-                day = getXMLInt(xmlFile, key .. "#day") or 0,
-                minX = minX, minZ = minZ, maxX = maxX, maxZ = maxZ,
-            }
-        end
-        i = i + 1
-    end
-
-    delete(xmlFile)
-end
-
 ---Mission-load entry point; called from main.lua after the GUI assets load.
 function RealisticCropRotationSprayerProducts.onMissionLoaded()
     productFillTypeSet = {}
     productTreatmentByFillType = {}
-    treatedGround = {}
     ensureSprayTypes()
     -- Safety net only: the hook is normally installed at source time below
     -- (before TypeManager:finalizeTypes snapshots Sprayer.processSprayerArea).
     installSprayerHook()
 end
 
----Mission teardown: forget the mission-scoped fillType indices and treated-ground marks.
+---Mission teardown: forget the mission-scoped fillType indices.
 function RealisticCropRotationSprayerProducts.onMissionDeleted()
     productFillTypeSet = {}
     productTreatmentByFillType = {}
-    treatedGround = {}
 end
 
 -- Source-time installation: mod scripts are sourced before TypeManager:finalizeTypes() runs, the
