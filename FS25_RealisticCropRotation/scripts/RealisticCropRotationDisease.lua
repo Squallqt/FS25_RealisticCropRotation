@@ -521,38 +521,10 @@ local function applyBandSpeckle(targetMapId, firstChannel, numChannels, clearTyp
     return true
 end
 
----Erases grid marks that landed outside the worked soil (parcel margins/tracks), so the overlay stays
----clean without a render-time mask.
--- @param table grid, table bbox, integer farmlandId
-local function clipGridToWorkedSoil(grid, bbox, farmlandId)
-    if grid == nil or grid.mapId == nil or DensityMapModifier == nil or DensityMapFilter == nil
-        or g_terrainNode == nil or g_farmlandManager == nil
-        or type(g_farmlandManager.getLocalMap) ~= "function"
-        or g_currentMission == nil or g_currentMission.fieldGroundSystem == nil
-        or FieldDensityMap == nil or getBitVectorMapNumChannels == nil then
-        return
-    end
-    local groundTypeMapId, groundFirstChannel, groundNumChannels =
-        g_currentMission.fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE)
-    local farmlandLocalMap = g_farmlandManager:getLocalMap()
-    if groundTypeMapId == nil or farmlandLocalMap == nil then return end
-
-    local modifier = DensityMapModifier.new(grid.mapId, 0, grid.numChannels, g_terrainNode)
-    modifier:setParallelogramWorldCoords(bbox.minX, bbox.minZ, bbox.maxX, bbox.minZ, bbox.minX, bbox.maxZ, DensityCoordType.POINT_POINT_POINT)
-
-    local farmlandFilter = DensityMapFilter.new(farmlandLocalMap, 0, getBitVectorMapNumChannels(farmlandLocalMap))
-    farmlandFilter:setValueCompareParams(DensityValueCompareType.EQUAL, farmlandId)
-
-    local unworkedFilter = DensityMapFilter.new(groundTypeMapId, groundFirstChannel, groundNumChannels)
-    unworkedFilter:setValueCompareParams(DensityValueCompareType.EQUAL, 0)
-
-    modifier:executeSet(0, farmlandFilter, unworkedFilter)
-end
-
----Applies the current destruction for one infection: full clear inside the core, scattered speckle in
----the band just outside it, and the disease state into the overlay grid over the core. Idempotent;
----protectionMapId excludes sprayed cells (curative and preventive at once).
-local function destroyCropField(field, farmlandId, seed, severity, curve, diseaseState, grid, protectionMapId)
+---Applies one infection's destruction: Perlin core+band clears the real crop; the overlay grid (map
+---display only) is filled across the whole field polygon instead. Idempotent; protectionMapId excludes
+---sprayed cells from the real crop destruction.
+local function destroyCropField(field, seed, severity, curve, diseaseState, grid, protectionMapId)
     local D = RealisticCropRotationDisease
     if field == nil then return end
     local dead = deadFractionForSeverity(severity, curve)
@@ -578,14 +550,15 @@ local function destroyCropField(field, farmlandId, seed, severity, curve, diseas
         end
     end
 
-    -- Overlay grid (server and client) over the dead core. The clip pass then erases the few marks
-    -- that fell on unworked parcel ground, so the rendered overlay stays inside the field.
-    if grid ~= nil and grid.mapId ~= nil and diseaseState ~= nil and diseaseState > 0 then
-        if applyPerlinDestruction(grid.mapId, 0, grid.numChannels, diseaseState, false, field, seed, coreThreshold, protectionMapId) then
-            local minX, minZ, maxX, maxZ = fieldWorldBounds(field)
-            if minX ~= nil then
-                clipGridToWorkedSoil(grid, { minX = minX, minZ = minZ, maxX = maxX, maxZ = maxZ }, farmlandId)
-            end
+    -- Overlay grid (server and client, map display only): fills the whole polygon so the map shows
+    -- which parcels are actively diseased, independent of the crop's own destruction pattern.
+    if grid ~= nil and grid.mapId ~= nil and diseaseState ~= nil and diseaseState > 0
+        and DensityMapModifier ~= nil and g_terrainNode ~= nil and type(field.getDensityMapPolygon) == "function" then
+        local polygon = field:getDensityMapPolygon()
+        if polygon ~= nil then
+            local gridModifier = DensityMapModifier.new(grid.mapId, 0, grid.numChannels, g_terrainNode)
+            polygon:applyToModifier(gridModifier)
+            gridModifier:executeSet(diseaseState)
             grid.changeRevision = (grid.changeRevision or 0) + 1
         end
     end
@@ -631,7 +604,7 @@ function RealisticCropRotationDisease:propagate(farmlandId)
                     if treatment == "FUNGICIDE" then protectionMapId = self.grid.fungicideProtectionMapId
                     elseif treatment == "NEMATICIDE" then protectionMapId = self.grid.nematicideProtectionMapId end
                 end
-                destroyCropField(field, farmlandId, s.seed, s.severity, curve, diseaseState, self.grid, protectionMapId)
+                destroyCropField(field, s.seed, s.severity, curve, diseaseState, self.grid, protectionMapId)
             end
         end
     end
@@ -860,7 +833,7 @@ function RealisticCropRotationDisease:rebuildGridFromState()
             if field ~= nil and (s.severity or 0) >= curve.destroySeverity then
                 local diseaseState = diseaseStateForGroup(group)
                 -- grid only (no fruit) on the client; the field arg of nil for the crop is skipped inside
-                destroyCropField(field, fid, s.seed, s.severity, curve, diseaseState, grid)
+                destroyCropField(field, s.seed, s.severity, curve, diseaseState, grid)
             end
         end
     end
