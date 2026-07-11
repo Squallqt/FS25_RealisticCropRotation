@@ -9,7 +9,7 @@
         <e k="rcr_sidebar_no_active_crop"  v="Sem cultura ativa" />
 
         <!-- Tabs -->
-        <e k="rcr_tab_history"          v="Rotação" />
+        <e k="rcr_tab_history"          v="Agronomia" />
         <e k="rcr_tab_planning"         v="Planeamento" />
         <e k="rcr_disease_name_sclerotinia" v="Esclerotínia (podridão branca)" />
         <e k="rcr_disease_name_bcn"   v="Nemátode de quisto" />

@@ -9,7 +9,7 @@
         <e k="rcr_sidebar_no_active_crop"  v="Žádná aktivní plodina" />
 
         <!-- Tabs -->
-        <e k="rcr_tab_history"          v="Rotace" />
+        <e k="rcr_tab_history"          v="Agronomie" />
         <e k="rcr_tab_planning"         v="Plánování" />
         <e k="rcr_disease_name_sclerotinia" v="Sklerotiniová hniloba (bílá hniloba)" />
         <e k="rcr_disease_name_bcn"   v="Háďátko řepné" />

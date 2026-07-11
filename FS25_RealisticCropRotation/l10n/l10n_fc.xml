@@ -9,7 +9,7 @@
         <e k="rcr_sidebar_no_active_crop"  v="Aucune culture" />
 
         <!-- Tabs -->
-        <e k="rcr_tab_history"          v="Rotation" />
+        <e k="rcr_tab_history"          v="Agronomie" />
         <e k="rcr_tab_planning"         v="Planification" />
         <e k="rcr_disease_name_sclerotinia" v="Sclérotinia" />
         <e k="rcr_disease_name_bcn"   v="Nématode à kyste" />

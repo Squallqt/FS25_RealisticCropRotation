@@ -9,7 +9,7 @@
         <e k="rcr_sidebar_no_active_crop"  v="No active crop" />
 
         <!-- Tabs -->
-        <e k="rcr_tab_history"          v="Rotation" />
+        <e k="rcr_tab_history"          v="Agronomy" />
         <e k="rcr_tab_planning"         v="Planning" />
         <e k="rcr_disease_name_sclerotinia" v="Sclerotinia" />
         <e k="rcr_disease_name_bcn"   v="Cyst nematode" />

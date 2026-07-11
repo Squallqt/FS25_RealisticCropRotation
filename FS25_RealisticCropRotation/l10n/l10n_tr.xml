@@ -9,7 +9,7 @@
         <e k="rcr_sidebar_no_active_crop"  v="Aktif ekin yok" />
 
         <!-- Tabs -->
-        <e k="rcr_tab_history"          v="Rotasyon" />
+        <e k="rcr_tab_history"          v="Agronomi" />
         <e k="rcr_tab_planning"         v="Planlama" />
         <e k="rcr_disease_name_sclerotinia" v="Sklerotinya (beyaz küf)" />
         <e k="rcr_disease_name_bcn"   v="Kist nematodu" />

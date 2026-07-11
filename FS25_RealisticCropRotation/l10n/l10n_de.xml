@@ -9,7 +9,7 @@
         <e k="rcr_sidebar_no_active_crop"  v="Keine aktive Kultur" />
 
         <!-- Tabs -->
-        <e k="rcr_tab_history"          v="Rotation" />
+        <e k="rcr_tab_history"          v="Agronomie" />
         <e k="rcr_tab_planning"         v="Planung" />
         <e k="rcr_disease_name_sclerotinia" v="Sclerotinia (Weißstängeligkeit)" />
         <e k="rcr_disease_name_bcn"   v="Zystennematode" />

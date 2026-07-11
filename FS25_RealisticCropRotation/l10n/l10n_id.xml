@@ -9,7 +9,7 @@
         <e k="rcr_sidebar_no_active_crop"  v="Tidak ada tanaman aktif" />
 
         <!-- Tabs -->
-        <e k="rcr_tab_history"          v="Rotasi" />
+        <e k="rcr_tab_history"          v="Agronomi" />
         <e k="rcr_tab_planning"         v="Perencanaan" />
         <e k="rcr_disease_name_sclerotinia" v="Busuk putih Sclerotinia" />
         <e k="rcr_disease_name_bcn"   v="Nematoda sista" />

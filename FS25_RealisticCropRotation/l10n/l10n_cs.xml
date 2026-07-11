@@ -9,7 +9,7 @@
         <e k="rcr_sidebar_no_active_crop"  v="无活动作物" />
 
         <!-- Tabs -->
-        <e k="rcr_tab_history"          v="轮作" />
+        <e k="rcr_tab_history"          v="农学" />
         <e k="rcr_tab_planning"         v="规划" />
         <e k="rcr_disease_name_sclerotinia" v="菌核病" />
         <e k="rcr_disease_name_bcn"   v="孢囊线虫" />

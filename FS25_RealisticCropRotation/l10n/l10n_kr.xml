@@ -9,7 +9,7 @@
         <e k="rcr_sidebar_no_active_crop"  v="활성 작물 없음" />
 
         <!-- Tabs -->
-        <e k="rcr_tab_history"          v="윤작" />
+        <e k="rcr_tab_history"          v="농학" />
         <e k="rcr_tab_planning"         v="계획" />
         <e k="rcr_disease_name_sclerotinia" v="균핵병" />
         <e k="rcr_disease_name_bcn"   v="씨스트선충" />

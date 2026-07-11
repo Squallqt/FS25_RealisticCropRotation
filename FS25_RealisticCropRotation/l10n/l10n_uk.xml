@@ -9,7 +9,7 @@
         <e k="rcr_sidebar_no_active_crop"  v="Немає активної культури" />
 
         <!-- Tabs -->
-        <e k="rcr_tab_history"          v="Ротація" />
+        <e k="rcr_tab_history"          v="Агрономія" />
         <e k="rcr_tab_planning"         v="Планування" />
         <e k="rcr_disease_name_sclerotinia" v="Склеротиніоз (біла гниль)" />
         <e k="rcr_disease_name_bcn"   v="Цистова нематода" />

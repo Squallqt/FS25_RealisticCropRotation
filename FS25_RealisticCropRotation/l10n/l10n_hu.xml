@@ -9,7 +9,7 @@
         <e k="rcr_sidebar_no_active_crop"  v="Nincs aktív növény" />
 
         <!-- Tabs -->
-        <e k="rcr_tab_history"          v="Forgó" />
+        <e k="rcr_tab_history"          v="Agronómia" />
         <e k="rcr_tab_planning"         v="Tervezés" />
         <e k="rcr_disease_name_sclerotinia" v="Fehérpenészes rothadás (Sclerotinia)" />
         <e k="rcr_disease_name_bcn"   v="Cisztaféreg" />

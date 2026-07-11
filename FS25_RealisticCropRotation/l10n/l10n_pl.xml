@@ -9,7 +9,7 @@
         <e k="rcr_sidebar_no_active_crop"  v="Brak aktywnej uprawy" />
 
         <!-- Tabs -->
-        <e k="rcr_tab_history"          v="Rotacja" />
+        <e k="rcr_tab_history"          v="Agronomia" />
         <e k="rcr_tab_planning"         v="Planowanie" />
         <e k="rcr_disease_name_sclerotinia" v="Zgnilizna twardzikowa (Sclerotinia)" />
         <e k="rcr_disease_name_bcn"   v="Mątwik" />

@@ -9,7 +9,7 @@
         <e k="rcr_sidebar_no_active_crop"  v="Ingen aktiv gröda" />
 
         <!-- Tabs -->
-        <e k="rcr_tab_history"          v="Rotation" />
+        <e k="rcr_tab_history"          v="Agronomi" />
         <e k="rcr_tab_planning"         v="Planering" />
         <e k="rcr_disease_name_sclerotinia" v="Bomullsmögel (Sclerotinia)" />
         <e k="rcr_disease_name_bcn"   v="Cystnematod" />

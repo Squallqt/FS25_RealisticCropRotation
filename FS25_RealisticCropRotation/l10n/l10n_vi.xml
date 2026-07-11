@@ -9,7 +9,7 @@
         <e k="rcr_sidebar_no_active_crop"  v="Không có cây trồng hoạt động" />
 
         <!-- Tabs -->
-        <e k="rcr_tab_history"          v="Luân canh" />
+        <e k="rcr_tab_history"          v="Nông học" />
         <e k="rcr_tab_planning"         v="Lập kế hoạch" />
         <e k="rcr_disease_name_sclerotinia" v="Bệnh thối hạch (nấm Sclerotinia)" />
         <e k="rcr_disease_name_bcn"   v="Tuyến trùng bào nang" />
