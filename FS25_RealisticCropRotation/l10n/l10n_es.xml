@@ -14,7 +14,7 @@
         <e k="rcr_disease_name_sclerotinia" v="Esclerotinia (podredumbre blanca)" />
         <e k="rcr_disease_name_bcn"   v="Nematodo del quiste" />
         <e k="rcr_section_disease_map"     v="Enfermedades" />
-        <e k="rcr_disease_sub_infections" v="Focos activos" />
+        <e k="rcr_disease_sub_infections" v="Parcelas infectadas" />
         <e k="rcr_disease_sub_pressure"   v="Presión de enfermedad" />
         <e k="rcr_disease_sub_treatment"  v="Tratamientos" />
         <e k="rcr_disease_risk_low"       v="Baja" />

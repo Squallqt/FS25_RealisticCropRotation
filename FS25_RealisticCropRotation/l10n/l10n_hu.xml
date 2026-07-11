@@ -14,7 +14,7 @@
         <e k="rcr_disease_name_sclerotinia" v="Fehérpenészes rothadás (Sclerotinia)" />
         <e k="rcr_disease_name_bcn"   v="Cisztaféreg" />
         <e k="rcr_section_disease_map"     v="Betegségek" />
-        <e k="rcr_disease_sub_infections" v="Aktív gócok" />
+        <e k="rcr_disease_sub_infections" v="Fertőzött táblák" />
         <e k="rcr_disease_sub_pressure"   v="Betegségnyomás" />
         <e k="rcr_disease_sub_treatment"  v="Kezelések" />
         <e k="rcr_disease_risk_low"       v="Alacsony" />

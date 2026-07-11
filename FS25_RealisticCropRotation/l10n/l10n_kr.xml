@@ -14,7 +14,7 @@
         <e k="rcr_disease_name_sclerotinia" v="균핵병" />
         <e k="rcr_disease_name_bcn"   v="씨스트선충" />
         <e k="rcr_section_disease_map"     v="병해" />
-        <e k="rcr_disease_sub_infections" v="활성 병반" />
+        <e k="rcr_disease_sub_infections" v="감염된 농지" />
         <e k="rcr_disease_sub_pressure"   v="병해 압력" />
         <e k="rcr_disease_sub_treatment"  v="방제" />
         <e k="rcr_disease_risk_low"       v="낮음" />

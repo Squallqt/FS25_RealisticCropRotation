@@ -14,7 +14,7 @@
         <e k="rcr_disease_name_sclerotinia" v="Bomullsmögel (Sclerotinia)" />
         <e k="rcr_disease_name_bcn"   v="Cystnematod" />
         <e k="rcr_section_disease_map"     v="Sjukdomar" />
-        <e k="rcr_disease_sub_infections" v="Aktiva härdar" />
+        <e k="rcr_disease_sub_infections" v="Infekterade fält" />
         <e k="rcr_disease_sub_pressure"   v="Sjukdomstryck" />
         <e k="rcr_disease_sub_treatment"  v="Behandling" />
         <e k="rcr_disease_risk_low"       v="Låg" />

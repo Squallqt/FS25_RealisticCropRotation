@@ -14,7 +14,7 @@
         <e k="rcr_disease_name_sclerotinia" v="Sklerotiniová hniloba (bílá hniloba)" />
         <e k="rcr_disease_name_bcn"   v="Háďátko řepné" />
         <e k="rcr_section_disease_map"     v="Choroby" />
-        <e k="rcr_disease_sub_infections" v="Aktivní ohniska" />
+        <e k="rcr_disease_sub_infections" v="Infikovaná pole" />
         <e k="rcr_disease_sub_pressure"   v="Tlak chorob" />
         <e k="rcr_disease_sub_treatment"  v="Ošetření" />
         <e k="rcr_disease_risk_low"       v="Nízký" />

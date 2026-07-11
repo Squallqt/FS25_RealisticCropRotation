@@ -14,7 +14,7 @@
         <e k="rcr_disease_name_sclerotinia" v="Storknolla råtesopp (Sclerotinia)" />
         <e k="rcr_disease_name_bcn"   v="Cystenematode" />
         <e k="rcr_section_disease_map"     v="Sykdommer" />
-        <e k="rcr_disease_sub_infections" v="Aktive angrep" />
+        <e k="rcr_disease_sub_infections" v="Infiserte jorder" />
         <e k="rcr_disease_sub_pressure"   v="Sykdomspress" />
         <e k="rcr_disease_sub_treatment"  v="Behandling" />
         <e k="rcr_disease_risk_low"       v="Lav" />

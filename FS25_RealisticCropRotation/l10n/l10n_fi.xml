@@ -14,7 +14,7 @@
         <e k="rcr_disease_name_sclerotinia" v="Pahkahome (Sclerotinia)" />
         <e k="rcr_disease_name_bcn"   v="Kystaankeroinen" />
         <e k="rcr_section_disease_map"     v="Taudit" />
-        <e k="rcr_disease_sub_infections" v="Aktiiviset pesäkkeet" />
+        <e k="rcr_disease_sub_infections" v="Tartunnan saaneet pellot" />
         <e k="rcr_disease_sub_pressure"   v="Tautipaine" />
         <e k="rcr_disease_sub_treatment"  v="Torjunta" />
         <e k="rcr_disease_risk_low"       v="Matala" />

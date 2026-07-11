@@ -14,7 +14,7 @@
         <e k="rcr_disease_name_sclerotinia" v="Bệnh thối hạch (nấm Sclerotinia)" />
         <e k="rcr_disease_name_bcn"   v="Tuyến trùng bào nang" />
         <e k="rcr_section_disease_map"     v="Bệnh hại" />
-        <e k="rcr_disease_sub_infections" v="Ổ bệnh hoạt động" />
+        <e k="rcr_disease_sub_infections" v="Ruộng bị nhiễm bệnh" />
         <e k="rcr_disease_sub_pressure"   v="Áp lực bệnh hại" />
         <e k="rcr_disease_sub_treatment"  v="Phun thuốc" />
         <e k="rcr_disease_risk_low"       v="Thấp" />

@@ -14,7 +14,7 @@
         <e k="rcr_disease_name_sclerotinia" v="Sclerotinia (rattenkeutelziekte)" />
         <e k="rcr_disease_name_bcn"   v="Cystenaaltje" />
         <e k="rcr_section_disease_map"     v="Ziekten" />
-        <e k="rcr_disease_sub_infections" v="Actieve haarden" />
+        <e k="rcr_disease_sub_infections" v="Geïnfecteerde velden" />
         <e k="rcr_disease_sub_pressure"   v="Ziektedruk" />
         <e k="rcr_disease_sub_treatment"  v="Behandelingen" />
         <e k="rcr_disease_risk_low"       v="Laag" />

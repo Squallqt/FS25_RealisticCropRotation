@@ -14,7 +14,7 @@
         <e k="rcr_disease_name_sclerotinia" v="Склеротиніоз (біла гниль)" />
         <e k="rcr_disease_name_bcn"   v="Цистова нематода" />
         <e k="rcr_section_disease_map"     v="Хвороби" />
-        <e k="rcr_disease_sub_infections" v="Активні осередки" />
+        <e k="rcr_disease_sub_infections" v="Заражені поля" />
         <e k="rcr_disease_sub_pressure"   v="Тиск хвороб" />
         <e k="rcr_disease_sub_treatment"  v="Обробки" />
         <e k="rcr_disease_risk_low"       v="Низький" />

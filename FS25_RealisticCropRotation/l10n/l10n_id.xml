@@ -14,7 +14,7 @@
         <e k="rcr_disease_name_sclerotinia" v="Busuk putih Sclerotinia" />
         <e k="rcr_disease_name_bcn"   v="Nematoda sista" />
         <e k="rcr_section_disease_map"     v="Penyakit" />
-        <e k="rcr_disease_sub_infections" v="Fokus aktif" />
+        <e k="rcr_disease_sub_infections" v="Ladang terinfeksi" />
         <e k="rcr_disease_sub_pressure"   v="Tekanan penyakit" />
         <e k="rcr_disease_sub_treatment"  v="Penyemprotan" />
         <e k="rcr_disease_risk_low"       v="Rendah" />

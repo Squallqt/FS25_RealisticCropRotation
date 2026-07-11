@@ -14,7 +14,7 @@
         <e k="rcr_disease_name_sclerotinia" v="Sclerotinia (Weißstängeligkeit)" />
         <e k="rcr_disease_name_bcn"   v="Zystennematode" />
         <e k="rcr_section_disease_map"     v="Krankheiten" />
-        <e k="rcr_disease_sub_infections" v="Aktive Herde" />
+        <e k="rcr_disease_sub_infections" v="Infizierte Felder" />
         <e k="rcr_disease_sub_pressure"   v="Krankheitsdruck" />
         <e k="rcr_disease_sub_treatment"  v="Behandlung" />
         <e k="rcr_disease_risk_low"       v="Gering" />

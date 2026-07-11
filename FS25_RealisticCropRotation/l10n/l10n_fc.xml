@@ -14,7 +14,7 @@
         <e k="rcr_disease_name_sclerotinia" v="Sclérotinia" />
         <e k="rcr_disease_name_bcn"   v="Nématode à kyste" />
         <e k="rcr_section_disease_map"     v="Maladies" />
-        <e k="rcr_disease_sub_infections" v="Foyers actifs" />
+        <e k="rcr_disease_sub_infections" v="Parcelles infectées" />
         <e k="rcr_disease_sub_pressure"   v="Pression maladie" />
         <e k="rcr_disease_sub_treatment"  v="Traitements" />
         <e k="rcr_disease_risk_low"       v="Faible" />

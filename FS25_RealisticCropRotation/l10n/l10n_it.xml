@@ -14,7 +14,7 @@
         <e k="rcr_disease_name_sclerotinia" v="Sclerotinia (muffa bianca)" />
         <e k="rcr_disease_name_bcn"   v="Nematode a cisti" />
         <e k="rcr_section_disease_map"     v="Malattie" />
-        <e k="rcr_disease_sub_infections" v="Focolai attivi" />
+        <e k="rcr_disease_sub_infections" v="Campi infetti" />
         <e k="rcr_disease_sub_pressure"   v="Pressione malattie" />
         <e k="rcr_disease_sub_treatment"  v="Trattamenti" />
         <e k="rcr_disease_risk_low"       v="Bassa" />

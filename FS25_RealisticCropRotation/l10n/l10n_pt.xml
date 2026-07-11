@@ -14,7 +14,7 @@
         <e k="rcr_disease_name_sclerotinia" v="Esclerotínia (podridão branca)" />
         <e k="rcr_disease_name_bcn"   v="Nemátode de quisto" />
         <e k="rcr_section_disease_map"     v="Doenças" />
-        <e k="rcr_disease_sub_infections" v="Focos ativos" />
+        <e k="rcr_disease_sub_infections" v="Campos infetados" />
         <e k="rcr_disease_sub_pressure"   v="Pressão de doenças" />
         <e k="rcr_disease_sub_treatment"  v="Tratamentos" />
         <e k="rcr_disease_risk_low"       v="Baixa" />

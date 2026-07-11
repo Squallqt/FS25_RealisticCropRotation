@@ -14,7 +14,7 @@
         <e k="rcr_disease_name_sclerotinia" v="Putregaiul alb (Sclerotinia)" />
         <e k="rcr_disease_name_bcn"   v="Nematod cu chisturi" />
         <e k="rcr_section_disease_map"     v="Boli" />
-        <e k="rcr_disease_sub_infections" v="Focare active" />
+        <e k="rcr_disease_sub_infections" v="Parcele infectate" />
         <e k="rcr_disease_sub_pressure"   v="Presiune de boli" />
         <e k="rcr_disease_sub_treatment"  v="Tratamente" />
         <e k="rcr_disease_risk_low"       v="Scăzută" />

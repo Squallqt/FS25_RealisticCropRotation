@@ -14,7 +14,7 @@
         <e k="rcr_disease_name_sclerotinia" v="Mofo-branco (Sclerotinia)" />
         <e k="rcr_disease_name_bcn"   v="Nematoide de cisto" />
         <e k="rcr_section_disease_map"     v="Doenças" />
-        <e k="rcr_disease_sub_infections" v="Focos ativos" />
+        <e k="rcr_disease_sub_infections" v="Campos infectados" />
         <e k="rcr_disease_sub_pressure"   v="Pressão de doenças" />
         <e k="rcr_disease_sub_treatment"  v="Tratamentos" />
         <e k="rcr_disease_risk_low"       v="Baixa" />

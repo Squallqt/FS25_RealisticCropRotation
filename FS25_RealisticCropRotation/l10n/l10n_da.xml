@@ -14,7 +14,7 @@
         <e k="rcr_disease_name_sclerotinia" v="Knoldbægersvamp (Sclerotinia)" />
         <e k="rcr_disease_name_bcn"   v="Cystenematode" />
         <e k="rcr_section_disease_map"     v="Sygdomme" />
-        <e k="rcr_disease_sub_infections" v="Aktive udbrud" />
+        <e k="rcr_disease_sub_infections" v="Inficerede marker" />
         <e k="rcr_disease_sub_pressure"   v="Sygdomstryk" />
         <e k="rcr_disease_sub_treatment"  v="Behandling" />
         <e k="rcr_disease_risk_low"       v="Lav" />

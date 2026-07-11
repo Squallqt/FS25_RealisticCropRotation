@@ -14,7 +14,7 @@
         <e k="rcr_disease_name_sclerotinia" v="菌核病" />
         <e k="rcr_disease_name_bcn"   v="孢囊線蟲" />
         <e k="rcr_section_disease_map"     v="疾病" />
-        <e k="rcr_disease_sub_infections" v="活躍病灶" />
+        <e k="rcr_disease_sub_infections" v="受感染地塊" />
         <e k="rcr_disease_sub_pressure"   v="病害壓力" />
         <e k="rcr_disease_sub_treatment"  v="防治" />
         <e k="rcr_disease_risk_low"       v="低" />
