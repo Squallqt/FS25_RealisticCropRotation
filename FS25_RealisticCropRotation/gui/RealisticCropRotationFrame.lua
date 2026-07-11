@@ -110,6 +110,10 @@ RealisticCropRotationFrame.SCORE_NO_RESIDUE_CAP = 79 -- no N returned: "excellen
 RealisticCropRotationFrame.SCORE_MONOCULTURE_CAP = 30 -- single-family plan: not a rotation, stays "poor"
 RealisticCropRotationFrame.SCORE_DISEASE_PENALTY_PER_YEAR = 10 -- shared-pathogen spacing
 
+-- Gauge tolerance: PF's own map legend can't show a gap this small, so treat it as "reached".
+RealisticCropRotationFrame.PH_GAUGE_TOLERANCE = 0.1        -- pH units
+RealisticCropRotationFrame.N_GAUGE_TOLERANCE_RATIO = 0.03  -- fraction of the crop's N requirement
+
 -- Max pixel widths (must match profile sizes)
 -- N_BAR_MAX_WIDTH: keep in sync with guiProfiles.xml frNitrogenTrack size (1192px)
 RealisticCropRotationFrame.N_BAR_MAX_WIDTH     = 1192
@@ -1726,9 +1730,12 @@ function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId)
             labelKey = "rcr_n_average_pf"
             stateText = string.format(self.i18n:getText("rcr_n_average_value"), actualN)
             if targetN ~= nil and targetN > 0 then
-                -- Crop planted: fill against the requirement, full once reached.
-                ratio = math.min(actualN / targetN, 1)
-                valueText = string.format(self.i18n:getText("rcr_n_crop_need"), targetN)
+                -- Crop planted: fill against the requirement, full once reached (within tolerance).
+                local tolerance = targetN * RealisticCropRotationFrame.N_GAUGE_TOLERANCE_RATIO
+                ratio = math.min((actualN + tolerance) / targetN, 1)
+                -- Bar is full within tolerance: say so instead of a "need" figure actual already exceeds.
+                valueText = (ratio >= 1) and self.i18n:getText("rcr_n_full")
+                    or string.format(self.i18n:getText("rcr_n_crop_need"), targetN)
             else
                 -- No crop planted: empty gauge, just the soil's real average N.
                 ratio = 0
@@ -1792,9 +1799,13 @@ function RealisticCropRotationFrame:updateSoilPHGauge(farmlandId)
             maxPH = tonumber(maxPH) or 0
             labelKey = "rcr_lime_average_pf"
             if targetPH ~= nil then
-                ratio = targetPH > 0 and math.min(actualPH / targetPH, 1) or 0
+                -- Full once reached (within tolerance): PF's own map legend can't show a smaller gap.
+                local tol = RealisticCropRotationFrame.PH_GAUGE_TOLERANCE
+                ratio = targetPH > 0 and math.min((actualPH + tol) / targetPH, 1) or 0
                 stateText = string.format(self.i18n:getText("rcr_lime_average_value"), actualPH)
-                valueText = string.format(self.i18n:getText("rcr_lime_target"), targetPH)
+                -- Bar is full within tolerance: say so instead of a target figure actual already meets.
+                valueText = (ratio >= 1) and self.i18n:getText("rcr_lime_full")
+                    or string.format(self.i18n:getText("rcr_lime_target"), targetPH)
             else
                 ratio = maxPH > minPH and ((actualPH - minPH) / (maxPH - minPH)) or 0
                 stateText = string.format(self.i18n:getText("rcr_lime_average_value"), actualPH)

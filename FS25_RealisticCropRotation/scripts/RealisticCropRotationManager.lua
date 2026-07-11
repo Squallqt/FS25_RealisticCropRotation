@@ -1235,53 +1235,13 @@ function RealisticCropRotationManager:isPFSoilLocked(pf, field)
     return phInternal <= 1
 end
 
----Loads PF crop nitrogen requirements (kg/ha by soil type) from PrecisionFarming.xml at runtime, cached.
--- @return table targets cropName(upper) -> { [soilTypeIndex]=kgPerHa }
-function RealisticCropRotationManager:getPFNitrogenTargets()
-    if self.pfNitrogenTargets ~= nil then return self.pfNitrogenTargets end
-    self.pfNitrogenTargets = {}
-    if g_modManager == nil or type(g_modManager.getModByName) ~= "function" then return self.pfNitrogenTargets end
-    if loadXMLFile == nil or hasXMLProperty == nil then return self.pfNitrogenTargets end
-
-    local mod = g_modManager:getModByName("FS25_precisionFarming")
-    local dir = mod ~= nil and (mod.modDir or mod.modDirectory) or nil
-    if dir == nil or dir == "" then return self.pfNitrogenTargets end
-
-    local xmlFile = loadXMLFile("rcrPFRequirements", dir .. "PrecisionFarming.xml")
-    if xmlFile == nil or xmlFile == 0 then return self.pfNitrogenTargets end
-
-    local i = 0
-    while true do
-        local fruitKey = string.format("precisionFarming.nitrogenMap.fruitRequirements.fruitRequirement(%d)", i)
-        if not hasXMLProperty(xmlFile, fruitKey) then break end
-        local name = getXMLString(xmlFile, fruitKey .. "#fruitTypeName")
-        if name ~= nil and name ~= "" then
-            local bySoil = {}
-            local j = 0
-            while true do
-                local soilKey = string.format("%s.soil(%d)", fruitKey, j)
-                if not hasXMLProperty(xmlFile, soilKey) then break end
-                local soilIndex = getXMLInt(xmlFile, soilKey .. "#soilTypeIndex")
-                local target = getXMLInt(xmlFile, soilKey .. "#targetLevel")
-                if soilIndex ~= nil and target ~= nil then bySoil[soilIndex] = target end
-                j = j + 1
-            end
-            self.pfNitrogenTargets[string.upper(name)] = bySoil
-        end
-        i = i + 1
-    end
-
-    delete(xmlFile)
-    return self.pfNitrogenTargets
-end
-
----Single cached PF soil scan: targets come from PF's native per-field soil distribution; actual N (tramlines excluded) and pH are sampled live.
+---Single cached PF soil scan: actual N (tramlines excluded), pH, and both their targets are sampled live on the same grid.
 -- @param integer farmlandId
 -- @return table record, false when not analysed, or nil when PF is absent
 function RealisticCropRotationManager:scanFieldSoil(farmlandId)
     local pf = self:getPrecisionFarming()
     if pf == nil then return nil end
-    local nMap, phMap = pf.nitrogenMap, pf.pHMap
+    local nMap, phMap, soilMap = pf.nitrogenMap, pf.pHMap, pf.soilMap
     if nMap == nil and phMap == nil then return nil end
 
     local n = tonumber(farmlandId)
@@ -1302,67 +1262,51 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId)
     local phCanLevel = phMap ~= nil and type(phMap.getLevelAtWorldPos) == "function"
         and type(phMap.getPhValueFromInternalValue) == "function"
     local phCanOptimal = phMap ~= nil and type(phMap.getOptimalPHValueForSoilTypeIndex) == "function"
+    local nCanTargetAtPos = nMap ~= nil and type(nMap.getTargetLevelAtWorldPos) == "function"
+    local canSoilTypeAtPos = soilMap ~= nil and type(soilMap.getTypeIndexAtWorldPos) == "function"
 
+    local nMaxInternal = (nMap ~= nil and tonumber(nMap.maxValue)) or 45
+    local function nConv(level)
+        return tonumber(nMap:getNitrogenValueFromInternalValue(math.max(0, math.min(level, nMaxInternal))))
+    end
     local phMaxInternal = (phMap ~= nil and tonumber(phMap.maxValue)) or 31
     local function phConv(level)
         return tonumber(phMap:getPhValueFromInternalValue(math.max(0, math.min(level, phMaxInternal))))
     end
 
-    -- Targets are soil-type properties: weight them by PF's native per-field soil distribution
-    -- (fraction of each soil type over the cultivable surface) instead of sampling a grid.
-    local farmland = getFarmlandById(n)
-    local soilDist = farmland ~= nil and farmland.soilDistribution or nil
+    local _, activeFruitTypeIndex = self:getActiveCropInfo(n)
 
-    -- Nitrogen need: crop's per-soil requirement (PF fruitRequirements), distribution-weighted.
-    local cropName, activeFruitTypeIndex = self:getActiveCropInfo(n)
-    local nTarget = nil
-    if soilDist ~= nil and cropName ~= nil then
-        local nReq = self:getPFNitrogenTargets()[string.upper(tostring(cropName))]
-        if nReq ~= nil then
-            local sum, w = 0, 0
-            for i = 1, #soilDist do
-                local frac = soilDist[i]
-                if frac ~= nil and frac > 0 and nReq[i] ~= nil then
-                    sum = sum + frac * nReq[i]; w = w + frac
-                end
-            end
-            if w > 0 then nTarget = math.floor(sum / w + 0.5) end
-        end
-    end
-
-    -- pH optimal: each soil type's optimal pH, distribution-weighted (independent of the crop).
-    local phTarget = nil
-    if soilDist ~= nil and phCanOptimal then
-        local sum, w = 0, 0
-        for i = 1, #soilDist do
-            local frac = soilDist[i]
-            if frac ~= nil and frac > 0 then
-                local opt = phMap:getOptimalPHValueForSoilTypeIndex(i)
-                if type(opt) == "number" and opt > 0 then
-                    if opt > 9 then opt = phConv(opt) end
-                    if type(opt) == "number" then sum = sum + frac * opt; w = w + frac end
-                end
-            end
-        end
-        if w > 0 then phTarget = sum / w end
-    end
-
-    -- Actual state is dynamic -> sample it. Current pH is a soil property (read over all ground).
-    -- Available N belongs to the crop: keep only pixels deep in the crop -- a crop pixel bordering a
-    -- tramline reads low (coarse N map smears the unfertilised track in), so exclude it.
+    -- Actual + target sampled together on the same grid, so they always read the same ground. N actual
+    -- excludes tramline-adjacent pixels (coarse map blur skews them low); the N target isn't affected,
+    -- so it samples every valid crop pixel.
     local TRAMLINE_MARGIN = 2.5
     local nActSum, nActCnt, nCropSum, nCropCnt, phActSum, phActCnt = 0, 0, 0, 0, 0, 0
+    local nTargetSum, nTargetCnt, phTargetSum, phTargetCnt = 0, 0, 0, 0
     local ok = pcall(function()
         for _, p in ipairs(points) do
             if phCanLevel then
                 local level = phMap:getLevelAtWorldPos(p.x, p.z)
                 if type(level) == "number" then phActSum = phActSum + level; phActCnt = phActCnt + 1 end
             end
+            if canSoilTypeAtPos and phCanOptimal then
+                local soilTypeIndex = soilMap:getTypeIndexAtWorldPos(p.x, p.z)
+                if type(soilTypeIndex) == "number" then
+                    local opt = phMap:getOptimalPHValueForSoilTypeIndex(soilTypeIndex)
+                    if type(opt) == "number" and opt > 0 then
+                        if opt > 9 then opt = phConv(opt) end
+                        if type(opt) == "number" then phTargetSum = phTargetSum + opt; phTargetCnt = phTargetCnt + 1 end
+                    end
+                end
+            end
             if nCanLevel and (activeFruitTypeIndex == nil
                 or getFruitTypeIndexAtWorldPos(p.x, p.z) == activeFruitTypeIndex) then
                 local level = nMap:getLevelAtWorldPos(p.x, p.z)
                 if type(level) == "number" then
                     nCropSum = nCropSum + level; nCropCnt = nCropCnt + 1
+                    if nCanTargetAtPos then
+                        local target = nMap:getTargetLevelAtWorldPos(p.x, p.z)
+                        if type(target) == "number" then nTargetSum = nTargetSum + target; nTargetCnt = nTargetCnt + 1 end
+                    end
                     local m = TRAMLINE_MARGIN
                     if activeFruitTypeIndex == nil
                         or (getFruitTypeIndexAtWorldPos(p.x + m, p.z) ~= nil
@@ -1382,17 +1326,13 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId)
     -- Precise averages (no PF-legend snap) so the gauge fills exactly to the requirement.
     local rec = {}
     if nCanLevel and nActCnt > 0 then
-        local nMaxInternal = tonumber(nMap.maxValue) or 45
-        local function nConv(level)
-            return tonumber(nMap:getNitrogenValueFromInternalValue(math.max(0, math.min(level, nMaxInternal))))
-        end
         rec.nActual = nConv(nActSum / nActCnt)
-        rec.nTarget = nTarget
+        rec.nTarget = (nTargetCnt > 0) and math.floor(nConv(nTargetSum / nTargetCnt) + 0.5) or nil
         rec.nMin, rec.nMax = nConv(0) or 0, nConv(nMaxInternal) or 0
     end
     if phCanLevel and phActCnt > 0 then
         rec.phActual = phConv(phActSum / phActCnt)
-        rec.phTarget = phTarget
+        rec.phTarget = (phTargetCnt > 0) and (phTargetSum / phTargetCnt) or nil
         rec.phMin, rec.phMax = phConv(0) or 0, phConv(phMaxInternal) or 0
     end
 
