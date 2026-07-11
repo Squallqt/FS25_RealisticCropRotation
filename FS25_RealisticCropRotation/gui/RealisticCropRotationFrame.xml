@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <GUI name="RealisticCropRotationFrame">
 
-    <!-- ============================ LEFT SIDEBAR ============================ -->
+    <!-- ==================== LEFT SIDEBAR ==================== -->
     <ThreePartBitmap profile="fs25_subCategoryContainerBg">
         <Bitmap profile="fs25_subCategoryContainerArrow"/>
     </ThreePartBitmap>
@@ -44,7 +44,7 @@
 
     </GuiElement>
 
-    <!-- ============================ RIGHT PANE ============================ -->
+    <!-- ==================== RIGHT PANE ==================== -->
     <GuiElement profile="fs25_menuContentContainer">
 
         <GuiElement profile="fs25_menuHeaderPanel" position="0px 74px">
@@ -57,7 +57,7 @@
         <!-- Detail container: hero + history/nitrogen/lime/advice/field sections, 832px total -->
         <GuiElement profile="frDetailContainer" id="detailsContainer">
 
-            <!-- == HERO CARD (y=0..56) == -->
+            <!-- HERO CARD (y=0..56) -->
             <GuiElement profile="frHeroCard" position="0px 0px">
                 <RoundCorner     profile="frHeroCardBg"/>
                 <ThreePartBitmap profile="frHeroAccent"/>
@@ -71,16 +71,16 @@
                 <Text        profile="frStatusPillText" id="statusPillText" text=""/>
             </GuiElement>
 
-            <!-- == SECTION: CROP HISTORY (y=-66) == -->
+            <!-- SECTION: CROP HISTORY (y=-66) -->
             <GuiElement profile="frSectionBar" position="0px -66px">
                 <RoundCorner profile="frSectionBarBg"/>
                 <RoundCorner profile="frSectionAccent" position="14px 0px"/>
                 <Text profile="frSectionTitle" text="$l10n_rcr_section_history"/>
             </GuiElement>
 
-            <!-- == TIMELINE STRIP (y=-112..298): 5 slot cards with connector arrows == -->
+            <!-- TIMELINE STRIP (y=-112..298): 5 slot cards with connector arrows -->
             <GuiElement profile="frTimeline" position="20px -112px">
-                <!-- == Slot 1: CURRENT active crop / ground state (leftmost) == -->
+                <!-- Slot 1: CURRENT active crop / ground state (leftmost) -->
                 <GuiElement profile="frSlotCard" position="8px -4px">
                     <RoundCorner profile="frSlotCardBgCurrent"/>
                     <ThreePartBitmap profile="frSlotAccentCurrent"/>
@@ -96,7 +96,7 @@
                     <Bitmap profile="frTimelineArrowIcon"/>
                 </GuiElement>
 
-                <!-- == Slot 2: N-1 == -->
+                <!-- Slot 2: N-1 -->
                 <GuiElement profile="frSlotCard" position="257px -4px">
                     <RoundCorner profile="frSlotCardBgN1"/>
                     <Text        profile="frSlotSeasonLabel"     id="slot2SeasonLabel" text="$l10n_rcr_slot_n1"/>
@@ -111,7 +111,7 @@
                     <Bitmap profile="frTimelineArrowIcon"/>
                 </GuiElement>
 
-                <!-- == Slot 3: N-2 == -->
+                <!-- Slot 3: N-2 -->
                 <GuiElement profile="frSlotCard" position="506px -4px">
                     <RoundCorner profile="frSlotCardBgN2"/>
                     <Text        profile="frSlotSeasonLabel"     id="slot3SeasonLabel" text="$l10n_rcr_slot_n2"/>
@@ -126,7 +126,7 @@
                     <Bitmap profile="frTimelineArrowIcon"/>
                 </GuiElement>
 
-                <!-- == Slot 4: N-3 == -->
+                <!-- Slot 4: N-3 -->
                 <GuiElement profile="frSlotCard" position="755px -4px">
                     <RoundCorner     profile="frSlotCardBgN3"/>
                     <Text        profile="frSlotSeasonLabel"     id="slot4SeasonLabel" text="$l10n_rcr_slot_n3"/>
@@ -141,7 +141,7 @@
                     <Bitmap profile="frTimelineArrowIcon"/>
                 </GuiElement>
 
-                <!-- == Slot 5: N-4 (oldest, rightmost) == -->
+                <!-- Slot 5: N-4 (oldest, rightmost) -->
                 <GuiElement profile="frSlotCard" position="1004px -4px">
                     <RoundCorner profile="frSlotCardBgN4"/>
                     <Text        profile="frSlotSeasonLabel"     id="slot5SeasonLabel" text="$l10n_rcr_slot_n4"/>
@@ -153,14 +153,14 @@
 
             </GuiElement>
 
-            <!-- == SECTION: NITROGEN STATUS (y=-330) == -->
+            <!-- SECTION: NITROGEN STATUS (y=-330) -->
             <GuiElement profile="frSectionBar" position="0px -330px">
                 <RoundCorner profile="frSectionBarBg"/>
                 <RoundCorner profile="frSectionAccentN" position="14px 0px"/>
                 <Text profile="frSectionTitleN" text="$l10n_rcr_section_nitrogen"/>
             </GuiElement>
 
-            <!-- == NITROGEN GAUGE CARD (y=-374..428) == -->
+            <!-- NITROGEN GAUGE CARD (y=-374..428) -->
             <GuiElement profile="frNitrogenCard" position="20px -374px">
                 <RoundCorner profile="frNitrogenCardBg"/>
                 <Text        profile="frNitrogenStateLabel" id="nitrogenStateLabel" text=""/>
@@ -169,14 +169,14 @@
                 <RoundCorner profile="frNitrogenFill"      id="nitrogenBarFill"    visible="false"/>
             </GuiElement>
 
-            <!-- == SECTION: LIME / PH STATUS (y=-452) == -->
+            <!-- SECTION: LIME / PH STATUS (y=-452) -->
             <GuiElement profile="frSectionBar" position="0px -452px">
                 <RoundCorner profile="frSectionBarBg"/>
                 <RoundCorner profile="frSectionAccentN" position="14px 0px"/>
                 <Text profile="frSectionTitleN" text="$l10n_rcr_section_lime"/>
             </GuiElement>
 
-            <!-- == LIME / PH GAUGE CARD (y=-496..550) == -->
+            <!-- LIME / PH GAUGE CARD (y=-496..550) -->
             <GuiElement profile="frNitrogenCard" position="20px -496px">
                 <RoundCorner profile="frNitrogenCardBg"/>
                 <Text        profile="frNitrogenStateLabel" id="limeStateLabel" text=""/>
@@ -185,28 +185,28 @@
                 <RoundCorner profile="frLimeFill"           id="limeBarFill"    visible="false"/>
             </GuiElement>
 
-            <!-- == SECTION: AGRONOMIC ADVICE (y=-574) == -->
+            <!-- SECTION: AGRONOMIC ADVICE (y=-574) -->
             <GuiElement profile="frSectionBar" position="0px -574px">
                 <RoundCorner profile="frSectionBarBg"/>
                 <RoundCorner profile="frSectionAccentAdvice" position="14px 0px"/>
                 <Text profile="frSectionTitleAdvice" text="$l10n_rcr_section_advice"/>
             </GuiElement>
 
-            <!-- == ADVICE CARD (y=-618..682) == -->
+            <!-- ADVICE CARD (y=-618..682) -->
             <GuiElement profile="frAdviceCard" position="20px -618px">
                 <RoundCorner     profile="frAdviceCardBg"/>
                 <ThreePartBitmap profile="frAdviceAccent"/>
                 <Text            profile="frAdviceText" id="adviceText" text=""/>
             </GuiElement>
 
-            <!-- == SECTION: FIELD (soil work / weed / growth) (y=-706) == -->
+            <!-- SECTION: FIELD (soil work / weed / growth) (y=-706) -->
             <GuiElement profile="frSectionBar" position="0px -706px">
                 <RoundCorner profile="frSectionBarBg"/>
                 <RoundCorner profile="frSectionAccentField" position="14px 0px"/>
                 <Text profile="frSectionTitleField" text="$l10n_rcr_section_field"/>
             </GuiElement>
 
-            <!-- == FIELD CARD (y=-750..832) == -->
+            <!-- FIELD CARD (y=-750..832) -->
             <GuiElement profile="frFieldCard" position="20px -750px">
                 <RoundCorner     profile="frFieldCardBg"/>
                 <ThreePartBitmap profile="frFieldAccent"/>
@@ -236,7 +236,7 @@
         <!-- Planning container: hero + plan/score/overview sections, 832px total -->
         <GuiElement profile="frPlanContainer" id="planningContainer" visible="false">
 
-            <!-- == HERO CARD (y=0..56) == -->
+            <!-- HERO CARD (y=0..56) -->
             <GuiElement profile="frHeroCard" position="0px 0px">
                 <RoundCorner     profile="frHeroCardBg"/>
                 <ThreePartBitmap profile="frHeroAccent"/>
@@ -250,14 +250,14 @@
                 <Text        profile="frStatusPillText" id="planStatusPillText" text=""/>
             </GuiElement>
 
-            <!-- == SECTION: ROTATION PLAN (y=-66) == -->
+            <!-- SECTION: ROTATION PLAN (y=-66) -->
             <GuiElement profile="frSectionBar" position="0px -66px">
                 <RoundCorner profile="frSectionBarBg"/>
                 <RoundCorner profile="frSectionAccent" position="14px 0px"/>
                 <Text profile="frSectionTitle" text="$l10n_rcr_section_plan"/>
             </GuiElement>
 
-            <!-- == ANNUAL ROTATION CALENDAR (y=-112..350) == -->
+            <!-- ANNUAL ROTATION CALENDAR (y=-112..350) -->
             <GuiElement profile="frCalendarTimeline" position="20px -112px">
                 <RoundCorner profile="frCalendarBg"/>
 
@@ -369,14 +369,14 @@
                 </GuiElement>
             </GuiElement>
 
-            <!-- == SECTION: ROTATION QUALITY (y=-366) == -->
+            <!-- SECTION: ROTATION QUALITY (y=-366) -->
             <GuiElement profile="frSectionBar" position="0px -366px">
                 <RoundCorner profile="frSectionBarBg"/>
                 <RoundCorner profile="frSectionAccent" position="14px 0px"/>
                 <Text profile="frSectionTitle" text="$l10n_rcr_section_score"/>
             </GuiElement>
 
-            <!-- == SCORE CARD (y=-410..466) == -->
+            <!-- SCORE CARD (y=-410..466) -->
             <GuiElement profile="frScoreCard" position="20px -410px">
                 <RoundCorner profile="frScoreCardBg"/>
                 <Text        profile="frScoreText"        id="scoreText"       text=""/>
@@ -388,7 +388,7 @@
                 <Text profile="frScoreLabelRight" id="scoreLabelRight" text="$l10n_rcr_score_label_optimal"/>
             </GuiElement>
 
-            <!-- == SECTION: GLOBAL OVERVIEW (y=-476) == -->
+            <!-- SECTION: GLOBAL OVERVIEW (y=-476) -->
             <GuiElement profile="frSectionBar" position="0px -476px">
                 <RoundCorner profile="frSectionBarBg"/>
                 <RoundCorner profile="frSectionAccent" position="14px 0px"/>
@@ -396,7 +396,7 @@
                 <Text profile="frOverviewTotalArea" id="overviewTotalArea" text=""/>
             </GuiElement>
 
-            <!-- == GLOBAL OVERVIEW LIST (y=-520..790) == -->
+            <!-- GLOBAL OVERVIEW LIST (y=-520..790) -->
             <GuiElement profile="frOverviewWrap" position="20px -520px">
                 <RoundCorner profile="frOverviewBg"/>
 

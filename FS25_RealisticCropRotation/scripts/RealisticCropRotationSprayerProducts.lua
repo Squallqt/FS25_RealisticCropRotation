@@ -94,7 +94,9 @@ local function paintDiseaseProtection(workArea, fillType)
 end
 
 ---AI job-completion rule: prohibits re-working an already-protected cell.
--- @param table self sprayer vehicle; @param function superFunc original function; @param integer fillType
+-- @param table self Sprayer vehicle
+-- @param function superFunc Original function
+-- @param integer fillType
 local function setSprayerAITerrainDetailProhibitedRange(self, superFunc, fillType)
     if not RealisticCropRotationSprayerProducts.isProductFillType(fillType) then
         return superFunc(self, fillType)
@@ -134,7 +136,8 @@ local function setSprayerAITerrainDetailProhibitedRange(self, superFunc, fillTyp
 end
 
 ---Paints the sprayed strip's ground look (SPRAY_TYPE only, no fertilisation/nitrogen/yield effect).
--- @param table self sprayer vehicle; @param table workArea work area giving the sprayed strip corners
+-- @param table self Sprayer vehicle
+-- @param table workArea Work area giving the sprayed strip corners
 local function paintTreatmentGround(self, workArea)
     if self == nil or not self.isServer then return end
     if treatmentSprayType == nil then return end

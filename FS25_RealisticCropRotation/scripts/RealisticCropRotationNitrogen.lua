@@ -261,7 +261,7 @@ local function getTransition(data)
             end
         end
     else
-        -- Service unavailable: fall back to scanning everything (previous behavior).
+        -- Service unavailable: fall back to scanning every crop.
         context.n1Crops = context.crops
     end
 
@@ -431,8 +431,7 @@ local function resetContext(context)
     end
 end
 
----Cheap pre-filter before mask capture: skips density-map work entirely off-farmland, and captures
----only the static n1>0 crop subset unless the previous crop carries n2 (then any crop can deposit).
+---Cheap pre-filter before mask capture: skips density-map work off-farmland, and captures only the static n1>0 crop subset unless the previous crop carries n2.
 local function prepare(sx, sz, wx, wz, hx, hz)
     if manager == nil or manager.service == nil then return nil end
     local farmlandId = getFarmlandId(sx, sz, wx, wz, hx, hz)

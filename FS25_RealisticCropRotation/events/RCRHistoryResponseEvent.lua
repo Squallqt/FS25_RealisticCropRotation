@@ -177,7 +177,7 @@ function RCRHistoryResponseEvent:readStream(streamId, _connection)
     end
 end
 
----Writes the full rotation snapshot: history, plans, cover plans, active crops, growth states.
+---Writes the full rotation snapshot: history, plans, cover plans, active crops, growth states, disease state.
 -- @param integer streamId Network stream identifier
 -- @param Connection _connection Network connection (unused)
 function RCRHistoryResponseEvent:writeStream(streamId, _connection)

@@ -18,7 +18,10 @@ function RCRPlanUpdateEvent.emptyNew()
 end
 
 ---Creates a plan-update event.
--- @param integer farmlandId, yearIdx; string cropName; boolean isCover Farmland, year slot (1-4), crop ("" to clear), cover flag
+-- @param integer farmlandId Target farmland
+-- @param integer yearIdx Year slot (1-4)
+-- @param string cropName Crop name ("" to clear)
+-- @param boolean isCover Cover-plan flag
 -- @return RCRPlanUpdateEvent instance The new event instance
 function RCRPlanUpdateEvent.new(farmlandId, yearIdx, cropName, isCover)
     local self = RCRPlanUpdateEvent.emptyNew()

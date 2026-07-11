@@ -1,4 +1,5 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
+-- On-foot field-info HUD: appends rotation history, disease, treatment and growth lines to the field box.
 
 RealisticCropRotationHud = {}
 
@@ -33,7 +34,8 @@ function RealisticCropRotationHud.getFruitTypeDisplayName(fruitType)
 end
 
 ---i18n lookup with a fallback when the key is missing.
--- @param string key, fallback
+-- @param string key
+-- @param string fallback
 -- @return string text
 function RealisticCropRotationHud.getText(key, fallback)
     if g_i18n ~= nil and g_i18n.getText ~= nil then
@@ -116,8 +118,10 @@ function RealisticCropRotationHud.addHistoryLines(fieldBox, farmlandId)
     RealisticCropRotationHud.addTreatmentLine(fieldBox)
 end
 
----World position -> grid cell (matches FarmlandManager:convertWorldToLocalPosition's formula).
--- @param number worldX, worldZ; @param integer mapSize
+---World position -> farmland-local grid cell.
+-- @param number worldX
+-- @param number worldZ
+-- @param integer mapSize
 -- @return integer localX, localZ, or nil when unavailable
 local function worldToGridCell(worldX, worldZ, mapSize)
     if g_currentMission == nil or g_currentMission.terrainSize == nil or mapSize == nil then return nil end
@@ -126,8 +130,7 @@ local function worldToGridCell(worldX, worldZ, mapSize)
         math.floor(mapSize * (worldZ + terrainSize * 0.5) / terrainSize)
 end
 
----True when the given world position is marked protected in the given per-cell map: one native point
----read (getBitVectorMapPoint), no loop.
+---True when the given world position is marked protected in the per-cell map (one native getBitVectorMapPoint read, no loop).
 local function isPointProtected(protectionMapId, mapSize, worldX, worldZ)
     if protectionMapId == nil or getBitVectorMapPoint == nil or worldX == nil then return false end
     local localX, localZ = worldToGridCell(worldX, worldZ, mapSize)
@@ -183,7 +186,8 @@ end
 
 ---Resolves the (tierText, numbers) override for the on-foot "Croissance:" line.
 -- @param table data Field-info data
--- @return string tierText, numbers Tier label, "X/Y" progress (nil, nil if unavailable)
+-- @return string tierText Tier label
+-- @return string numbers "X/Y" progress (nil when unavailable)
 local function resolveGrowthOverride(data)
     if data == nil or g_fruitTypeManager == nil then return nil, nil end
     if RealisticCropRotationManager == nil then return nil, nil end
@@ -215,7 +219,10 @@ local function resolveGrowthOverride(data)
 end
 
 ---Overwrite of PlayerHUDUpdater.fieldAddField: injects the numeric growth into the growth row.
--- @param table hudSelf, data, fieldBox; function superFunc HUD updater, field data, field box, original fn
+-- @param table hudSelf HUD updater
+-- @param function superFunc Original fieldAddField
+-- @param table data Field data
+-- @param table fieldBox Field-info box
 function RealisticCropRotationHud.fieldAddField(hudSelf, superFunc, data, fieldBox, ...)
     local hookData = data
     local hookFieldBox = fieldBox
@@ -248,7 +255,10 @@ function RealisticCropRotationHud.fieldAddField(hudSelf, superFunc, data, fieldB
 end
 
 ---Overwrite of PlayerHUDUpdater.fieldAddFarmland: appends our rotation history rows.
--- @param table hudSelf, data, fieldBox; function superFunc HUD updater, field data, field box, original fn
+-- @param table hudSelf HUD updater
+-- @param function superFunc Original fieldAddFarmland
+-- @param table data Field data
+-- @param table fieldBox Field-info box
 function RealisticCropRotationHud.fieldAddFarmland(hudSelf, superFunc, data, fieldBox)
     RealisticCropRotationHud.hudInstance = hudSelf
     local farmlandId = data ~= nil and data.farmlandId or nil

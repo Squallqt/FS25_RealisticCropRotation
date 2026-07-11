@@ -1,4 +1,5 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
+-- BitVectorMap storage for the disease system: overlay grid, per-treatment protection maps, runtime risk + speckle maps.
 RealisticCropRotationDiseaseGrid = {}
 local RealisticCropRotationDiseaseGrid_mt = Class(RealisticCropRotationDiseaseGrid)
 
@@ -7,11 +8,9 @@ local RealisticCropRotationDiseaseGrid_mt = Class(RealisticCropRotationDiseaseGr
 RealisticCropRotationDiseaseGrid.NUM_CHANNELS = 4
 RealisticCropRotationDiseaseGrid.FILENAME = "realisticCropRotationDiseaseGrid.grle"
 
--- Per-cell curative/preventive protection, one bitvector per treatment family (0/1, 1 channel each,
--- same resolution as the main grid so cell-for-cell it lines up 1:1). A cell painted protected is
--- excluded from ALL future destruction under it (see RealisticCropRotationDisease's destroy filter) --
--- this covers BOTH curing an existing infection under the sprayed strip AND shielding it from a future
--- one, with the SAME mechanism. Persisted like the main grid.
+-- Per-cell protection, one bitvector per treatment family (0/1, same resolution as the main grid, 1:1).
+-- A protected cell is excluded from all future destruction under it (see Disease's destroy filter), so
+-- the same write both cures an existing infection and prevents a future one. Persisted like the main grid.
 RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS = 1
 RealisticCropRotationDiseaseGrid.FUNGICIDE_PROTECTION_FILENAME = "realisticCropRotationFungicideProtection.grle"
 RealisticCropRotationDiseaseGrid.NEMATICIDE_PROTECTION_FILENAME = "realisticCropRotationNematicideProtection.grle"
@@ -42,9 +41,7 @@ function RealisticCropRotationDiseaseGrid.new()
     return self
 end
 
----World-space axis-aligned bounding box of a field, from its polygon corner nodes.
----FS25 Field objects carry `polygonPoints` (a list of transform nodes), not the
----`fieldDimensions`/`start-width-height` triplets the old code assumed.
+---World-space axis-aligned bounding box of a field, from its polygon corner nodes (Field has no `fieldDimensions`).
 -- @return number minX, minZ, maxX, maxZ, or nil when geometry is unavailable
 local function fieldWorldBounds(field)
     if field == nil or getWorldTranslation == nil then return nil end
@@ -207,7 +204,8 @@ end
 
 ---Bbox + farmland-mask filter for a field's cells, reused by clearField and clearFieldProtection.
 -- @param table field
--- @return number minX, minZ, maxX, maxZ (nil if unbounded), table farmlandFilter or nil
+-- @return number minX, minZ, maxX, maxZ Field bbox, or nil if unbounded
+-- @return table farmlandFilter Farmland mask, or nil
 local function fieldClearParams(field)
     local minX, minZ, maxX, maxZ = fieldWorldBounds(field)
     if minX == nil then return nil end
@@ -251,7 +249,8 @@ end
 
 ---Wipes only this field's curative/preventive protection, leaving disease marks untouched.
 -- @param table field
--- @param number minX, minZ, maxX, maxZ, table farmlandFilter Optional, reused from clearField
+-- @param number minX, minZ, maxX, maxZ Optional field bbox, reused from clearField
+-- @param table farmlandFilter Optional farmland mask, reused from clearField
 function RealisticCropRotationDiseaseGrid:clearFieldProtection(field, minX, minZ, maxX, maxZ, farmlandFilter)
     if g_terrainNode == nil or DensityMapModifier == nil then return end
     if minX == nil then
@@ -280,7 +279,7 @@ function RealisticCropRotationDiseaseGrid:clearAll()
 end
 
 ---Marks the sprayed strip protected for the given family and clears its disease marks immediately.
----The daily destruction pass excludes protected cells, so the SAME write both cures and prevents.
+-- The daily destruction pass excludes protected cells, so the same write both cures and prevents.
 -- @param string family "FUNGICIDE" | "NEMATICIDE"
 -- @param number sx, sz, wx, wz, hx, hz world-space parallelogram corners of the sprayed strip
 function RealisticCropRotationDiseaseGrid:paintProtection(family, sx, sz, wx, wz, hx, hz)

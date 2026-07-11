@@ -1,6 +1,6 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
--- Native in-game map disease overlay: two sub-pages (active infections / disease risk), both coloured
--- directly from existing BitVectorMaps off the UI path -- no Lua pixel iteration, no map built here.
+-- Native in-game map disease overlay: three sub-pages (active infections / disease risk / treatment
+-- coverage), all coloured from existing BitVectorMaps off the UI path -- no Lua pixel iteration, no map built here.
 -- The table must survive source() reloads, so closures reference the GLOBAL name, never a captured self.
 
 RealisticCropRotationDiseaseMap = RealisticCropRotationDiseaseMap or {}
@@ -30,10 +30,8 @@ RealisticCropRotationDiseaseMap.RISK_LOW = 1
 RealisticCropRotationDiseaseMap.RISK_MODERATE = 2
 RealisticCropRotationDiseaseMap.RISK_HIGH = 3
 
--- Fallback overlay TEXTURE base resolution, used only if MapOverlayGenerator.OVERLAY_RESOLUTION isn't
--- available (see adjustedOverlaySize, which reads the real native value first). Matches it anyway
--- (FIELDS/FOLIAGE_STATE/FARMLANDS all start at 512x512). Display texture only, independent of the
--- source data maps (grid.mapId etc.).
+-- Fallback overlay texture base resolution, used only when MapOverlayGenerator.OVERLAY_RESOLUTION is
+-- unavailable (adjustedOverlaySize reads the real value first). Display texture only, independent of the source data maps.
 RealisticCropRotationDiseaseMap.OVERLAY_BASE_RESOLUTION = 512
 
 RealisticCropRotationDiseaseMap.SUB_PAGE_INFECTIONS = 1
@@ -100,17 +98,15 @@ local function getGrid()
     return RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
 end
 
----Overlay colour for a disease's grid state id, honouring colour-blind mode. Falls back to a
----generic colour for any state id beyond the defined palette.
+---Overlay colour for a disease's grid state id (colour-blind aware); falls back to a generic colour beyond the palette.
 local function infectionStateColor(state, colorBlind)
     local entry = RealisticCropRotationDiseaseMap.STATE_COLORS[state]
         or RealisticCropRotationDiseaseMap.STATE_COLOR_FALLBACK
     return entry[colorBlind == true] or entry[false] or {1, 1, 1, 1}
 end
 
----Filter list rows for the infection sub-page: ONE row per disease, built dynamically from the
----config (name via l10n through the disease model, colour by the disease's stable state id). The
----row order matches self.filter and renderInfectionOverlay (both walk orderedDiseaseGroups).
+---Filter rows for the infection sub-page: one per disease, built from config (l10n name, colour by state id).
+-- Row order matches self.filter and renderInfectionOverlay (both walk orderedDiseaseGroups).
 local function getInfectionDisplayItems(colorBlind)
     local disease = getDisease()
     local items = {}
@@ -139,9 +135,7 @@ local function getRiskDisplayItems()
     }
 end
 
----Filter list rows for the treatment-coverage sub-page: one row per product family, reusing the SAME
----l10n titles already shipped for the fillTypes (rcr_fillType_fungicide / rcr_fillType_nematicide,
----translated in all 27 languages already), so no new product-name strings are needed.
+---Filter rows for the treatment-coverage sub-page: one per product family, reusing the fillType l10n titles (rcr_fillType_fungicide / rcr_fillType_nematicide).
 local function getTreatmentDisplayItems()
     local fung = RealisticCropRotationDiseaseMap.TREATMENT_COLOR_FUNGICIDE
     local nema = RealisticCropRotationDiseaseMap.TREATMENT_COLOR_NEMATICIDE
@@ -253,8 +247,7 @@ end
 -- Runtime objects
 -- ============================================================================
 
----Overlay TEXTURE size, scaled from OVERLAY_BASE_RESOLUTION by the player's performance profile.
----Independent of any source data map's own resolution.
+---Overlay texture size, scaled from OVERLAY_BASE_RESOLUTION by the performance profile (independent of source map resolution).
 -- @return integer size
 local function adjustedOverlaySize()
     local base = RealisticCropRotationDiseaseMap.OVERLAY_BASE_RESOLUTION
@@ -279,8 +272,7 @@ local function adjustedOverlaySize()
     end
 end
 
----Creates two value overlays per sub-page (double-buffered): generation is async (GPU-side), so
----regenerating into the hidden slot while the active one keeps drawing avoids a blank gap on refresh.
+---Creates two value overlays per sub-page (double-buffered) so async regeneration into the hidden slot avoids a blank gap on refresh.
 function RealisticCropRotationDiseaseMap:createRuntimeObjects()
     if createDensityMapVisualizationOverlay == nil then return end
     local grid = getGrid()
@@ -345,8 +337,8 @@ function RealisticCropRotationDiseaseMap:buildKey()
     parts[#parts + 1] = string.format("P%d", subPage)
     parts[#parts + 1] = self.isColorBlindMode == true and "CB1" or "CB0"
 
-    -- Only the display controls we own: the CONTENT of both views lives in the display maps,
-    -- whose revisions (grid.changeRevision / grid.riskRevision) are tracked in updateOverlay.
+    -- Only the display controls we own: each view's CONTENT lives in the display maps, whose revisions
+    -- (grid.changeRevision / grid.riskRevision / grid.protectionRevision) are tracked in updateOverlay.
     if subPage == self.SUB_PAGE_PRESSURE then
         local rf = self.riskFilter or {}
         parts[#parts + 1] = string.format("%s%s%s",
@@ -408,8 +400,7 @@ end
 -- Risk view — render straight from the runtime risk-band map (no iteration).
 -- ============================================================================
 
----Colours the pressure view straight from the runtime risk-band map: one native call per band (1..3),
----painted off the UI path by Disease:refreshRiskMap -- no per-field loop, no mask.
+---Colours the pressure view from the runtime risk-band map: one native call per band (1..3), painted off the UI path by Disease:refreshRiskMap.
 function RealisticCropRotationDiseaseMap:renderRiskOverlay()
     local grid = getGrid()
     if grid == nil or grid.riskMapId == nil or self.riskOverlayIds == nil then
@@ -445,8 +436,7 @@ end
 -- Treatment-coverage view — render straight from the two per-cell protection maps.
 -- ============================================================================
 
----Colours the treatment-coverage view straight from the two per-cell protection maps written by the
----sprayer, showing exactly the same coverage the daily destroy pass excludes -- no mask, no Lua iteration.
+---Colours the treatment-coverage view from the two per-cell protection maps written by the sprayer (same coverage the daily destroy pass excludes).
 function RealisticCropRotationDiseaseMap:renderTreatmentOverlay()
     local grid = getGrid()
     if grid == nil or self.treatmentOverlayIds == nil then return false end
@@ -523,8 +513,7 @@ function RealisticCropRotationDiseaseMap:updateOverlay(force)
     end
 end
 
----Draws the active view's overlay (double-buffered). If the background slot finished generating, it
----becomes the new active slot, so the map is never blank after the first generation.
+---Draws the active view's overlay (double-buffered): a finished background slot becomes the new active slot, so the map is never blank after the first generation.
 function RealisticCropRotationDiseaseMap:draw(x, y, width, height)
     local overlayIds, pendingSlotField, activeSlotField
     if self:isPressurePage() then

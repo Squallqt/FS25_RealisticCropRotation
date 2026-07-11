@@ -99,7 +99,9 @@ local function fieldPolygonBounds(field)
 end
 
 ---True when a 2D point lies inside a polygon (ray-casting / even-odd rule).
--- @param number x, z; @param table vertices Array of {x=, z=}
+-- @param number x
+-- @param number z
+-- @param table vertices Array of {x=, z=}
 -- @return boolean inside
 local function isPointInPolygon(x, z, vertices)
     if vertices == nil or #vertices < 3 then return false end
@@ -240,7 +242,8 @@ local function collectFieldInteriorSamples(field, samples)
 end
 
 ---True when a fruit type's growth state is cut/withered (harvested residue, not a live crop).
--- @param table fruitType; @param number growthState
+-- @param table fruitType
+-- @param number growthState
 -- @return boolean isDone
 local function isFruitTypeCutOrWithered(fruitType, growthState)
     if fruitType == nil or growthState == nil then return false end
@@ -561,7 +564,7 @@ local function getNativeSoilStateIndex(field)
     return getNativeSoilStateIndexFromFieldState(fieldState)
 end
 
----Ground state -> native GIANTS l10n label (GROWTH_MAP_* via MapOverlayGenerator.L10N_SYMBOL).
+---Ground state -> native l10n label (GROWTH_MAP_* via MapOverlayGenerator.L10N_SYMBOL).
 -- @param table field
 -- @param integer groundStateIndex Resolved when nil
 -- @return string label, or nil
@@ -594,7 +597,7 @@ local function getNativeGroundStateLabel(field, groundStateIndex)
     return label
 end
 
----Soil state -> native GIANTS l10n label (SOIL_MAP_* via MapOverlayGenerator.L10N_SYMBOL).
+---Soil state -> native l10n label (SOIL_MAP_* via MapOverlayGenerator.L10N_SYMBOL).
 -- @param table field
 -- @param integer soilStateIndex Resolved when nil
 -- @return string label, or nil
@@ -1082,6 +1085,7 @@ end
 ---Builds an { x, z } sample grid over the field bbox, masked to this farmland's ground so neighbours never leak in.
 -- @param table field
 -- @param integer farmlandId
+-- @param integer customSteps Grid resolution override (optional; defaults to FIELD_SCAN_STEPS)
 -- @return table points, or nil when no point is on the farmland
 function RealisticCropRotationManager:buildFieldSampleGrid(field, farmlandId, customSteps)
     if field == nil then return nil end
@@ -1306,7 +1310,7 @@ function RealisticCropRotationManager:getPHLevel(farmlandId)
     return rec.phActual, rec.phTarget, rec.phMin, rec.phMax
 end
 
----Localised growth-tier label, matching MapOverlayGenerator.buildGrowthStateMapOverlay.
+---Localised growth-tier label (growing / ready to prepare / ready to harvest / cut / withered).
 -- @param table fruitType
 -- @param integer growthState
 -- @return string label, or nil

@@ -133,7 +133,7 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- ===== Section bar (1280 x 32 px) ===== -->
+    <!-- Section bar (1280 x 32 px) -->
 
     <Profile name="frSectionBar" extends="emptyPanel" with="anchorTopLeft">
         <size value="1280px 32px"/>
@@ -654,7 +654,7 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- ===== Score card (1240 x 70 px) ===== -->
+    <!-- Score card (1240 x 70 px) -->
 
     <!-- Score card: 80px — text left, cursor track right, labels below track -->
     <Profile name="frScoreCard" extends="emptyPanel" with="anchorTopLeft">
@@ -755,7 +755,7 @@
         <size value="6px 292px"/>
     </Profile>
 
-    <!-- === Rotation group rows (1 row = 1 unique rotation pattern, 80 px tall) === -->
+    <!-- Rotation group rows (1 row = 1 unique rotation pattern, 80 px tall) -->
 
     <!-- Row = transparent — the card bg child provides the visual -->
     <Profile name="frOverviewListItem" extends="baseReference" with="anchorTopStretchingX">

@@ -1,4 +1,5 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
+-- In-game menu page: rotation history, planning calendar, agronomy/disease panels and the fields overview.
 RealisticCropRotationFrame = {}
 local RealisticCropRotationFrame_mt = Class(RealisticCropRotationFrame, TabbedMenuFrameElement)
 
@@ -1743,7 +1744,7 @@ function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId)
         end
     end
 
-    -- Vanilla fallback: base-game fertilisation level (SPRAY_LEVEL).
+    -- Vanilla fallback: fertilisation level (SPRAY_LEVEL).
     if stateText == nil then
         local nLevel = 0
         local maxLevel = 1

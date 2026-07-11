@@ -21,7 +21,11 @@ local function hasPlanData(plan)
 end
 
 ---Counts non-empty entities for persistence logging.
--- @return integer historyFarmlands, historyEntries, planFarmlands, coverPlanFarmlands, activeCropFarmlands
+-- @return integer historyFarmlands
+-- @return integer historyEntries
+-- @return integer planFarmlands
+-- @return integer coverPlanFarmlands
+-- @return integer activeCropFarmlands
 local function getPersistenceCounts(history, plans, coverPlans, lastKnownActiveCrop)
     local historyFarmlands = 0
     local historyEntries = 0
@@ -270,7 +274,11 @@ function RealisticCropRotationRepository:setLastKnownGrowthState(farmlandId, gro
 end
 
 ---Replaces all stored data (used by the client sync).
--- @param table newHistory, newPlans, newCoverPlans, newLastKnownActiveCrop, newLastKnownGrowthState
+-- @param table newHistory
+-- @param table newPlans
+-- @param table newCoverPlans
+-- @param table newLastKnownActiveCrop
+-- @param table newLastKnownGrowthState
 function RealisticCropRotationRepository:replaceAll(newHistory, newPlans, newCoverPlans, newLastKnownActiveCrop, newLastKnownGrowthState)
     self.history    = newHistory or {}
     self.plans      = newPlans or {}

@@ -35,7 +35,7 @@ function RealisticCropRotation.isFallowCrop(cropName)
         and string.upper(tostring(cropName)) == RealisticCropRotation.SPECIAL_CROP_FALLOW
 end
 
----Loads cropConfig.xml into a families/nitrogen/coverCrops table.
+---Loads cropConfig.xml into the crop and disease-group config table.
 -- @return table config Crop config, or nil on failure
 local function loadCropConfig()
     local filePath = modDirectory .. "cropConfig.xml"
@@ -182,7 +182,7 @@ local function onFarmlandOwnerChanged(farmlandId, _farmId, loadFromSavegame)
     end
 end
 
----Reconciles active crops for all owned farmlands on a period change (server).
+---Reconciles active crops and rolls disease infection for all owned farmlands on a period change (server).
 local function onPeriodChanged()
     if g_currentMission == nil or not g_currentMission:getIsServer() then return end
     if RealisticCropRotation.manager == nil
@@ -221,8 +221,7 @@ local function onPeriodChanged()
     end
 end
 
----Server: queues the day's disease progress (cheap); the work itself is drained a few fields per
--- frame from the broadcast updateable. Subscribed to MessageType.DAY_CHANGED.
+---Queues the day's disease progress; drained across frames by the broadcast updateable (server).
 local function onDayChanged()
     if g_currentMission == nil or not g_currentMission:getIsServer() then return end
     if RealisticCropRotation.disease ~= nil
@@ -268,7 +267,9 @@ local function applyTabListAlignmentFix()
 end
 
 ---Injects the RealisticCropRotationFrame as a tab in the InGameMenu paging element.
--- @param string frameFieldName, insertPosition; function predicateFunc Field name, insert position (index or sibling field name), visibility predicate
+-- @param string frameFieldName Field name to expose on the menu
+-- @param function predicateFunc Page visibility predicate
+-- @param number|string insertPosition Insert index, or sibling field name to insert after
 -- @return table frame The registered frame, or nil on failure
 function RealisticCropRotation.addInGameMenuPage(frameFieldName, predicateFunc, insertPosition)
     if g_inGameMenu == nil then return nil end
@@ -357,7 +358,7 @@ local function loadGuiAssets()
     end
 end
 
----Mission-load hook: builds the manager, loads/saves state, wires server listeners.
+---Mission-load hook: builds the manager, loads state, wires server listeners.
 local function loadedMission()
     -- Reload crop config here to guarantee the engine XML API is fully ready.
     if RealisticCropRotation.cropConfig == nil then
