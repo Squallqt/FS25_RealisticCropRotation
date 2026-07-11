@@ -466,6 +466,11 @@
         <textSize value="18px"/>
     </Profile>
 
+    <!-- Same compact size as frFieldKpiValueSmall, greyed out for non-priority fallback text -->
+    <Profile name="frFieldKpiValueSmallNA" extends="frFieldKpiValueSmall">
+        <textColor value="$preset_fs25_colorGrey"/>
+    </Profile>
+
     <!-- Thin vertical divider between the two KPIs -->
     <Profile name="frFieldDivider" extends="baseReference" with="anchorTopCenter">
         <position value="0px -18px"/>

@@ -10,6 +10,7 @@
 
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="농학" />
+        <e k="rcr_sidebar_fields"       v="밭" />
         <e k="rcr_tab_planning"         v="계획" />
         <e k="rcr_disease_name_sclerotinia" v="균핵병" />
         <e k="rcr_disease_name_bcn"   v="씨스트선충" />
@@ -113,7 +114,6 @@
 
         <!-- Field card — required actions / growth -->
         <e k="rcr_action_header"        v="토양 상태" />
-        <e k="rcr_action_none"          v="없음" />
         <e k="rcr_field_growth"          v="생장" />
 
         <!-- Field card — weed column header (singular) -->

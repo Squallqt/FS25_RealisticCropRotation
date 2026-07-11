@@ -10,6 +10,7 @@
 
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Nông học" />
+        <e k="rcr_sidebar_fields"       v="Ruộng" />
         <e k="rcr_tab_planning"         v="Lập kế hoạch" />
         <e k="rcr_disease_name_sclerotinia" v="Bệnh thối hạch (nấm Sclerotinia)" />
         <e k="rcr_disease_name_bcn"   v="Tuyến trùng bào nang" />
@@ -113,7 +114,6 @@
 
         <!-- Field card — required actions / growth -->
         <e k="rcr_action_header"        v="Tình trạng đất" />
-        <e k="rcr_action_none"          v="Không có" />
         <e k="rcr_field_growth"          v="Sinh trưởng" />
 
         <!-- Field card — weed column header (singular) -->

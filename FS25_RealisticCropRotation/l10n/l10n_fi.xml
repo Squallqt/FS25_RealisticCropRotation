@@ -10,6 +10,7 @@
 
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Agronomia" />
+        <e k="rcr_sidebar_fields"       v="Pellot" />
         <e k="rcr_tab_planning"         v="Suunnittelu" />
         <e k="rcr_disease_name_sclerotinia" v="Pahkahome (Sclerotinia)" />
         <e k="rcr_disease_name_bcn"   v="Kystaankeroinen" />
@@ -113,7 +114,6 @@
 
         <!-- Field card — required actions / growth -->
         <e k="rcr_action_header"        v="Maan tila" />
-        <e k="rcr_action_none"          v="Ei mitään" />
         <e k="rcr_field_growth"          v="Kasvu" />
 
         <!-- Field card — weed column header (singular) -->

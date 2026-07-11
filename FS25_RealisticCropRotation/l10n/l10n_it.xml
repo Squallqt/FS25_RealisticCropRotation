@@ -10,6 +10,7 @@
 
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Agronomia" />
+        <e k="rcr_sidebar_fields"       v="Campi" />
         <e k="rcr_tab_planning"         v="Pianificazione" />
         <e k="rcr_disease_name_sclerotinia" v="Sclerotinia (muffa bianca)" />
         <e k="rcr_disease_name_bcn"   v="Nematode a cisti" />
@@ -113,7 +114,6 @@
 
         <!-- Field card — required actions / growth -->
         <e k="rcr_action_header"        v="Condizione del suolo" />
-        <e k="rcr_action_none"          v="Nessuno" />
         <e k="rcr_field_growth"          v="Crescita" />
 
         <!-- Field card — weed column header (singular) -->

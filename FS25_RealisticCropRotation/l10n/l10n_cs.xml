@@ -10,6 +10,7 @@
 
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="农学" />
+        <e k="rcr_sidebar_fields"       v="田块" />
         <e k="rcr_tab_planning"         v="规划" />
         <e k="rcr_disease_name_sclerotinia" v="菌核病" />
         <e k="rcr_disease_name_bcn"   v="孢囊线虫" />
@@ -113,7 +114,6 @@
 
         <!-- Field card — required actions / growth -->
         <e k="rcr_action_header"        v="土壤状况" />
-        <e k="rcr_action_none"          v="无" />
         <e k="rcr_field_growth"          v="生长" />
 
         <!-- Field card — weed column header (singular) -->

@@ -10,6 +10,7 @@
 
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Агрономия" />
+        <e k="rcr_sidebar_fields"       v="Поля" />
         <e k="rcr_tab_planning"         v="Планирование" />
         <e k="rcr_disease_name_sclerotinia" v="Склеротиниоз (белая гниль)" />
         <e k="rcr_disease_name_bcn"   v="Цистовая нематода" />
@@ -113,7 +114,6 @@
 
         <!-- Field card — required actions / growth -->
         <e k="rcr_action_header"        v="Состояние почвы" />
-        <e k="rcr_action_none"          v="Нет" />
         <e k="rcr_field_growth"          v="Рост" />
 
         <!-- Field card — weed column header (singular) -->

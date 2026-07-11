@@ -650,24 +650,6 @@ local function fieldStatusRank(kind, index)
     return math.huge
 end
 
----Field-prep needed at a point (PLOW_LEVEL 0 / ROLLER_LEVEL 1), per buildSoilStateMapOverlay.
--- @param table fieldState
--- @return boolean plowNeeded
--- @return boolean rollNeeded
-local function detectTillageActionsFromFieldState(fieldState)
-    local gameplay = Platform ~= nil and Platform.gameplay or nil
-    local missionInfo = g_currentMission ~= nil and g_currentMission.missionInfo or nil
-
-    local plowNeeded = gameplay ~= nil and gameplay.usePlowCounter == true
-        and missionInfo ~= nil and missionInfo.plowingRequiredEnabled == true
-        and getRoundedFieldStateLevel(fieldState, "plowLevel") == 0
-
-    local rollNeeded = gameplay ~= nil and gameplay.useRolling == true
-        and getRoundedFieldStateLevel(fieldState, "rollerLevel") == 1
-
-    return plowNeeded == true, rollNeeded == true
-end
-
 -- Construction / lifecycle.
 
 ---Creates the manager (repository + service, caches).
@@ -963,46 +945,6 @@ function RealisticCropRotationManager:getCurrentFieldStatus(farmlandId)
     return label, chosenKind, chosenIndex
 end
 
----Top field-prep action label over field samples (plow > roll).
--- @param integer farmlandId
--- @return string label Native action label, or nil when none
-function RealisticCropRotationManager:getRequiredFieldActionLabel(farmlandId)
-    if MapOverlayGenerator == nil or MapOverlayGenerator.SOIL_STATE_INDEX == nil then return nil end
-    local field = self:getFieldByFarmlandId(farmlandId)
-    if field == nil or FieldState == nil then return nil end
-
-    local samples = {}
-    if type(field.posX) == "number" and type(field.posZ) == "number" then
-        samples[#samples + 1] = { x = field.posX, z = field.posZ }
-    end
-    collectFieldInteriorSamples(field, samples)
-    if #samples == 0 then return nil end
-
-    local total, plowCount, rollCount = 0, 0, 0
-    for _, s in ipairs(samples) do
-        local fieldState = FieldState.new()
-        if type(fieldState.update) == "function" then
-            fieldState:update(s.x, s.z)
-            if fieldState.isValid then
-                total = total + 1
-                local plowNeeded, rollNeeded = detectTillageActionsFromFieldState(fieldState)
-                if plowNeeded then plowCount = plowCount + 1 end
-                if rollNeeded then rollCount = rollCount + 1 end
-            end
-        end
-    end
-    if total == 0 then return nil end
-
-    local indices = MapOverlayGenerator.SOIL_STATE_INDEX
-    if plowCount * 2 >= total then
-        return getNativeSoilStateLabel(nil, indices.NEEDS_PLOWING)
-    end
-    if rollCount * 2 >= total then
-        return getNativeSoilStateLabel(nil, indices.NEEDS_ROLLING)
-    end
-    return nil
-end
-
 ---Returns the player-owned farmland ids that carry a usable rotation area, sorted.
 -- @return table farmlandIds
 function RealisticCropRotationManager:getOwnedRotationFarmlandIds()
@@ -1276,9 +1218,7 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId)
 
     local _, activeFruitTypeIndex = self:getActiveCropInfo(n)
 
-    -- Actual + target sampled together on the same grid, so they always read the same ground. N actual
-    -- excludes tramline-adjacent pixels (coarse map blur skews them low); the N target isn't affected,
-    -- so it samples every valid crop pixel.
+    -- Actual and target sampled on the same grid; N actual skips tramline-adjacent pixels (blurred low), the target doesn't need that filter.
     local TRAMLINE_MARGIN = 2.5
     local nActSum, nActCnt, nCropSum, nCropCnt, phActSum, phActCnt = 0, 0, 0, 0, 0, 0
     local nTargetSum, nTargetCnt, phTargetSum, phTargetCnt = 0, 0, 0, 0
@@ -1370,6 +1310,7 @@ end
 -- @param table fruitType
 -- @param integer growthState
 -- @return string label, or nil
+-- @return boolean isActionable True when the player has something to do now (prepare/harvest)
 function RealisticCropRotationManager.getGrowthTierText(fruitType, growthState)
     if fruitType == nil then return nil end
     growthState = tonumber(growthState) or 0
@@ -1377,10 +1318,10 @@ function RealisticCropRotationManager.getGrowthTierText(fruitType, growthState)
     if g_i18n == nil or g_i18n.getText == nil then return nil end
 
     if fruitType.witheredState ~= nil and growthState == tonumber(fruitType.witheredState) then
-        return g_i18n:getText("ui_growthMapWithered")
+        return g_i18n:getText("ui_growthMapWithered"), false
     end
     if type(fruitType.cutStates) == "table" and fruitType.cutStates[growthState] then
-        return g_i18n:getText("ui_growthMapCut")
+        return g_i18n:getText("ui_growthMapCut"), false
     end
 
     local minHarvest = tonumber(fruitType.minHarvestingGrowthState) or 0
@@ -1395,30 +1336,31 @@ function RealisticCropRotationManager.getGrowthTierText(fruitType, growthState)
             maxGrowingState = math.min(maxGrowingState, minPrep - 1)
         end
         if growthState >= 1 and growthState <= maxGrowingState then
-            return g_i18n:getText("ui_growthMapGrowing")
+            return g_i18n:getText("ui_growthMapGrowing"), false
         end
     end
 
     if minPrep >= 0 and growthState >= minPrep and growthState <= maxPrep then
-        return g_i18n:getText("ui_growthMapReadyToPrepareForHarvest")
+        return g_i18n:getText("ui_growthMapReadyToPrepareForHarvest"), true
     end
     if minHarvest > 0 and growthState >= minHarvest and growthState <= maxHarvest then
-        return g_i18n:getText("ui_growthMapReadyToHarvest")
+        return g_i18n:getText("ui_growthMapReadyToHarvest"), true
     end
 
-    return nil
+    return nil, false
 end
 
 ---"(X/Y) · <tier>" for active tiers, tier alone for terminal ones.
 -- @param table fruitType
 -- @param integer growthState
 -- @return string text, or nil
+-- @return boolean isActionable True when the player has something to do now (prepare/harvest)
 function RealisticCropRotationManager.classifyGrowthStage(fruitType, growthState)
-    local tierText = RealisticCropRotationManager.getGrowthTierText(fruitType, growthState)
+    local tierText, isActionable = RealisticCropRotationManager.getGrowthTierText(fruitType, growthState)
     if tierText == nil then return nil end
     local numbers = RealisticCropRotationManager.getGrowthStageNumbers(fruitType, growthState)
-    if numbers == nil then return tierText end
-    return string.format("(%s) · %s", numbers, tierText)
+    if numbers == nil then return tierText, isActionable end
+    return string.format("(%s) · %s", numbers, tierText), isActionable
 end
 
 ---"X/Y" native growth-state progress (nil for terminal states). Used by menu card + HUD.
@@ -1462,7 +1404,7 @@ end
 
 ---Per-field card info: growth stage + the on-foot weed line.
 -- @param integer farmlandId
--- @return table info { growthStageText, weedHeader, weedActionText }, or nil when no crop
+-- @return table info { growthStageText, growthIsAction, weedHeader, weedActionText }, or nil when no crop
 function RealisticCropRotationManager:getFieldCropInfo(farmlandId)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return nil end
@@ -1492,8 +1434,11 @@ function RealisticCropRotationManager:getFieldCropInfo(farmlandId)
         weedHeader, weedValue = RealisticCropRotationHud.getWeedLineFromGame(fieldState)
     end
 
+    local growthStageText, growthIsAction = RealisticCropRotationManager.classifyGrowthStage(fruitType, growthState)
+
     return {
-        growthStageText = RealisticCropRotationManager.classifyGrowthStage(fruitType, growthState),
+        growthStageText = growthStageText,
+        growthIsAction  = growthIsAction,
         weedHeader      = weedHeader,
         weedActionText  = weedValue,
     }

@@ -211,11 +211,11 @@ end
 function RealisticCropRotationFrame:initialize()
     RealisticCropRotationFrame:superClass().initialize(self)
 
-    -- Setup sidebar view tab selector
+    -- Sidebar always lists fields, whichever sub-tab is active; the page title carries the mode.
     if self.viewSelector ~= nil then
         self.viewSelector:setTexts({
-            self.i18n:getText("rcr_tab_history"),
-            self.i18n:getText("rcr_tab_planning"),
+            self.i18n:getText("rcr_sidebar_fields"),
+            self.i18n:getText("rcr_sidebar_fields"),
         })
         self.viewSelector:setState(RealisticCropRotationFrame.TAB.HISTORY, false)
 
@@ -1858,21 +1858,28 @@ function RealisticCropRotationFrame:updateFieldCard(farmlandId)
     end
 
     local hasStage = info ~= nil and info.growthStageText ~= nil
+    local growthIsAction = info ~= nil and info.growthIsAction == true
     local hasWeed  = info ~= nil and info.weedActionText ~= nil
     local weedText  = hasWeed and info.weedActionText or "-"
     local stageText = hasStage and info.growthStageText or "-"
 
-    -- Soil-work KPI: top field-prep action (native label), or "none".
-    local actionLabel = nil
-    if mgr ~= nil and type(mgr.getRequiredFieldActionLabel) == "function" then
-        actionLabel = mgr:getRequiredFieldActionLabel(farmlandId)
+    -- Single source (getCurrentFieldStatus), shared with the sidebar, so the same state always gets the same label.
+    local actionLabel, statusKind, statusIndex = nil, nil, nil
+    if mgr ~= nil and type(mgr.getCurrentFieldStatus) == "function" then
+        actionLabel, statusKind, statusIndex = mgr:getCurrentFieldStatus(farmlandId)
     end
     local hasAction = actionLabel ~= nil and actionLabel ~= ""
-    local actionText = hasAction and actionLabel or self.i18n:getText("rcr_action_none")
+    local indices = MapOverlayGenerator ~= nil and MapOverlayGenerator.SOIL_STATE_INDEX or nil
+    local isPriority = hasAction and statusKind == "soil" and indices ~= nil
+        and (statusIndex == indices.NEEDS_PLOWING or statusIndex == indices.NEEDS_ROLLING)
+    local actionText = hasAction and actionLabel or "-"
 
     if self.requiredActionValue ~= nil then
         if self.requiredActionValue.applyProfile ~= nil then
-            self.requiredActionValue:applyProfile(hasAction and "frFieldKpiValueSmall" or "frFieldKpiValueNA")
+            -- Small size (18px) for any real text (avoids clipping); NA's 26px is only right for "-".
+            local profile = isPriority and "frFieldKpiValueSmall"
+                or (hasAction and "frFieldKpiValueSmallNA" or "frFieldKpiValueNA")
+            self.requiredActionValue:applyProfile(profile)
         end
         self.requiredActionValue:setText(actionText)
     end
@@ -1894,7 +1901,10 @@ function RealisticCropRotationFrame:updateFieldCard(farmlandId)
 
     if self.growthValue ~= nil then
         if self.growthValue.applyProfile ~= nil then
-            self.growthValue:applyProfile(hasStage and "frFieldKpiValueSmall" or "frFieldKpiValueNA")
+            -- Orange only when ready to prepare/harvest (an action); plain growing is grey.
+            local profile = growthIsAction and "frFieldKpiValueSmall"
+                or (hasStage and "frFieldKpiValueSmallNA" or "frFieldKpiValueNA")
+            self.growthValue:applyProfile(profile)
         end
         self.growthValue:setText(stageText)
     end

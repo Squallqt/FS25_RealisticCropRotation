@@ -10,6 +10,7 @@
 
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Agronomy" />
+        <e k="rcr_sidebar_fields"       v="Fields" />
         <e k="rcr_tab_planning"         v="Planning" />
         <e k="rcr_disease_name_sclerotinia" v="Sclerotinia" />
         <e k="rcr_disease_name_bcn"   v="Cyst nematode" />
@@ -113,7 +114,6 @@
 
         <!-- Field card — required actions / growth -->
         <e k="rcr_action_header"        v="Soil condition" />
-        <e k="rcr_action_none"          v="None" />
         <e k="rcr_field_growth"          v="Growth" />
 
         <!-- Field card — weed column header (singular) -->

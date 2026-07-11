@@ -10,6 +10,7 @@
 
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Agronomi" />
+        <e k="rcr_sidebar_fields"       v="Lahan" />
         <e k="rcr_tab_planning"         v="Perencanaan" />
         <e k="rcr_disease_name_sclerotinia" v="Busuk putih Sclerotinia" />
         <e k="rcr_disease_name_bcn"   v="Nematoda sista" />
@@ -113,7 +114,6 @@
 
         <!-- Field card — required actions / growth -->
         <e k="rcr_action_header"        v="Kondisi tanah" />
-        <e k="rcr_action_none"          v="Tidak ada" />
         <e k="rcr_field_growth"          v="Pertumbuhan" />
 
         <!-- Field card — weed column header (singular) -->

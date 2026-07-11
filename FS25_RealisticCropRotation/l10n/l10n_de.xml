@@ -10,6 +10,7 @@
 
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Agronomie" />
+        <e k="rcr_sidebar_fields"       v="Felder" />
         <e k="rcr_tab_planning"         v="Planung" />
         <e k="rcr_disease_name_sclerotinia" v="Sclerotinia (Weißstängeligkeit)" />
         <e k="rcr_disease_name_bcn"   v="Zystennematode" />
@@ -113,7 +114,6 @@
 
         <!-- Field card — required actions / growth -->
         <e k="rcr_action_header"        v="Bodenzustand" />
-        <e k="rcr_action_none"          v="Keine" />
         <e k="rcr_field_growth"          v="Wachstum" />
 
         <!-- Field card — weed column header (singular) -->

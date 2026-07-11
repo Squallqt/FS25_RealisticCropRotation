@@ -10,6 +10,7 @@
 
         <!-- Tabs -->
         <e k="rcr_tab_history"          v="Agronómia" />
+        <e k="rcr_sidebar_fields"       v="Táblák" />
         <e k="rcr_tab_planning"         v="Tervezés" />
         <e k="rcr_disease_name_sclerotinia" v="Fehérpenészes rothadás (Sclerotinia)" />
         <e k="rcr_disease_name_bcn"   v="Cisztaféreg" />
@@ -113,7 +114,6 @@
 
         <!-- Field card — required actions / growth -->
         <e k="rcr_action_header"        v="Talajállapot" />
-        <e k="rcr_action_none"          v="Nincs" />
         <e k="rcr_field_growth"          v="Növekedés" />
 
         <!-- Field card — weed column header (singular) -->
