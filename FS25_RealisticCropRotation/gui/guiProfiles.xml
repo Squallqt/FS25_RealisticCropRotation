@@ -378,16 +378,20 @@
         <size value="25px 186px"/>
     </Profile>
 
+    <!-- Shared background for the full-width detail cards: same tint + corner, height set per card. -->
+    <Profile name="frDetailCardBg" extends="baseReference" with="anchorTopLeft">
+        <color value="0 0 0 0.50"/>
+        <cornerSize value="0.35"/>
+    </Profile>
+
     <!-- Nitrogen / lime gauge card (1240 x 54 px) -->
 
     <Profile name="frNitrogenCard" extends="emptyPanel" with="anchorTopLeft">
         <size value="1240px 54px"/>
     </Profile>
 
-    <Profile name="frNitrogenCardBg" extends="baseReference" with="anchorTopLeft">
+    <Profile name="frNitrogenCardBg" extends="frDetailCardBg">
         <size value="1240px 54px"/>
-        <color value="0 0 0 0.50"/>
-        <cornerSize value="0.35"/>
     </Profile>
 
     <!-- State label — top left -->
@@ -430,13 +434,11 @@
         <color value="$preset_fs25_colorGreen"/>
     </Profile>
 
-    <Profile name="frLimeValueLabel" extends="frNitrogenValueLabel">
-        <textColor value="$preset_fs25_colorGreen"/>
-    </Profile>
+    <!-- Same as the nitrogen value label; distinct name kept for the lime gauge. -->
+    <Profile name="frLimeValueLabel" extends="frNitrogenValueLabel"/>
 
-    <Profile name="frLimeFill" extends="frNitrogenTrack">
-        <color value="$preset_fs25_colorGreen"/>
-    </Profile>
+    <!-- Identical fill to the nitrogen gauge; distinct name kept for the lime gauge. -->
+    <Profile name="frLimeFill" extends="frNitrogenFill"/>
 
     <!-- Agronomic advice card (1240 x 64 px) -->
 
@@ -444,10 +446,8 @@
         <size value="1240px 64px"/>
     </Profile>
 
-    <Profile name="frAdviceCardBg" extends="baseReference" with="anchorTopLeft">
+    <Profile name="frAdviceCardBg" extends="frDetailCardBg">
         <size value="1240px 64px"/>
-        <color value="0 0 0 0.50"/>
-        <cornerSize value="0.35"/>
     </Profile>
 
     <Profile name="frAdviceAccent" extends="fs25_lineSeparatorTopHighlighted" with="anchorTopLeft">
@@ -475,10 +475,8 @@
         <size value="1240px 82px"/>
     </Profile>
 
-    <Profile name="frFieldCardBg" extends="baseReference" with="anchorTopLeft">
+    <Profile name="frFieldCardBg" extends="frDetailCardBg">
         <size value="1240px 82px"/>
-        <color value="0 0 0 0.50"/>
-        <cornerSize value="0.35"/>
     </Profile>
 
     <Profile name="frFieldAccent" extends="fs25_lineSeparatorTopHighlighted" with="anchorTopLeft">
@@ -559,13 +557,6 @@
     <Profile name="frCalendarEditor" extends="emptyPanel" with="anchorTopLeft">
         <position value="10px -7px"/>
         <size value="736px 30px"/>
-    </Profile>
-
-    <Profile name="frCalendarEditorBg" extends="baseReference" with="anchorTopLeft">
-        <position value="0px 0px"/>
-        <size value="736px 30px"/>
-        <color value="0 0 0 0.30"/>
-        <cornerSize value="0.22"/>
     </Profile>
 
     <Profile name="frCalendarEditCropSelector" extends="fs25_multiTextOption" with="anchorTopLeft">
@@ -722,10 +713,8 @@
         <size value="1240px 56px"/>
     </Profile>
 
-    <Profile name="frScoreCardBg" extends="baseReference" with="anchorTopLeft">
+    <Profile name="frScoreCardBg" extends="frDetailCardBg">
         <size value="1240px 56px"/>
-        <color value="0 0 0 0.50"/>
-        <cornerSize value="0.35"/>
     </Profile>
 
     <!-- Score verdict text — left side, shifted up to align with track -->

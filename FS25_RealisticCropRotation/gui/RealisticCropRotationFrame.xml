@@ -95,7 +95,7 @@
                 <GuiElement profile="frSlotCard" position="8px -4px">
                     <RoundCorner profile="frSlotCardBgCurrent"/>
                     <ThreePartBitmap profile="frSlotAccentCurrent"/>
-                    <Text        profile="frSlotSeasonLabel"     id="slot1SeasonLabel" text="$l10n_rcr_slot_current"/>
+                    <Text        profile="frSlotSeasonLabel"     text="$l10n_rcr_slot_current"/>
                     <Bitmap      profile="frSlotIcon"            id="slot1Icon"        visible="false"/>
                     <Text        profile="frSlotCropName"        id="slot1CropName"    text=""/>
                     <RoundCorner profile="frSlotFamilyBadgeBg"   id="slot1BadgeBg"     visible="false"/>
@@ -110,7 +110,7 @@
                 <!-- Slot 2: N-1 -->
                 <GuiElement profile="frSlotCard" position="257px -4px">
                     <RoundCorner profile="frSlotCardBgN1"/>
-                    <Text        profile="frSlotSeasonLabel"     id="slot2SeasonLabel" text="$l10n_rcr_slot_n1"/>
+                    <Text        profile="frSlotSeasonLabel"     text="$l10n_rcr_slot_n1"/>
                     <Bitmap      profile="frSlotIcon"            id="slot2Icon"        visible="false"/>
                     <Text        profile="frSlotCropName"        id="slot2CropName"    text=""/>
                     <RoundCorner profile="frSlotFamilyBadgeBg"   id="slot2BadgeBg"     visible="false"/>
@@ -125,7 +125,7 @@
                 <!-- Slot 3: N-2 -->
                 <GuiElement profile="frSlotCard" position="506px -4px">
                     <RoundCorner profile="frSlotCardBgN2"/>
-                    <Text        profile="frSlotSeasonLabel"     id="slot3SeasonLabel" text="$l10n_rcr_slot_n2"/>
+                    <Text        profile="frSlotSeasonLabel"     text="$l10n_rcr_slot_n2"/>
                     <Bitmap      profile="frSlotIcon"            id="slot3Icon"        visible="false"/>
                     <Text        profile="frSlotCropName"        id="slot3CropName"    text=""/>
                     <RoundCorner profile="frSlotFamilyBadgeBg"   id="slot3BadgeBg"     visible="false"/>
@@ -140,7 +140,7 @@
                 <!-- Slot 4: N-3 -->
                 <GuiElement profile="frSlotCard" position="755px -4px">
                     <RoundCorner     profile="frSlotCardBgN3"/>
-                    <Text        profile="frSlotSeasonLabel"     id="slot4SeasonLabel" text="$l10n_rcr_slot_n3"/>
+                    <Text        profile="frSlotSeasonLabel"     text="$l10n_rcr_slot_n3"/>
                     <Bitmap      profile="frSlotIcon"            id="slot4Icon"        visible="false"/>
                     <Text        profile="frSlotCropName"        id="slot4CropName"    text=""/>
                     <RoundCorner profile="frSlotFamilyBadgeBg"   id="slot4BadgeBg"     visible="false"/>
@@ -155,7 +155,7 @@
                 <!-- Slot 5: N-4 (oldest, rightmost) -->
                 <GuiElement profile="frSlotCard" position="1004px -4px">
                     <RoundCorner profile="frSlotCardBgN4"/>
-                    <Text        profile="frSlotSeasonLabel"     id="slot5SeasonLabel" text="$l10n_rcr_slot_n4"/>
+                    <Text        profile="frSlotSeasonLabel"     text="$l10n_rcr_slot_n4"/>
                     <Bitmap      profile="frSlotIcon"            id="slot5Icon"        visible="false"/>
                     <Text        profile="frSlotCropName"        id="slot5CropName"    text=""/>
                     <RoundCorner profile="frSlotFamilyBadgeBg"   id="slot5BadgeBg"     visible="false"/>
@@ -297,7 +297,7 @@
                 <!-- N+1 -->
                 <GuiElement profile="frCalendarRow" position="0px -54px">
                     <RoundCorner profile="frCalendarRowBg" id="calendarRowBg[1]"/>
-                    <Text profile="frCalendarStepLabel" id="calendarStepLabel[1]" text="$l10n_rcr_plan_year1"/>
+                    <Text profile="frCalendarStepLabel" text="$l10n_rcr_plan_year1"/>
                     <Bitmap profile="frCalendarCropIcon" id="calendarCropIcon[1]" visible="false"/>
                     <Bitmap profile="frCalendarCoverIcon" id="calendarCoverIcon[1]" visible="false"/>
                     <RoundCorner profile="frCalendarCropBar" id="calendarCropBar[1]" visible="false"/>
@@ -309,7 +309,7 @@
                 <!-- N+2 -->
                 <GuiElement profile="frCalendarRow" position="0px -97px">
                     <RoundCorner profile="frCalendarRowBg" id="calendarRowBg[2]"/>
-                    <Text profile="frCalendarStepLabel" id="calendarStepLabel[2]" text="$l10n_rcr_plan_year2"/>
+                    <Text profile="frCalendarStepLabel" text="$l10n_rcr_plan_year2"/>
                     <Bitmap profile="frCalendarCropIcon" id="calendarCropIcon[2]" visible="false"/>
                     <Bitmap profile="frCalendarCoverIcon" id="calendarCoverIcon[2]" visible="false"/>
                     <RoundCorner profile="frCalendarCropBar" id="calendarCropBar[2]" visible="false"/>
@@ -321,7 +321,7 @@
                 <!-- N+3 -->
                 <GuiElement profile="frCalendarRow" position="0px -140px">
                     <RoundCorner profile="frCalendarRowBg" id="calendarRowBg[3]"/>
-                    <Text profile="frCalendarStepLabel" id="calendarStepLabel[3]" text="$l10n_rcr_plan_year3"/>
+                    <Text profile="frCalendarStepLabel" text="$l10n_rcr_plan_year3"/>
                     <Bitmap profile="frCalendarCropIcon" id="calendarCropIcon[3]" visible="false"/>
                     <Bitmap profile="frCalendarCoverIcon" id="calendarCoverIcon[3]" visible="false"/>
                     <RoundCorner profile="frCalendarCropBar" id="calendarCropBar[3]" visible="false"/>
@@ -333,7 +333,7 @@
                 <!-- N+4 -->
                 <GuiElement profile="frCalendarRow" position="0px -183px">
                     <RoundCorner profile="frCalendarRowBg" id="calendarRowBg[4]"/>
-                    <Text profile="frCalendarStepLabel" id="calendarStepLabel[4]" text="$l10n_rcr_plan_year4"/>
+                    <Text profile="frCalendarStepLabel" text="$l10n_rcr_plan_year4"/>
                     <Bitmap profile="frCalendarCropIcon" id="calendarCropIcon[4]" visible="false"/>
                     <Bitmap profile="frCalendarCoverIcon" id="calendarCoverIcon[4]" visible="false"/>
                     <RoundCorner profile="frCalendarCropBar" id="calendarCropBar[4]" visible="false"/>
@@ -386,12 +386,12 @@
             <GuiElement profile="frScoreCard" position="20px -410px">
                 <RoundCorner profile="frScoreCardBg"/>
                 <Text        profile="frScoreText"        id="scoreText"       text=""/>
-                <RoundCorner profile="frScoreTrack"       id="scoreTrack"/>
+                <RoundCorner profile="frScoreTrack"/>
                 <GuiElement  profile="frScoreCursorPos"   id="scoreCursorPos">
                     <RoundCorner profile="frScoreCursor"  id="scoreCursor"/>
                 </GuiElement>
-                <Text profile="frScoreLabelLeft"  id="scoreLabelLeft"  text="$l10n_rcr_score_label_low"/>
-                <Text profile="frScoreLabelRight" id="scoreLabelRight" text="$l10n_rcr_score_label_optimal"/>
+                <Text profile="frScoreLabelLeft"  text="$l10n_rcr_score_label_low"/>
+                <Text profile="frScoreLabelRight" text="$l10n_rcr_score_label_optimal"/>
             </GuiElement>
 
             <!-- SECTION: GLOBAL OVERVIEW (y=-476) -->
