@@ -42,8 +42,9 @@ function RealisticCropRotationDiseaseGrid.new()
 end
 
 ---World-space axis-aligned bounding box of a field, from its polygon corner nodes (Field has no `fieldDimensions`).
+-- Public so RealisticCropRotationDisease reuses the same bbox derivation instead of a private copy.
 -- @return number minX, minZ, maxX, maxZ, or nil when geometry is unavailable
-local function fieldWorldBounds(field)
+function RealisticCropRotationDiseaseGrid.fieldWorldBounds(field)
     if field == nil or getWorldTranslation == nil then return nil end
     local points = field.polygonPoints
     if type(points) ~= "table" or #points == 0 then return nil end
@@ -64,6 +65,9 @@ local function fieldWorldBounds(field)
     if minX == nil then return nil end
     return minX, minZ, maxX, maxZ
 end
+
+-- File-local alias for the methods below.
+local fieldWorldBounds = RealisticCropRotationDiseaseGrid.fieldWorldBounds
 
 function RealisticCropRotationDiseaseGrid:loadMap(savegamePath)
     -- Single real dynamic source for every custom map's size: the native ground-detail resolution.

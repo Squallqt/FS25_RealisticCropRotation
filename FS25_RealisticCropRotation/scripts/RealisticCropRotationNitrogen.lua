@@ -1,7 +1,6 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
 -- Deposits configured rotation nitrogen residue on fruit pixels destroyed by native tillage.
 RealisticCropRotationNitrogen = {}
-RealisticCropRotationNitrogen.PF_STATE_KG = 5
 
 local manager = nil
 local installed = false

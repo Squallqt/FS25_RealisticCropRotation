@@ -5,7 +5,6 @@ local RealisticCropRotationFrame_mt = Class(RealisticCropRotationFrame, TabbedMe
 
 -- Internal tab indices
 RealisticCropRotationFrame.TAB = { HISTORY = 1, PLANNING = 2 }
-RealisticCropRotationFrame.HERO_PILL_HEIGHT_PX = 28
 RealisticCropRotationFrame.HERO_PILL_MIN_W_PX = 96
 RealisticCropRotationFrame.HERO_PILL_MAX_W_PX = 420
 RealisticCropRotationFrame.HERO_PILL_TEXT_PADDING_PX = 24
@@ -40,19 +39,12 @@ RealisticCropRotationFrame.ADVICE_KEY = {
 -- (getDiseaseOrder, sorted by each disease's stable state id), so a new <diseaseGroup> appears
 -- automatically with no Lua edit.
 function RealisticCropRotationFrame.getDiseaseOrder()
-    local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
-    local states = config ~= nil and config.diseaseStates or nil
-    local entries = {}
-    if states == nil then return {} end
-    for group, state in pairs(states) do
-        entries[#entries + 1] = { group = group, state = tonumber(state) or 0 }
-    end
-    table.sort(entries, function(a, b)
-        if a.state == b.state then return tostring(a.group) < tostring(b.group) end
-        return a.state < b.state
-    end)
     local order = {}
-    for _, e in ipairs(entries) do order[#order + 1] = e.group end
+    if RealisticCropRotationDisease ~= nil and type(RealisticCropRotationDisease.getOrderedGroups) == "function" then
+        for _, e in ipairs(RealisticCropRotationDisease.getOrderedGroups()) do
+            order[#order + 1] = e.group
+        end
+    end
     return order
 end
 

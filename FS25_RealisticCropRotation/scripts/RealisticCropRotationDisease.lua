@@ -158,6 +158,23 @@ local function diseaseStateForGroup(group)
     return tonumber(state) or 1
 end
 
+---Pathogen groups ordered by their stable overlay state id (cropConfig). Single source for the map overlay row order and the planner disease advice.
+-- @return table list array of { group=, state= } sorted by state id, then group name
+function RealisticCropRotationDisease.getOrderedGroups()
+    local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
+    local states = config ~= nil and config.diseaseStates or nil
+    local out = {}
+    if states == nil then return out end
+    for group, state in pairs(states) do
+        out[#out + 1] = { group = group, state = tonumber(state) or 0 }
+    end
+    table.sort(out, function(a, b)
+        if a.state == b.state then return tostring(a.group) < tostring(b.group) end
+        return a.state < b.state
+    end)
+    return out
+end
+
 ---Localized display name for a pathogen group (g_i18n key rcr_disease_name_<lowergroup>).
 -- @param string group
 -- @return string name
@@ -329,27 +346,6 @@ local function getFieldCrop(field)
     return fieldState.fruitTypeIndex, tonumber(fieldState.growthState) or 0
 end
 
----World-space axis-aligned bounding box of a field from its polygon corner nodes, or nil.
-local function fieldWorldBounds(field)
-    if field == nil or getWorldTranslation == nil then return nil end
-    local points = field.polygonPoints
-    if type(points) ~= "table" or #points == 0 then return nil end
-    local minX, maxX, minZ, maxZ
-    for _, node in ipairs(points) do
-        if node ~= nil then
-            local x, _, z = getWorldTranslation(node)
-            if type(x) == "number" and type(z) == "number" then
-                if minX == nil or x < minX then minX = x end
-                if maxX == nil or x > maxX then maxX = x end
-                if minZ == nil or z < minZ then minZ = z end
-                if maxZ == nil or z > maxZ then maxZ = z end
-            end
-        end
-    end
-    if minX == nil then return nil end
-    return minX, minZ, maxX, maxZ
-end
-
 ---Target dead area fraction for a severity: a gentle convex ramp from 0 at the latent threshold to the curve's deadFractionMax at full severity.
 -- @param number severity
 -- @param table curve Per-pathogen curve, or nil for module fallbacks
@@ -493,7 +489,7 @@ local function applyBandSpeckle(targetMapId, firstChannel, numChannels, clearTyp
     if polygon == nil then return false end
     local groundTypeMapId = select(1, g_currentMission.fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE))
     if groundTypeMapId == nil then return false end
-    local minX, minZ, maxX, maxZ = fieldWorldBounds(field)
+    local minX, minZ, maxX, maxZ = RealisticCropRotationDiseaseGrid.fieldWorldBounds(field)
     if minX == nil then return false end
 
     -- Recomputed fresh every call: protection can grow mid-epidemic, so a stale mask could let the

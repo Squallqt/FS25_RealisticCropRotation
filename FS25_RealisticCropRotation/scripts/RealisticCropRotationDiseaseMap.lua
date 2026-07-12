@@ -66,21 +66,13 @@ local function getText(key, fallback)
     return fallback or key
 end
 
----Pathogen groups ordered by their stable overlay state id, straight from the crop config (data-driven).
+---Pathogen groups ordered by their stable overlay state id (delegates to the shared source on RealisticCropRotationDisease).
 -- @return table list array of { group, state } sorted by state id
 local function orderedDiseaseGroups()
-    local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
-    local states = config ~= nil and config.diseaseStates or nil
-    local out = {}
-    if states == nil then return out end
-    for group, state in pairs(states) do
-        out[#out + 1] = { group = group, state = tonumber(state) or 0 }
+    if RealisticCropRotationDisease == nil or type(RealisticCropRotationDisease.getOrderedGroups) ~= "function" then
+        return {}
     end
-    table.sort(out, function(a, b)
-        if a.state == b.state then return tostring(a.group) < tostring(b.group) end
-        return a.state < b.state
-    end)
-    return out
+    return RealisticCropRotationDisease.getOrderedGroups()
 end
 
 ---Number of pathogen groups the infection view lists (one filter row + one colour each).

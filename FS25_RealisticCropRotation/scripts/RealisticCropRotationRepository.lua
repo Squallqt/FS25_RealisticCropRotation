@@ -20,46 +20,6 @@ local function hasPlanData(plan)
     return false
 end
 
----Counts non-empty entities for persistence logging.
--- @return integer historyFarmlands
--- @return integer historyEntries
--- @return integer planFarmlands
--- @return integer coverPlanFarmlands
--- @return integer activeCropFarmlands
-local function getPersistenceCounts(history, plans, coverPlans, lastKnownActiveCrop)
-    local historyFarmlands = 0
-    local historyEntries = 0
-    for _, entries in pairs(history or {}) do
-        if entries ~= nil and #entries > 0 then
-            historyFarmlands = historyFarmlands + 1
-            historyEntries = historyEntries + #entries
-        end
-    end
-
-    local planFarmlands = 0
-    for _, plan in pairs(plans or {}) do
-        if hasPlanData(plan) then
-            planFarmlands = planFarmlands + 1
-        end
-    end
-
-    local coverPlanFarmlands = 0
-    for _, coverPlan in pairs(coverPlans or {}) do
-        if hasPlanData(coverPlan) then
-            coverPlanFarmlands = coverPlanFarmlands + 1
-        end
-    end
-
-    local activeCropFarmlands = 0
-    for _, cropName in pairs(lastKnownActiveCrop or {}) do
-        if cropName ~= nil and cropName ~= "" then
-            activeCropFarmlands = activeCropFarmlands + 1
-        end
-    end
-
-    return historyFarmlands, historyEntries, planFarmlands, coverPlanFarmlands, activeCropFarmlands
-end
-
 ---Creates an empty repository.
 -- @return RealisticCropRotationRepository instance
 function RealisticCropRotationRepository.new()

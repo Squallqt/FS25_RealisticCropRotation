@@ -25,7 +25,6 @@ RealisticCropRotation.manager = nil
 RealisticCropRotation.disease = nil
 RealisticCropRotation.frame = nil
 RealisticCropRotation.pendingSyncData = nil
-RealisticCropRotation.isEnabled = true
 RealisticCropRotation.cropConfig = nil
 RealisticCropRotation.guiProfilesLoaded = false
 RealisticCropRotation.tabListFixApplied = false
