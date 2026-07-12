@@ -12,8 +12,6 @@
         <e k="rcr_tab_history"          v="Agronomie" />
         <e k="rcr_sidebar_fields"       v="Parcele" />
         <e k="rcr_tab_planning"         v="Planificare" />
-        <e k="rcr_disease_name_sclerotinia" v="Putregaiul alb (Sclerotinia)" />
-        <e k="rcr_disease_name_bcn"   v="Nematod cu chisturi" />
         <e k="rcr_section_disease_map"     v="Boli" />
         <e k="rcr_disease_sub_infections" v="Parcele infectate" />
         <e k="rcr_disease_sub_pressure"   v="Presiune de boli" />
@@ -24,7 +22,6 @@
         <e k="rcr_disease_notification" v="%s detectată pe câmpul %s" />
         <e k="rcr_disease_hud_label"    v="Boală" />
         <e k="rcr_disease_hud_active"   v="%s (activă)" />
-        <e k="rcr_disease_hud_none"     v="Niciuna" />
         <e k="rcr_treatment_hud_label"  v="Tratament" />
 
         <!-- Status labels -->
@@ -55,6 +52,7 @@
         <e k="rcr_section_history"      v="Istoric Culturi" />
         <e k="rcr_section_nitrogen"     v="Stare Azot" />
         <e k="rcr_section_advice"       v="Sfat Agronomic" />
+        <e k="rcr_section_soil_indicators" v="Indicatori ai solului" />
         <e k="rcr_section_field"        v="Starea actuală a parcelei" />
         <e k="rcr_section_lime"         v="Stare Var / pH" />
         <e k="rcr_section_plan"         v="Plan de Rotație" />
@@ -79,7 +77,6 @@
         <e k="rcr_family_root"          v="Rădăcinoase" />
         <e k="rcr_family_vegetable"     v="Legumă" />
         <e k="rcr_family_forage"        v="Furaj" />
-        <e k="rcr_family_cover"         v="Acoperire" />
         <e k="rcr_cover_crop"           v="Cultură intercalată" />
         <e k="rcr_fallow"              v="Pârloagă" />
 
@@ -96,7 +93,11 @@
         <e k="rcr_lime_average_pf"      v="pH mediu" />
         <e k="rcr_lime_average_value"   v="pH mediu: %.3f pH" />
         <e k="rcr_lime_target"          v="Țintă: %.3f pH" />
-        <e k="rcr_soil_not_sampled"     v="Sol neanalizat" />
+        <e k="rcr_soil_value_unmeasured" v="Valoare nemăsurată" />
+        <e k="rcr_n_crop_need_unavailable" v="Necesarul culturii: --" />
+        <e k="rcr_lime_status_unavailable" v="Var: --" />
+        <e k="rcr_advice_soil_analysis_required_title" v="Analiza solului este necesară" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Valorile azotului și pH-ului nu sunt disponibile. Analizează solul pentru recomandări agronomice precise." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="După o cereală, semănă o leguminoasă pentru a reface azotul sau o cultură de întrerupere împotriva bolilor bazei tulpinii, și lasă doi ani între cereale." />
@@ -167,22 +168,15 @@
         <e k="rcr_function_fungicideTank" v="Folosește AMISTAR în pulverizatoare pentru a aplica un tratament fungicid pe culturile expuse riscului." />
         <e k="rcr_function_nematicideTank" v="Folosește VELUM PRIME în pulverizatoare pentru a aplica un tratament nematicid pe culturile expuse la nematozi." />
         <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Putregaiul alb (Sclerotinia)" />
         <e k="rcr_disease_name_phoma" v="Putregaiul uscat / cancerul tulpinii (Phoma)" />
         <e k="rcr_disease_name_pietin" v="Înnegrirea bazei paiului" />
         <e k="rcr_disease_name_septoriose" v="Septorioza frunzelor" />
         <e k="rcr_disease_name_rouille" v="Rugina" />
         <e k="rcr_disease_name_fusariose" v="Fuzarioza spicului" />
         <e k="rcr_disease_name_mildiou" v="Mana cartofului" />
+        <e k="rcr_disease_name_bcn"   v="Nematod cu chisturi" />
         <e k="rcr_disease_name_hernie" v="Hernia rădăcinilor de crucifere" />
-        <e k="rcr_disease_desc_sclerotinia" v="Putregaiul alb al plantelor oleaginoase, leguminoaselor și rădăcinoaselor la înflorire; scleroții persistă în sol mai mulți ani, este favorizat de o înflorire umedă." />
-        <e k="rcr_disease_desc_phoma" v="Cancerul tulpinii de rapiță/muștar transmis prin resturile vegetale; necesită o pauză lungă a oleaginoaselor, agravat de umezeala de toamnă." />
-        <e k="rcr_disease_desc_pietin" v="Înnegrirea bazei paiului la cerealele cultivate continuu; întreruptă doar de o cultură negazdă (ovăz, leguminoasă, oleaginoasă). Niciun fungicid eficient." />
-        <e k="rcr_disease_desc_septoriose" v="Principala boală foliară a grâului/orzului, răspândită prin stropii de ploaie de pe resturi; explozivă într-o primăvară umedă." />
-        <e k="rcr_disease_desc_rouille" v="Ruginile brună și galbenă ale cerealelor și ale florii-soarelui/rapiței; explozive pe vreme blândă și umedă, purtate de vânt." />
-        <e k="rcr_disease_desc_fusariose" v="Fuzarioza spicului favorizată de resturile de cereale și porumb (porumb→grâu); critică la o înflorire umedă, șiștăvește bobul." />
-        <e k="rcr_disease_desc_mildiou" v="Mana cartofului; determinată de vremea răcoroasă și umedă, dependență redusă de rotație; distruge cultura în câteva zile." />
-        <e k="rcr_disease_desc_bcn" v="Nematodul cu chisturi al sfeclei; chisturile persistă în sol mai mulți ani, stres cronic în vetre; rotația este pârghia principală." />
-        <e k="rcr_disease_desc_hernie" v="Hernia rădăcinilor de crucifere; sporii de rezistență persistă peste șase ani, necesită o pauză foarte lungă a cruciferelor; niciun tratament chimic." />
         <e k="rcr_disease_treatment_sclerotinia" v="Fungicid" />
         <e k="rcr_disease_treatment_phoma" v="Fungicid" />
         <e k="rcr_disease_treatment_pietin" v="Niciunul (rotație)" />

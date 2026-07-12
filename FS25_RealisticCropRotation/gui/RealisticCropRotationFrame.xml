@@ -164,63 +164,58 @@
 
             </GuiElement>
 
-            <!-- SECTION: NITROGEN STATUS (y=-330) -->
+            <!-- SECTION: AGRONOMIC ADVICE (y=-330) -->
             <GuiElement profile="frSectionBar" position="0px -330px">
-                <RoundCorner profile="frSectionBarBg"/>
-                <RoundCorner profile="frSectionAccentN" position="14px 0px"/>
-                <Text profile="frSectionTitleN" text="$l10n_rcr_section_nitrogen"/>
-            </GuiElement>
-
-            <!-- NITROGEN GAUGE CARD (y=-374..428) -->
-            <GuiElement profile="frNitrogenCard" position="20px -374px">
-                <RoundCorner profile="frNitrogenCardBg"/>
-                <Text        profile="frNitrogenStateLabel" id="nitrogenStateLabel" text=""/>
-                <Text        profile="frNitrogenValueLabel" id="nitrogenValueLabel" text="" visible="false"/>
-                <RoundCorner profile="frNitrogenTrack"/>
-                <RoundCorner profile="frNitrogenFill"      id="nitrogenBarFill"    visible="false"/>
-            </GuiElement>
-
-            <!-- SECTION: LIME / PH STATUS (y=-452) -->
-            <GuiElement profile="frSectionBar" position="0px -452px">
-                <RoundCorner profile="frSectionBarBg"/>
-                <RoundCorner profile="frSectionAccentN" position="14px 0px"/>
-                <Text profile="frSectionTitleN" text="$l10n_rcr_section_lime"/>
-            </GuiElement>
-
-            <!-- LIME / PH GAUGE CARD (y=-496..550) -->
-            <GuiElement profile="frNitrogenCard" position="20px -496px">
-                <RoundCorner profile="frNitrogenCardBg"/>
-                <Text        profile="frNitrogenStateLabel" id="limeStateLabel" text=""/>
-                <Text        profile="frLimeValueLabel"     id="limeValueLabel" text="" visible="false"/>
-                <RoundCorner profile="frNitrogenTrack"/>
-                <RoundCorner profile="frLimeFill"           id="limeBarFill"    visible="false"/>
-            </GuiElement>
-
-            <!-- SECTION: AGRONOMIC ADVICE (y=-574) -->
-            <GuiElement profile="frSectionBar" position="0px -574px">
                 <RoundCorner profile="frSectionBarBg"/>
                 <RoundCorner profile="frSectionAccentAdvice" position="14px 0px"/>
                 <Text profile="frSectionTitleAdvice" text="$l10n_rcr_section_advice"/>
             </GuiElement>
 
-            <!-- ADVICE CARD (y=-618..682) -->
-            <GuiElement profile="frAdviceCard" position="20px -618px">
-                <RoundCorner     profile="frAdviceCardBg"/>
-                <ThreePartBitmap profile="frAdviceAccent"/>
-                <Text            profile="frAdviceText" id="adviceText" text=""/>
+            <!-- ADVICE CARD (y=-374..452) -->
+            <GuiElement profile="frAdviceCard" position="20px -374px">
+                <RoundCorner profile="frAdviceCardBgNeutral" id="adviceCardBg"/>
+                <RoundCorner profile="frAdviceStatusBadgeBgNeutral" id="adviceStatusBadgeBg"/>
+                <Text profile="frAdviceStatusBadgeText" id="adviceStatusBadgeText" text=""/>
+                <Text profile="frAdviceTitleNeutral" id="adviceTitle" text=""/>
+                <Text profile="frAdviceText" id="adviceText" text=""/>
             </GuiElement>
 
-            <!-- SECTION: FIELD (soil work / weed / growth) (y=-706) -->
-            <GuiElement profile="frSectionBar" position="0px -706px">
+            <!-- SECTION: SOIL INDICATORS (y=-476) -->
+            <GuiElement profile="frSectionBar" position="0px -476px">
+                <RoundCorner profile="frSectionBarBg"/>
+                <RoundCorner profile="frSectionAccentN" position="14px 0px"/>
+                <Text profile="frSectionTitleN" text="$l10n_rcr_section_soil_indicators"/>
+            </GuiElement>
+
+            <!-- UNIFIED SOIL CARD (y=-520..652) -->
+            <GuiElement profile="frSoilIndicatorsCard" position="20px -520px">
+                <RoundCorner profile="frSoilIndicatorsCardBg"/>
+
+                <Text profile="frSoilRowTitleTop" id="nitrogenRowTitle" text="$l10n_rcr_section_nitrogen"/>
+                <Text profile="frSoilStateTop" id="nitrogenStateLabel" text=""/>
+                <Text profile="frSoilValueTop" id="nitrogenValueLabel" text="" visible="false"/>
+                <RoundCorner profile="frSoilTrackTop" id="nitrogenTrack"/>
+                <RoundCorner profile="frSoilFillTop" id="nitrogenBarFill" visible="false"/>
+
+                <RoundCorner profile="frSoilRowDivider"/>
+
+                <Text profile="frSoilRowTitleBottom" id="limeRowTitle" text="$l10n_rcr_section_lime"/>
+                <Text profile="frSoilStateBottom" id="limeStateLabel" text=""/>
+                <Text profile="frSoilValueBottom" id="limeValueLabel" text="" visible="false"/>
+                <RoundCorner profile="frSoilTrackBottom" id="limeTrack"/>
+                <RoundCorner profile="frSoilFillBottom" id="limeBarFill" visible="false"/>
+            </GuiElement>
+
+            <!-- SECTION: FIELD (soil work / weed / growth) (y=-676) -->
+            <GuiElement profile="frSectionBar" position="0px -676px">
                 <RoundCorner profile="frSectionBarBg"/>
                 <RoundCorner profile="frSectionAccentField" position="14px 0px"/>
                 <Text profile="frSectionTitleField" text="$l10n_rcr_section_field"/>
             </GuiElement>
 
-            <!-- FIELD CARD (y=-750..832) -->
-            <GuiElement profile="frFieldCard" position="20px -750px">
+            <!-- FIELD CARD (y=-720..802) -->
+            <GuiElement profile="frFieldCard" position="20px -720px">
                 <RoundCorner     profile="frFieldCardBg"/>
-                <ThreePartBitmap profile="frFieldAccent"/>
 
                 <GuiElement profile="frFieldKpi" position="0px 0px">
                     <Text profile="frFieldKpiLabel" text="$l10n_rcr_action_header"/>

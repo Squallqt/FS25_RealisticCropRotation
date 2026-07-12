@@ -12,8 +12,6 @@
         <e k="rcr_tab_history"          v="Agronomia" />
         <e k="rcr_sidebar_fields"       v="Pellot" />
         <e k="rcr_tab_planning"         v="Suunnittelu" />
-        <e k="rcr_disease_name_sclerotinia" v="Pahkahome (Sclerotinia)" />
-        <e k="rcr_disease_name_bcn"   v="Kystaankeroinen" />
         <e k="rcr_section_disease_map"     v="Taudit" />
         <e k="rcr_disease_sub_infections" v="Tartunnan saaneet pellot" />
         <e k="rcr_disease_sub_pressure"   v="Tautipaine" />
@@ -24,7 +22,6 @@
         <e k="rcr_disease_notification" v="%s havaittu pellolla %s" />
         <e k="rcr_disease_hud_label"    v="Kasvitauti" />
         <e k="rcr_disease_hud_active"   v="%s (aktiivinen)" />
-        <e k="rcr_disease_hud_none"     v="Ei mitään" />
         <e k="rcr_treatment_hud_label"  v="Torjunta" />
 
         <!-- Status labels -->
@@ -55,6 +52,7 @@
         <e k="rcr_section_history"      v="Kasvihistoria" />
         <e k="rcr_section_nitrogen"     v="Typpitila" />
         <e k="rcr_section_advice"       v="Agronominen neuvo" />
+        <e k="rcr_section_soil_indicators" v="Maaperän indikaattorit" />
         <e k="rcr_section_field"        v="Pellon nykytila" />
         <e k="rcr_section_lime"         v="Kalkki-/pH-tila" />
         <e k="rcr_section_plan"         v="Viljelykiertosuunnitelma" />
@@ -79,7 +77,6 @@
         <e k="rcr_family_root"          v="Juurikasvi" />
         <e k="rcr_family_vegetable"     v="Vihannes" />
         <e k="rcr_family_forage"        v="Rehu" />
-        <e k="rcr_family_cover"         v="Kate" />
         <e k="rcr_cover_crop"           v="Välikasvi" />
         <e k="rcr_fallow"              v="Kesanto" />
 
@@ -96,7 +93,11 @@
         <e k="rcr_lime_average_pf"      v="Keskimääräinen pH" />
         <e k="rcr_lime_average_value"   v="Keskimääräinen pH: %.3f pH" />
         <e k="rcr_lime_target"          v="Tavoite: %.3f pH" />
-        <e k="rcr_soil_not_sampled"     v="Maata ei näytteistetty" />
+        <e k="rcr_soil_value_unmeasured" v="Arvoa ei mitattu" />
+        <e k="rcr_n_crop_need_unavailable" v="Kasvin tarve: --" />
+        <e k="rcr_lime_status_unavailable" v="Kalkki: --" />
+        <e k="rcr_advice_soil_analysis_required_title" v="Maaperäanalyysi vaaditaan" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Typpi- ja pH-arvot eivät ole saatavilla. Analysoi maaperä saadaksesi tarkat viljelyneuvot." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Viljan jälkeen kylvä palkokasvi typen palauttamiseksi tai katkaisukasvi tyvitauteja vastaan, ja pidä kaksi vuotta viljojen välissä." />
@@ -167,22 +168,15 @@
         <e k="rcr_function_fungicideTank" v="Käytä AMISTARia ruiskuissa fungisidikäsittelyyn riskialttiilla kasveilla." />
         <e k="rcr_function_nematicideTank" v="Käytä VELUM PRIMEa ruiskuissa nematisidikäsittelyyn sukkulamadoille altistuneilla kasveilla." />
         <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Pahkahome (Sclerotinia)" />
         <e k="rcr_disease_name_phoma" v="Phoma-varsitauti" />
         <e k="rcr_disease_name_pietin" v="Tyvi- ja juuristomätä" />
         <e k="rcr_disease_name_septoriose" v="Vehnänruskolaikku (Septoria)" />
         <e k="rcr_disease_name_rouille" v="Ruoste" />
         <e k="rcr_disease_name_fusariose" v="Tähkän punahome (Fusarium)" />
         <e k="rcr_disease_name_mildiou" v="Perunarutto" />
+        <e k="rcr_disease_name_bcn"   v="Kystaankeroinen" />
         <e k="rcr_disease_name_hernie" v="Möhöjuuri" />
-        <e k="rcr_disease_desc_sclerotinia" v="Öljykasvien, palkokasvien ja juurikasvien pahkahome kukinnan aikaan; rihmastopahkat säilyvät maassa vuosia, kosteaa kukintaa suosiva." />
-        <e k="rcr_disease_desc_phoma" v="Rapsin ja sinapin varsitauti, joka leviää kasvijätteiden mukana; vaatii pitkän tauon öljykasveista, syksyn kosteus pahentaa sitä." />
-        <e k="rcr_disease_desc_pietin" v="Jatkuvan viljanviljelyn tyvi- ja juuristomätä; katkeaa vain isäntäkasviksi kelpaamattomalla kasvilla (kaura, palkokasvi, öljykasvi). Ei tehokasta sienitorjunta-ainetta." />
-        <e k="rcr_disease_desc_septoriose" v="Vehnän ja ohran tärkein lehtitauti, leviää sadepisaroiden roiskeina kasvijätteistä; kostealla keväällä puhkeaa rajusti." />
-        <e k="rcr_disease_desc_rouille" v="Viljojen sekä auringonkukan/rapsin ruskea- ja keltaruoste; leudolla kostealla säällä leviää nopeasti tuulen mukana." />
-        <e k="rcr_disease_desc_fusariose" v="Tähkän punahometta suosivat viljan ja maissin jätteet (maissi→vehnä); kriittinen kostean kukinnan aikaan, kuivettaa jyvän." />
-        <e k="rcr_disease_desc_mildiou" v="Perunarutto; kylmän ja kostean sään ohjaama, vähän viljelykierrosta riippuvainen; tuhoaa kasvuston muutamassa päivässä." />
-        <e k="rcr_disease_desc_bcn" v="Juurikkaan ankeroinen; kystat säilyvät maassa vuosia, krooninen laikuttainen stressi; viljelykierto on tärkein keino." />
-        <e k="rcr_disease_desc_hernie" v="Möhöjuuri; lepoitiöt säilyvät maassa yli kuusi vuotta, vaatii hyvin pitkän tauon ristikukkaisista; ei kemiallista torjuntaa." />
         <e k="rcr_disease_treatment_sclerotinia" v="Sienitorjunta-aine" />
         <e k="rcr_disease_treatment_phoma" v="Sienitorjunta-aine" />
         <e k="rcr_disease_treatment_pietin" v="Ei mitään (viljelykierto)" />

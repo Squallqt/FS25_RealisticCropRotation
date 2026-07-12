@@ -12,8 +12,6 @@
         <e k="rcr_tab_history"          v="Agronomie" />
         <e k="rcr_sidebar_fields"       v="Velden" />
         <e k="rcr_tab_planning"         v="Planning" />
-        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia (rattenkeutelziekte)" />
-        <e k="rcr_disease_name_bcn"   v="Cystenaaltje" />
         <e k="rcr_section_disease_map"     v="Ziekten" />
         <e k="rcr_disease_sub_infections" v="Geïnfecteerde velden" />
         <e k="rcr_disease_sub_pressure"   v="Ziektedruk" />
@@ -24,7 +22,6 @@
         <e k="rcr_disease_notification" v="%s gedetecteerd op veld %s" />
         <e k="rcr_disease_hud_label"    v="Gewasziekte" />
         <e k="rcr_disease_hud_active"   v="%s (actief)" />
-        <e k="rcr_disease_hud_none"     v="Geen" />
         <e k="rcr_treatment_hud_label"  v="Behandeling" />
 
         <!-- Status labels -->
@@ -55,6 +52,7 @@
         <e k="rcr_section_history"      v="Gewasgeschiedenis" />
         <e k="rcr_section_nitrogen"     v="Stikstofstatus" />
         <e k="rcr_section_advice"       v="Agronomisch advies" />
+        <e k="rcr_section_soil_indicators" v="Bodemindicatoren" />
         <e k="rcr_section_field"        v="Huidige veldstatus" />
         <e k="rcr_section_lime"         v="Kalk-/pH-status" />
         <e k="rcr_section_plan"         v="Rotatieplan" />
@@ -79,7 +77,6 @@
         <e k="rcr_family_root"          v="Wortelgewas" />
         <e k="rcr_family_vegetable"     v="Groente" />
         <e k="rcr_family_forage"        v="Voeder" />
-        <e k="rcr_family_cover"         v="Bedekking" />
         <e k="rcr_cover_crop"           v="Tussengewas" />
         <e k="rcr_fallow"              v="Braak" />
 
@@ -96,7 +93,11 @@
         <e k="rcr_lime_average_pf"      v="Gemiddelde pH" />
         <e k="rcr_lime_average_value"   v="Gemiddelde pH: %.3f pH" />
         <e k="rcr_lime_target"          v="Doel: %.3f pH" />
-        <e k="rcr_soil_not_sampled"     v="Bodem niet bemonsterd" />
+        <e k="rcr_soil_value_unmeasured" v="Waarde niet gemeten" />
+        <e k="rcr_n_crop_need_unavailable" v="Gewasbehoefte: --" />
+        <e k="rcr_lime_status_unavailable" v="Kalk: --" />
+        <e k="rcr_advice_soil_analysis_required_title" v="Bodemanalyse vereist" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Stikstof- en pH-waarden zijn niet beschikbaar. Analyseer de bodem voor nauwkeurig agronomisch advies." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Na een graan zaai je een vlinderbloemige om stikstof terug te geven of een rustgewas tegen voetziekten, en houd twee jaar tussen granen." />
@@ -167,22 +168,15 @@
         <e k="rcr_function_fungicideTank" v="Gebruik AMISTAR in veldspuiten om een fungicidebehandeling toe te passen op risicogewassen." />
         <e k="rcr_function_nematicideTank" v="Gebruik VELUM PRIME in veldspuiten om een nematicidebehandeling toe te passen op gewassen die aan nematoden zijn blootgesteld." />
         <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia (rattenkeutelziekte)" />
         <e k="rcr_disease_name_phoma" v="Phoma (stengelkanker)" />
         <e k="rcr_disease_name_pietin" v="Tarwehalmdoder" />
         <e k="rcr_disease_name_septoriose" v="Septoria-bladvlekkenziekte" />
         <e k="rcr_disease_name_rouille" v="Roest" />
         <e k="rcr_disease_name_fusariose" v="Aarfusarium" />
         <e k="rcr_disease_name_mildiou" v="Aardappelziekte (Phytophthora)" />
+        <e k="rcr_disease_name_bcn"   v="Cystenaaltje" />
         <e k="rcr_disease_name_hernie" v="Knolvoet" />
-        <e k="rcr_disease_desc_sclerotinia" v="Witte schimmel (rattenkeutelziekte) van oliehoudende gewassen, vlinderbloemigen en wortelgewassen tijdens de bloei; sclerotiën blijven jarenlang in de grond, bevorderd door een vochtige bloei." />
-        <e k="rcr_disease_desc_phoma" v="Stengelkanker van koolzaad/mosterd, overgedragen via gewasresten; vereist een lange teeltpauze van oliehoudende gewassen, verergerd door vocht in de herfst." />
-        <e k="rcr_disease_desc_pietin" v="Tarwehalmdoder bij continue graanteelt; alleen te doorbreken met een niet-waardgewas (haver, vlinderbloemige, oliehoudend gewas). Geen werkzaam fungicide." />
-        <e k="rcr_disease_desc_septoriose" v="Belangrijkste bladziekte van tarwe/gerst, verspreid door opspattende regen vanaf de gewasresten; explosief in een nat voorjaar." />
-        <e k="rcr_disease_desc_rouille" v="Bruine en gele roest van granen en zonnebloem/koolzaad; explosief bij zacht en vochtig weer, verspreid door de wind." />
-        <e k="rcr_disease_desc_fusariose" v="Aarfusarium, bevorderd door graan- en maïsresten (maïs→tarwe); kritiek bij een natte bloei, doet de korrel verschrompelen." />
-        <e k="rcr_disease_desc_mildiou" v="Aardappelziekte (Phytophthora); gedreven door koel en nat weer, weinig afhankelijk van de vruchtwisseling; verwoest het gewas binnen enkele dagen." />
-        <e k="rcr_disease_desc_bcn" v="Bietencystenaaltje; cysten blijven jarenlang in de grond, chronische pleksgewijze schade; vruchtwisseling is de belangrijkste maatregel." />
-        <e k="rcr_disease_desc_hernie" v="Knolvoet; rustsporen overleven meer dan zes jaar, vereist een zeer lange teeltpauze van koolgewassen; geen chemische bestrijding." />
         <e k="rcr_disease_treatment_sclerotinia" v="Fungicide" />
         <e k="rcr_disease_treatment_phoma" v="Fungicide" />
         <e k="rcr_disease_treatment_pietin" v="Geen (vruchtwisseling)" />

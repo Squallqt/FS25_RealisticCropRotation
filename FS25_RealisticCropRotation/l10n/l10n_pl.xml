@@ -12,8 +12,6 @@
         <e k="rcr_tab_history"          v="Agronomia" />
         <e k="rcr_sidebar_fields"       v="Pola" />
         <e k="rcr_tab_planning"         v="Planowanie" />
-        <e k="rcr_disease_name_sclerotinia" v="Zgnilizna twardzikowa (Sclerotinia)" />
-        <e k="rcr_disease_name_bcn"   v="Mątwik" />
         <e k="rcr_section_disease_map"     v="Choroby" />
         <e k="rcr_disease_sub_infections" v="Zainfekowane pola" />
         <e k="rcr_disease_sub_pressure"   v="Presja chorób" />
@@ -24,7 +22,6 @@
         <e k="rcr_disease_notification" v="%s wykryta na polu %s" />
         <e k="rcr_disease_hud_label"    v="Choroba" />
         <e k="rcr_disease_hud_active"   v="%s (aktywna)" />
-        <e k="rcr_disease_hud_none"     v="Brak" />
         <e k="rcr_treatment_hud_label"  v="Zabieg" />
 
         <!-- Status labels -->
@@ -55,6 +52,7 @@
         <e k="rcr_section_history"      v="Historia upraw" />
         <e k="rcr_section_nitrogen"     v="Stan azotu" />
         <e k="rcr_section_advice"       v="Porada agronomiczna" />
+        <e k="rcr_section_soil_indicators" v="Wskaźniki gleby" />
         <e k="rcr_section_field"        v="Aktualny stan pola" />
         <e k="rcr_section_lime"         v="Stan wapna / pH" />
         <e k="rcr_section_plan"         v="Plan płodozmianu" />
@@ -79,7 +77,6 @@
         <e k="rcr_family_root"          v="Okopowe" />
         <e k="rcr_family_vegetable"     v="Warzywo" />
         <e k="rcr_family_forage"        v="Pasza" />
-        <e k="rcr_family_cover"         v="Okrywowa" />
         <e k="rcr_cover_crop"           v="Międzyplon" />
         <e k="rcr_fallow"              v="Ugór" />
 
@@ -96,7 +93,11 @@
         <e k="rcr_lime_average_pf"      v="Średnie pH" />
         <e k="rcr_lime_average_value"   v="Średnie pH: %.3f pH" />
         <e k="rcr_lime_target"          v="Cel: %.3f pH" />
-        <e k="rcr_soil_not_sampled"     v="Gleba nieprzebadana" />
+        <e k="rcr_soil_value_unmeasured" v="Wartość niezmierzona" />
+        <e k="rcr_n_crop_need_unavailable" v="Zapotrzebowanie uprawy: --" />
+        <e k="rcr_lime_status_unavailable" v="Wapno: --" />
+        <e k="rcr_advice_soil_analysis_required_title" v="Wymagana analiza gleby" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Wartości azotu i pH są niedostępne. Przeanalizuj glebę, aby uzyskać dokładne zalecenia agronomiczne." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Po zbożu zasiej roślinę bobowatą, aby przywrócić azot, lub roślinę przerywającą przeciw chorobom podstawy źdźbła, i zachowaj dwa lata między zbożami." />
@@ -167,22 +168,15 @@
         <e k="rcr_function_fungicideTank" v="Używaj AMISTAR w opryskiwaczach, aby stosować zabieg fungicydowy na uprawach zagrożonych." />
         <e k="rcr_function_nematicideTank" v="Używaj VELUM PRIME w opryskiwaczach, aby stosować zabieg nematocydowy na uprawach narażonych na nicienie." />
         <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Zgnilizna twardzikowa (Sclerotinia)" />
         <e k="rcr_disease_name_phoma" v="Sucha zgnilizna kapustnych (Phoma)" />
         <e k="rcr_disease_name_pietin" v="Zgorzel podstawy źdźbła" />
         <e k="rcr_disease_name_septoriose" v="Septorioza liści (paskowana)" />
         <e k="rcr_disease_name_rouille" v="Rdza" />
         <e k="rcr_disease_name_fusariose" v="Fuzarioza kłosów" />
         <e k="rcr_disease_name_mildiou" v="Zaraza ziemniaka" />
+        <e k="rcr_disease_name_bcn"   v="Mątwik" />
         <e k="rcr_disease_name_hernie" v="Kiła kapusty" />
-        <e k="rcr_disease_desc_sclerotinia" v="Biała zgnilizna roślin oleistych, bobowatych i okopowych w czasie kwitnienia; sklerocja przetrwają w glebie wiele lat, chorobie sprzyja wilgotne kwitnienie." />
-        <e k="rcr_disease_desc_phoma" v="Sucha zgnilizna łodyg rzepaku i gorczycy przenoszona przez resztki pożniwne; wymaga długiej przerwy w uprawie oleistych, nasila ją jesienna wilgoć." />
-        <e k="rcr_disease_desc_pietin" v="Zgorzel podstawy źdźbła w monokulturze zbóż; przerywana jedynie rośliną niebędącą żywicielem (owies, bobowate, oleiste). Brak skutecznego fungicydu." />
-        <e k="rcr_disease_desc_septoriose" v="Główna choroba liści pszenicy i jęczmienia, roznoszona przez rozpryskujące się krople deszczu z resztek; wybucha gwałtownie mokrą wiosną." />
-        <e k="rcr_disease_desc_rouille" v="Rdza brunatna i żółta zbóż oraz słonecznika/rzepaku; w łagodnej wilgotnej pogodzie szybko rozprzestrzenia się z wiatrem." />
-        <e k="rcr_disease_desc_fusariose" v="Fuzarioza kłosów sprzyjana przez resztki zbóż i kukurydzy (kukurydza→pszenica); krytyczna przy wilgotnym kwitnieniu, poraża ziarno." />
-        <e k="rcr_disease_desc_mildiou" v="Zaraza ziemniaka; napędzana chłodną wilgotną pogodą, słabo zależna od płodozmianu; niszczy plantację w ciągu kilku dni." />
-        <e k="rcr_disease_desc_bcn" v="Mątwik burakowy; cysty przetrwają w glebie wiele lat, przewlekły placowy stres; głównym narzędziem jest płodozmian." />
-        <e k="rcr_disease_desc_hernie" v="Kiła kapusty; zarodniki przetrwalnikowe utrzymują się ponad sześć lat, wymaga bardzo długiej przerwy w uprawie kapustnych; brak środków chemicznych." />
         <e k="rcr_disease_treatment_sclerotinia" v="Fungicyd" />
         <e k="rcr_disease_treatment_phoma" v="Fungicyd" />
         <e k="rcr_disease_treatment_pietin" v="Brak (płodozmian)" />

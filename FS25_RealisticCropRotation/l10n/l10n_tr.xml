@@ -12,8 +12,6 @@
         <e k="rcr_tab_history"          v="Agronomi" />
         <e k="rcr_sidebar_fields"       v="Tarlalar" />
         <e k="rcr_tab_planning"         v="Planlama" />
-        <e k="rcr_disease_name_sclerotinia" v="Sklerotinya (beyaz küf)" />
-        <e k="rcr_disease_name_bcn"   v="Kist nematodu" />
         <e k="rcr_section_disease_map"     v="Hastalıklar" />
         <e k="rcr_disease_sub_infections" v="Enfekte tarlalar" />
         <e k="rcr_disease_sub_pressure"   v="Hastalık baskısı" />
@@ -24,7 +22,6 @@
         <e k="rcr_disease_notification" v="Tarla %s üzerinde %s tespit edildi" />
         <e k="rcr_disease_hud_label"    v="Hastalık" />
         <e k="rcr_disease_hud_active"   v="%s (aktif)" />
-        <e k="rcr_disease_hud_none"     v="Yok" />
         <e k="rcr_treatment_hud_label"  v="İlaçlama" />
 
         <!-- Status labels -->
@@ -55,6 +52,7 @@
         <e k="rcr_section_history"      v="Ekin Geçmişi" />
         <e k="rcr_section_nitrogen"     v="Azot Durumu" />
         <e k="rcr_section_advice"       v="Agronomik Tavsiye" />
+        <e k="rcr_section_soil_indicators" v="Toprak göstergeleri" />
         <e k="rcr_section_field"        v="Mevcut tarla durumu" />
         <e k="rcr_section_lime"         v="Kireç / pH Durumu" />
         <e k="rcr_section_plan"         v="Rotasyon Planı" />
@@ -79,7 +77,6 @@
         <e k="rcr_family_root"          v="Kök sebze" />
         <e k="rcr_family_vegetable"     v="Sebze" />
         <e k="rcr_family_forage"        v="Yem bitkisi" />
-        <e k="rcr_family_cover"         v="Örtü" />
         <e k="rcr_cover_crop"           v="Ara ekin" />
         <e k="rcr_fallow"              v="Nadas" />
 
@@ -96,7 +93,11 @@
         <e k="rcr_lime_average_pf"      v="Ortalama pH" />
         <e k="rcr_lime_average_value"   v="Ortalama pH: %.3f pH" />
         <e k="rcr_lime_target"          v="Hedef: %.3f pH" />
-        <e k="rcr_soil_not_sampled"     v="Toprak örneklenmedi" />
+        <e k="rcr_soil_value_unmeasured" v="Değer ölçülmedi" />
+        <e k="rcr_n_crop_need_unavailable" v="Ürün ihtiyacı: --" />
+        <e k="rcr_lime_status_unavailable" v="Kireç: --" />
+        <e k="rcr_advice_soil_analysis_required_title" v="Toprak analizi gerekli" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Azot ve pH değerleri kullanılamıyor. Kesin tarımsal öneriler için toprağı analiz edin." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Bir tahıldan sonra azotu geri kazandırmak için baklagil veya kök boğazı hastalıklarına karşı bir ara ürün ek, ve tahıllar arasında iki yıl bırak." />
@@ -167,22 +168,15 @@
         <e k="rcr_function_fungicideTank" v="AMISTAR ürününü ilaçlama makinelerinde kullanarak risk altındaki ekinlere fungisit uygulaması yapın." />
         <e k="rcr_function_nematicideTank" v="VELUM PRIME ürününü ilaçlama makinelerinde kullanarak nematodlara maruz kalan ekinlere nematisit uygulaması yapın." />
         <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Sklerotinya (beyaz küf)" />
         <e k="rcr_disease_name_phoma" v="Gövde kanseri (Phoma)" />
         <e k="rcr_disease_name_pietin" v="Buğday kök çürüklüğü" />
         <e k="rcr_disease_name_septoriose" v="Septorya yaprak lekesi" />
         <e k="rcr_disease_name_rouille" v="Pas hastalığı" />
         <e k="rcr_disease_name_fusariose" v="Fusarium başak yanıklığı" />
         <e k="rcr_disease_name_mildiou" v="Mildiyö (geç yanıklık)" />
+        <e k="rcr_disease_name_bcn"   v="Kist nematodu" />
         <e k="rcr_disease_name_hernie" v="Kök uru hastalığı" />
-        <e k="rcr_disease_desc_sclerotinia" v="Yağlı tohumlu bitkiler, baklagiller ve kök bitkilerinde çiçeklenmede görülen beyaz küf; sklerotlar toprakta yıllarca kalır, nemli çiçeklenmede artar." />
-        <e k="rcr_disease_desc_phoma" v="Bitki artıklarıyla taşınan kanola/hardal gövde kanseri; uzun bir yağlı tohum arası gerektirir, sonbahar nemiyle kötüleşir." />
-        <e k="rcr_disease_desc_pietin" v="Sürekli ekilen tahılların kök çürüklüğü; yalnızca konukçu olmayan bir bitkiyle (yulaf, baklagil, yağlı tohum) kırılır. Etkili bir fungisit yoktur." />
-        <e k="rcr_disease_desc_septoriose" v="Buğday/arpanın başlıca yaprak hastalığı; artıklardan yağmur sıçramasıyla yayılır, yağışlı ilkbaharda patlar." />
-        <e k="rcr_disease_desc_rouille" v="Tahıllarda ve ayçiçeği/kanolada kahverengi/sarı pas; ılıman ve nemli havada patlar, rüzgârla taşınır." />
-        <e k="rcr_disease_desc_fusariose" v="Tahıl ve mısır artıklarıyla artan başak yanıklığı (mısır→buğday); nemli çiçeklenmede en tehlikelidir, taneyi cılızlaştırır." />
-        <e k="rcr_disease_desc_mildiou" v="Patates mildiyösü; serin ve nemli havayla yönlenir, münavebeye bağımlılığı düşüktür; ürünü günler içinde mahveder." />
-        <e k="rcr_disease_desc_bcn" v="Şeker pancarı kist nematodu; kistler toprakta yıllarca kalır, öbekler halinde kronik stres yapar; münavebe ana çözümdür." />
-        <e k="rcr_disease_desc_hernie" v="Kök uru; dinlenme sporları altı yıldan fazla toprakta kalır, çok uzun bir turpgil arası gerektirir; kimyasal tedavi yoktur." />
         <e k="rcr_disease_treatment_sclerotinia" v="Fungisit" />
         <e k="rcr_disease_treatment_phoma" v="Fungisit" />
         <e k="rcr_disease_treatment_pietin" v="Yok (münavebe)" />

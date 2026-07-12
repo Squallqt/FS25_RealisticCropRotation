@@ -12,8 +12,6 @@
         <e k="rcr_tab_history"          v="农学" />
         <e k="rcr_sidebar_fields"       v="田块" />
         <e k="rcr_tab_planning"         v="规划" />
-        <e k="rcr_disease_name_sclerotinia" v="菌核病" />
-        <e k="rcr_disease_name_bcn"   v="孢囊线虫" />
         <e k="rcr_section_disease_map"     v="疾病" />
         <e k="rcr_disease_sub_infections" v="受感染地块" />
         <e k="rcr_disease_sub_pressure"   v="病害压力" />
@@ -24,7 +22,6 @@
         <e k="rcr_disease_notification" v="在田地 %s 检测到 %s" />
         <e k="rcr_disease_hud_label"    v="病害" />
         <e k="rcr_disease_hud_active"   v="%s（活跃）" />
-        <e k="rcr_disease_hud_none"     v="无" />
         <e k="rcr_treatment_hud_label"  v="防治" />
 
         <!-- Status labels -->
@@ -55,6 +52,7 @@
         <e k="rcr_section_history"      v="作物历史" />
         <e k="rcr_section_nitrogen"     v="氮素状态" />
         <e k="rcr_section_advice"       v="农艺建议" />
+        <e k="rcr_section_soil_indicators" v="Ukazatele půdy" />
         <e k="rcr_section_field"        v="当前田块状态" />
         <e k="rcr_section_lime"         v="石灰 / pH 状态" />
         <e k="rcr_section_plan"         v="轮作计划" />
@@ -79,7 +77,6 @@
         <e k="rcr_family_root"          v="根茎类" />
         <e k="rcr_family_vegetable"     v="蔬菜" />
         <e k="rcr_family_forage"        v="饲草" />
-        <e k="rcr_family_cover"         v="覆盖" />
         <e k="rcr_cover_crop"           v="间作作物" />
         <e k="rcr_fallow"              v="休耕" />
 
@@ -96,7 +93,11 @@
         <e k="rcr_lime_average_pf"      v="平均 pH" />
         <e k="rcr_lime_average_value"   v="平均 pH: %.3f pH" />
         <e k="rcr_lime_target"          v="目标: %.3f pH" />
-        <e k="rcr_soil_not_sampled"     v="土壤未采样" />
+        <e k="rcr_soil_value_unmeasured" v="Hodnota nezměřena" />
+        <e k="rcr_n_crop_need_unavailable" v="Potřeba plodiny: --" />
+        <e k="rcr_lime_status_unavailable" v="Vápno: --" />
+        <e k="rcr_advice_soil_analysis_required_title" v="Je nutný rozbor půdy" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Hodnoty dusíku a pH nejsou dostupné. Pro přesné agronomické doporučení proveďte rozbor půdy." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="种植谷物后，播种豆科作物以补充氮，或种植隔茬作物以减少基腐病，并在两次谷物之间间隔两年。" />
@@ -167,22 +168,15 @@
         <e k="rcr_function_fungicideTank" v="将 AMISTAR 用于喷雾机，为高风险作物施用杀菌剂处理。" />
         <e k="rcr_function_nematicideTank" v="将 VELUM PRIME 用于喷雾机，为受线虫威胁的作物施用杀线虫剂处理。" />
         <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="菌核病" />
         <e k="rcr_disease_name_phoma" v="黑胫病（茎溃疡）" />
         <e k="rcr_disease_name_pietin" v="全蚀病" />
         <e k="rcr_disease_name_septoriose" v="壳针孢叶枯病" />
         <e k="rcr_disease_name_rouille" v="锈病" />
         <e k="rcr_disease_name_fusariose" v="赤霉病" />
         <e k="rcr_disease_name_mildiou" v="晚疫病" />
+        <e k="rcr_disease_name_bcn"   v="孢囊线虫" />
         <e k="rcr_disease_name_hernie" v="根肿病" />
-        <e k="rcr_disease_desc_sclerotinia" v="油料作物、豆科作物和块根作物在花期发生的白色霉腐病；菌核在土壤中可存活数年，潮湿花期利于发病。" />
-        <e k="rcr_disease_desc_phoma" v="油菜/芥菜的茎基溃疡病，通过残体传播；需要较长的油料作物间隔，秋季潮湿会加重病情。" />
-        <e k="rcr_disease_desc_pietin" v="连作谷物的全蚀病；只能通过非寄主作物（燕麦、豆科、油料作物）打断，没有有效的杀菌剂。" />
-        <e k="rcr_disease_desc_septoriose" v="小麦/大麦的主要叶部病害，由雨水飞溅从残体传播；在潮湿的春季会暴发。" />
-        <e k="rcr_disease_desc_rouille" v="谷物及向日葵/油菜的褐锈病、黄锈病；在温暖潮湿的天气下暴发，随风传播。" />
-        <e k="rcr_disease_desc_fusariose" v="由谷物和玉米残体（玉米→小麦）诱发的穗部赤霉病；潮湿花期最危险，导致籽粒瘪缩。" />
-        <e k="rcr_disease_desc_mildiou" v="马铃薯晚疫病；由凉爽潮湿的天气主导，对轮作依赖较低；数天内即可毁掉整片作物。" />
-        <e k="rcr_disease_desc_bcn" v="甜菜孢囊线虫；孢囊在土壤中可存活数年，呈斑块状的慢性胁迫；轮作是主要的防控手段。" />
-        <e k="rcr_disease_desc_hernie" v="根肿病；休眠孢子在土壤中可存活六年以上，需要很长的十字花科作物间隔；无化学防治方法。" />
         <e k="rcr_disease_treatment_sclerotinia" v="杀菌剂" />
         <e k="rcr_disease_treatment_phoma" v="杀菌剂" />
         <e k="rcr_disease_treatment_pietin" v="无（轮作）" />

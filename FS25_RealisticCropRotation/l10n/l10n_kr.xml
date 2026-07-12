@@ -12,8 +12,6 @@
         <e k="rcr_tab_history"          v="농학" />
         <e k="rcr_sidebar_fields"       v="밭" />
         <e k="rcr_tab_planning"         v="계획" />
-        <e k="rcr_disease_name_sclerotinia" v="균핵병" />
-        <e k="rcr_disease_name_bcn"   v="씨스트선충" />
         <e k="rcr_section_disease_map"     v="병해" />
         <e k="rcr_disease_sub_infections" v="감염된 농지" />
         <e k="rcr_disease_sub_pressure"   v="병해 압력" />
@@ -24,7 +22,6 @@
         <e k="rcr_disease_notification" v="농지 %s에서 %s 발견" />
         <e k="rcr_disease_hud_label"    v="병해" />
         <e k="rcr_disease_hud_active"   v="%s (발생 중)" />
-        <e k="rcr_disease_hud_none"     v="없음" />
         <e k="rcr_treatment_hud_label"  v="방제" />
 
         <!-- Status labels -->
@@ -55,6 +52,7 @@
         <e k="rcr_section_history"      v="작물 이력" />
         <e k="rcr_section_nitrogen"     v="질소 상태" />
         <e k="rcr_section_advice"       v="농학적 조언" />
+        <e k="rcr_section_soil_indicators" v="토양 지표" />
         <e k="rcr_section_field"        v="현재 밭 상태" />
         <e k="rcr_section_lime"         v="석회 / pH 상태" />
         <e k="rcr_section_plan"         v="윤작 계획" />
@@ -79,7 +77,6 @@
         <e k="rcr_family_root"          v="뿌리채소" />
         <e k="rcr_family_vegetable"     v="채소" />
         <e k="rcr_family_forage"        v="사료작물" />
-        <e k="rcr_family_cover"         v="피복" />
         <e k="rcr_cover_crop"           v="사이짓기" />
         <e k="rcr_fallow"              v="휴경" />
 
@@ -96,7 +93,11 @@
         <e k="rcr_lime_average_pf"      v="평균 pH" />
         <e k="rcr_lime_average_value"   v="평균 pH: %.3f pH" />
         <e k="rcr_lime_target"          v="목표: %.3f pH" />
-        <e k="rcr_soil_not_sampled"     v="토양 미채취" />
+        <e k="rcr_soil_value_unmeasured" v="측정되지 않음" />
+        <e k="rcr_n_crop_need_unavailable" v="작물 요구량: --" />
+        <e k="rcr_lime_status_unavailable" v="석회: --" />
+        <e k="rcr_advice_soil_analysis_required_title" v="토양 분석 필요" />
+        <e k="rcr_advice_soil_analysis_required_body" v="질소 및 pH 값을 사용할 수 없습니다. 정확한 농업 조언을 위해 토양을 분석하십시오." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="곡물 다음에는 질소를 되돌리기 위해 콩과 작물을, 또는 입고병을 줄이기 위해 휴지 작물을 파종하고, 곡물 사이에 2년을 두세요." />
@@ -167,22 +168,15 @@
         <e k="rcr_function_fungicideTank" v="AMISTAR를 분무기에 사용하여 위험 작물에 살균제 처리를 적용합니다." />
         <e k="rcr_function_nematicideTank" v="VELUM PRIME을 분무기에 사용하여 선충에 노출된 작물에 살선충제 처리를 적용합니다." />
         <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="균핵병" />
         <e k="rcr_disease_name_phoma" v="검은다리병(줄기궤양)" />
         <e k="rcr_disease_name_pietin" v="밀 뿌리썩음병" />
         <e k="rcr_disease_name_septoriose" v="셉토리아 잎마름병" />
         <e k="rcr_disease_name_rouille" v="녹병" />
         <e k="rcr_disease_name_fusariose" v="붉은곰팡이병" />
         <e k="rcr_disease_name_mildiou" v="역병" />
+        <e k="rcr_disease_name_bcn"   v="씨스트선충" />
         <e k="rcr_disease_name_hernie" v="뿌리혹병" />
-        <e k="rcr_disease_desc_sclerotinia" v="유지작물, 콩과 작물, 뿌리작물에서 개화기에 발생하는 흰색 균핵병. 균핵은 토양에서 여러 해 생존하며 습한 개화기에 잘 발생한다." />
-        <e k="rcr_disease_desc_phoma" v="잔재물로 전염되는 유채/겨자의 줄기 궤양병. 유지작물의 긴 휴지기가 필요하며 가을철 습기에 악화된다." />
-        <e k="rcr_disease_desc_pietin" v="연작한 맥류의 뿌리썩음병. 비기주 작물(귀리, 콩과, 유지작물)로만 끊을 수 있으며 효과적인 살균제가 없다." />
-        <e k="rcr_disease_desc_septoriose" v="밀/보리의 주요 잎 병해로, 잔재물에서 빗물 튐으로 전염된다. 습한 봄에 폭발적으로 번진다." />
-        <e k="rcr_disease_desc_rouille" v="맥류와 해바라기/유채의 붉은녹병·노란녹병. 온화하고 습한 날씨에 폭발적으로 늘며 바람으로 퍼진다." />
-        <e k="rcr_disease_desc_fusariose" v="맥류와 옥수수 잔재물(옥수수→밀)로 조장되는 이삭 붉은곰팡이병. 습한 개화기에 가장 위험하며 알곡을 쭉정이로 만든다." />
-        <e k="rcr_disease_desc_mildiou" v="감자 역병. 서늘하고 습한 날씨가 좌우하며 윤작 의존도는 낮다. 며칠 만에 작물을 초토화시킨다." />
-        <e k="rcr_disease_desc_bcn" v="사탕무 씨스트선충. 씨스트는 토양에서 여러 해 생존하며 부분적으로 만성 스트레스를 준다. 윤작이 주된 방제 수단이다." />
-        <e k="rcr_disease_desc_hernie" v="뿌리혹병. 휴면포자가 6년 넘게 토양에 생존하여 배추과 작물의 매우 긴 휴지기가 필요하다. 화학적 방제법이 없다." />
         <e k="rcr_disease_treatment_sclerotinia" v="살균제" />
         <e k="rcr_disease_treatment_phoma" v="살균제" />
         <e k="rcr_disease_treatment_pietin" v="없음(윤작)" />

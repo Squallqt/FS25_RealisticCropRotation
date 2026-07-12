@@ -88,10 +88,8 @@ RealisticCropRotationFrame.SCORE_DISEASE_PENALTY_PER_YEAR = 10 -- shared-pathoge
 RealisticCropRotationFrame.PH_GAUGE_TOLERANCE = 0.1        -- pH units
 RealisticCropRotationFrame.N_GAUGE_TOLERANCE_RATIO = 0.03  -- fraction of the crop's N requirement
 
--- Max pixel widths (must match profile sizes)
--- N_BAR_MAX_WIDTH: keep in sync with guiProfiles.xml frNitrogenTrack size (1192px)
-RealisticCropRotationFrame.N_BAR_MAX_WIDTH     = 1192
-RealisticCropRotationFrame.N_BAR_HEIGHT        = 14
+-- Gap between a soil row's title and its gauge track.
+RealisticCropRotationFrame.SOIL_ROW_TITLE_GAP_PX = 16
 
 -- Global overview crop badge layout (pixel values, converted at runtime)
 -- Goal: center the whole pair [crop icon + 5px gap + crop text] inside each crop badge.
@@ -700,6 +698,51 @@ function RealisticCropRotationFrame:getTextRenderWidth(textElement, text)
     end
 
     return width
+end
+
+---Starts a soil gauge track after its title's rendered width (varies per language) and realigns the state label above it to the same left edge.
+-- @param table titleElement
+-- @param string titleText
+-- @param table trackElement
+-- @param table fillElement
+-- @param table stateLabelElement
+-- @return number trackWidth normalized, or nil
+function RealisticCropRotationFrame:layoutSoilGaugeTrack(titleElement, titleText, trackElement, fillElement, stateLabelElement)
+    if titleElement == nil or trackElement == nil then return nil end
+
+    local titlePos = self:getElementOriginalPosition(titleElement)
+    local titleSize = self:getElementOriginalSize(titleElement)
+    local trackPos = self:getElementOriginalPosition(trackElement)
+    local trackSize = self:getElementOriginalSize(trackElement)
+    if titlePos == nil or titleSize == nil or trackPos == nil or trackSize == nil then return nil end
+
+    local textWidth = self:getTextRenderWidth(titleElement, titleText)
+    if textWidth == nil then return nil end
+
+    if titleElement.setSize ~= nil then
+        titleElement:setSize(textWidth, titleSize[2])
+    end
+
+    local gap = self:getNormalizedPixelWidth(RealisticCropRotationFrame.SOIL_ROW_TITLE_GAP_PX)
+    local newLeft = titlePos[1] + textWidth + gap
+    local rightEdge = trackPos[1] + trackSize[1]
+    local newWidth = math.max(0, rightEdge - newLeft)
+
+    trackElement:setPosition(newLeft, trackPos[2])
+    trackElement:setSize(newWidth, trackSize[2])
+
+    if fillElement ~= nil and fillElement.setPosition ~= nil then
+        fillElement:setPosition(newLeft, trackPos[2])
+    end
+
+    if stateLabelElement ~= nil and stateLabelElement.setPosition ~= nil then
+        local statePos = self:getElementOriginalPosition(stateLabelElement)
+        if statePos ~= nil then
+            stateLabelElement:setPosition(newLeft, statePos[2])
+        end
+    end
+
+    return newWidth
 end
 
 ---Resizes a pill (bg + text) to fit its text within padding/min/max bounds.
@@ -1372,27 +1415,44 @@ function RealisticCropRotationFrame:updateTimelineSlot(slotId, cropName, family,
     end
 end
 
+---Returns false (soil not sampled), true (PF data available), or nil (no PF installed).
+function RealisticCropRotationFrame:getSoilAnalysisState(farmlandId)
+    local mgr = self:getManager()
+    if mgr == nil then return nil end
+
+    local hasAnalysedValue = false
+    if type(mgr.getNitrogenLevel) == "function" then
+        local actualN = mgr:getNitrogenLevel(farmlandId)
+        if actualN == false then return false end
+        hasAnalysedValue = hasAnalysedValue or actualN ~= nil
+    end
+
+    if type(mgr.getPHLevel) == "function" then
+        local actualPH = mgr:getPHLevel(farmlandId)
+        if actualPH == false then return false end
+        hasAnalysedValue = hasAnalysedValue or actualPH ~= nil
+    end
+
+    return hasAnalysedValue and true or nil
+end
+
 -- Status bars (shared by the nitrogen and pH gauges)
 
 ---Sets a status bar fill width from a 0..1 ratio.
 -- @param table barFill
 -- @param number ratio Clamped to [0, 1]
-function RealisticCropRotationFrame:setStatusBarFill(barFill, ratio)
+-- @param number maxWidth Track width (normalized units) at ratio 1
+function RealisticCropRotationFrame:setStatusBarFill(barFill, ratio, maxWidth)
+    if barFill == nil then return end
     ratio = math.max(0, math.min(1, tonumber(ratio) or 0))
+    maxWidth = math.max(0, tonumber(maxWidth) or 0)
 
-    local fillW = math.floor(RealisticCropRotationFrame.N_BAR_MAX_WIDTH * ratio)
-    if barFill ~= nil then
-        if barFill.setSize ~= nil then
-            local fillSize = GuiUtils ~= nil and GuiUtils.getNormalizedScreenValues ~= nil
-                and GuiUtils.getNormalizedScreenValues(
-                    string.format("%dpx %dpx", fillW, RealisticCropRotationFrame.N_BAR_HEIGHT)
-                ) or nil
-            if fillSize ~= nil then
-                barFill:setSize(fillSize[1], fillSize[2])
-            end
-        end
-        barFill:setVisible(fillW > 0)
+    if barFill.setSize ~= nil then
+        local fillSize = self:getElementOriginalSize(barFill)
+        local height = fillSize ~= nil and fillSize[2] or 0
+        barFill:setSize(maxWidth * ratio, height)
     end
+    barFill:setVisible(maxWidth * ratio > 0)
 end
 
 -- Nitrogen gauge
@@ -1411,8 +1471,9 @@ function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId)
     if mgr ~= nil and mgr.getNitrogenLevel ~= nil then
         local actualN, targetN = mgr:getNitrogenLevel(farmlandId)
         if actualN == false then
-            labelKey = "rcr_soil_not_sampled"
-            stateText = self.i18n:getText("rcr_soil_not_sampled")
+            labelKey = "rcr_soil_value_unmeasured"
+            stateText = self.i18n:getText("rcr_soil_value_unmeasured")
+            valueText = self.i18n:getText("rcr_n_crop_need_unavailable")
             ratio = 0
         elseif actualN ~= nil then
             labelKey = "rcr_n_average_pf"
@@ -1453,13 +1514,19 @@ function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId)
         end
     end
 
-    self:setStatusBarFill(self.nitrogenBarFill, ratio)
+    local trackWidth = self:layoutSoilGaugeTrack(self.nitrogenRowTitle, self.i18n:getText("rcr_section_nitrogen"),
+        self.nitrogenTrack, self.nitrogenBarFill, self.nitrogenStateLabel)
+    self:setStatusBarFill(self.nitrogenBarFill, ratio, trackWidth)
 
     if self.nitrogenStateLabel ~= nil then
         self.nitrogenStateLabel:setText(stateText or self.i18n:getText(labelKey))
     end
 
     if self.nitrogenValueLabel ~= nil then
+        if self.nitrogenValueLabel.applyProfile ~= nil then
+            self.nitrogenValueLabel:applyProfile(labelKey == "rcr_soil_value_unmeasured"
+                and "frSoilValueUnavailableTop" or "frSoilValueTop")
+        end
         self.nitrogenValueLabel:setText(valueText or "")
         self.nitrogenValueLabel:setVisible(valueText ~= nil)
     end
@@ -1479,8 +1546,9 @@ function RealisticCropRotationFrame:updateSoilPHGauge(farmlandId)
     if mgr ~= nil and mgr.getPHLevel ~= nil then
         local actualPH, targetPH, minPH, maxPH = mgr:getPHLevel(farmlandId)
         if actualPH == false then
-            labelKey = "rcr_soil_not_sampled"
-            stateText = self.i18n:getText("rcr_soil_not_sampled")
+            labelKey = "rcr_soil_value_unmeasured"
+            stateText = self.i18n:getText("rcr_soil_value_unmeasured")
+            valueText = self.i18n:getText("rcr_lime_status_unavailable")
             ratio = 0
         elseif actualPH ~= nil then
             minPH = tonumber(minPH) or 0
@@ -1522,13 +1590,19 @@ function RealisticCropRotationFrame:updateSoilPHGauge(farmlandId)
         end
     end
 
-    self:setStatusBarFill(self.limeBarFill, ratio)
+    local trackWidth = self:layoutSoilGaugeTrack(self.limeRowTitle, self.i18n:getText("rcr_section_lime"),
+        self.limeTrack, self.limeBarFill, self.limeStateLabel)
+    self:setStatusBarFill(self.limeBarFill, ratio, trackWidth)
 
     if self.limeStateLabel ~= nil then
         self.limeStateLabel:setText(stateText or self.i18n:getText(labelKey))
     end
 
     if self.limeValueLabel ~= nil then
+        if self.limeValueLabel.applyProfile ~= nil then
+            self.limeValueLabel:applyProfile(labelKey == "rcr_soil_value_unmeasured"
+                and "frSoilValueUnavailableBottom" or "frSoilValueBottom")
+        end
         self.limeValueLabel:setText(valueText or "")
         self.limeValueLabel:setVisible(valueText ~= nil)
     end
@@ -1606,6 +1680,37 @@ end
 -- @param string currentCropName
 function RealisticCropRotationFrame:updateAdvice(currentFamily, farmlandId, currentCropName)
     if self.adviceText == nil then return end
+
+    local soilAnalysisState = self:getSoilAnalysisState(farmlandId)
+    local visualState = soilAnalysisState == false and "Warning"
+        or (soilAnalysisState == true and "Ready" or "Neutral")
+
+    if self.adviceCardBg ~= nil and self.adviceCardBg.applyProfile ~= nil then
+        self.adviceCardBg:applyProfile("frAdviceCardBg" .. visualState)
+    end
+    if self.adviceStatusBadgeBg ~= nil and self.adviceStatusBadgeBg.applyProfile ~= nil then
+        self.adviceStatusBadgeBg:applyProfile("frAdviceStatusBadgeBg" .. visualState)
+    end
+    if self.adviceTitle ~= nil and self.adviceTitle.applyProfile ~= nil then
+        self.adviceTitle:applyProfile("frAdviceTitle" .. visualState)
+    end
+
+    if soilAnalysisState == false then
+        if self.adviceStatusBadgeText ~= nil then self.adviceStatusBadgeText:setText("!") end
+        if self.adviceTitle ~= nil then
+            self.adviceTitle:setText(self.i18n:getText("rcr_advice_soil_analysis_required_title"))
+        end
+        self.adviceText:setText(self.i18n:getText("rcr_advice_soil_analysis_required_body"))
+        return
+    end
+
+    if self.adviceStatusBadgeText ~= nil then
+        self.adviceStatusBadgeText:setText(soilAnalysisState == true and "OK" or "i")
+    end
+    if self.adviceTitle ~= nil then
+        self.adviceTitle:setText(self.i18n:getText("rcr_section_advice"))
+    end
+
     local key = RealisticCropRotationFrame.ADVICE_KEY[currentFamily]
     if key == nil then
         self.adviceText:setText(self.i18n:getText("rcr_advice_no_current_crop"))
@@ -1613,7 +1718,6 @@ function RealisticCropRotationFrame:updateAdvice(currentFamily, farmlandId, curr
     end
 
     local text = self.i18n:getText(key)
-
     local cropDiseases = self:getCropDiseases(currentCropName)
     if next(cropDiseases) ~= nil then
         local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
@@ -1626,11 +1730,8 @@ function RealisticCropRotationFrame:updateAdvice(currentFamily, farmlandId, curr
                 local diseaseName = type(self.i18n.hasText) == "function" and self.i18n:hasText(nameKey)
                     and self.i18n:getText(nameKey) or tostring(group)
                 local interval = tonumber(diseaseIntervals[group])
-                if interval ~= nil and interval > 0 then
-                    parts[#parts + 1] = string.format("%s %d", diseaseName, interval)
-                else
-                    parts[#parts + 1] = diseaseName
-                end
+                parts[#parts + 1] = interval ~= nil and interval > 0
+                    and string.format("%s %d", diseaseName, interval) or diseaseName
             end
         end
 
@@ -1649,7 +1750,6 @@ function RealisticCropRotationFrame:updateAdvice(currentFamily, farmlandId, curr
             local pressure = tonumber(load[group]) or 0
             local suffix = pressure >= 0.50 and "high" or (pressure >= 0.25 and "moderate" or nil)
             if suffix ~= nil then
-                -- Skip a disease that has no advice string yet, so a missing key never leaks into the UI.
                 local adviceKey = "rcr_advice_pressure_" .. suffix .. "_" .. string.lower(group)
                 if type(self.i18n.hasText) == "function" and self.i18n:hasText(adviceKey) then
                     text = text .. " " .. self.i18n:getText(adviceKey)

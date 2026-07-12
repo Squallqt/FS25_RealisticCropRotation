@@ -12,8 +12,6 @@
         <e k="rcr_tab_history"          v="Agronomi" />
         <e k="rcr_sidebar_fields"       v="Marker" />
         <e k="rcr_tab_planning"         v="Planlægning" />
-        <e k="rcr_disease_name_sclerotinia" v="Knoldbægersvamp (Sclerotinia)" />
-        <e k="rcr_disease_name_bcn"   v="Cystenematode" />
         <e k="rcr_section_disease_map"     v="Sygdomme" />
         <e k="rcr_disease_sub_infections" v="Inficerede marker" />
         <e k="rcr_disease_sub_pressure"   v="Sygdomstryk" />
@@ -24,7 +22,6 @@
         <e k="rcr_disease_notification" v="%s opdaget på mark %s" />
         <e k="rcr_disease_hud_label"    v="Sygdom" />
         <e k="rcr_disease_hud_active"   v="%s (aktiv)" />
-        <e k="rcr_disease_hud_none"     v="Ingen" />
         <e k="rcr_treatment_hud_label"  v="Behandling" />
 
         <!-- Status labels -->
@@ -55,6 +52,7 @@
         <e k="rcr_section_history"      v="Afgrødehistorik" />
         <e k="rcr_section_nitrogen"     v="Kvælstofstatus" />
         <e k="rcr_section_advice"       v="Agronomisk råd" />
+        <e k="rcr_section_soil_indicators" v="Jordindikatorer" />
         <e k="rcr_section_field"        v="Aktuel markstatus" />
         <e k="rcr_section_lime"         v="Kalk-/pH-status" />
         <e k="rcr_section_plan"         v="Sædskifteplan" />
@@ -79,7 +77,6 @@
         <e k="rcr_family_root"          v="Rodfrugt" />
         <e k="rcr_family_vegetable"     v="Grøntsag" />
         <e k="rcr_family_forage"        v="Foder" />
-        <e k="rcr_family_cover"         v="Dække" />
         <e k="rcr_cover_crop"           v="Mellemafgrøde" />
         <e k="rcr_fallow"              v="Brak" />
 
@@ -96,7 +93,11 @@
         <e k="rcr_lime_average_pf"      v="Gennemsnitlig pH" />
         <e k="rcr_lime_average_value"   v="Gennemsnitlig pH: %.3f pH" />
         <e k="rcr_lime_target"          v="Mål: %.3f pH" />
-        <e k="rcr_soil_not_sampled"     v="Jord ikke analyseret" />
+        <e k="rcr_soil_value_unmeasured" v="Værdi ikke målt" />
+        <e k="rcr_n_crop_need_unavailable" v="Afgrødens behov: --" />
+        <e k="rcr_lime_status_unavailable" v="Kalk: --" />
+        <e k="rcr_advice_soil_analysis_required_title" v="Jordbundsanalyse påkrævet" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Kvælstof- og pH-værdier er ikke tilgængelige. Analysér jorden for at få præcise agronomiske råd." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Efter en kornafgrøde sås en bælgplante for at tilføre kvælstof eller en afbrudsafgrøde mod fodsyge, og hold to år mellem kornafgrøder." />
@@ -167,22 +168,15 @@
         <e k="rcr_function_fungicideTank" v="Brug AMISTAR i marksprøjter til at anvende en svampebehandling på udsatte afgrøder." />
         <e k="rcr_function_nematicideTank" v="Brug VELUM PRIME i marksprøjter til at anvende en nematodebehandling på afgrøder udsat for nematoder." />
         <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Knoldbægersvamp (Sclerotinia)" />
         <e k="rcr_disease_name_phoma" v="Knæksyge (Phoma)" />
         <e k="rcr_disease_name_pietin" v="Goldfodsyge" />
         <e k="rcr_disease_name_septoriose" v="Hvedens bladplet (Septoria)" />
         <e k="rcr_disease_name_rouille" v="Rust" />
         <e k="rcr_disease_name_fusariose" v="Aksfusariose (Fusarium)" />
         <e k="rcr_disease_name_mildiou" v="Kartoffelskimmel" />
+        <e k="rcr_disease_name_bcn"   v="Cystenematode" />
         <e k="rcr_disease_name_hernie" v="Kålbrok" />
-        <e k="rcr_disease_desc_sclerotinia" v="Hvid råd i olieafgrøder, bælgplanter og rodfrugter ved blomstring; sklerotier overlever i jorden i årevis, begunstiget af en fugtig blomstring." />
-        <e k="rcr_disease_desc_phoma" v="Stængelkræft i raps/sennep båret på planterester; kræver en lang pause fra olieafgrøder, forværres af efterårsfugt." />
-        <e k="rcr_disease_desc_pietin" v="Goldfodsyge i vedvarende korn; brydes kun af en ikke-værtsafgrøde (havre, bælgplante, olieafgrøde). Intet effektivt svampemiddel." />
-        <e k="rcr_disease_desc_septoriose" v="Vigtigste bladsygdom i hvede/byg, spredes med regnstænk fra planterester; eksplosiv i et vådt forår." />
-        <e k="rcr_disease_desc_rouille" v="Brun og gul rust i korn samt solsikke/raps; eksplosiv i mildt fugtigt vejr, spredes med vinden." />
-        <e k="rcr_disease_desc_fusariose" v="Aksfusariose begunstiget af korn- og majsrester (majs→hvede); kritisk ved en våd blomstring, skrumper kernen." />
-        <e k="rcr_disease_desc_mildiou" v="Kartoffelskimmel; drevet af køligt vådt vejr, lav afhængighed af sædskifte; ødelægger afgrøden på få dage." />
-        <e k="rcr_disease_desc_bcn" v="Roecystenematode; cyster overlever i jorden i årevis, kronisk pletvis stress; sædskiftet er den vigtigste løftestang." />
-        <e k="rcr_disease_desc_hernie" v="Kålbrok; hvilesporer overlever i over seks år, kræver en meget lang pause fra korsblomstrede; ingen kemisk behandling." />
         <e k="rcr_disease_treatment_sclerotinia" v="Svampemiddel" />
         <e k="rcr_disease_treatment_phoma" v="Svampemiddel" />
         <e k="rcr_disease_treatment_pietin" v="Ingen (sædskifte)" />

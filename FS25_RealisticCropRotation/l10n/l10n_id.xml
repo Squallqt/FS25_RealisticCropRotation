@@ -12,8 +12,6 @@
         <e k="rcr_tab_history"          v="Agronomi" />
         <e k="rcr_sidebar_fields"       v="Lahan" />
         <e k="rcr_tab_planning"         v="Perencanaan" />
-        <e k="rcr_disease_name_sclerotinia" v="Busuk putih Sclerotinia" />
-        <e k="rcr_disease_name_bcn"   v="Nematoda sista" />
         <e k="rcr_section_disease_map"     v="Penyakit" />
         <e k="rcr_disease_sub_infections" v="Ladang terinfeksi" />
         <e k="rcr_disease_sub_pressure"   v="Tekanan penyakit" />
@@ -24,7 +22,6 @@
         <e k="rcr_disease_notification" v="%s terdeteksi di Lahan %s" />
         <e k="rcr_disease_hud_label"    v="Penyakit" />
         <e k="rcr_disease_hud_active"   v="%s (aktif)" />
-        <e k="rcr_disease_hud_none"     v="Tidak ada" />
         <e k="rcr_treatment_hud_label"  v="Penyemprotan" />
 
         <!-- Status labels -->
@@ -55,6 +52,7 @@
         <e k="rcr_section_history"      v="Riwayat Tanaman" />
         <e k="rcr_section_nitrogen"     v="Status Nitrogen" />
         <e k="rcr_section_advice"       v="Saran Agronomi" />
+        <e k="rcr_section_soil_indicators" v="Indikator tanah" />
         <e k="rcr_section_field"        v="Status lahan saat ini" />
         <e k="rcr_section_lime"         v="Status Kapur / pH" />
         <e k="rcr_section_plan"         v="Rencana Rotasi" />
@@ -79,7 +77,6 @@
         <e k="rcr_family_root"          v="Umbi-umbian" />
         <e k="rcr_family_vegetable"     v="Sayuran" />
         <e k="rcr_family_forage"        v="Hijauan" />
-        <e k="rcr_family_cover"         v="Penutup" />
         <e k="rcr_cover_crop"           v="Tanaman sela" />
         <e k="rcr_fallow"              v="Bera" />
 
@@ -96,7 +93,11 @@
         <e k="rcr_lime_average_pf"      v="Rata-rata pH" />
         <e k="rcr_lime_average_value"   v="Rata-rata pH: %.3f pH" />
         <e k="rcr_lime_target"          v="Target: %.3f pH" />
-        <e k="rcr_soil_not_sampled"     v="Tanah belum diambil sampel" />
+        <e k="rcr_soil_value_unmeasured" v="Nilai belum diukur" />
+        <e k="rcr_n_crop_need_unavailable" v="Kebutuhan tanaman: --" />
+        <e k="rcr_lime_status_unavailable" v="Kapur: --" />
+        <e k="rcr_advice_soil_analysis_required_title" v="Analisis tanah diperlukan" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Nilai nitrogen dan pH tidak tersedia. Analisis tanah untuk mendapatkan saran agronomi yang akurat." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Setelah serealia, tanam legum untuk mengembalikan nitrogen atau tanaman jeda melawan penyakit pangkal batang, dan beri jarak dua tahun antar serealia." />
@@ -167,22 +168,15 @@
         <e k="rcr_function_fungicideTank" v="Gunakan AMISTAR pada penyemprot untuk menerapkan perlakuan fungisida pada tanaman berisiko." />
         <e k="rcr_function_nematicideTank" v="Gunakan VELUM PRIME pada penyemprot untuk menerapkan perlakuan nematisida pada tanaman yang terpapar nematoda." />
         <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Busuk putih Sclerotinia" />
         <e k="rcr_disease_name_phoma" v="Kanker batang (Phoma)" />
         <e k="rcr_disease_name_pietin" v="Busuk akar serealia" />
         <e k="rcr_disease_name_septoriose" v="Bercak daun Septoria" />
         <e k="rcr_disease_name_rouille" v="Penyakit karat" />
         <e k="rcr_disease_name_fusariose" v="Hawar malai Fusarium" />
         <e k="rcr_disease_name_mildiou" v="Hawar daun (busuk daun)" />
+        <e k="rcr_disease_name_bcn"   v="Nematoda sista" />
         <e k="rcr_disease_name_hernie" v="Penyakit akar gada" />
-        <e k="rcr_disease_desc_sclerotinia" v="Kapang putih pada tanaman minyak, kacang-kacangan, dan umbi saat pembungaan; sklerotia bertahan bertahun-tahun di tanah, dipicu oleh pembungaan yang lembap." />
-        <e k="rcr_disease_desc_phoma" v="Kanker batang kanola/sesawi yang terbawa sisa tanaman; memerlukan jeda tanam minyak yang panjang, memburuk oleh kelembapan musim gugur." />
-        <e k="rcr_disease_desc_pietin" v="Busuk akar pada serealia yang ditanam terus-menerus; hanya dapat diputus oleh tanaman bukan inang (oat, legum, tanaman minyak). Tidak ada fungisida yang efektif." />
-        <e k="rcr_disease_desc_septoriose" v="Penyakit daun utama gandum/jelai, menyebar oleh percikan air hujan dari sisa tanaman; meledak pada musim semi yang basah." />
-        <e k="rcr_disease_desc_rouille" v="Karat cokelat/kuning pada serealia dan bunga matahari/kanola; meledak pada cuaca sejuk lembap, terbawa angin." />
-        <e k="rcr_disease_desc_fusariose" v="Hawar malai yang dipicu sisa serealia dan jagung (jagung→gandum); paling kritis saat pembungaan basah, membuat biji mengerut." />
-        <e k="rcr_disease_desc_mildiou" v="Hawar daun kentang; dikendalikan oleh cuaca sejuk dan basah, sedikit bergantung pada rotasi; menghancurkan tanaman dalam hitungan hari." />
-        <e k="rcr_disease_desc_bcn" v="Nematoda sista bit gula; sista bertahan bertahun-tahun di tanah, menimbulkan stres kronis secara berkelompok; rotasi adalah pengungkit utama." />
-        <e k="rcr_disease_desc_hernie" v="Akar gada; spora istirahat bertahan lebih dari enam tahun, memerlukan jeda tanam brassica yang sangat panjang; tidak ada pengendalian kimia." />
         <e k="rcr_disease_treatment_sclerotinia" v="Fungisida" />
         <e k="rcr_disease_treatment_phoma" v="Fungisida" />
         <e k="rcr_disease_treatment_pietin" v="Tidak ada (rotasi)" />

@@ -12,8 +12,6 @@
         <e k="rcr_tab_history"          v="Agronomie" />
         <e k="rcr_sidebar_fields"       v="Pole" />
         <e k="rcr_tab_planning"         v="Plánování" />
-        <e k="rcr_disease_name_sclerotinia" v="Sklerotiniová hniloba (bílá hniloba)" />
-        <e k="rcr_disease_name_bcn"   v="Háďátko řepné" />
         <e k="rcr_section_disease_map"     v="Choroby" />
         <e k="rcr_disease_sub_infections" v="Infikovaná pole" />
         <e k="rcr_disease_sub_pressure"   v="Tlak chorob" />
@@ -24,7 +22,6 @@
         <e k="rcr_disease_notification" v="%s zjištěna na poli %s" />
         <e k="rcr_disease_hud_label"    v="Choroba" />
         <e k="rcr_disease_hud_active"   v="%s (aktivní)" />
-        <e k="rcr_disease_hud_none"     v="Žádná" />
         <e k="rcr_treatment_hud_label"  v="Ošetření" />
 
         <!-- Status labels -->
@@ -55,6 +52,7 @@
         <e k="rcr_section_history"      v="Historie plodin" />
         <e k="rcr_section_nitrogen"     v="Stav dusíku" />
         <e k="rcr_section_advice"       v="Agronomická rada" />
+        <e k="rcr_section_soil_indicators" v="Ukazatele půdy" />
         <e k="rcr_section_field"        v="Aktuální stav pole" />
         <e k="rcr_section_lime"         v="Stav vápna / pH" />
         <e k="rcr_section_plan"         v="Plán osevního postupu" />
@@ -79,7 +77,6 @@
         <e k="rcr_family_root"          v="Okopanina" />
         <e k="rcr_family_vegetable"     v="Zelenina" />
         <e k="rcr_family_forage"        v="Pícnina" />
-        <e k="rcr_family_cover"         v="Krycí" />
         <e k="rcr_cover_crop"           v="Meziplodina" />
         <e k="rcr_fallow"              v="Úhor" />
 
@@ -96,7 +93,11 @@
         <e k="rcr_lime_average_pf"      v="Průměrné pH" />
         <e k="rcr_lime_average_value"   v="Průměrné pH: %.3f pH" />
         <e k="rcr_lime_target"          v="Cíl: %.3f pH" />
-        <e k="rcr_soil_not_sampled"     v="Půda neanalyzována" />
+        <e k="rcr_soil_value_unmeasured" v="Hodnota nezměřena" />
+        <e k="rcr_n_crop_need_unavailable" v="Potřeba plodiny: --" />
+        <e k="rcr_lime_status_unavailable" v="Vápno: --" />
+        <e k="rcr_advice_soil_analysis_required_title" v="Je nutný rozbor půdy" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Hodnoty dusíku a pH nejsou dostupné. Pro přesné agronomické doporučení proveďte rozbor půdy." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Po obilnině zasej luskovinu pro doplnění dusíku nebo přerušovací plodinu proti chorobám pat stébel a ponech dva roky mezi obilninami." />
@@ -167,22 +168,15 @@
         <e k="rcr_function_fungicideTank" v="Použijte AMISTAR v postřikovačích k aplikaci fungicidního ošetření na ohrožené plodiny." />
         <e k="rcr_function_nematicideTank" v="Použijte VELUM PRIME v postřikovačích k aplikaci nematicidního ošetření na plodiny ohrožené háďátky." />
         <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Sklerotiniová hniloba (bílá hniloba)" />
         <e k="rcr_disease_name_phoma" v="Fomová hniloba (černání stonku řepky)" />
         <e k="rcr_disease_name_pietin" v="Černání pat stébel" />
         <e k="rcr_disease_name_septoriose" v="Braničnatka pšeničná (listová skvrnitost)" />
         <e k="rcr_disease_name_rouille" v="Rez" />
         <e k="rcr_disease_name_fusariose" v="Fuzarióza klasů" />
         <e k="rcr_disease_name_mildiou" v="Plíseň bramboru" />
+        <e k="rcr_disease_name_bcn"   v="Háďátko řepné" />
         <e k="rcr_disease_name_hernie" v="Nádorovitost brukvovitých" />
-        <e k="rcr_disease_desc_sclerotinia" v="Bílá hniloba olejnin, luskovin a okopanin v době kvetení; sklerocia přetrvávají v půdě řadu let, chorobě prospívá vlhké kvetení." />
-        <e k="rcr_disease_desc_phoma" v="Černání stonku řepky a hořčice přenášené posklizňovými zbytky; vyžaduje dlouhý odstup olejnin, zhoršuje ji podzimní vlhko." />
-        <e k="rcr_disease_desc_pietin" v="Černání pat stébel u trvale pěstovaných obilnin; přerušit lze pouze nehostitelskou plodinou (oves, luskovina, olejnina). Žádný účinný fungicid." />
-        <e k="rcr_disease_desc_septoriose" v="Hlavní listová choroba pšenice a ječmene, šíří se rozstřikem dešťových kapek z posklizňových zbytků; ve vlhkém jaru vypukne prudce." />
-        <e k="rcr_disease_desc_rouille" v="Hnědá a žlutá rez obilnin a slunečnice/řepky; při mírném vlhkém počasí se rychle šíří větrem." />
-        <e k="rcr_disease_desc_fusariose" v="Fuzarióza klasů podporovaná zbytky obilnin a kukuřice (kukuřice→pšenice); kritická při vlhkém kvetení, zaschne zrno." />
-        <e k="rcr_disease_desc_mildiou" v="Plíseň bramboru; řídí ji chladné a vlhké počasí, málo závislá na osevním postupu; porost zničí během několika dní." />
-        <e k="rcr_disease_desc_bcn" v="Háďátko řepné; cysty přetrvávají v půdě řadu let, chronický ohniskový stres; hlavní pákou je osevní postup." />
-        <e k="rcr_disease_desc_hernie" v="Nádorovitost brukvovitých; trvalé spory přežívají v půdě přes šest let, vyžaduje velmi dlouhý odstup brukvovitých; žádné chemické ošetření." />
         <e k="rcr_disease_treatment_sclerotinia" v="Fungicid" />
         <e k="rcr_disease_treatment_phoma" v="Fungicid" />
         <e k="rcr_disease_treatment_pietin" v="Žádné (osevní postup)" />

@@ -12,8 +12,6 @@
         <e k="rcr_tab_history"          v="Nông học" />
         <e k="rcr_sidebar_fields"       v="Ruộng" />
         <e k="rcr_tab_planning"         v="Lập kế hoạch" />
-        <e k="rcr_disease_name_sclerotinia" v="Bệnh thối hạch (nấm Sclerotinia)" />
-        <e k="rcr_disease_name_bcn"   v="Tuyến trùng bào nang" />
         <e k="rcr_section_disease_map"     v="Bệnh hại" />
         <e k="rcr_disease_sub_infections" v="Ruộng bị nhiễm bệnh" />
         <e k="rcr_disease_sub_pressure"   v="Áp lực bệnh hại" />
@@ -24,7 +22,6 @@
         <e k="rcr_disease_notification" v="%s được phát hiện trên cánh đồng %s" />
         <e k="rcr_disease_hud_label"    v="Dịch bệnh" />
         <e k="rcr_disease_hud_active"   v="%s (đang hoạt động)" />
-        <e k="rcr_disease_hud_none"     v="Không có" />
         <e k="rcr_treatment_hud_label"  v="Phun thuốc" />
 
         <!-- Status labels -->
@@ -55,6 +52,7 @@
         <e k="rcr_section_history"      v="Lịch sử cây trồng" />
         <e k="rcr_section_nitrogen"     v="Trạng thái đạm" />
         <e k="rcr_section_advice"       v="Tư vấn nông học" />
+        <e k="rcr_section_soil_indicators" v="Chỉ số đất" />
         <e k="rcr_section_field"        v="Trạng thái ruộng hiện tại" />
         <e k="rcr_section_lime"         v="Trạng thái vôi / pH" />
         <e k="rcr_section_plan"         v="Kế hoạch luân canh" />
@@ -79,7 +77,6 @@
         <e k="rcr_family_root"          v="Cây lấy củ" />
         <e k="rcr_family_vegetable"     v="Rau" />
         <e k="rcr_family_forage"        v="Cây thức ăn" />
-        <e k="rcr_family_cover"         v="Che phủ" />
         <e k="rcr_cover_crop"           v="Cây xen canh" />
         <e k="rcr_fallow"              v="Bỏ hóa" />
 
@@ -96,7 +93,11 @@
         <e k="rcr_lime_average_pf"      v="pH trung bình" />
         <e k="rcr_lime_average_value"   v="pH trung bình: %.3f pH" />
         <e k="rcr_lime_target"          v="Mục tiêu: %.3f pH" />
-        <e k="rcr_soil_not_sampled"     v="Đất chưa lấy mẫu" />
+        <e k="rcr_soil_value_unmeasured" v="Giá trị chưa đo" />
+        <e k="rcr_n_crop_need_unavailable" v="Nhu cầu cây trồng: --" />
+        <e k="rcr_lime_status_unavailable" v="Vôi: --" />
+        <e k="rcr_advice_soil_analysis_required_title" v="Cần phân tích đất" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Không có dữ liệu nitơ và pH. Hãy phân tích đất để nhận khuyến nghị nông học chính xác." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Sau cây ngũ cốc, gieo cây họ đậu để hoàn trả đạm hoặc cây cắt vụ chống bệnh thối gốc, và giữ khoảng cách hai năm giữa các vụ ngũ cốc." />
@@ -167,22 +168,15 @@
         <e k="rcr_function_fungicideTank" v="Sử dụng AMISTAR trong máy phun để áp dụng xử lý thuốc trừ nấm cho cây trồng có nguy cơ." />
         <e k="rcr_function_nematicideTank" v="Sử dụng VELUM PRIME trong máy phun để áp dụng xử lý thuốc trừ tuyến trùng cho cây trồng phơi nhiễm tuyến trùng." />
         <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Bệnh thối hạch (nấm Sclerotinia)" />
         <e k="rcr_disease_name_phoma" v="Bệnh loét thân (Phoma)" />
         <e k="rcr_disease_name_pietin" v="Bệnh thối rễ ngũ cốc" />
         <e k="rcr_disease_name_septoriose" v="Bệnh đốm lá Septoria" />
         <e k="rcr_disease_name_rouille" v="Bệnh gỉ sắt" />
         <e k="rcr_disease_name_fusariose" v="Bệnh cháy bông Fusarium" />
         <e k="rcr_disease_name_mildiou" v="Bệnh mốc sương" />
+        <e k="rcr_disease_name_bcn"   v="Tuyến trùng bào nang" />
         <e k="rcr_disease_name_hernie" v="Bệnh sưng rễ họ cải" />
-        <e k="rcr_disease_desc_sclerotinia" v="Bệnh mốc trắng ở cây lấy dầu, cây họ đậu và cây lấy củ vào thời kỳ ra hoa; hạch nấm tồn tại trong đất nhiều năm, phát triển mạnh khi ra hoa gặp ẩm." />
-        <e k="rcr_disease_desc_phoma" v="Bệnh loét thân cải dầu/mù tạt lây qua tàn dư; cần khoảng cách dài giữa các vụ cây lấy dầu, nặng hơn khi mùa thu ẩm ướt." />
-        <e k="rcr_disease_desc_pietin" v="Bệnh thối rễ ở ngũ cốc trồng liên tục; chỉ phá vỡ được bằng cây không phải ký chủ (yến mạch, họ đậu, cây lấy dầu). Không có thuốc trừ nấm hiệu quả." />
-        <e k="rcr_disease_desc_septoriose" v="Bệnh lá chính của lúa mì/lúa mạch, lây lan do nước mưa bắn từ tàn dư; bùng phát mạnh trong mùa xuân ẩm ướt." />
-        <e k="rcr_disease_desc_rouille" v="Bệnh gỉ sắt nâu/vàng ở ngũ cốc và hướng dương/cải dầu; bùng phát khi thời tiết ôn hòa ẩm ướt, phát tán theo gió." />
-        <e k="rcr_disease_desc_fusariose" v="Bệnh cháy bông do tàn dư ngũ cốc và ngô (ngô→lúa mì) thúc đẩy; nguy hiểm nhất khi ra hoa gặp ẩm, làm hạt bị lép." />
-        <e k="rcr_disease_desc_mildiou" v="Bệnh mốc sương khoai tây; chi phối bởi thời tiết mát và ẩm, ít phụ thuộc vào luân canh; phá hủy cả ruộng trong vài ngày." />
-        <e k="rcr_disease_desc_bcn" v="Tuyến trùng bào nang củ cải đường; bào nang tồn tại trong đất nhiều năm, gây stress mãn tính theo từng đám; luân canh là biện pháp chính." />
-        <e k="rcr_disease_desc_hernie" v="Bệnh sưng rễ; bào tử nghỉ tồn tại trên sáu năm, cần khoảng cách rất dài giữa các vụ cây họ cải; không có thuốc hóa học." />
         <e k="rcr_disease_treatment_sclerotinia" v="Thuốc trừ nấm" />
         <e k="rcr_disease_treatment_phoma" v="Thuốc trừ nấm" />
         <e k="rcr_disease_treatment_pietin" v="Không (luân canh)" />

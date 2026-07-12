@@ -12,8 +12,6 @@
         <e k="rcr_tab_history"          v="Агрономія" />
         <e k="rcr_sidebar_fields"       v="Поля" />
         <e k="rcr_tab_planning"         v="Планування" />
-        <e k="rcr_disease_name_sclerotinia" v="Склеротиніоз (біла гниль)" />
-        <e k="rcr_disease_name_bcn"   v="Цистова нематода" />
         <e k="rcr_section_disease_map"     v="Хвороби" />
         <e k="rcr_disease_sub_infections" v="Заражені поля" />
         <e k="rcr_disease_sub_pressure"   v="Тиск хвороб" />
@@ -24,7 +22,6 @@
         <e k="rcr_disease_notification" v="%s виявлено на полі %s" />
         <e k="rcr_disease_hud_label"    v="Хвороба" />
         <e k="rcr_disease_hud_active"   v="%s (активна)" />
-        <e k="rcr_disease_hud_none"     v="Немає" />
         <e k="rcr_treatment_hud_label"  v="Обробка" />
 
         <!-- Status labels -->
@@ -55,6 +52,7 @@
         <e k="rcr_section_history"      v="Історія культур" />
         <e k="rcr_section_nitrogen"     v="Стан азоту" />
         <e k="rcr_section_advice"       v="Агрономічна порада" />
+        <e k="rcr_section_soil_indicators" v="Показники ґрунту" />
         <e k="rcr_section_field"        v="Поточний стан поля" />
         <e k="rcr_section_lime"         v="Стан вапна / pH" />
         <e k="rcr_section_plan"         v="План сівозміни" />
@@ -79,7 +77,6 @@
         <e k="rcr_family_root"          v="Коренеплоди" />
         <e k="rcr_family_vegetable"     v="Овочі" />
         <e k="rcr_family_forage"        v="Кормові" />
-        <e k="rcr_family_cover"         v="Покривні" />
         <e k="rcr_cover_crop"           v="Проміжна культура" />
         <e k="rcr_fallow"              v="Пар" />
 
@@ -96,7 +93,11 @@
         <e k="rcr_lime_average_pf"      v="Середній pH" />
         <e k="rcr_lime_average_value"   v="Середній pH: %.3f pH" />
         <e k="rcr_lime_target"          v="Ціль: %.3f pH" />
-        <e k="rcr_soil_not_sampled"     v="Ґрунт не проаналізовано" />
+        <e k="rcr_soil_value_unmeasured" v="Значення не виміряно" />
+        <e k="rcr_n_crop_need_unavailable" v="Потреба культури: --" />
+        <e k="rcr_lime_status_unavailable" v="Вапно: --" />
+        <e k="rcr_advice_soil_analysis_required_title" v="Потрібен аналіз ґрунту" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Значення азоту та pH недоступні. Проведіть аналіз ґрунту, щоб отримати точні агрономічні рекомендації." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Після зернової культури посійте бобову для повернення азоту або розривну культуру проти прикореневих хвороб і витримайте два роки між зерновими." />
@@ -167,22 +168,15 @@
         <e k="rcr_function_fungicideTank" v="Використовуйте AMISTAR в обприскувачах для внесення фунгіцидної обробки на культури в зоні ризику." />
         <e k="rcr_function_nematicideTank" v="Використовуйте VELUM PRIME в обприскувачах для внесення нематицидної обробки на культури, уражені нематодами." />
         <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Склеротиніоз (біла гниль)" />
         <e k="rcr_disease_name_phoma" v="Фомоз (рак стебла)" />
         <e k="rcr_disease_name_pietin" v="Офіобольозна коренева гниль" />
         <e k="rcr_disease_name_septoriose" v="Септоріоз листя" />
         <e k="rcr_disease_name_rouille" v="Іржа" />
         <e k="rcr_disease_name_fusariose" v="Фузаріоз колоса" />
         <e k="rcr_disease_name_mildiou" v="Фітофтороз картоплі" />
+        <e k="rcr_disease_name_bcn"   v="Цистова нематода" />
         <e k="rcr_disease_name_hernie" v="Кила капусти" />
-        <e k="rcr_disease_desc_sclerotinia" v="Біла гниль олійних, бобових і коренеплодів у період цвітіння; склероції зберігаються у ґрунті роками, розвитку сприяє вологе цвітіння." />
-        <e k="rcr_disease_desc_phoma" v="Рак стебла ріпаку та гірчиці, передається через рослинні рештки; потребує тривалої перерви олійних, посилюється осінньою вологою." />
-        <e k="rcr_disease_desc_pietin" v="Офіобольозна коренева гниль за беззмінного вирощування зернових; переривається лише непоражуваною культурою (овес, бобові, олійні). Ефективного фунгіциду немає." />
-        <e k="rcr_disease_desc_septoriose" v="Основна хвороба листя пшениці та ячменю, поширюється бризками дощу з рослинних решток; вологою весною розвивається стрімко." />
-        <e k="rcr_disease_desc_rouille" v="Бура та жовта іржа зернових, соняшнику й ріпаку; за м'якої вологої погоди швидко розноситься вітром." />
-        <e k="rcr_disease_desc_fusariose" v="Фузаріоз колоса, якому сприяють рештки зернових і кукурудзи (кукурудза→пшениця); критичний за вологого цвітіння, спричиняє щуплість зерна." />
-        <e k="rcr_disease_desc_mildiou" v="Фітофтороз картоплі; визначається прохолодною вологою погодою, слабко залежить від сівозміни; знищує посадки за кілька днів." />
-        <e k="rcr_disease_desc_bcn" v="Бурякова цистоутворююча нематода; цисти зберігаються у ґрунті роками, хронічний осередковий стрес; головний важіль — сівозміна." />
-        <e k="rcr_disease_desc_hernie" v="Кила капусти; спори спокою зберігаються понад шість років, потребує дуже тривалої перерви капустяних; хімічного лікування немає." />
         <e k="rcr_disease_treatment_sclerotinia" v="Фунгіцид" />
         <e k="rcr_disease_treatment_phoma" v="Фунгіцид" />
         <e k="rcr_disease_treatment_pietin" v="Немає (сівозміна)" />

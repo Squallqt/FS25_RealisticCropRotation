@@ -12,8 +12,6 @@
         <e k="rcr_tab_history"          v="Agronomie" />
         <e k="rcr_sidebar_fields"       v="Felder" />
         <e k="rcr_tab_planning"         v="Planung" />
-        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia (Weißstängeligkeit)" />
-        <e k="rcr_disease_name_bcn"   v="Zystennematode" />
         <e k="rcr_section_disease_map"     v="Krankheiten" />
         <e k="rcr_disease_sub_infections" v="Infizierte Felder" />
         <e k="rcr_disease_sub_pressure"   v="Krankheitsdruck" />
@@ -24,7 +22,6 @@
         <e k="rcr_disease_notification" v="%s auf Feld %s entdeckt" />
         <e k="rcr_disease_hud_label"    v="Krankheit" />
         <e k="rcr_disease_hud_active"   v="%s (aktiv)" />
-        <e k="rcr_disease_hud_none"     v="Keine" />
         <e k="rcr_treatment_hud_label"  v="Behandlung" />
 
         <!-- Status labels -->
@@ -55,6 +52,7 @@
         <e k="rcr_section_history"      v="Anbaugeschichte" />
         <e k="rcr_section_nitrogen"     v="Stickstoffstatus" />
         <e k="rcr_section_advice"       v="Agronomische Empfehlung" />
+        <e k="rcr_section_soil_indicators" v="Bodenindikatoren" />
         <e k="rcr_section_field"        v="Aktueller Feldzustand" />
         <e k="rcr_section_lime"         v="Kalk-/pH-Status" />
         <e k="rcr_section_plan"         v="Rotationsplan" />
@@ -79,7 +77,6 @@
         <e k="rcr_family_root"          v="Wurzelgemüse" />
         <e k="rcr_family_vegetable"     v="Gemüse" />
         <e k="rcr_family_forage"        v="Futter" />
-        <e k="rcr_family_cover"         v="Zwischenfrucht" />
         <e k="rcr_cover_crop"           v="Zwischenkultur" />
         <e k="rcr_fallow"              v="Brache" />
 
@@ -96,7 +93,11 @@
         <e k="rcr_lime_average_pf"      v="Durchschnitt pH" />
         <e k="rcr_lime_average_value"   v="Durchschnitt pH: %.3f pH" />
         <e k="rcr_lime_target"          v="Ziel: %.3f pH" />
-        <e k="rcr_soil_not_sampled"     v="Boden nicht beprobt" />
+        <e k="rcr_soil_value_unmeasured" v="Wert nicht gemessen" />
+        <e k="rcr_n_crop_need_unavailable" v="Pflanzenbedarf: --" />
+        <e k="rcr_lime_status_unavailable" v="Kalk: --" />
+        <e k="rcr_advice_soil_analysis_required_title" v="Bodenanalyse erforderlich" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Stickstoff- und pH-Werte sind nicht verfügbar. Analysiere den Boden, um genaue agronomische Empfehlungen zu erhalten." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal"    v="Nach Getreide eine Hülsenfrucht zur Stickstoffrückführung oder eine Blattfrucht gegen Fußkrankheiten säen, und zwei Jahre zwischen zwei Getreidekulturen lassen." />
@@ -167,22 +168,15 @@
         <e k="rcr_function_fungicideTank" v="Verwende AMISTAR in Feldspritzen, um eine Fungizidbehandlung auf gefährdeten Kulturen auszubringen." />
         <e k="rcr_function_nematicideTank" v="Verwende VELUM PRIME in Feldspritzen, um eine Nematizidbehandlung auf nematodengefährdeten Kulturen auszubringen." />
         <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia (Weißstängeligkeit)" />
         <e k="rcr_disease_name_phoma" v="Phoma (Wurzelhalsfäule)" />
         <e k="rcr_disease_name_pietin" v="Schwarzbeinigkeit" />
         <e k="rcr_disease_name_septoriose" v="Septoria-Blattdürre" />
         <e k="rcr_disease_name_rouille" v="Rost" />
         <e k="rcr_disease_name_fusariose" v="Ährenfusariose" />
         <e k="rcr_disease_name_mildiou" v="Kraut- und Knollenfäule" />
+        <e k="rcr_disease_name_bcn"   v="Zystennematode" />
         <e k="rcr_disease_name_hernie" v="Kohlhernie" />
-        <e k="rcr_disease_desc_sclerotinia" v="Weißfäule von Ölfrüchten, Leguminosen und Wurzelfrüchten zur Blüte; Sklerotien überdauern jahrelang im Boden, begünstigt durch eine feuchte Blüte." />
-        <e k="rcr_disease_desc_phoma" v="Wurzelhals- und Stängelfäule von Raps/Senf, über Ernterückstände übertragen; erfordert eine lange Anbaupause der Ölfrüchte, verstärkt durch Herbstfeuchte." />
-        <e k="rcr_disease_desc_pietin" v="Schwarzbeinigkeit bei Getreide-Monokultur; nur durch eine Nichtwirtskultur (Hafer, Leguminose, Ölfrucht) zu durchbrechen. Kein wirksames Fungizid." />
-        <e k="rcr_disease_desc_septoriose" v="Wichtigste Blattkrankheit von Weizen/Gerste, durch Regenspritzer von den Rückständen verbreitet; explosionsartig bei nassem Frühjahr." />
-        <e k="rcr_disease_desc_rouille" v="Braun- und Gelbrost von Getreide sowie Sonnenblume/Raps; explosionsartig bei mild-feuchter Witterung, durch Wind verbreitet." />
-        <e k="rcr_disease_desc_fusariose" v="Ährenfusariose, begünstigt durch Getreide- und Maisrückstände (Mais→Weizen); kritisch bei feuchter Blüte, führt zu Kümmerkorn." />
-        <e k="rcr_disease_desc_mildiou" v="Kraut- und Knollenfäule der Kartoffel; von kühl-nasser Witterung getrieben, gering von der Fruchtfolge abhängig; vernichtet den Bestand in wenigen Tagen." />
-        <e k="rcr_disease_desc_bcn" v="Rübenzystennematode; Zysten überdauern jahrelang im Boden, chronischer nesterweiser Befall; die Fruchtfolge ist der wichtigste Hebel." />
-        <e k="rcr_disease_desc_hernie" v="Kohlhernie; Dauersporen überleben über sechs Jahre, erfordert eine sehr lange Anbaupause der Kreuzblütler; keine chemische Bekämpfung." />
         <e k="rcr_disease_treatment_sclerotinia" v="Fungizid" />
         <e k="rcr_disease_treatment_phoma" v="Fungizid" />
         <e k="rcr_disease_treatment_pietin" v="Keine (Fruchtfolge)" />

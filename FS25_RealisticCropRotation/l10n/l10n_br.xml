@@ -12,8 +12,6 @@
         <e k="rcr_tab_history"          v="Agronomia" />
         <e k="rcr_sidebar_fields"       v="Campos" />
         <e k="rcr_tab_planning"         v="Planejamento" />
-        <e k="rcr_disease_name_sclerotinia" v="Mofo-branco (Sclerotinia)" />
-        <e k="rcr_disease_name_bcn"   v="Nematoide de cisto" />
         <e k="rcr_section_disease_map"     v="Doenças" />
         <e k="rcr_disease_sub_infections" v="Campos infectados" />
         <e k="rcr_disease_sub_pressure"   v="Pressão de doenças" />
@@ -24,7 +22,6 @@
         <e k="rcr_disease_notification" v="%s detectada no Campo %s" />
         <e k="rcr_disease_hud_label"    v="Doença" />
         <e k="rcr_disease_hud_active"   v="%s (ativa)" />
-        <e k="rcr_disease_hud_none"     v="Nenhuma" />
         <e k="rcr_treatment_hud_label"  v="Tratamento" />
 
         <!-- Status labels -->
@@ -55,6 +52,7 @@
         <e k="rcr_section_history"      v="Histórico de Culturas" />
         <e k="rcr_section_nitrogen"     v="Status do Nitrogênio" />
         <e k="rcr_section_advice"       v="Conselho Agronômico" />
+        <e k="rcr_section_soil_indicators" v="Indicadores do solo" />
         <e k="rcr_section_field"        v="Status atual do campo" />
         <e k="rcr_section_lime"         v="Status Cal / pH" />
         <e k="rcr_section_plan"         v="Plano de Rotação" />
@@ -79,7 +77,6 @@
         <e k="rcr_family_root"          v="Raízes" />
         <e k="rcr_family_vegetable"     v="Hortaliça" />
         <e k="rcr_family_forage"        v="Forragem" />
-        <e k="rcr_family_cover"         v="Cobertura" />
         <e k="rcr_cover_crop"           v="Cultura intercalar" />
         <e k="rcr_fallow"              v="Pousio" />
 
@@ -96,7 +93,11 @@
         <e k="rcr_lime_average_pf"      v="pH médio" />
         <e k="rcr_lime_average_value"   v="pH médio: %.3f pH" />
         <e k="rcr_lime_target"          v="Meta: %.3f pH" />
-        <e k="rcr_soil_not_sampled"     v="Solo não amostrado" />
+        <e k="rcr_soil_value_unmeasured" v="Valor não medido" />
+        <e k="rcr_n_crop_need_unavailable" v="Necessidade da cultura: --" />
+        <e k="rcr_lime_status_unavailable" v="Calcário: --" />
+        <e k="rcr_advice_soil_analysis_required_title" v="Análise do solo necessária" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Os valores de nitrogênio e pH não estão disponíveis. Analise o solo para obter recomendações agronômicas precisas." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Depois de um cereal, semeie uma leguminosa para repor nitrogênio ou uma cultura de corte contra as doenças do pé, e deixe dois anos entre cereais." />
@@ -167,22 +168,15 @@
         <e k="rcr_function_fungicideTank" v="Use o AMISTAR em pulverizadores para aplicar um tratamento fungicida em culturas sob risco." />
         <e k="rcr_function_nematicideTank" v="Use o VELUM PRIME em pulverizadores para aplicar um tratamento nematicida em culturas expostas a nematoides." />
         <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Mofo-branco (Sclerotinia)" />
         <e k="rcr_disease_name_phoma" v="Phoma (canela-preta)" />
         <e k="rcr_disease_name_pietin" v="Mal-do-pé" />
         <e k="rcr_disease_name_septoriose" v="Septoriose" />
         <e k="rcr_disease_name_rouille" v="Ferrugem" />
         <e k="rcr_disease_name_fusariose" v="Giberela (fusariose da espiga)" />
         <e k="rcr_disease_name_mildiou" v="Requeima (míldio da batata)" />
+        <e k="rcr_disease_name_bcn"   v="Nematoide de cisto" />
         <e k="rcr_disease_name_hernie" v="Hérnia das crucíferas" />
-        <e k="rcr_disease_desc_sclerotinia" v="Mofo-branco de oleaginosas, leguminosas e raízes na floração; os escleródios persistem por anos no solo, favorecido por uma floração úmida." />
-        <e k="rcr_disease_desc_phoma" v="Canela-preta de canola/mostarda transmitida pelos restos culturais; exige um longo intervalo entre oleaginosas, agravada pela umidade do outono." />
-        <e k="rcr_disease_desc_pietin" v="Mal-do-pé dos cereais em monocultura; só é quebrado por uma cultura não hospedeira (aveia, leguminosa, oleaginosa). Nenhum fungicida eficaz." />
-        <e k="rcr_disease_desc_septoriose" v="Principal doença foliar do trigo/cevada, dispersa pelos respingos de chuva a partir dos restos culturais; explosiva numa primavera chuvosa." />
-        <e k="rcr_disease_desc_rouille" v="Ferrugens marrom e amarela dos cereais e do girassol/canola; explosivas com tempo ameno e úmido, disseminadas pelo vento." />
-        <e k="rcr_disease_desc_fusariose" v="Giberela (fusariose da espiga) favorecida pelos restos de cereais e milho (milho→trigo); crítica numa floração úmida, deixa o grão chocho." />
-        <e k="rcr_disease_desc_mildiou" v="Requeima da batata; impulsionada pelo tempo fresco e úmido, pouca dependência da rotação; devasta a cultura em poucos dias." />
-        <e k="rcr_disease_desc_bcn" v="Nematoide de cisto da beterraba; os cistos persistem no solo por anos, estresse crônico em reboleiras; a rotação é a principal alavanca." />
-        <e k="rcr_disease_desc_hernie" v="Hérnia das crucíferas; os esporos de resistência persistem por mais de seis anos, exige um intervalo muito longo entre brássicas; sem tratamento químico." />
         <e k="rcr_disease_treatment_sclerotinia" v="Fungicida" />
         <e k="rcr_disease_treatment_phoma" v="Fungicida" />
         <e k="rcr_disease_treatment_pietin" v="Nenhum (rotação)" />

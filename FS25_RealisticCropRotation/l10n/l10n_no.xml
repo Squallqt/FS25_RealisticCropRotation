@@ -12,8 +12,6 @@
         <e k="rcr_tab_history"          v="Agronomi" />
         <e k="rcr_sidebar_fields"       v="Jorder" />
         <e k="rcr_tab_planning"         v="Planlegging" />
-        <e k="rcr_disease_name_sclerotinia" v="Storknolla råtesopp (Sclerotinia)" />
-        <e k="rcr_disease_name_bcn"   v="Cystenematode" />
         <e k="rcr_section_disease_map"     v="Sykdommer" />
         <e k="rcr_disease_sub_infections" v="Infiserte jorder" />
         <e k="rcr_disease_sub_pressure"   v="Sykdomspress" />
@@ -24,7 +22,6 @@
         <e k="rcr_disease_notification" v="%s oppdaget på åker %s" />
         <e k="rcr_disease_hud_label"    v="Sykdom" />
         <e k="rcr_disease_hud_active"   v="%s (aktiv)" />
-        <e k="rcr_disease_hud_none"     v="Ingen" />
         <e k="rcr_treatment_hud_label"  v="Behandling" />
 
         <!-- Status labels -->
@@ -55,6 +52,7 @@
         <e k="rcr_section_history"      v="Veksthistorikk" />
         <e k="rcr_section_nitrogen"     v="Nitrogenstatus" />
         <e k="rcr_section_advice"       v="Agronomisk råd" />
+        <e k="rcr_section_soil_indicators" v="Jordindikatorer" />
         <e k="rcr_section_field"        v="Gjeldende jordestatus" />
         <e k="rcr_section_lime"         v="Kalk-/pH-status" />
         <e k="rcr_section_plan"         v="Vekstskifteplan" />
@@ -79,7 +77,6 @@
         <e k="rcr_family_root"          v="Rotvekst" />
         <e k="rcr_family_vegetable"     v="Grønnsak" />
         <e k="rcr_family_forage"        v="Fôr" />
-        <e k="rcr_family_cover"         v="Dekke" />
         <e k="rcr_cover_crop"           v="Mellomvekst" />
         <e k="rcr_fallow"              v="Brakk" />
 
@@ -96,7 +93,11 @@
         <e k="rcr_lime_average_pf"      v="Gjennomsnittlig pH" />
         <e k="rcr_lime_average_value"   v="Gjennomsnittlig pH: %.3f pH" />
         <e k="rcr_lime_target"          v="Mål: %.3f pH" />
-        <e k="rcr_soil_not_sampled"     v="Jord ikke analysert" />
+        <e k="rcr_soil_value_unmeasured" v="Verdi ikke målt" />
+        <e k="rcr_n_crop_need_unavailable" v="Vekstens behov: --" />
+        <e k="rcr_lime_status_unavailable" v="Kalk: --" />
+        <e k="rcr_advice_soil_analysis_required_title" v="Jordanalyse kreves" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Nitrogen- og pH-verdier er ikke tilgjengelige. Analyser jorden for å få presise agronomiske råd." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Etter et korn sår du en belgvekst for å tilføre nitrogen eller en bruddkultur mot fotsyke, og hold to år mellom kornslag." />
@@ -167,22 +168,15 @@
         <e k="rcr_function_fungicideTank" v="Bruk AMISTAR i åkersprøyter for å påføre en fungicidbehandling på utsatte vekster." />
         <e k="rcr_function_nematicideTank" v="Bruk VELUM PRIME i åkersprøyter for å påføre en nematicidbehandling på vekster utsatt for nematoder." />
         <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Storknolla råtesopp (Sclerotinia)" />
         <e k="rcr_disease_name_phoma" v="Phoma (rothalsråte)" />
         <e k="rcr_disease_name_pietin" v="Rotdreper" />
         <e k="rcr_disease_name_septoriose" v="Hvetebladprikk (Septoria)" />
         <e k="rcr_disease_name_rouille" v="Rust" />
         <e k="rcr_disease_name_fusariose" v="Aksfusariose (Fusarium)" />
         <e k="rcr_disease_name_mildiou" v="Tørråte (potet)" />
+        <e k="rcr_disease_name_bcn"   v="Cystenematode" />
         <e k="rcr_disease_name_hernie" v="Klumprot" />
-        <e k="rcr_disease_desc_sclerotinia" v="Hvitråte i oljevekster, belgvekster og rotvekster ved blomstring; sklerotier overlever i jorda i årevis, begunstiget av en fuktig blomstring." />
-        <e k="rcr_disease_desc_phoma" v="Rothalsråte i raps/sennep som spres med planterester; krever et langt opphold fra oljevekster, forverres av høstfuktighet." />
-        <e k="rcr_disease_desc_pietin" v="Rotdreper i sammenhengende korndyrking; brytes bare av en ikke-vertsvekst (havre, belgvekst, oljevekst). Ingen effektiv soppmiddel." />
-        <e k="rcr_disease_desc_septoriose" v="Viktigste bladsykdom i hvete/bygg, spres med regnsprut fra planterester; eksplosiv i en våt vår." />
-        <e k="rcr_disease_desc_rouille" v="Brunrust og gulrust i korn samt solsikke/raps; eksplosiv i mildt fuktig vær, spres med vinden." />
-        <e k="rcr_disease_desc_fusariose" v="Aksfusariose begunstiget av korn- og maisrester (mais→hvete); kritisk ved en våt blomstring, skrumper kornet." />
-        <e k="rcr_disease_desc_mildiou" v="Tørråte i potet; drevet av kjølig vått vær, lav avhengighet av vekstskifte; ødelegger åkeren på få dager." />
-        <e k="rcr_disease_desc_bcn" v="Betecystenematode; cyster overlever i jorda i årevis, kronisk flekkvis stress; vekstskifte er den viktigste brekkstangen." />
-        <e k="rcr_disease_desc_hernie" v="Klumprot; hvilesporer overlever i over seks år, krever et svært langt opphold fra korsblomstrede; ingen kjemisk behandling." />
         <e k="rcr_disease_treatment_sclerotinia" v="Soppmiddel" />
         <e k="rcr_disease_treatment_phoma" v="Soppmiddel" />
         <e k="rcr_disease_treatment_pietin" v="Ingen (vekstskifte)" />

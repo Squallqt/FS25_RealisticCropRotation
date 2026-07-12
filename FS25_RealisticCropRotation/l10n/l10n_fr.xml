@@ -12,8 +12,6 @@
         <e k="rcr_tab_history"          v="Agronomie" />
         <e k="rcr_sidebar_fields"       v="Parcelles" />
         <e k="rcr_tab_planning"         v="Planification" />
-        <e k="rcr_disease_name_sclerotinia" v="Sclérotinia" />
-        <e k="rcr_disease_name_bcn"   v="Nématode à kyste" />
         <e k="rcr_section_disease_map"     v="Maladies" />
         <e k="rcr_disease_sub_infections" v="Parcelles infectées" />
         <e k="rcr_disease_sub_pressure"   v="Pression maladie" />
@@ -24,7 +22,6 @@
         <e k="rcr_disease_notification" v="%s détecté sur le champ %s" />
         <e k="rcr_disease_hud_label"    v="Maladie" />
         <e k="rcr_disease_hud_active"   v="%s (active)" />
-        <e k="rcr_disease_hud_none"     v="Aucune" />
         <e k="rcr_treatment_hud_label"  v="Traitement" />
 
         <!-- Status labels -->
@@ -53,10 +50,11 @@
 
         <!-- Section bars -->
         <e k="rcr_section_history"      v="Historique des Cultures" />
-        <e k="rcr_section_nitrogen"     v="Statut Azoté" />
+        <e k="rcr_section_nitrogen"     v="Azote du sol" />
         <e k="rcr_section_advice"       v="Conseil Agronomique" />
+        <e k="rcr_section_soil_indicators" v="Indicateurs du sol" />
         <e k="rcr_section_field"        v="État actuel de la parcelle" />
-        <e k="rcr_section_lime"         v="Statut Chaux / pH" />
+        <e k="rcr_section_lime"         v="pH / Chaulage" />
         <e k="rcr_section_plan"         v="Plan de Rotation" />
         <e k="rcr_clear_plan_button"    v="Effacer le plan" />
         <e k="rcr_clear_plan_confirm"   v="Effacer le plan de rotation de %s ?" />
@@ -79,7 +77,6 @@
         <e k="rcr_family_root"          v="Légumes-racines" />
         <e k="rcr_family_vegetable"     v="Légumes" />
         <e k="rcr_family_forage"        v="Fourrage" />
-        <e k="rcr_family_cover"         v="Couvert" />
         <e k="rcr_cover_crop"           v="Interculture" />
         <e k="rcr_fallow"              v="Jachère" />
 
@@ -96,7 +93,11 @@
         <e k="rcr_lime_average_pf"      v="Moyenne du pH" />
         <e k="rcr_lime_average_value"   v="Moyenne du pH : %.3f pH" />
         <e k="rcr_lime_target"          v="Objectif : %.3f pH" />
-        <e k="rcr_soil_not_sampled"     v="Sol non analysé" />
+        <e k="rcr_soil_value_unmeasured" v="Valeur non mesurée" />
+        <e k="rcr_n_crop_need_unavailable" v="Besoin de la culture : --" />
+        <e k="rcr_lime_status_unavailable" v="Chaux : --" />
+        <e k="rcr_advice_soil_analysis_required_title" v="Analyse du sol requise" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Les valeurs d’azote et de pH sont indisponibles. Analysez le sol pour accéder aux conseils agronomiques précis." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal"    v="Après une céréale, semez une légumineuse pour restituer l'azote ou une culture de coupure contre le piétin, et gardez deux ans entre céréales." />
@@ -167,22 +168,15 @@
         <e k="rcr_function_fungicideTank" v="Utilisez AMISTAR dans les pulvérisateurs pour appliquer un traitement fongicide sur les cultures à risque." />
         <e k="rcr_function_nematicideTank" v="Utilisez VELUM PRIME dans les pulvérisateurs pour appliquer un traitement nématicide sur les cultures exposées aux nématodes." />
         <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Sclérotinia" />
         <e k="rcr_disease_name_phoma" v="Phoma (nécrose du collet)" />
         <e k="rcr_disease_name_pietin" v="Piétin-échaudage" />
         <e k="rcr_disease_name_septoriose" v="Septoriose" />
         <e k="rcr_disease_name_rouille" v="Rouille" />
         <e k="rcr_disease_name_fusariose" v="Fusariose" />
         <e k="rcr_disease_name_mildiou" v="Mildiou" />
+        <e k="rcr_disease_name_bcn"   v="Nématode à kyste" />
         <e k="rcr_disease_name_hernie" v="Hernie des crucifères" />
-        <e k="rcr_disease_desc_sclerotinia" v="Pourriture blanche des oléagineux, légumineuses et racines à la floraison ; sclérotes persistant plusieurs années, favorisée par une floraison humide." />
-        <e k="rcr_disease_desc_phoma" v="Nécrose du collet du colza/moutarde transmise par les résidus ; nécessite un retour long des oléagineux, aggravée par l'humidité automnale." />
-        <e k="rcr_disease_desc_pietin" v="Piétin-échaudage des céréales en monoculture ; rompu uniquement par une culture non-hôte (avoine, légumineuse, oléagineux). Aucun fongicide efficace." />
-        <e k="rcr_disease_desc_septoriose" v="Principale maladie foliaire du blé/orge, dispersée par les éclaboussures de pluie depuis les résidus ; explosive au printemps humide." />
-        <e k="rcr_disease_desc_rouille" v="Rouilles brune/jaune des céréales et du tournesol/colza ; explosives par temps doux et humide, disséminées par le vent." />
-        <e k="rcr_disease_desc_fusariose" v="Fusariose de l'épi favorisée par les résidus de céréales et de maïs (maïs→blé) ; critique par floraison humide, échaude le grain." />
-        <e k="rcr_disease_desc_mildiou" v="Mildiou de la pomme de terre ; dominé par la météo fraîche et humide, faible dépendance à la rotation ; ravage la culture en quelques jours." />
-        <e k="rcr_disease_desc_bcn" v="Nématode à kyste de la betterave ; kystes persistant dans le sol plusieurs années, stress chronique en foyers ; la rotation est le levier principal." />
-        <e k="rcr_disease_desc_hernie" v="Hernie des crucifères ; spores de repos persistant plus de six ans, nécessite un retour très long des brassicacées ; aucun traitement chimique." />
         <e k="rcr_disease_treatment_sclerotinia" v="Fongicide" />
         <e k="rcr_disease_treatment_phoma" v="Fongicide" />
         <e k="rcr_disease_treatment_pietin" v="Aucun (rotation)" />

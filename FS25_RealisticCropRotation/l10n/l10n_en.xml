@@ -12,8 +12,6 @@
         <e k="rcr_tab_history"          v="Agronomy" />
         <e k="rcr_sidebar_fields"       v="Fields" />
         <e k="rcr_tab_planning"         v="Planning" />
-        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia" />
-        <e k="rcr_disease_name_bcn"   v="Cyst nematode" />
         <e k="rcr_section_disease_map"     v="Diseases" />
         <e k="rcr_disease_sub_infections" v="Infected fields" />
         <e k="rcr_disease_sub_pressure"   v="Disease pressure" />
@@ -24,7 +22,6 @@
         <e k="rcr_disease_notification" v="%s detected on Field %s" />
         <e k="rcr_disease_hud_label"    v="Disease" />
         <e k="rcr_disease_hud_active"   v="%s (active)" />
-        <e k="rcr_disease_hud_none"     v="None" />
         <e k="rcr_treatment_hud_label"  v="Treatment" />
 
         <!-- Status labels -->
@@ -55,6 +52,7 @@
         <e k="rcr_section_history"      v="Crop History" />
         <e k="rcr_section_nitrogen"     v="Nitrogen Status" />
         <e k="rcr_section_advice"       v="Agronomic Advice" />
+        <e k="rcr_section_soil_indicators" v="Soil Indicators" />
         <e k="rcr_section_field"        v="Current field status" />
         <e k="rcr_section_lime"         v="Lime / pH Status" />
         <e k="rcr_section_plan"         v="Rotation Plan" />
@@ -79,7 +77,6 @@
         <e k="rcr_family_root"          v="Root vegetable" />
         <e k="rcr_family_vegetable"     v="Vegetable" />
         <e k="rcr_family_forage"        v="Forage" />
-        <e k="rcr_family_cover"         v="Cover" />
         <e k="rcr_cover_crop"           v="Intercrop" />
         <e k="rcr_fallow"              v="Fallow" />
 
@@ -96,7 +93,11 @@
         <e k="rcr_lime_average_pf"      v="Average pH" />
         <e k="rcr_lime_average_value"   v="Average pH: %.3f pH" />
         <e k="rcr_lime_target"          v="Target: %.3f pH" />
-        <e k="rcr_soil_not_sampled"     v="Soil not sampled" />
+        <e k="rcr_soil_value_unmeasured" v="Value not measured" />
+        <e k="rcr_n_crop_need_unavailable" v="Crop requirement: --" />
+        <e k="rcr_lime_status_unavailable" v="Lime: --" />
+        <e k="rcr_advice_soil_analysis_required_title" v="Soil analysis required" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Nitrogen and pH values are unavailable. Analyse the soil to unlock precise agronomic advice." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal"    v="After a cereal, sow a legume to restore nitrogen or a break crop to cut foot diseases, and keep two years between cereals." />
@@ -167,22 +168,15 @@
         <e k="rcr_function_fungicideTank" v="Use AMISTAR in sprayers to apply a fungicide treatment to at-risk crops." />
         <e k="rcr_function_nematicideTank" v="Use VELUM PRIME in sprayers to apply a nematicide treatment to crops exposed to nematodes." />
         <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia" />
         <e k="rcr_disease_name_phoma" v="Phoma (blackleg)" />
         <e k="rcr_disease_name_pietin" v="Take-all" />
         <e k="rcr_disease_name_septoriose" v="Septoria leaf blotch" />
         <e k="rcr_disease_name_rouille" v="Rust" />
         <e k="rcr_disease_name_fusariose" v="Fusarium head blight" />
         <e k="rcr_disease_name_mildiou" v="Late blight" />
+        <e k="rcr_disease_name_bcn"   v="Cyst nematode" />
         <e k="rcr_disease_name_hernie" v="Clubroot" />
-        <e k="rcr_disease_desc_sclerotinia" v="White mould of oilseeds, legumes and roots at flowering; sclerotia persist for years, favoured by a humid flowering." />
-        <e k="rcr_disease_desc_phoma" v="Stem canker of canola/mustard carried on residue; needs a long oilseed break, worsened by autumn moisture." />
-        <e k="rcr_disease_desc_pietin" v="Take-all of continuous cereals; broken only by a non-host crop (oats, legume, oilseed). No effective fungicide." />
-        <e k="rcr_disease_desc_septoriose" v="Main wheat/barley foliar disease, splash-dispersed from residue; explosive in a wet spring." />
-        <e k="rcr_disease_desc_rouille" v="Brown/yellow rusts of cereals and sunflower/canola; explosive in mild humid weather, wind-borne." />
-        <e k="rcr_disease_desc_fusariose" v="Fusarium head blight favoured by cereal and maize residue (maize→wheat); critical in a wet flowering, shrivels the grain." />
-        <e k="rcr_disease_desc_mildiou" v="Potato late blight; driven by cool wet weather, low rotation dependence; devastates the crop within days." />
-        <e k="rcr_disease_desc_bcn" v="Beet cyst nematode; cysts persist in soil for years, chronic patchy stress; rotation is the main lever." />
-        <e k="rcr_disease_desc_hernie" v="Clubroot; resting spores persist over six years, needs a very long brassica break; no chemical treatment." />
         <e k="rcr_disease_treatment_sclerotinia" v="Fungicide" />
         <e k="rcr_disease_treatment_phoma" v="Fungicide" />
         <e k="rcr_disease_treatment_pietin" v="None (rotation)" />

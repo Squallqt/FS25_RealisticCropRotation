@@ -384,20 +384,35 @@
         <cornerSize value="0.35"/>
     </Profile>
 
-    <!-- Nitrogen / lime gauge card (1240 x 54 px) -->
+    <!-- Unified soil indicators card (1240 x 132 px) -->
 
-    <Profile name="frNitrogenCard" extends="emptyPanel" with="anchorTopLeft">
-        <size value="1240px 54px"/>
+    <Profile name="frSoilIndicatorsCard" extends="emptyPanel" with="anchorTopLeft">
+        <size value="1240px 132px"/>
     </Profile>
 
-    <Profile name="frNitrogenCardBg" extends="frDetailCardBg">
-        <size value="1240px 54px"/>
+    <Profile name="frSoilIndicatorsCardBg" extends="frDetailCardBg">
+        <size value="1240px 132px"/>
     </Profile>
 
-    <!-- State label — top left -->
-    <Profile name="frNitrogenStateLabel" extends="fs25_textDefault" with="anchorTopLeft">
-        <position value="24px -4px"/>
-        <size value="300px 18px"/>
+    <!-- Centered on its 66px zone (0..-66 for the top row, -66..-132 for the bottom row) -->
+    <Profile name="frSoilRowTitleTop" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="24px -26px"/>
+        <size value="190px 14px"/>
+        <textSize value="12px"/>
+        <textBold value="true"/>
+        <textColor value="$preset_fs25_colorMainLight"/>
+        <textAlignment value="left"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frSoilRowTitleBottom" extends="frSoilRowTitleTop">
+        <position value="24px -92px"/>
+    </Profile>
+
+    <Profile name="frSoilStateTop" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="220px -8px"/>
+        <size value="600px 18px"/>
         <textSize value="12px"/>
         <textBold value="true"/>
         <textUpperCase value="false"/>
@@ -407,11 +422,13 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
+    <Profile name="frSoilStateBottom" extends="frSoilStateTop">
+        <position value="220px -74px"/>
+    </Profile>
 
-    <!-- kg/ha value (PF mode) — top right -->
-    <Profile name="frNitrogenValueLabel" extends="fs25_textDefault" with="anchorTopRight">
-        <position value="-24px -4px"/>
-        <size value="200px 18px"/>
+    <Profile name="frSoilValueTop" extends="fs25_textDefault" with="anchorTopRight">
+        <position value="-24px -8px"/>
+        <size value="360px 18px"/>
         <textSize value="12px"/>
         <textBold value="true"/>
         <textUpperCase value="false"/>
@@ -421,51 +438,116 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Progress bar track (keep width in sync with N_BAR_MAX_WIDTH in Lua) -->
-    <Profile name="frNitrogenTrack" extends="baseReference" with="anchorBottomLeft">
-        <position value="24px 10px"/>
-        <size value="1192px 14px"/>
+    <Profile name="frSoilValueBottom" extends="frSoilValueTop">
+        <position value="-24px -74px"/>
+    </Profile>
+
+    <Profile name="frSoilValueUnavailableTop" extends="frSoilValueTop">
+        <textColor value="$preset_fs25_colorGrey"/>
+    </Profile>
+
+    <Profile name="frSoilValueUnavailableBottom" extends="frSoilValueBottom">
+        <textColor value="$preset_fs25_colorGrey"/>
+    </Profile>
+
+    <Profile name="frSoilTrackTop" extends="baseReference" with="anchorTopLeft">
+        <position value="230px -38px"/>
+        <size value="986px 14px"/>
         <color value="$preset_fs25_colorGreyDark_50"/>
         <cornerSize value="0.5"/>
     </Profile>
 
-    <!-- Progress bar fill (resized in Lua) -->
-    <Profile name="frNitrogenFill" extends="frNitrogenTrack">
+    <Profile name="frSoilFillTop" extends="frSoilTrackTop">
         <color value="$preset_fs25_colorGreen"/>
     </Profile>
 
-    <!-- Same as the nitrogen value label; distinct name kept for the lime gauge. -->
-    <Profile name="frLimeValueLabel" extends="frNitrogenValueLabel"/>
+    <Profile name="frSoilTrackBottom" extends="frSoilTrackTop">
+        <position value="230px -104px"/>
+    </Profile>
 
-    <!-- Identical fill to the nitrogen gauge; distinct name kept for the lime gauge. -->
-    <Profile name="frLimeFill" extends="frNitrogenFill"/>
+    <Profile name="frSoilFillBottom" extends="frSoilTrackBottom">
+        <color value="$preset_fs25_colorGreen"/>
+    </Profile>
 
-    <!-- Agronomic advice card (1240 x 64 px) -->
+    <Profile name="frSoilRowDivider" extends="baseReference" with="anchorTopLeft">
+        <position value="24px -66px"/>
+        <size value="1192px 1px"/>
+        <color value="$preset_fs25_colorGreyLight"/>
+        <cornerSize value="0"/>
+    </Profile>
+
+    <!-- Agronomic advice card (1240 x 78 px) -->
 
     <Profile name="frAdviceCard" extends="emptyPanel" with="anchorTopLeft">
-        <size value="1240px 64px"/>
+        <size value="1240px 78px"/>
     </Profile>
 
-    <Profile name="frAdviceCardBg" extends="frDetailCardBg">
-        <size value="1240px 64px"/>
+    <Profile name="frAdviceCardBgNeutral" extends="frDetailCardBg">
+        <size value="1240px 78px"/>
     </Profile>
 
-    <Profile name="frAdviceAccent" extends="fs25_lineSeparatorTopHighlighted" with="anchorTopLeft">
-        <position value="0px 0px"/>
-        <size value="1240px 3dp"/>
-        <imageColor value="0.95 0.85 0.05 1.0"/>
+    <Profile name="frAdviceCardBgWarning" extends="frAdviceCardBgNeutral">
+        <color value="0.24 0.18 0.02 0.82"/>
     </Profile>
 
-    <!-- Advice text — left-aligned, vertically centered (3 lines: family + disease notes) -->
-    <Profile name="frAdviceText" extends="fs25_textDefault" with="anchorMiddleLeft">
-        <position value="24px 0px"/>
-        <size value="1190px 60px"/>
-        <textSize value="15px"/>
+    <Profile name="frAdviceCardBgReady" extends="frAdviceCardBgNeutral">
+        <color value="0.10 0.20 0.03 0.76"/>
+    </Profile>
+
+    <Profile name="frAdviceStatusBadgeBgNeutral" extends="baseReference" with="anchorMiddleLeft">
+        <position value="18px 0px"/>
+        <size value="42px 42px"/>
+        <color value="0.32 0.32 0.32 1"/>
+        <cornerSize value="0.5"/>
+    </Profile>
+
+    <Profile name="frAdviceStatusBadgeBgWarning" extends="frAdviceStatusBadgeBgNeutral">
+        <color value="0.95 0.70 0.08 1"/>
+    </Profile>
+
+    <Profile name="frAdviceStatusBadgeBgReady" extends="frAdviceStatusBadgeBgNeutral">
+        <color value="$preset_fs25_colorGreen"/>
+    </Profile>
+
+    <Profile name="frAdviceStatusBadgeText" extends="fs25_textDefault" with="anchorMiddleLeft">
+        <position value="18px 0px"/>
+        <size value="42px 42px"/>
+        <textSize value="17px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_fs25_colorMainDark"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frAdviceTitleNeutral" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="76px -10px"/>
+        <size value="1138px 20px"/>
+        <textSize value="14px"/>
+        <textBold value="true"/>
+        <textUpperCase value="false"/>
+        <textColor value="0.95 0.85 0.05 1.0"/>
+        <textAlignment value="left"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frAdviceTitleWarning" extends="frAdviceTitleNeutral"/>
+
+    <Profile name="frAdviceTitleReady" extends="frAdviceTitleNeutral">
+        <textColor value="$preset_fs25_colorGreen"/>
+    </Profile>
+
+    <Profile name="frAdviceText" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="76px -29px"/>
+        <size value="1138px 45px"/>
+        <textSize value="12px"/>
         <textBold value="false"/>
         <textUpperCase value="false"/>
         <textColor value="$preset_fs25_colorMainLight"/>
         <textAlignment value="left"/>
-        <textVerticalAlignment value="middle"/>
+        <textVerticalAlignment value="top"/>
         <textMaxNumLines value="3"/>
     </Profile>
 
@@ -477,12 +559,6 @@
 
     <Profile name="frFieldCardBg" extends="frDetailCardBg">
         <size value="1240px 82px"/>
-    </Profile>
-
-    <Profile name="frFieldAccent" extends="fs25_lineSeparatorTopHighlighted" with="anchorTopLeft">
-        <position value="0px 0px"/>
-        <size value="1240px 3dp"/>
-        <imageColor value="$preset_fs25_colorOrangeDark"/>
     </Profile>
 
     <!-- Third-width KPI container (3 columns across the 1240px card) -->

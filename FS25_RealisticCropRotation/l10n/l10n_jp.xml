@@ -12,8 +12,6 @@
         <e k="rcr_tab_history"          v="農学" />
         <e k="rcr_sidebar_fields"       v="畑" />
         <e k="rcr_tab_planning"         v="計画" />
-        <e k="rcr_disease_name_sclerotinia" v="菌核病" />
-        <e k="rcr_disease_name_bcn"   v="シストセンチュウ" />
         <e k="rcr_section_disease_map"     v="病害" />
         <e k="rcr_disease_sub_infections" v="感染中の畑" />
         <e k="rcr_disease_sub_pressure"   v="病害圧" />
@@ -24,7 +22,6 @@
         <e k="rcr_disease_notification" v="%s が圃場 %s で検出されました" />
         <e k="rcr_disease_hud_label"    v="病害" />
         <e k="rcr_disease_hud_active"   v="%s（発生中）" />
-        <e k="rcr_disease_hud_none"     v="なし" />
         <e k="rcr_treatment_hud_label"  v="防除" />
 
         <!-- Status labels -->
@@ -55,6 +52,7 @@
         <e k="rcr_section_history"      v="作物履歴" />
         <e k="rcr_section_nitrogen"     v="窒素の状態" />
         <e k="rcr_section_advice"       v="農学的アドバイス" />
+        <e k="rcr_section_soil_indicators" v="土壌指標" />
         <e k="rcr_section_field"        v="現在の畑の状態" />
         <e k="rcr_section_lime"         v="石灰 / pH の状態" />
         <e k="rcr_section_plan"         v="輪作計画" />
@@ -79,7 +77,6 @@
         <e k="rcr_family_root"          v="根菜" />
         <e k="rcr_family_vegetable"     v="野菜" />
         <e k="rcr_family_forage"        v="飼料作物" />
-        <e k="rcr_family_cover"         v="被覆" />
         <e k="rcr_cover_crop"           v="間作" />
         <e k="rcr_fallow"              v="休閑" />
 
@@ -96,7 +93,11 @@
         <e k="rcr_lime_average_pf"      v="平均 pH" />
         <e k="rcr_lime_average_value"   v="平均 pH: %.3f pH" />
         <e k="rcr_lime_target"          v="目標: %.3f pH" />
-        <e k="rcr_soil_not_sampled"     v="土壌未採取" />
+        <e k="rcr_soil_value_unmeasured" v="未測定" />
+        <e k="rcr_n_crop_need_unavailable" v="作物の必要量: --" />
+        <e k="rcr_lime_status_unavailable" v="石灰: --" />
+        <e k="rcr_advice_soil_analysis_required_title" v="土壌分析が必要" />
+        <e k="rcr_advice_soil_analysis_required_body" v="窒素値とpH値を利用できません。正確な農学的助言を得るには土壌を分析してください。" />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="穀物の後は、窒素を戻すためにマメ科作物を、または立枯病対策に間作作物を播種し、穀物の間は2年あけてください。" />
@@ -167,22 +168,15 @@
         <e k="rcr_function_fungicideTank" v="AMISTARを噴霧器で使用し、リスクのある作物に殺菌剤処理を行います。" />
         <e k="rcr_function_nematicideTank" v="VELUM PRIMEを噴霧器で使用し、線虫にさらされた作物に殺線虫剤処理を行います。" />
         <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="菌核病" />
         <e k="rcr_disease_name_phoma" v="根朽病（フォマ茎枯）" />
         <e k="rcr_disease_name_pietin" v="ムギ類立枯病" />
         <e k="rcr_disease_name_septoriose" v="葉枯病（セプトリア）" />
         <e k="rcr_disease_name_rouille" v="さび病" />
         <e k="rcr_disease_name_fusariose" v="赤かび病" />
         <e k="rcr_disease_name_mildiou" v="疫病" />
+        <e k="rcr_disease_name_bcn"   v="シストセンチュウ" />
         <e k="rcr_disease_name_hernie" v="根こぶ病" />
-        <e k="rcr_disease_desc_sclerotinia" v="油糧作物・マメ科・根菜類の開花期に発生する白色の菌核病。菌核は土中で数年生存し、多湿の開花期に発生しやすい。" />
-        <e k="rcr_disease_desc_phoma" v="残渣で伝染するナタネ／カラシナの茎枯病。油糧作物の長い間隔が必要で、秋の多湿で悪化する。" />
-        <e k="rcr_disease_desc_pietin" v="連作したムギ類の立枯病。非宿主作物（エンバク、マメ科、油糧作物）でしか断ち切れず、有効な殺菌剤はない。" />
-        <e k="rcr_disease_desc_septoriose" v="コムギ／オオムギの主要な葉の病害で、残渣から雨のはねで伝染する。多雨の春に爆発的に広がる。" />
-        <e k="rcr_disease_desc_rouille" v="ムギ類やヒマワリ／ナタネの赤さび病・黄さび病。温暖で多湿な天候で爆発的に増え、風で運ばれる。" />
-        <e k="rcr_disease_desc_fusariose" v="ムギ類やトウモロコシの残渣で助長される穂の赤かび病（トウモロコシ→コムギ）。多湿の開花期に最も危険で、子実がしいなになる。" />
-        <e k="rcr_disease_desc_mildiou" v="ジャガイモ疫病。冷涼で多湿な天候に左右され、輪作への依存は低い。数日で作物を壊滅させる。" />
-        <e k="rcr_disease_desc_bcn" v="テンサイシストセンチュウ。シストは土中で数年生存し、斑状の慢性的なストレスを与える。輪作が主な防除手段。" />
-        <e k="rcr_disease_desc_hernie" v="根こぶ病。休眠胞子は6年以上土中で生存し、アブラナ科の非常に長い間隔を要する。化学的防除法はない。" />
         <e k="rcr_disease_treatment_sclerotinia" v="殺菌剤" />
         <e k="rcr_disease_treatment_phoma" v="殺菌剤" />
         <e k="rcr_disease_treatment_pietin" v="なし（輪作）" />

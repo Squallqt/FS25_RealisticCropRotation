@@ -12,8 +12,6 @@
         <e k="rcr_tab_history"          v="Agronómia" />
         <e k="rcr_sidebar_fields"       v="Táblák" />
         <e k="rcr_tab_planning"         v="Tervezés" />
-        <e k="rcr_disease_name_sclerotinia" v="Fehérpenészes rothadás (Sclerotinia)" />
-        <e k="rcr_disease_name_bcn"   v="Cisztaféreg" />
         <e k="rcr_section_disease_map"     v="Betegségek" />
         <e k="rcr_disease_sub_infections" v="Fertőzött táblák" />
         <e k="rcr_disease_sub_pressure"   v="Betegségnyomás" />
@@ -24,7 +22,6 @@
         <e k="rcr_disease_notification" v="%s észlelve a(z) %s. táblán" />
         <e k="rcr_disease_hud_label"    v="Betegség" />
         <e k="rcr_disease_hud_active"   v="%s (aktív)" />
-        <e k="rcr_disease_hud_none"     v="Nincs" />
         <e k="rcr_treatment_hud_label"  v="Kezelés" />
 
         <!-- Status labels -->
@@ -55,6 +52,7 @@
         <e k="rcr_section_history"      v="Növénytörténet" />
         <e k="rcr_section_nitrogen"     v="Nitrogénállapot" />
         <e k="rcr_section_advice"       v="Agronómiai tanács" />
+        <e k="rcr_section_soil_indicators" v="Talajmutatók" />
         <e k="rcr_section_field"        v="Tábla aktuális állapota" />
         <e k="rcr_section_lime"         v="Mész-/pH-állapot" />
         <e k="rcr_section_plan"         v="Vetésforgó-terv" />
@@ -79,7 +77,6 @@
         <e k="rcr_family_root"          v="Gyökérnövény" />
         <e k="rcr_family_vegetable"     v="Zöldség" />
         <e k="rcr_family_forage"        v="Takarmány" />
-        <e k="rcr_family_cover"         v="Takaró" />
         <e k="rcr_cover_crop"           v="Köztes növény" />
         <e k="rcr_fallow"              v="Ugar" />
 
@@ -96,7 +93,11 @@
         <e k="rcr_lime_average_pf"      v="Átlagos pH" />
         <e k="rcr_lime_average_value"   v="Átlagos pH: %.3f pH" />
         <e k="rcr_lime_target"          v="Cél: %.3f pH" />
-        <e k="rcr_soil_not_sampled"     v="Talaj nincs mintázva" />
+        <e k="rcr_soil_value_unmeasured" v="Nincs mért érték" />
+        <e k="rcr_n_crop_need_unavailable" v="Növény igénye: --" />
+        <e k="rcr_lime_status_unavailable" v="Mész: --" />
+        <e k="rcr_advice_soil_analysis_required_title" v="Talajvizsgálat szükséges" />
+        <e k="rcr_advice_soil_analysis_required_body" v="A nitrogén- és pH-értékek nem érhetők el. A pontos agronómiai tanácsokhoz vizsgáld meg a talajt." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Gabona után vess pillangóst a nitrogén visszapótlására vagy megszakító növényt a lábbetegségek ellen, és hagyj két évet a gabonák között." />
@@ -167,22 +168,15 @@
         <e k="rcr_function_fungicideTank" v="Használd az AMISTAR-t permetezőkben a veszélyeztetett kultúrák gombaölő kezeléséhez." />
         <e k="rcr_function_nematicideTank" v="Használd a VELUM PRIME-ot permetezőkben a fonálférgeknek kitett kultúrák nematicid kezeléséhez." />
         <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Fehérpenészes rothadás (Sclerotinia)" />
         <e k="rcr_disease_name_phoma" v="Fómás szárrothadás (Phoma)" />
         <e k="rcr_disease_name_pietin" v="Gyökér- és szártőfeketedés" />
         <e k="rcr_disease_name_septoriose" v="Szeptóriás levélfoltosság" />
         <e k="rcr_disease_name_rouille" v="Rozsda" />
         <e k="rcr_disease_name_fusariose" v="Kalászfuzáriózis" />
         <e k="rcr_disease_name_mildiou" v="Burgonyavész" />
+        <e k="rcr_disease_name_bcn"   v="Cisztaféreg" />
         <e k="rcr_disease_name_hernie" v="Káposztafélék gyökérgolyvája" />
-        <e k="rcr_disease_desc_sclerotinia" v="Az olajnövények, hüvelyesek és gyökérnövények fehérpenészes rothadása virágzáskor; a szkleróciumok évekig fennmaradnak a talajban, a nedves virágzás kedvez neki." />
-        <e k="rcr_disease_desc_phoma" v="A repce és a mustár tarlómaradványokkal terjedő szárrothadása; hosszú olajnövény-kihagyást igényel, az őszi nedvesség súlyosbítja." />
-        <e k="rcr_disease_desc_pietin" v="A folyamatosan termesztett gabona gyökér- és szártőfeketedése; csak nem gazdanövénnyel (zab, hüvelyes, olajnövény) szakítható meg. Nincs hatékony gombaölő szer." />
-        <e k="rcr_disease_desc_septoriose" v="A búza és az árpa fő levélbetegsége, a tarlómaradványokról esőcseppekkel fröccsenve terjed; nedves tavaszon robbanásszerűen jelentkezik." />
-        <e k="rcr_disease_desc_rouille" v="A gabonafélék, valamint a napraforgó/repce barna- és sárgarozsdája; enyhe, nedves időben gyorsan terjed a széllel." />
-        <e k="rcr_disease_desc_fusariose" v="A kalászfuzáriózist a gabona- és kukoricamaradványok segítik (kukorica→búza); nedves virágzáskor kritikus, aszalja a szemet." />
-        <e k="rcr_disease_desc_mildiou" v="Burgonyavész; a hűvös, nedves időjárás hajtja, a vetésforgótól kevéssé függ; néhány nap alatt tönkreteszi az állományt." />
-        <e k="rcr_disease_desc_bcn" v="Répacisztaféreg; a ciszták évekig fennmaradnak a talajban, tartós, foltszerű stresszt okoznak; a fő eszköz a vetésforgó." />
-        <e k="rcr_disease_desc_hernie" v="Káposztafélék gyökérgolyvája; a nyugvó spórák több mint hat évig fennmaradnak, nagyon hosszú keresztesvirágú-kihagyást igényel; nincs vegyszeres kezelés." />
         <e k="rcr_disease_treatment_sclerotinia" v="Gombaölő szer" />
         <e k="rcr_disease_treatment_phoma" v="Gombaölő szer" />
         <e k="rcr_disease_treatment_pietin" v="Nincs (vetésforgó)" />

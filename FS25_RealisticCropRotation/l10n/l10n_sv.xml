@@ -12,8 +12,6 @@
         <e k="rcr_tab_history"          v="Agronomi" />
         <e k="rcr_sidebar_fields"       v="Fält" />
         <e k="rcr_tab_planning"         v="Planering" />
-        <e k="rcr_disease_name_sclerotinia" v="Bomullsmögel (Sclerotinia)" />
-        <e k="rcr_disease_name_bcn"   v="Cystnematod" />
         <e k="rcr_section_disease_map"     v="Sjukdomar" />
         <e k="rcr_disease_sub_infections" v="Infekterade fält" />
         <e k="rcr_disease_sub_pressure"   v="Sjukdomstryck" />
@@ -24,7 +22,6 @@
         <e k="rcr_disease_notification" v="%s upptäckt på fält %s" />
         <e k="rcr_disease_hud_label"    v="Växtsjukdom" />
         <e k="rcr_disease_hud_active"   v="%s (aktiv)" />
-        <e k="rcr_disease_hud_none"     v="Ingen" />
         <e k="rcr_treatment_hud_label"  v="Behandling" />
 
         <!-- Status labels -->
@@ -55,6 +52,7 @@
         <e k="rcr_section_history"      v="Grödhistorik" />
         <e k="rcr_section_nitrogen"     v="Kvävestatus" />
         <e k="rcr_section_advice"       v="Agronomiskt råd" />
+        <e k="rcr_section_soil_indicators" v="Markindikatorer" />
         <e k="rcr_section_field"        v="Aktuell fältstatus" />
         <e k="rcr_section_lime"         v="Kalk-/pH-status" />
         <e k="rcr_section_plan"         v="Växtföljdsplan" />
@@ -79,7 +77,6 @@
         <e k="rcr_family_root"          v="Rotfrukt" />
         <e k="rcr_family_vegetable"     v="Grönsak" />
         <e k="rcr_family_forage"        v="Foder" />
-        <e k="rcr_family_cover"         v="Täcke" />
         <e k="rcr_cover_crop"           v="Mellangröda" />
         <e k="rcr_fallow"              v="Träda" />
 
@@ -96,7 +93,11 @@
         <e k="rcr_lime_average_pf"      v="Genomsnittligt pH" />
         <e k="rcr_lime_average_value"   v="Genomsnittligt pH: %.3f pH" />
         <e k="rcr_lime_target"          v="Mål: %.3f pH" />
-        <e k="rcr_soil_not_sampled"     v="Jord ej provtagen" />
+        <e k="rcr_soil_value_unmeasured" v="Värde inte uppmätt" />
+        <e k="rcr_n_crop_need_unavailable" v="Grödans behov: --" />
+        <e k="rcr_lime_status_unavailable" v="Kalk: --" />
+        <e k="rcr_advice_soil_analysis_required_title" v="Jordanalys krävs" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Kväve- och pH-värden är inte tillgängliga. Analysera jorden för att få exakta agronomiska råd." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Efter en spannmål, så en baljväxt för att återföra kväve eller en avbrottsgröda mot fotsjuka, och håll två år mellan spannmål." />
@@ -167,22 +168,15 @@
         <e k="rcr_function_fungicideTank" v="Använd AMISTAR i växtskyddssprutor för att applicera en fungicidbehandling på riskutsatta grödor." />
         <e k="rcr_function_nematicideTank" v="Använd VELUM PRIME i växtskyddssprutor för att applicera en nematicidbehandling på grödor som utsätts för nematoder." />
         <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Bomullsmögel (Sclerotinia)" />
         <e k="rcr_disease_name_phoma" v="Torröta (Phoma)" />
         <e k="rcr_disease_name_pietin" v="Rotdödare" />
         <e k="rcr_disease_name_septoriose" v="Svartpricksjuka (Septoria)" />
         <e k="rcr_disease_name_rouille" v="Rost" />
         <e k="rcr_disease_name_fusariose" v="Axfusarios (Fusarium)" />
         <e k="rcr_disease_name_mildiou" v="Potatisbladmögel" />
+        <e k="rcr_disease_name_bcn"   v="Cystnematod" />
         <e k="rcr_disease_name_hernie" v="Klumprotsjuka" />
-        <e k="rcr_disease_desc_sclerotinia" v="Vitröta i oljeväxter, baljväxter och rotfrukter vid blomning; sklerotier överlever i marken i åratal, gynnas av en fuktig blomning." />
-        <e k="rcr_disease_desc_phoma" v="Stjälkröta i raps/senap som sprids med skörderester; kräver ett långt uppehåll från oljeväxter, förvärras av höstfukt." />
-        <e k="rcr_disease_desc_pietin" v="Rotdödare i ensidig spannmålsodling; bryts endast av en icke-värdgröda (havre, baljväxt, oljeväxt). Inget effektivt svampmedel." />
-        <e k="rcr_disease_desc_septoriose" v="Viktigaste bladsjukdomen i vete/korn, sprids med regnstänk från skörderester; explosiv under en våt vår." />
-        <e k="rcr_disease_desc_rouille" v="Brunrost och gulrost i spannmål samt solros/raps; explosiv i milt fuktigt väder, sprids med vinden." />
-        <e k="rcr_disease_desc_fusariose" v="Axfusarios som gynnas av spannmåls- och majsrester (majs→vete); kritisk vid en våt blomning, skrumpnar kärnan." />
-        <e k="rcr_disease_desc_mildiou" v="Potatisbladmögel; drivs av svalt vått väder, litet beroende av växtföljd; förstör grödan på några dagar." />
-        <e k="rcr_disease_desc_bcn" v="Betcystnematod; cystor överlever i marken i åratal, kronisk fläckvis stress; växtföljden är den viktigaste hävstången." />
-        <e k="rcr_disease_desc_hernie" v="Klumprotsjuka; vilsporer överlever i över sex år, kräver ett mycket långt uppehåll från korsblommiga; ingen kemisk behandling." />
         <e k="rcr_disease_treatment_sclerotinia" v="Svampmedel" />
         <e k="rcr_disease_treatment_phoma" v="Svampmedel" />
         <e k="rcr_disease_treatment_pietin" v="Ingen (växtföljd)" />
