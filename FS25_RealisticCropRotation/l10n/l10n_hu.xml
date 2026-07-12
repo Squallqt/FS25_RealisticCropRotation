@@ -47,7 +47,7 @@
         <e k="rcr_weather_later" v="%s N+%d %s-%s" />
         <e k="rcr_time_minutes" v="%d perc" />
         <e k="rcr_time_hours" v="%d ó" />
-        <e k="rcr_time_hours_minutes" v="%d ó %02d" />
+        <e k="rcr_time_hours_minutes" v="%d ó %02d perc" />
         <e k="rcr_hud_previous_n1"      v="Előző növény (N-1)" />
         <e k="rcr_hud_previous_n2"      v="Azelőtti növény (N-2)" />
 

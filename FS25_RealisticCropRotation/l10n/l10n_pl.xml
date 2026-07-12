@@ -47,7 +47,7 @@
         <e k="rcr_weather_later" v="%s D+%d %s-%s" />
         <e k="rcr_time_minutes" v="%d min" />
         <e k="rcr_time_hours" v="%d godz" />
-        <e k="rcr_time_hours_minutes" v="%d godz %02d" />
+        <e k="rcr_time_hours_minutes" v="%d godz %02d min" />
         <e k="rcr_hud_previous_n1"      v="Poprzednia uprawa (N-1)" />
         <e k="rcr_hud_previous_n2"      v="Uprawa wcześniejsza (N-2)" />
 

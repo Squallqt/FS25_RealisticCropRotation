@@ -47,7 +47,7 @@
         <e k="rcr_weather_later" v="%s G+%d %s-%s" />
         <e k="rcr_time_minutes" v="%d dk" />
         <e k="rcr_time_hours" v="%d sa" />
-        <e k="rcr_time_hours_minutes" v="%d sa %02d" />
+        <e k="rcr_time_hours_minutes" v="%d sa %02d dk" />
         <e k="rcr_hud_previous_n1"      v="Önceki ekin (N-1)" />
         <e k="rcr_hud_previous_n2"      v="Daha önceki ekin (N-2)" />
 
