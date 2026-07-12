@@ -78,33 +78,94 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Weather forecast pill — vanilla weather icon slices are set from Lua -->
-    <Profile name="frWeatherPill" extends="emptyPanel" with="anchorMiddleLeft">
+    <!-- Reference row for the header weather station: 1280px, matches frDetailContainer's own right edge -->
+    <Profile name="frHeaderRow" extends="baseReference" with="anchorTopLeft">
+        <width value="1280px"/>
+        <position value="0px 74px"/>
+    </Profile>
+
+    <!-- Weather card: authored width is only a hidden bootstrap value; Lua fits it to rendered text before display. -->
+    <Profile name="frHeaderWeather" extends="emptyPanel" with="anchorTopRight">
+        <position value="-24px 0px"/>
+        <size value="300px 60px"/>
+    </Profile>
+
+    <Profile name="frHeaderWeatherShadow" extends="baseReference" with="anchorTopLeft">
+        <position value="3px -3px"/>
+        <size value="297px 60px"/>
+        <color value="0 0 0 0.28"/>
+        <cornerSize value="0.28"/>
+    </Profile>
+
+    <Profile name="frHeaderWeatherBg" extends="baseReference" with="anchorTopLeft">
+        <size value="300px 60px"/>
+        <color value="0.035 0.050 0.060 0.97"/>
+        <cornerSize value="0.28"/>
+    </Profile>
+
+    <!-- Thin event-colour signal: informative without turning the whole card into a badge. -->
+    <Profile name="frHeaderWeatherAccent" extends="fs25_lineSeparatorTopHighlighted" with="anchorTopLeft">
+        <size value="300px 3dp"/>
         <position value="0px 0px"/>
-        <size value="120px 28px"/>
     </Profile>
 
-    <Profile name="frWeatherPillBg" extends="baseReference" with="anchorTopLeft">
-        <size value="120px 28px"/>
-        <color value="0.04 0.20 0.28 0.86"/>
-        <cornerSize value="0.5"/>
-    </Profile>
-
-    <Profile name="frWeatherPillIcon" extends="baseReference" with="anchorMiddleLeft">
+    <!-- Dedicated icon tile, visually independent from the text hierarchy. -->
+    <Profile name="frHeaderWeatherIconBg" extends="baseReference" with="anchorMiddleLeft">
         <position value="12px 0px"/>
-        <size value="22px 22px"/>
+        <size value="48px 44px"/>
+        <color value="0.18 0.48 0.66 1"/>
+        <cornerSize value="0.28"/>
+    </Profile>
+
+    <Profile name="frHeaderWeatherIcon" extends="baseReference" with="anchorMiddleLeft">
+        <position value="24px 0px"/>
+        <size value="24px 24px"/>
         <imageSliceId value="gui.icon_weather_rain"/>
         <imageColor value="$preset_fs25_colorMainLight"/>
     </Profile>
 
-    <Profile name="frWeatherPillText" extends="fs25_textDefault" with="anchorMiddleLeft">
-        <position value="42px 0px"/>
-        <size value="66px 22px"/>
-        <textSize value="12px"/>
+    <!-- The weather phenomenon is vertically centred as the card's primary subject. -->
+    <Profile name="frHeaderWeatherText" extends="fs25_textDefault" with="anchorMiddleLeft">
+        <position value="76px 0px"/>
+        <size value="110px 24px"/>
+        <textSize value="19px"/>
         <textBold value="true"/>
         <textUpperCase value="true"/>
         <textColor value="$preset_fs25_colorMainLight"/>
-        <textAlignment value="left"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <!-- Thin vertical divider, matching the existing KPI separators. -->
+    <Profile name="frHeaderWeatherDivider" extends="baseReference" with="anchorMiddleLeft">
+        <position value="200px 0px"/>
+        <size value="1px 34px"/>
+        <color value="$preset_fs25_colorGreyLight"/>
+        <cornerSize value="0"/>
+    </Profile>
+
+    <!-- Temporal hierarchy: actionable state first, exact schedule second. -->
+    <Profile name="frHeaderWeatherWindow" extends="fs25_textDefault" with="anchorMiddleRight">
+        <position value="-12px -10px"/>
+        <size value="88px 15px"/>
+        <textSize value="11px"/>
+        <textBold value="false"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_colorWhite_50"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frHeaderWeatherStatus" extends="fs25_textDefault" with="anchorMiddleRight">
+        <position value="-12px 9px"/>
+        <size value="88px 16px"/>
+        <textSize value="13px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_fs25_colorMainLight"/>
+        <textAlignment value="center"/>
         <textVerticalAlignment value="middle"/>
         <textMaxNumLines value="1"/>
     </Profile>

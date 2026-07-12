@@ -5,30 +5,11 @@ local RealisticCropRotationFrame_mt = Class(RealisticCropRotationFrame, TabbedMe
 
 -- Internal tab indices
 RealisticCropRotationFrame.TAB = { HISTORY = 1, PLANNING = 2 }
-RealisticCropRotationFrame.DAY_LENGTH_MS = 86400000
-
 RealisticCropRotationFrame.HERO_PILL_HEIGHT_PX = 28
 RealisticCropRotationFrame.HERO_PILL_MIN_W_PX = 96
 RealisticCropRotationFrame.HERO_PILL_MAX_W_PX = 420
 RealisticCropRotationFrame.HERO_PILL_TEXT_PADDING_PX = 24
-RealisticCropRotationFrame.HERO_WEATHER_ICON_PX = 22
-RealisticCropRotationFrame.HERO_WEATHER_LEFT_PAD_PX = 14
-RealisticCropRotationFrame.HERO_WEATHER_RIGHT_PAD_PX = 16
-RealisticCropRotationFrame.HERO_WEATHER_ICON_TEXT_GAP_PX = 8
 RealisticCropRotationFrame.HERO_TITLE_PILL_GAP_PX = 24
-
--- Vanilla weather types and their icon slices.
-RealisticCropRotationFrame.WEATHER_TYPES = {
-    { constant = "SUN",              textKey = "rcr_weather_sun",              sliceId = "gui.icon_weather_sun",             color = {0.34, 0.40, 0.10, 0.86} },
-    { constant = "PARTIALLY_CLOUDY", textKey = "rcr_weather_partially_cloudy", sliceId = "gui.icon_weather_partiallyCloudy", color = {0.23, 0.32, 0.34, 0.86} },
-    { constant = "CLOUDY",           textKey = "rcr_weather_cloudy",           sliceId = "gui.icon_weather_cloudy",          color = {0.22, 0.27, 0.30, 0.86} },
-    { constant = "RAIN",             textKey = "rcr_weather_rain",             sliceId = "gui.icon_weather_rain",            color = {0.04, 0.20, 0.28, 0.86}, isOperational = true },
-    { constant = "SNOW",             textKey = "rcr_weather_snow",             sliceId = "gui.icon_weather_snow",            color = {0.22, 0.28, 0.32, 0.86}, isOperational = true },
-    { constant = "HAIL",             textKey = "rcr_weather_hail",             sliceId = "gui.icon_weather_hail",            color = {0.24, 0.22, 0.34, 0.86}, isOperational = true },
-    { constant = "TWISTER",          textKey = "rcr_weather_twister",          sliceId = "gui.icon_weather_twister",         color = {0.34, 0.16, 0.10, 0.88}, isOperational = true },
-    { constant = "THUNDER",          textKey = "rcr_weather_thunder",          sliceId = "gui.icon_weather_thunder",         color = {0.30, 0.22, 0.08, 0.88}, isOperational = true },
-}
-
 local function isFallowCrop(cropName)
     return RealisticCropRotation ~= nil
         and type(RealisticCropRotation.isFallowCrop) == "function"
@@ -174,6 +155,7 @@ function RealisticCropRotationFrame.new(i18n, messageCenter)
     self.calendarLocalCoverPlan = {"", "", "", ""}
     self.totalAreaHa   = 0
     self.isSubscribedToFarmlandChanges = false
+    self.weatherCard = nil
     return self
 end
 
@@ -185,12 +167,14 @@ function RealisticCropRotationFrame:copyAttributes(src)
     self.messageCenter = src.messageCenter
     self.totalAreaHa   = src.totalAreaHa or 0
     self.isSubscribedToFarmlandChanges = false
+    self.weatherCard = nil
 end
 
 ---Unsubscribes and releases the frame.
 function RealisticCropRotationFrame:delete()
     self:unsubscribeFarmlandChanges()
     self.farmlandList = nil
+    self.weatherCard = nil
     RealisticCropRotationFrame:superClass().delete(self)
 end
 
@@ -205,6 +189,25 @@ function RealisticCropRotationFrame:onGuiSetupFinished()
         self.listPlanOverview:setDataSource(self)
         self.listPlanOverview:setDelegate(self)
     end
+
+    if RealisticCropRotationWeatherCard ~= nil then
+        self.weatherCard = RealisticCropRotationWeatherCard.new(self, self.i18n)
+        self.weatherCard:bind({
+            root = self.headerWeatherPill,
+            shadow = self.headerWeatherShadow,
+            background = self.headerWeatherBg,
+            accent = self.headerWeatherAccent,
+            iconBackground = self.headerWeatherIconBg,
+            icon = self.headerWeatherIcon,
+            condition = self.headerWeatherText,
+            divider = self.headerWeatherDivider,
+            window = self.headerWeatherWindow,
+            status = self.headerWeatherStatus,
+            menuHeaderTitle = self.menuHeaderTitle,
+            menuHeaderIconBg = self.menuHeaderIconBg,
+        })
+    end
+
     self:linkFocusNavigation()
 end
 
@@ -272,6 +275,18 @@ function RealisticCropRotationFrame:onFrameClose()
     RealisticCropRotationFrame:superClass().onFrameClose(self)
 end
 
+---Keeps the weather countdown synchronized while this menu frame is active.
+-- @param integer dt Frame delta in milliseconds
+function RealisticCropRotationFrame:update(dt)
+    local superClass = RealisticCropRotationFrame:superClass()
+    if superClass.update ~= nil then
+        superClass.update(self, dt)
+    end
+    if self.weatherCard ~= nil then
+        self.weatherCard:update(dt)
+    end
+end
+
 ---Returns the menu button info: back + page nav always, plus "Clear plan" while Planning is active.
 -- @return table buttons
 function RealisticCropRotationFrame:getMenuButtonInfo()
@@ -297,260 +312,6 @@ end
 function RealisticCropRotationFrame:getManager()
     if g_currentMission == nil then return nil end
     return g_currentMission.realisticCropRotationManager
-end
-
----Returns the active weather object.
--- @return table weather, or nil
-function RealisticCropRotationFrame:getWeather()
-    if g_currentMission == nil or g_currentMission.environment == nil then return nil end
-    return g_currentMission.environment.weather
-end
-
----Returns the WEATHER_TYPES spec matching an engine weather type.
--- @param integer weatherType
--- @return table spec, or nil
-function RealisticCropRotationFrame:getWeatherTypeSpec(weatherType)
-    if weatherType == nil or WeatherType == nil then return nil end
-
-    for _, spec in ipairs(RealisticCropRotationFrame.WEATHER_TYPES) do
-        local weatherTypeValue = WeatherType[spec.constant]
-        if weatherTypeValue ~= nil and weatherType == weatherTypeValue then
-            return spec
-        end
-    end
-
-    return nil
-end
-
----Resolves the weather type of a forecast item.
--- @param table weather
--- @param table forecastItem
--- @return integer weatherType, or nil
-function RealisticCropRotationFrame:getForecastWeatherType(weather, forecastItem)
-    if weather == nil or forecastItem == nil or weather.getWeatherObjectByIndex == nil then return nil end
-    if forecastItem.season == nil or forecastItem.objectIndex == nil then return nil end
-    local weatherObject = weather:getWeatherObjectByIndex(forecastItem.season, forecastItem.objectIndex)
-    return weatherObject ~= nil and weatherObject.weatherType or nil
-end
-
----Returns the UI icon slice id for a weather type.
--- @param integer weatherType
--- @return string sliceId, or nil
-function RealisticCropRotationFrame:getWeatherSliceId(weatherType)
-    local spec = self:getWeatherTypeSpec(weatherType)
-    return spec ~= nil and spec.sliceId or nil
-end
-
----Returns the pill RGBA for a weather type (neutral default when unknown).
--- @param integer weatherType
--- @return table rgba
-function RealisticCropRotationFrame:getWeatherPillColor(weatherType)
-    local spec = self:getWeatherTypeSpec(weatherType)
-    return spec ~= nil and spec.color or {0.22, 0.27, 0.30, 0.86}
-end
-
----Returns the localized label for a weather type.
--- @param integer weatherType
--- @return string label, or nil
-function RealisticCropRotationFrame:getWeatherLabel(weatherType)
-    local spec = self:getWeatherTypeSpec(weatherType)
-    return spec ~= nil and self.i18n:getText(spec.textKey) or nil
-end
-
----Milliseconds from now to a forecast day/dayTime.
--- @param table environment
--- @param integer day Monotonic day
--- @param integer dayTime Time of day (ms)
--- @return integer deltaMs, or nil
-function RealisticCropRotationFrame:getForecastDeltaMs(environment, day, dayTime)
-    if environment == nil or environment.currentMonotonicDay == nil or environment.dayTime == nil then return nil end
-    if day == nil or dayTime == nil then return nil end
-    return (day - environment.currentMonotonicDay) * RealisticCropRotationFrame.DAY_LENGTH_MS
-        + (dayTime - environment.dayTime)
-end
-
----Builds a normalized forecast event (start/end + deltas) from a forecast item.
--- @param table weather
--- @param table environment
--- @param table item Forecast item
--- @return table event, or nil
-function RealisticCropRotationFrame:getForecastEventFromItem(weather, environment, item)
-    if item == nil or item.startDay == nil or item.startDayTime == nil then return nil end
-
-    local weatherType = self:getForecastWeatherType(weather, item)
-    local weatherSpec = self:getWeatherTypeSpec(weatherType)
-    if weatherSpec == nil then return nil end
-
-    local endDay = item.startDay
-    local endDayTime = item.startDayTime + (tonumber(item.duration) or 0)
-    if environment.getDayAndDayTime ~= nil then
-        endDay, endDayTime = environment:getDayAndDayTime(endDayTime, item.startDay)
-    elseif endDayTime >= RealisticCropRotationFrame.DAY_LENGTH_MS then
-        endDay = endDay + math.floor(endDayTime / RealisticCropRotationFrame.DAY_LENGTH_MS)
-        endDayTime = endDayTime % RealisticCropRotationFrame.DAY_LENGTH_MS
-    end
-
-    local startDelta = self:getForecastDeltaMs(environment, item.startDay, item.startDayTime)
-    local endDelta = self:getForecastDeltaMs(environment, endDay, endDayTime)
-    if startDelta == nil or endDelta == nil then return nil end
-
-    return {
-        weatherType = weatherType,
-        startDay = item.startDay,
-        startDayTime = item.startDayTime,
-        endDay = endDay,
-        endDayTime = endDayTime,
-        startDelta = startDelta,
-        endDelta = endDelta,
-        dayOffset = math.max(0, item.startDay - environment.currentMonotonicDay),
-        isOperational = weatherSpec.isOperational == true,
-    }
-end
-
----Picks the weather event to show: next operational, else current, else next.
--- @return table event, or nil
-function RealisticCropRotationFrame:getWeatherEvent()
-    local weather = self:getWeather()
-    if weather == nil or weather.forecastItems == nil or #weather.forecastItems == 0 then return nil end
-
-    local environment = weather.owner
-    if environment == nil or environment.currentMonotonicDay == nil or environment.dayTime == nil then return nil end
-
-    local currentEvent = nil
-    local nextWeatherEvent = nil
-    local nextOperationalEvent = nil
-
-    for i = 1, #weather.forecastItems do
-        local event = self:getForecastEventFromItem(weather, environment, weather.forecastItems[i])
-        if event ~= nil and event.startDelta <= 0 and event.endDelta > 0 then
-            event.isCurrent = true
-            currentEvent = event
-            if event.isOperational == true then
-                return event
-            end
-            break
-        end
-    end
-
-    for i = 1, #weather.forecastItems do
-        local event = self:getForecastEventFromItem(weather, environment, weather.forecastItems[i])
-        if event ~= nil and event.startDelta > 0 then
-            event.isCurrent = false
-            if nextWeatherEvent == nil then
-                nextWeatherEvent = event
-            end
-            if event.isOperational == true then
-                nextOperationalEvent = event
-                break
-            end
-        end
-    end
-
-    return nextOperationalEvent or currentEvent or nextWeatherEvent
-end
-
----Formats a day time (ms) as a clock string.
--- @param integer dayTime Time of day (ms)
--- @return string text
-function RealisticCropRotationFrame:formatForecastTime(dayTime)
-    local normalizedDayTime = (tonumber(dayTime) or 0) % RealisticCropRotationFrame.DAY_LENGTH_MS
-    local totalMinutes = math.floor(normalizedDayTime / 60000 + 0.5)
-    if totalMinutes >= 1440 then
-        totalMinutes = 0
-    end
-
-    if Utils ~= nil and Utils.formatTime ~= nil then
-        return Utils.formatTime(totalMinutes)
-    end
-
-    local hour = math.floor(totalMinutes / 60)
-    local minute = totalMinutes - hour * 60
-    return string.format("%02d:%02d", hour, minute)
-end
-
----Formats a lead time (ms) as a localized "in Xh Ym" string.
--- @param integer deltaMs
--- @return string text
-function RealisticCropRotationFrame:formatForecastLeadTime(deltaMs)
-    local minutes = math.max(1, math.floor((tonumber(deltaMs) or 0) / 60000 + 0.5))
-    local hours = math.floor(minutes / 60)
-    local remainingMinutes = minutes - hours * 60
-
-    if hours <= 0 then
-        return string.format(self.i18n:getText("rcr_time_minutes"), minutes)
-    elseif remainingMinutes <= 0 then
-        return string.format(self.i18n:getText("rcr_time_hours"), hours)
-    end
-
-    return string.format(self.i18n:getText("rcr_time_hours_minutes"), hours, remainingMinutes)
-end
-
----Builds the localized weather pill text for an event (current/soon/tomorrow/later).
--- @param table event
--- @return string text, or nil
-function RealisticCropRotationFrame:getWeatherPillText(event)
-    if event == nil then return nil end
-
-    local weatherLabel = self:getWeatherLabel(event.weatherType)
-    if weatherLabel == nil then return nil end
-
-    if event.isCurrent == true then
-        local key = event.isOperational == true and "rcr_weather_current_operational" or "rcr_weather_current_calm"
-        return string.format(self.i18n:getText(key), weatherLabel, self:formatForecastTime(event.endDayTime))
-    end
-
-    local startTimeText = self:formatForecastTime(event.startDayTime)
-    local endTimeText = self:formatForecastTime(event.endDayTime)
-    local dayOffset = event.dayOffset or 0
-    if dayOffset <= 0 then
-        return string.format(
-            self.i18n:getText("rcr_weather_soon"),
-            weatherLabel,
-            startTimeText,
-            endTimeText,
-            self:formatForecastLeadTime(event.startDelta)
-        )
-    elseif dayOffset == 1 then
-        return string.format(self.i18n:getText("rcr_weather_tomorrow"), weatherLabel, startTimeText, endTimeText)
-    end
-
-    return string.format(self.i18n:getText("rcr_weather_later"), weatherLabel, dayOffset, startTimeText, endTimeText)
-end
-
----Updates the hero weather pill (text, icon, colour, visibility) and resizes it.
--- @param table pill
--- @param table pillBg
--- @param table pillIcon
--- @param table pillText
--- @return number width Resized pill width, or nil when hidden
-function RealisticCropRotationFrame:updateWeatherPill(pill, pillBg, pillIcon, pillText)
-    local event = self:getWeatherEvent()
-    local text = self:getWeatherPillText(event)
-    local sliceId = event ~= nil and self:getWeatherSliceId(event.weatherType) or nil
-    local show = text ~= nil and text ~= "" and sliceId ~= nil
-
-    if pill ~= nil then
-        pill:setVisible(show)
-        pill._frWeatherPillVisible = show
-    end
-    if pillText ~= nil then
-        pillText:setText(show and text or "")
-    end
-    if pillIcon ~= nil then
-        pillIcon:setVisible(show)
-        if show and pillIcon.setImageSlice ~= nil then
-            pillIcon:setImageSlice(nil, sliceId)
-        end
-    end
-    if pillBg ~= nil and show then
-        pillBg.color = self:getWeatherPillColor(event.weatherType)
-    end
-
-    if show then
-        return self:resizeWeatherPillToText(pill, pillBg, pillIcon, pillText, text)
-    end
-
-    return nil
 end
 
 ---Updates the detail-tab residue pill: crop residue (n1/n2) or catch-crop cover residue, in kg/ha.
@@ -949,11 +710,11 @@ function RealisticCropRotationFrame:getTextRenderWidth(textElement, text)
     return width
 end
 
----Resizes a pill (bg + text) to fit its text within padding/min/max/parent bounds.
+---Resizes a pill (bg + text) to fit its text within padding/min/max bounds.
 -- @param table pillBg
 -- @param table pillText
 -- @param string text
--- @param table options { paddingPx, minWidthPx, maxWidthPx }
+-- @param table options { paddingPx, minWidthPx, maxWidthPx, leftOffsetPx (icon zone reserved before text) }
 -- @return number width, or nil
 function RealisticCropRotationFrame:resizePillToText(pillBg, pillText, text, options)
     if pillBg == nil or pillText == nil then return end
@@ -967,21 +728,18 @@ function RealisticCropRotationFrame:resizePillToText(pillBg, pillText, text, opt
     local textWidth = self:getTextRenderWidth(pillText, text)
     if textWidth == nil then return end
 
+    local leftOffset = self:getNormalizedPixelWidth(options.leftOffsetPx or 0)
     local padding = self:getNormalizedPixelWidth(options.paddingPx or 20)
-    local width = textWidth + padding
+    local width = leftOffset + textWidth + padding
     if options.minWidthPx ~= nil then
         width = math.max(width, self:getNormalizedPixelWidth(options.minWidthPx))
     end
     if options.maxWidthPx ~= nil then
         width = math.min(width, self:getNormalizedPixelWidth(options.maxWidthPx))
     end
-    if pillBg.parent ~= nil and pillBg.parent.absSize ~= nil
-        and (pillBg.parent.absSize[1] or 0) > 0 then
-        width = math.min(width, pillBg.parent.absSize[1])
-    end
 
     pillBg:setSize(width, bgSize[2])
-    pillText:setSize(width, textSize[2])
+    pillText:setSize(width - leftOffset, textSize[2])
 
     if pillBg.parent ~= nil and pillBg.parent.invalidateLayout ~= nil then
         pillBg.parent:invalidateLayout()
@@ -1003,64 +761,11 @@ function RealisticCropRotationFrame:resizeHeroPillToText(pillBg, pillText, text)
     })
 end
 
----Resizes the weather pill (icon + text) and lays out its inner elements.
--- @param table pill
--- @param table pillBg
--- @param table pillIcon
--- @param table pillText
--- @param string text
--- @return number width, or nil
-function RealisticCropRotationFrame:resizeWeatherPillToText(pill, pillBg, pillIcon, pillText, text)
-    if pill == nil or pillBg == nil or pillIcon == nil or pillText == nil then return nil end
-    if pill.setSize == nil or pillBg.setSize == nil or pillText.setSize == nil then return nil end
-    if pillIcon.setPosition == nil or pillText.setPosition == nil then return nil end
-
-    local textWidth = self:getTextRenderWidth(pillText, text)
-    if textWidth == nil then return nil end
-
-    local iconSize = self:getNormalizedPixelSize(
-        RealisticCropRotationFrame.HERO_WEATHER_ICON_PX,
-        RealisticCropRotationFrame.HERO_WEATHER_ICON_PX
-    )
-    local heightSize = self:getNormalizedPixelSize(0, RealisticCropRotationFrame.HERO_PILL_HEIGHT_PX)
-    if iconSize == nil or heightSize == nil then return nil end
-
-    local leftPad = self:getNormalizedPixelWidth(RealisticCropRotationFrame.HERO_WEATHER_LEFT_PAD_PX)
-    local rightPad = self:getNormalizedPixelWidth(RealisticCropRotationFrame.HERO_WEATHER_RIGHT_PAD_PX)
-    local iconTextGap = self:getNormalizedPixelWidth(RealisticCropRotationFrame.HERO_WEATHER_ICON_TEXT_GAP_PX)
-    local minWidth = self:getNormalizedPixelWidth(RealisticCropRotationFrame.HERO_PILL_MIN_W_PX)
-    local maxWidth = self:getNormalizedPixelWidth(RealisticCropRotationFrame.HERO_PILL_MAX_W_PX)
-
-    local width = leftPad + iconSize[1] + iconTextGap + textWidth + rightPad
-    width = math.max(width, minWidth)
-    width = math.min(width, maxWidth)
-
-    local textBoxWidth = math.max(0, width - leftPad - iconSize[1] - iconTextGap - rightPad)
-    local textX = leftPad + iconSize[1] + iconTextGap
-
-    pill:setSize(width, heightSize[2])
-    pillBg:setSize(width, heightSize[2])
-    pillIcon:setPosition(leftPad, 0)
-    if pillIcon.setSize ~= nil then
-        pillIcon:setSize(iconSize[1], iconSize[2])
-    end
-    pillText:setPosition(textX, 0)
-    pillText:setSize(textBoxWidth, pillText.size[2])
-
-    if pill.parent ~= nil and pill.parent.invalidateLayout ~= nil then
-        pill.parent:invalidateLayout()
-    end
-
-    return width
-end
-
----Centres the weather pill and shrinks the title so the hero row never overlaps.
+---Shrinks the hero title so it never runs under the status pill.
 -- @param table titleElement
--- @param table weatherPill
 -- @param table statusPillBg
-function RealisticCropRotationFrame:layoutHeroPills(titleElement, weatherPill, statusPillBg)
+function RealisticCropRotationFrame:layoutHeroPills(titleElement, statusPillBg)
     local hero = titleElement ~= nil and titleElement.parent or nil
-    if hero == nil and weatherPill ~= nil then hero = weatherPill.parent end
     if hero == nil and statusPillBg ~= nil then hero = statusPillBg.parent end
     if hero == nil then return end
 
@@ -1068,15 +773,6 @@ function RealisticCropRotationFrame:layoutHeroPills(titleElement, weatherPill, s
     if heroSize == nil then return end
 
     local gap = self:getNormalizedPixelWidth(RealisticCropRotationFrame.HERO_TITLE_PILL_GAP_PX)
-
-    local weatherLeft = nil
-    if weatherPill ~= nil and weatherPill._frWeatherPillVisible == true and weatherPill.setPosition ~= nil then
-        local weatherWidth = weatherPill.size ~= nil and weatherPill.size[1] or nil
-        if weatherWidth ~= nil then
-            weatherLeft = math.max(0, (heroSize[1] - weatherWidth) * 0.5)
-            weatherPill:setPosition(weatherLeft, 0)
-        end
-    end
 
     local statusLeft = nil
     if statusPillBg ~= nil and statusPillBg.position ~= nil and statusPillBg.size ~= nil then
@@ -1088,7 +784,6 @@ function RealisticCropRotationFrame:layoutHeroPills(titleElement, weatherPill, s
         local titleSize = self:getElementOriginalSize(titleElement)
         if titlePos ~= nil and titleSize ~= nil then
             local titleLimit = heroSize[1]
-            if weatherLeft ~= nil then titleLimit = math.min(titleLimit, weatherLeft) end
             if statusLeft ~= nil then titleLimit = math.min(titleLimit, statusLeft) end
             local titleWidth = math.max(0, titleLimit - titlePos[1] - gap)
             titleElement:setSize(titleWidth, titleSize[2])
@@ -1208,6 +903,7 @@ function RealisticCropRotationFrame:updateContainerVisibility()
     if self.detailsContainer ~= nil then self.detailsContainer:setVisible(hasFields and isHistory) end
     if self.planningContainer ~= nil then self.planningContainer:setVisible(hasFields and not isHistory) end
     self:updateMainHeaderTitle()
+    if self.weatherCard ~= nil then self.weatherCard:refresh(true) end
 end
 
 ---Links gamepad focus between the field list and the calendar editor selectors.
@@ -1613,9 +1309,8 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
     end
 
     local mgr = self:getManager()
-    self:updateWeatherPill(self.weatherPill, self.weatherPillBg, self.weatherPillIcon, self.weatherPillText)
     self:updateResiduePill(self.statusPillBg, self.statusPillText, farmlandId)
-    self:layoutHeroPills(self.detailTitle, self.weatherPill, self.statusPillBg)
+    self:layoutHeroPills(self.detailTitle, self.statusPillBg)
 
     local history = (mgr ~= nil) and (mgr:getHistory(farmlandId) or {}) or {}
 
@@ -2000,9 +1695,8 @@ function RealisticCropRotationFrame:updatePlanningPanel(farmlandId)
     local plan = self:getPlanForFarmland(farmlandId)
     local coverPlan = self:getCoverPlanForFarmland(farmlandId)
     self:updateScoreCard(plan, coverPlan)
-    self:updateWeatherPill(self.planWeatherPill, self.planWeatherPillBg, self.planWeatherPillIcon, self.planWeatherPillText)
     self:updatePlannedResiduePill(self.planStatusPillBg, self.planStatusPillText, plan, coverPlan)
-    self:layoutHeroPills(self.planTitle, self.planWeatherPill, self.planStatusPillBg)
+    self:layoutHeroPills(self.planTitle, self.planStatusPillBg)
 end
 
 -- Annual calendar — crop selector + sow window + cover marker
@@ -2386,7 +2080,7 @@ function RealisticCropRotationFrame:renderCalendarFromLocalPlans()
 
     self:updateScoreCard(plan, coverPlan)
     self:updatePlannedResiduePill(self.planStatusPillBg, self.planStatusPillText, plan, coverPlan)
-    self:layoutHeroPills(self.planTitle, self.planWeatherPill, self.planStatusPillBg)
+    self:layoutHeroPills(self.planTitle, self.planStatusPillBg)
 end
 
 ---Loads a farmland's plans into the local editor state and renders the calendar.

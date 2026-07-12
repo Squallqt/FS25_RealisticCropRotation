@@ -48,10 +48,26 @@
     <GuiElement profile="fs25_menuContentContainer">
 
         <GuiElement profile="fs25_menuHeaderPanel" position="0px 74px">
-            <Bitmap profile="fs25_menuHeaderIconBg">
+            <Bitmap profile="fs25_menuHeaderIconBg" id="menuHeaderIconBg">
                 <Bitmap profile="fs25_menuHeaderIcon" imageSliceId="realisticCropRotation.menuIcon"/>
             </Bitmap>
             <Text profile="fs25_menuHeaderTitle" id="menuHeaderTitle" text="$l10n_realisticCropRotation_menu_title"/>
+        </GuiElement>
+
+        <!-- Reference row, 1280px wide to match the hero card below -->
+        <GuiElement profile="frHeaderRow">
+            <!-- Persistent weather station: independent of tab/field -->
+            <GuiElement profile="frHeaderWeather" id="headerWeatherPill" visible="false">
+                <RoundCorner     profile="frHeaderWeatherShadow"   id="headerWeatherShadow"/>
+                <RoundCorner     profile="frHeaderWeatherBg"       id="headerWeatherBg"/>
+                <ThreePartBitmap profile="frHeaderWeatherAccent"   id="headerWeatherAccent"/>
+                <RoundCorner     profile="frHeaderWeatherIconBg"   id="headerWeatherIconBg"/>
+                <Bitmap          profile="frHeaderWeatherIcon"     id="headerWeatherIcon"/>
+                <Text            profile="frHeaderWeatherText"     id="headerWeatherText" text=""/>
+                <RoundCorner     profile="frHeaderWeatherDivider"  id="headerWeatherDivider"/>
+                <Text            profile="frHeaderWeatherWindow"   id="headerWeatherWindow" text=""/>
+                <Text            profile="frHeaderWeatherStatus"   id="headerWeatherStatus" text=""/>
+            </GuiElement>
         </GuiElement>
 
         <!-- Detail container: hero + history/nitrogen/lime/advice/field sections, 832px total -->
@@ -62,11 +78,6 @@
                 <RoundCorner     profile="frHeroCardBg"/>
                 <ThreePartBitmap profile="frHeroAccent"/>
                 <Text profile="frHeroTitle" id="detailTitle"  text="-"/>
-                <GuiElement profile="frWeatherPill" id="weatherPill" visible="false">
-                    <RoundCorner profile="frWeatherPillBg" id="weatherPillBg"/>
-                    <Bitmap      profile="frWeatherPillIcon" id="weatherPillIcon"/>
-                    <Text        profile="frWeatherPillText" id="weatherPillText" text=""/>
-                </GuiElement>
                 <RoundCorner profile="frStatusPillBg"   id="statusPillBg"/>
                 <Text        profile="frStatusPillText" id="statusPillText" text=""/>
             </GuiElement>
@@ -241,11 +252,6 @@
                 <RoundCorner     profile="frHeroCardBg"/>
                 <ThreePartBitmap profile="frHeroAccent"/>
                 <Text profile="frHeroTitle" id="planTitle"  text="-"/>
-                <GuiElement profile="frWeatherPill" id="planWeatherPill" visible="false">
-                    <RoundCorner profile="frWeatherPillBg" id="planWeatherPillBg"/>
-                    <Bitmap      profile="frWeatherPillIcon" id="planWeatherPillIcon"/>
-                    <Text        profile="frWeatherPillText" id="planWeatherPillText" text=""/>
-                </GuiElement>
                 <RoundCorner profile="frStatusPillBg"   id="planStatusPillBg"/>
                 <Text        profile="frStatusPillText" id="planStatusPillText" text=""/>
             </GuiElement>

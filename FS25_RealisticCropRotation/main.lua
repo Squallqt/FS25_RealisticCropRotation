@@ -15,6 +15,7 @@ source(modDirectory .. "scripts/RealisticCropRotationSprayerProducts.lua")
 source(modDirectory .. "events/RCRHistoryRequestEvent.lua")
 source(modDirectory .. "events/RCRHistoryResponseEvent.lua")
 source(modDirectory .. "events/RCRPlanUpdateEvent.lua")
+source(modDirectory .. "gui/RealisticCropRotationWeatherCard.lua")
 source(modDirectory .. "gui/RealisticCropRotationFrame.lua")
 
 RealisticCropRotation = {}
