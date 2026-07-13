@@ -8,21 +8,19 @@
         <fr>Assolement</fr>
     </title>
     <description>
-        <en><![CDATA[
-Make crop rotations matter.
-Realistic Crop Rotation tracks every field's crop history, scores your rotation plan against real agronomy, and turns a poor rotation into a real risk: nine crop diseases build up in the soil and spread the way they do on a real farm, driven by your rotation choices, the weather and the season. Plan the next four crops from a dedicated tab in the in-game menu.
+        <en><![CDATA[Make crop rotation matter.
+Realistic Crop Rotation tracks every field's crop history, grades your rotation plan against real agronomy, and turns a poor rotation into a real risk: nine crop diseases build up in the soil and spread the way they do on a real farm, driven by your choices, the weather and the season. Plan your rotation on a repeating 4-year calendar (a 2-crop alternation works just as well as a full 4-crop sequence) from a dedicated tab in the in-game menu, and see the consequences before you sow.
 
-FIELD MONITORING
+Features:
+- Crop history & flexible planning: track each field's last 4 crops and plan up to 4 years ahead with 2, 3 or 4 different crops, whatever your rotation actually needs, with an instant 0-100 grade and tailored advice
+- Real agronomy scoring: family and disease-specific return intervals, the nitrogen a legume hands off to the next cereal, and overall crop diversity shape the grade: a monoculture scores poorly, a rotation built around a legume scores best
+- Nitrogen residue: legumes destroyed by tillage return real nitrogen to the soil (Precision Farming's nitrogen map, or one fertilizer level without it), split between the next crop and the rotation after
+- 9 diseases, real consequences: sclerotinia, phoma, take-all, septoria, rust, fusarium head blight, late blight, beet cyst nematode and clubroot each target specific crops; bring a host back too soon and soil pressure builds, and with the right weather that pressure can trigger an infection that destroys part of the field in a spreading, organic patch
+- Treatment: buy a fungicide (AMISTAR) or nematicide (VELUM PRIME) and spray it with any compatible sprayer: it stops an active infection from destroying more of the field and shields the sprayed ground against future damage from that disease
+- Disease map: three views added to the existing in-game map (infected fields, a predictive pressure forecast, treated-ground coverage)
+- On-foot & weather info: the field HUD shows rotation history and active disease under your feet, and the menu header shows the next relevant weather event so you can time your spraying
 
-View the current crop, growth stage, soil condition, weeds, nitrogen and pH for every field.
-Group fields that share the same rotation and quickly check the quality of each plan.
-
-NITROGEN RESIDUE
-
-Legumes capture nitrogen from the air in their roots. Tilling the soil releases it for the next crop.
-The first share benefits the following crop. A second share remains available for the next rotation.
-
-Nitrogen residue values in kg N/ha:
+Nitrogen residue in kg N/ha (first share, then second):
 - Alfalfa: 80, then 50
 - Vetch-rye: 60, then 20
 - Clover: 50, then 20
@@ -30,80 +28,32 @@ Nitrogen residue values in kg N/ha:
 - Pea: 40, then 10
 - Green bean: 20, then 5
 
-ROTATION QUALITY
-
-Each plan is scored on real agronomy: family return intervals, crop-specific disease return intervals such as take-all, clubroot, sclerotinia and the beet cyst nematode, the nitrogen a legume passes to the following cereal, and overall crop diversity. A monoculture scores poorly while a varied rotation built around a legume earns the top grade. The planning tab shows the grade and a tailored recommendation for every field.
-
-DISEASE MANAGEMENT
-
-Nine realistic diseases build up on your fields, each tied to specific host crops, its own weather sensitivity and its own pace once it takes hold:
-- Sclerotinia (white mould): canola, sunflower, mustard, soybean, pea, green bean, potato, carrot. Rots stems and flowers at flowering; sclerotia survive for years and a humid flowering is decisive.
-- Phoma (blackleg): canola, mustard. Stem canker carried on oilseed residue; needs a long break from brassica oilseeds and is worsened by autumn moisture.
-- Take-all: wheat, barley, rye, triticale, spelt. Builds up in back-to-back cereals and is broken only by a non-host year (oats, legume, oilseed). No effective fungicide.
-- Septoria leaf blotch: wheat, barley, triticale, spelt. The main cereal foliar disease, splash-dispersed from residue; explosive in a wet spring.
-- Rust: cereals plus sunflower and canola. Wind-borne brown and yellow rust that explodes in mild, humid weather.
-- Fusarium head blight: cereals and maize. Favoured by cereal and maize residue; a wet flowering shrivels the grain.
-- Late blight: potato. A cool, wet spell strongly favours it, and severity climbs as fast as the quickest diseases here once it takes hold.
-- Beet cyst nematode: sugar beet, beetroot, canola, mustard, spinach. Cysts persist in the soil for years and cause chronic, patchy stress; rotation is the main lever.
-- Clubroot: canola, mustard. Resting spores survive over six years, so brassicas need a very long break. No chemical treatment.
-
-How the pressure builds and diseases develop:
-- Bringing a host crop back too soon builds up disease pressure in the soil: it raises the odds of an infection starting, and once a field is infected, that pressure makes it spread faster.
-- Rain and temperature both drive fungal risk. Each disease has its own favourable temperature window, and pressure peaks in mild, humid weather; the beet cyst nematode ignores both.
-- A new infection stays latent for an incubation period before it does any damage, shorter in warm weather and longer in cold weather.
-- An infected crop is destroyed progressively, in an organic, irregular patch that spreads and merges over the following days. You receive a notification and the field info shows the active disease and its pressure level.
-
-Treatment:
-- The fungal diseases (sclerotinia, phoma, septoria, rust, fusarium, late blight) are meant to be controlled with a fungicide (AMISTAR).
-- The beet cyst nematode is meant to be controlled with a nematicide (VELUM PRIME).
-- Take-all and clubroot have NO chemical treatment. They can only be managed agronomically: a non-host crop, a resistant variety, liming and a long enough rotation.
-
-Sprayer treatment:
-- Spray products can now be bought and applied with compatible sprayers. AMISTAR cures active fungal infections that are configured for fungicide treatment, and VELUM PRIME cures the beet cyst nematode. Spraying stops the active infection, but it does not regrow already destroyed crop and it does not erase the soil pressure created by a poor rotation.
-
-Prevention:
-- Space host crops far enough apart. The rotation grade and per-field advice warn you before you sow.
-- The disease map shows infected fields and the agronomic advice shows the pressure level on each field.
-
-After infection:
-- Harvest what remains and avoid returning a susceptible host until rotation decay lowers the soil pressure.
-
-CONSOLE COMMANDS
-
-The disease tools registered by the mod are:
-- rcrDisease [farmlandId]
-- rcrDiseaseInfect <farmlandId> <group> [severity]
-- rcrDiseaseTick [farmlandId]
-- rcrDiseaseClear [farmlandId]
+Console commands:
+- rcrDisease [farmlandId]: prints the disease state
+- rcrDiseaseInfect <farmlandId> <group> [severity]: forces an infection
+- rcrDiseaseTick [farmlandId]: advances it by one day
+- rcrDiseaseClear [farmlandId]: resets it
 
 Valid <group> values: SCLEROTINIA, PHOMA, PIETIN, SEPTORIOSE, ROUILLE, FUSARIOSE, MILDIOU, BCN, HERNIE.
 
-COMPATIBILITY
+Important: Take-all and clubroot have no chemical treatment; only a non-host crop, a resistant variety, liming and a long enough rotation keep them in check.
 
-With Precision Farming, the residue is added directly to the nitrogen map.
-Without Precision Farming, the mod adds one fertilizer level.
-Disease progression speed automatically adapts to your save's season length, so pacing feels the same whether you play short or long seasons.
-Compatible with singleplayer and multiplayer games.
-Access it from the dedicated tab in the in-game menu (ESC).
+Issues & suggestions: https://github.com/Squallqt/FS25_RealisticCropRotation
 
-Issues & suggestions:
-https://github.com/Squallqt/FS25_RealisticCropRotation
-]]></en>
-        <de><![CDATA[
-Gib deiner Fruchtfolge eine echte Bedeutung.
-Realistic Crop Rotation speichert die Anbauhistorie jedes Feldes, bewertet deinen Fruchtfolgeplan nach echter Agronomie und macht aus einer schlechten Fruchtfolge ein echtes Risiko: Neun Pflanzenkrankheiten bauen sich im Boden auf und breiten sich so aus wie auf einem echten Hof - abhängig von deiner Fruchtfolge, dem Wetter und der Jahreszeit. Plane die nächsten vier Kulturen über einen eigenen Reiter im Spielmenü.
+Access via the dedicated "Crop Rotation" tab in the InGame Menu (ESC). Compatible with singleplayer and multiplayer, with or without Precision Farming.]]></en>
+        <de><![CDATA[Gib deiner Fruchtfolge eine echte Bedeutung.
+Realistic Crop Rotation speichert die Anbauhistorie jedes Feldes, bewertet deinen Fruchtfolgeplan nach echter Agronomie und macht aus einer schlechten Fruchtfolge ein echtes Risiko: Neun Pflanzenkrankheiten bauen sich im Boden auf und breiten sich so aus wie auf einem echten Hof, abhängig von deinen Entscheidungen, dem Wetter und der Jahreszeit. Plane deine Fruchtfolge auf einem sich wiederholenden 4-Jahres-Kalender (ein Wechsel zwischen nur 2 Kulturen funktioniert genauso gut wie eine volle 4-Kulturen-Folge) über einen eigenen Reiter im Spielmenü, und sieh die Folgen, bevor du säst.
 
-FELDÜBERSICHT
+Funktionen:
+- Anbauhistorie & flexible Planung: Sieh die letzten 4 Kulturen jedes Feldes ein und plane bis zu 4 Jahre im Voraus mit 2, 3 oder 4 verschiedenen Kulturen, so wie es deine Fruchtfolge wirklich braucht, mit sofortiger Note von 0-100 und passender Empfehlung
+- Echte Agronomie-Bewertung: Anbaupausen je Pflanzenfamilie und je Krankheit, der Stickstoff, den eine Leguminose an das folgende Getreide weitergibt, sowie die Kulturvielfalt fließen in die Note ein: eine Monokultur schneidet schlecht ab, eine Fruchtfolge rund um eine Leguminose am besten
+- Stickstoffrückstand: Durch Bodenbearbeitung zerstörte Leguminosen geben echten Stickstoff an den Boden zurück (über die Stickstoffkarte von Precision Farming, ohne PF eine Düngestufe), aufgeteilt zwischen der nächsten Kultur und der folgenden Fruchtfolge
+- 9 Krankheiten mit echten Folgen: Sklerotinia, Phoma, Schwarzbeinigkeit, Septoria-Blattdürre, Rost, Ährenfusariose, Kraut- und Knollenfäule, Rübenzystennematode und Kohlhernie befallen jeweils bestimmte Kulturen; bringst du eine Wirtskultur zu früh zurück, baut sich Druck im Boden auf, und bei passendem Wetter kann dieser Druck eine Infektion auslösen, die einen Teil des Feldes in einem sich ausbreitenden, organischen Fleck zerstört
+- Behandlung: Kaufe ein Fungizid (AMISTAR) oder Nematizid (VELUM PRIME) und bringe es mit einer kompatiblen Feldspritze aus: Das stoppt eine aktive Infektion daran, weiter zu zerstören, und schützt die besprühte Fläche vor künftigem Schaden durch diese Krankheit
+- Krankheitskarte: Drei neue Ansichten auf der bestehenden Spielkarte (befallene Felder, eine vorausschauende Druck-Prognose, die besprühte Fläche je Mittel)
+- Feld- und Wetterinfos: Die Feldanzeige zeigt Anbauhistorie und aktive Krankheiten direkt unter deinen Füßen, und die Menüleiste zeigt das nächste relevante Wetterereignis, damit du deine Spritzungen timen kannst
 
-Sieh für jedes Feld die aktuelle Kultur, den Wachstumsstand, den Bodenzustand, Unkraut, Stickstoff und pH-Wert ein.
-Gruppiere Felder mit derselben Fruchtfolge und prüfe schnell die Qualität jedes Plans.
-
-STICKSTOFFRÜCKSTAND
-
-Leguminosen binden Stickstoff aus der Luft in ihren Wurzeln. Die Bodenbearbeitung setzt ihn für die nächste Kultur frei.
-Der erste Anteil kommt der folgenden Kultur zugute. Ein zweiter Anteil bleibt für die nächste Fruchtfolge verfügbar.
-
-Stickstoffrückstand in kg N/ha:
+Stickstoffrückstand in kg N/ha (erster Anteil, danach zweiter):
 - Luzerne: 80, danach 50
 - Wicke-Roggen: 60, danach 20
 - Klee: 50, danach 20
@@ -111,80 +61,32 @@ Stickstoffrückstand in kg N/ha:
 - Erbse: 40, danach 10
 - Grüne Bohne: 20, danach 5
 
-QUALITÄT DER FRUCHTFOLGE
-
-Jeder Plan wird nach echter Agronomie bewertet: Anbaupausen je Pflanzenfamilie, krankheitsspezifische Anbaupausen wie Schwarzbeinigkeit, Kohlhernie, Sklerotinia und der Rübenzystennematode, der Stickstoff, den eine Leguminose an das folgende Getreide weitergibt, sowie die gesamte Kulturvielfalt. Eine Monokultur schneidet schlecht ab, während eine vielfältige Fruchtfolge rund um eine Leguminose die Bestnote erhält. Der Planungsreiter zeigt die Note und eine passende Empfehlung für jedes Feld.
-
-KRANKHEITSMANAGEMENT
-
-Neun realistische Krankheiten bauen sich auf deinen Feldern auf, jede an bestimmte Wirtskulturen gebunden, mit eigener Wetterempfindlichkeit und eigenem Tempo, sobald sie sich festsetzt:
-- Sklerotinia (Weißstängeligkeit): Raps, Sonnenblume, Senf, Sojabohne, Erbse, grüne Bohne, Kartoffel, Karotte. Fäulnis von Stängel und Blüte zur Blütezeit; Sklerotien überdauern Jahre, eine feuchte Blüte ist entscheidend.
-- Phoma (Wurzelhals- und Stängelfäule): Raps, Senf. Stängelkrebs über Ölsaatenrückstände; braucht eine lange Anbaupause von Kreuzblütler-Ölsaaten und wird durch Herbstfeuchte verschlimmert.
-- Schwarzbeinigkeit (Take-all): Weizen, Gerste, Roggen, Triticale, Dinkel. Baut sich in Getreide-Selbstfolge auf und wird nur durch ein Nichtwirtsjahr (Hafer, Leguminose, Ölsaat) unterbrochen. Kein wirksames Fungizid.
-- Septoria-Blattdürre: Weizen, Gerste, Triticale, Dinkel. Die wichtigste Blattkrankheit im Getreide, durch Regenspritzer von Rückständen verbreitet; explosiv in einem feuchten Frühjahr.
-- Rost: Getreide sowie Sonnenblume und Raps. Windbürtiger Braun- und Gelbrost, der bei milder, feuchter Witterung explodiert.
-- Ährenfusariose: Getreide und Mais. Begünstigt durch Getreide- und Maisrückstände; eine feuchte Blüte lässt das Korn verkümmern.
-- Kraut- und Knollenfäule: Kartoffel. Eine kühle, feuchte Phase begünstigt sie stark, und der Befallsdruck steigt, einmal etabliert, genauso schnell wie bei den schnellsten Krankheiten hier.
-- Rübenzystennematode: Zuckerrübe, Rote Bete, Raps, Senf, Spinat. Zysten überdauern Jahre im Boden und verursachen chronischen, nesterweisen Stress; die Fruchtfolge ist der Haupthebel.
-- Kohlhernie: Raps, Senf. Dauersporen überleben über sechs Jahre, daher brauchen Kreuzblütler eine sehr lange Anbaupause. Keine chemische Behandlung.
-
-Wie sich der Druck aufbaut und Krankheiten entwickeln:
-- Eine Wirtskultur zu früh zurückzubringen baut Krankheitsdruck im Boden auf: Das erhöht die Wahrscheinlichkeit eines Befalls, und ist ein Feld erst infiziert, lässt dieser Druck die Krankheit schneller fortschreiten.
-- Regen und Temperatur treiben gemeinsam den Pilzdruck an. Jede Krankheit hat ihr eigenes günstiges Temperaturfenster, der Druck ist bei mildem, feuchtem Wetter am höchsten; die Rübenzystennematode ignoriert beides.
-- Ein neuer Befall bleibt zunächst latent (Inkubationszeit), bevor er Schaden anrichtet - kürzer bei warmem Wetter, länger bei kaltem Wetter.
-- Eine befallene Kultur wird schrittweise zerstört, in einem organischen, unregelmäßigen Fleck, der sich über die folgenden Tage ausbreitet und verschmilzt. Du erhältst eine Benachrichtigung und die Feldanzeige zeigt die aktive Krankheit und ihren Befallsdruck.
-
-Behandlung:
-- Die Pilzkrankheiten (Sklerotinia, Phoma, Septoria, Rost, Fusariose, Kraut- und Knollenfäule) sollen mit einem Fungizid (AMISTAR) bekämpft werden.
-- Die Rübenzystennematode soll mit einem Nematizid (VELUM PRIME) bekämpft werden.
-- Schwarzbeinigkeit und Kohlhernie haben KEINE chemische Behandlung. Sie lassen sich nur agronomisch steuern: eine Nichtwirtskultur, eine resistente Sorte, Kalkung und eine ausreichend lange Fruchtfolge.
-
-Spritzbehandlung:
-- Spritzmittel können jetzt gekauft und mit kompatiblen Feldspritzen ausgebracht werden. AMISTAR heilt aktive Pilzinfektionen, die für eine Fungizidbehandlung konfiguriert sind, und VELUM PRIME heilt die Rübenzystennematode. Das Spritzen stoppt den aktiven Befall, lässt aber bereits zerstörte Pflanzen nicht nachwachsen und entfernt nicht den Bodendruck einer schlechten Fruchtfolge.
-
-Vorbeugung:
-- Halte ausreichend Abstand zwischen Wirtskulturen. Die Fruchtfolge-Note und die Empfehlung je Feld warnen dich vor der Aussaat.
-- Die Krankheitskarte zeigt befallene Felder und der Agrartipp zeigt den Befallsdruck je Feld.
-
-Nach einem Befall:
-- Ernte, was noch übrig ist, und baue keine anfällige Kultur erneut an, bis die Fruchtfolge den Befallsdruck im Boden gesenkt hat.
-
-KONSOLENBEFEHLE
-
-Die vom Mod registrierten Krankheitsbefehle sind:
-- rcrDisease [farmlandId]
-- rcrDiseaseInfect <farmlandId> <group> [severity]
-- rcrDiseaseTick [farmlandId]
-- rcrDiseaseClear [farmlandId]
+Konsolenbefehle:
+- rcrDisease [farmlandId]: zeigt den Krankheitszustand
+- rcrDiseaseInfect <farmlandId> <group> [severity]: erzwingt eine Infektion
+- rcrDiseaseTick [farmlandId]: simuliert einen Tag
+- rcrDiseaseClear [farmlandId]: setzt den Zustand zurück
 
 Gültige <group>-Werte: SCLEROTINIA, PHOMA, PIETIN, SEPTORIOSE, ROUILLE, FUSARIOSE, MILDIOU, BCN, HERNIE.
 
-KOMPATIBILITÄT
+Wichtig: Schwarzbeinigkeit und Kohlhernie haben keine chemische Behandlung; nur eine Nichtwirtskultur, eine resistente Sorte, Kalkung und eine ausreichend lange Fruchtfolge halten sie in Schach.
 
-Mit Precision Farming wird der Rückstand direkt der Stickstoffkarte hinzugefügt.
-Ohne Precision Farming fügt der Mod eine Düngestufe hinzu.
-Die Geschwindigkeit des Krankheitsverlaufs passt sich automatisch an die Saisonlänge deines Spielstands an, sodass sich das Tempo bei kurzen wie bei langen Saisons gleich anfühlt.
-Kompatibel mit Einzelspieler- und Mehrspielerpartien.
-Zugriff über den eigenen Reiter im Spielmenü (ESC).
+Issues & Vorschläge: https://github.com/Squallqt/FS25_RealisticCropRotation
 
-Issues & Vorschläge:
-https://github.com/Squallqt/FS25_RealisticCropRotation
-]]></de>
-        <fr><![CDATA[
-Donnez un rôle réel à vos rotations de cultures.
-Realistic Crop Rotation enregistre l'historique de chaque parcelle, note votre plan de rotation selon l'agronomie réelle, et transforme une mauvaise rotation en risque bien réel : neuf maladies des cultures s'installent dans le sol et se propagent comme sur une vraie exploitation, portées par vos choix de rotation, la météo et la saison. Planifiez les quatre prochaines cultures depuis un onglet dédié du menu en jeu.
+Zugriff über den eigenen Reiter "Fruchtfolge" im Spielmenü (ESC). Kompatibel mit Einzelspieler und Mehrspieler, mit oder ohne Precision Farming.]]></de>
+        <fr><![CDATA[Donnez un rôle réel à vos rotations de cultures.
+Realistic Crop Rotation enregistre l'historique de chaque parcelle, note votre plan de rotation selon l'agronomie réelle, et transforme une mauvaise rotation en risque bien réel : neuf maladies s'installent dans le sol et se propagent comme sur une vraie exploitation, selon vos choix, la météo et la saison. Planifiez votre rotation sur un calendrier de 4 ans qui se répète (une alternance à 2 cultures fonctionne aussi bien qu'une séquence complète à 4 cultures) depuis un onglet dédié du menu en jeu, et voyez les conséquences avant même de semer.
 
-SUIVI DES PARCELLES
+Fonctionnalités :
+- Historique & planification flexible : consultez les 4 dernières cultures de chaque parcelle et planifiez jusqu'à 4 ans à l'avance avec 2, 3 ou 4 cultures différentes, selon ce que votre rotation demande réellement, avec une note instantanée de 0 à 100 et un conseil adapté
+- Notation agronomique réelle : intervalles de retour par famille et par maladie, azote qu'une légumineuse transmet à la céréale suivante, et diversité des cultures : une monoculture est mal notée, une rotation bâtie autour d'une légumineuse obtient la meilleure note
+- Reliquat d'azote : les légumineuses détruites par le travail du sol restituent un véritable reliquat d'azote (carte d'azote de Precision Farming, ou un niveau d'engrais sans PF), réparti entre la culture suivante et la rotation d'après
+- 9 maladies, de vraies conséquences : sclérotinia, phoma, piétin-échaudage, septoriose, rouille, fusariose de l'épi, mildiou, nématode à kystes de la betterave et hernie des crucifères ciblent chacune des cultures précises ; faire revenir une culture hôte trop tôt accumule la pression dans le sol, et avec une météo favorable, cette pression peut déclencher une infection qui détruit une partie de la parcelle en une tache organique qui s'étend
+- Traitement : achetez un fongicide (AMISTAR) ou un nématicide (VELUM PRIME) et pulvérisez-le avec un pulvérisateur compatible : cela stoppe une infection active et protège la zone traitée contre de futurs dégâts liés à cette maladie
+- Carte des maladies : trois nouvelles vues sur la carte du jeu existante (parcelles infectées, prévision de pression, zones traitées par produit)
+- Infos au sol & météo : la fiche de champ affiche l'historique de rotation et les maladies actives sous vos pieds, et l'en-tête du menu affiche le prochain événement météo pertinent pour bien choisir le moment de pulvériser
 
-Consultez la culture en place, son stade de croissance, l'état du sol, les mauvaises herbes, l'azote et le pH.
-Regroupez les parcelles partageant la même rotation et vérifiez rapidement la qualité de chaque plan.
-
-RELIQUAT D'AZOTE
-
-Les légumineuses captent l'azote de l'air dans leurs racines. Le travail du sol libère cet azote pour la culture suivante.
-Une première partie profite à la culture suivante. Une seconde partie reste disponible pour la rotation suivante.
-
-Valeurs du reliquat en kg N/ha :
+Reliquat d'azote en kg N/ha (première part, puis seconde) :
 - Luzerne : 80 puis 50
 - Vesce-seigle : 60 puis 20
 - Trèfle : 50 puis 20
@@ -192,65 +94,19 @@ Valeurs du reliquat en kg N/ha :
 - Pois : 40 puis 10
 - Haricot vert : 20 puis 5
 
-QUALITÉ DE ROTATION
-
-Chaque plan reçoit une note fondée sur l'agronomie réelle : intervalles de retour par famille, intervalles de retour par maladie comme le piétin-échaudage, la hernie des crucifères, le sclérotinia et le nématode à kystes de la betterave, azote qu'une légumineuse transmet à la céréale suivante, et diversité globale des cultures. Une monoculture est mal notée tandis qu'une rotation variée bâtie autour d'une légumineuse obtient la meilleure note. L'onglet de planification affiche la note et une recommandation adaptée pour chaque parcelle.
-
-GESTION DES MALADIES
-
-Neuf maladies réalistes s'installent sur vos parcelles, chacune liée à des cultures hôtes précises, avec sa propre sensibilité à la météo et son propre rythme une fois installée :
-- Sclérotinia (pourriture blanche) : colza, tournesol, moutarde, soja, pois, haricot vert, pomme de terre, carotte. Pourrit la tige et la fleur à la floraison ; les sclérotes persistent plusieurs années et une floraison humide est décisive.
-- Phoma (nécrose du collet) : colza, moutarde. Nécrose du collet transmise par les résidus d'oléagineux ; exige un retour long des oléagineux crucifères et s'aggrave avec l'humidité automnale.
-- Piétin-échaudage : blé, orge, seigle, triticale, épeautre. S'accumule en céréales sur céréales et n'est rompu que par une année non-hôte (avoine, légumineuse, oléagineux). Aucun fongicide efficace.
-- Septoriose : blé, orge, triticale, épeautre. Principale maladie foliaire des céréales, dispersée par les éclaboussures de pluie depuis les résidus ; explosive au printemps humide.
-- Rouille : céréales, plus tournesol et colza. Rouille brune et jaune disséminée par le vent, explosive par temps doux et humide.
-- Fusariose de l'épi : céréales et maïs. Favorisée par les résidus de céréales et de maïs ; une floraison humide échaude le grain.
-- Mildiou : pomme de terre. Une période fraîche et humide le favorise fortement ; une fois installé, il progresse aussi vite que les maladies les plus rapides ici.
-- Nématode à kystes de la betterave : betterave sucrière, betterave rouge, colza, moutarde, épinard. Les kystes persistent plusieurs années dans le sol et créent un stress chronique en foyers ; la rotation est le levier principal.
-- Hernie des crucifères : colza, moutarde. Les spores de repos survivent plus de six ans, les crucifères exigent donc un retour très long. Aucun traitement chimique.
-
-Comment la pression s'installe et les maladies évoluent :
-- Faire revenir une culture hôte trop tôt accumule la pression de maladie dans le sol : cela augmente la probabilité qu'une infection démarre, et une fois la parcelle infectée, cette pression accélère sa progression.
-- La pluie et la température pilotent ensemble le risque fongique. Chaque maladie a sa propre fenêtre de température favorable, et la pression est maximale par temps doux et humide ; le nématode à kystes ignore les deux.
-- Une nouvelle infection reste d'abord latente (incubation) avant de causer des dégâts, plus courte par temps chaud, plus longue par temps froid.
-- Une culture infectée est détruite progressivement, en une tache organique et irrégulière qui s'étend et fusionne au fil des jours. Vous recevez une notification et la fiche du champ affiche la maladie active et son niveau de pression.
-
-Traitement :
-- Les maladies fongiques (sclérotinia, phoma, septoriose, rouille, fusariose, mildiou) doivent être combattues au fongicide (AMISTAR).
-- Le nématode à kystes de la betterave doit être combattu au nématicide (VELUM PRIME).
-- Le piétin-échaudage et la hernie des crucifères n'ont AUCUN traitement chimique. Ils ne se gèrent que par l'agronomie : une culture non-hôte, une variété résistante, le chaulage et une rotation assez longue.
-
-Traitement par pulvérisation :
-- Les produits de pulvérisation peuvent maintenant être achetés et appliqués avec des pulvérisateurs compatibles. AMISTAR soigne les infections fongiques actives configurées pour un traitement fongicide, et VELUM PRIME soigne le nématode à kystes de la betterave. La pulvérisation stoppe l'infection active, mais elle ne fait pas repousser les cultures déjà détruites et n'efface pas la pression du sol créée par une mauvaise rotation.
-
-Prévention :
-- Espacez suffisamment les cultures hôtes. La note de rotation et le conseil par parcelle vous alertent avant le semis.
-- La carte des maladies montre les champs infectés et le conseil agronomique affiche le niveau de pression sur chaque parcelle.
-
-Après une infection :
-- Récoltez ce qui reste et évitez de remettre une culture sensible tant que la rotation n'a pas réduit la pression du sol.
-
-COMMANDES CONSOLE
-
-Les commandes maladie enregistrées par le mod sont :
-- rcrDisease [farmlandId]
-- rcrDiseaseInfect <farmlandId> <group> [severity]
-- rcrDiseaseTick [farmlandId]
-- rcrDiseaseClear [farmlandId]
+Commandes console :
+- rcrDisease [farmlandId] : affiche l'état des maladies
+- rcrDiseaseInfect <farmlandId> <group> [severity] : force une infection
+- rcrDiseaseTick [farmlandId] : fait avancer d'un jour
+- rcrDiseaseClear [farmlandId] : réinitialise l'état
 
 Valeurs valides pour <group> : SCLEROTINIA, PHOMA, PIETIN, SEPTORIOSE, ROUILLE, FUSARIOSE, MILDIOU, BCN, HERNIE.
 
-COMPATIBILITÉ
+Important : le piétin-échaudage et la hernie des crucifères n'ont aucun traitement chimique ; seules une culture non-hôte, une variété résistante, le chaulage et une rotation assez longue permettent de les contenir.
 
-Avec Precision Farming, le reliquat est directement ajouté à la carte d'azote.
-Sans Precision Farming, le mod ajoute un niveau de fertilisation.
-La vitesse de progression des maladies s'adapte automatiquement à la longueur des saisons de votre partie, pour un rythme identique que vous jouiez des saisons courtes ou longues.
-Compatible avec les parties solo et multijoueur.
-Accès depuis l'onglet dédié du menu en jeu (ÉCHAP).
+Issues & suggestions : https://github.com/Squallqt/FS25_RealisticCropRotation
 
-Issues & suggestions :
-https://github.com/Squallqt/FS25_RealisticCropRotation
-]]></fr>
+Accès depuis l'onglet dédié « Assolement » dans le menu en jeu (ÉCHAP). Compatible solo et multijoueur, avec ou sans Precision Farming.]]></fr>
     </description>
     <iconFilename>icon_RealCropRotation.dds</iconFilename>
     <multiplayer supported="true" />
