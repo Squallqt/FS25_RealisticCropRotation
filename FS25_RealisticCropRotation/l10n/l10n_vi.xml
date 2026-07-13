@@ -96,7 +96,6 @@
         <e k="rcr_soil_value_unmeasured" v="Giá trị chưa đo" />
         <e k="rcr_n_crop_need_unavailable" v="Nhu cầu cây trồng: --" />
         <e k="rcr_lime_status_unavailable" v="Vôi: --" />
-        <e k="rcr_advice_soil_analysis_required_title" v="Cần phân tích đất" />
         <e k="rcr_advice_soil_analysis_required_body" v="Không có dữ liệu nitơ và pH. Hãy phân tích đất để nhận khuyến nghị nông học chính xác." />
 
         <!-- Agronomic advice -->
@@ -106,12 +105,20 @@
         <e k="rcr_advice_afterRoot" v="Sau cây lấy củ, chờ bốn năm trước khi cây lấy củ quay lại, tiếp theo là ngũ cốc để tái tạo cấu trúc đất sau thu hoạch muộn." />
         <e k="rcr_advice_afterVegetable" v="Sau rau, chờ ba năm trước khi lặp lại, với ngũ cốc làm khoảng nghỉ sạch." />
         <e k="rcr_advice_afterForage" v="Sau đồng cỏ tạm thời, ngũ cốc tận dụng độ phì và cấu trúc tích lũy dưới lớp cỏ." />
-        <e k="rcr_advice_current_crop_disease_hosts" v="Khoảng cách luân canh theo bệnh cho cây trồng này (năm): %s." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Áp lực thối hạch cao — tránh cải dầu, hướng dương, đậu tương, đậu Hà Lan, đậu, khoai tây và cà rốt ít nhất 3 năm; phun thuốc trừ nấm khi ra hoa gặp thời tiết ẩm." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Áp lực tuyến trùng cao — tránh củ cải đường, củ dền, cải dầu, mù tạt và rau chân vịt trong 3 năm; dùng thuốc trừ tuyến trùng hoặc cây bẫy kháng bệnh." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Áp lực thối hạch trung bình — giãn cách các cây ký chủ và theo dõi thời kỳ ra hoa ẩm ướt." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Áp lực tuyến trùng trung bình — giãn cách củ cải và cây họ cải." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Áp lực thối hạch cao: tránh cải dầu, hướng dương, đậu tương, đậu Hà Lan, đậu, khoai tây và cà rốt ít nhất 3 năm; phun thuốc trừ nấm khi ra hoa gặp thời tiết ẩm." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Áp lực tuyến trùng cao: tránh củ cải đường, củ dền, cải dầu, mù tạt và rau chân vịt trong 3 năm; dùng thuốc trừ tuyến trùng hoặc cây bẫy kháng bệnh." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Áp lực thối hạch trung bình: giãn cách các cây ký chủ và theo dõi thời kỳ ra hoa ẩm ướt." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Áp lực tuyến trùng trung bình: giãn cách củ cải và cây họ cải." />
         <e k="rcr_advice_no_current_crop" v="Không có cây trồng chính hiện tại: tư vấn sẽ có khi phát hiện cây trồng." />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_outbreak" v="Dịch bệnh đang hoạt động" />
+        <e k="rcr_advice_outbreak" v="%s đang hoạt động trên cánh đồng này, mức độ nghiêm trọng %d%%. Biện pháp xử lý khuyến nghị: %s." />
+        <e k="rcr_advice_plan_next_conflict_family" v="%s dự kiến cho %s: xung đột luân canh, cùng họ (%s) với cây trồng hiện tại, còn thiếu %d/%d năm trước khi có thể quay lại an toàn." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s dự kiến cho %s: xung đột luân canh, chung nguy cơ %s với cây trồng hiện tại, còn thiếu %d/%d năm trước khi có thể quay lại an toàn." />
+        <e k="rcr_advice_plan_next_ok" v="%s dự kiến cho %s: lựa chọn tốt, không phát hiện xung đột luân canh." />
+
+        <!-- Advice card, disease pressure list -->
 
         <!-- Field card — required actions / growth -->
         <e k="rcr_action_header"        v="Tình trạng đất" />
@@ -150,11 +157,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Kế hoạch chưa đầy đủ" />
-        <e k="rcr_score_excellent"      v="Luân canh xuất sắc — nguy cơ bệnh thấp" />
-        <e k="rcr_score_good"           v="Luân canh tốt — nguy cơ bệnh trong tầm kiểm soát" />
-        <e k="rcr_score_fair"           v="Luân canh khá — nguy cơ bệnh đang tăng" />
-        <e k="rcr_score_poor"           v="Luân canh kém — nguy cơ bệnh cao" />
-        <e k="rcr_score_bad"            v="Luân canh rất kém — nguy cơ bệnh rất cao" />
+        <e k="rcr_score_excellent"      v="Luân canh xuất sắc: nguy cơ bệnh thấp" />
+        <e k="rcr_score_good"           v="Luân canh tốt: nguy cơ bệnh trong tầm kiểm soát" />
+        <e k="rcr_score_fair"           v="Luân canh khá: nguy cơ bệnh đang tăng" />
+        <e k="rcr_score_poor"           v="Luân canh kém: nguy cơ bệnh cao" />
+        <e k="rcr_score_bad"            v="Luân canh rất kém: nguy cơ bệnh rất cao" />
         <e k="rcr_score_label_low"      v="Điểm kém" />
         <e k="rcr_score_label_optimal"  v="Điểm tối ưu" />
         <e k="rcr_score_short_optimal"  v="TỐI ƯU" />
@@ -188,19 +195,19 @@
         <e k="rcr_fillType_fungicide" v="Thuốc trừ nấm" />
         <e k="rcr_fillType_nematicide" v="Thuốc trừ tuyến trùng" />
         <e k="rcr_disease_treatment_hernie" v="Không (giống kháng bệnh, bón vôi, luân canh)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Áp lực Phoma cao — tránh cải dầu và mù tạt khoảng 4 năm, vùi tàn dư; phun thuốc trừ nấm mùa thu trên giống mẫn cảm." />
-        <e k="rcr_advice_pressure_high_pietin" v="Áp lực thối rễ cao — chèn một vụ cây không phải ký chủ (yến mạch, họ đậu, cây lấy dầu); không có thuốc trừ nấm hiệu quả, chỉ luân canh mới khắc phục." />
-        <e k="rcr_advice_pressure_high_septoriose" v="Áp lực đốm lá cao — tránh trồng lúa mì/lúa mạch trên tàn dư ngũ cốc, chọn giống chịu bệnh; phun thuốc trừ nấm từ giai đoạn vươn lóng ở vùng khí hậu ẩm." />
-        <e k="rcr_advice_pressure_high_rouille" v="Áp lực gỉ sắt cao — gieo giống kháng bệnh và dự trù thuốc trừ nấm; theo dõi những đợt thời tiết ôn hòa ẩm ướt." />
-        <e k="rcr_advice_pressure_high_fusariose" v="Áp lực cháy bông cao — tránh trồng lúa mì sau ngô, vùi tàn dư; phun thuốc trừ nấm khi ra hoa nếu gặp mưa." />
-        <e k="rcr_advice_pressure_high_mildiou" v="Áp lực mốc sương cao — trồng giống kháng bệnh và bảo vệ khoai tây bằng thuốc trừ nấm ngay khi trời trở mát và ẩm." />
-        <e k="rcr_advice_pressure_high_hernie" v="Áp lực sưng rễ cao — giãn cách cây họ cải trên 6 năm, bón vôi để nâng pH và gieo giống kháng bệnh; không có thuốc hóa học." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Áp lực Phoma trung bình — kéo dài khoảng cách vụ cải dầu và băm nhỏ gốc rạ." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Áp lực thối rễ trung bình — tránh vụ ngũ cốc thứ ba liên tiếp." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Áp lực đốm lá trung bình — theo dõi mưa xuân và nguồn bệnh trong tàn dư." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Áp lực gỉ sắt trung bình — kiểm tra các ổ bào tử (vết bệnh) khi thời tiết ôn hòa." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Áp lực cháy bông trung bình — giãn cách ngũ cốc và ngô, quản lý tàn dư." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Áp lực mốc sương trung bình — theo dõi thời tiết mát ẩm và tiêu hủy cây tự mọc." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Áp lực sưng rễ trung bình — kéo dài khoảng cách vụ cải dầu và theo dõi pH chua." />
+        <e k="rcr_advice_pressure_high_phoma" v="Áp lực Phoma cao: tránh cải dầu và mù tạt khoảng 4 năm, vùi tàn dư; phun thuốc trừ nấm mùa thu trên giống mẫn cảm." />
+        <e k="rcr_advice_pressure_high_pietin" v="Áp lực thối rễ cao: chèn một vụ cây không phải ký chủ (yến mạch, họ đậu, cây lấy dầu); không có thuốc trừ nấm hiệu quả, chỉ luân canh mới khắc phục." />
+        <e k="rcr_advice_pressure_high_septoriose" v="Áp lực đốm lá cao: tránh trồng lúa mì/lúa mạch trên tàn dư ngũ cốc, chọn giống chịu bệnh; phun thuốc trừ nấm từ giai đoạn vươn lóng ở vùng khí hậu ẩm." />
+        <e k="rcr_advice_pressure_high_rouille" v="Áp lực gỉ sắt cao: gieo giống kháng bệnh và dự trù thuốc trừ nấm; theo dõi những đợt thời tiết ôn hòa ẩm ướt." />
+        <e k="rcr_advice_pressure_high_fusariose" v="Áp lực cháy bông cao: tránh trồng lúa mì sau ngô, vùi tàn dư; phun thuốc trừ nấm khi ra hoa nếu gặp mưa." />
+        <e k="rcr_advice_pressure_high_mildiou" v="Áp lực mốc sương cao: trồng giống kháng bệnh và bảo vệ khoai tây bằng thuốc trừ nấm ngay khi trời trở mát và ẩm." />
+        <e k="rcr_advice_pressure_high_hernie" v="Áp lực sưng rễ cao: giãn cách cây họ cải trên 6 năm, bón vôi để nâng pH và gieo giống kháng bệnh; không có thuốc hóa học." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Áp lực Phoma trung bình: kéo dài khoảng cách vụ cải dầu và băm nhỏ gốc rạ." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="Áp lực thối rễ trung bình: tránh vụ ngũ cốc thứ ba liên tiếp." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="Áp lực đốm lá trung bình: theo dõi mưa xuân và nguồn bệnh trong tàn dư." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="Áp lực gỉ sắt trung bình: kiểm tra các ổ bào tử (vết bệnh) khi thời tiết ôn hòa." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="Áp lực cháy bông trung bình: giãn cách ngũ cốc và ngô, quản lý tàn dư." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="Áp lực mốc sương trung bình: theo dõi thời tiết mát ẩm và tiêu hủy cây tự mọc." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="Áp lực sưng rễ trung bình: kéo dài khoảng cách vụ cải dầu và theo dõi pH chua." />
     </elements>
 </l10n>

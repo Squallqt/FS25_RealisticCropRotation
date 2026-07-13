@@ -35,19 +35,6 @@ RealisticCropRotationFrame.ADVICE_KEY = {
     FORAGE    = "rcr_advice_afterForage",
 }
 
--- Disease notes appended to the family advice. The order is DATA-DRIVEN from the crop config
--- (getDiseaseOrder, sorted by each disease's stable state id), so a new <diseaseGroup> appears
--- automatically with no Lua edit.
-function RealisticCropRotationFrame.getDiseaseOrder()
-    local order = {}
-    if RealisticCropRotationDisease ~= nil and type(RealisticCropRotationDisease.getOrderedGroups) == "function" then
-        for _, e in ipairs(RealisticCropRotationDisease.getOrderedGroups()) do
-            order[#order + 1] = e.group
-        end
-    end
-    return order
-end
-
 -- Family badge RGBA — Lua-only (XML constraint does not apply)
 RealisticCropRotationFrame.FAMILY_RGBA = {
     CEREAL    = {0.761, 0.365, 0.000, 1.0},  -- amber
@@ -706,8 +693,9 @@ end
 -- @param table trackElement
 -- @param table fillElement
 -- @param table stateLabelElement
+-- @param number alignWidth Width to align the track start to (the wider of this row's and its sibling row's title), instead of this row's own title width; nil uses this row's own width.
 -- @return number trackWidth normalized, or nil
-function RealisticCropRotationFrame:layoutSoilGaugeTrack(titleElement, titleText, trackElement, fillElement, stateLabelElement)
+function RealisticCropRotationFrame:layoutSoilGaugeTrack(titleElement, titleText, trackElement, fillElement, stateLabelElement, alignWidth)
     if titleElement == nil or trackElement == nil then return nil end
 
     local titlePos = self:getElementOriginalPosition(titleElement)
@@ -724,7 +712,7 @@ function RealisticCropRotationFrame:layoutSoilGaugeTrack(titleElement, titleText
     end
 
     local gap = self:getNormalizedPixelWidth(RealisticCropRotationFrame.SOIL_ROW_TITLE_GAP_PX)
-    local newLeft = titlePos[1] + textWidth + gap
+    local newLeft = titlePos[1] + (alignWidth ~= nil and alignWidth or textWidth) + gap
     local rightEdge = trackPos[1] + trackSize[1]
     local newWidth = math.max(0, rightEdge - newLeft)
 
@@ -1360,8 +1348,15 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
         self:updateTimelineSlot(histIdx + 1, cropName, self:getCropFamily(cropName), nil)
     end
 
-    self:updateNitrogenGauge(farmlandId)
-    self:updateSoilPHGauge(farmlandId)
+    -- Both soil gauges start at the same x (the wider of the two row titles) so neither
+    -- track ends up shorter than the other just because its own label is narrower.
+    local nitrogenTitleWidth = self:getTextRenderWidth(self.nitrogenRowTitle, self.i18n:getText("rcr_section_nitrogen"))
+    local limeTitleWidth = self:getTextRenderWidth(self.limeRowTitle, self.i18n:getText("rcr_section_lime"))
+    local sharedRowTitleWidth = (nitrogenTitleWidth ~= nil and limeTitleWidth ~= nil)
+        and math.max(nitrogenTitleWidth, limeTitleWidth) or nil
+
+    self:updateNitrogenGauge(farmlandId, sharedRowTitleWidth)
+    self:updateSoilPHGauge(farmlandId, sharedRowTitleWidth)
     self:updateAdvice(currentFamily, farmlandId, currentCropName)
     self:updateFieldCard(farmlandId)
 end
@@ -1459,7 +1454,8 @@ end
 
 ---Updates the nitrogen gauge: PF average vs crop need, with a vanilla SPRAY_LEVEL fallback.
 -- @param integer farmlandId
-function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId)
+-- @param number sharedRowTitleWidth Shared row-title width (the wider of the N/pH titles), so both gauges align; nil falls back to this row's own title width.
+function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId, sharedRowTitleWidth)
     local mgr = self:getManager()
     local ratio = 0
     local labelKey = "rcr_n_none"
@@ -1515,7 +1511,7 @@ function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId)
     end
 
     local trackWidth = self:layoutSoilGaugeTrack(self.nitrogenRowTitle, self.i18n:getText("rcr_section_nitrogen"),
-        self.nitrogenTrack, self.nitrogenBarFill, self.nitrogenStateLabel)
+        self.nitrogenTrack, self.nitrogenBarFill, self.nitrogenStateLabel, sharedRowTitleWidth)
     self:setStatusBarFill(self.nitrogenBarFill, ratio, trackWidth)
 
     if self.nitrogenStateLabel ~= nil then
@@ -1536,7 +1532,8 @@ end
 
 ---Updates the pH gauge: PF average vs soil optimal, with a vanilla LIME_LEVEL fallback.
 -- @param integer farmlandId
-function RealisticCropRotationFrame:updateSoilPHGauge(farmlandId)
+-- @param number sharedRowTitleWidth Shared row-title width (the wider of the N/pH titles), so both gauges align; nil falls back to this row's own title width.
+function RealisticCropRotationFrame:updateSoilPHGauge(farmlandId, sharedRowTitleWidth)
     local mgr = self:getManager()
     local ratio = 0
     local labelKey = "rcr_lime_none"
@@ -1591,7 +1588,7 @@ function RealisticCropRotationFrame:updateSoilPHGauge(farmlandId)
     end
 
     local trackWidth = self:layoutSoilGaugeTrack(self.limeRowTitle, self.i18n:getText("rcr_section_lime"),
-        self.limeTrack, self.limeBarFill, self.limeStateLabel)
+        self.limeTrack, self.limeBarFill, self.limeStateLabel, sharedRowTitleWidth)
     self:setStatusBarFill(self.limeBarFill, ratio, trackWidth)
 
     if self.limeStateLabel ~= nil then
@@ -1674,16 +1671,193 @@ end
 
 -- Agronomic advice
 
----Sets the advice from the current crop's family, plus field-specific disease pressure warnings.
+---Refreshes the advice status/rotation card.
 -- @param string currentFamily
 -- @param integer farmlandId
 -- @param string currentCropName
 function RealisticCropRotationFrame:updateAdvice(currentFamily, farmlandId, currentCropName)
     if self.adviceText == nil then return end
+    self:updateAdviceStatusCard(currentFamily, farmlandId, currentCropName)
+end
 
-    local soilAnalysisState = self:getSoilAnalysisState(farmlandId)
-    local visualState = soilAnalysisState == false and "Warning"
-        or (soilAnalysisState == true and "Ready" or "Neutral")
+---Finds the plan slot matching a crop name (first match wins; same approximation already used by
+-- RealisticCropRotationService:isCurrentGapFallow -- no disambiguation when a crop repeats in the plan).
+-- @param table plan 4-slot plan
+-- @param string cropName
+-- @return integer slotIdx, or nil
+function RealisticCropRotationFrame:findPlanSlotForCrop(plan, cropName)
+    if plan == nil or cropName == nil or cropName == "" then return nil end
+    local normalized = string.upper(tostring(cropName))
+    for i = 1, 4 do
+        if plan[i] == normalized then return i end
+    end
+    return nil
+end
+
+---Evaluates a one-year rotation step (cropA now, cropB next) for a conflict, from the SAME
+-- family/disease-interval rules as calcRotationScore (never duplicated/re-tuned separately).
+-- @param string cropA Current crop name
+-- @param string cropB Next-planned crop name
+-- @return table conflict { kind = "family"|"disease", label, yearsRemaining, minInterval }, or nil
+function RealisticCropRotationFrame:evaluateRotationStep(cropA, cropB)
+    if cropA == nil or cropA == "" or cropB == nil or cropB == "" then return nil end
+    if isFallowCrop(cropA) or isFallowCrop(cropB) then return nil end
+
+    local famA = self:getCropFamily(cropA)
+    local famB = self:getCropFamily(cropB)
+    local familyMinInterval = (famA == famB and famA ~= "UNKNOWN")
+        and RealisticCropRotationFrame.FAMILY_MIN_INTERVAL[famA] or nil
+    -- Same baseline rule as calcRotationScore: a same-family pair's own interval floors the
+    -- disease-interval comparison, so the disease conflict only reports the interval left BEYOND
+    -- what the family rule already accounts for.
+    local diseaseBaseline = familyMinInterval ~= nil and math.max(1, familyMinInterval) or 1
+
+    local diseasesA = self:getCropDiseases(cropA)
+    local diseasesB = self:getCropDiseases(cropB)
+    local diseaseIntervals = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig
+        and RealisticCropRotation.cropConfig.diseaseIntervals or {}
+    local worstGroup, worstMinInterval = nil, 0
+    for group in pairs(diseasesA) do
+        if diseasesB[group] then
+            local minInterval = tonumber(diseaseIntervals[group])
+            if minInterval ~= nil and diseaseBaseline < minInterval and minInterval > worstMinInterval then
+                worstGroup, worstMinInterval = group, minInterval
+            end
+        end
+    end
+
+    if worstGroup ~= nil then
+        local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
+        local label = (disease ~= nil and type(disease.getDisplayName) == "function")
+            and disease:getDisplayName(worstGroup) or tostring(worstGroup)
+        return { kind = "disease", label = label, yearsRemaining = worstMinInterval - 1, minInterval = worstMinInterval }
+    end
+
+    if familyMinInterval ~= nil and familyMinInterval > 1 then
+        return {
+            kind = "family",
+            label = self.i18n:getText(getFamilyTextKey(famA)),
+            yearsRemaining = familyMinInterval - 1,
+            minInterval = familyMinInterval,
+        }
+    end
+
+    return nil
+end
+
+---Returns the hand-written pressure tip for the current crop's single worst hosted disease
+-- (high band beats moderate; ties broken by the higher soil load), or nil when none applies.
+-- Reuses the existing rcr_advice_pressure_high/moderate_<group> texts verbatim.
+-- @param integer farmlandId
+-- @param string currentCropName
+-- @return string text, or nil
+function RealisticCropRotationFrame:getWorstPressureAdviceText(farmlandId, currentCropName)
+    local cropDiseases = self:getCropDiseases(currentCropName)
+    if next(cropDiseases) == nil then return nil end
+
+    local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
+    if disease == nil or type(disease.getLoad) ~= "function" then return nil end
+    local D = RealisticCropRotationDisease
+    if D == nil then return nil end
+
+    local load = disease:getLoad(farmlandId)
+    local bestBand, bestGroup, bestPressure = nil, nil, 0
+    for group in pairs(cropDiseases) do
+        local pressure = tonumber(load[group]) or 0
+        local band = pressure >= D.RISK_BAND_HIGH_THRESHOLD and "high"
+            or (pressure >= D.RISK_BAND_MODERATE_THRESHOLD and "moderate" or nil)
+        if band ~= nil then
+            local better = (bestBand == nil)
+                or (band == "high" and bestBand == "moderate")
+                or (band == bestBand and pressure > bestPressure)
+            if better then
+                bestBand, bestGroup, bestPressure = band, group, pressure
+            end
+        end
+    end
+    if bestGroup == nil then return nil end
+
+    local key = "rcr_advice_pressure_" .. bestBand .. "_" .. string.lower(bestGroup)
+    if type(self.i18n.hasText) == "function" and self.i18n:hasText(key) then
+        return self.i18n:getText(key)
+    end
+    return nil
+end
+
+---Refreshes the advice card: active outbreak > planned-rotation-step evaluation > generic
+-- per-family fallback, then appends a soil-analysis note instead of replacing the whole message.
+-- @param string currentFamily
+-- @param integer farmlandId
+-- @param string currentCropName
+function RealisticCropRotationFrame:updateAdviceStatusCard(currentFamily, farmlandId, currentCropName)
+    local visualState = "Neutral"
+    local badgeSymbol = "i"
+    local title = self.i18n:getText("rcr_section_advice")
+    local text
+
+    -- 1) Active outbreak: the worst infection actually happening on this field right now.
+    local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
+    local activeState = (disease ~= nil and type(disease.getState) == "function")
+        and disease:getState(farmlandId) or nil
+    local worstGroup, worstSeverity = nil, 0
+    for group, s in pairs(activeState or {}) do
+        if (s.severity or 0) > worstSeverity then
+            worstGroup, worstSeverity = group, s.severity or 0
+        end
+    end
+
+    if worstGroup ~= nil then
+        visualState = "Danger"
+        badgeSymbol = "!"
+        title = self.i18n:getText("rcr_advice_title_outbreak")
+        text = string.format(self.i18n:getText("rcr_advice_outbreak"),
+            disease:getDisplayName(worstGroup),
+            math.floor(worstSeverity * 100 + 0.5),
+            disease:getTreatmentName(worstGroup))
+    else
+        -- 2) Planned-rotation-step evaluation, only for a real (non-fallow, known) current crop.
+        local plan = self:getPlanForFarmland(farmlandId)
+        local slotIdx = (currentFamily ~= "FALLOW" and currentFamily ~= "UNKNOWN")
+            and self:findPlanSlotForCrop(plan, currentCropName) or nil
+        local nextCrop = slotIdx ~= nil and plan[(slotIdx % 4) + 1] or nil
+        nextCrop = (nextCrop ~= nil and nextCrop ~= "") and nextCrop or nil
+
+        if nextCrop ~= nil then
+            local nextSlotIdx = (slotIdx % 4) + 1
+            local yearLabel = self.i18n:getText("rcr_plan_year" .. nextSlotIdx)
+            local nextCropLabel = self:getCropDisplayName(nextCrop)
+            local conflict = self:evaluateRotationStep(currentCropName, nextCrop)
+
+            if conflict == nil then
+                visualState = "Ready"
+                badgeSymbol = "OK"
+                text = string.format(self.i18n:getText("rcr_advice_plan_next_ok"), nextCropLabel, yearLabel)
+            else
+                visualState = "Warning"
+                badgeSymbol = "!"
+                local key = conflict.kind == "disease"
+                    and "rcr_advice_plan_next_conflict_disease"
+                    or "rcr_advice_plan_next_conflict_family"
+                text = string.format(self.i18n:getText(key),
+                    nextCropLabel, yearLabel, conflict.label, conflict.yearsRemaining, conflict.minInterval)
+            end
+        else
+            -- 3) No confirmed next step: today's generic per-family advice, unchanged wording.
+            local key = RealisticCropRotationFrame.ADVICE_KEY[currentFamily]
+            text = key ~= nil and self.i18n:getText(key) or self.i18n:getText("rcr_advice_no_current_crop")
+        end
+
+        -- Worst current disease-pressure tip only (not a concatenation of every hosted disease),
+        -- so the card doesn't grow with the crop's disease count.
+        local pressureText = self:getWorstPressureAdviceText(farmlandId, currentCropName)
+        if pressureText ~= nil then
+            text = text .. " " .. pressureText
+        end
+    end
+
+    if self:getSoilAnalysisState(farmlandId) == false then
+        text = text .. " " .. self.i18n:getText("rcr_advice_soil_analysis_required_body")
+    end
 
     if self.adviceCardBg ~= nil and self.adviceCardBg.applyProfile ~= nil then
         self.adviceCardBg:applyProfile("frAdviceCardBg" .. visualState)
@@ -1694,70 +1868,12 @@ function RealisticCropRotationFrame:updateAdvice(currentFamily, farmlandId, curr
     if self.adviceTitle ~= nil and self.adviceTitle.applyProfile ~= nil then
         self.adviceTitle:applyProfile("frAdviceTitle" .. visualState)
     end
-
-    if soilAnalysisState == false then
-        if self.adviceStatusBadgeText ~= nil then self.adviceStatusBadgeText:setText("!") end
-        if self.adviceTitle ~= nil then
-            self.adviceTitle:setText(self.i18n:getText("rcr_advice_soil_analysis_required_title"))
-        end
-        self.adviceText:setText(self.i18n:getText("rcr_advice_soil_analysis_required_body"))
-        return
-    end
-
     if self.adviceStatusBadgeText ~= nil then
-        self.adviceStatusBadgeText:setText(soilAnalysisState == true and "OK" or "i")
+        self.adviceStatusBadgeText:setText(badgeSymbol)
     end
     if self.adviceTitle ~= nil then
-        self.adviceTitle:setText(self.i18n:getText("rcr_section_advice"))
+        self.adviceTitle:setText(title)
     end
-
-    local key = RealisticCropRotationFrame.ADVICE_KEY[currentFamily]
-    if key == nil then
-        self.adviceText:setText(self.i18n:getText("rcr_advice_no_current_crop"))
-        return
-    end
-
-    local text = self.i18n:getText(key)
-    local cropDiseases = self:getCropDiseases(currentCropName)
-    if next(cropDiseases) ~= nil then
-        local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
-        local diseaseIntervals = config ~= nil and config.diseaseIntervals or {}
-        local parts = {}
-
-        for _, group in ipairs(RealisticCropRotationFrame.getDiseaseOrder()) do
-            if cropDiseases[group] then
-                local nameKey = "rcr_disease_name_" .. string.lower(group)
-                local diseaseName = type(self.i18n.hasText) == "function" and self.i18n:hasText(nameKey)
-                    and self.i18n:getText(nameKey) or tostring(group)
-                local interval = tonumber(diseaseIntervals[group])
-                parts[#parts + 1] = interval ~= nil and interval > 0
-                    and string.format("%s %d", diseaseName, interval) or diseaseName
-            end
-        end
-
-        if #parts > 0 then
-            local hostAdviceKey = "rcr_advice_current_crop_disease_hosts"
-            if type(self.i18n.hasText) ~= "function" or self.i18n:hasText(hostAdviceKey) then
-                text = text .. " " .. string.format(self.i18n:getText(hostAdviceKey), table.concat(parts, ", "))
-            end
-        end
-    end
-
-    local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
-    if disease ~= nil and farmlandId ~= nil and type(disease.getLoad) == "function" then
-        local load = disease:getLoad(farmlandId)
-        for _, group in ipairs(RealisticCropRotationFrame.getDiseaseOrder()) do
-            local pressure = tonumber(load[group]) or 0
-            local suffix = pressure >= 0.50 and "high" or (pressure >= 0.25 and "moderate" or nil)
-            if suffix ~= nil then
-                local adviceKey = "rcr_advice_pressure_" .. suffix .. "_" .. string.lower(group)
-                if type(self.i18n.hasText) == "function" and self.i18n:hasText(adviceKey) then
-                    text = text .. " " .. self.i18n:getText(adviceKey)
-                end
-            end
-        end
-    end
-
     self.adviceText:setText(text)
 end
 

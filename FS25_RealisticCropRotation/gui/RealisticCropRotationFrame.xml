@@ -70,7 +70,7 @@
             </GuiElement>
         </GuiElement>
 
-        <!-- Detail container: hero + history/nitrogen/lime/advice/field sections, 832px total -->
+        <!-- Detail container: hero + history/nitrogen/lime/advice/field sections, 864px total -->
         <GuiElement profile="frDetailContainer" id="detailsContainer">
 
             <!-- HERO CARD (y=0..56) -->
@@ -171,24 +171,25 @@
                 <Text profile="frSectionTitleAdvice" text="$l10n_rcr_section_advice"/>
             </GuiElement>
 
-            <!-- ADVICE CARD (y=-374..452) -->
+            <!-- ADVICE CARD (y=-374..484) -->
             <GuiElement profile="frAdviceCard" position="20px -374px">
                 <RoundCorner profile="frAdviceCardBgNeutral" id="adviceCardBg"/>
                 <RoundCorner profile="frAdviceStatusBadgeBgNeutral" id="adviceStatusBadgeBg"/>
                 <Text profile="frAdviceStatusBadgeText" id="adviceStatusBadgeText" text=""/>
                 <Text profile="frAdviceTitleNeutral" id="adviceTitle" text=""/>
+                <RoundCorner profile="frAdviceTitleDivider"/>
                 <Text profile="frAdviceText" id="adviceText" text=""/>
             </GuiElement>
 
-            <!-- SECTION: SOIL INDICATORS (y=-476) -->
-            <GuiElement profile="frSectionBar" position="0px -476px">
+            <!-- SECTION: SOIL INDICATORS (y=-508) -->
+            <GuiElement profile="frSectionBar" position="0px -508px">
                 <RoundCorner profile="frSectionBarBg"/>
                 <RoundCorner profile="frSectionAccentN" position="14px 0px"/>
                 <Text profile="frSectionTitleN" text="$l10n_rcr_section_soil_indicators"/>
             </GuiElement>
 
-            <!-- UNIFIED SOIL CARD (y=-520..652) -->
-            <GuiElement profile="frSoilIndicatorsCard" position="20px -520px">
+            <!-- UNIFIED SOIL CARD (y=-552..684) -->
+            <GuiElement profile="frSoilIndicatorsCard" position="20px -552px">
                 <RoundCorner profile="frSoilIndicatorsCardBg"/>
 
                 <Text profile="frSoilRowTitleTop" id="nitrogenRowTitle" text="$l10n_rcr_section_nitrogen"/>
@@ -206,15 +207,15 @@
                 <RoundCorner profile="frSoilFillBottom" id="limeBarFill" visible="false"/>
             </GuiElement>
 
-            <!-- SECTION: FIELD (soil work / weed / growth) (y=-676) -->
-            <GuiElement profile="frSectionBar" position="0px -676px">
+            <!-- SECTION: FIELD (soil work / weed / growth) (y=-708) -->
+            <GuiElement profile="frSectionBar" position="0px -708px">
                 <RoundCorner profile="frSectionBarBg"/>
                 <RoundCorner profile="frSectionAccentField" position="14px 0px"/>
                 <Text profile="frSectionTitleField" text="$l10n_rcr_section_field"/>
             </GuiElement>
 
-            <!-- FIELD CARD (y=-720..802) -->
-            <GuiElement profile="frFieldCard" position="20px -720px">
+            <!-- FIELD CARD (y=-752..834) -->
+            <GuiElement profile="frFieldCard" position="20px -752px">
                 <RoundCorner     profile="frFieldCardBg"/>
 
                 <GuiElement profile="frFieldKpi" position="0px 0px">

@@ -396,9 +396,9 @@
 
     <!-- Centered on its 66px zone (0..-66 for the top row, -66..-132 for the bottom row) -->
     <Profile name="frSoilRowTitleTop" extends="fs25_textDefault" with="anchorTopLeft">
-        <position value="24px -26px"/>
-        <size value="190px 14px"/>
-        <textSize value="12px"/>
+        <position value="24px -24px"/>
+        <size value="220px 20px"/>
+        <textSize value="16px"/>
         <textBold value="true"/>
         <textColor value="$preset_fs25_colorMainLight"/>
         <textAlignment value="left"/>
@@ -476,14 +476,15 @@
         <cornerSize value="0"/>
     </Profile>
 
-    <!-- Agronomic advice card (1240 x 78 px) -->
+    <!-- Agronomic advice card (1240 x 110 px): centered title banner (state name) on top, a thin
+         rule, then badge + status/rotation text below. -->
 
     <Profile name="frAdviceCard" extends="emptyPanel" with="anchorTopLeft">
-        <size value="1240px 78px"/>
+        <size value="1240px 110px"/>
     </Profile>
 
     <Profile name="frAdviceCardBgNeutral" extends="frDetailCardBg">
-        <size value="1240px 78px"/>
+        <size value="1240px 110px"/>
     </Profile>
 
     <Profile name="frAdviceCardBgWarning" extends="frAdviceCardBgNeutral">
@@ -494,9 +495,10 @@
         <color value="0.10 0.20 0.03 0.76"/>
     </Profile>
 
-    <Profile name="frAdviceStatusBadgeBgNeutral" extends="baseReference" with="anchorMiddleLeft">
-        <position value="18px 0px"/>
-        <size value="42px 42px"/>
+    <!-- Anchored top-left (not centered on the card) -->
+    <Profile name="frAdviceStatusBadgeBgNeutral" extends="baseReference" with="anchorTopLeft">
+        <position value="18px -51px"/>
+        <size value="40px 40px"/>
         <color value="0.32 0.32 0.32 1"/>
         <cornerSize value="0.5"/>
     </Profile>
@@ -509,10 +511,19 @@
         <color value="$preset_fs25_colorGreen"/>
     </Profile>
 
-    <Profile name="frAdviceStatusBadgeText" extends="fs25_textDefault" with="anchorMiddleLeft">
-        <position value="18px 0px"/>
-        <size value="42px 42px"/>
-        <textSize value="17px"/>
+    <!-- Active-outbreak state -->
+    <Profile name="frAdviceCardBgDanger" extends="frAdviceCardBgNeutral">
+        <color value="0.30 0.06 0.05 0.85"/>
+    </Profile>
+
+    <Profile name="frAdviceStatusBadgeBgDanger" extends="frAdviceStatusBadgeBgNeutral">
+        <color value="0.86 0.17 0.14 1"/>
+    </Profile>
+
+    <Profile name="frAdviceStatusBadgeText" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="18px -51px"/>
+        <size value="40px 40px"/>
+        <textSize value="16px"/>
         <textBold value="true"/>
         <textUpperCase value="true"/>
         <textColor value="$preset_fs25_colorMainDark"/>
@@ -521,14 +532,15 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
+    <!-- Full-width header banner, centered, above the badge/body row -->
     <Profile name="frAdviceTitleNeutral" extends="fs25_textDefault" with="anchorTopLeft">
-        <position value="76px -10px"/>
-        <size value="1138px 20px"/>
-        <textSize value="14px"/>
+        <position value="0px -6px"/>
+        <size value="1240px 22px"/>
+        <textSize value="16px"/>
         <textBold value="true"/>
-        <textUpperCase value="false"/>
+        <textUpperCase value="true"/>
         <textColor value="0.95 0.85 0.05 1.0"/>
-        <textAlignment value="left"/>
+        <textAlignment value="center"/>
         <textVerticalAlignment value="middle"/>
         <textMaxNumLines value="1"/>
     </Profile>
@@ -539,15 +551,27 @@
         <textColor value="$preset_fs25_colorGreen"/>
     </Profile>
 
+    <Profile name="frAdviceTitleDanger" extends="frAdviceTitleNeutral">
+        <textColor value="0.86 0.17 0.14 1"/>
+    </Profile>
+
+    <!-- Thin rule separating the title banner from the badge/body row -->
+    <Profile name="frAdviceTitleDivider" extends="baseReference" with="anchorTopLeft">
+        <position value="24px -32px"/>
+        <size value="1192px 1px"/>
+        <color value="$preset_fs25_colorGreyLight"/>
+        <cornerSize value="0"/>
+    </Profile>
+
     <Profile name="frAdviceText" extends="fs25_textDefault" with="anchorTopLeft">
-        <position value="76px -29px"/>
-        <size value="1138px 45px"/>
-        <textSize value="12px"/>
+        <position value="72px -42px"/>
+        <size value="1148px 58px"/>
+        <textSize value="14px"/>
         <textBold value="false"/>
         <textUpperCase value="false"/>
         <textColor value="$preset_fs25_colorMainLight"/>
         <textAlignment value="left"/>
-        <textVerticalAlignment value="top"/>
+        <textVerticalAlignment value="middle"/>
         <textMaxNumLines value="3"/>
     </Profile>
 

@@ -96,7 +96,6 @@
         <e k="rcr_soil_value_unmeasured" v="未測定" />
         <e k="rcr_n_crop_need_unavailable" v="作物の必要量: --" />
         <e k="rcr_lime_status_unavailable" v="石灰: --" />
-        <e k="rcr_advice_soil_analysis_required_title" v="土壌分析が必要" />
         <e k="rcr_advice_soil_analysis_required_body" v="窒素値とpH値を利用できません。正確な農学的助言を得るには土壌を分析してください。" />
 
         <!-- Agronomic advice -->
@@ -106,12 +105,20 @@
         <e k="rcr_advice_afterRoot" v="根菜の後は、根菜が戻るまで4年あけ、遅い収穫の後に土壌構造を回復させるため穀物を続けてください。" />
         <e k="rcr_advice_afterVegetable" v="野菜の後は、繰り返す前に3年あけ、穀物をきれいな区切りとしてください。" />
         <e k="rcr_advice_afterForage" v="短期草地の後は、穀物が芝の下に蓄えられた地力と構造を活用します。" />
-        <e k="rcr_advice_current_crop_disease_hosts" v="この作物の病害別輪作間隔（年）：%s。" />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病の圧力が高い——ナタネ、ヒマワリ、ダイズ、エンドウ、インゲン、ジャガイモ、ニンジンを最低3年は避ける。多湿なら開花期に殺菌剤を散布する。" />
-        <e k="rcr_advice_pressure_high_bcn"           v="センチュウの圧力が高い——テンサイ、ビート、ナタネ、カラシナ、ホウレンソウを3年避ける。殺線虫剤または抵抗性のおとり作物を用いる。" />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病の圧力は中程度——宿主作物の間隔をあけ、多湿な開花期に注意する。" />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="センチュウの圧力は中程度——テンサイとアブラナ科の間隔をあける。" />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病の圧力が高い。ナタネ、ヒマワリ、ダイズ、エンドウ、インゲン、ジャガイモ、ニンジンを最低3年は避ける。多湿なら開花期に殺菌剤を散布する。" />
+        <e k="rcr_advice_pressure_high_bcn"           v="センチュウの圧力が高い。テンサイ、ビート、ナタネ、カラシナ、ホウレンソウを3年避ける。殺線虫剤または抵抗性のおとり作物を用いる。" />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病の圧力は中程度。宿主作物の間隔をあけ、多湿な開花期に注意する。" />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="センチュウの圧力は中程度。テンサイとアブラナ科の間隔をあける。" />
         <e k="rcr_advice_no_current_crop" v="現在の主要作物なし: 作物が検出されるとアドバイスが表示されます。" />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_outbreak" v="感染が発生中" />
+        <e k="rcr_advice_outbreak" v="%sがこの畑で発生中。重症度%d%%。推奨される対処：%s。" />
+        <e k="rcr_advice_plan_next_conflict_family" v="%sを%sに予定：輪作の衝突。現在の作物と同じ科（%s）のため、安全な復帰まであと%d年（必要%d年のうち）不足しています。" />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%sを%sに予定：輪作の衝突。現在の作物と%sのリスクを共有しており、安全な復帰まであと%d年（必要%d年のうち）不足しています。" />
+        <e k="rcr_advice_plan_next_ok" v="%sを%sに予定：良い選択です。輪作の衝突は検出されませんでした。" />
+
+        <!-- Advice card, disease pressure list -->
 
         <!-- Field card — required actions / growth -->
         <e k="rcr_action_header"        v="土壌の状態" />
@@ -150,11 +157,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="計画が不完全" />
-        <e k="rcr_score_excellent"      v="優れた輪作——病害リスク低" />
-        <e k="rcr_score_good"           v="良い輪作——病害リスク抑制" />
-        <e k="rcr_score_fair"           v="まずまずの輪作——病害リスク上昇" />
-        <e k="rcr_score_poor"           v="不十分な輪作——病害リスク高" />
-        <e k="rcr_score_bad"            v="悪い輪作——病害リスク深刻" />
+        <e k="rcr_score_excellent"      v="優れた輪作。病害リスク低" />
+        <e k="rcr_score_good"           v="良い輪作。病害リスク抑制" />
+        <e k="rcr_score_fair"           v="まずまずの輪作。病害リスク上昇" />
+        <e k="rcr_score_poor"           v="不十分な輪作。病害リスク高" />
+        <e k="rcr_score_bad"            v="悪い輪作。病害リスク深刻" />
         <e k="rcr_score_label_low"      v="悪いスコア" />
         <e k="rcr_score_label_optimal"  v="最適スコア" />
         <e k="rcr_score_short_optimal"  v="最適" />
@@ -188,19 +195,19 @@
         <e k="rcr_fillType_fungicide" v="殺菌剤" />
         <e k="rcr_fillType_nematicide" v="殺線虫剤" />
         <e k="rcr_disease_treatment_hernie" v="なし（抵抗性品種・石灰散布・輪作）" />
-        <e k="rcr_advice_pressure_high_phoma" v="茎枯病の圧力が高い——ナタネとカラシナを約4年避け、残渣をすき込む。感受性品種には秋に殺菌剤を散布する。" />
-        <e k="rcr_advice_pressure_high_pietin" v="立枯病の圧力が高い——非宿主作物（エンバク、マメ科、油糧作物）を挟んで断ち切る。有効な殺菌剤はなく、輪作だけが治せる。" />
-        <e k="rcr_advice_pressure_high_septoriose" v="葉枯病の圧力が高い——ムギ類の残渣の上にコムギ／オオムギを作付けせず、耐病性品種を選ぶ。多湿な気候では茎立ち期から殺菌剤を散布する。" />
-        <e k="rcr_advice_pressure_high_rouille" v="さび病の圧力が高い——抵抗性品種をまき、殺菌剤を計画する。温暖で多湿な時期に注意する。" />
-        <e k="rcr_advice_pressure_high_fusariose" v="赤かび病の圧力が高い——トウモロコシの後にコムギを作らず、残渣をすき込む。降雨があれば開花期に殺菌剤を散布する。" />
-        <e k="rcr_advice_pressure_high_mildiou" v="疫病の圧力が高い——抵抗性品種を植え、冷涼で多湿になり次第、殺菌剤でジャガイモを保護する。" />
-        <e k="rcr_advice_pressure_high_hernie" v="根こぶ病の圧力が高い——アブラナ科の間隔を6年以上とり、石灰でpHを上げ、抵抗性品種をまく。化学的防除法はない。" />
-        <e k="rcr_advice_pressure_moderate_phoma" v="茎枯病の圧力は中程度——ナタネの間隔を延ばし、刈り株を粉砕する。" />
-        <e k="rcr_advice_pressure_moderate_pietin" v="立枯病の圧力は中程度——3作連続のムギ類を避ける。" />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="葉枯病の圧力は中程度——春の降雨と残渣の伝染源に注意する。" />
-        <e k="rcr_advice_pressure_moderate_rouille" v="さび病の圧力は中程度——温暖な天候で胞子堆（病斑）の発生を見張る。" />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="赤かび病の圧力は中程度——ムギ類とトウモロコシの間隔をあけ、残渣を管理する。" />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="疫病の圧力は中程度——冷涼で多湿な天候を監視し、こぼれ生えを処分する。" />
-        <e k="rcr_advice_pressure_moderate_hernie" v="根こぶ病の圧力は中程度——ナタネの間隔を延ばし、酸性pHに注意する。" />
+        <e k="rcr_advice_pressure_high_phoma" v="茎枯病の圧力が高い。ナタネとカラシナを約4年避け、残渣をすき込む。感受性品種には秋に殺菌剤を散布する。" />
+        <e k="rcr_advice_pressure_high_pietin" v="立枯病の圧力が高い。非宿主作物（エンバク、マメ科、油糧作物）を挟んで断ち切る。有効な殺菌剤はなく、輪作だけが治せる。" />
+        <e k="rcr_advice_pressure_high_septoriose" v="葉枯病の圧力が高い。ムギ類の残渣の上にコムギ／オオムギを作付けせず、耐病性品種を選ぶ。多湿な気候では茎立ち期から殺菌剤を散布する。" />
+        <e k="rcr_advice_pressure_high_rouille" v="さび病の圧力が高い。抵抗性品種をまき、殺菌剤を計画する。温暖で多湿な時期に注意する。" />
+        <e k="rcr_advice_pressure_high_fusariose" v="赤かび病の圧力が高い。トウモロコシの後にコムギを作らず、残渣をすき込む。降雨があれば開花期に殺菌剤を散布する。" />
+        <e k="rcr_advice_pressure_high_mildiou" v="疫病の圧力が高い。抵抗性品種を植え、冷涼で多湿になり次第、殺菌剤でジャガイモを保護する。" />
+        <e k="rcr_advice_pressure_high_hernie" v="根こぶ病の圧力が高い。アブラナ科の間隔を6年以上とり、石灰でpHを上げ、抵抗性品種をまく。化学的防除法はない。" />
+        <e k="rcr_advice_pressure_moderate_phoma" v="茎枯病の圧力は中程度。ナタネの間隔を延ばし、刈り株を粉砕する。" />
+        <e k="rcr_advice_pressure_moderate_pietin" v="立枯病の圧力は中程度。3作連続のムギ類を避ける。" />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="葉枯病の圧力は中程度。春の降雨と残渣の伝染源に注意する。" />
+        <e k="rcr_advice_pressure_moderate_rouille" v="さび病の圧力は中程度。温暖な天候で胞子堆（病斑）の発生を見張る。" />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="赤かび病の圧力は中程度。ムギ類とトウモロコシの間隔をあけ、残渣を管理する。" />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="疫病の圧力は中程度。冷涼で多湿な天候を監視し、こぼれ生えを処分する。" />
+        <e k="rcr_advice_pressure_moderate_hernie" v="根こぶ病の圧力は中程度。ナタネの間隔を延ばし、酸性pHに注意する。" />
     </elements>
 </l10n>

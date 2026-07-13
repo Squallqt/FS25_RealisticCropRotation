@@ -96,7 +96,6 @@
         <e k="rcr_soil_value_unmeasured" v="Wartość niezmierzona" />
         <e k="rcr_n_crop_need_unavailable" v="Zapotrzebowanie uprawy: --" />
         <e k="rcr_lime_status_unavailable" v="Wapno: --" />
-        <e k="rcr_advice_soil_analysis_required_title" v="Wymagana analiza gleby" />
         <e k="rcr_advice_soil_analysis_required_body" v="Wartości azotu i pH są niedostępne. Przeanalizuj glebę, aby uzyskać dokładne zalecenia agronomiczne." />
 
         <!-- Agronomic advice -->
@@ -106,12 +105,20 @@
         <e k="rcr_advice_afterRoot" v="Po roślinie okopowej odczekaj cztery lata przed powrotem okopowych, a następnie zboże, aby odbudować strukturę po późnym zbiorze." />
         <e k="rcr_advice_afterVegetable" v="Po warzywie odczekaj trzy lata przed jego powtórzeniem, ze zbożem jako czystą przerwą." />
         <e k="rcr_advice_afterForage" v="Po użytku przemiennym z trawą zboże wykorzystuje żyzność i strukturę zgromadzone pod darnią." />
-        <e k="rcr_advice_current_crop_disease_hosts" v="Odstępy powrotu według chorób dla tej uprawy (lata): %s." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Wysoka presja zgnilizny twardzikowej — przez co najmniej 3 lata unikaj rzepaku, słonecznika, soi, grochu, fasoli, ziemniaka i marchwi; fungicyd w czasie kwitnienia przy wilgotnej pogodzie." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Wysoka presja mątwika — przez 3 lata unikaj buraka cukrowego, buraka ćwikłowego, rzepaku, gorczycy i szpinaku; nematocyd lub odporna roślina pułapkowa." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Umiarkowana presja zgnilizny twardzikowej — rozłóż w czasie rośliny żywicielskie i obserwuj wilgotne kwitnienie." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Umiarkowana presja mątwika — rozłóż w czasie buraki i kapustne." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Wysoka presja zgnilizny twardzikowej: przez co najmniej 3 lata unikaj rzepaku, słonecznika, soi, grochu, fasoli, ziemniaka i marchwi; fungicyd w czasie kwitnienia przy wilgotnej pogodzie." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Wysoka presja mątwika: przez 3 lata unikaj buraka cukrowego, buraka ćwikłowego, rzepaku, gorczycy i szpinaku; nematocyd lub odporna roślina pułapkowa." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Umiarkowana presja zgnilizny twardzikowej: rozłóż w czasie rośliny żywicielskie i obserwuj wilgotne kwitnienie." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Umiarkowana presja mątwika: rozłóż w czasie buraki i kapustne." />
         <e k="rcr_advice_no_current_crop" v="Brak aktualnej uprawy głównej: porada dostępna po wykryciu uprawy." />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_outbreak" v="Aktywna infekcja" />
+        <e k="rcr_advice_outbreak" v="%s jest aktywna na tym polu, nasilenie %d %%. Zalecane leczenie: %s." />
+        <e k="rcr_advice_plan_next_conflict_family" v="%s zaplanowana na %s: konflikt płodozmianu, ta sama rodzina (%s) co obecna uprawa, brakuje %d roku/lat z %d przed bezpiecznym powrotem." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s zaplanowana na %s: konflikt płodozmianu, dzieli ryzyko %s z obecną uprawą, brakuje %d roku/lat z %d przed bezpiecznym powrotem." />
+        <e k="rcr_advice_plan_next_ok" v="%s zaplanowana na %s: dobry wybór, nie wykryto konfliktu płodozmianu." />
+
+        <!-- Advice card, disease pressure list -->
 
         <!-- Field card — required actions / growth -->
         <e k="rcr_action_header"        v="Stan gleby" />
@@ -150,11 +157,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Plan niekompletny" />
-        <e k="rcr_score_excellent"      v="Doskonały płodozmian — niskie ryzyko chorób" />
-        <e k="rcr_score_good"           v="Dobry płodozmian — ryzyko chorób pod kontrolą" />
-        <e k="rcr_score_fair"           v="Przeciętny płodozmian — rosnące ryzyko chorób" />
-        <e k="rcr_score_poor"           v="Słaby płodozmian — wysokie ryzyko chorób" />
-        <e k="rcr_score_bad"            v="Zły płodozmian — poważne ryzyko chorób" />
+        <e k="rcr_score_excellent"      v="Doskonały płodozmian: niskie ryzyko chorób" />
+        <e k="rcr_score_good"           v="Dobry płodozmian: ryzyko chorób pod kontrolą" />
+        <e k="rcr_score_fair"           v="Przeciętny płodozmian: rosnące ryzyko chorób" />
+        <e k="rcr_score_poor"           v="Słaby płodozmian: wysokie ryzyko chorób" />
+        <e k="rcr_score_bad"            v="Zły płodozmian: poważne ryzyko chorób" />
         <e k="rcr_score_label_low"      v="Zły wynik" />
         <e k="rcr_score_label_optimal"  v="Optymalny wynik" />
         <e k="rcr_score_short_optimal"  v="OPTYMALNY" />
@@ -188,19 +195,19 @@
         <e k="rcr_fillType_fungicide" v="Fungicyd" />
         <e k="rcr_fillType_nematicide" v="Nematocyd" />
         <e k="rcr_disease_treatment_hernie" v="Brak (odmiana odporna, wapnowanie, płodozmian)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Wysoka presja suchej zgnilizny — przez około 4 lata unikaj rzepaku i gorczycy, przyoraj resztki; jesienny fungicyd na odmianach podatnych." />
-        <e k="rcr_advice_pressure_high_pietin" v="Wysoka presja zgorzeli podstawy źdźbła — wprowadź przerwę z rośliną niebędącą żywicielem (owies, bobowate, oleiste); żaden fungicyd nie działa, leczy tylko płodozmian." />
-        <e k="rcr_advice_pressure_high_septoriose" v="Wysoka presja septoriozy — nie uprawiaj pszenicy/jęczmienia na resztkach zbóż, wybierz odmianę tolerancyjną; w wilgotnym klimacie fungicyd od strzelania w źdźbło." />
-        <e k="rcr_advice_pressure_high_rouille" v="Wysoka presja rdzy — wysiej odmianę odporną i zaplanuj fungicyd; obserwuj łagodne wilgotne okresy." />
-        <e k="rcr_advice_pressure_high_fusariose" v="Wysoka presja fuzariozy — nie uprawiaj pszenicy po kukurydzy, przyoraj resztki; fungicyd w czasie kwitnienia przy deszczu." />
-        <e k="rcr_advice_pressure_high_mildiou" v="Wysoka presja zarazy ziemniaka — posadź odmianę odporną i chroń ziemniaki fungicydem, gdy tylko zrobi się chłodno i wilgotno." />
-        <e k="rcr_advice_pressure_high_hernie" v="Wysoka presja kiły — przerwa w uprawie kapustnych ponad 6 lat, wapnuj dla podniesienia pH i wysiej odmianę odporną; brak środków chemicznych." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Umiarkowana presja suchej zgnilizny — wydłuż przerwę w uprawie rzepaku i rozdrobnij ściernisko." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Umiarkowana presja zgorzeli podstawy źdźbła — unikaj trzeciego zboża z rzędu." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Umiarkowana presja septoriozy — obserwuj wiosenne deszcze i inokulum w resztkach." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Umiarkowana presja rdzy — w łagodnej pogodzie wypatruj pustul." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Umiarkowana presja fuzariozy — rozłóż w czasie zboża i kukurydzę, zagospodaruj resztki." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Umiarkowana presja zarazy ziemniaka — monitoruj chłodną wilgotną pogodę i niszcz samosiewy." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Umiarkowana presja kiły — wydłuż przerwę w uprawie rzepaku i obserwuj kwaśne pH." />
+        <e k="rcr_advice_pressure_high_phoma" v="Wysoka presja suchej zgnilizny: przez około 4 lata unikaj rzepaku i gorczycy, przyoraj resztki; jesienny fungicyd na odmianach podatnych." />
+        <e k="rcr_advice_pressure_high_pietin" v="Wysoka presja zgorzeli podstawy źdźbła: wprowadź przerwę z rośliną niebędącą żywicielem (owies, bobowate, oleiste); żaden fungicyd nie działa, leczy tylko płodozmian." />
+        <e k="rcr_advice_pressure_high_septoriose" v="Wysoka presja septoriozy: nie uprawiaj pszenicy/jęczmienia na resztkach zbóż, wybierz odmianę tolerancyjną; w wilgotnym klimacie fungicyd od strzelania w źdźbło." />
+        <e k="rcr_advice_pressure_high_rouille" v="Wysoka presja rdzy: wysiej odmianę odporną i zaplanuj fungicyd; obserwuj łagodne wilgotne okresy." />
+        <e k="rcr_advice_pressure_high_fusariose" v="Wysoka presja fuzariozy: nie uprawiaj pszenicy po kukurydzy, przyoraj resztki; fungicyd w czasie kwitnienia przy deszczu." />
+        <e k="rcr_advice_pressure_high_mildiou" v="Wysoka presja zarazy ziemniaka: posadź odmianę odporną i chroń ziemniaki fungicydem, gdy tylko zrobi się chłodno i wilgotno." />
+        <e k="rcr_advice_pressure_high_hernie" v="Wysoka presja kiły: przerwa w uprawie kapustnych ponad 6 lat, wapnuj dla podniesienia pH i wysiej odmianę odporną; brak środków chemicznych." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Umiarkowana presja suchej zgnilizny: wydłuż przerwę w uprawie rzepaku i rozdrobnij ściernisko." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="Umiarkowana presja zgorzeli podstawy źdźbła: unikaj trzeciego zboża z rzędu." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="Umiarkowana presja septoriozy: obserwuj wiosenne deszcze i inokulum w resztkach." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="Umiarkowana presja rdzy: w łagodnej pogodzie wypatruj pustul." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="Umiarkowana presja fuzariozy: rozłóż w czasie zboża i kukurydzę, zagospodaruj resztki." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="Umiarkowana presja zarazy ziemniaka: monitoruj chłodną wilgotną pogodę i niszcz samosiewy." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="Umiarkowana presja kiły: wydłuż przerwę w uprawie rzepaku i obserwuj kwaśne pH." />
     </elements>
 </l10n>

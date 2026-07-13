@@ -96,7 +96,6 @@
         <e k="rcr_soil_value_unmeasured" v="Værdi ikke målt" />
         <e k="rcr_n_crop_need_unavailable" v="Afgrødens behov: --" />
         <e k="rcr_lime_status_unavailable" v="Kalk: --" />
-        <e k="rcr_advice_soil_analysis_required_title" v="Jordbundsanalyse påkrævet" />
         <e k="rcr_advice_soil_analysis_required_body" v="Kvælstof- og pH-værdier er ikke tilgængelige. Analysér jorden for at få præcise agronomiske råd." />
 
         <!-- Agronomic advice -->
@@ -106,12 +105,20 @@
         <e k="rcr_advice_afterRoot" v="Efter en rodafgrøde vent fire år før rodafgrøder vender tilbage, og følg op med en kornafgrøde for at genopbygge strukturen efter den sene optagning." />
         <e k="rcr_advice_afterVegetable" v="Efter en grøntsag vent tre år før den gentages, med en kornafgrøde som ren afbrydelse." />
         <e k="rcr_advice_afterForage" v="Efter en kløvergræsmark udnytter en kornafgrøde den frugtbarhed og struktur, der er opbygget under græsset." />
-        <e k="rcr_advice_current_crop_disease_hosts" v="Sygdomsbetingede tilbagevendingsintervaller for denne afgrøde (år): %s." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Højt sclerotinia-tryk — undgå raps, solsikke, sojabønne, ært, bønne, kartoffel og gulerod i mindst 3 år; svampemiddel ved blomstring i fugtigt vejr." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Højt nematode-tryk — undgå sukkerroe, rødbede, raps, sennep og spinat i 3 år; nematicid eller resistent fangafgrøde." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderat sclerotinia-tryk — spred værtsafgrøderne og hold øje med en fugtig blomstring." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Moderat nematode-tryk — spred roer og korsblomstrede." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Højt sclerotinia-tryk: undgå raps, solsikke, sojabønne, ært, bønne, kartoffel og gulerod i mindst 3 år; svampemiddel ved blomstring i fugtigt vejr." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Højt nematode-tryk: undgå sukkerroe, rødbede, raps, sennep og spinat i 3 år; nematicid eller resistent fangafgrøde." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderat sclerotinia-tryk: spred værtsafgrøderne og hold øje med en fugtig blomstring." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Moderat nematode-tryk: spred roer og korsblomstrede." />
         <e k="rcr_advice_no_current_crop" v="Ingen aktuel hovedafgrøde: råd tilgængeligt, når en afgrøde registreres." />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_outbreak" v="Aktivt sygdomsudbrud" />
+        <e k="rcr_advice_outbreak" v="%s er aktiv på denne mark, sværhedsgrad %d %%. Anbefalet behandling: %s." />
+        <e k="rcr_advice_plan_next_conflict_family" v="%s planlagt til %s: sædskiftekonflikt, samme familie (%s) som den aktuelle afgrøde, der mangler %d år ud af %d, før det er sikkert at vende tilbage." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s planlagt til %s: sædskiftekonflikt, deler %s-risikoen med den aktuelle afgrøde, der mangler %d år ud af %d, før det er sikkert at vende tilbage." />
+        <e k="rcr_advice_plan_next_ok" v="%s planlagt til %s: godt valg, ingen sædskiftekonflikt fundet." />
+
+        <!-- Advice card, disease pressure list -->
 
         <!-- Field card — required actions / growth -->
         <e k="rcr_action_header"        v="Jordtilstand" />
@@ -150,11 +157,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Ufuldstændig plan" />
-        <e k="rcr_score_excellent"      v="Fremragende sædskifte — lav sygdomsrisiko" />
-        <e k="rcr_score_good"           v="Godt sædskifte — sygdomsrisiko under kontrol" />
-        <e k="rcr_score_fair"           v="Rimeligt sædskifte — stigende sygdomsrisiko" />
-        <e k="rcr_score_poor"           v="Dårligt sædskifte — høj sygdomsrisiko" />
-        <e k="rcr_score_bad"            v="Meget dårligt sædskifte — alvorlig sygdomsrisiko" />
+        <e k="rcr_score_excellent"      v="Fremragende sædskifte: lav sygdomsrisiko" />
+        <e k="rcr_score_good"           v="Godt sædskifte: sygdomsrisiko under kontrol" />
+        <e k="rcr_score_fair"           v="Rimeligt sædskifte: stigende sygdomsrisiko" />
+        <e k="rcr_score_poor"           v="Dårligt sædskifte: høj sygdomsrisiko" />
+        <e k="rcr_score_bad"            v="Meget dårligt sædskifte: alvorlig sygdomsrisiko" />
         <e k="rcr_score_label_low"      v="Dårlig score" />
         <e k="rcr_score_label_optimal"  v="Optimal score" />
         <e k="rcr_score_short_optimal"  v="OPTIMAL" />
@@ -188,19 +195,19 @@
         <e k="rcr_fillType_fungicide" v="Svampemiddel" />
         <e k="rcr_fillType_nematicide" v="Nematicid" />
         <e k="rcr_disease_treatment_hernie" v="Ingen (resistent sort, kalkning, sædskifte)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Højt phoma-tryk — undgå raps og sennep i ca. 4 år, nedmuld planterester; efterårssvampemiddel på modtagelige sorter." />
-        <e k="rcr_advice_pressure_high_pietin" v="Højt goldfodsyge-tryk — indsæt en ikke-værtsafgrøde som pause (havre, bælgplante, olieafgrøde); intet svampemiddel virker, kun sædskifte kurerer." />
-        <e k="rcr_advice_pressure_high_septoriose" v="Højt septoria-tryk — undgå hvede/byg på kornrester, vælg en tolerant sort; svampemiddel fra strækning i et vådt klima." />
-        <e k="rcr_advice_pressure_high_rouille" v="Højt rust-tryk — så en resistent sort og planlæg et svampemiddel; hold øje med milde fugtige perioder." />
-        <e k="rcr_advice_pressure_high_fusariose" v="Højt fusarium-tryk — undgå hvede efter majs, nedmuld planterester; svampemiddel ved blomstring hvis vådt." />
-        <e k="rcr_advice_pressure_high_mildiou" v="Højt kartoffelskimmel-tryk — plant en resistent sort og beskyt kartofler med svampemiddel, så snart det bliver køligt og vådt." />
-        <e k="rcr_advice_pressure_high_hernie" v="Højt kålbrok-tryk — pause fra korsblomstrede i over 6 år, kalk for at hæve pH og så en resistent sort; ingen kemisk behandling." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Moderat phoma-tryk — forlæng pausen fra raps og snit stubben." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Moderat goldfodsyge-tryk — undgå et tredje korn i træk." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Moderat septoria-tryk — hold øje med forårsregn og smittekilder i planterester." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Moderat rust-tryk — spejd efter pustler i mildt vejr." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Moderat fusarium-tryk — spred korn og majs, håndter planterester." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Moderat kartoffelskimmel-tryk — overvåg køligt vådt vejr og fjern spildplanter." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Moderat kålbrok-tryk — forlæng pausen fra raps og hold øje med sur pH." />
+        <e k="rcr_advice_pressure_high_phoma" v="Højt phoma-tryk: undgå raps og sennep i ca. 4 år, nedmuld planterester; efterårssvampemiddel på modtagelige sorter." />
+        <e k="rcr_advice_pressure_high_pietin" v="Højt goldfodsyge-tryk: indsæt en ikke-værtsafgrøde som pause (havre, bælgplante, olieafgrøde); intet svampemiddel virker, kun sædskifte kurerer." />
+        <e k="rcr_advice_pressure_high_septoriose" v="Højt septoria-tryk: undgå hvede/byg på kornrester, vælg en tolerant sort; svampemiddel fra strækning i et vådt klima." />
+        <e k="rcr_advice_pressure_high_rouille" v="Højt rust-tryk: så en resistent sort og planlæg et svampemiddel; hold øje med milde fugtige perioder." />
+        <e k="rcr_advice_pressure_high_fusariose" v="Højt fusarium-tryk: undgå hvede efter majs, nedmuld planterester; svampemiddel ved blomstring hvis vådt." />
+        <e k="rcr_advice_pressure_high_mildiou" v="Højt kartoffelskimmel-tryk: plant en resistent sort og beskyt kartofler med svampemiddel, så snart det bliver køligt og vådt." />
+        <e k="rcr_advice_pressure_high_hernie" v="Højt kålbrok-tryk: pause fra korsblomstrede i over 6 år, kalk for at hæve pH og så en resistent sort; ingen kemisk behandling." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Moderat phoma-tryk: forlæng pausen fra raps og snit stubben." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="Moderat goldfodsyge-tryk: undgå et tredje korn i træk." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="Moderat septoria-tryk: hold øje med forårsregn og smittekilder i planterester." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="Moderat rust-tryk: spejd efter pustler i mildt vejr." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="Moderat fusarium-tryk: spred korn og majs, håndter planterester." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="Moderat kartoffelskimmel-tryk: overvåg køligt vådt vejr og fjern spildplanter." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="Moderat kålbrok-tryk: forlæng pausen fra raps og hold øje med sur pH." />
     </elements>
 </l10n>

@@ -96,7 +96,6 @@
         <e k="rcr_soil_value_unmeasured" v="Value not measured" />
         <e k="rcr_n_crop_need_unavailable" v="Crop requirement: --" />
         <e k="rcr_lime_status_unavailable" v="Lime: --" />
-        <e k="rcr_advice_soil_analysis_required_title" v="Soil analysis required" />
         <e k="rcr_advice_soil_analysis_required_body" v="Nitrogen and pH values are unavailable. Analyse the soil to unlock precise agronomic advice." />
 
         <!-- Agronomic advice -->
@@ -106,12 +105,20 @@
         <e k="rcr_advice_afterRoot"      v="After a root crop, allow four years before roots come back, and follow with a cereal to rebuild structure after the late lifting." />
         <e k="rcr_advice_afterVegetable" v="After a vegetable, wait three years before repeating it, with a cereal as a clean break." />
         <e k="rcr_advice_afterForage"    v="After a grass ley, a cereal cashes in the fertility and structure built up under the sward." />
-        <e k="rcr_advice_current_crop_disease_hosts" v="Disease return intervals for this crop (years): %s." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="High sclerotinia pressure — avoid canola, sunflower, soybean, pea, bean, potato and carrot for at least 3 years; fungicide at flowering in humid weather." />
-        <e k="rcr_advice_pressure_high_bcn"           v="High nematode pressure — avoid sugar beet, beetroot, canola, mustard and spinach for 3 years; nematicide or resistant trap crop." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderate sclerotinia pressure — space host crops and watch for a humid flowering." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Moderate nematode pressure — space beets and brassicas." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="High sclerotinia pressure: avoid canola, sunflower, soybean, pea, bean, potato and carrot for at least 3 years; fungicide at flowering in humid weather." />
+        <e k="rcr_advice_pressure_high_bcn"           v="High nematode pressure: avoid sugar beet, beetroot, canola, mustard and spinach for 3 years; nematicide or resistant trap crop." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderate sclerotinia pressure: space host crops and watch for a humid flowering." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Moderate nematode pressure: space beets and brassicas." />
         <e k="rcr_advice_no_current_crop" v="No current main crop: advice available when a crop is detected." />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_outbreak" v="Active outbreak" />
+        <e k="rcr_advice_outbreak" v="%s is active on this field, severity %d%%. Recommended treatment: %s." />
+        <e k="rcr_advice_plan_next_conflict_family" v="%s planned for %s: rotation conflict, same family (%s) as the current crop, %d more year(s) needed out of %d before it's safe." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s planned for %s: rotation conflict, shares %s risk with the current crop, %d more year(s) needed out of %d before it's safe." />
+        <e k="rcr_advice_plan_next_ok" v="%s planned for %s: good choice, no rotation conflict detected." />
+
+        <!-- Advice card, disease pressure list -->
 
         <!-- Field card — required actions / growth -->
         <e k="rcr_action_header"        v="Soil condition" />
@@ -150,11 +157,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Incomplete plan" />
-        <e k="rcr_score_excellent"      v="Excellent rotation — low disease risk" />
-        <e k="rcr_score_good"           v="Good rotation — disease risk under control" />
-        <e k="rcr_score_fair"           v="Fair rotation — rising disease risk" />
-        <e k="rcr_score_poor"           v="Poor rotation — high disease risk" />
-        <e k="rcr_score_bad"            v="Bad rotation — severe disease risk" />
+        <e k="rcr_score_excellent"      v="Excellent rotation: low disease risk" />
+        <e k="rcr_score_good"           v="Good rotation: disease risk under control" />
+        <e k="rcr_score_fair"           v="Fair rotation: rising disease risk" />
+        <e k="rcr_score_poor"           v="Poor rotation: high disease risk" />
+        <e k="rcr_score_bad"            v="Bad rotation: severe disease risk" />
         <e k="rcr_score_label_low"      v="Bad score" />
         <e k="rcr_score_label_optimal"  v="Optimal score" />
         <e k="rcr_score_short_optimal"  v="OPTIMAL" />
@@ -188,19 +195,19 @@
         <e k="rcr_fillType_fungicide" v="Fungicide" />
         <e k="rcr_fillType_nematicide" v="Nematicide" />
         <e k="rcr_disease_treatment_hernie" v="None (resistant variety, liming, rotation)" />
-        <e k="rcr_advice_pressure_high_phoma" v="High phoma pressure — avoid canola and mustard for ~4 years, bury residue; autumn fungicide on susceptible varieties." />
-        <e k="rcr_advice_pressure_high_pietin" v="High take-all pressure — insert a non-host break (oats, legume, oilseed); no effective fungicide, only rotation cures it." />
-        <e k="rcr_advice_pressure_high_septoriose" v="High septoria pressure — avoid wheat/barley on cereal residue, pick a tolerant variety; fungicide from stem elongation in a wet climate." />
-        <e k="rcr_advice_pressure_high_rouille" v="High rust pressure — sow a resistant variety and plan a fungicide; watch mild humid spells." />
-        <e k="rcr_advice_pressure_high_fusariose" v="High fusarium pressure — avoid wheat after maize, bury residue; fungicide at flowering if wet." />
-        <e k="rcr_advice_pressure_high_mildiou" v="High late blight pressure — plant a resistant variety and protect potatoes with fungicide as soon as it turns cool and wet." />
-        <e k="rcr_advice_pressure_high_hernie" v="High clubroot pressure — brassica break over 6 years, lime to raise pH and sow a resistant variety; no chemical treatment." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Moderate phoma pressure — lengthen the canola break and chop the stubble." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Moderate take-all pressure — avoid a third cereal in a row." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Moderate septoria pressure — watch spring rains and residue inoculum." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Moderate rust pressure — scout for pustules in mild weather." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Moderate fusarium pressure — space cereals and maize, manage residue." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Moderate late blight pressure — monitor cool wet weather and destroy volunteers." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Moderate clubroot pressure — lengthen the canola break and watch for acid pH." />
+        <e k="rcr_advice_pressure_high_phoma" v="High phoma pressure: avoid canola and mustard for ~4 years, bury residue; autumn fungicide on susceptible varieties." />
+        <e k="rcr_advice_pressure_high_pietin" v="High take-all pressure: insert a non-host break (oats, legume, oilseed); no effective fungicide, only rotation cures it." />
+        <e k="rcr_advice_pressure_high_septoriose" v="High septoria pressure: avoid wheat/barley on cereal residue, pick a tolerant variety; fungicide from stem elongation in a wet climate." />
+        <e k="rcr_advice_pressure_high_rouille" v="High rust pressure: sow a resistant variety and plan a fungicide; watch mild humid spells." />
+        <e k="rcr_advice_pressure_high_fusariose" v="High fusarium pressure: avoid wheat after maize, bury residue; fungicide at flowering if wet." />
+        <e k="rcr_advice_pressure_high_mildiou" v="High late blight pressure: plant a resistant variety and protect potatoes with fungicide as soon as it turns cool and wet." />
+        <e k="rcr_advice_pressure_high_hernie" v="High clubroot pressure: brassica break over 6 years, lime to raise pH and sow a resistant variety; no chemical treatment." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Moderate phoma pressure: lengthen the canola break and chop the stubble." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="Moderate take-all pressure: avoid a third cereal in a row." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="Moderate septoria pressure: watch spring rains and residue inoculum." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="Moderate rust pressure: scout for pustules in mild weather." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="Moderate fusarium pressure: space cereals and maize, manage residue." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="Moderate late blight pressure: monitor cool wet weather and destroy volunteers." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="Moderate clubroot pressure: lengthen the canola break and watch for acid pH." />
     </elements>
 </l10n>

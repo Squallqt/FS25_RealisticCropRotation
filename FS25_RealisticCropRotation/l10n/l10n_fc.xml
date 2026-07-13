@@ -96,7 +96,6 @@
         <e k="rcr_soil_value_unmeasured" v="Valeur non mesurée" />
         <e k="rcr_n_crop_need_unavailable" v="Besoin de la culture : --" />
         <e k="rcr_lime_status_unavailable" v="Chaux : --" />
-        <e k="rcr_advice_soil_analysis_required_title" v="Analyse du sol requise" />
         <e k="rcr_advice_soil_analysis_required_body" v="Les valeurs d’azote et de pH sont indisponibles. Analysez le sol pour obtenir des conseils agronomiques précis." />
 
         <!-- Agronomic advice -->
@@ -106,12 +105,20 @@
         <e k="rcr_advice_afterRoot" v="Après une culture sarclée, attendez quatre ans avant d'y revenir, puis une céréale pour restructurer le sol après l'arrachage tardif." />
         <e k="rcr_advice_afterVegetable" v="Après un légume, attendez trois ans avant de le répéter, avec une céréale comme coupure nette." />
         <e k="rcr_advice_afterForage" v="Après une prairie temporaire, une céréale valorise la fertilité et la structure accumulées sous le couvert." />
-        <e k="rcr_advice_current_crop_disease_hosts" v="Intervalles maladie pour cette culture (années) : %s." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Forte pression sclérotinia — évitez canola, tournesol, soja, pois, haricot, pomme de terre et carotte pendant au moins 3 ans ; fongicide à la floraison si temps humide." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Forte pression nématode — évitez betterave, betterave rouge, canola, moutarde et épinard 3 ans ; nématicide ou culture-piège résistante." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Pression sclérotinia modérée — espacez les cultures hôtes et surveillez la floraison humide." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Pression nématode modérée — espacez betteraves et brassicacées." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Forte pression sclérotinia : évitez canola, tournesol, soja, pois, haricot, pomme de terre et carotte pendant au moins 3 ans ; fongicide à la floraison si temps humide." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Forte pression nématode : évitez betterave, betterave rouge, canola, moutarde et épinard 3 ans ; nématicide ou culture-piège résistante." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Pression sclérotinia modérée : espacez les cultures hôtes et surveillez la floraison humide." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Pression nématode modérée : espacez betteraves et brassicacées." />
         <e k="rcr_advice_no_current_crop" v="Aucune culture principale actuelle : conseil disponible quand une culture est détectée." />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_outbreak" v="Infection active" />
+        <e k="rcr_advice_outbreak" v="%s active sur ce champ, sévérité %d %%. Traitement recommandé : %s." />
+        <e k="rcr_advice_plan_next_conflict_family" v="%s prévu en %s : conflit de rotation, même famille (%s) que la culture actuelle, il reste %d an(s) sur %d requis avant un retour sûr." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s prévu en %s : conflit de rotation, risque %s partagé avec la culture actuelle, il reste %d an(s) sur %d requis avant un retour sûr." />
+        <e k="rcr_advice_plan_next_ok" v="%s prévu en %s : bon choix, aucun conflit de rotation détecté." />
+
+        <!-- Advice card, disease pressure list -->
 
         <!-- Field card — required actions / growth -->
         <e k="rcr_action_header"        v="État du sol" />
@@ -150,11 +157,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Plan incomplet" />
-        <e k="rcr_score_excellent"      v="Excellente rotation — faible risque de maladie" />
-        <e k="rcr_score_good"           v="Bonne rotation — risque de maladie maîtrisé" />
-        <e k="rcr_score_fair"           v="Rotation correcte — risque de maladie en hausse" />
-        <e k="rcr_score_poor"           v="Rotation à améliorer — risque de maladie élevé" />
-        <e k="rcr_score_bad"            v="Mauvaise rotation — risque de maladie très élevé" />
+        <e k="rcr_score_excellent"      v="Excellente rotation : faible risque de maladie" />
+        <e k="rcr_score_good"           v="Bonne rotation : risque de maladie maîtrisé" />
+        <e k="rcr_score_fair"           v="Rotation correcte : risque de maladie en hausse" />
+        <e k="rcr_score_poor"           v="Rotation à améliorer : risque de maladie élevé" />
+        <e k="rcr_score_bad"            v="Mauvaise rotation : risque de maladie très élevé" />
         <e k="rcr_score_label_low"      v="Score mauvais" />
         <e k="rcr_score_label_optimal"  v="Score optimal" />
         <e k="rcr_score_short_optimal"  v="OPTIMAL" />
@@ -188,19 +195,19 @@
         <e k="rcr_fillType_fungicide" v="Fongicide" />
         <e k="rcr_fillType_nematicide" v="Nématicide" />
         <e k="rcr_disease_treatment_hernie" v="Aucun (variété résistante, chaulage, rotation)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Forte pression phoma — évitez canola et moutarde ~4 ans, enfouissez les résidus ; fongicide d'automne sur variété sensible." />
-        <e k="rcr_advice_pressure_high_pietin" v="Forte pression piétin-échaudage — insérez une coupure non-hôte (avoine, légumineuse, oléagineux) ; aucun fongicide efficace, seule la rotation guérit." />
-        <e k="rcr_advice_pressure_high_septoriose" v="Forte pression septoriose — évitez blé/orge sur résidus de céréales, choisissez une variété tolérante ; fongicide dès la montaison en climat humide." />
-        <e k="rcr_advice_pressure_high_rouille" v="Forte pression rouille — semez une variété résistante et prévoyez un fongicide ; surveillez les périodes douces et humides." />
-        <e k="rcr_advice_pressure_high_fusariose" v="Forte pression fusariose — évitez blé après maïs, enfouissez les résidus ; fongicide à la floraison si pluie." />
-        <e k="rcr_advice_pressure_high_mildiou" v="Forte pression mildiou — plantez une variété résistante et protégez la pomme de terre au fongicide dès qu'il fait frais et humide." />
-        <e k="rcr_advice_pressure_high_hernie" v="Forte pression hernie — retour des brassicacées &gt; 6 ans, chaulez pour remonter le pH et semez une variété résistante ; aucun traitement chimique." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Pression phoma modérée — allongez le retour du canola et broyez les résidus." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Pression piétin modérée — évitez la troisième céréale d'affilée." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Pression septoriose modérée — surveillez les pluies de printemps et l'inoculum des résidus." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Pression rouille modérée — surveillez l'apparition des pustules par temps doux." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Pression fusariose modérée — espacez céréales et maïs, gérez les résidus." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Pression mildiou modérée — surveillez la météo fraîche et humide et détruisez les repousses." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Pression hernie modérée — allongez le retour du canola et surveillez le pH acide." />
+        <e k="rcr_advice_pressure_high_phoma" v="Forte pression phoma : évitez canola et moutarde ~4 ans, enfouissez les résidus ; fongicide d'automne sur variété sensible." />
+        <e k="rcr_advice_pressure_high_pietin" v="Forte pression piétin-échaudage : insérez une coupure non-hôte (avoine, légumineuse, oléagineux) ; aucun fongicide efficace, seule la rotation guérit." />
+        <e k="rcr_advice_pressure_high_septoriose" v="Forte pression septoriose : évitez blé/orge sur résidus de céréales, choisissez une variété tolérante ; fongicide dès la montaison en climat humide." />
+        <e k="rcr_advice_pressure_high_rouille" v="Forte pression rouille : semez une variété résistante et prévoyez un fongicide ; surveillez les périodes douces et humides." />
+        <e k="rcr_advice_pressure_high_fusariose" v="Forte pression fusariose : évitez blé après maïs, enfouissez les résidus ; fongicide à la floraison si pluie." />
+        <e k="rcr_advice_pressure_high_mildiou" v="Forte pression mildiou : plantez une variété résistante et protégez la pomme de terre au fongicide dès qu'il fait frais et humide." />
+        <e k="rcr_advice_pressure_high_hernie" v="Forte pression hernie : retour des brassicacées &gt; 6 ans, chaulez pour remonter le pH et semez une variété résistante ; aucun traitement chimique." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Pression phoma modérée : allongez le retour du canola et broyez les résidus." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="Pression piétin modérée : évitez la troisième céréale d'affilée." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="Pression septoriose modérée : surveillez les pluies de printemps et l'inoculum des résidus." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="Pression rouille modérée : surveillez l'apparition des pustules par temps doux." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="Pression fusariose modérée : espacez céréales et maïs, gérez les résidus." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="Pression mildiou modérée : surveillez la météo fraîche et humide et détruisez les repousses." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="Pression hernie modérée : allongez le retour du canola et surveillez le pH acide." />
     </elements>
 </l10n>

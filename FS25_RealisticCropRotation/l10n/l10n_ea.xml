@@ -93,11 +93,10 @@
         <e k="rcr_lime_average_pf"      v="pH promedio" />
         <e k="rcr_lime_average_value"   v="pH promedio: %.3f pH" />
         <e k="rcr_lime_target"          v="Objetivo: %.3f pH" />
-        <e k="rcr_soil_value_unmeasured" v="Valor no mesurat" />
-        <e k="rcr_n_crop_need_unavailable" v="Necessitat del cultiu: --" />
-        <e k="rcr_lime_status_unavailable" v="Calç: --" />
-        <e k="rcr_advice_soil_analysis_required_title" v="Cal analitzar el sòl" />
-        <e k="rcr_advice_soil_analysis_required_body" v="Els valors de nitrogen i pH no estan disponibles. Analitza el sòl per obtenir recomanacions agronòmiques precises." />
+        <e k="rcr_soil_value_unmeasured" v="Valor no medido" />
+        <e k="rcr_n_crop_need_unavailable" v="Necesidad del cultivo: --" />
+        <e k="rcr_lime_status_unavailable" v="Cal: --" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Los valores de nitrógeno y pH no están disponibles. Analiza el suelo para obtener recomendaciones agronómicas precisas." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Después de un cereal, siembra una leguminosa para reponer nitrógeno o un cultivo de corte contra las enfermedades del pie, y deja dos años entre cereales." />
@@ -106,12 +105,20 @@
         <e k="rcr_advice_afterRoot" v="Después de un cultivo de raíz, espera cuatro años antes de que vuelvan las raíces, y sigue con un cereal para rehacer la estructura tras el arranque tardío." />
         <e k="rcr_advice_afterVegetable" v="Después de una hortaliza, espera tres años antes de repetirla, con un cereal como corte limpio." />
         <e k="rcr_advice_afterForage" v="Después de una pradera temporal, un cereal aprovecha la fertilidad y la estructura acumuladas bajo la hierba." />
-        <e k="rcr_advice_current_crop_disease_hosts" v="Intervalos de retorno por enfermedad para este cultivo (años): %s." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Alta presión de esclerotinia — evita canola, girasol, soja, arveja, frijol, papa y zanahoria durante al menos 3 años; fungicida en floración con clima húmedo." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Alta presión de nematodo — evita remolacha azucarera, remolacha de mesa, canola, mostaza y espinaca durante 3 años; nematicida o cultivo trampa resistente." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Presión de esclerotinia moderada — espacia los cultivos hospedantes y monitorea una floración húmeda." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Presión de nematodo moderada — espacia remolachas y brasicáceas." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Alta presión de esclerotinia: evita canola, girasol, soja, arveja, frijol, papa y zanahoria durante al menos 3 años; fungicida en floración con clima húmedo." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Alta presión de nematodo: evita remolacha azucarera, remolacha de mesa, canola, mostaza y espinaca durante 3 años; nematicida o cultivo trampa resistente." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Presión de esclerotinia moderada: espacia los cultivos hospedantes y monitorea una floración húmeda." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Presión de nematodo moderada: espacia remolachas y brasicáceas." />
         <e k="rcr_advice_no_current_crop" v="Sin cultivo principal actual: el consejo estará disponible cuando se detecte un cultivo." />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_outbreak" v="Infección activa" />
+        <e k="rcr_advice_outbreak" v="%s está activa en este campo, gravedad %d %%. Tratamiento recomendado: %s." />
+        <e k="rcr_advice_plan_next_conflict_family" v="%s previsto para %s: conflicto de rotación, misma familia (%s) que el cultivo actual, faltan %d año(s) de %d antes de un retorno seguro." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s previsto para %s: conflicto de rotación, comparte el riesgo de %s con el cultivo actual, faltan %d año(s) de %d antes de un retorno seguro." />
+        <e k="rcr_advice_plan_next_ok" v="%s previsto para %s: buena elección, no se detecta conflicto de rotación." />
+
+        <!-- Advice card, disease pressure list -->
 
         <!-- Field card — required actions / growth -->
         <e k="rcr_action_header"        v="Estado del suelo" />
@@ -150,11 +157,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Plan incompleto" />
-        <e k="rcr_score_excellent"      v="Rotación excelente — bajo riesgo de enfermedad" />
-        <e k="rcr_score_good"           v="Buena rotación — riesgo de enfermedad controlado" />
-        <e k="rcr_score_fair"           v="Rotación aceptable — riesgo de enfermedad en aumento" />
-        <e k="rcr_score_poor"           v="Rotación deficiente — alto riesgo de enfermedad" />
-        <e k="rcr_score_bad"            v="Rotación mala — riesgo grave de enfermedad" />
+        <e k="rcr_score_excellent"      v="Rotación excelente: bajo riesgo de enfermedad" />
+        <e k="rcr_score_good"           v="Buena rotación: riesgo de enfermedad controlado" />
+        <e k="rcr_score_fair"           v="Rotación aceptable: riesgo de enfermedad en aumento" />
+        <e k="rcr_score_poor"           v="Rotación deficiente: alto riesgo de enfermedad" />
+        <e k="rcr_score_bad"            v="Rotación mala: riesgo grave de enfermedad" />
         <e k="rcr_score_label_low"      v="Puntuación mala" />
         <e k="rcr_score_label_optimal"  v="Puntuación óptima" />
         <e k="rcr_score_short_optimal"  v="ÓPTIMA" />
@@ -188,19 +195,19 @@
         <e k="rcr_fillType_fungicide" v="Fungicida" />
         <e k="rcr_fillType_nematicide" v="Nematicida" />
         <e k="rcr_disease_treatment_hernie" v="Ninguno (variedad resistente, encalado, rotación)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Alta presión de phoma — evita canola y mostaza ~4 años, incorpora los rastrojos; fungicida otoñal en variedades susceptibles." />
-        <e k="rcr_advice_pressure_high_pietin" v="Alta presión de mal del pie — intercala un corte no hospedante (avena, leguminosa, oleaginosa); ningún fungicida eficaz, solo la rotación lo cura." />
-        <e k="rcr_advice_pressure_high_septoriose" v="Alta presión de septoriosis — evita trigo/cebada sobre rastrojos de cereal, elige una variedad tolerante; fungicida desde el encañado en clima húmedo." />
-        <e k="rcr_advice_pressure_high_rouille" v="Alta presión de roya — siembra una variedad resistente y planifica un fungicida; monitorea los periodos templados y húmedos." />
-        <e k="rcr_advice_pressure_high_fusariose" v="Alta presión de fusariosis — evita trigo después de maíz, incorpora los rastrojos; fungicida en floración si llueve." />
-        <e k="rcr_advice_pressure_high_mildiou" v="Alta presión de tizón tardío — planta una variedad resistente y protege las papas con fungicida apenas el clima se vuelve fresco y húmedo." />
-        <e k="rcr_advice_pressure_high_hernie" v="Alta presión de hernia — intervalo entre brasicáceas superior a 6 años, encala para subir el pH y siembra una variedad resistente; sin tratamiento químico." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Presión de phoma moderada — alarga el intervalo de la canola y tritura el rastrojo." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Presión de mal del pie moderada — evita el tercer cereal seguido." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Presión de septoriosis moderada — monitorea las lluvias de primavera y el inóculo de los rastrojos." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Presión de roya moderada — explora la aparición de pústulas con clima templado." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Presión de fusariosis moderada — espacia cereales y maíz, maneja los rastrojos." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Presión de tizón tardío moderada — monitorea el clima fresco y húmedo y destruye los rebrotes espontáneos." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Presión de hernia moderada — alarga el intervalo de la canola y vigila el pH ácido." />
+        <e k="rcr_advice_pressure_high_phoma" v="Alta presión de phoma: evita canola y mostaza ~4 años, incorpora los rastrojos; fungicida otoñal en variedades susceptibles." />
+        <e k="rcr_advice_pressure_high_pietin" v="Alta presión de mal del pie: intercala un corte no hospedante (avena, leguminosa, oleaginosa); ningún fungicida eficaz, solo la rotación lo cura." />
+        <e k="rcr_advice_pressure_high_septoriose" v="Alta presión de septoriosis: evita trigo/cebada sobre rastrojos de cereal, elige una variedad tolerante; fungicida desde el encañado en clima húmedo." />
+        <e k="rcr_advice_pressure_high_rouille" v="Alta presión de roya: siembra una variedad resistente y planifica un fungicida; monitorea los periodos templados y húmedos." />
+        <e k="rcr_advice_pressure_high_fusariose" v="Alta presión de fusariosis: evita trigo después de maíz, incorpora los rastrojos; fungicida en floración si llueve." />
+        <e k="rcr_advice_pressure_high_mildiou" v="Alta presión de tizón tardío: planta una variedad resistente y protege las papas con fungicida apenas el clima se vuelve fresco y húmedo." />
+        <e k="rcr_advice_pressure_high_hernie" v="Alta presión de hernia: intervalo entre brasicáceas superior a 6 años, encala para subir el pH y siembra una variedad resistente; sin tratamiento químico." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Presión de phoma moderada: alarga el intervalo de la canola y tritura el rastrojo." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="Presión de mal del pie moderada: evita el tercer cereal seguido." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="Presión de septoriosis moderada: monitorea las lluvias de primavera y el inóculo de los rastrojos." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="Presión de roya moderada: explora la aparición de pústulas con clima templado." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="Presión de fusariosis moderada: espacia cereales y maíz, maneja los rastrojos." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="Presión de tizón tardío moderada: monitorea el clima fresco y húmedo y destruye los rebrotes espontáneos." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="Presión de hernia moderada: alarga el intervalo de la canola y vigila el pH ácido." />
     </elements>
 </l10n>

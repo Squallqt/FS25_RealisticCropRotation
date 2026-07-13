@@ -96,7 +96,6 @@
         <e k="rcr_soil_value_unmeasured" v="측정되지 않음" />
         <e k="rcr_n_crop_need_unavailable" v="작물 요구량: --" />
         <e k="rcr_lime_status_unavailable" v="석회: --" />
-        <e k="rcr_advice_soil_analysis_required_title" v="토양 분석 필요" />
         <e k="rcr_advice_soil_analysis_required_body" v="질소 및 pH 값을 사용할 수 없습니다. 정확한 농업 조언을 위해 토양을 분석하십시오." />
 
         <!-- Agronomic advice -->
@@ -106,12 +105,20 @@
         <e k="rcr_advice_afterRoot" v="뿌리 작물 다음에는 뿌리 작물이 돌아오기까지 4년을 기다리고, 늦은 수확 후 토양 구조를 회복하기 위해 곡물을 이어 심으세요." />
         <e k="rcr_advice_afterVegetable" v="채소 다음에는 반복하기 전에 3년을 기다리고, 곡물을 깔끔한 휴지로 두세요." />
         <e k="rcr_advice_afterForage" v="단기 초지 다음에는 곡물이 잔디 아래 쌓인 비옥도와 구조를 활용합니다." />
-        <e k="rcr_advice_current_crop_disease_hosts" v="이 작물의 병해별 재배 간격(년): %s." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="균핵병 압력 높음 — 유채, 해바라기, 대두, 완두, 강낭콩, 감자, 당근을 최소 3년간 피하고, 습한 날씨에는 개화기에 살균제를 살포한다." />
-        <e k="rcr_advice_pressure_high_bcn"           v="선충 압력 높음 — 사탕무, 비트, 유채, 겨자, 시금치를 3년간 피하고, 살선충제 또는 저항성 유인작물을 이용한다." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="균핵병 압력 보통 — 기주 작물의 간격을 넓히고 습한 개화기를 주시한다." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="선충 압력 보통 — 사탕무와 배추과 작물의 간격을 넓힌다." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="균핵병 압력 높음: 유채, 해바라기, 대두, 완두, 강낭콩, 감자, 당근을 최소 3년간 피하고, 습한 날씨에는 개화기에 살균제를 살포한다." />
+        <e k="rcr_advice_pressure_high_bcn"           v="선충 압력 높음: 사탕무, 비트, 유채, 겨자, 시금치를 3년간 피하고, 살선충제 또는 저항성 유인작물을 이용한다." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="균핵병 압력 보통: 기주 작물의 간격을 넓히고 습한 개화기를 주시한다." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="선충 압력 보통: 사탕무와 배추과 작물의 간격을 넓힌다." />
         <e k="rcr_advice_no_current_crop" v="현재 주요 작물 없음: 작물이 감지되면 조언이 제공됩니다." />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_outbreak" v="활성 감염" />
+        <e k="rcr_advice_outbreak" v="%s이(가) 이 밭에서 활성 상태입니다, 심각도 %d%%. 권장 처리: %s." />
+        <e k="rcr_advice_plan_next_conflict_family" v="%s이(가) %s에 계획됨: 윤작 충돌, 현재 작물과 같은 과(%s)로, 안전한 복귀까지 %d/%d년이 부족합니다." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s이(가) %s에 계획됨: 윤작 충돌, 현재 작물과 %s 위험을 공유하며, 안전한 복귀까지 %d/%d년이 부족합니다." />
+        <e k="rcr_advice_plan_next_ok" v="%s이(가) %s에 계획됨: 좋은 선택이며, 윤작 충돌이 감지되지 않았습니다." />
+
+        <!-- Advice card, disease pressure list -->
 
         <!-- Field card — required actions / growth -->
         <e k="rcr_action_header"        v="토양 상태" />
@@ -150,11 +157,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="불완전한 계획" />
-        <e k="rcr_score_excellent"      v="우수한 윤작 — 병해 위험 낮음" />
-        <e k="rcr_score_good"           v="좋은 윤작 — 병해 위험 통제됨" />
-        <e k="rcr_score_fair"           v="보통 윤작 — 병해 위험 증가" />
-        <e k="rcr_score_poor"           v="미흡한 윤작 — 병해 위험 높음" />
-        <e k="rcr_score_bad"            v="나쁜 윤작 — 병해 위험 심각" />
+        <e k="rcr_score_excellent"      v="우수한 윤작: 병해 위험 낮음" />
+        <e k="rcr_score_good"           v="좋은 윤작: 병해 위험 통제됨" />
+        <e k="rcr_score_fair"           v="보통 윤작: 병해 위험 증가" />
+        <e k="rcr_score_poor"           v="미흡한 윤작: 병해 위험 높음" />
+        <e k="rcr_score_bad"            v="나쁜 윤작: 병해 위험 심각" />
         <e k="rcr_score_label_low"      v="나쁜 점수" />
         <e k="rcr_score_label_optimal"  v="최적 점수" />
         <e k="rcr_score_short_optimal"  v="최적" />
@@ -188,19 +195,19 @@
         <e k="rcr_fillType_fungicide" v="살균제" />
         <e k="rcr_fillType_nematicide" v="살선충제" />
         <e k="rcr_disease_treatment_hernie" v="없음(저항성 품종, 석회 시용, 윤작)" />
-        <e k="rcr_advice_pressure_high_phoma" v="검은다리병 압력 높음 — 유채와 겨자를 약 4년간 피하고 잔재물을 매몰하며, 감수성 품종에는 가을에 살균제를 살포한다." />
-        <e k="rcr_advice_pressure_high_pietin" v="뿌리썩음병 압력 높음 — 비기주 작물(귀리, 콩과, 유지작물)을 넣어 끊는다. 효과적인 살균제가 없으며 오직 윤작으로만 치유된다." />
-        <e k="rcr_advice_pressure_high_septoriose" v="잎마름병 압력 높음 — 곡류 잔재물 위에 밀/보리를 심지 말고 내병성 품종을 고르며, 습한 기후에서는 절간신장기부터 살균제를 살포한다." />
-        <e k="rcr_advice_pressure_high_rouille" v="녹병 압력 높음 — 저항성 품종을 파종하고 살균제를 계획하며, 온화하고 습한 시기를 주시한다." />
-        <e k="rcr_advice_pressure_high_fusariose" v="붉은곰팡이병 압력 높음 — 옥수수 뒤에 밀을 심지 말고 잔재물을 매몰하며, 비가 오면 개화기에 살균제를 살포한다." />
-        <e k="rcr_advice_pressure_high_mildiou" v="역병 압력 높음 — 저항성 품종을 심고, 서늘하고 습해지는 즉시 살균제로 감자를 보호한다." />
-        <e k="rcr_advice_pressure_high_hernie" v="뿌리혹병 압력 높음 — 배추과 작물 휴지기를 6년 넘게 두고, 석회로 pH를 높이며 저항성 품종을 파종한다. 화학적 방제법이 없다." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="검은다리병 압력 보통 — 유채 휴지기를 늘리고 그루터기를 분쇄한다." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="뿌리썩음병 압력 보통 — 연속 세 번째 곡류를 피한다." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="잎마름병 압력 보통 — 봄비와 잔재물의 전염원을 주시한다." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="녹병 압력 보통 — 온화한 날씨에 여름포자퇴(병반) 발생을 살핀다." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="붉은곰팡이병 압력 보통 — 곡류와 옥수수의 간격을 넓히고 잔재물을 관리한다." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="역병 압력 보통 — 서늘하고 습한 날씨를 관찰하고 자생주를 제거한다." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="뿌리혹병 압력 보통 — 유채 휴지기를 늘리고 산성 pH를 주시한다." />
+        <e k="rcr_advice_pressure_high_phoma" v="검은다리병 압력 높음: 유채와 겨자를 약 4년간 피하고 잔재물을 매몰하며, 감수성 품종에는 가을에 살균제를 살포한다." />
+        <e k="rcr_advice_pressure_high_pietin" v="뿌리썩음병 압력 높음: 비기주 작물(귀리, 콩과, 유지작물)을 넣어 끊는다. 효과적인 살균제가 없으며 오직 윤작으로만 치유된다." />
+        <e k="rcr_advice_pressure_high_septoriose" v="잎마름병 압력 높음: 곡류 잔재물 위에 밀/보리를 심지 말고 내병성 품종을 고르며, 습한 기후에서는 절간신장기부터 살균제를 살포한다." />
+        <e k="rcr_advice_pressure_high_rouille" v="녹병 압력 높음: 저항성 품종을 파종하고 살균제를 계획하며, 온화하고 습한 시기를 주시한다." />
+        <e k="rcr_advice_pressure_high_fusariose" v="붉은곰팡이병 압력 높음: 옥수수 뒤에 밀을 심지 말고 잔재물을 매몰하며, 비가 오면 개화기에 살균제를 살포한다." />
+        <e k="rcr_advice_pressure_high_mildiou" v="역병 압력 높음: 저항성 품종을 심고, 서늘하고 습해지는 즉시 살균제로 감자를 보호한다." />
+        <e k="rcr_advice_pressure_high_hernie" v="뿌리혹병 압력 높음: 배추과 작물 휴지기를 6년 넘게 두고, 석회로 pH를 높이며 저항성 품종을 파종한다. 화학적 방제법이 없다." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="검은다리병 압력 보통: 유채 휴지기를 늘리고 그루터기를 분쇄한다." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="뿌리썩음병 압력 보통: 연속 세 번째 곡류를 피한다." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="잎마름병 압력 보통: 봄비와 잔재물의 전염원을 주시한다." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="녹병 압력 보통: 온화한 날씨에 여름포자퇴(병반) 발생을 살핀다." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="붉은곰팡이병 압력 보통: 곡류와 옥수수의 간격을 넓히고 잔재물을 관리한다." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="역병 압력 보통: 서늘하고 습한 날씨를 관찰하고 자생주를 제거한다." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="뿌리혹병 압력 보통: 유채 휴지기를 늘리고 산성 pH를 주시한다." />
     </elements>
 </l10n>

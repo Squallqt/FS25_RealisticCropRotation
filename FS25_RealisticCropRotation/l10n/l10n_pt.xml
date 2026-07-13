@@ -96,7 +96,6 @@
         <e k="rcr_soil_value_unmeasured" v="Valor não medido" />
         <e k="rcr_n_crop_need_unavailable" v="Necessidade da cultura: --" />
         <e k="rcr_lime_status_unavailable" v="Cal: --" />
-        <e k="rcr_advice_soil_analysis_required_title" v="Análise do solo necessária" />
         <e k="rcr_advice_soil_analysis_required_body" v="Os valores de azoto e pH não estão disponíveis. Analise o solo para obter recomendações agronómicas precisas." />
 
         <!-- Agronomic advice -->
@@ -106,12 +105,20 @@
         <e k="rcr_advice_afterRoot" v="Depois de uma cultura de raiz, espere quatro anos antes de as raízes voltarem, seguindo com um cereal para refazer a estrutura após o arranque tardio." />
         <e k="rcr_advice_afterVegetable" v="Depois de um produto hortícola, espere três anos antes de o repetir, com um cereal como corte limpo." />
         <e k="rcr_advice_afterForage" v="Depois de uma pastagem temporária, um cereal valoriza a fertilidade e a estrutura acumuladas sob o relvado." />
-        <e k="rcr_advice_current_crop_disease_hosts" v="Intervalos de retorno por doença para esta cultura (anos): %s." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Forte pressão de esclerotínia — evite colza, girassol, soja, ervilha, feijão, batata e cenoura durante pelo menos 3 anos; fungicida na floração com tempo húmido." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Forte pressão de nemátode — evite beterraba sacarina, beterraba de mesa, colza, mostarda e espinafre durante 3 anos; nematicida ou cultura-armadilha resistente." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Pressão de esclerotínia moderada — espace as culturas hospedeiras e vigie uma floração húmida." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Pressão de nemátode moderada — espace beterrabas e brássicas." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Forte pressão de esclerotínia: evite colza, girassol, soja, ervilha, feijão, batata e cenoura durante pelo menos 3 anos; fungicida na floração com tempo húmido." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Forte pressão de nemátode: evite beterraba sacarina, beterraba de mesa, colza, mostarda e espinafre durante 3 anos; nematicida ou cultura-armadilha resistente." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Pressão de esclerotínia moderada: espace as culturas hospedeiras e vigie uma floração húmida." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Pressão de nemátode moderada: espace beterrabas e brássicas." />
         <e k="rcr_advice_no_current_crop" v="Sem cultura principal atual: conselho disponível quando uma cultura for detetada." />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_outbreak" v="Infeção ativa" />
+        <e k="rcr_advice_outbreak" v="%s está ativa neste campo, gravidade %d %%. Tratamento recomendado: %s." />
+        <e k="rcr_advice_plan_next_conflict_family" v="%s previsto para %s: conflito de rotação, mesma família (%s) da cultura atual, faltam %d ano(s) de %d antes de um regresso seguro." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s previsto para %s: conflito de rotação, partilha o risco de %s com a cultura atual, faltam %d ano(s) de %d antes de um regresso seguro." />
+        <e k="rcr_advice_plan_next_ok" v="%s previsto para %s: boa escolha, nenhum conflito de rotação detetado." />
+
+        <!-- Advice card, disease pressure list -->
 
         <!-- Field card — required actions / growth -->
         <e k="rcr_action_header"        v="Estado do solo" />
@@ -150,11 +157,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Plano incompleto" />
-        <e k="rcr_score_excellent"      v="Rotação excelente — baixo risco de doenças" />
-        <e k="rcr_score_good"           v="Boa rotação — risco de doenças sob controlo" />
-        <e k="rcr_score_fair"           v="Rotação razoável — risco de doenças a aumentar" />
-        <e k="rcr_score_poor"           v="Rotação fraca — alto risco de doenças" />
-        <e k="rcr_score_bad"            v="Rotação má — risco grave de doenças" />
+        <e k="rcr_score_excellent"      v="Rotação excelente: baixo risco de doenças" />
+        <e k="rcr_score_good"           v="Boa rotação: risco de doenças sob controlo" />
+        <e k="rcr_score_fair"           v="Rotação razoável: risco de doenças a aumentar" />
+        <e k="rcr_score_poor"           v="Rotação fraca: alto risco de doenças" />
+        <e k="rcr_score_bad"            v="Rotação má: risco grave de doenças" />
         <e k="rcr_score_label_low"      v="Pontuação má" />
         <e k="rcr_score_label_optimal"  v="Pontuação ótima" />
         <e k="rcr_score_short_optimal"  v="ÓTIMA" />
@@ -188,19 +195,19 @@
         <e k="rcr_fillType_fungicide" v="Fungicida" />
         <e k="rcr_fillType_nematicide" v="Nematicida" />
         <e k="rcr_disease_treatment_hernie" v="Nenhum (variedade resistente, calagem, rotação)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Forte pressão de phoma — evite colza e mostarda ~4 anos, enterre os resíduos; fungicida de outono em variedades sensíveis." />
-        <e k="rcr_advice_pressure_high_pietin" v="Forte pressão de mal-do-pé — introduza um corte não hospedeiro (aveia, leguminosa, oleaginosa); nenhum fungicida eficaz, só a rotação resolve." />
-        <e k="rcr_advice_pressure_high_septoriose" v="Forte pressão de septoriose — evite trigo/cevada sobre resíduos de cereais, escolha uma variedade tolerante; fungicida a partir do encanamento em clima húmido." />
-        <e k="rcr_advice_pressure_high_rouille" v="Forte pressão de ferrugem — semeie uma variedade resistente e preveja um fungicida; vigie os períodos amenos e húmidos." />
-        <e k="rcr_advice_pressure_high_fusariose" v="Forte pressão de fusariose — evite trigo depois de milho, enterre os resíduos; fungicida na floração se chover." />
-        <e k="rcr_advice_pressure_high_mildiou" v="Forte pressão de míldio — plante uma variedade resistente e proteja as batatas com fungicida assim que o tempo ficar fresco e húmido." />
-        <e k="rcr_advice_pressure_high_hernie" v="Forte pressão de hérnia — intervalo entre brássicas superior a 6 anos, faça calagem para subir o pH e semeie uma variedade resistente; sem tratamento químico." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Pressão de phoma moderada — alongue o intervalo da colza e triture o restolho." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Pressão de mal-do-pé moderada — evite o terceiro cereal seguido." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Pressão de septoriose moderada — vigie as chuvas de primavera e o inóculo dos resíduos." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Pressão de ferrugem moderada — observe o aparecimento de pústulas com tempo ameno." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Pressão de fusariose moderada — espace cereais e milho, faça a gestão dos resíduos." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Pressão de míldio moderada — monitorize o tempo fresco e húmido e destrua as plantas espontâneas." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Pressão de hérnia moderada — alongue o intervalo da colza e vigie o pH ácido." />
+        <e k="rcr_advice_pressure_high_phoma" v="Forte pressão de phoma: evite colza e mostarda ~4 anos, enterre os resíduos; fungicida de outono em variedades sensíveis." />
+        <e k="rcr_advice_pressure_high_pietin" v="Forte pressão de mal-do-pé: introduza um corte não hospedeiro (aveia, leguminosa, oleaginosa); nenhum fungicida eficaz, só a rotação resolve." />
+        <e k="rcr_advice_pressure_high_septoriose" v="Forte pressão de septoriose: evite trigo/cevada sobre resíduos de cereais, escolha uma variedade tolerante; fungicida a partir do encanamento em clima húmido." />
+        <e k="rcr_advice_pressure_high_rouille" v="Forte pressão de ferrugem: semeie uma variedade resistente e preveja um fungicida; vigie os períodos amenos e húmidos." />
+        <e k="rcr_advice_pressure_high_fusariose" v="Forte pressão de fusariose: evite trigo depois de milho, enterre os resíduos; fungicida na floração se chover." />
+        <e k="rcr_advice_pressure_high_mildiou" v="Forte pressão de míldio: plante uma variedade resistente e proteja as batatas com fungicida assim que o tempo ficar fresco e húmido." />
+        <e k="rcr_advice_pressure_high_hernie" v="Forte pressão de hérnia: intervalo entre brássicas superior a 6 anos, faça calagem para subir o pH e semeie uma variedade resistente; sem tratamento químico." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Pressão de phoma moderada: alongue o intervalo da colza e triture o restolho." />
+        <e k="rcr_advice_pressure_moderate_pietin" v="Pressão de mal-do-pé moderada: evite o terceiro cereal seguido." />
+        <e k="rcr_advice_pressure_moderate_septoriose" v="Pressão de septoriose moderada: vigie as chuvas de primavera e o inóculo dos resíduos." />
+        <e k="rcr_advice_pressure_moderate_rouille" v="Pressão de ferrugem moderada: observe o aparecimento de pústulas com tempo ameno." />
+        <e k="rcr_advice_pressure_moderate_fusariose" v="Pressão de fusariose moderada: espace cereais e milho, faça a gestão dos resíduos." />
+        <e k="rcr_advice_pressure_moderate_mildiou" v="Pressão de míldio moderada: monitorize o tempo fresco e húmido e destrua as plantas espontâneas." />
+        <e k="rcr_advice_pressure_moderate_hernie" v="Pressão de hérnia moderada: alongue o intervalo da colza e vigie o pH ácido." />
     </elements>
 </l10n>
