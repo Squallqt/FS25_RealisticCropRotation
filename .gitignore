@@ -1,0 +1,33 @@
+# Build artifacts
+*.zip
+*.rar
+*.7z
+
+# Giants Editor temp files
+*.cache
+*.bak
+*.tmp
+
+# System files
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# IDE files
+.vscode/
+.idea/
+*.code-workspace
+
+# Logs
+*.log
+
+# Development folders
+node_modules/
+build/
+dist/
+temp/
+
+# Backup files
+*~
+*.orig
+*.swp
