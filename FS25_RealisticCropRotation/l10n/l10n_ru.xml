@@ -112,6 +112,9 @@
         <e k="rcr_advice_no_current_crop" v="Нет текущей основной культуры: совет появится при обнаружении культуры." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_status" v="Текущий статус" />
+        <e k="rcr_advice_title_ready" v="Севооборот в порядке" />
+        <e k="rcr_advice_title_warning" v="Конфликт севооборота" />
         <e k="rcr_advice_title_outbreak" v="Активная вспышка болезни" />
         <e k="rcr_advice_outbreak" v="%s активна на этом поле, тяжесть %d %%. Рекомендуемое лечение: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s запланирована на %s: конфликт севооборота, то же семейство (%s), что и у текущей культуры, не хватает %d года(лет) из %d до безопасного возврата." />

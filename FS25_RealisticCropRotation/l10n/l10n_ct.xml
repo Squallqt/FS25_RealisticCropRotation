@@ -112,6 +112,9 @@
         <e k="rcr_advice_no_current_crop" v="目前無主要作物: 偵測到作物後將提供建議。" />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_status" v="目前狀態" />
+        <e k="rcr_advice_title_ready" v="輪作良好" />
+        <e k="rcr_advice_title_warning" v="輪作衝突" />
         <e k="rcr_advice_title_outbreak" v="活躍感染" />
         <e k="rcr_advice_outbreak" v="%s正在此地塊活躍，嚴重程度%d%%。建議處理方式：%s。" />
         <e k="rcr_advice_plan_next_conflict_family" v="%s計畫種植於%s：輪作衝突，與目前作物同科（%s），距離安全輪作還差%d年（共需%d年）。" />

@@ -112,6 +112,9 @@
         <e k="rcr_advice_no_current_crop" v="Geen huidig hoofdgewas: advies beschikbaar zodra een gewas wordt gedetecteerd." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_status" v="Huidige status" />
+        <e k="rcr_advice_title_ready" v="Vruchtwisseling in orde" />
+        <e k="rcr_advice_title_warning" v="Vruchtwisselingsconflict" />
         <e k="rcr_advice_title_outbreak" v="Actieve infectie" />
         <e k="rcr_advice_outbreak" v="%s is actief op dit perceel, ernst %d %%. Aanbevolen behandeling: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s gepland voor %s: vruchtwisselingsconflict, zelfde familie (%s) als het huidige gewas, nog %d jaar van %d nodig voor een veilige terugkeer." />

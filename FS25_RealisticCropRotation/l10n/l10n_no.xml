@@ -112,6 +112,9 @@
         <e k="rcr_advice_no_current_crop" v="Ingen aktuell hovedvekst: råd tilgjengelig når en vekst oppdages." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_status" v="Nåværende status" />
+        <e k="rcr_advice_title_ready" v="Vekstskifte i orden" />
+        <e k="rcr_advice_title_warning" v="Vekstskiftekonflikt" />
         <e k="rcr_advice_title_outbreak" v="Aktivt sykdomsutbrudd" />
         <e k="rcr_advice_outbreak" v="%s er aktiv på dette jordet, alvorlighetsgrad %d %%. Anbefalt behandling: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s planlagt for %s: vekstskiftekonflikt, samme familie (%s) som den nåværende veksten, det mangler %d år av %d før en trygg retur." />

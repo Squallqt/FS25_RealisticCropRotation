@@ -112,6 +112,9 @@
         <e k="rcr_advice_no_current_crop" v="현재 주요 작물 없음: 작물이 감지되면 조언이 제공됩니다." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_status" v="현재 상태" />
+        <e k="rcr_advice_title_ready" v="윤작 양호" />
+        <e k="rcr_advice_title_warning" v="윤작 충돌" />
         <e k="rcr_advice_title_outbreak" v="활성 감염" />
         <e k="rcr_advice_outbreak" v="%s이(가) 이 밭에서 활성 상태입니다, 심각도 %d%%. 권장 처리: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s이(가) %s에 계획됨: 윤작 충돌, 현재 작물과 같은 과(%s)로, 안전한 복귀까지 %d/%d년이 부족합니다." />

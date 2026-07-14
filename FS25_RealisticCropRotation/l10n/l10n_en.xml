@@ -112,6 +112,9 @@
         <e k="rcr_advice_no_current_crop" v="No current main crop: advice available when a crop is detected." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_status" v="Current status" />
+        <e k="rcr_advice_title_ready" v="Rotation on track" />
+        <e k="rcr_advice_title_warning" v="Rotation conflict" />
         <e k="rcr_advice_title_outbreak" v="Active outbreak" />
         <e k="rcr_advice_outbreak" v="%s is active on this field, severity %d%%. Recommended treatment: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s planned for %s: rotation conflict, same family (%s) as the current crop, %d more year(s) needed out of %d before it's safe." />

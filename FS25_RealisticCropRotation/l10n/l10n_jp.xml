@@ -112,6 +112,9 @@
         <e k="rcr_advice_no_current_crop" v="現在の主要作物なし: 作物が検出されるとアドバイスが表示されます。" />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_status" v="現在の状況" />
+        <e k="rcr_advice_title_ready" v="輪作良好" />
+        <e k="rcr_advice_title_warning" v="輪作の衝突" />
         <e k="rcr_advice_title_outbreak" v="感染が発生中" />
         <e k="rcr_advice_outbreak" v="%sがこの畑で発生中。重症度%d%%。推奨される対処：%s。" />
         <e k="rcr_advice_plan_next_conflict_family" v="%sを%sに予定：輪作の衝突。現在の作物と同じ科（%s）のため、安全な復帰まであと%d年（必要%d年のうち）不足しています。" />

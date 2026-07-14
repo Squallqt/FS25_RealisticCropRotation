@@ -112,6 +112,9 @@
         <e k="rcr_advice_no_current_crop" v="Ingen aktuell huvudgröda: råd tillgängligt när en gröda upptäcks." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_status" v="Aktuell status" />
+        <e k="rcr_advice_title_ready" v="Växtföljd i ordning" />
+        <e k="rcr_advice_title_warning" v="Växtföljdskonflikt" />
         <e k="rcr_advice_title_outbreak" v="Aktivt sjukdomsutbrott" />
         <e k="rcr_advice_outbreak" v="%s är aktiv på detta fält, allvarlighetsgrad %d %%. Rekommenderad behandling: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s planerad till %s: växtföljdskonflikt, samma familj (%s) som den aktuella grödan, %d år av %d kvarstår innan en säker återkomst." />

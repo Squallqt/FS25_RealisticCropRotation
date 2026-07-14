@@ -112,6 +112,9 @@
         <e k="rcr_advice_no_current_crop" v="Sem cultura principal atual: conselho disponível quando uma cultura for detetada." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_status" v="Estado atual" />
+        <e k="rcr_advice_title_ready" v="Rotação otimizada" />
+        <e k="rcr_advice_title_warning" v="Conflito de rotação" />
         <e k="rcr_advice_title_outbreak" v="Infeção ativa" />
         <e k="rcr_advice_outbreak" v="%s está ativa neste campo, gravidade %d %%. Tratamento recomendado: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s previsto para %s: conflito de rotação, mesma família (%s) da cultura atual, faltam %d ano(s) de %d antes de um regresso seguro." />

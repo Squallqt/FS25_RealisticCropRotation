@@ -1792,7 +1792,7 @@ end
 function RealisticCropRotationFrame:updateAdviceStatusCard(currentFamily, farmlandId, currentCropName)
     local visualState = "Neutral"
     local badgeSymbol = "i"
-    local title = self.i18n:getText("rcr_section_advice")
+    local title = self.i18n:getText("rcr_advice_title_status")
     local text
 
     -- 1) Active outbreak: the worst infection actually happening on this field right now.
@@ -1831,10 +1831,12 @@ function RealisticCropRotationFrame:updateAdviceStatusCard(currentFamily, farmla
             if conflict == nil then
                 visualState = "Ready"
                 badgeSymbol = "OK"
+                title = self.i18n:getText("rcr_advice_title_ready")
                 text = string.format(self.i18n:getText("rcr_advice_plan_next_ok"), nextCropLabel, yearLabel)
             else
                 visualState = "Warning"
                 badgeSymbol = "!"
+                title = self.i18n:getText("rcr_advice_title_warning")
                 local key = conflict.kind == "disease"
                     and "rcr_advice_plan_next_conflict_disease"
                     or "rcr_advice_plan_next_conflict_family"

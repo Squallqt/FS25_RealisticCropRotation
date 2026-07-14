@@ -112,6 +112,9 @@
         <e k="rcr_advice_no_current_crop" v="Ingen aktuel hovedafgrøde: råd tilgængeligt, når en afgrøde registreres." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_status" v="Aktuel status" />
+        <e k="rcr_advice_title_ready" v="Sædskifte i orden" />
+        <e k="rcr_advice_title_warning" v="Sædskiftekonflikt" />
         <e k="rcr_advice_title_outbreak" v="Aktivt sygdomsudbrud" />
         <e k="rcr_advice_outbreak" v="%s er aktiv på denne mark, sværhedsgrad %d %%. Anbefalet behandling: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s planlagt til %s: sædskiftekonflikt, samme familie (%s) som den aktuelle afgrøde, der mangler %d år ud af %d, før det er sikkert at vende tilbage." />

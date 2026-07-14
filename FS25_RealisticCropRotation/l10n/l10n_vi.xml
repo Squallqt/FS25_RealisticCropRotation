@@ -112,6 +112,9 @@
         <e k="rcr_advice_no_current_crop" v="Không có cây trồng chính hiện tại: tư vấn sẽ có khi phát hiện cây trồng." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_status" v="Trạng thái hiện tại" />
+        <e k="rcr_advice_title_ready" v="Luân canh hợp lý" />
+        <e k="rcr_advice_title_warning" v="Xung đột luân canh" />
         <e k="rcr_advice_title_outbreak" v="Dịch bệnh đang hoạt động" />
         <e k="rcr_advice_outbreak" v="%s đang hoạt động trên cánh đồng này, mức độ nghiêm trọng %d%%. Biện pháp xử lý khuyến nghị: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s dự kiến cho %s: xung đột luân canh, cùng họ (%s) với cây trồng hiện tại, còn thiếu %d/%d năm trước khi có thể quay lại an toàn." />
