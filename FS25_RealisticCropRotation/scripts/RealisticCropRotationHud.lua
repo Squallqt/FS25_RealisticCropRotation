@@ -278,8 +278,7 @@ if PlayerHUDUpdater ~= nil and Utils ~= nil and Utils.overwrittenFunction ~= nil
     end
 end
 
--- Reads the weed row by calling the real (stripped) fieldAddWeed with a capture box, reading back
--- the exact (label, value). nil when no weed line applies.
+-- Reads the weed row via the real (stripped) fieldAddWeed with a capture box; nil when no weed line applies.
 RealisticCropRotationHud.hudInstance = nil
 
 ---Reads the weed row via the real fieldAddWeed + a capture box.
@@ -290,8 +289,7 @@ function RealisticCropRotationHud.getWeedLineFromGame(data)
         return nil
     end
 
-    -- Canonical instance is the local player's HUD updater (Player.lua:363);
-    -- fall back to the instance seen by our live HUD hooks.
+    -- Canonical instance is the local player's HUD updater; falls back to the instance seen by our live HUD hooks.
     local hudUpdater = (g_localPlayer ~= nil and g_localPlayer.hudUpdater)
         or RealisticCropRotationHud.hudInstance
     if hudUpdater == nil then

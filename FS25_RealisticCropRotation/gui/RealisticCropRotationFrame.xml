@@ -84,18 +84,41 @@
 
             <!-- SECTION: CROP HISTORY (y=-66) -->
             <GuiElement profile="frSectionBar" position="0px -66px">
-                <RoundCorner profile="frSectionBarBg"/>
                 <RoundCorner profile="frSectionAccent" position="14px 0px"/>
-                <Text profile="frSectionTitle" text="$l10n_rcr_section_history"/>
+                <Text profile="frSectionTitle" id="historySectionTitle" text="$l10n_rcr_section_history"/>
+                <RoundCorner profile="frSectionLine" id="historySectionLine"/>
             </GuiElement>
 
-            <!-- TIMELINE STRIP (y=-112..298): 5 slot cards with connector arrows -->
+            <!-- TIMELINE STRIP (y=-112..306): rail (season labels) + 5 slot cards -->
             <GuiElement profile="frTimeline" position="20px -112px">
-                <!-- Slot 1: CURRENT active crop / ground state (leftmost) -->
-                <GuiElement profile="frSlotCard" position="8px -4px">
-                    <RoundCorner profile="frSlotCardBgCurrent"/>
-                    <ThreePartBitmap profile="frSlotAccentCurrent"/>
-                    <Text        profile="frSlotSeasonLabel"     text="$l10n_rcr_slot_current"/>
+
+                <!-- Rail -->
+                <GuiElement profile="frRailCell" position="8px 0px">
+                    <Text profile="frRailSeasonLabelCurrent" text="$l10n_rcr_slot_current"/>
+                </GuiElement>
+                <GuiElement profile="frRailCell" position="257px 0px">
+                    <Text profile="frSlotSeasonLabel" text="$l10n_rcr_slot_n1"/>
+                </GuiElement>
+                <GuiElement profile="frRailCell" position="506px 0px">
+                    <Text profile="frSlotSeasonLabel" text="$l10n_rcr_slot_n2"/>
+                </GuiElement>
+                <GuiElement profile="frRailCell" position="755px 0px">
+                    <Text profile="frSlotSeasonLabel" text="$l10n_rcr_slot_n3"/>
+                </GuiElement>
+                <GuiElement profile="frRailCell" position="1004px 0px">
+                    <Text profile="frSlotSeasonLabel" text="$l10n_rcr_slot_n4"/>
+                </GuiElement>
+
+                <!-- Slot 1: Current -->
+                <GuiElement profile="frSlotCard" position="8px -38px">
+                    <RoundCorner profile="frSlotCardBgCurrent" id="slot1CardBg"/>
+                    <GuiElement profile="emptyPanel" id="slot1Frame">
+                        <RoundCorner profile="frSlotFrameHCurrent" position="0px 0px"/>
+                        <RoundCorner profile="frSlotFrameHCurrent" position="0px -155px"/>
+                        <RoundCorner profile="frSlotFrameVCurrent" position="0px 0px"/>
+                        <RoundCorner profile="frSlotFrameVCurrent" position="223px 0px"/>
+                    </GuiElement>
+                    <RoundCorner profile="frSlotAvatarBg"        id="slot1AvatarBg"    visible="false"/>
                     <Bitmap      profile="frSlotIcon"            id="slot1Icon"        visible="false"/>
                     <Text        profile="frSlotCropName"        id="slot1CropName"    text=""/>
                     <RoundCorner profile="frSlotFamilyBadgeBg"   id="slot1BadgeBg"     visible="false"/>
@@ -103,14 +126,20 @@
                 </GuiElement>
 
                 <!-- Connector 1 -->
-                <GuiElement profile="frHistoryTimelineConnector" position="232px -4px">
+                <GuiElement profile="frHistoryTimelineConnector" position="232px -38px">
                     <Bitmap profile="frTimelineArrowIcon"/>
                 </GuiElement>
 
                 <!-- Slot 2: N-1 -->
-                <GuiElement profile="frSlotCard" position="257px -4px">
-                    <RoundCorner profile="frSlotCardBgN1"/>
-                    <Text        profile="frSlotSeasonLabel"     text="$l10n_rcr_slot_n1"/>
+                <GuiElement profile="frSlotCard" position="257px -38px">
+                    <RoundCorner profile="frSlotCardBgN1" id="slot2CardBg"/>
+                    <GuiElement profile="emptyPanel" id="slot2Frame">
+                        <RoundCorner profile="frSlotFrameH" position="0px 0px"/>
+                        <RoundCorner profile="frSlotFrameH" position="0px -155px"/>
+                        <RoundCorner profile="frSlotFrameV" position="0px 0px"/>
+                        <RoundCorner profile="frSlotFrameV" position="223px 0px"/>
+                    </GuiElement>
+                    <RoundCorner profile="frSlotAvatarBg"        id="slot2AvatarBg"    visible="false"/>
                     <Bitmap      profile="frSlotIcon"            id="slot2Icon"        visible="false"/>
                     <Text        profile="frSlotCropName"        id="slot2CropName"    text=""/>
                     <RoundCorner profile="frSlotFamilyBadgeBg"   id="slot2BadgeBg"     visible="false"/>
@@ -118,14 +147,20 @@
                 </GuiElement>
 
                 <!-- Connector 2 -->
-                <GuiElement profile="frHistoryTimelineConnector" position="481px -4px">
+                <GuiElement profile="frHistoryTimelineConnector" position="481px -38px">
                     <Bitmap profile="frTimelineArrowIcon"/>
                 </GuiElement>
 
                 <!-- Slot 3: N-2 -->
-                <GuiElement profile="frSlotCard" position="506px -4px">
-                    <RoundCorner profile="frSlotCardBgN2"/>
-                    <Text        profile="frSlotSeasonLabel"     text="$l10n_rcr_slot_n2"/>
+                <GuiElement profile="frSlotCard" position="506px -38px">
+                    <RoundCorner profile="frSlotCardBgN2" id="slot3CardBg"/>
+                    <GuiElement profile="emptyPanel" id="slot3Frame">
+                        <RoundCorner profile="frSlotFrameH" position="0px 0px"/>
+                        <RoundCorner profile="frSlotFrameH" position="0px -155px"/>
+                        <RoundCorner profile="frSlotFrameV" position="0px 0px"/>
+                        <RoundCorner profile="frSlotFrameV" position="223px 0px"/>
+                    </GuiElement>
+                    <RoundCorner profile="frSlotAvatarBg"        id="slot3AvatarBg"    visible="false"/>
                     <Bitmap      profile="frSlotIcon"            id="slot3Icon"        visible="false"/>
                     <Text        profile="frSlotCropName"        id="slot3CropName"    text=""/>
                     <RoundCorner profile="frSlotFamilyBadgeBg"   id="slot3BadgeBg"     visible="false"/>
@@ -133,14 +168,20 @@
                 </GuiElement>
 
                 <!-- Connector 3 -->
-                <GuiElement profile="frHistoryTimelineConnector" position="730px -4px">
+                <GuiElement profile="frHistoryTimelineConnector" position="730px -38px">
                     <Bitmap profile="frTimelineArrowIcon"/>
                 </GuiElement>
 
                 <!-- Slot 4: N-3 -->
-                <GuiElement profile="frSlotCard" position="755px -4px">
-                    <RoundCorner     profile="frSlotCardBgN3"/>
-                    <Text        profile="frSlotSeasonLabel"     text="$l10n_rcr_slot_n3"/>
+                <GuiElement profile="frSlotCard" position="755px -38px">
+                    <RoundCorner profile="frSlotCardBgN3" id="slot4CardBg"/>
+                    <GuiElement profile="emptyPanel" id="slot4Frame">
+                        <RoundCorner profile="frSlotFrameH" position="0px 0px"/>
+                        <RoundCorner profile="frSlotFrameH" position="0px -155px"/>
+                        <RoundCorner profile="frSlotFrameV" position="0px 0px"/>
+                        <RoundCorner profile="frSlotFrameV" position="223px 0px"/>
+                    </GuiElement>
+                    <RoundCorner profile="frSlotAvatarBg"        id="slot4AvatarBg"    visible="false"/>
                     <Bitmap      profile="frSlotIcon"            id="slot4Icon"        visible="false"/>
                     <Text        profile="frSlotCropName"        id="slot4CropName"    text=""/>
                     <RoundCorner profile="frSlotFamilyBadgeBg"   id="slot4BadgeBg"     visible="false"/>
@@ -148,14 +189,20 @@
                 </GuiElement>
 
                 <!-- Connector 4 -->
-                <GuiElement profile="frHistoryTimelineConnector" position="979px -4px">
+                <GuiElement profile="frHistoryTimelineConnector" position="979px -38px">
                     <Bitmap profile="frTimelineArrowIcon"/>
                 </GuiElement>
 
-                <!-- Slot 5: N-4 (oldest, rightmost) -->
-                <GuiElement profile="frSlotCard" position="1004px -4px">
-                    <RoundCorner profile="frSlotCardBgN4"/>
-                    <Text        profile="frSlotSeasonLabel"     text="$l10n_rcr_slot_n4"/>
+                <!-- Slot 5: N-4 -->
+                <GuiElement profile="frSlotCard" position="1004px -38px">
+                    <RoundCorner profile="frSlotCardBgN4" id="slot5CardBg"/>
+                    <GuiElement profile="emptyPanel" id="slot5Frame">
+                        <RoundCorner profile="frSlotFrameH" position="0px 0px"/>
+                        <RoundCorner profile="frSlotFrameH" position="0px -155px"/>
+                        <RoundCorner profile="frSlotFrameV" position="0px 0px"/>
+                        <RoundCorner profile="frSlotFrameV" position="223px 0px"/>
+                    </GuiElement>
+                    <RoundCorner profile="frSlotAvatarBg"        id="slot5AvatarBg"    visible="false"/>
                     <Bitmap      profile="frSlotIcon"            id="slot5Icon"        visible="false"/>
                     <Text        profile="frSlotCropName"        id="slot5CropName"    text=""/>
                     <RoundCorner profile="frSlotFamilyBadgeBg"   id="slot5BadgeBg"     visible="false"/>
@@ -166,9 +213,9 @@
 
             <!-- SECTION: AGRONOMIC ADVICE (y=-330) -->
             <GuiElement profile="frSectionBar" position="0px -330px">
-                <RoundCorner profile="frSectionBarBg"/>
                 <RoundCorner profile="frSectionAccentAdvice" position="14px 0px"/>
-                <Text profile="frSectionTitleAdvice" text="$l10n_rcr_section_advice"/>
+                <Text profile="frSectionTitleAdvice" id="adviceSectionTitle" text="$l10n_rcr_section_advice"/>
+                <RoundCorner profile="frSectionLine" id="adviceSectionLine"/>
             </GuiElement>
 
             <!-- ADVICE CARD (y=-374..484) -->
@@ -183,9 +230,9 @@
 
             <!-- SECTION: SOIL INDICATORS (y=-508) -->
             <GuiElement profile="frSectionBar" position="0px -508px">
-                <RoundCorner profile="frSectionBarBg"/>
                 <RoundCorner profile="frSectionAccentN" position="14px 0px"/>
-                <Text profile="frSectionTitleN" text="$l10n_rcr_section_soil_indicators"/>
+                <Text profile="frSectionTitleN" id="soilSectionTitle" text="$l10n_rcr_section_soil_indicators"/>
+                <RoundCorner profile="frSectionLine" id="soilSectionLine"/>
             </GuiElement>
 
             <!-- UNIFIED SOIL CARD (y=-552..684) -->
@@ -209,9 +256,9 @@
 
             <!-- SECTION: FIELD (soil work / weed / growth) (y=-708) -->
             <GuiElement profile="frSectionBar" position="0px -708px">
-                <RoundCorner profile="frSectionBarBg"/>
                 <RoundCorner profile="frSectionAccentField" position="14px 0px"/>
-                <Text profile="frSectionTitleField" text="$l10n_rcr_section_field"/>
+                <Text profile="frSectionTitleField" id="fieldSectionTitle" text="$l10n_rcr_section_field"/>
+                <RoundCorner profile="frSectionLine" id="fieldSectionLine"/>
             </GuiElement>
 
             <!-- FIELD CARD (y=-752..834) -->
@@ -254,9 +301,9 @@
 
             <!-- SECTION: ROTATION PLAN (y=-66) -->
             <GuiElement profile="frSectionBar" position="0px -66px">
-                <RoundCorner profile="frSectionBarBg"/>
                 <RoundCorner profile="frSectionAccent" position="14px 0px"/>
-                <Text profile="frSectionTitle" text="$l10n_rcr_section_plan"/>
+                <Text profile="frSectionTitle" id="planSectionTitle" text="$l10n_rcr_section_plan"/>
+                <RoundCorner profile="frSectionLine" id="planSectionLine"/>
             </GuiElement>
 
             <!-- ANNUAL ROTATION CALENDAR (y=-112..350) -->
@@ -373,9 +420,9 @@
 
             <!-- SECTION: ROTATION QUALITY (y=-366) -->
             <GuiElement profile="frSectionBar" position="0px -366px">
-                <RoundCorner profile="frSectionBarBg"/>
                 <RoundCorner profile="frSectionAccent" position="14px 0px"/>
-                <Text profile="frSectionTitle" text="$l10n_rcr_section_score"/>
+                <Text profile="frSectionTitle" id="scoreSectionTitle" text="$l10n_rcr_section_score"/>
+                <RoundCorner profile="frSectionLine" id="scoreSectionLine"/>
             </GuiElement>
 
             <!-- SCORE CARD (y=-410..466) -->
@@ -392,9 +439,9 @@
 
             <!-- SECTION: GLOBAL OVERVIEW (y=-476) -->
             <GuiElement profile="frSectionBar" position="0px -476px">
-                <RoundCorner profile="frSectionBarBg"/>
                 <RoundCorner profile="frSectionAccent" position="14px 0px"/>
-                <Text profile="frSectionTitle" text="$l10n_rcr_section_overview"/>
+                <Text profile="frSectionTitle" id="overviewSectionTitle" text="$l10n_rcr_section_overview"/>
+                <RoundCorner profile="frSectionLine" id="overviewSectionLine"/>
                 <Text profile="frOverviewTotalArea" id="overviewTotalArea" text=""/>
             </GuiElement>
 

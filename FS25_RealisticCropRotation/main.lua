@@ -76,8 +76,7 @@ local function loadCropConfig()
         i = i + 1
     end
 
-    -- Shared-pathogen groups: minimum return interval (years) between any two host crops.
-    -- `autoState` gives a deterministic overlay id (parse order) when a group omits #state.
+    -- Shared-pathogen groups: `autoState` gives a deterministic overlay id (parse order) when a group omits #state.
     local j = 0
     local autoState = 0
     while true do
@@ -96,16 +95,13 @@ local function loadCropConfig()
             end
             -- Fungal pathogens get the rain bonus; soil animals/protists do not.
             config.diseaseFungal[upper] = getXMLBool(xmlFile, gkey .. "#fungal") == true
-            -- Stable per-disease overlay id (1..N): the in-game map paints EACH disease with its
-            -- own colour from this id. Falls back to the parse order when #state is omitted.
+            -- Stable per-disease overlay id (1..N): the in-game map paints each disease its own colour from this id.
             local state = getXMLInt(xmlFile, gkey .. "#state")
             config.diseaseStates[upper] = (state ~= nil and state > 0) and state or autoState
-            -- Reference treatment family for the field panel/advice and sprayer treatment.
-            -- FUNGICIDE | NEMATICIDE | NONE (default NONE).
+            -- Reference treatment family for the field panel/advice and sprayer treatment (FUNGICIDE | NEMATICIDE | NONE).
             local treatment = getXMLString(xmlFile, gkey .. "#treatment")
             config.diseaseTreatments[upper] = (treatment ~= nil and treatment ~= "") and string.upper(treatment) or "NONE"
-            -- Rain multiplier for fungal groups (default RAIN_BONUS in Disease.lua when omitted);
-            -- read only for fungal groups, ignored for soil-borne ones.
+            -- Rain multiplier for fungal groups only (default RAIN_BONUS in Disease.lua when omitted).
             config.diseaseWeatherFactors[upper] = getXMLFloat(xmlFile, gkey .. "#weatherFactor")
             -- Daily destruction profile (optional; nil -> module fallbacks in getCurve): growth rate, destroy threshold, max destroyed share.
             config.diseaseCurves[upper] = {
@@ -121,8 +117,7 @@ local function loadCropConfig()
     return config
 end
 
--- Broadcast coalescing: hooks request a broadcast instead of emitting one
--- per density-map change.
+-- Broadcast coalescing: hooks request a broadcast instead of emitting one per density-map change.
 RealisticCropRotation.BROADCAST_DEBOUNCE_MS = 500
 RealisticCropRotation.broadcastDirty = false
 RealisticCropRotation.broadcastTimerMs = 0
@@ -174,8 +169,7 @@ local function onFarmlandOwnerChanged(farmlandId, _farmId, loadFromSavegame)
         RealisticCropRotation.requestBroadcast()
     end
 
-    -- Ownership changed: wipe + repaint the risk display map so bought fields appear and sold
-    -- fields disappear (clients repaint through the broadcast -> sync path).
+    -- Ownership changed: wipe + repaint the risk display map so bought fields appear and sold fields disappear.
     if RealisticCropRotation.disease ~= nil
         and type(RealisticCropRotation.disease.refreshRiskMap) == "function" then
         RealisticCropRotation.disease:refreshRiskMap(true)
@@ -199,8 +193,7 @@ local function onPeriodChanged()
             changed = true
         end
         if RealisticCropRotation.disease ~= nil then
-            -- Infection roll + reset only here (freshCycle also resets treatment on same-crop replant).
-            -- Severity progression and crop destruction run day by day (onDayChanged), not in this burst.
+            -- Infection roll + reset only here; severity progression and destruction run day by day (onDayChanged).
             RealisticCropRotation.disease:evaluateInfection(farmlandId, rotationChanged)
             diseaseUpdated = true
         end
@@ -213,8 +206,7 @@ local function onPeriodChanged()
         RealisticCropRotation.requestBroadcast()
     end
 
-    -- Risk bands drift with the period (history decay): repaint the fields whose band moved
-    -- (usually none or a couple of native passes) so the map page never paints on the UI path.
+    -- Risk bands drift with the period (history decay): repaint only the fields whose band moved, off the UI path.
     if RealisticCropRotation.disease ~= nil
         and type(RealisticCropRotation.disease.refreshRiskMap) == "function" then
         RealisticCropRotation.disease:refreshRiskMap(false)
@@ -366,8 +358,7 @@ local function loadedMission()
     end
 
     loadGuiAssets()
-    -- Wires RCR sprayer products; without this, Sprayer:onStartWorkAreaProcessing() gets sprayType
-    -- = nil and the native ground call aborts before the spray effect starts.
+    -- Wires RCR sprayer products; without this, Sprayer:onStartWorkAreaProcessing() gets a nil sprayType and aborts.
     if RealisticCropRotationSprayerProducts ~= nil
         and type(RealisticCropRotationSprayerProducts.onMissionLoaded) == "function" then
         RealisticCropRotationSprayerProducts.onMissionLoaded()
@@ -443,8 +434,7 @@ local function loadedMission()
     if g_currentMission:getIsServer() and type(g_currentMission.addUpdateable) == "function" then
         RealisticCropRotation.broadcastUpdateable = {
             update = function(_self, dt)
-                -- Spread the day's disease work across frames: drain a few queued fields per frame
-                -- (native passes only) rather than processing every infected field on the day change.
+                -- Spread the day's disease work across frames: drain a few queued fields per frame instead of all at once.
                 if RealisticCropRotation.disease ~= nil
                     and type(RealisticCropRotation.disease.processDailyQueue) == "function" then
                     RealisticCropRotation.disease:processDailyQueue()
@@ -460,8 +450,7 @@ local function loadedMission()
     end
 
     if not g_currentMission:getIsServer() then
-        -- Clients are not sent the .grle; they get an empty grid here and repaint the active-foci
-        -- overlay from the synced disease state (disease:rebuildGridFromState in applySyncData).
+        -- Clients are not sent the .grle; they get an empty grid here and repaint from the synced disease state instead.
         if RealisticCropRotation.grid ~= nil then
             RealisticCropRotation.grid:loadMap(nil)
         end

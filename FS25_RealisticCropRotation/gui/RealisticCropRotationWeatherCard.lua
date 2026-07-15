@@ -7,7 +7,6 @@ RealisticCropRotationWeatherCard.DAY_LENGTH_MS = 86400000
 RealisticCropRotationWeatherCard.REFRESH_INTERVAL_MS = 5000
 
 -- Layout values are kept in pixels and converted at runtime so the card remains resolution-safe.
--- Widths are derived from the rendered condition and timing text.
 RealisticCropRotationWeatherCard.TITLE_GAP_PX = 24
 RealisticCropRotationWeatherCard.CONTENT_LEFT_PX = 76
 RealisticCropRotationWeatherCard.CONDITION_DIVIDER_GAP_PX = 14
@@ -176,8 +175,7 @@ function RealisticCropRotationWeatherCard:normalizeForecastItem(weather, environ
     }
 end
 
----Selects the most useful event for an agronomy screen.
--- Priority: current disruptive weather, next disruptive weather, current calm weather, next calm weather.
+---Selects the most useful event: current disruptive weather, next disruptive, current calm, then next calm.
 -- @return table event, or nil
 function RealisticCropRotationWeatherCard:selectForecastEvent()
     local weather = self:getWeather()
@@ -384,8 +382,7 @@ function RealisticCropRotationWeatherCard:alignToMenuLogo()
     root:setAbsolutePosition(x, logo.absPosition[2])
 end
 
----Resizes the card from the exact rendered condition and timing text widths.
--- The right edge remains fixed; longer translations expand the card to the left.
+---Resizes the card from the rendered text widths; the right edge stays fixed, longer text expands it left.
 -- @param table model
 function RealisticCropRotationWeatherCard:layout(model)
     local c = self.controls
@@ -415,8 +412,7 @@ function RealisticCropRotationWeatherCard:layout(model)
         targetWidth = math.min(targetWidth, availableWidth)
     end
 
-    -- The timing column and outer padding remain intact if the title constrains the card.
-    -- Only the condition column is reduced in that edge case.
+    -- If the title constrains the card, only the condition column shrinks; timing and padding stay intact.
     local fixedWidth = contentLeft
         + conditionDividerGap
         + dividerWidth

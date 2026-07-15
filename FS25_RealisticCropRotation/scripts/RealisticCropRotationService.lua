@@ -3,12 +3,10 @@
 RealisticCropRotationService = {}
 local RealisticCropRotationService_mt = Class(RealisticCropRotationService)
 
--- Crop data (families, nitrogen, cover flags) comes from cropConfig.xml (loaded at init).
 -- Conversion: 1 state = 5 kg N/ha (source: PrecisionFarming.xml amountPerState=5).
 RealisticCropRotationService.PF_STATE_PER_UNIT = 5
 
--- PF applies +25 kg N/ha when a catch-crop cover is destroyed; the planner reflects
--- it as an estimate (the mod never deposits it itself).
+-- PF applies +25 kg N/ha when a catch-crop cover is destroyed; the planner reflects it as an estimate, the mod never deposits it.
 RealisticCropRotationService.COVER_CROP_RESIDUE_KG_HA = 25
 
 ---Creates the service over a repository.

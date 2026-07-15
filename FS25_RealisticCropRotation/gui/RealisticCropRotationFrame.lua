@@ -21,11 +21,9 @@ local function getFamilyTextKey(family)
     return "rcr_family_" .. string.lower(family)
 end
 
--- Crop family classification is driven by cropConfig.xml.
--- RealisticCropRotation.cropConfig is loaded once at mod init by main.lua.
+-- Crop family classification comes from cropConfig.xml, loaded once at mod init by main.lua.
 
--- Advice follows the current timeline card.
--- COVER does not drive a recommendation because it is not a main crop.
+-- Advice follows the current timeline card; COVER never drives a recommendation (not a main crop).
 RealisticCropRotationFrame.ADVICE_KEY = {
     CEREAL    = "rcr_advice_afterCereal",
     LEGUME    = "rcr_advice_afterLegume",
@@ -78,8 +76,7 @@ RealisticCropRotationFrame.N_GAUGE_TOLERANCE_RATIO = 0.03  -- fraction of the cr
 -- Gap between a soil row's title and its gauge track.
 RealisticCropRotationFrame.SOIL_ROW_TITLE_GAP_PX = 16
 
--- Global overview crop badge layout (pixel values, converted at runtime)
--- Goal: center the whole pair [crop icon + 5px gap + crop text] inside each crop badge.
+-- Global overview crop badge layout (pixel values, converted at runtime); centers the icon+text pair in the badge.
 RealisticCropRotationFrame.GROUP_BADGE_Y          = 18
 RealisticCropRotationFrame.GROUP_BADGE_W          = 300
 RealisticCropRotationFrame.GROUP_BADGE_H          = 30
@@ -92,8 +89,7 @@ RealisticCropRotationFrame.GROUP_BADGE_PADDING_X  = 20
 RealisticCropRotationFrame.CALENDAR_AXIS_X = 94
 RealisticCropRotationFrame.CALENDAR_AXIS_W = 1130
 RealisticCropRotationFrame.CALENDAR_GRID_H = 188
--- Season boundaries: FS25 has 3 periods (months) per season, so 1 line out of 3
--- (indices 1,4,7,10,13) is drawn thick to mark the start of each season.
+-- Season boundary: every 3rd grid line (indices 1,4,7,10,13) is drawn thick to mark a season start.
 RealisticCropRotationFrame.CALENDAR_SEASON_LEN     = 3
 RealisticCropRotationFrame.CALENDAR_GRID_W_THIN    = 1
 RealisticCropRotationFrame.CALENDAR_GRID_W_THICK   = 2
@@ -167,7 +163,7 @@ function RealisticCropRotationFrame:onGuiSetupFinished()
         self.listPlanOverview:setDelegate(self)
     end
 
-    if RealisticCropRotationWeatherCard ~= nil then
+    if RealisticCropRotationWeatherCard ~= nil and self.weatherCard == nil then
         self.weatherCard = RealisticCropRotationWeatherCard.new(self, self.i18n)
         self.weatherCard:bind({
             root = self.headerWeatherPill,
@@ -186,6 +182,18 @@ function RealisticCropRotationFrame:onGuiSetupFinished()
     end
 
     self:linkFocusNavigation()
+    self:setupSectionLines()
+end
+
+---Lays out every section header's trailing line once (titles are static l10n text).
+function RealisticCropRotationFrame:setupSectionLines()
+    self:layoutSectionLine(self.historySectionLine, self.historySectionTitle)
+    self:layoutSectionLine(self.adviceSectionLine, self.adviceSectionTitle)
+    self:layoutSectionLine(self.soilSectionLine, self.soilSectionTitle)
+    self:layoutSectionLine(self.fieldSectionLine, self.fieldSectionTitle)
+    self:layoutSectionLine(self.planSectionLine, self.planSectionTitle)
+    self:layoutSectionLine(self.scoreSectionLine, self.scoreSectionTitle)
+    self:layoutSectionLine(self.overviewSectionLine, self.overviewSectionTitle, self.overviewTotalArea)
 end
 
 ---Builds the sidebar view selector (history/planning tabs).
@@ -211,10 +219,6 @@ function RealisticCropRotationFrame:initialize()
         end
     end
 
-end
-
----Frame creation hook; population is deferred to onFrameOpen.
-function RealisticCropRotationFrame:onCreate()
 end
 
 ---Reconciles history (server), populates the sidebar and requests a server sync.
@@ -615,6 +619,7 @@ function RealisticCropRotationFrame:updateOverviewTotalArea()
     if self.overviewTotalArea == nil then return end
     local label = self.i18n:getText("rcr_overview_total_area")
     self.overviewTotalArea:setText(string.format(label, self.totalAreaHa or 0))
+    self:layoutSectionLine(self.overviewSectionLine, self.overviewSectionTitle, self.overviewTotalArea)
 end
 
 ---Returns an element's first-seen size, caching it for later restores.
@@ -784,6 +789,33 @@ function RealisticCropRotationFrame:resizeHeroPillToText(pillBg, pillText, text)
     })
 end
 
+---Starts a section header's trailing line after its title, stopping before an optional right-side sibling text.
+-- @param table lineEl
+-- @param table titleEl
+-- @param table rightBoundaryEl Right-aligned sibling text the line must stop before, or nil
+function RealisticCropRotationFrame:layoutSectionLine(lineEl, titleEl, rightBoundaryEl)
+    if lineEl == nil or titleEl == nil or lineEl.parent == nil then return end
+    local textWidth = self:getTextRenderWidth(titleEl, titleEl.text)
+    if textWidth == nil then return end
+
+    local parentAbsX = lineEl.parent.absPosition[1]
+    local gap = self:getNormalizedPixelWidth(12)
+    local rightInset = self:getNormalizedPixelWidth(26)
+    local maxRightAbs = parentAbsX + lineEl.parent.absSize[1] - rightInset
+
+    if rightBoundaryEl ~= nil then
+        local rightTextWidth = self:getTextRenderWidth(rightBoundaryEl, rightBoundaryEl.text) or 0
+        local boundaryRightEdge = rightBoundaryEl.absPosition[1] + rightBoundaryEl.absSize[1]
+        maxRightAbs = math.min(maxRightAbs, boundaryRightEdge - rightTextWidth - gap)
+    end
+
+    local lineXAbs = titleEl.absPosition[1] + textWidth + gap
+    local lineWidth = math.max(maxRightAbs - lineXAbs, 0)
+
+    lineEl:setPosition(lineXAbs - parentAbsX, lineEl.position[2])
+    lineEl:setSize(lineWidth, lineEl.size[2])
+end
+
 ---Shrinks the hero title so it never runs under the status pill.
 -- @param table titleElement
 -- @param table statusPillBg
@@ -851,8 +883,7 @@ function RealisticCropRotationFrame:layoutCalendarLegend()
         {label = self.calendarLegendLabelSow,     swatch = self.calendarLegendSwatchSow,     key = "rcr_calendar_legend_sowing"},
     }
 
-    -- cursorX = right edge of the next (leftward) item, in normalized units,
-    -- measured from the container's own left edge (children are anchorTopLeft).
+    -- cursorX = right edge of the next (leftward) item, normalized, measured from the container's own left edge (anchorTopLeft).
     local cursorX = containerSize[1]
     for _, item in ipairs(items) do
         if item.label ~= nil and item.swatch ~= nil
@@ -1158,7 +1189,7 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
     local nameEl = cell:getAttribute("fieldName")
     local areaEl = cell:getAttribute("fieldArea")
     if nameEl ~= nil then nameEl:setText(string.upper(tostring(entry.name or ""))) end
-    if areaEl ~= nil then areaEl:setText(string.format("%.1f ha", tonumber(entry.areaHa) or 0)) end
+    if areaEl ~= nil then areaEl:setText(self:formatAreaHa(entry.areaHa)) end
 
     -- Real state, never history: active crop -> native ground state -> "no crop".
     local activeCropName = nil
@@ -1327,7 +1358,7 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
         self.detailTitle:setText(
             string.upper(tostring(entry.name or ""))
             .. "  |  "
-            .. string.format("%.1f ha", tonumber(entry.areaHa) or 0)
+            .. self:formatAreaHa(entry.areaHa)
         )
     end
 
@@ -1348,8 +1379,7 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
         self:updateTimelineSlot(histIdx + 1, cropName, self:getCropFamily(cropName), nil)
     end
 
-    -- Both soil gauges start at the same x (the wider of the two row titles) so neither
-    -- track ends up shorter than the other just because its own label is narrower.
+    -- Both soil gauges start at the same x (the wider of the two row titles) so neither track looks shorter just because its own label is narrower.
     local nitrogenTitleWidth = self:getTextRenderWidth(self.nitrogenRowTitle, self.i18n:getText("rcr_section_nitrogen"))
     local limeTitleWidth = self:getTextRenderWidth(self.limeRowTitle, self.i18n:getText("rcr_section_lime"))
     local sharedRowTitleWidth = (nitrogenTitleWidth ~= nil and limeTitleWidth ~= nil)
@@ -1363,7 +1393,7 @@ end
 
 -- Timeline slot (slotId 1..5) — history tab
 
----Fills one history timeline slot (icon, crop name, family badge).
+---Fills one history timeline slot: frame, avatar, crop name, family badge.
 -- @param integer slotId Slot 1-5 (1 = current)
 -- @param string cropName, or nil
 -- @param string family
@@ -1371,33 +1401,58 @@ end
 -- @param string badgeTextKey Override badge i18n key, or nil
 function RealisticCropRotationFrame:updateTimelineSlot(slotId, cropName, family, fallbackText, badgeTextKey)
     local pfx = "slot" .. tostring(slotId)
+    local cardBg   = self[pfx .. "CardBg"]
+    local frame    = self[pfx .. "Frame"]
+    local avatarBg = self[pfx .. "AvatarBg"]
     local iconEl   = self[pfx .. "Icon"]
     local nameEl   = self[pfx .. "CropName"]
     local badgeBg  = self[pfx .. "BadgeBg"]
     local badgeTxt = self[pfx .. "BadgeText"]
+
+    local hasCrop = cropName ~= nil and cropName ~= ""
+    local dashOnly = not hasCrop and (fallbackText == nil or fallbackText == "")
+    local familyColor = hasCrop and RealisticCropRotationFrame.FAMILY_RGBA[family] or nil
+
+    if cardBg ~= nil then
+        cardBg:setVisible(not dashOnly)
+    end
+    if frame ~= nil then
+        frame:setVisible(not dashOnly)
+    end
+
+    if avatarBg ~= nil then
+        avatarBg:setVisible(hasCrop)
+        if hasCrop then
+            -- Native crop color, not family color — the badge below already shows the family.
+            local fruitType = g_fruitTypeManager ~= nil and type(g_fruitTypeManager.getFruitTypeByName) == "function"
+                and g_fruitTypeManager:getFruitTypeByName(string.upper(cropName)) or nil
+            local nativeColor = fruitType ~= nil and self:getFruitTypeMapColor(fruitType) or nil
+            self:applyIconBackgroundColor(avatarBg, nativeColor or familyColor or RealisticCropRotationFrame.FAMILY_RGBA.FALLOW)
+        end
+    end
 
     if iconEl ~= nil then
         self:applySlotCropIcon(iconEl, cropName)
     end
 
     if nameEl ~= nil then
-        if cropName ~= nil and cropName ~= "" then
+        if hasCrop then
+            nameEl:applyProfile("frSlotCropName")
             nameEl:setText(self:getCropDisplayName(cropName))
-        elseif fallbackText ~= nil and fallbackText ~= "" then
-            nameEl:setText(fallbackText)
+        elseif dashOnly then
+            nameEl:applyProfile("frSlotCropNameEmpty")
+            nameEl:setText("-")
         else
-            nameEl:setText(self.i18n:getText("rcr_slot_empty"))
+            nameEl:applyProfile("frSlotCropNameCentered")
+            nameEl:setText(fallbackText)
         end
     end
 
-    local showBadge = cropName ~= nil and cropName ~= "" and (family ~= nil) and (family ~= "UNKNOWN")
+    local showBadge = hasCrop and (family ~= nil) and (family ~= "UNKNOWN")
     if badgeBg ~= nil then
         badgeBg:setVisible(showBadge)
-        if showBadge then
-            local c = RealisticCropRotationFrame.FAMILY_RGBA[family]
-            if c ~= nil then
-                badgeBg.color = {c[1], c[2], c[3], c[4]}
-            end
+        if showBadge and familyColor ~= nil then
+            badgeBg.color = {familyColor[1], familyColor[2], familyColor[3], familyColor[4]}
         end
     end
     if badgeTxt ~= nil then
@@ -1462,8 +1517,7 @@ function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId, sharedRowTit
     local stateText = nil
     local valueText = nil
 
-    -- Precision Farming path: PF nitrogen average when PF is installed. false =
-    -- soil not analysed ("not sampled"); nil = no PF -> vanilla fallback.
+    -- Precision Farming path: false = soil not analysed ("not sampled"); nil = no PF -> vanilla fallback.
     if mgr ~= nil and mgr.getNitrogenLevel ~= nil then
         local actualN, targetN = mgr:getNitrogenLevel(farmlandId)
         if actualN == false then
@@ -1680,8 +1734,7 @@ function RealisticCropRotationFrame:updateAdvice(currentFamily, farmlandId, curr
     self:updateAdviceStatusCard(currentFamily, farmlandId, currentCropName)
 end
 
----Finds the plan slot matching a crop name (first match wins; same approximation already used by
--- RealisticCropRotationService:isCurrentGapFallow -- no disambiguation when a crop repeats in the plan).
+---Finds the plan slot matching a crop name (first match wins, no disambiguation when a crop repeats).
 -- @param table plan 4-slot plan
 -- @param string cropName
 -- @return integer slotIdx, or nil
@@ -1694,8 +1747,7 @@ function RealisticCropRotationFrame:findPlanSlotForCrop(plan, cropName)
     return nil
 end
 
----Evaluates a one-year rotation step (cropA now, cropB next) for a conflict, from the SAME
--- family/disease-interval rules as calcRotationScore (never duplicated/re-tuned separately).
+---Evaluates a one-year rotation step (cropA now, cropB next) for a conflict, using calcRotationScore's own rules.
 -- @param string cropA Current crop name
 -- @param string cropB Next-planned crop name
 -- @return table conflict { kind = "family"|"disease", label, yearsRemaining, minInterval }, or nil
@@ -1707,9 +1759,7 @@ function RealisticCropRotationFrame:evaluateRotationStep(cropA, cropB)
     local famB = self:getCropFamily(cropB)
     local familyMinInterval = (famA == famB and famA ~= "UNKNOWN")
         and RealisticCropRotationFrame.FAMILY_MIN_INTERVAL[famA] or nil
-    -- Same baseline rule as calcRotationScore: a same-family pair's own interval floors the
-    -- disease-interval comparison, so the disease conflict only reports the interval left BEYOND
-    -- what the family rule already accounts for.
+    -- A same-family pair's own interval floors the comparison, so the conflict reports only the interval left beyond the family rule.
     local diseaseBaseline = familyMinInterval ~= nil and math.max(1, familyMinInterval) or 1
 
     local diseasesA = self:getCropDiseases(cropA)
@@ -1745,9 +1795,7 @@ function RealisticCropRotationFrame:evaluateRotationStep(cropA, cropB)
     return nil
 end
 
----Returns the hand-written pressure tip for the current crop's single worst hosted disease
--- (high band beats moderate; ties broken by the higher soil load), or nil when none applies.
--- Reuses the existing rcr_advice_pressure_high/moderate_<group> texts verbatim.
+---Returns the pressure tip for the crop's single worst hosted disease (high beats moderate, ties by soil load), or nil.
 -- @param integer farmlandId
 -- @param string currentCropName
 -- @return string text, or nil
@@ -1784,8 +1832,7 @@ function RealisticCropRotationFrame:getWorstPressureAdviceText(farmlandId, curre
     return nil
 end
 
----Refreshes the advice card: active outbreak > planned-rotation-step evaluation > generic
--- per-family fallback, then appends a soil-analysis note instead of replacing the whole message.
+---Refreshes the advice card: active outbreak > planned-step evaluation > per-family fallback, plus a soil-analysis note.
 -- @param string currentFamily
 -- @param integer farmlandId
 -- @param string currentCropName
@@ -1849,8 +1896,7 @@ function RealisticCropRotationFrame:updateAdviceStatusCard(currentFamily, farmla
             text = key ~= nil and self.i18n:getText(key) or self.i18n:getText("rcr_advice_no_current_crop")
         end
 
-        -- Worst current disease-pressure tip only (not a concatenation of every hosted disease),
-        -- so the card doesn't grow with the crop's disease count.
+        -- Worst current disease-pressure tip only, so the card doesn't grow with the crop's disease count.
         local pressureText = self:getWorstPressureAdviceText(farmlandId, currentCropName)
         if pressureText ~= nil then
             text = text .. " " .. pressureText
@@ -1897,7 +1943,7 @@ function RealisticCropRotationFrame:updatePlanningPanel(farmlandId)
         self.planTitle:setText(
             string.upper(tostring(entry.name or ""))
             .. "  |  "
-            .. string.format("%.1f ha", tonumber(entry.areaHa) or 0)
+            .. self:formatAreaHa(entry.areaHa)
         )
     end
 
@@ -2218,8 +2264,7 @@ function RealisticCropRotationFrame:applyCalendarRow(slotIdx, cropName, coverCro
     placeBar(cropBar, pStart, pLen, SOW_Y, hasCrop)
     placeBar(harvestBar, hStart, hLen, HARVEST_Y, hasCrop)
 
-    -- cover crop: planting only (covers are never harvested), middle lane, tinted to its
-    -- planner-card colour (RGB) so it reads as the cover and not a main crop.
+    -- cover crop: planting only (never harvested), middle lane, tinted to its planner-card colour to read as a cover, not a main crop.
     local cStart, cLen = nil, nil
     if hasCover then
         cStart, cLen = longestRun(self:getCropPeriodFlags(coverCropName, periodCount, firstPeriod))
@@ -2349,8 +2394,7 @@ function RealisticCropRotationFrame:onServerSyncReceived()
 
     self.isApplyingServerSync = true
 
-    -- History tab: safe to rebuild from the server snapshot. Planner tab: do NOT
-    -- rebuild here -- a snapshot mid-interaction would disrupt the MultiTextOption.
+    -- History tab: safe to rebuild from the server snapshot. Planner tab: never rebuild here, it would disrupt the MultiTextOption.
     if self:isHistoryTab() then
         self:populateSidebar()
     else
@@ -2527,7 +2571,7 @@ function RealisticCropRotationFrame:handleCalendarCoverChange(slotIdx)
     end
 end
 
----"Effacer le plan" button: confirms before wiping the selected farmland's rotation plan.
+---"Clear plan" button: confirms before wiping the selected farmland's rotation plan.
 function RealisticCropRotationFrame:onClickClearPlan()
     if self.selectedId == nil or YesNoDialog == nil then return end
 
@@ -2675,9 +2719,7 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
         end
     end
 
-    -- Shared-pathogen pressure: any two crops hosting the same disease group need the group's
-    -- configured spacing. Same-family pairs already pay the generic family penalty above; here
-    -- they only pay the extra disease interval beyond that family rule.
+    -- Shared-pathogen pressure: same-family pairs already pay the family penalty above, so this adds only the extra disease interval beyond it.
     local diseaseIntervals = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig
         and RealisticCropRotation.cropConfig.diseaseIntervals or {}
     for a = 1, n - 1 do
@@ -2720,8 +2762,7 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
         score = math.min(score, RealisticCropRotationFrame.SCORE_NO_RESIDUE_CAP)
     end
 
-    -- A single-family plan is a monoculture, not a rotation: it stays "poor" even when its family
-    -- carries no return-interval penalty (e.g. permanent grass/forage scoring "good" otherwise).
+    -- A single-family plan is a monoculture: it stays "poor" even when the family carries no return-interval penalty.
     if uniqueCount == 1 then
         score = math.min(score, RealisticCropRotationFrame.SCORE_MONOCULTURE_CAP)
     end

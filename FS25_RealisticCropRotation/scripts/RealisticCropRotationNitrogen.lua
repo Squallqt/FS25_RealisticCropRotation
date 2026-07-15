@@ -248,9 +248,7 @@ local function getTransition(data)
         context.unionFilter:setValueCompareParams(DensityValueCompareType.EQUAL, 1)
     end
 
-    -- Static subset of crops whose own termination residue (n1) is > 0. When the
-    -- previous crop on the farmland has no n2 carry-over, only these crops can
-    -- deposit anything, so capture can skip every other fruit plane entirely.
+    -- Crops with termination residue (n1) > 0 are the only ones that can deposit, so capture skips every other fruit plane.
     if manager ~= nil and manager.service ~= nil
         and type(manager.service.getResidueEntry) == "function" then
         for _, crop in ipairs(context.crops) do
@@ -404,8 +402,7 @@ local function process(context, active, farmlandId, sx, sz, wx, wz, hx, hz)
             depositVanilla(context, active, farmlandId, sx, sz, wx, wz, hx, hz)
         end
     end
-    -- Clear only the mask groups the active crops live in (their areas were set in
-    -- capture for this very call); untouched groups are still zero by invariant.
+    -- Clear only the mask groups the active crops live in; untouched groups are still zero by invariant.
     context.resetStamp = context.resetStamp + 1
     local stamp = context.resetStamp
     for _, crop in ipairs(active) do
@@ -469,8 +466,7 @@ function RealisticCropRotationNitrogen.install(rcrManager)
 
     installed = true
 
-    -- No native "fruit destroyed" callback exists, so these two functions are hooked directly;
-    -- prepare() no-ops with no rotation residue.
+    -- No "fruit destroyed" callback exists, so these two functions are hooked directly.
     local function makeTillageWrapper()
         return function(sx, superFunc, sz, wx, wz, hx, hz, ...)
             local context, active, farmlandId

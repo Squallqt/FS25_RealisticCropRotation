@@ -16,8 +16,7 @@ local productFillTypeSet = {}
 local productTreatmentByFillType = {}
 local hookInstalled = false
 
--- Ground-paint value only (SPRAY_TYPE channel, no fertilisation/nitrogen/yield); the engine clears it
--- on the crop's next growth-state transition. Resolved at mission load; nil disables the paint.
+-- Ground-paint value only (SPRAY_TYPE channel); the engine clears it on the crop's next growth-state transition.
 local treatmentSprayType = nil
 
 ---Returns true when the given fillType index is one of the RCR sprayer products.
@@ -61,8 +60,7 @@ local function ensureSprayTypes()
             productTreatmentByFillType[fillTypeIndex] = RealisticCropRotationSprayerProducts.PRODUCT_TREATMENTS[name]
 
             if g_sprayTypeManager:getSprayTypeByFillTypeIndex(fillTypeIndex) == nil then
-                -- HERBICIDE is the only engine sprayType accepting a custom fillType (SprayTypeManager
-                -- only allows FERTILIZER/HERBICIDE/LIME); its ground effect is neutralized below.
+                -- HERBICIDE is the only engine sprayType accepting a custom fillType; its ground effect is neutralized below.
                 g_sprayTypeManager:addSprayType(name, litersPerSecond, "HERBICIDE", sprayGroundType, false)
             end
         end
@@ -171,8 +169,7 @@ local function paintTreatmentGround(self, workArea)
     modifier:executeSet(treatmentSprayType, fieldFilter)
 end
 
----Overwrites Sprayer.processSprayerArea once per game session.
--- Non-RCR fillTypes fall through unchanged to the original function.
+---Overwrites Sprayer.processSprayerArea once per game session; non-RCR fillTypes fall through unchanged.
 local function installSprayerHook()
     if hookInstalled then
         return
@@ -192,8 +189,7 @@ local function installSprayerHook()
             return superFunc(self, workArea, dt)
         end
 
-        -- Replicates the original activation guards but skips FSDensityMapUtil.updateSprayArea
-        -- (no herbicide ground effect from this custom fillType).
+        -- Replicates the original activation guards but skips FSDensityMapUtil.updateSprayArea (no herbicide ground effect here).
         if params.sprayFillLevel <= 0 then
             return 0, 0
         end
@@ -212,8 +208,7 @@ local function installSprayerHook()
             spec.isWorking = true
         end
 
-        -- Curative + preventive disease protection: server-only, since it gates the server-authoritative
-        -- daily destroy pass. Runs every qualifying tick over just the sprayed strip; never touches the real crop.
+        -- Curative + preventive disease protection: server-only, since it gates the server-authoritative daily destroy pass.
         if self.isServer then
             paintDiseaseProtection(workArea, sprayFillType)
         end
@@ -221,8 +216,7 @@ local function installSprayerHook()
         return 0, 0
     end)
 
-    -- AI job completion: without this, the HERBICIDE-family sprayType has no weed-replacement data for
-    -- a custom fillType, so no prohibitions are ever set and the AI never knows the field is done.
+    -- AI job completion: without this, the HERBICIDE sprayType has no weed-replacement data for a custom fillType, so the AI never sees the field as done.
     if Sprayer.setSprayerAITerrainDetailProhibitedRange ~= nil then
         Sprayer.setSprayerAITerrainDetailProhibitedRange = Utils.overwrittenFunction(
             Sprayer.setSprayerAITerrainDetailProhibitedRange, setSprayerAITerrainDetailProhibitedRange)
@@ -236,8 +230,7 @@ function RealisticCropRotationSprayerProducts.onMissionLoaded()
     productFillTypeSet = {}
     productTreatmentByFillType = {}
     ensureSprayTypes()
-    -- Safety net only: the hook is normally installed at source time below
-    -- (before TypeManager:finalizeTypes snapshots Sprayer.processSprayerArea).
+    -- Safety net only: the hook is normally installed at source time, before TypeManager:finalizeTypes snapshots it.
     installSprayerHook()
 end
 
@@ -247,7 +240,5 @@ function RealisticCropRotationSprayerProducts.onMissionDeleted()
     productTreatmentByFillType = {}
 end
 
--- Source-time installation: mod scripts are sourced before TypeManager:finalizeTypes() runs, the
--- only moment the overwritten processSprayerArea is guaranteed to reach every sprayer vehicleType.
--- Until onMissionLoaded() populates productFillTypeSet, the wrapper is a pure passthrough.
+-- Source-time installation is the only moment the overwritten processSprayerArea reaches every sprayer vehicleType.
 installSprayerHook()

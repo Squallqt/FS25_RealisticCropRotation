@@ -183,9 +183,7 @@ end
 function RCRHistoryResponseEvent:writeStream(streamId, _connection)
     local manager = g_currentMission ~= nil and g_currentMission.realisticCropRotationManager or nil
     if manager == nil or manager.service == nil or type(manager.service.getSyncData) ~= "function" then
-        -- Empty snapshot: write one zero count per section readStream expects, in order
-        -- (history, plans, coverPlans, activeCrops, growthStates, disease = 6), or the
-        -- client read pointer desyncs on the later sections.
+        -- Empty snapshot: write one zero count per section readStream expects (6), or the client read pointer desyncs.
         for _ = 1, 6 do
             streamWriteInt16(streamId, 0)
         end

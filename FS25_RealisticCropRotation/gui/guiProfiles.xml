@@ -19,7 +19,7 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Area in ha — line 1, right-aligned (x offset from right sourced from OSE profiles) -->
+    <!-- Area in ha — line 1, right-aligned (x offset from right matches the existing list-item profiles) -->
     <Profile name="frSidebarItemArea" extends="fs25_subCategoryListItemName" with="anchorTopRight">
         <width value="84px"/>
         <position value="-46px -18px"/>
@@ -118,8 +118,8 @@
     </Profile>
 
     <Profile name="frHeaderWeatherIcon" extends="baseReference" with="anchorMiddleLeft">
-        <position value="24px 0px"/>
-        <size value="24px 24px"/>
+        <position value="21px 0px"/>
+        <size value="30px 30px"/>
         <imageSliceId value="gui.icon_weather_rain"/>
         <imageColor value="$preset_fs25_colorMainLight"/>
     </Profile>
@@ -200,10 +200,12 @@
         <size value="1280px 32px"/>
     </Profile>
 
-    <Profile name="frSectionBarBg" extends="baseReference" with="anchorTopLeft">
-        <size value="1280px 32px"/>
-        <color value="0 0 0 0.28"/>
-        <cornerSize value="0.35"/>
+    <!-- Trailing line after the section title, sized in Lua to the rendered text -->
+    <Profile name="frSectionLine" extends="baseReference" with="anchorMiddleLeft">
+        <position value="0px 0px"/>
+        <size value="0px 1px"/>
+        <color value="$preset_fs25_colorGreyDark"/>
+        <cornerSize value="0"/>
     </Profile>
 
     <!-- Vertical accent bar (3 x 22 px) -->
@@ -262,25 +264,81 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Timeline strip: 5 slot cards + 4 arrow gaps, present-to-past left to right -->
+    <!-- Timeline strip -->
 
     <Profile name="frTimeline" extends="emptyPanel" with="anchorTopLeft">
-        <size value="1240px 186px"/>
+        <size value="1240px 194px"/>
     </Profile>
 
-    <!-- Slot card container (224 x 186 px — fills the timeline block height) -->
+    <!-- Rail cell -->
+    <Profile name="frRailCell" extends="emptyPanel" with="anchorTopLeft">
+        <size value="224px 24px"/>
+    </Profile>
+
+    <!-- Season label -->
+    <Profile name="frSlotSeasonLabel" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="7px -4px"/>
+        <size value="210px 18px"/>
+        <textSize value="12px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_colorWhite_50"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frRailSeasonLabelCurrent" extends="frSlotSeasonLabel">
+        <textColor value="$preset_fs25_colorGreen"/>
+    </Profile>
+
+    <!-- Slot card container (224 x 156 px) -->
     <Profile name="frSlotCard" extends="emptyPanel" with="anchorTopLeft">
-        <size value="224px 186px"/>
+        <size value="224px 156px"/>
+    </Profile>
+
+    <!-- Connector arrow between cards -->
+    <Profile name="frTimelineArrowIcon" extends="baseReference" with="anchorMiddleCenter">
+        <position value="0px 0px"/>
+        <size value="25px 18px"/>
+        <imageSliceId value="realisticCropRotation.timelineArrowRight"/>
+        <imageColor value="$preset_fs25_colorMainHighlight"/>
+    </Profile>
+
+    <!-- Connector container -->
+    <Profile name="frHistoryTimelineConnector" extends="emptyPanel" with="anchorTopLeft">
+        <size value="25px 156px"/>
+    </Profile>
+
+    <!-- Card frame -->
+    <Profile name="frSlotFrameH" extends="baseReference" with="anchorTopLeft">
+        <size value="224px 1px"/>
+        <color value="$preset_fs25_colorGreyDark"/>
+        <cornerSize value="0"/>
+    </Profile>
+
+    <Profile name="frSlotFrameV" extends="baseReference" with="anchorTopLeft">
+        <size value="1px 156px"/>
+        <color value="$preset_fs25_colorGreyDark"/>
+        <cornerSize value="0"/>
+    </Profile>
+
+    <Profile name="frSlotFrameHCurrent" extends="frSlotFrameH">
+        <color value="$preset_fs25_colorGreen"/>
+    </Profile>
+
+    <Profile name="frSlotFrameVCurrent" extends="frSlotFrameV">
+        <color value="$preset_fs25_colorGreen"/>
     </Profile>
 
     <!-- Base shape shared by all slot backgrounds -->
     <Profile name="frSlotCardBg" extends="baseReference" with="anchorTopLeft">
-        <size value="224px 186px"/>
+        <size value="224px 156px"/>
         <color value="0 0 0 0.44"/>
-        <cornerSize value="0.35"/>
+        <cornerSize value="0"/>
     </Profile>
 
-    <!-- N-4: oldest season — most faded -->
+    <!-- N-4 -->
     <Profile name="frSlotCardBgN4" extends="frSlotCardBg">
         <color value="0 0 0 0.22"/>
     </Profile>
@@ -295,47 +353,35 @@
         <color value="0 0 0 0.44"/>
     </Profile>
 
-    <!-- N-1: most recent completed crop -->
+    <!-- N-1 -->
     <Profile name="frSlotCardBgN1" extends="frSlotCardBg">
         <color value="0 0 0 0.50"/>
     </Profile>
 
-    <!-- Current crop / ground state slot: most prominent + green accent line -->
+    <!-- Current -->
     <Profile name="frSlotCardBgCurrent" extends="frSlotCardBg">
         <color value="0 0 0 0.58"/>
     </Profile>
 
-    <!-- Green accent line at top of current slot -->
-    <Profile name="frSlotAccentCurrent" extends="fs25_lineSeparatorTopHighlighted" with="anchorTopLeft">
-        <size value="224px 3dp"/>
-        <position value="0px 0px"/>
-        <imageColor value="$preset_fs25_colorGreen"/>
+    <!-- Avatar background -->
+    <Profile name="frSlotAvatarBg" extends="baseReference" with="anchorTopLeft">
+        <position value="82px -18px"/>
+        <size value="60px 60px"/>
+        <color value="$preset_fs25_colorGrey"/>
+        <cornerSize value="1"/>
     </Profile>
 
-    <!-- Season label — top of card -->
-    <Profile name="frSlotSeasonLabel" extends="fs25_textDefault" with="anchorTopCenter">
-        <position value="0px -12px"/>
-        <size value="210px 18px"/>
-        <textSize value="12px"/>
-        <textBold value="true"/>
-        <textUpperCase value="true"/>
-        <textColor value="$preset_colorWhite_50"/>
-        <textAlignment value="center"/>
-        <textVerticalAlignment value="middle"/>
-        <textMaxNumLines value="1"/>
+    <!-- Crop icon -->
+    <Profile name="frSlotIcon" extends="baseReference" with="anchorTopLeft">
+        <position value="92px -28px"/>
+        <size value="40px 40px"/>
     </Profile>
 
-    <!-- Crop icon — center of card (filename loaded in Lua) -->
-    <Profile name="frSlotIcon" extends="baseReference" with="anchorTopCenter">
-        <position value="0px -46px"/>
-        <size value="52px 52px"/>
-    </Profile>
-
-    <!-- Crop name — below icon -->
+    <!-- Crop name -->
     <Profile name="frSlotCropName" extends="fs25_textDefault" with="anchorTopCenter">
-        <position value="0px -114px"/>
-        <size value="210px 18px"/>
-        <textSize value="14px"/>
+        <position value="0px -88px"/>
+        <size value="210px 20px"/>
+        <textSize value="16px"/>
         <textBold value="false"/>
         <textUpperCase value="false"/>
         <textColor value="$preset_fs25_colorMainLight"/>
@@ -344,38 +390,51 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Family badge background pill — bottom of card (color set in Lua) -->
+    <!-- Status text, centered (no crop) -->
+    <Profile name="frSlotCropNameCentered" extends="fs25_textDefault" with="anchorTopCenter">
+        <position value="0px -68px"/>
+        <size value="210px 20px"/>
+        <textSize value="16px"/>
+        <textBold value="false"/>
+        <textUpperCase value="false"/>
+        <textColor value="$preset_fs25_colorMainLight"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <!-- Empty dash -->
+    <Profile name="frSlotCropNameEmpty" extends="fs25_textDefault" with="anchorTopCenter">
+        <position value="0px -65px"/>
+        <size value="210px 26px"/>
+        <textSize value="24px"/>
+        <textBold value="true"/>
+        <textUpperCase value="false"/>
+        <textColor value="$preset_colorWhite_50"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <!-- Family badge background -->
     <Profile name="frSlotFamilyBadgeBg" extends="baseReference" with="anchorBottomCenter">
-        <position value="0px 16px"/>
-        <size value="88px 22px"/>
+        <position value="0px 18px"/>
+        <size value="96px 24px"/>
         <color value="$preset_fs25_colorGrey"/>
         <cornerSize value="0.20"/>
     </Profile>
 
     <!-- Family badge text overlay -->
     <Profile name="frSlotFamilyBadgeText" extends="fs25_textDefault" with="anchorBottomCenter">
-        <position value="0px 16px"/>
-        <size value="88px 22px"/>
-        <textSize value="12px"/>
+        <position value="0px 18px"/>
+        <size value="96px 24px"/>
+        <textSize value="13px"/>
         <textBold value="true"/>
         <textUpperCase value="true"/>
         <textColor value="$preset_fs25_colorMainDark"/>
         <textAlignment value="center"/>
         <textVerticalAlignment value="middle"/>
         <textMaxNumLines value="1"/>
-    </Profile>
-
-    <!-- Connector arrow between history slots -->
-    <Profile name="frTimelineArrowIcon" extends="baseReference" with="anchorMiddleCenter">
-        <position value="0px 0px"/>
-        <size value="25px 18px"/>
-        <imageSliceId value="realisticCropRotation.timelineArrowRight"/>
-        <imageColor value="$preset_fs25_colorMainHighlight"/>
-    </Profile>
-
-    <!-- Container for the connector assembly -->
-    <Profile name="frHistoryTimelineConnector" extends="emptyPanel" with="anchorTopLeft">
-        <size value="25px 186px"/>
     </Profile>
 
     <!-- Shared background for the full-width detail cards: same tint + corner, height set per card. -->
@@ -476,8 +535,7 @@
         <cornerSize value="0"/>
     </Profile>
 
-    <!-- Agronomic advice card (1240 x 110 px): centered title banner (state name) on top, a thin
-         rule, then badge + status/rotation text below. -->
+    <!-- Agronomic advice card (1240 x 110 px) -->
 
     <Profile name="frAdviceCard" extends="emptyPanel" with="anchorTopLeft">
         <size value="1240px 110px"/>
@@ -725,11 +783,11 @@
     </Profile>
 
     <Profile name="frCalendarRowBgOdd" extends="frCalendarRowBg">
-        <color value="$preset_fs25_colorGreyDark_50"/>
+        <color value="$preset_colorTransparent"/>
     </Profile>
 
     <Profile name="frCalendarRowBgEven" extends="frCalendarRowBg">
-        <color value="$preset_colorTransparent"/>
+        <color value="$preset_fs25_colorGreyDark_50"/>
     </Profile>
 
     <Profile name="frCalendarStepLabel" extends="fs25_textDefault" with="anchorTopLeft">

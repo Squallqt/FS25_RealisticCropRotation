@@ -68,8 +68,7 @@ function RealisticCropRotationRepository:pushEntry(farmlandId, cropName, allowDu
         self.history[farmlandId] = entries
     end
 
-    -- One entry per actual rotation change: ignore a crop that is already the most recent.
-    -- This is what keeps the history from growing on every tool pass over the same crop.
+    -- One entry per actual rotation change: ignore a crop that is already the most recent, so history doesn't grow on repeat passes.
     if not allowDuplicate and entries[1] ~= nil and entries[1].crop == cropName then
         return false
     end

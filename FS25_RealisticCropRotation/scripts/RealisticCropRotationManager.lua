@@ -6,8 +6,7 @@ local RealisticCropRotationManager_mt = Class(RealisticCropRotationManager)
 -- Active-crop cache TTL: UI/HUD reads are frequent, growth changes slowly.
 local ACTIVE_CROP_CACHE_TTL_MS = 10000
 
--- PF soil read cache TTL. PF nitrogen/pH only change when the player works the
--- field; a short TTL keeps the menu-open reads cheap without going stale.
+-- PF soil read cache TTL: nitrogen/pH only change when the player works the field, so a short TTL is safe.
 local SOIL_PF_CACHE_TTL_MS = 10000
 
 -- Soil scan grid resolution (menu only): FIELD_SCAN_STEPS^2 points over the field.
@@ -149,8 +148,7 @@ end
 -- @return number areaHa
 local function getFarmlandFieldAreaHa(farmland)
     if type(farmland) ~= "table" then return 0 end
-    -- Cultivable agricultural area on the farmland — different from areaInHa
-    -- which is the full buyable parcel and may include yards/buildable land.
+    -- Cultivable agricultural area, different from areaInHa which is the full buyable parcel (may include yards/buildable land).
     local totalFieldArea = tonumber(farmland.totalFieldArea) or 0
     if totalFieldArea > 0 then return totalFieldArea end
     local fieldAreaHa = tonumber(farmland.fieldAreaHa) or 0
@@ -224,8 +222,7 @@ local function collectFieldInteriorSamples(field, samples)
     local minX, maxX, minZ, maxZ = fieldPolygonBounds(field)
     if vertices == nil or minX == nil then return end
 
-    -- Spread from near-edge to near-edge, not just the central band: a localized destruction patch
-    -- (disease, etc.) must not be able to outvote crop still standing near the field's borders.
+    -- Spread from near-edge to near-edge, not just the central band, so a localized destruction patch can't outvote crop near the borders.
     local offsets = {
         {0.15, 0.15}, {0.50, 0.15}, {0.85, 0.15},
         {0.15, 0.50}, {0.50, 0.50}, {0.85, 0.50},
@@ -307,8 +304,7 @@ local function getFieldFruitTypeIndexFromDensityMap(field)
 
     if not sampled then return nil, false end
 
-    -- "No crop" is itself a vote: a single stray hit must not outvote a field that reads bare
-    -- everywhere else (e.g. a sample point landing just past the field's edge).
+    -- "No crop" is itself a vote: a single stray hit must not outvote a field that reads bare everywhere else.
     local bestFruitTypeIndex = nil
     local bestCount = noneCount
     for fruitTypeIndex, count in pairs(counts) do
@@ -442,8 +438,7 @@ local function getNativeGroundStateIndex(field)
         return nil
     end
 
-    -- Live read first (fresh, consistent with the crop detection); fall back to the engine's
-    -- periodic fieldState snapshot only when the live read is unavailable.
+    -- Live read first (fresh, consistent with crop detection); falls back to the engine's periodic fieldState snapshot.
     local groundType = getFieldGroundTypeFromDensityMap(field)
     if groundType == nil and field ~= nil and field.fieldState ~= nil then
         groundType = field.fieldState.groundType
@@ -815,8 +810,7 @@ function RealisticCropRotationManager:getFieldByFarmlandId(farmlandId)
     return getUsableFieldFromFarmland(getFarmlandById(n))
 end
 
----Returns the currently active crop on a farmland (cached).
--- Pure clients use density-map sampling only; fieldState fallback is server-only.
+---Returns the currently active crop on a farmland (cached); pure clients use density-map sampling only, fieldState fallback is server-only.
 -- @param integer farmlandId
 -- @return string cropName, or nil
 -- @return integer fruitTypeIndex, or nil

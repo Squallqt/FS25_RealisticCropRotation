@@ -3,24 +3,19 @@
 RealisticCropRotationDiseaseGrid = {}
 local RealisticCropRotationDiseaseGrid_mt = Class(RealisticCropRotationDiseaseGrid)
 
--- 4 channels hold a per-disease state 0..15 (0 = clean), enough for the 9 pathogens (states 1..9)
--- so each disease is painted with its OWN colour on the parcel.
+-- 4 channels hold a per-disease state 0..15 (0 = clean), enough for the 9 pathogens, each painted its own colour.
 RealisticCropRotationDiseaseGrid.NUM_CHANNELS = 4
 RealisticCropRotationDiseaseGrid.FILENAME = "realisticCropRotationDiseaseGrid.grle"
 
--- Per-cell protection, one bitvector per treatment family (0/1, same resolution as the main grid, 1:1).
--- A protected cell is excluded from all future destruction under it (see Disease's destroy filter), so
--- the same write both cures an existing infection and prevents a future one. Persisted like the main grid.
+-- Per-cell protection, one bitvector per treatment family: a protected cell is excluded from all future destruction, so the same write cures and prevents.
 RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS = 1
 RealisticCropRotationDiseaseGrid.FUNGICIDE_PROTECTION_FILENAME = "realisticCropRotationFungicideProtection.grle"
 RealisticCropRotationDiseaseGrid.NEMATICIDE_PROTECTION_FILENAME = "realisticCropRotationNematicideProtection.grle"
 
--- Risk map: runtime-only display map (never saved), painted off the UI path, rendered with no
--- mask and no map building at render time.
+-- Risk map: runtime-only display map (never saved), painted off the UI path.
 RealisticCropRotationDiseaseGrid.RISK_NUM_CHANNELS = 2
 
--- Scratch mask (never saved): recomputed by every destroy call to hold "eligible for transition-band
--- speckle" cells, then immediately consumed -- see RealisticCropRotationDisease's band speckle pass.
+-- Scratch mask (never saved): recomputed by every destroy call to hold cells eligible for the transition-band speckle, then consumed.
 RealisticCropRotationDiseaseGrid.SPECKLE_NUM_CHANNELS = 1
 
 function RealisticCropRotationDiseaseGrid.new()
@@ -42,7 +37,6 @@ function RealisticCropRotationDiseaseGrid.new()
 end
 
 ---World-space axis-aligned bounding box of a field, from its polygon corner nodes (Field has no `fieldDimensions`).
--- Public so RealisticCropRotationDisease reuses the same bbox derivation instead of a private copy.
 -- @return number minX, minZ, maxX, maxZ, or nil when geometry is unavailable
 function RealisticCropRotationDiseaseGrid.fieldWorldBounds(field)
     if field == nil or getWorldTranslation == nil then return nil end
@@ -214,8 +208,7 @@ local function fieldClearParams(field)
     local minX, minZ, maxX, maxZ = fieldWorldBounds(field)
     if minX == nil then return nil end
 
-    -- Restrict the wipe to THIS farmland's cells, using the farmland map as a mask, so a
-    -- neighbouring field whose bbox overlaps keeps its own marks (native cross-map filter).
+    -- Restrict the wipe to THIS farmland's cells (farmland map as mask), so an overlapping neighbour keeps its own marks.
     local farmlandId = field.farmland ~= nil and tonumber(field.farmland.id) or nil
     local fm = g_farmlandManager
     local farmlandFilter = nil
@@ -283,7 +276,6 @@ function RealisticCropRotationDiseaseGrid:clearAll()
 end
 
 ---Marks the sprayed strip protected for the given family and clears its disease marks immediately.
--- The daily destruction pass excludes protected cells, so the same write both cures and prevents.
 -- @param string family "FUNGICIDE" | "NEMATICIDE"
 -- @param number sx, sz, wx, wz, hx, hz world-space parallelogram corners of the sprayed strip
 function RealisticCropRotationDiseaseGrid:paintProtection(family, sx, sz, wx, wz, hx, hz)
@@ -306,8 +298,7 @@ function RealisticCropRotationDiseaseGrid:paintProtection(family, sx, sz, wx, wz
 
     local protModifier = DensityMapModifier.new(protectionMapId, 0, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, g_terrainNode)
     protModifier:setParallelogramWorldCoords(sx, sz, wx, wz, hx, hz, DensityCoordType.POINT_POINT_POINT)
-    -- Same changed-count gating as the grid write below: only bump protectionRevision (drives the
-    -- treatment-coverage map view) when a cell was ACTUALLY newly marked, not on every spray tick.
+    -- Only bump protectionRevision (drives the treatment-coverage map view) when a cell was ACTUALLY newly marked.
     local _, protChanged = protModifier:executeSetWithStats(1, groundFilter)
     if (protChanged or 0) > 0 then
         self.protectionRevision = (self.protectionRevision or 0) + 1
