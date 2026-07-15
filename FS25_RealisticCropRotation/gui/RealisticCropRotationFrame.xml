@@ -511,7 +511,7 @@
                         <!-- Right column: total rotation nitrogen residue above score -->
                         <BoxLayout profile="frOverviewMetaColumn" name="gMetaColumn">
                             <GuiElement profile="frOverviewResidueCard" name="gResidueCard" visible="false">
-                                <RoundCorner profile="frStatusPillBgBonus" position="0px 0px" size="228px 22px"/>
+                                <RoundCorner profile="frStatusPillBgBonus" name="gResidueBg" position="0px 0px" size="228px 22px"/>
                                 <Text profile="frStatusPillText" name="gResidueText" position="0px 0px" size="228px 22px" textSize="11px" text=""/>
                             </GuiElement>
                             <Text profile="frOverviewScore" name="gScore" text=""/>

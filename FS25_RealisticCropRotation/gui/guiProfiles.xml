@@ -655,7 +655,7 @@
         <textSize value="12px"/>
         <textBold value="true"/>
         <textUpperCase value="true"/>
-        <textColor value="$preset_colorWhite_50"/>
+        <textColor value="$preset_fs25_colorMainLight"/>
         <textAlignment value="center"/>
         <textVerticalAlignment value="middle"/>
         <textMaxNumLines value="1"/>
@@ -675,7 +675,7 @@
     </Profile>
 
     <Profile name="frFieldKpiValueNA" extends="frFieldKpiValue">
-        <textColor value="$preset_fs25_colorGrey"/>
+        <textColor value="$preset_colorWhite_50"/>
     </Profile>
 
     <!-- Compact value for KPIs with composed text; smaller size avoids clipping -->
@@ -685,7 +685,7 @@
 
     <!-- Same compact size as frFieldKpiValueSmall, greyed out for non-priority fallback text -->
     <Profile name="frFieldKpiValueSmallNA" extends="frFieldKpiValueSmall">
-        <textColor value="$preset_fs25_colorGrey"/>
+        <textColor value="$preset_colorWhite_50"/>
     </Profile>
 
     <!-- Thin vertical divider between the two KPIs -->

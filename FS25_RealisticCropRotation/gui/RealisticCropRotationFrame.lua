@@ -76,7 +76,7 @@ RealisticCropRotationFrame.N_GAUGE_TOLERANCE_RATIO = 0.03  -- fraction of the cr
 -- Gap between a soil row's title and its gauge track.
 RealisticCropRotationFrame.SOIL_ROW_TITLE_GAP_PX = 16
 
--- Global overview crop badge layout (pixel values, converted at runtime); centers the icon+text pair in the badge.
+-- Global overview crop badge layout (pixel values, converted at runtime); centers the icon+text pair in the badge and leaves a safety margin for the text to avoid clipping.
 RealisticCropRotationFrame.GROUP_BADGE_Y          = 18
 RealisticCropRotationFrame.GROUP_BADGE_W          = 300
 RealisticCropRotationFrame.GROUP_BADGE_H          = 30
@@ -84,6 +84,7 @@ RealisticCropRotationFrame.GROUP_ICON_W           = 20
 RealisticCropRotationFrame.GROUP_ICON_H           = 20
 RealisticCropRotationFrame.GROUP_ICON_TEXT_GAP    = 5
 RealisticCropRotationFrame.GROUP_BADGE_PADDING_X  = 20
+RealisticCropRotationFrame.GROUP_BADGE_TEXT_SAFETY_PX = 20
 
 -- Annual calendar layout in pixels. The XML container is 1240 x 154 px.
 RealisticCropRotationFrame.CALENDAR_AXIS_X = 94
@@ -2979,10 +2980,11 @@ function RealisticCropRotationFrame:layoutGroupBadgeContent(cell, slotIndex, dis
 
     local iconWidth = showIcon and iconSize[1] or 0
     local iconTextGap = showIcon and gapSize[1] or 0
+    local textSafety = self:getNormalizedPixelWidth(RealisticCropRotationFrame.GROUP_BADGE_TEXT_SAFETY_PX)
 
-    local badgeWidth = math.min(
-        badgeSize[1],
-        math.max(iconWidth + iconTextGap + paddingSize[1], iconWidth + iconTextGap + textWidth + paddingSize[1])
+    local badgeWidth = math.max(
+        iconWidth + iconTextGap + paddingSize[1],
+        iconWidth + iconTextGap + textWidth + textSafety + paddingSize[1]
     )
     local textBoxWidth = math.max(0, badgeWidth - iconWidth - iconTextGap - paddingSize[1])
     local renderedTextWidth = math.min(textWidth, textBoxWidth)
@@ -3186,6 +3188,7 @@ function RealisticCropRotationFrame:populateGroupCell(index, cell)
 
     -- Total rotation residue — text and calculation come from the shared planning helper.
     local residueCardEl = cell:getAttribute("gResidueCard")
+    local residueBgEl = cell:getAttribute("gResidueBg")
     local residueTextEl = cell:getAttribute("gResidueText")
     local residueText = group.residueText
     if residueCardEl ~= nil then
@@ -3193,6 +3196,10 @@ function RealisticCropRotationFrame:populateGroupCell(index, cell)
     end
     if residueTextEl ~= nil and residueText ~= nil then
         residueTextEl:setText(residueText)
+        local residueWidth = self:resizePillToText(residueBgEl, residueTextEl, residueText, { minWidthPx = 228 })
+        if residueWidth ~= nil and residueCardEl ~= nil and residueCardEl.setSize ~= nil then
+            residueCardEl:setSize(residueWidth, residueCardEl.size[2])
+        end
     end
     local metaColumnEl = cell:getAttribute("gMetaColumn")
     if metaColumnEl ~= nil and metaColumnEl.invalidateLayout ~= nil then
