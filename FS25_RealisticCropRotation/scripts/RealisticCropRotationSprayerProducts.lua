@@ -16,6 +16,9 @@ local productFillTypeSet = {}
 local productTreatmentByFillType = {}
 local hookInstalled = false
 
+-- Below this ground speed (km/h) the tool counts as stopped: no consumption, jet fades.
+local MIN_WORK_SPEED = 0.5
+
 local PF_MOD_NAME = "FS25_precisionFarming"
 local PF_PATCH_REFRESH_INTERVAL = 1000
 local pfExtendedSprayer = nil
@@ -402,7 +405,7 @@ local function installSprayerHook()
             return superFunc(self, workArea, dt)
         end
 
-        -- Replicates the original activation guards but skips FSDensityMapUtil.updateSprayArea (no herbicide ground effect here).
+        -- Guards mirror the vanilla activation path; RCR skips FSDensityMapUtil.updateSprayArea (no herbicide ground effect, no SPRAY_LEVEL).
         if params.sprayFillLevel <= 0 then
             return 0, 0
         end
@@ -411,18 +414,20 @@ local function installSprayerHook()
             return 0, 0
         end
 
-        params.isActive = true
-        params.lastSprayTime = g_time
-
-        -- Treated-ground visual only (no agronomy effect); cleared by the engine on the next growth-state bump.
-        paintTreatmentGround(self, workArea)
-
-        if self:getLastSpeed() > 1 then
-            spec.isWorking = true
+        -- Stationary means no work. RCR has no changedArea to fall to zero, so speed is its work signal: leaving
+        -- isActive/lastSprayTime unset makes onEndWorkAreaProcessing skip consumption and lets the jet fade out.
+        if self:getLastSpeed() <= MIN_WORK_SPEED then
+            return 0, 0
         end
 
-        -- Curative + preventive disease protection: server-only, since it gates the server-authoritative daily destroy pass.
+        -- isActive drives the vanilla per-tick consumption in onEndWorkAreaProcessing; lastSprayTime drives the jet effect.
+        params.isActive = true
+        params.lastSprayTime = g_time
+        spec.isWorking = true
+
+        -- Treated-ground look plus curative/preventive protection; server only (protection gates the daily destroy pass).
         if self.isServer then
+            paintTreatmentGround(self, workArea)
             paintDiseaseProtection(workArea, sprayFillType)
         end
 
