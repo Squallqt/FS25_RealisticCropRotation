@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="Yüksek" />
         <e k="rcr_disease_notification" v="Tarla %s üzerinde %s tespit edildi" />
         <e k="rcr_disease_hud_label"    v="Hastalık" />
-        <e k="rcr_disease_hud_active"   v="%s (aktif)" />
+        <e k="rcr_disease_header_active" v="Hastalık (%s)" />
         <e k="rcr_treatment_hud_label"  v="İlaçlama" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="Nematisit" />
         <e k="rcr_fillType_fungicide" v="Fungisit" />
         <e k="rcr_fillType_nematicide" v="Nematisit" />
+        <e k="rcr_disease_treatment_none" v="İlaçlama yok" />
         <e k="rcr_disease_treatment_hernie" v="Yok (dayanıklı çeşit, kireçleme, münavebe)" />
         <e k="rcr_advice_pressure_high_phoma" v="Phoma baskısı yüksek: kanola ve hardalı yaklaşık 4 yıl ekmeyin, artıkları toprağa gömün; duyarlı çeşitlerde sonbaharda fungisit uygulayın." />
         <e k="rcr_advice_pressure_high_pietin" v="Kök çürüklüğü baskısı yüksek: konukçu olmayan bir ara bitki (yulaf, baklagil, yağlı tohum) ekin; etkili fungisit yoktur, yalnızca münavebe iyileştirir." />

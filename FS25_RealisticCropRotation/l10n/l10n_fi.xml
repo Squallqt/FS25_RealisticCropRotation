@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="Korkea" />
         <e k="rcr_disease_notification" v="%s havaittu pellolla %s" />
         <e k="rcr_disease_hud_label"    v="Kasvitauti" />
-        <e k="rcr_disease_hud_active"   v="%s (aktiivinen)" />
+        <e k="rcr_disease_header_active" v="Kasvitauti (%s)" />
         <e k="rcr_treatment_hud_label"  v="Torjunta" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="Ankeroistorjunta-aine" />
         <e k="rcr_fillType_fungicide" v="Sienitorjunta-aine" />
         <e k="rcr_fillType_nematicide" v="Ankeroistorjunta-aine" />
+        <e k="rcr_disease_treatment_none" v="Ei torjuntaa" />
         <e k="rcr_disease_treatment_hernie" v="Ei mitään (kestävä lajike, kalkitus, viljelykierto)" />
         <e k="rcr_advice_pressure_high_phoma" v="Korkea Phoman paine: vältä rapsia ja sinappia noin 4 vuotta, muokkaa kasvijätteet maahan; syksyn sienitorjunta-aine alttiille lajikkeille." />
         <e k="rcr_advice_pressure_high_pietin" v="Korkea tyvimädän paine: lisää isäntäkasviksi kelpaamaton katkokasvi (kaura, palkokasvi, öljykasvi); mikään sienitorjunta-aine ei tehoa, vain viljelykierto parantaa." />

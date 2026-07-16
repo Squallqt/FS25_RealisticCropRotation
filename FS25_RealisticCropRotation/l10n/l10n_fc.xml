@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="Élevée" />
         <e k="rcr_disease_notification" v="%s détectée sur le champ %s" />
         <e k="rcr_disease_hud_label"    v="Maladie" />
-        <e k="rcr_disease_hud_active"   v="%s (active)" />
+        <e k="rcr_disease_header_active" v="Maladie (%s)" />
         <e k="rcr_treatment_hud_label"  v="Traitement" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="Nématicide" />
         <e k="rcr_fillType_fungicide" v="Fongicide" />
         <e k="rcr_fillType_nematicide" v="Nématicide" />
+        <e k="rcr_disease_treatment_none" v="Aucun traitement" />
         <e k="rcr_disease_treatment_hernie" v="Aucun (variété résistante, chaulage, rotation)" />
         <e k="rcr_advice_pressure_high_phoma" v="Forte pression phoma : évitez canola et moutarde ~4 ans, enfouissez les résidus ; fongicide d'automne sur variété sensible." />
         <e k="rcr_advice_pressure_high_pietin" v="Forte pression piétin-échaudage : insérez une coupure non-hôte (avoine, légumineuse, oléagineux) ; aucun fongicide efficace, seule la rotation guérit." />

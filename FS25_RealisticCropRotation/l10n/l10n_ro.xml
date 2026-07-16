@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="Ridicată" />
         <e k="rcr_disease_notification" v="%s detectată pe câmpul %s" />
         <e k="rcr_disease_hud_label"    v="Boală" />
-        <e k="rcr_disease_hud_active"   v="%s (activă)" />
+        <e k="rcr_disease_header_active" v="Boală (%s)" />
         <e k="rcr_treatment_hud_label"  v="Tratament" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="Nematicid" />
         <e k="rcr_fillType_fungicide" v="Fungicid" />
         <e k="rcr_fillType_nematicide" v="Nematicid" />
+        <e k="rcr_disease_treatment_none" v="Niciun tratament" />
         <e k="rcr_disease_treatment_hernie" v="Niciunul (soi rezistent, amendare cu var, rotație)" />
         <e k="rcr_advice_pressure_high_phoma" v="Presiune mare de Phoma: evitați rapița și muștarul circa 4 ani, încorporați resturile; fungicid de toamnă pe soiurile sensibile." />
         <e k="rcr_advice_pressure_high_pietin" v="Presiune mare de înnegrire a bazei paiului: introduceți o pauză cu o cultură negazdă (ovăz, leguminoasă, oleaginoasă); niciun fungicid nu ajută, doar rotația vindecă." />

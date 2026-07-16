@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="Magas" />
         <e k="rcr_disease_notification" v="%s észlelve a(z) %s. táblán" />
         <e k="rcr_disease_hud_label"    v="Betegség" />
-        <e k="rcr_disease_hud_active"   v="%s (aktív)" />
+        <e k="rcr_disease_header_active" v="Betegség (%s)" />
         <e k="rcr_treatment_hud_label"  v="Kezelés" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="Fonálféregölő szer" />
         <e k="rcr_fillType_fungicide" v="Gombaölő szer" />
         <e k="rcr_fillType_nematicide" v="Fonálféregölő szer" />
+        <e k="rcr_disease_treatment_none" v="Nincs kezelés" />
         <e k="rcr_disease_treatment_hernie" v="Nincs (rezisztens fajta, meszezés, vetésforgó)" />
         <e k="rcr_advice_pressure_high_phoma" v="Erős fómás nyomás: mintegy 4 évig kerülje a repcét és a mustárt, forgassa be a maradványokat; fogékony fajtán őszi gombaölő szer." />
         <e k="rcr_advice_pressure_high_pietin" v="Erős szártőfeketedés-nyomás: iktasson be nem gazdanövény kihagyást (zab, hüvelyes, olajnövény); nincs hatékony gombaölő szer, csak a vetésforgó gyógyítja." />

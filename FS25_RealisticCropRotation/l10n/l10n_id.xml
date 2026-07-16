@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="Tinggi" />
         <e k="rcr_disease_notification" v="%s terdeteksi di Lahan %s" />
         <e k="rcr_disease_hud_label"    v="Penyakit" />
-        <e k="rcr_disease_hud_active"   v="%s (aktif)" />
+        <e k="rcr_disease_header_active" v="Penyakit (%s)" />
         <e k="rcr_treatment_hud_label"  v="Penyemprotan" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="Nematisida" />
         <e k="rcr_fillType_fungicide" v="Fungisida" />
         <e k="rcr_fillType_nematicide" v="Nematisida" />
+        <e k="rcr_disease_treatment_none" v="Tidak ada penyemprotan" />
         <e k="rcr_disease_treatment_hernie" v="Tidak ada (varietas tahan, pengapuran, rotasi)" />
         <e k="rcr_advice_pressure_high_phoma" v="Tekanan phoma tinggi: hindari kanola dan sesawi sekitar 4 tahun, benamkan sisa tanaman; fungisida musim gugur pada varietas rentan." />
         <e k="rcr_advice_pressure_high_pietin" v="Tekanan busuk akar tinggi: sisipkan jeda tanaman bukan inang (oat, legum, tanaman minyak); tidak ada fungisida efektif, hanya rotasi yang menyembuhkan." />

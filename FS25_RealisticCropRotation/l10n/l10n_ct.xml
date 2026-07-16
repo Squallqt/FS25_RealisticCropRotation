@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="高" />
         <e k="rcr_disease_notification" v="在田地 %s 偵測到 %s" />
         <e k="rcr_disease_hud_label"    v="病害" />
-        <e k="rcr_disease_hud_active"   v="%s（活躍）" />
+        <e k="rcr_disease_header_active" v="病害（%s）" />
         <e k="rcr_treatment_hud_label"  v="防治" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="殺線蟲劑" />
         <e k="rcr_fillType_fungicide" v="殺菌劑" />
         <e k="rcr_fillType_nematicide" v="殺線蟲劑" />
+        <e k="rcr_disease_treatment_none" v="無防治" />
         <e k="rcr_disease_treatment_hernie" v="無（抗病品種、施石灰、輪作）" />
         <e k="rcr_advice_pressure_high_phoma" v="黑脛病壓力高，約四年內避免種植油菜和芥菜，翻埋殘體；感病品種在秋季施用殺菌劑。" />
         <e k="rcr_advice_pressure_high_pietin" v="全蝕病壓力高，插入一茬非寄主作物（燕麥、豆科、油料作物）打斷；沒有有效殺菌劑，只有輪作才能根治。" />

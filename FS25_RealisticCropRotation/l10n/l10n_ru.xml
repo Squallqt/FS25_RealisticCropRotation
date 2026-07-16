@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="Высокое" />
         <e k="rcr_disease_notification" v="%s обнаружена на поле %s" />
         <e k="rcr_disease_hud_label"    v="Болезнь" />
-        <e k="rcr_disease_hud_active"   v="%s (активна)" />
+        <e k="rcr_disease_header_active" v="Болезнь (%s)" />
         <e k="rcr_treatment_hud_label"  v="Обработка" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="Нематицид" />
         <e k="rcr_fillType_fungicide" v="Фунгицид" />
         <e k="rcr_fillType_nematicide" v="Нематицид" />
+        <e k="rcr_disease_treatment_none" v="Нет обработки" />
         <e k="rcr_disease_treatment_hernie" v="Нет (устойчивый сорт, известкование, севооборот)" />
         <e k="rcr_advice_pressure_high_phoma" v="Высокое давление фомоза: около 4 лет избегайте рапса и горчицы, заделайте остатки; осенний фунгицид на восприимчивых сортах." />
         <e k="rcr_advice_pressure_high_pietin" v="Высокое давление офиоболёзной гнили: введите непоражаемую культуру-разрыв (овёс, бобовые, масличные); фунгициды не действуют, лечит только севооборот." />

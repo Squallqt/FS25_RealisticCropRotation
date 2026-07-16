@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="Alta" />
         <e k="rcr_disease_notification" v="%s detectada no Campo %s" />
         <e k="rcr_disease_hud_label"    v="Doença" />
-        <e k="rcr_disease_hud_active"   v="%s (ativa)" />
+        <e k="rcr_disease_header_active" v="Doença (%s)" />
         <e k="rcr_treatment_hud_label"  v="Tratamento" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="Nematicida" />
         <e k="rcr_fillType_fungicide" v="Fungicida" />
         <e k="rcr_fillType_nematicide" v="Nematicida" />
+        <e k="rcr_disease_treatment_none" v="Nenhum tratamento" />
         <e k="rcr_disease_treatment_hernie" v="Nenhum (variedade resistente, calagem, rotação)" />
         <e k="rcr_advice_pressure_high_phoma" v="Forte pressão de phoma: evite canola e mostarda por ~4 anos, incorpore os restos culturais; fungicida de outono em variedades suscetíveis." />
         <e k="rcr_advice_pressure_high_pietin" v="Forte pressão de mal-do-pé: insira um corte não hospedeiro (aveia, leguminosa, oleaginosa); nenhum fungicida eficaz, só a rotação resolve." />

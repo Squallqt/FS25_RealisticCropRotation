@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="Alta" />
         <e k="rcr_disease_notification" v="%s detectada en el campo %s" />
         <e k="rcr_disease_hud_label"    v="Enfermedad" />
-        <e k="rcr_disease_hud_active"   v="%s (activa)" />
+        <e k="rcr_disease_header_active" v="Enfermedad (%s)" />
         <e k="rcr_treatment_hud_label"  v="Tratamiento" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="Nematicida" />
         <e k="rcr_fillType_fungicide" v="Fungicida" />
         <e k="rcr_fillType_nematicide" v="Nematicida" />
+        <e k="rcr_disease_treatment_none" v="Ningún tratamiento" />
         <e k="rcr_disease_treatment_hernie" v="Ninguno (variedad resistente, encalado, rotación)" />
         <e k="rcr_advice_pressure_high_phoma" v="Alta presión de phoma: evita colza y mostaza ~4 años, entierra los restos; fungicida otoñal en variedades sensibles." />
         <e k="rcr_advice_pressure_high_pietin" v="Alta presión de mal del pie: introduce un corte no hospedante (avena, leguminosa, oleaginosa); ningún fungicida eficaz, solo la rotación lo cura." />

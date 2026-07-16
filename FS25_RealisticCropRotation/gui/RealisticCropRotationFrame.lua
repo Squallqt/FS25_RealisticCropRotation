@@ -1660,9 +1660,9 @@ function RealisticCropRotationFrame:updateSoilPHGauge(farmlandId, sharedRowTitle
     end
 end
 
--- Field card (soil work / weed / growth)
+-- Field card (soil work / weed / growth / disease)
 
----Updates the field card: required soil work, weed line, and growth stage.
+---Updates the field card: required soil work, weed line, growth stage, and active disease.
 -- @param integer farmlandId
 function RealisticCropRotationFrame:updateFieldCard(farmlandId)
     local mgr = self:getManager()
@@ -1721,6 +1721,37 @@ function RealisticCropRotationFrame:updateFieldCard(farmlandId)
             self.growthValue:applyProfile(profile)
         end
         self.growthValue:setText(stageText)
+    end
+
+    -- Disease KPI reuses the weed layout: header = disease name in context, value = short treatment.
+    local worstDiseaseGroup = self:getWorstActiveDisease(farmlandId)
+    local diseaseHeaderText = self.i18n:getText("rcr_section_disease_map")
+    local diseaseText = "-"
+
+    if worstDiseaseGroup ~= nil then
+        diseaseHeaderText = string.format(
+            self.i18n:getText("rcr_disease_header_active"),
+            RealisticCropRotation.disease:getDisplayName(worstDiseaseGroup)
+        )
+
+        -- Treatment enum (FUNGICIDE | NEMATICIDE | NONE) maps to the same short fillType labels
+        -- already used for the sprayer tanks, so the KPI value stays a single short word.
+        local treatment = RealisticCropRotation.disease:getTreatment(worstDiseaseGroup)
+        local treatmentKey = (treatment == "FUNGICIDE" and "rcr_fillType_fungicide")
+            or (treatment == "NEMATICIDE" and "rcr_fillType_nematicide")
+            or "rcr_disease_treatment_none"
+        diseaseText = self.i18n:getText(treatmentKey)
+    end
+
+    if self.diseaseHeaderText ~= nil then
+        self.diseaseHeaderText:setText(diseaseHeaderText)
+    end
+
+    if self.diseaseValue ~= nil then
+        if self.diseaseValue.applyProfile ~= nil then
+            self.diseaseValue:applyProfile(worstDiseaseGroup ~= nil and "frFieldKpiValueSmall" or "frFieldKpiValueNA")
+        end
+        self.diseaseValue:setText(diseaseText)
     end
 end
 
@@ -1833,6 +1864,23 @@ function RealisticCropRotationFrame:getWorstPressureAdviceText(farmlandId, curre
     return nil
 end
 
+---Worst infection actually active on a field right now (across all pathogen groups), or nil when healthy.
+-- @param integer farmlandId
+-- @return string worstGroup, or nil
+-- @return number worstSeverity
+function RealisticCropRotationFrame:getWorstActiveDisease(farmlandId)
+    local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
+    local activeState = (disease ~= nil and type(disease.getState) == "function")
+        and disease:getState(farmlandId) or nil
+    local worstGroup, worstSeverity = nil, 0
+    for group, s in pairs(activeState or {}) do
+        if (s.severity or 0) > worstSeverity then
+            worstGroup, worstSeverity = group, s.severity or 0
+        end
+    end
+    return worstGroup, worstSeverity
+end
+
 ---Refreshes the advice card: active outbreak > planned-step evaluation > per-family fallback, plus a soil-analysis note.
 -- @param string currentFamily
 -- @param integer farmlandId
@@ -1845,14 +1893,7 @@ function RealisticCropRotationFrame:updateAdviceStatusCard(currentFamily, farmla
 
     -- 1) Active outbreak: the worst infection actually happening on this field right now.
     local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
-    local activeState = (disease ~= nil and type(disease.getState) == "function")
-        and disease:getState(farmlandId) or nil
-    local worstGroup, worstSeverity = nil, 0
-    for group, s in pairs(activeState or {}) do
-        if (s.severity or 0) > worstSeverity then
-            worstGroup, worstSeverity = group, s.severity or 0
-        end
-    end
+    local worstGroup, worstSeverity = self:getWorstActiveDisease(farmlandId)
 
     if worstGroup ~= nil then
         visualState = "Danger"

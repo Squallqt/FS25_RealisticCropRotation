@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="Cao" />
         <e k="rcr_disease_notification" v="%s được phát hiện trên cánh đồng %s" />
         <e k="rcr_disease_hud_label"    v="Dịch bệnh" />
-        <e k="rcr_disease_hud_active"   v="%s (đang hoạt động)" />
+        <e k="rcr_disease_header_active" v="Dịch bệnh (%s)" />
         <e k="rcr_treatment_hud_label"  v="Phun thuốc" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="Thuốc trừ tuyến trùng" />
         <e k="rcr_fillType_fungicide" v="Thuốc trừ nấm" />
         <e k="rcr_fillType_nematicide" v="Thuốc trừ tuyến trùng" />
+        <e k="rcr_disease_treatment_none" v="Không phun thuốc" />
         <e k="rcr_disease_treatment_hernie" v="Không (giống kháng bệnh, bón vôi, luân canh)" />
         <e k="rcr_advice_pressure_high_phoma" v="Áp lực Phoma cao: tránh cải dầu và mù tạt khoảng 4 năm, vùi tàn dư; phun thuốc trừ nấm mùa thu trên giống mẫn cảm." />
         <e k="rcr_advice_pressure_high_pietin" v="Áp lực thối rễ cao: chèn một vụ cây không phải ký chủ (yến mạch, họ đậu, cây lấy dầu); không có thuốc trừ nấm hiệu quả, chỉ luân canh mới khắc phục." />

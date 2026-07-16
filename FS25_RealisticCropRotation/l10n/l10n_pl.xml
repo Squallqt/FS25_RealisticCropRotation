@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="Wysoka" />
         <e k="rcr_disease_notification" v="%s wykryta na polu %s" />
         <e k="rcr_disease_hud_label"    v="Choroba" />
-        <e k="rcr_disease_hud_active"   v="%s (aktywna)" />
+        <e k="rcr_disease_header_active" v="Choroba (%s)" />
         <e k="rcr_treatment_hud_label"  v="Zabieg" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="Nematocyd" />
         <e k="rcr_fillType_fungicide" v="Fungicyd" />
         <e k="rcr_fillType_nematicide" v="Nematocyd" />
+        <e k="rcr_disease_treatment_none" v="Brak zabiegu" />
         <e k="rcr_disease_treatment_hernie" v="Brak (odmiana odporna, wapnowanie, płodozmian)" />
         <e k="rcr_advice_pressure_high_phoma" v="Wysoka presja suchej zgnilizny: przez około 4 lata unikaj rzepaku i gorczycy, przyoraj resztki; jesienny fungicyd na odmianach podatnych." />
         <e k="rcr_advice_pressure_high_pietin" v="Wysoka presja zgorzeli podstawy źdźbła: wprowadź przerwę z rośliną niebędącą żywicielem (owies, bobowate, oleiste); żaden fungicyd nie działa, leczy tylko płodozmian." />

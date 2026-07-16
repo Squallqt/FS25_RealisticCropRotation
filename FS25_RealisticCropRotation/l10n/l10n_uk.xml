@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="Високий" />
         <e k="rcr_disease_notification" v="%s виявлено на полі %s" />
         <e k="rcr_disease_hud_label"    v="Хвороба" />
-        <e k="rcr_disease_hud_active"   v="%s (активна)" />
+        <e k="rcr_disease_header_active" v="Хвороба (%s)" />
         <e k="rcr_treatment_hud_label"  v="Обробка" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="Нематицид" />
         <e k="rcr_fillType_fungicide" v="Фунгіцид" />
         <e k="rcr_fillType_nematicide" v="Нематицид" />
+        <e k="rcr_disease_treatment_none" v="Немає обробки" />
         <e k="rcr_disease_treatment_hernie" v="Немає (стійкий сорт, вапнування, сівозміна)" />
         <e k="rcr_advice_pressure_high_phoma" v="Високий тиск фомозу: близько 4 років уникайте ріпаку та гірчиці, загорніть рештки; осінній фунгіцид на сприйнятливих сортах." />
         <e k="rcr_advice_pressure_high_pietin" v="Високий тиск офіобольозної гнилі: введіть непоражувану культуру-розрив (овес, бобові, олійні); фунгіциди не діють, лікує лише сівозміна." />

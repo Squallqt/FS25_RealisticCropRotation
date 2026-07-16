@@ -154,8 +154,7 @@ function RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
     for group, s in pairs(groups) do
         if (s.severity or 0) > 0 then
             local diseaseName = (type(disease.getDisplayName) == "function") and disease:getDisplayName(group) or tostring(group)
-            local value = string.format(RealisticCropRotationHud.getText("rcr_disease_hud_active", "%s (active)"), diseaseName)
-            fieldBox:addLine(label, value, true)
+            fieldBox:addLine(label, diseaseName, true)
         end
     end
 end

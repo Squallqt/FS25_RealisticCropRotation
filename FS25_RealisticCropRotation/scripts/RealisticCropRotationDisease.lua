@@ -1052,8 +1052,8 @@ function RealisticCropRotationDisease:consoleInfect(farmlandId, groupName, sever
     local warning = ""
     local hostGroups = cropDiseaseGroups(cropName)
     if hostGroups == nil or not hostGroups[group] then
-        local cropLabel = (cropName ~= nil and cropName ~= "") and tostring(cropName) or "(aucune culture)"
-        warning = string.format("ATTENTION : %s n'est pas un hote naturel de %s (infection forcee pour test). ",
+        local cropLabel = (cropName ~= nil and cropName ~= "") and tostring(cropName) or "(no crop)"
+        warning = string.format("WARNING: %s is not a natural host for %s (forced infection for testing). ",
             cropLabel, self:getDisplayName(group))
     end
 

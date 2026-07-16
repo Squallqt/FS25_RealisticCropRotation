@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="Alta" />
         <e k="rcr_disease_notification" v="%s rilevata sul campo %s" />
         <e k="rcr_disease_hud_label"    v="Malattia" />
-        <e k="rcr_disease_hud_active"   v="%s (attiva)" />
+        <e k="rcr_disease_header_active" v="Malattia (%s)" />
         <e k="rcr_treatment_hud_label"  v="Trattamento" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="Nematocida" />
         <e k="rcr_fillType_fungicide" v="Fungicida" />
         <e k="rcr_fillType_nematicide" v="Nematocida" />
+        <e k="rcr_disease_treatment_none" v="Nessun trattamento" />
         <e k="rcr_disease_treatment_hernie" v="Nessuno (varietà resistente, calcitazione, rotazione)" />
         <e k="rcr_advice_pressure_high_phoma" v="Forte pressione di phoma: evita colza e senape per ~4 anni, interra i residui; fungicida autunnale sulle varietà sensibili." />
         <e k="rcr_advice_pressure_high_pietin" v="Forte pressione di mal del piede: inserisci un'interruzione non ospite (avena, leguminosa, oleaginosa); nessun fungicida efficace, solo la rotazione risolve." />

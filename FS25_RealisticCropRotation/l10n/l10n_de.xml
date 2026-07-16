@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="Hoch" />
         <e k="rcr_disease_notification" v="%s auf Feld %s entdeckt" />
         <e k="rcr_disease_hud_label"    v="Krankheit" />
-        <e k="rcr_disease_hud_active"   v="%s (aktiv)" />
+        <e k="rcr_disease_header_active" v="Krankheit (%s)" />
         <e k="rcr_treatment_hud_label"  v="Behandlung" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="Nematizid" />
         <e k="rcr_fillType_fungicide" v="Fungizid" />
         <e k="rcr_fillType_nematicide" v="Nematizid" />
+        <e k="rcr_disease_treatment_none" v="Keine Behandlung" />
         <e k="rcr_disease_treatment_hernie" v="Keine (resistente Sorte, Kalkung, Fruchtfolge)" />
         <e k="rcr_advice_pressure_high_phoma" v="Hoher Phoma-Druck: Raps und Senf ca. 4 Jahre meiden, Rückstände einarbeiten; Herbstfungizid bei anfälligen Sorten." />
         <e k="rcr_advice_pressure_high_pietin" v="Hoher Schwarzbeinigkeits-Druck: eine Nichtwirtspause einlegen (Hafer, Leguminose, Ölfrucht); kein wirksames Fungizid, nur die Fruchtfolge hilft." />

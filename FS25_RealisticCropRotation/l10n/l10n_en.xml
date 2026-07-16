@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="High" />
         <e k="rcr_disease_notification" v="%s detected on Field %s" />
         <e k="rcr_disease_hud_label"    v="Disease" />
-        <e k="rcr_disease_hud_active"   v="%s (active)" />
+        <e k="rcr_disease_header_active" v="Disease (%s)" />
         <e k="rcr_treatment_hud_label"  v="Treatment" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="Nematicide" />
         <e k="rcr_fillType_fungicide" v="Fungicide" />
         <e k="rcr_fillType_nematicide" v="Nematicide" />
+        <e k="rcr_disease_treatment_none" v="No treatment" />
         <e k="rcr_disease_treatment_hernie" v="None (resistant variety, liming, rotation)" />
         <e k="rcr_advice_pressure_high_phoma" v="High phoma pressure: avoid canola and mustard for ~4 years, bury residue; autumn fungicide on susceptible varieties." />
         <e k="rcr_advice_pressure_high_pietin" v="High take-all pressure: insert a non-host break (oats, legume, oilseed); no effective fungicide, only rotation cures it." />

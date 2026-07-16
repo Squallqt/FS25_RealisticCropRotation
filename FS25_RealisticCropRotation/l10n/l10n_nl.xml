@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="Hoog" />
         <e k="rcr_disease_notification" v="%s gedetecteerd op veld %s" />
         <e k="rcr_disease_hud_label"    v="Gewasziekte" />
-        <e k="rcr_disease_hud_active"   v="%s (actief)" />
+        <e k="rcr_disease_header_active" v="Gewasziekte (%s)" />
         <e k="rcr_treatment_hud_label"  v="Behandeling" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="Nematicide" />
         <e k="rcr_fillType_fungicide" v="Fungicide" />
         <e k="rcr_fillType_nematicide" v="Nematicide" />
+        <e k="rcr_disease_treatment_none" v="Geen behandeling" />
         <e k="rcr_disease_treatment_hernie" v="Geen (resistent ras, bekalking, vruchtwisseling)" />
         <e k="rcr_advice_pressure_high_phoma" v="Hoge phoma-druk: vermijd koolzaad en mosterd ~4 jaar, werk de gewasresten onder; najaarsfungicide op vatbare rassen." />
         <e k="rcr_advice_pressure_high_pietin" v="Hoge tarwehalmdoder-druk: voeg een niet-waardgewas in (haver, vlinderbloemige, oliehoudend gewas); geen werkzaam fungicide, alleen vruchtwisseling helpt." />

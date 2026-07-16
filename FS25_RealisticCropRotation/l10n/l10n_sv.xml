@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="Hög" />
         <e k="rcr_disease_notification" v="%s upptäckt på fält %s" />
         <e k="rcr_disease_hud_label"    v="Växtsjukdom" />
-        <e k="rcr_disease_hud_active"   v="%s (aktiv)" />
+        <e k="rcr_disease_header_active" v="Växtsjukdom (%s)" />
         <e k="rcr_treatment_hud_label"  v="Behandling" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="Nematicid" />
         <e k="rcr_fillType_fungicide" v="Svampmedel" />
         <e k="rcr_fillType_nematicide" v="Nematicid" />
+        <e k="rcr_disease_treatment_none" v="Ingen behandling" />
         <e k="rcr_disease_treatment_hernie" v="Ingen (resistent sort, kalkning, växtföljd)" />
         <e k="rcr_advice_pressure_high_phoma" v="Högt torrötetryck: undvik raps och senap i cirka 4 år, myllna ned skörderester; höstsvampmedel på mottagliga sorter." />
         <e k="rcr_advice_pressure_high_pietin" v="Högt rotdödartryck: lägg in en icke-värdgröda som avbrott (havre, baljväxt, oljeväxt); inget svampmedel hjälper, bara växtföljd botar." />

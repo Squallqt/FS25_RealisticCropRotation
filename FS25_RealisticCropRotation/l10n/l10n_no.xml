@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="Høy" />
         <e k="rcr_disease_notification" v="%s oppdaget på åker %s" />
         <e k="rcr_disease_hud_label"    v="Sykdom" />
-        <e k="rcr_disease_hud_active"   v="%s (aktiv)" />
+        <e k="rcr_disease_header_active" v="Sykdom (%s)" />
         <e k="rcr_treatment_hud_label"  v="Behandling" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="Nematicid" />
         <e k="rcr_fillType_fungicide" v="Soppmiddel" />
         <e k="rcr_fillType_nematicide" v="Nematicid" />
+        <e k="rcr_disease_treatment_none" v="Ingen behandling" />
         <e k="rcr_disease_treatment_hernie" v="Ingen (resistent sort, kalking, vekstskifte)" />
         <e k="rcr_advice_pressure_high_phoma" v="Høyt phoma-trykk: unngå raps og sennep i ca. 4 år, mold ned planterester; soppmiddel om høsten på mottakelige sorter." />
         <e k="rcr_advice_pressure_high_pietin" v="Høyt rotdreper-trykk: sett inn en ikke-vertsvekst som opphold (havre, belgvekst, oljevekst); ingen soppmiddel virker, bare vekstskifte kurerer." />

@@ -270,16 +270,23 @@
                     <Text profile="frFieldKpiValueNA" id="requiredActionValue" text="-"/>
                 </GuiElement>
 
-                <RoundCorner profile="frFieldDivider" position="-207px -18px"/>
+                <RoundCorner profile="frFieldDivider" position="-310px -18px"/>
 
-                <GuiElement profile="frFieldKpi" position="413px 0px">
+                <GuiElement profile="frFieldKpi" position="310px 0px">
                     <Text profile="frFieldKpiLabel" id="weedHeaderText" text="$l10n_rcr_weed_header"/>
                     <Text profile="frFieldKpiValueNA" id="weedValue" text="-"/>
                 </GuiElement>
 
-                <RoundCorner profile="frFieldDivider" position="207px -18px"/>
+                <RoundCorner profile="frFieldDivider" position="0px -18px"/>
 
-                <GuiElement profile="frFieldKpi" position="827px 0px">
+                <GuiElement profile="frFieldKpi" position="620px 0px">
+                    <Text profile="frFieldKpiLabel" id="diseaseHeaderText" text="$l10n_rcr_section_disease_map"/>
+                    <Text profile="frFieldKpiValueNA" id="diseaseValue" text="-"/>
+                </GuiElement>
+
+                <RoundCorner profile="frFieldDivider" position="310px -18px"/>
+
+                <GuiElement profile="frFieldKpi" position="930px 0px">
                     <Text profile="frFieldKpiLabel" text="$l10n_rcr_field_growth"/>
                     <Text profile="frFieldKpiValueNA" id="growthValue" text="-"/>
                 </GuiElement>

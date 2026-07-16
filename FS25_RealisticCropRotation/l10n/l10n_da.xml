@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="Høj" />
         <e k="rcr_disease_notification" v="%s opdaget på mark %s" />
         <e k="rcr_disease_hud_label"    v="Sygdom" />
-        <e k="rcr_disease_hud_active"   v="%s (aktiv)" />
+        <e k="rcr_disease_header_active" v="Sygdom (%s)" />
         <e k="rcr_treatment_hud_label"  v="Behandling" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="Nematicid" />
         <e k="rcr_fillType_fungicide" v="Svampemiddel" />
         <e k="rcr_fillType_nematicide" v="Nematicid" />
+        <e k="rcr_disease_treatment_none" v="Ingen behandling" />
         <e k="rcr_disease_treatment_hernie" v="Ingen (resistent sort, kalkning, sædskifte)" />
         <e k="rcr_advice_pressure_high_phoma" v="Højt phoma-tryk: undgå raps og sennep i ca. 4 år, nedmuld planterester; efterårssvampemiddel på modtagelige sorter." />
         <e k="rcr_advice_pressure_high_pietin" v="Højt goldfodsyge-tryk: indsæt en ikke-værtsafgrøde som pause (havre, bælgplante, olieafgrøde); intet svampemiddel virker, kun sædskifte kurerer." />

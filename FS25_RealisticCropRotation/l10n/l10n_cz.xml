@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="Vysoký" />
         <e k="rcr_disease_notification" v="%s zjištěna na poli %s" />
         <e k="rcr_disease_hud_label"    v="Choroba" />
-        <e k="rcr_disease_hud_active"   v="%s (aktivní)" />
+        <e k="rcr_disease_header_active" v="Choroba (%s)" />
         <e k="rcr_treatment_hud_label"  v="Ošetření" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="Nematicid" />
         <e k="rcr_fillType_fungicide" v="Fungicid" />
         <e k="rcr_fillType_nematicide" v="Nematicid" />
+        <e k="rcr_disease_treatment_none" v="Žádné ošetření" />
         <e k="rcr_disease_treatment_hernie" v="Žádné (odolná odrůda, vápnění, osevní postup)" />
         <e k="rcr_advice_pressure_high_phoma" v="Vysoký tlak fomové hniloby: asi 4 roky nepěstujte řepku a hořčici, zapravte zbytky; u náchylných odrůd podzimní fungicid." />
         <e k="rcr_advice_pressure_high_pietin" v="Vysoký tlak černání pat stébel: zařaďte nehostitelskou přerušovací plodinu (oves, luskovina, olejnina); žádný fungicid nezabírá, léčí jen osevní postup." />

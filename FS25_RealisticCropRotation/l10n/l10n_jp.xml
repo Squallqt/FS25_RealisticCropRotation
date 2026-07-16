@@ -21,7 +21,7 @@
         <e k="rcr_disease_risk_high"      v="高" />
         <e k="rcr_disease_notification" v="%s が圃場 %s で検出されました" />
         <e k="rcr_disease_hud_label"    v="病害" />
-        <e k="rcr_disease_hud_active"   v="%s（発生中）" />
+        <e k="rcr_disease_header_active" v="病害（%s）" />
         <e k="rcr_treatment_hud_label"  v="防除" />
 
         <!-- Status labels -->
@@ -197,6 +197,7 @@
         <e k="rcr_disease_treatment_bcn" v="殺線虫剤" />
         <e k="rcr_fillType_fungicide" v="殺菌剤" />
         <e k="rcr_fillType_nematicide" v="殺線虫剤" />
+        <e k="rcr_disease_treatment_none" v="防除なし" />
         <e k="rcr_disease_treatment_hernie" v="なし（抵抗性品種・石灰散布・輪作）" />
         <e k="rcr_advice_pressure_high_phoma" v="茎枯病の圧力が高い。ナタネとカラシナを約4年避け、残渣をすき込む。感受性品種には秋に殺菌剤を散布する。" />
         <e k="rcr_advice_pressure_high_pietin" v="立枯病の圧力が高い。非宿主作物（エンバク、マメ科、油糧作物）を挟んで断ち切る。有効な殺菌剤はなく、輪作だけが治せる。" />
