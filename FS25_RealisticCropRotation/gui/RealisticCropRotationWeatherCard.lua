@@ -4,7 +4,6 @@ RealisticCropRotationWeatherCard = {}
 local RealisticCropRotationWeatherCard_mt = { __index = RealisticCropRotationWeatherCard }
 
 RealisticCropRotationWeatherCard.DAY_LENGTH_MS = 86400000
-RealisticCropRotationWeatherCard.REFRESH_INTERVAL_MS = 5000
 
 -- Layout values are kept in pixels and converted at runtime so the card remains resolution-safe.
 RealisticCropRotationWeatherCard.TITLE_GAP_PX = 24
@@ -68,7 +67,6 @@ function RealisticCropRotationWeatherCard.new(owner, i18n)
     self.owner = owner
     self.i18n = i18n or g_i18n
     self.controls = {}
-    self.refreshTimerMs = 0
     self.lastSignature = nil
     self.cardRightEdge = nil
     return self
@@ -513,14 +511,4 @@ function RealisticCropRotationWeatherCard:refresh(force)
 
     self.lastSignature = signature
     self:render(model)
-end
-
----Throttled live refresh used while the menu page is open.
--- @param integer dt Frame delta in milliseconds
-function RealisticCropRotationWeatherCard:update(dt)
-    self.refreshTimerMs = self.refreshTimerMs + (tonumber(dt) or 0)
-    if self.refreshTimerMs < RealisticCropRotationWeatherCard.REFRESH_INTERVAL_MS then return end
-
-    self.refreshTimerMs = self.refreshTimerMs % RealisticCropRotationWeatherCard.REFRESH_INTERVAL_MS
-    self:refresh(false)
 end

@@ -5,6 +5,7 @@ local RealisticCropRotationFrame_mt = Class(RealisticCropRotationFrame, TabbedMe
 
 -- Internal tab indices
 RealisticCropRotationFrame.TAB = { HISTORY = 1, PLANNING = 2 }
+RealisticCropRotationFrame.DETAIL_REFRESH_INTERVAL_MS = 5000
 RealisticCropRotationFrame.HERO_PILL_MIN_W_PX = 96
 RealisticCropRotationFrame.HERO_PILL_MAX_W_PX = 420
 RealisticCropRotationFrame.HERO_PILL_TEXT_PADDING_PX = 24
@@ -257,15 +258,23 @@ function RealisticCropRotationFrame:onFrameClose()
     RealisticCropRotationFrame:superClass().onFrameClose(self)
 end
 
----Keeps the weather countdown synchronized while this menu frame is active.
+---Keeps the weather card and the history detail panel synchronized while this menu frame is active.
 -- @param integer dt Frame delta in milliseconds
 function RealisticCropRotationFrame:update(dt)
     local superClass = RealisticCropRotationFrame:superClass()
     if superClass.update ~= nil then
         superClass.update(self, dt)
     end
+
+    self.refreshTimerMs = (self.refreshTimerMs or 0) + (dt or 0)
+    if self.refreshTimerMs < RealisticCropRotationFrame.DETAIL_REFRESH_INTERVAL_MS then return end
+    self.refreshTimerMs = 0
+
     if self.weatherCard ~= nil then
-        self.weatherCard:update(dt)
+        self.weatherCard:refresh(false)
+    end
+    if self.selectedId ~= nil and self:isHistoryTab() then
+        self:updateDetailPanel(self.selectedId)
     end
 end
 

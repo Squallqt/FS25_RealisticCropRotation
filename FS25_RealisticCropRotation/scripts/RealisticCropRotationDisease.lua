@@ -149,6 +149,26 @@ local function diseaseStateForGroup(group)
     return tonumber(state) or 1
 end
 
+---Fills a field's whole polygon with a pathogen's overlay colour on the persistent map grid.
+-- @param table grid
+-- @param table field
+-- @param string group
+local function paintInfectionPresence(grid, field, group)
+    if grid == nil or grid.mapId == nil or field == nil
+        or DensityMapModifier == nil or g_terrainNode == nil
+        or type(field.getDensityMapPolygon) ~= "function" then
+        return
+    end
+    local diseaseState = diseaseStateForGroup(group)
+    if diseaseState == nil or diseaseState <= 0 then return end
+    local polygon = field:getDensityMapPolygon()
+    if polygon == nil then return end
+    local gridModifier = DensityMapModifier.new(grid.mapId, 0, grid.numChannels, g_terrainNode)
+    polygon:applyToModifier(gridModifier)
+    gridModifier:executeSet(diseaseState)
+    grid.changeRevision = (grid.changeRevision or 0) + 1
+end
+
 ---Pathogen groups ordered by their stable overlay state id (cropConfig). Single source for the map overlay row order and the planner disease advice.
 -- @return table list array of { group=, state= } sorted by state id, then group name
 function RealisticCropRotationDisease.getOrderedGroups()
@@ -256,6 +276,7 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId, freshCycle)
     local mgr = self.manager
     if mgr == nil then return end
     local cropName, _, growthState = mgr:getActiveCropInfo(farmlandId)
+    local field = type(mgr.getFieldByFarmlandId) == "function" and mgr:getFieldByFarmlandId(farmlandId) or nil
 
     -- Reset stays gated to a confirmed rotation to a different crop, never a momentary "no crop" read or same-crop replant.
     local previousCrop = self.crop[farmlandId]
@@ -263,15 +284,13 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId, freshCycle)
         local rotated = previousCrop ~= nil and previousCrop ~= cropName
         if rotated then
             self.state[farmlandId] = nil
-            if self.grid ~= nil and type(self.grid.clearField) == "function" then
-                -- Also drops per-cell protection for this field: it is crop-cycle scoped and ends here.
-                local field = type(mgr.getFieldByFarmlandId) == "function" and mgr:getFieldByFarmlandId(farmlandId) or nil
-                if field ~= nil then self.grid:clearField(field) end
+            -- Also drops per-cell protection for this field: it is crop-cycle scoped and ends here.
+            if field ~= nil and self.grid ~= nil and type(self.grid.clearField) == "function" then
+                self.grid:clearField(field)
             end
-        elseif freshCycle and self.grid ~= nil and type(self.grid.clearFieldProtection) == "function" then
+        elseif freshCycle and field ~= nil and self.grid ~= nil and type(self.grid.clearFieldProtection) == "function" then
             -- Same-crop replant: the treatment is consumed by the new stand, disease state is untouched.
-            local field = type(mgr.getFieldByFarmlandId) == "function" and mgr:getFieldByFarmlandId(farmlandId) or nil
-            if field ~= nil then self.grid:clearFieldProtection(field) end
+            self.grid:clearFieldProtection(field)
         end
         self.crop[farmlandId] = cropName
     end
@@ -305,6 +324,8 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId, freshCycle)
                             -- temperature-paced latent period, scaled to the save's calendar (periodScale)
                             incubation = RealisticCropRotationDisease.INCUBATION_DAYS * periodScale(),
                         }
+                        -- Paints map presence for the new infection.
+                        paintInfectionPresence(self.grid, field, group)
                         if g_currentMission ~= nil and type(g_currentMission.addIngameNotification) == "function"
                             and FSBaseMission ~= nil and g_i18n ~= nil then
                             local diseaseName = diseaseDisplayName(group)
@@ -515,8 +536,8 @@ local function applyBandSpeckle(targetMapId, firstChannel, numChannels, clearTyp
     return true
 end
 
----Applies one infection's destruction: Perlin core+band clears the real crop; the overlay grid fills the whole field polygon.
-local function destroyCropField(field, seed, severity, curve, diseaseState, grid, protectionMapId)
+---Applies one infection's real-crop destruction (Perlin core+band); server only.
+local function destroyCropField(field, seed, severity, curve, grid, protectionMapId)
     local D = RealisticCropRotationDisease
     if field == nil then return end
     local dead = deadFractionForSeverity(severity, curve)
@@ -524,7 +545,6 @@ local function destroyCropField(field, seed, severity, curve, diseaseState, grid
     local coreThreshold = perlinThresholdForArea(field, seed, dead,
         D.DESTROY_PERLIN_OCTAVES, D.DESTROY_PERLIN_FREQUENCY, D.DESTROY_PERLIN_PERSISTENCE)
 
-    -- Real crop (server only; the engine replicates the density change to clients).
     if g_server ~= nil and g_fruitTypeManager ~= nil then
         local fruitTypeIndex = getFieldCrop(field)
         if fruitTypeIndex ~= nil then
@@ -539,18 +559,6 @@ local function destroyCropField(field, seed, severity, curve, diseaseState, grid
                 applyPerlinDestruction(desc.terrainDataPlaneId, desc.startStateChannel, desc.numStateChannels,
                     0, true, field, seed, coreThreshold, protectionMapId)
             end
-        end
-    end
-
-    -- Overlay grid (map display only): fills the whole polygon so the map shows which parcels are diseased, independent of the real destruction pattern.
-    if grid ~= nil and grid.mapId ~= nil and diseaseState ~= nil and diseaseState > 0
-        and DensityMapModifier ~= nil and g_terrainNode ~= nil and type(field.getDensityMapPolygon) == "function" then
-        local polygon = field:getDensityMapPolygon()
-        if polygon ~= nil then
-            local gridModifier = DensityMapModifier.new(grid.mapId, 0, grid.numChannels, g_terrainNode)
-            polygon:applyToModifier(gridModifier)
-            gridModifier:executeSet(diseaseState)
-            grid.changeRevision = (grid.changeRevision or 0) + 1
         end
     end
 end
@@ -584,7 +592,6 @@ function RealisticCropRotationDisease:propagate(farmlandId)
             local growth = (curve.dailyGrowth / scale) * weatherModifier(raining, temperature, group) * loadSpeed
             s.severity = math.min(1, (s.severity or 0) + growth)
             if s.severity >= curve.destroySeverity then
-                local diseaseState = diseaseStateForGroup(group)
                 -- Per-cell exclusion map for this group's treatment family; nil for NONE-treatment groups (rotation-only, no product shields them).
                 local treatment = self:getTreatment(group)
                 local protectionMapId = nil
@@ -592,7 +599,7 @@ function RealisticCropRotationDisease:propagate(farmlandId)
                     if treatment == "FUNGICIDE" then protectionMapId = self.grid.fungicideProtectionMapId
                     elseif treatment == "NEMATICIDE" then protectionMapId = self.grid.nematicideProtectionMapId end
                 end
-                destroyCropField(field, s.seed, s.severity, curve, diseaseState, self.grid, protectionMapId)
+                destroyCropField(field, s.seed, s.severity, curve, self.grid, protectionMapId)
             end
         end
     end
@@ -774,23 +781,20 @@ function RealisticCropRotationDisease:applySyncData(state, crop)
     end
 end
 
----Cheap order-independent signature of the destruction-relevant state, used to skip rebuilds when a sync carried no real change.
+---Order-independent signature of the active infection set.
 function RealisticCropRotationDisease:destructionSignature()
     local sig = 0
     for farmlandId, groups in pairs(self.state) do
         local fid = tonumber(farmlandId) or 0
-        for group, s in pairs(groups) do
-            local severity = tonumber(s.severity) or 0
-            if severity >= self:getCurve(group).destroySeverity then
-                -- severity drives the destroyed share; seed fixes the scatter -> both change the grid
-                sig = sig + fid + severity + (tonumber(s.seed) or 0) % 100000
-            end
+        for group in pairs(groups) do
+            -- Farmland id + stable state id per group.
+            sig = sig + fid + diseaseStateForGroup(group)
         end
     end
     return sig
 end
 
----Repaints the persistent grid from the synced infection state, applying the same Perlin destruction as the server (no bitmap transferred).
+---Repaints the persistent grid's presence colours from the synced infection state.
 function RealisticCropRotationDisease:rebuildGridFromState()
     local grid = self.grid
     if grid == nil or grid.mapId == nil then return end
@@ -806,12 +810,9 @@ function RealisticCropRotationDisease:rebuildGridFromState()
         local fid = tonumber(farmlandId)
         local field = (mgr ~= nil and type(mgr.getFieldByFarmlandId) == "function")
             and mgr:getFieldByFarmlandId(fid) or nil
-        for group, s in pairs(groups) do
-            local curve = self:getCurve(group)
-            if field ~= nil and (s.severity or 0) >= curve.destroySeverity then
-                local diseaseState = diseaseStateForGroup(group)
-                -- grid only (no fruit) on the client; the field arg of nil for the crop is skipped inside
-                destroyCropField(field, s.seed, s.severity, curve, diseaseState, grid)
+        if field ~= nil then
+            for group in pairs(groups) do
+                paintInfectionPresence(grid, field, group)
             end
         end
     end
@@ -1062,7 +1063,10 @@ function RealisticCropRotationDisease:consoleInfect(farmlandId, groupName, sever
     }
     self.crop[id] = cropName
 
-    -- Map overlay and real crop destruction are both applied immediately.
+    -- Paints map presence, then applies real destruction if severity already clears the threshold.
+    if self.manager ~= nil and type(self.manager.getFieldByFarmlandId) == "function" then
+        paintInfectionPresence(self.grid, self.manager:getFieldByFarmlandId(id), group)
+    end
     self:propagate(id)
 
     requestDiseaseConsoleBroadcast()
