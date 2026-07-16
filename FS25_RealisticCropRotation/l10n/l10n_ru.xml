@@ -180,25 +180,25 @@
         <!-- Disease system (9 pathogens) -->
         <e k="rcr_disease_name_sclerotinia" v="Склеротиниоз (белая гниль)" />
         <e k="rcr_disease_name_phoma" v="Фомоз (рак стебля)" />
-        <e k="rcr_disease_name_pietin" v="Офиоболёзная корневая гниль" />
-        <e k="rcr_disease_name_septoriose" v="Септориоз листьев" />
-        <e k="rcr_disease_name_rouille" v="Ржавчина" />
-        <e k="rcr_disease_name_fusariose" v="Фузариоз колоса" />
-        <e k="rcr_disease_name_mildiou" v="Фитофтороз картофеля" />
+        <e k="rcr_disease_name_takeall" v="Офиоболёзная корневая гниль" />
+        <e k="rcr_disease_name_septoria" v="Септориоз листьев" />
+        <e k="rcr_disease_name_rust" v="Ржавчина" />
+        <e k="rcr_disease_name_fusarium" v="Фузариоз колоса" />
+        <e k="rcr_disease_name_lateblight" v="Фитофтороз картофеля" />
         <e k="rcr_disease_name_bcn"   v="Цистовая нематода" />
-        <e k="rcr_disease_name_hernie" v="Кила капусты" />
+        <e k="rcr_disease_name_clubroot" v="Кила капусты" />
         <e k="rcr_disease_treatment_sclerotinia" v="Фунгицид" />
         <e k="rcr_disease_treatment_phoma" v="Фунгицид" />
-        <e k="rcr_disease_treatment_pietin" v="Нет (севооборот)" />
-        <e k="rcr_disease_treatment_septoriose" v="Фунгицид" />
-        <e k="rcr_disease_treatment_rouille" v="Фунгицид" />
-        <e k="rcr_disease_treatment_fusariose" v="Фунгицид" />
-        <e k="rcr_disease_treatment_mildiou" v="Фунгицид" />
+        <e k="rcr_disease_treatment_takeall" v="Нет (севооборот)" />
+        <e k="rcr_disease_treatment_septoria" v="Фунгицид" />
+        <e k="rcr_disease_treatment_rust" v="Фунгицид" />
+        <e k="rcr_disease_treatment_fusarium" v="Фунгицид" />
+        <e k="rcr_disease_treatment_lateblight" v="Фунгицид" />
         <e k="rcr_disease_treatment_bcn" v="Нематицид" />
         <e k="rcr_fillType_fungicide" v="Фунгицид" />
         <e k="rcr_fillType_nematicide" v="Нематицид" />
         <e k="rcr_disease_treatment_none" v="Нет обработки" />
-        <e k="rcr_disease_treatment_hernie" v="Нет (устойчивый сорт, известкование, севооборот)" />
+        <e k="rcr_disease_treatment_clubroot" v="Нет (устойчивый сорт, известкование, севооборот)" />
         <e k="rcr_advice_pressure_high_phoma" v="Высокое давление фомоза: около 4 лет избегайте рапса и горчицы, заделайте остатки; осенний фунгицид на восприимчивых сортах." />
         <e k="rcr_advice_pressure_high_pietin" v="Высокое давление офиоболёзной гнили: введите непоражаемую культуру-разрыв (овёс, бобовые, масличные); фунгициды не действуют, лечит только севооборот." />
         <e k="rcr_advice_pressure_high_septoriose" v="Высокое давление септориоза: не сейте пшеницу/ячмень по остаткам зерновых, выберите толерантный сорт; во влажном климате фунгицид с выхода в трубку." />

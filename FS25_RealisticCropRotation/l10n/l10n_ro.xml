@@ -180,25 +180,25 @@
         <!-- Disease system (9 pathogens) -->
         <e k="rcr_disease_name_sclerotinia" v="Putregaiul alb (Sclerotinia)" />
         <e k="rcr_disease_name_phoma" v="Putregaiul uscat / cancerul tulpinii (Phoma)" />
-        <e k="rcr_disease_name_pietin" v="Înnegrirea bazei paiului" />
-        <e k="rcr_disease_name_septoriose" v="Septorioza frunzelor" />
-        <e k="rcr_disease_name_rouille" v="Rugina" />
-        <e k="rcr_disease_name_fusariose" v="Fuzarioza spicului" />
-        <e k="rcr_disease_name_mildiou" v="Mana cartofului" />
+        <e k="rcr_disease_name_takeall" v="Înnegrirea bazei paiului" />
+        <e k="rcr_disease_name_septoria" v="Septorioza frunzelor" />
+        <e k="rcr_disease_name_rust" v="Rugina" />
+        <e k="rcr_disease_name_fusarium" v="Fuzarioza spicului" />
+        <e k="rcr_disease_name_lateblight" v="Mana cartofului" />
         <e k="rcr_disease_name_bcn"   v="Nematod cu chisturi" />
-        <e k="rcr_disease_name_hernie" v="Hernia rădăcinilor de crucifere" />
+        <e k="rcr_disease_name_clubroot" v="Hernia rădăcinilor de crucifere" />
         <e k="rcr_disease_treatment_sclerotinia" v="Fungicid" />
         <e k="rcr_disease_treatment_phoma" v="Fungicid" />
-        <e k="rcr_disease_treatment_pietin" v="Niciunul (rotație)" />
-        <e k="rcr_disease_treatment_septoriose" v="Fungicid" />
-        <e k="rcr_disease_treatment_rouille" v="Fungicid" />
-        <e k="rcr_disease_treatment_fusariose" v="Fungicid" />
-        <e k="rcr_disease_treatment_mildiou" v="Fungicid" />
+        <e k="rcr_disease_treatment_takeall" v="Niciunul (rotație)" />
+        <e k="rcr_disease_treatment_septoria" v="Fungicid" />
+        <e k="rcr_disease_treatment_rust" v="Fungicid" />
+        <e k="rcr_disease_treatment_fusarium" v="Fungicid" />
+        <e k="rcr_disease_treatment_lateblight" v="Fungicid" />
         <e k="rcr_disease_treatment_bcn" v="Nematicid" />
         <e k="rcr_fillType_fungicide" v="Fungicid" />
         <e k="rcr_fillType_nematicide" v="Nematicid" />
         <e k="rcr_disease_treatment_none" v="Niciun tratament" />
-        <e k="rcr_disease_treatment_hernie" v="Niciunul (soi rezistent, amendare cu var, rotație)" />
+        <e k="rcr_disease_treatment_clubroot" v="Niciunul (soi rezistent, amendare cu var, rotație)" />
         <e k="rcr_advice_pressure_high_phoma" v="Presiune mare de Phoma: evitați rapița și muștarul circa 4 ani, încorporați resturile; fungicid de toamnă pe soiurile sensibile." />
         <e k="rcr_advice_pressure_high_pietin" v="Presiune mare de înnegrire a bazei paiului: introduceți o pauză cu o cultură negazdă (ovăz, leguminoasă, oleaginoasă); niciun fungicid nu ajută, doar rotația vindecă." />
         <e k="rcr_advice_pressure_high_septoriose" v="Presiune mare de septorioză: nu cultivați grâu/orz pe resturi de cereale, alegeți un soi tolerant; fungicid de la alungirea paiului în climat umed." />

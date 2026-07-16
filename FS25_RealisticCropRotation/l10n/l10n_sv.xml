@@ -180,25 +180,25 @@
         <!-- Disease system (9 pathogens) -->
         <e k="rcr_disease_name_sclerotinia" v="Bomullsmögel (Sclerotinia)" />
         <e k="rcr_disease_name_phoma" v="Torröta (Phoma)" />
-        <e k="rcr_disease_name_pietin" v="Rotdödare" />
-        <e k="rcr_disease_name_septoriose" v="Svartpricksjuka (Septoria)" />
-        <e k="rcr_disease_name_rouille" v="Rost" />
-        <e k="rcr_disease_name_fusariose" v="Axfusarios (Fusarium)" />
-        <e k="rcr_disease_name_mildiou" v="Potatisbladmögel" />
+        <e k="rcr_disease_name_takeall" v="Rotdödare" />
+        <e k="rcr_disease_name_septoria" v="Svartpricksjuka (Septoria)" />
+        <e k="rcr_disease_name_rust" v="Rost" />
+        <e k="rcr_disease_name_fusarium" v="Axfusarios (Fusarium)" />
+        <e k="rcr_disease_name_lateblight" v="Potatisbladmögel" />
         <e k="rcr_disease_name_bcn"   v="Cystnematod" />
-        <e k="rcr_disease_name_hernie" v="Klumprotsjuka" />
+        <e k="rcr_disease_name_clubroot" v="Klumprotsjuka" />
         <e k="rcr_disease_treatment_sclerotinia" v="Svampmedel" />
         <e k="rcr_disease_treatment_phoma" v="Svampmedel" />
-        <e k="rcr_disease_treatment_pietin" v="Ingen (växtföljd)" />
-        <e k="rcr_disease_treatment_septoriose" v="Svampmedel" />
-        <e k="rcr_disease_treatment_rouille" v="Svampmedel" />
-        <e k="rcr_disease_treatment_fusariose" v="Svampmedel" />
-        <e k="rcr_disease_treatment_mildiou" v="Svampmedel" />
+        <e k="rcr_disease_treatment_takeall" v="Ingen (växtföljd)" />
+        <e k="rcr_disease_treatment_septoria" v="Svampmedel" />
+        <e k="rcr_disease_treatment_rust" v="Svampmedel" />
+        <e k="rcr_disease_treatment_fusarium" v="Svampmedel" />
+        <e k="rcr_disease_treatment_lateblight" v="Svampmedel" />
         <e k="rcr_disease_treatment_bcn" v="Nematicid" />
         <e k="rcr_fillType_fungicide" v="Svampmedel" />
         <e k="rcr_fillType_nematicide" v="Nematicid" />
         <e k="rcr_disease_treatment_none" v="Ingen behandling" />
-        <e k="rcr_disease_treatment_hernie" v="Ingen (resistent sort, kalkning, växtföljd)" />
+        <e k="rcr_disease_treatment_clubroot" v="Ingen (resistent sort, kalkning, växtföljd)" />
         <e k="rcr_advice_pressure_high_phoma" v="Högt torrötetryck: undvik raps och senap i cirka 4 år, myllna ned skörderester; höstsvampmedel på mottagliga sorter." />
         <e k="rcr_advice_pressure_high_pietin" v="Högt rotdödartryck: lägg in en icke-värdgröda som avbrott (havre, baljväxt, oljeväxt); inget svampmedel hjälper, bara växtföljd botar." />
         <e k="rcr_advice_pressure_high_septoriose" v="Högt svartpricksjuketryck: undvik vete/korn på spannmålsrester, välj en tolerant sort; svampmedel från stråskjutning i ett vått klimat." />

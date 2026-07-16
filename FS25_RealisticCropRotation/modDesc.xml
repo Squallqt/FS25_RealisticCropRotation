@@ -34,7 +34,7 @@ Console commands:
 - rcrDiseaseTick [farmlandId]: advances it by one day
 - rcrDiseaseClear [farmlandId]: resets it
 
-Valid <group> values: SCLEROTINIA, PHOMA, PIETIN, SEPTORIOSE, ROUILLE, FUSARIOSE, MILDIOU, BCN, HERNIE.
+Valid <group> values: SCLEROTINIA, PHOMA, TAKEALL, SEPTORIA, RUST, FUSARIUM, LATEBLIGHT, BCN, CLUBROOT.
 
 Important: Take-all and clubroot have no chemical treatment; only a non-host crop, a resistant variety, liming and a long enough rotation keep them in check.
 
@@ -67,7 +67,7 @@ Konsolenbefehle:
 - rcrDiseaseTick [farmlandId]: simuliert einen Tag
 - rcrDiseaseClear [farmlandId]: setzt den Zustand zurück
 
-Gültige <group>-Werte: SCLEROTINIA, PHOMA, PIETIN, SEPTORIOSE, ROUILLE, FUSARIOSE, MILDIOU, BCN, HERNIE.
+Gültige <group>-Werte: SCLEROTINIA, PHOMA, TAKEALL, SEPTORIA, RUST, FUSARIUM, LATEBLIGHT, BCN, CLUBROOT.
 
 Wichtig: Schwarzbeinigkeit und Kohlhernie haben keine chemische Behandlung; nur eine Nichtwirtskultur, eine resistente Sorte, Kalkung und eine ausreichend lange Fruchtfolge halten sie in Schach.
 
@@ -100,7 +100,7 @@ Commandes console :
 - rcrDiseaseTick [farmlandId] : fait avancer d'un jour
 - rcrDiseaseClear [farmlandId] : réinitialise l'état
 
-Valeurs valides pour <group> : SCLEROTINIA, PHOMA, PIETIN, SEPTORIOSE, ROUILLE, FUSARIOSE, MILDIOU, BCN, HERNIE.
+Valeurs valides pour <group> : SCLEROTINIA, PHOMA, TAKEALL, SEPTORIA, RUST, FUSARIUM, LATEBLIGHT, BCN, CLUBROOT.
 
 Important : le piétin-échaudage et la hernie des crucifères n'ont aucun traitement chimique ; seules une culture non-hôte, une variété résistante, le chaulage et une rotation assez longue permettent de les contenir.
 

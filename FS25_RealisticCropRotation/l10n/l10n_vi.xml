@@ -180,25 +180,25 @@
         <!-- Disease system (9 pathogens) -->
         <e k="rcr_disease_name_sclerotinia" v="Bệnh thối hạch (nấm Sclerotinia)" />
         <e k="rcr_disease_name_phoma" v="Bệnh loét thân (Phoma)" />
-        <e k="rcr_disease_name_pietin" v="Bệnh thối rễ ngũ cốc" />
-        <e k="rcr_disease_name_septoriose" v="Bệnh đốm lá Septoria" />
-        <e k="rcr_disease_name_rouille" v="Bệnh gỉ sắt" />
-        <e k="rcr_disease_name_fusariose" v="Bệnh cháy bông Fusarium" />
-        <e k="rcr_disease_name_mildiou" v="Bệnh mốc sương" />
+        <e k="rcr_disease_name_takeall" v="Bệnh thối rễ ngũ cốc" />
+        <e k="rcr_disease_name_septoria" v="Bệnh đốm lá Septoria" />
+        <e k="rcr_disease_name_rust" v="Bệnh gỉ sắt" />
+        <e k="rcr_disease_name_fusarium" v="Bệnh cháy bông Fusarium" />
+        <e k="rcr_disease_name_lateblight" v="Bệnh mốc sương" />
         <e k="rcr_disease_name_bcn"   v="Tuyến trùng bào nang" />
-        <e k="rcr_disease_name_hernie" v="Bệnh sưng rễ họ cải" />
+        <e k="rcr_disease_name_clubroot" v="Bệnh sưng rễ họ cải" />
         <e k="rcr_disease_treatment_sclerotinia" v="Thuốc trừ nấm" />
         <e k="rcr_disease_treatment_phoma" v="Thuốc trừ nấm" />
-        <e k="rcr_disease_treatment_pietin" v="Không (luân canh)" />
-        <e k="rcr_disease_treatment_septoriose" v="Thuốc trừ nấm" />
-        <e k="rcr_disease_treatment_rouille" v="Thuốc trừ nấm" />
-        <e k="rcr_disease_treatment_fusariose" v="Thuốc trừ nấm" />
-        <e k="rcr_disease_treatment_mildiou" v="Thuốc trừ nấm" />
+        <e k="rcr_disease_treatment_takeall" v="Không (luân canh)" />
+        <e k="rcr_disease_treatment_septoria" v="Thuốc trừ nấm" />
+        <e k="rcr_disease_treatment_rust" v="Thuốc trừ nấm" />
+        <e k="rcr_disease_treatment_fusarium" v="Thuốc trừ nấm" />
+        <e k="rcr_disease_treatment_lateblight" v="Thuốc trừ nấm" />
         <e k="rcr_disease_treatment_bcn" v="Thuốc trừ tuyến trùng" />
         <e k="rcr_fillType_fungicide" v="Thuốc trừ nấm" />
         <e k="rcr_fillType_nematicide" v="Thuốc trừ tuyến trùng" />
         <e k="rcr_disease_treatment_none" v="Không phun thuốc" />
-        <e k="rcr_disease_treatment_hernie" v="Không (giống kháng bệnh, bón vôi, luân canh)" />
+        <e k="rcr_disease_treatment_clubroot" v="Không (giống kháng bệnh, bón vôi, luân canh)" />
         <e k="rcr_advice_pressure_high_phoma" v="Áp lực Phoma cao: tránh cải dầu và mù tạt khoảng 4 năm, vùi tàn dư; phun thuốc trừ nấm mùa thu trên giống mẫn cảm." />
         <e k="rcr_advice_pressure_high_pietin" v="Áp lực thối rễ cao: chèn một vụ cây không phải ký chủ (yến mạch, họ đậu, cây lấy dầu); không có thuốc trừ nấm hiệu quả, chỉ luân canh mới khắc phục." />
         <e k="rcr_advice_pressure_high_septoriose" v="Áp lực đốm lá cao: tránh trồng lúa mì/lúa mạch trên tàn dư ngũ cốc, chọn giống chịu bệnh; phun thuốc trừ nấm từ giai đoạn vươn lóng ở vùng khí hậu ẩm." />

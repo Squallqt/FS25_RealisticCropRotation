@@ -180,25 +180,25 @@
         <!-- Disease system (9 pathogens) -->
         <e k="rcr_disease_name_sclerotinia" v="Zgnilizna twardzikowa (Sclerotinia)" />
         <e k="rcr_disease_name_phoma" v="Sucha zgnilizna kapustnych (Phoma)" />
-        <e k="rcr_disease_name_pietin" v="Zgorzel podstawy źdźbła" />
-        <e k="rcr_disease_name_septoriose" v="Septorioza liści (paskowana)" />
-        <e k="rcr_disease_name_rouille" v="Rdza" />
-        <e k="rcr_disease_name_fusariose" v="Fuzarioza kłosów" />
-        <e k="rcr_disease_name_mildiou" v="Zaraza ziemniaka" />
+        <e k="rcr_disease_name_takeall" v="Zgorzel podstawy źdźbła" />
+        <e k="rcr_disease_name_septoria" v="Septorioza liści (paskowana)" />
+        <e k="rcr_disease_name_rust" v="Rdza" />
+        <e k="rcr_disease_name_fusarium" v="Fuzarioza kłosów" />
+        <e k="rcr_disease_name_lateblight" v="Zaraza ziemniaka" />
         <e k="rcr_disease_name_bcn"   v="Mątwik" />
-        <e k="rcr_disease_name_hernie" v="Kiła kapusty" />
+        <e k="rcr_disease_name_clubroot" v="Kiła kapusty" />
         <e k="rcr_disease_treatment_sclerotinia" v="Fungicyd" />
         <e k="rcr_disease_treatment_phoma" v="Fungicyd" />
-        <e k="rcr_disease_treatment_pietin" v="Brak (płodozmian)" />
-        <e k="rcr_disease_treatment_septoriose" v="Fungicyd" />
-        <e k="rcr_disease_treatment_rouille" v="Fungicyd" />
-        <e k="rcr_disease_treatment_fusariose" v="Fungicyd" />
-        <e k="rcr_disease_treatment_mildiou" v="Fungicyd" />
+        <e k="rcr_disease_treatment_takeall" v="Brak (płodozmian)" />
+        <e k="rcr_disease_treatment_septoria" v="Fungicyd" />
+        <e k="rcr_disease_treatment_rust" v="Fungicyd" />
+        <e k="rcr_disease_treatment_fusarium" v="Fungicyd" />
+        <e k="rcr_disease_treatment_lateblight" v="Fungicyd" />
         <e k="rcr_disease_treatment_bcn" v="Nematocyd" />
         <e k="rcr_fillType_fungicide" v="Fungicyd" />
         <e k="rcr_fillType_nematicide" v="Nematocyd" />
         <e k="rcr_disease_treatment_none" v="Brak zabiegu" />
-        <e k="rcr_disease_treatment_hernie" v="Brak (odmiana odporna, wapnowanie, płodozmian)" />
+        <e k="rcr_disease_treatment_clubroot" v="Brak (odmiana odporna, wapnowanie, płodozmian)" />
         <e k="rcr_advice_pressure_high_phoma" v="Wysoka presja suchej zgnilizny: przez około 4 lata unikaj rzepaku i gorczycy, przyoraj resztki; jesienny fungicyd na odmianach podatnych." />
         <e k="rcr_advice_pressure_high_pietin" v="Wysoka presja zgorzeli podstawy źdźbła: wprowadź przerwę z rośliną niebędącą żywicielem (owies, bobowate, oleiste); żaden fungicyd nie działa, leczy tylko płodozmian." />
         <e k="rcr_advice_pressure_high_septoriose" v="Wysoka presja septoriozy: nie uprawiaj pszenicy/jęczmienia na resztkach zbóż, wybierz odmianę tolerancyjną; w wilgotnym klimacie fungicyd od strzelania w źdźbło." />

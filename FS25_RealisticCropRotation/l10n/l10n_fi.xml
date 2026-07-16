@@ -180,25 +180,25 @@
         <!-- Disease system (9 pathogens) -->
         <e k="rcr_disease_name_sclerotinia" v="Pahkahome (Sclerotinia)" />
         <e k="rcr_disease_name_phoma" v="Phoma-varsitauti" />
-        <e k="rcr_disease_name_pietin" v="Tyvi- ja juuristomätä" />
-        <e k="rcr_disease_name_septoriose" v="Vehnänruskolaikku (Septoria)" />
-        <e k="rcr_disease_name_rouille" v="Ruoste" />
-        <e k="rcr_disease_name_fusariose" v="Tähkän punahome (Fusarium)" />
-        <e k="rcr_disease_name_mildiou" v="Perunarutto" />
+        <e k="rcr_disease_name_takeall" v="Tyvi- ja juuristomätä" />
+        <e k="rcr_disease_name_septoria" v="Vehnänruskolaikku (Septoria)" />
+        <e k="rcr_disease_name_rust" v="Ruoste" />
+        <e k="rcr_disease_name_fusarium" v="Tähkän punahome (Fusarium)" />
+        <e k="rcr_disease_name_lateblight" v="Perunarutto" />
         <e k="rcr_disease_name_bcn"   v="Kystaankeroinen" />
-        <e k="rcr_disease_name_hernie" v="Möhöjuuri" />
+        <e k="rcr_disease_name_clubroot" v="Möhöjuuri" />
         <e k="rcr_disease_treatment_sclerotinia" v="Sienitorjunta-aine" />
         <e k="rcr_disease_treatment_phoma" v="Sienitorjunta-aine" />
-        <e k="rcr_disease_treatment_pietin" v="Ei mitään (viljelykierto)" />
-        <e k="rcr_disease_treatment_septoriose" v="Sienitorjunta-aine" />
-        <e k="rcr_disease_treatment_rouille" v="Sienitorjunta-aine" />
-        <e k="rcr_disease_treatment_fusariose" v="Sienitorjunta-aine" />
-        <e k="rcr_disease_treatment_mildiou" v="Sienitorjunta-aine" />
+        <e k="rcr_disease_treatment_takeall" v="Ei mitään (viljelykierto)" />
+        <e k="rcr_disease_treatment_septoria" v="Sienitorjunta-aine" />
+        <e k="rcr_disease_treatment_rust" v="Sienitorjunta-aine" />
+        <e k="rcr_disease_treatment_fusarium" v="Sienitorjunta-aine" />
+        <e k="rcr_disease_treatment_lateblight" v="Sienitorjunta-aine" />
         <e k="rcr_disease_treatment_bcn" v="Ankeroistorjunta-aine" />
         <e k="rcr_fillType_fungicide" v="Sienitorjunta-aine" />
         <e k="rcr_fillType_nematicide" v="Ankeroistorjunta-aine" />
         <e k="rcr_disease_treatment_none" v="Ei torjuntaa" />
-        <e k="rcr_disease_treatment_hernie" v="Ei mitään (kestävä lajike, kalkitus, viljelykierto)" />
+        <e k="rcr_disease_treatment_clubroot" v="Ei mitään (kestävä lajike, kalkitus, viljelykierto)" />
         <e k="rcr_advice_pressure_high_phoma" v="Korkea Phoman paine: vältä rapsia ja sinappia noin 4 vuotta, muokkaa kasvijätteet maahan; syksyn sienitorjunta-aine alttiille lajikkeille." />
         <e k="rcr_advice_pressure_high_pietin" v="Korkea tyvimädän paine: lisää isäntäkasviksi kelpaamaton katkokasvi (kaura, palkokasvi, öljykasvi); mikään sienitorjunta-aine ei tehoa, vain viljelykierto parantaa." />
         <e k="rcr_advice_pressure_high_septoriose" v="Korkea Septorian paine: älä viljele vehnää/ohraa viljan jätteillä, valitse kestävä lajike; kosteassa ilmastossa sienitorjunta-aine korrenkasvusta alkaen." />

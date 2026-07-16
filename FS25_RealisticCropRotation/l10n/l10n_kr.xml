@@ -180,25 +180,25 @@
         <!-- Disease system (9 pathogens) -->
         <e k="rcr_disease_name_sclerotinia" v="균핵병" />
         <e k="rcr_disease_name_phoma" v="검은다리병(줄기궤양)" />
-        <e k="rcr_disease_name_pietin" v="밀 뿌리썩음병" />
-        <e k="rcr_disease_name_septoriose" v="셉토리아 잎마름병" />
-        <e k="rcr_disease_name_rouille" v="녹병" />
-        <e k="rcr_disease_name_fusariose" v="붉은곰팡이병" />
-        <e k="rcr_disease_name_mildiou" v="역병" />
+        <e k="rcr_disease_name_takeall" v="밀 뿌리썩음병" />
+        <e k="rcr_disease_name_septoria" v="셉토리아 잎마름병" />
+        <e k="rcr_disease_name_rust" v="녹병" />
+        <e k="rcr_disease_name_fusarium" v="붉은곰팡이병" />
+        <e k="rcr_disease_name_lateblight" v="역병" />
         <e k="rcr_disease_name_bcn"   v="씨스트선충" />
-        <e k="rcr_disease_name_hernie" v="뿌리혹병" />
+        <e k="rcr_disease_name_clubroot" v="뿌리혹병" />
         <e k="rcr_disease_treatment_sclerotinia" v="살균제" />
         <e k="rcr_disease_treatment_phoma" v="살균제" />
-        <e k="rcr_disease_treatment_pietin" v="없음(윤작)" />
-        <e k="rcr_disease_treatment_septoriose" v="살균제" />
-        <e k="rcr_disease_treatment_rouille" v="살균제" />
-        <e k="rcr_disease_treatment_fusariose" v="살균제" />
-        <e k="rcr_disease_treatment_mildiou" v="살균제" />
+        <e k="rcr_disease_treatment_takeall" v="없음(윤작)" />
+        <e k="rcr_disease_treatment_septoria" v="살균제" />
+        <e k="rcr_disease_treatment_rust" v="살균제" />
+        <e k="rcr_disease_treatment_fusarium" v="살균제" />
+        <e k="rcr_disease_treatment_lateblight" v="살균제" />
         <e k="rcr_disease_treatment_bcn" v="살선충제" />
         <e k="rcr_fillType_fungicide" v="살균제" />
         <e k="rcr_fillType_nematicide" v="살선충제" />
         <e k="rcr_disease_treatment_none" v="방제 없음" />
-        <e k="rcr_disease_treatment_hernie" v="없음(저항성 품종, 석회 시용, 윤작)" />
+        <e k="rcr_disease_treatment_clubroot" v="없음(저항성 품종, 석회 시용, 윤작)" />
         <e k="rcr_advice_pressure_high_phoma" v="검은다리병 압력 높음: 유채와 겨자를 약 4년간 피하고 잔재물을 매몰하며, 감수성 품종에는 가을에 살균제를 살포한다." />
         <e k="rcr_advice_pressure_high_pietin" v="뿌리썩음병 압력 높음: 비기주 작물(귀리, 콩과, 유지작물)을 넣어 끊는다. 효과적인 살균제가 없으며 오직 윤작으로만 치유된다." />
         <e k="rcr_advice_pressure_high_septoriose" v="잎마름병 압력 높음: 곡류 잔재물 위에 밀/보리를 심지 말고 내병성 품종을 고르며, 습한 기후에서는 절간신장기부터 살균제를 살포한다." />

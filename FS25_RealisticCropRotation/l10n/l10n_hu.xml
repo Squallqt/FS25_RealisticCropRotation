@@ -180,25 +180,25 @@
         <!-- Disease system (9 pathogens) -->
         <e k="rcr_disease_name_sclerotinia" v="Fehérpenészes rothadás (Sclerotinia)" />
         <e k="rcr_disease_name_phoma" v="Fómás szárrothadás (Phoma)" />
-        <e k="rcr_disease_name_pietin" v="Gyökér- és szártőfeketedés" />
-        <e k="rcr_disease_name_septoriose" v="Szeptóriás levélfoltosság" />
-        <e k="rcr_disease_name_rouille" v="Rozsda" />
-        <e k="rcr_disease_name_fusariose" v="Kalászfuzáriózis" />
-        <e k="rcr_disease_name_mildiou" v="Burgonyavész" />
+        <e k="rcr_disease_name_takeall" v="Gyökér- és szártőfeketedés" />
+        <e k="rcr_disease_name_septoria" v="Szeptóriás levélfoltosság" />
+        <e k="rcr_disease_name_rust" v="Rozsda" />
+        <e k="rcr_disease_name_fusarium" v="Kalászfuzáriózis" />
+        <e k="rcr_disease_name_lateblight" v="Burgonyavész" />
         <e k="rcr_disease_name_bcn"   v="Cisztaféreg" />
-        <e k="rcr_disease_name_hernie" v="Káposztafélék gyökérgolyvája" />
+        <e k="rcr_disease_name_clubroot" v="Káposztafélék gyökérgolyvája" />
         <e k="rcr_disease_treatment_sclerotinia" v="Gombaölő szer" />
         <e k="rcr_disease_treatment_phoma" v="Gombaölő szer" />
-        <e k="rcr_disease_treatment_pietin" v="Nincs (vetésforgó)" />
-        <e k="rcr_disease_treatment_septoriose" v="Gombaölő szer" />
-        <e k="rcr_disease_treatment_rouille" v="Gombaölő szer" />
-        <e k="rcr_disease_treatment_fusariose" v="Gombaölő szer" />
-        <e k="rcr_disease_treatment_mildiou" v="Gombaölő szer" />
+        <e k="rcr_disease_treatment_takeall" v="Nincs (vetésforgó)" />
+        <e k="rcr_disease_treatment_septoria" v="Gombaölő szer" />
+        <e k="rcr_disease_treatment_rust" v="Gombaölő szer" />
+        <e k="rcr_disease_treatment_fusarium" v="Gombaölő szer" />
+        <e k="rcr_disease_treatment_lateblight" v="Gombaölő szer" />
         <e k="rcr_disease_treatment_bcn" v="Fonálféregölő szer" />
         <e k="rcr_fillType_fungicide" v="Gombaölő szer" />
         <e k="rcr_fillType_nematicide" v="Fonálféregölő szer" />
         <e k="rcr_disease_treatment_none" v="Nincs kezelés" />
-        <e k="rcr_disease_treatment_hernie" v="Nincs (rezisztens fajta, meszezés, vetésforgó)" />
+        <e k="rcr_disease_treatment_clubroot" v="Nincs (rezisztens fajta, meszezés, vetésforgó)" />
         <e k="rcr_advice_pressure_high_phoma" v="Erős fómás nyomás: mintegy 4 évig kerülje a repcét és a mustárt, forgassa be a maradványokat; fogékony fajtán őszi gombaölő szer." />
         <e k="rcr_advice_pressure_high_pietin" v="Erős szártőfeketedés-nyomás: iktasson be nem gazdanövény kihagyást (zab, hüvelyes, olajnövény); nincs hatékony gombaölő szer, csak a vetésforgó gyógyítja." />
         <e k="rcr_advice_pressure_high_septoriose" v="Erős szeptória-nyomás: ne termesszen búzát/árpát gabonamaradványon, válasszon toleráns fajtát; nedves éghajlaton gombaölő szer szárba indulástól." />

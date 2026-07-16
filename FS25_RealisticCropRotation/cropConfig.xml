@@ -13,23 +13,23 @@
                       fungal="true"  treatment="FUNGICIDE"  weatherFactor="1.8"
                       dailyGrowth="0.03"  destroySeverity="0.30" deadFractionMax="0.55" />
         <!-- Take-all: soil-borne cereal root disease, no fungicide (rotation only) -->
-        <diseaseGroup name="PIETIN"      state="3" minInterval="3" infectFrom="0.30" infectTo="0.80"
+        <diseaseGroup name="TAKEALL"     state="3" minInterval="3" infectFrom="0.30" infectTo="0.80"
                       fungal="true"  treatment="NONE"       weatherFactor="1.4"
                       dailyGrowth="0.035" destroySeverity="0.30" deadFractionMax="0.55" />
         <!-- Septoria leaf blotch: dominant fungal wheat/barley foliar disease -->
-        <diseaseGroup name="SEPTORIOSE"  state="4" minInterval="2" infectFrom="0.25" infectTo="0.75"
+        <diseaseGroup name="SEPTORIA"    state="4" minInterval="2" infectFrom="0.25" infectTo="0.75"
                       fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.3"
                       dailyGrowth="0.045" destroySeverity="0.25" deadFractionMax="0.55" />
         <!-- Rusts: fungal cereal/oilseed foliar disease, wind-borne -->
-        <diseaseGroup name="ROUILLE"     state="5" minInterval="2" infectFrom="0.30" infectTo="0.85"
+        <diseaseGroup name="RUST"        state="5" minInterval="2" infectFrom="0.30" infectTo="0.85"
                       fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.4"
                       dailyGrowth="0.05"  destroySeverity="0.25" deadFractionMax="0.60" />
         <!-- Fusarium head blight: fungal disease favoured by cereal/maize residue -->
-        <diseaseGroup name="FUSARIOSE"   state="6" minInterval="2" infectFrom="0.50" infectTo="0.80"
+        <diseaseGroup name="FUSARIUM"    state="6" minInterval="2" infectFrom="0.50" infectTo="0.80"
                       fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.0"
                       dailyGrowth="0.035" destroySeverity="0.30" deadFractionMax="0.45" />
         <!-- Late blight: weather-driven potato disease -->
-        <diseaseGroup name="MILDIOU"     state="7" minInterval="2" infectFrom="0.15" infectTo="0.85"
+        <diseaseGroup name="LATEBLIGHT"  state="7" minInterval="2" infectFrom="0.15" infectTo="0.85"
                       fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.0"
                       dailyGrowth="0.05"  destroySeverity="0.28" deadFractionMax="0.70" />
         <!-- Beet cyst nematode: soil-borne, not rain-driven -->
@@ -37,31 +37,31 @@
                       fungal="false" treatment="NEMATICIDE"
                       dailyGrowth="0.015" destroySeverity="0.30" deadFractionMax="0.45" />
         <!-- Clubroot: soil-borne brassica disease, long-lived spores -->
-        <diseaseGroup name="HERNIE"      state="9" minInterval="6" infectFrom="0.10" infectTo="0.60"
+        <diseaseGroup name="CLUBROOT"    state="9" minInterval="6" infectFrom="0.10" infectTo="0.60"
                       fungal="false" treatment="NONE"
                       dailyGrowth="0.02"  destroySeverity="0.30" deadFractionMax="0.60" />
     </diseaseGroups>
 
     <!-- Cereals -->
-    <crop name="WHEAT"         family="CEREAL" disease="PIETIN SEPTORIOSE ROUILLE FUSARIOSE" />
-    <crop name="BARLEY"        family="CEREAL" disease="PIETIN SEPTORIOSE ROUILLE FUSARIOSE" />
-    <crop name="OAT"           family="CEREAL" disease="ROUILLE FUSARIOSE" />
-    <crop name="RYE"           family="CEREAL" disease="PIETIN ROUILLE FUSARIOSE" />
-    <crop name="TRITICALE"     family="CEREAL" disease="PIETIN SEPTORIOSE ROUILLE FUSARIOSE" />
-    <crop name="SPELT"         family="CEREAL" disease="PIETIN SEPTORIOSE" />
-    <crop name="MAIZE"         family="CEREAL" disease="FUSARIOSE" />
-    <crop name="SORGHUM"       family="CEREAL" disease="FUSARIOSE" />
-    <crop name="WINTERWHEAT"   family="CEREAL" disease="PIETIN SEPTORIOSE ROUILLE FUSARIOSE" />
-    <crop name="WINTERBARLEY"  family="CEREAL" disease="PIETIN SEPTORIOSE ROUILLE FUSARIOSE" />
+    <crop name="WHEAT"         family="CEREAL" disease="TAKEALL SEPTORIA RUST FUSARIUM" />
+    <crop name="BARLEY"        family="CEREAL" disease="TAKEALL SEPTORIA RUST FUSARIUM" />
+    <crop name="OAT"           family="CEREAL" disease="RUST FUSARIUM" />
+    <crop name="RYE"           family="CEREAL" disease="TAKEALL RUST FUSARIUM" />
+    <crop name="TRITICALE"     family="CEREAL" disease="TAKEALL SEPTORIA RUST FUSARIUM" />
+    <crop name="SPELT"         family="CEREAL" disease="TAKEALL SEPTORIA" />
+    <crop name="MAIZE"         family="CEREAL" disease="FUSARIUM" />
+    <crop name="SORGHUM"       family="CEREAL" disease="FUSARIUM" />
+    <crop name="WINTERWHEAT"   family="CEREAL" disease="TAKEALL SEPTORIA RUST FUSARIUM" />
+    <crop name="WINTERBARLEY"  family="CEREAL" disease="TAKEALL SEPTORIA RUST FUSARIUM" />
     <crop name="RICE"          family="CEREAL" />
     <crop name="RICELONGGRAIN" family="CEREAL" />
-    <crop name="SILAGEMAIZE"   family="CEREAL" disease="FUSARIOSE" />
-    <crop name="GREENRYE"      family="CEREAL" disease="PIETIN" />
+    <crop name="SILAGEMAIZE"   family="CEREAL" disease="FUSARIUM" />
+    <crop name="GREENRYE"      family="CEREAL" disease="TAKEALL" />
 
     <!-- Oilseeds -->
-    <crop name="CANOLA"    family="OILSEED" disease="SCLEROTINIA PHOMA ROUILLE BCN HERNIE" />
-    <crop name="SUNFLOWER" family="OILSEED" disease="SCLEROTINIA ROUILLE" />
-    <crop name="MUSTARD"   family="OILSEED" disease="SCLEROTINIA PHOMA BCN HERNIE" />
+    <crop name="CANOLA"    family="OILSEED" disease="SCLEROTINIA PHOMA RUST BCN CLUBROOT" />
+    <crop name="SUNFLOWER" family="OILSEED" disease="SCLEROTINIA RUST" />
+    <crop name="MUSTARD"   family="OILSEED" disease="SCLEROTINIA PHOMA BCN CLUBROOT" />
     <!-- Legumes (n1/n2 in PF states; 1 state = 5 kg N/ha) -->
     <crop name="SOYBEAN"   family="LEGUME" n1="8"  n2="2"  disease="SCLEROTINIA" />
     <crop name="ALFALFA"   family="LEGUME" n1="16" n2="10" />
@@ -72,7 +72,7 @@
 
     <!-- Root vegetables -->
     <crop name="SUGARBEET" family="ROOT" disease="BCN" />
-    <crop name="POTATO"    family="ROOT" disease="SCLEROTINIA MILDIOU" />
+    <crop name="POTATO"    family="ROOT" disease="SCLEROTINIA LATEBLIGHT" />
     <crop name="CARROT"    family="ROOT" disease="SCLEROTINIA" />
     <crop name="PARSNIP"   family="ROOT" />
     <crop name="BEETROOT"  family="ROOT" disease="BCN" />

@@ -180,25 +180,25 @@
         <!-- Disease system (9 pathogens) -->
         <e k="rcr_disease_name_sclerotinia" v="Busuk putih Sclerotinia" />
         <e k="rcr_disease_name_phoma" v="Kanker batang (Phoma)" />
-        <e k="rcr_disease_name_pietin" v="Busuk akar serealia" />
-        <e k="rcr_disease_name_septoriose" v="Bercak daun Septoria" />
-        <e k="rcr_disease_name_rouille" v="Penyakit karat" />
-        <e k="rcr_disease_name_fusariose" v="Hawar malai Fusarium" />
-        <e k="rcr_disease_name_mildiou" v="Hawar daun (busuk daun)" />
+        <e k="rcr_disease_name_takeall" v="Busuk akar serealia" />
+        <e k="rcr_disease_name_septoria" v="Bercak daun Septoria" />
+        <e k="rcr_disease_name_rust" v="Penyakit karat" />
+        <e k="rcr_disease_name_fusarium" v="Hawar malai Fusarium" />
+        <e k="rcr_disease_name_lateblight" v="Hawar daun (busuk daun)" />
         <e k="rcr_disease_name_bcn"   v="Nematoda sista" />
-        <e k="rcr_disease_name_hernie" v="Penyakit akar gada" />
+        <e k="rcr_disease_name_clubroot" v="Penyakit akar gada" />
         <e k="rcr_disease_treatment_sclerotinia" v="Fungisida" />
         <e k="rcr_disease_treatment_phoma" v="Fungisida" />
-        <e k="rcr_disease_treatment_pietin" v="Tidak ada (rotasi)" />
-        <e k="rcr_disease_treatment_septoriose" v="Fungisida" />
-        <e k="rcr_disease_treatment_rouille" v="Fungisida" />
-        <e k="rcr_disease_treatment_fusariose" v="Fungisida" />
-        <e k="rcr_disease_treatment_mildiou" v="Fungisida" />
+        <e k="rcr_disease_treatment_takeall" v="Tidak ada (rotasi)" />
+        <e k="rcr_disease_treatment_septoria" v="Fungisida" />
+        <e k="rcr_disease_treatment_rust" v="Fungisida" />
+        <e k="rcr_disease_treatment_fusarium" v="Fungisida" />
+        <e k="rcr_disease_treatment_lateblight" v="Fungisida" />
         <e k="rcr_disease_treatment_bcn" v="Nematisida" />
         <e k="rcr_fillType_fungicide" v="Fungisida" />
         <e k="rcr_fillType_nematicide" v="Nematisida" />
         <e k="rcr_disease_treatment_none" v="Tidak ada penyemprotan" />
-        <e k="rcr_disease_treatment_hernie" v="Tidak ada (varietas tahan, pengapuran, rotasi)" />
+        <e k="rcr_disease_treatment_clubroot" v="Tidak ada (varietas tahan, pengapuran, rotasi)" />
         <e k="rcr_advice_pressure_high_phoma" v="Tekanan phoma tinggi: hindari kanola dan sesawi sekitar 4 tahun, benamkan sisa tanaman; fungisida musim gugur pada varietas rentan." />
         <e k="rcr_advice_pressure_high_pietin" v="Tekanan busuk akar tinggi: sisipkan jeda tanaman bukan inang (oat, legum, tanaman minyak); tidak ada fungisida efektif, hanya rotasi yang menyembuhkan." />
         <e k="rcr_advice_pressure_high_septoriose" v="Tekanan septoria tinggi: hindari gandum/jelai di atas sisa serealia, pilih varietas toleran; fungisida sejak pemanjangan batang di iklim basah." />

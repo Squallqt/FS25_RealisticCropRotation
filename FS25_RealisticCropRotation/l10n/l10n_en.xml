@@ -180,25 +180,25 @@
         <!-- Disease system (9 pathogens) -->
         <e k="rcr_disease_name_sclerotinia" v="Sclerotinia" />
         <e k="rcr_disease_name_phoma" v="Phoma (blackleg)" />
-        <e k="rcr_disease_name_pietin" v="Take-all" />
-        <e k="rcr_disease_name_septoriose" v="Septoria leaf blotch" />
-        <e k="rcr_disease_name_rouille" v="Rust" />
-        <e k="rcr_disease_name_fusariose" v="Fusarium head blight" />
-        <e k="rcr_disease_name_mildiou" v="Late blight" />
+        <e k="rcr_disease_name_takeall" v="Take-all" />
+        <e k="rcr_disease_name_septoria" v="Septoria leaf blotch" />
+        <e k="rcr_disease_name_rust" v="Rust" />
+        <e k="rcr_disease_name_fusarium" v="Fusarium head blight" />
+        <e k="rcr_disease_name_lateblight" v="Late blight" />
         <e k="rcr_disease_name_bcn"   v="Cyst nematode" />
-        <e k="rcr_disease_name_hernie" v="Clubroot" />
+        <e k="rcr_disease_name_clubroot" v="Clubroot" />
         <e k="rcr_disease_treatment_sclerotinia" v="Fungicide" />
         <e k="rcr_disease_treatment_phoma" v="Fungicide" />
-        <e k="rcr_disease_treatment_pietin" v="None (rotation)" />
-        <e k="rcr_disease_treatment_septoriose" v="Fungicide" />
-        <e k="rcr_disease_treatment_rouille" v="Fungicide" />
-        <e k="rcr_disease_treatment_fusariose" v="Fungicide" />
-        <e k="rcr_disease_treatment_mildiou" v="Fungicide" />
+        <e k="rcr_disease_treatment_takeall" v="None (rotation)" />
+        <e k="rcr_disease_treatment_septoria" v="Fungicide" />
+        <e k="rcr_disease_treatment_rust" v="Fungicide" />
+        <e k="rcr_disease_treatment_fusarium" v="Fungicide" />
+        <e k="rcr_disease_treatment_lateblight" v="Fungicide" />
         <e k="rcr_disease_treatment_bcn" v="Nematicide" />
         <e k="rcr_fillType_fungicide" v="Fungicide" />
         <e k="rcr_fillType_nematicide" v="Nematicide" />
         <e k="rcr_disease_treatment_none" v="No treatment" />
-        <e k="rcr_disease_treatment_hernie" v="None (resistant variety, liming, rotation)" />
+        <e k="rcr_disease_treatment_clubroot" v="None (resistant variety, liming, rotation)" />
         <e k="rcr_advice_pressure_high_phoma" v="High phoma pressure: avoid canola and mustard for ~4 years, bury residue; autumn fungicide on susceptible varieties." />
         <e k="rcr_advice_pressure_high_pietin" v="High take-all pressure: insert a non-host break (oats, legume, oilseed); no effective fungicide, only rotation cures it." />
         <e k="rcr_advice_pressure_high_septoriose" v="High septoria pressure: avoid wheat/barley on cereal residue, pick a tolerant variety; fungicide from stem elongation in a wet climate." />

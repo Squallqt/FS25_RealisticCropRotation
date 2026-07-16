@@ -180,25 +180,25 @@
         <!-- Disease system (9 pathogens) -->
         <e k="rcr_disease_name_sclerotinia" v="Sklerotiniová hniloba (bílá hniloba)" />
         <e k="rcr_disease_name_phoma" v="Fomová hniloba (černání stonku řepky)" />
-        <e k="rcr_disease_name_pietin" v="Černání pat stébel" />
-        <e k="rcr_disease_name_septoriose" v="Braničnatka pšeničná (listová skvrnitost)" />
-        <e k="rcr_disease_name_rouille" v="Rez" />
-        <e k="rcr_disease_name_fusariose" v="Fuzarióza klasů" />
-        <e k="rcr_disease_name_mildiou" v="Plíseň bramboru" />
+        <e k="rcr_disease_name_takeall" v="Černání pat stébel" />
+        <e k="rcr_disease_name_septoria" v="Braničnatka pšeničná (listová skvrnitost)" />
+        <e k="rcr_disease_name_rust" v="Rez" />
+        <e k="rcr_disease_name_fusarium" v="Fuzarióza klasů" />
+        <e k="rcr_disease_name_lateblight" v="Plíseň bramboru" />
         <e k="rcr_disease_name_bcn"   v="Háďátko řepné" />
-        <e k="rcr_disease_name_hernie" v="Nádorovitost brukvovitých" />
+        <e k="rcr_disease_name_clubroot" v="Nádorovitost brukvovitých" />
         <e k="rcr_disease_treatment_sclerotinia" v="Fungicid" />
         <e k="rcr_disease_treatment_phoma" v="Fungicid" />
-        <e k="rcr_disease_treatment_pietin" v="Žádné (osevní postup)" />
-        <e k="rcr_disease_treatment_septoriose" v="Fungicid" />
-        <e k="rcr_disease_treatment_rouille" v="Fungicid" />
-        <e k="rcr_disease_treatment_fusariose" v="Fungicid" />
-        <e k="rcr_disease_treatment_mildiou" v="Fungicid" />
+        <e k="rcr_disease_treatment_takeall" v="Žádné (osevní postup)" />
+        <e k="rcr_disease_treatment_septoria" v="Fungicid" />
+        <e k="rcr_disease_treatment_rust" v="Fungicid" />
+        <e k="rcr_disease_treatment_fusarium" v="Fungicid" />
+        <e k="rcr_disease_treatment_lateblight" v="Fungicid" />
         <e k="rcr_disease_treatment_bcn" v="Nematicid" />
         <e k="rcr_fillType_fungicide" v="Fungicid" />
         <e k="rcr_fillType_nematicide" v="Nematicid" />
         <e k="rcr_disease_treatment_none" v="Žádné ošetření" />
-        <e k="rcr_disease_treatment_hernie" v="Žádné (odolná odrůda, vápnění, osevní postup)" />
+        <e k="rcr_disease_treatment_clubroot" v="Žádné (odolná odrůda, vápnění, osevní postup)" />
         <e k="rcr_advice_pressure_high_phoma" v="Vysoký tlak fomové hniloby: asi 4 roky nepěstujte řepku a hořčici, zapravte zbytky; u náchylných odrůd podzimní fungicid." />
         <e k="rcr_advice_pressure_high_pietin" v="Vysoký tlak černání pat stébel: zařaďte nehostitelskou přerušovací plodinu (oves, luskovina, olejnina); žádný fungicid nezabírá, léčí jen osevní postup." />
         <e k="rcr_advice_pressure_high_septoriose" v="Vysoký tlak braničnatky: nepěstujte pšenici/ječmen na zbytcích obilnin, zvolte tolerantní odrůdu; ve vlhkém klimatu fungicid od sloupkování." />

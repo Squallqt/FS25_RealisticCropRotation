@@ -178,27 +178,27 @@
         <e k="rcr_function_fungicideTank" v="Utilisez AMISTAR dans les pulvérisateurs pour appliquer un traitement fongicide sur les cultures à risque." />
         <e k="rcr_function_nematicideTank" v="Utilisez VELUM PRIME dans les pulvérisateurs pour appliquer un traitement nématicide sur les cultures exposées aux nématodes." />
         <!-- Disease system (9 pathogens) -->
-        <e k="rcr_disease_name_sclerotinia" v="Sclérotinia" />
-        <e k="rcr_disease_name_phoma" v="Phoma (nécrose du collet)" />
-        <e k="rcr_disease_name_pietin" v="Piétin-échaudage" />
-        <e k="rcr_disease_name_septoriose" v="Septoriose" />
-        <e k="rcr_disease_name_rouille" v="Rouille" />
-        <e k="rcr_disease_name_fusariose" v="Fusariose" />
-        <e k="rcr_disease_name_mildiou" v="Mildiou" />
-        <e k="rcr_disease_name_bcn"   v="Nématode à kyste" />
-        <e k="rcr_disease_name_hernie" v="Hernie des crucifères" />
+        <e k="rcr_disease_name_sclerotinia" v="Pourriture blanche" />
+        <e k="rcr_disease_name_phoma" v="Nécrose du collet" />
+        <e k="rcr_disease_name_takeall" v="Piétin-échaudage" />
+        <e k="rcr_disease_name_septoria" v="Septoriose" />
+        <e k="rcr_disease_name_rust" v="Rouille" />
+        <e k="rcr_disease_name_fusarium" v="Fusariose de l'épi" />
+        <e k="rcr_disease_name_lateblight" v="Mildiou" />
+        <e k="rcr_disease_name_bcn"   v="Nématode à kystes" />
+        <e k="rcr_disease_name_clubroot" v="Hernie des crucifères" />
         <e k="rcr_disease_treatment_sclerotinia" v="Fongicide" />
         <e k="rcr_disease_treatment_phoma" v="Fongicide" />
-        <e k="rcr_disease_treatment_pietin" v="Aucun (rotation)" />
-        <e k="rcr_disease_treatment_septoriose" v="Fongicide" />
-        <e k="rcr_disease_treatment_rouille" v="Fongicide" />
-        <e k="rcr_disease_treatment_fusariose" v="Fongicide" />
-        <e k="rcr_disease_treatment_mildiou" v="Fongicide" />
+        <e k="rcr_disease_treatment_takeall" v="Aucun (rotation)" />
+        <e k="rcr_disease_treatment_septoria" v="Fongicide" />
+        <e k="rcr_disease_treatment_rust" v="Fongicide" />
+        <e k="rcr_disease_treatment_fusarium" v="Fongicide" />
+        <e k="rcr_disease_treatment_lateblight" v="Fongicide" />
         <e k="rcr_disease_treatment_bcn" v="Nématicide" />
         <e k="rcr_fillType_fungicide" v="Fongicide" />
         <e k="rcr_fillType_nematicide" v="Nématicide" />
         <e k="rcr_disease_treatment_none" v="Aucun traitement" />
-        <e k="rcr_disease_treatment_hernie" v="Aucun (variété résistante, chaulage, rotation)" />
+        <e k="rcr_disease_treatment_clubroot" v="Aucun (variété résistante, chaulage, rotation)" />
         <e k="rcr_advice_pressure_high_phoma" v="Forte pression phoma : évitez canola et moutarde ~4 ans, enfouissez les résidus ; fongicide d'automne sur variété sensible." />
         <e k="rcr_advice_pressure_high_pietin" v="Forte pression piétin-échaudage : insérez une coupure non-hôte (avoine, légumineuse, oléagineux) ; aucun fongicide efficace, seule la rotation guérit." />
         <e k="rcr_advice_pressure_high_septoriose" v="Forte pression septoriose : évitez blé/orge sur résidus de céréales, choisissez une variété tolérante ; fongicide dès la montaison en climat humide." />

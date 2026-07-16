@@ -80,7 +80,7 @@ Testing/admin tools registered by the mod (server/host only):
 | `rcrDiseaseTick [farmlandId]` | Runs one disease update step |
 | `rcrDiseaseClear [farmlandId]` | Clears disease state |
 
-Valid `<group>` values: `SCLEROTINIA`, `PHOMA`, `PIETIN`, `SEPTORIOSE`, `ROUILLE`, `FUSARIOSE`, `MILDIOU`, `BCN`, `HERNIE`.
+Valid `<group>` values: `SCLEROTINIA`, `PHOMA`, `TAKEALL`, `SEPTORIA`, `RUST`, `FUSARIUM`, `LATEBLIGHT`, `BCN`, `CLUBROOT`.
 
 ## Changelog
 

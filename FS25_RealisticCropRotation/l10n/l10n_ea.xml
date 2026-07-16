@@ -180,25 +180,25 @@
         <!-- Disease system (9 pathogens) -->
         <e k="rcr_disease_name_sclerotinia" v="Esclerotinia (moho blanco)" />
         <e k="rcr_disease_name_phoma" v="Phoma (pie negro)" />
-        <e k="rcr_disease_name_pietin" v="Mal del pie" />
-        <e k="rcr_disease_name_septoriose" v="Septoriosis" />
-        <e k="rcr_disease_name_rouille" v="Roya" />
-        <e k="rcr_disease_name_fusariose" v="Fusariosis de la espiga" />
-        <e k="rcr_disease_name_mildiou" v="Tizón tardío de la papa" />
+        <e k="rcr_disease_name_takeall" v="Mal del pie" />
+        <e k="rcr_disease_name_septoria" v="Septoriosis" />
+        <e k="rcr_disease_name_rust" v="Roya" />
+        <e k="rcr_disease_name_fusarium" v="Fusariosis de la espiga" />
+        <e k="rcr_disease_name_lateblight" v="Tizón tardío de la papa" />
         <e k="rcr_disease_name_bcn"   v="Nematodo del quiste" />
-        <e k="rcr_disease_name_hernie" v="Hernia de las crucíferas" />
+        <e k="rcr_disease_name_clubroot" v="Hernia de las crucíferas" />
         <e k="rcr_disease_treatment_sclerotinia" v="Fungicida" />
         <e k="rcr_disease_treatment_phoma" v="Fungicida" />
-        <e k="rcr_disease_treatment_pietin" v="Ninguno (rotación)" />
-        <e k="rcr_disease_treatment_septoriose" v="Fungicida" />
-        <e k="rcr_disease_treatment_rouille" v="Fungicida" />
-        <e k="rcr_disease_treatment_fusariose" v="Fungicida" />
-        <e k="rcr_disease_treatment_mildiou" v="Fungicida" />
+        <e k="rcr_disease_treatment_takeall" v="Ninguno (rotación)" />
+        <e k="rcr_disease_treatment_septoria" v="Fungicida" />
+        <e k="rcr_disease_treatment_rust" v="Fungicida" />
+        <e k="rcr_disease_treatment_fusarium" v="Fungicida" />
+        <e k="rcr_disease_treatment_lateblight" v="Fungicida" />
         <e k="rcr_disease_treatment_bcn" v="Nematicida" />
         <e k="rcr_fillType_fungicide" v="Fungicida" />
         <e k="rcr_fillType_nematicide" v="Nematicida" />
         <e k="rcr_disease_treatment_none" v="Ningún tratamiento" />
-        <e k="rcr_disease_treatment_hernie" v="Ninguno (variedad resistente, encalado, rotación)" />
+        <e k="rcr_disease_treatment_clubroot" v="Ninguno (variedad resistente, encalado, rotación)" />
         <e k="rcr_advice_pressure_high_phoma" v="Alta presión de phoma: evita canola y mostaza ~4 años, incorpora los rastrojos; fungicida otoñal en variedades susceptibles." />
         <e k="rcr_advice_pressure_high_pietin" v="Alta presión de mal del pie: intercala un corte no hospedante (avena, leguminosa, oleaginosa); ningún fungicida eficaz, solo la rotación lo cura." />
         <e k="rcr_advice_pressure_high_septoriose" v="Alta presión de septoriosis: evita trigo/cebada sobre rastrojos de cereal, elige una variedad tolerante; fungicida desde el encañado en clima húmedo." />

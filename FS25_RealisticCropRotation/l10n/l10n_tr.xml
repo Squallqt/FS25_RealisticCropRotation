@@ -180,25 +180,25 @@
         <!-- Disease system (9 pathogens) -->
         <e k="rcr_disease_name_sclerotinia" v="Sklerotinya (beyaz küf)" />
         <e k="rcr_disease_name_phoma" v="Gövde kanseri (Phoma)" />
-        <e k="rcr_disease_name_pietin" v="Buğday kök çürüklüğü" />
-        <e k="rcr_disease_name_septoriose" v="Septorya yaprak lekesi" />
-        <e k="rcr_disease_name_rouille" v="Pas hastalığı" />
-        <e k="rcr_disease_name_fusariose" v="Fusarium başak yanıklığı" />
-        <e k="rcr_disease_name_mildiou" v="Mildiyö (geç yanıklık)" />
+        <e k="rcr_disease_name_takeall" v="Buğday kök çürüklüğü" />
+        <e k="rcr_disease_name_septoria" v="Septorya yaprak lekesi" />
+        <e k="rcr_disease_name_rust" v="Pas hastalığı" />
+        <e k="rcr_disease_name_fusarium" v="Fusarium başak yanıklığı" />
+        <e k="rcr_disease_name_lateblight" v="Mildiyö (geç yanıklık)" />
         <e k="rcr_disease_name_bcn"   v="Kist nematodu" />
-        <e k="rcr_disease_name_hernie" v="Kök uru hastalığı" />
+        <e k="rcr_disease_name_clubroot" v="Kök uru hastalığı" />
         <e k="rcr_disease_treatment_sclerotinia" v="Fungisit" />
         <e k="rcr_disease_treatment_phoma" v="Fungisit" />
-        <e k="rcr_disease_treatment_pietin" v="Yok (münavebe)" />
-        <e k="rcr_disease_treatment_septoriose" v="Fungisit" />
-        <e k="rcr_disease_treatment_rouille" v="Fungisit" />
-        <e k="rcr_disease_treatment_fusariose" v="Fungisit" />
-        <e k="rcr_disease_treatment_mildiou" v="Fungisit" />
+        <e k="rcr_disease_treatment_takeall" v="Yok (münavebe)" />
+        <e k="rcr_disease_treatment_septoria" v="Fungisit" />
+        <e k="rcr_disease_treatment_rust" v="Fungisit" />
+        <e k="rcr_disease_treatment_fusarium" v="Fungisit" />
+        <e k="rcr_disease_treatment_lateblight" v="Fungisit" />
         <e k="rcr_disease_treatment_bcn" v="Nematisit" />
         <e k="rcr_fillType_fungicide" v="Fungisit" />
         <e k="rcr_fillType_nematicide" v="Nematisit" />
         <e k="rcr_disease_treatment_none" v="İlaçlama yok" />
-        <e k="rcr_disease_treatment_hernie" v="Yok (dayanıklı çeşit, kireçleme, münavebe)" />
+        <e k="rcr_disease_treatment_clubroot" v="Yok (dayanıklı çeşit, kireçleme, münavebe)" />
         <e k="rcr_advice_pressure_high_phoma" v="Phoma baskısı yüksek: kanola ve hardalı yaklaşık 4 yıl ekmeyin, artıkları toprağa gömün; duyarlı çeşitlerde sonbaharda fungisit uygulayın." />
         <e k="rcr_advice_pressure_high_pietin" v="Kök çürüklüğü baskısı yüksek: konukçu olmayan bir ara bitki (yulaf, baklagil, yağlı tohum) ekin; etkili fungisit yoktur, yalnızca münavebe iyileştirir." />
         <e k="rcr_advice_pressure_high_septoriose" v="Septorya baskısı yüksek: tahıl artıkları üzerine buğday/arpa ekmeyin, dayanıklı çeşit seçin; nemli iklimde sapa kalkmadan itibaren fungisit uygulayın." />

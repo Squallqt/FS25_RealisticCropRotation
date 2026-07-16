@@ -180,25 +180,25 @@
         <!-- Disease system (9 pathogens) -->
         <e k="rcr_disease_name_sclerotinia" v="Sclerotinia (rattenkeutelziekte)" />
         <e k="rcr_disease_name_phoma" v="Phoma (stengelkanker)" />
-        <e k="rcr_disease_name_pietin" v="Tarwehalmdoder" />
-        <e k="rcr_disease_name_septoriose" v="Septoria-bladvlekkenziekte" />
-        <e k="rcr_disease_name_rouille" v="Roest" />
-        <e k="rcr_disease_name_fusariose" v="Aarfusarium" />
-        <e k="rcr_disease_name_mildiou" v="Aardappelziekte (Phytophthora)" />
+        <e k="rcr_disease_name_takeall" v="Tarwehalmdoder" />
+        <e k="rcr_disease_name_septoria" v="Septoria-bladvlekkenziekte" />
+        <e k="rcr_disease_name_rust" v="Roest" />
+        <e k="rcr_disease_name_fusarium" v="Aarfusarium" />
+        <e k="rcr_disease_name_lateblight" v="Aardappelziekte (Phytophthora)" />
         <e k="rcr_disease_name_bcn"   v="Cystenaaltje" />
-        <e k="rcr_disease_name_hernie" v="Knolvoet" />
+        <e k="rcr_disease_name_clubroot" v="Knolvoet" />
         <e k="rcr_disease_treatment_sclerotinia" v="Fungicide" />
         <e k="rcr_disease_treatment_phoma" v="Fungicide" />
-        <e k="rcr_disease_treatment_pietin" v="Geen (vruchtwisseling)" />
-        <e k="rcr_disease_treatment_septoriose" v="Fungicide" />
-        <e k="rcr_disease_treatment_rouille" v="Fungicide" />
-        <e k="rcr_disease_treatment_fusariose" v="Fungicide" />
-        <e k="rcr_disease_treatment_mildiou" v="Fungicide" />
+        <e k="rcr_disease_treatment_takeall" v="Geen (vruchtwisseling)" />
+        <e k="rcr_disease_treatment_septoria" v="Fungicide" />
+        <e k="rcr_disease_treatment_rust" v="Fungicide" />
+        <e k="rcr_disease_treatment_fusarium" v="Fungicide" />
+        <e k="rcr_disease_treatment_lateblight" v="Fungicide" />
         <e k="rcr_disease_treatment_bcn" v="Nematicide" />
         <e k="rcr_fillType_fungicide" v="Fungicide" />
         <e k="rcr_fillType_nematicide" v="Nematicide" />
         <e k="rcr_disease_treatment_none" v="Geen behandeling" />
-        <e k="rcr_disease_treatment_hernie" v="Geen (resistent ras, bekalking, vruchtwisseling)" />
+        <e k="rcr_disease_treatment_clubroot" v="Geen (resistent ras, bekalking, vruchtwisseling)" />
         <e k="rcr_advice_pressure_high_phoma" v="Hoge phoma-druk: vermijd koolzaad en mosterd ~4 jaar, werk de gewasresten onder; najaarsfungicide op vatbare rassen." />
         <e k="rcr_advice_pressure_high_pietin" v="Hoge tarwehalmdoder-druk: voeg een niet-waardgewas in (haver, vlinderbloemige, oliehoudend gewas); geen werkzaam fungicide, alleen vruchtwisseling helpt." />
         <e k="rcr_advice_pressure_high_septoriose" v="Hoge septoria-druk: teel geen tarwe/gerst op graanresten, kies een tolerant ras; fungicide vanaf de stengelstrekking in een vochtig klimaat." />

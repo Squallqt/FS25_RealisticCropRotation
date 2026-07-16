@@ -180,25 +180,25 @@
         <!-- Disease system (9 pathogens) -->
         <e k="rcr_disease_name_sclerotinia" v="菌核病" />
         <e k="rcr_disease_name_phoma" v="黑胫病（茎溃疡）" />
-        <e k="rcr_disease_name_pietin" v="全蚀病" />
-        <e k="rcr_disease_name_septoriose" v="壳针孢叶枯病" />
-        <e k="rcr_disease_name_rouille" v="锈病" />
-        <e k="rcr_disease_name_fusariose" v="赤霉病" />
-        <e k="rcr_disease_name_mildiou" v="晚疫病" />
+        <e k="rcr_disease_name_takeall" v="全蚀病" />
+        <e k="rcr_disease_name_septoria" v="壳针孢叶枯病" />
+        <e k="rcr_disease_name_rust" v="锈病" />
+        <e k="rcr_disease_name_fusarium" v="赤霉病" />
+        <e k="rcr_disease_name_lateblight" v="晚疫病" />
         <e k="rcr_disease_name_bcn"   v="孢囊线虫" />
-        <e k="rcr_disease_name_hernie" v="根肿病" />
+        <e k="rcr_disease_name_clubroot" v="根肿病" />
         <e k="rcr_disease_treatment_sclerotinia" v="杀菌剂" />
         <e k="rcr_disease_treatment_phoma" v="杀菌剂" />
-        <e k="rcr_disease_treatment_pietin" v="无（轮作）" />
-        <e k="rcr_disease_treatment_septoriose" v="杀菌剂" />
-        <e k="rcr_disease_treatment_rouille" v="杀菌剂" />
-        <e k="rcr_disease_treatment_fusariose" v="杀菌剂" />
-        <e k="rcr_disease_treatment_mildiou" v="杀菌剂" />
+        <e k="rcr_disease_treatment_takeall" v="无（轮作）" />
+        <e k="rcr_disease_treatment_septoria" v="杀菌剂" />
+        <e k="rcr_disease_treatment_rust" v="杀菌剂" />
+        <e k="rcr_disease_treatment_fusarium" v="杀菌剂" />
+        <e k="rcr_disease_treatment_lateblight" v="杀菌剂" />
         <e k="rcr_disease_treatment_bcn" v="杀线虫剂" />
         <e k="rcr_fillType_fungicide" v="杀菌剂" />
         <e k="rcr_fillType_nematicide" v="杀线虫剂" />
         <e k="rcr_disease_treatment_none" v="无防治" />
-        <e k="rcr_disease_treatment_hernie" v="无（抗病品种、施石灰、轮作）" />
+        <e k="rcr_disease_treatment_clubroot" v="无（抗病品种、施石灰、轮作）" />
         <e k="rcr_advice_pressure_high_phoma" v="黑胫病压力高，约四年内避免种植油菜和芥菜，翻埋残体；感病品种在秋季施用杀菌剂。" />
         <e k="rcr_advice_pressure_high_pietin" v="全蚀病压力高，插入一茬非寄主作物（燕麦、豆科、油料作物）打断；没有有效杀菌剂，只有轮作才能根治。" />
         <e k="rcr_advice_pressure_high_septoriose" v="叶枯病压力高，避免在谷物残体上种植小麦/大麦，选用耐病品种；在潮湿气候下从拔节期开始施用杀菌剂。" />
