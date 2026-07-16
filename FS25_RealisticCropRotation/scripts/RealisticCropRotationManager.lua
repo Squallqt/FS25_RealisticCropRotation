@@ -238,12 +238,25 @@ local function collectFieldInteriorSamples(field, samples)
     end
 end
 
+---True when a fruit type is a cover crop (cropConfig cover="true" or the native isCatchCrop flag).
+-- @param table fruitType
+-- @return boolean isCover
+local function isFruitTypeCoverCrop(fruitType)
+    if fruitType == nil then return false end
+    if fruitType.isCatchCrop == true then return true end
+    local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
+    if config == nil or config.coverCrops == nil or fruitType.name == nil then return false end
+    return config.coverCrops[string.upper(tostring(fruitType.name))] == true
+end
+
 ---True when a fruit type's growth state is cut/withered (harvested residue, not a live crop).
+-- Cover crops are exempt: withering in place is their intended end-of-life mulch stage, still the active crop until tilled.
 -- @param table fruitType
 -- @param number growthState
 -- @return boolean isDone
 local function isFruitTypeCutOrWithered(fruitType, growthState)
     if fruitType == nil or growthState == nil then return false end
+    if isFruitTypeCoverCrop(fruitType) then return false end
 
     if type(fruitType.getIsCut) == "function" then
         local ok, isCut = pcall(fruitType.getIsCut, fruitType, growthState)
@@ -1406,30 +1419,32 @@ end
 function RealisticCropRotationManager:getFieldCropInfo(farmlandId)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return nil end
+    if g_fruitTypeManager == nil then return nil end
 
-    local field = self:getFieldByFarmlandId(farmlandId)
-    if field == nil or g_fruitTypeManager == nil or FieldState == nil then return nil end
-    if type(field.posX) ~= "number" or type(field.posZ) ~= "number" then return nil end
-
-    -- field.fieldState is clobbered on MP clients; sample a fresh one at the field centre.
-    local fieldState = FieldState.new()
-    if type(fieldState.update) ~= "function" then return nil end
-    fieldState:update(field.posX, field.posZ)
-    if not fieldState.isValid then return nil end
-
-    local fruitTypeIndex = normalizeFruitTypeIndex(fieldState.fruitTypeIndex)
+    -- Shares the majority-vote/cached crop read with the sidebar and history cards, not a raw single-point sample.
+    local _, fruitTypeIndex, growthState = self:getActiveCropInfo(numericFarmlandId)
+    fruitTypeIndex = normalizeFruitTypeIndex(fruitTypeIndex)
     if fruitTypeIndex == nil then return nil end
 
     local fruitType = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
     if fruitType == nil then return nil end
+    growthState = tonumber(growthState) or 0
 
-    local growthState = tonumber(fieldState.growthState or fieldState.lastGrowthState) or 0
-
-    -- Reads the weed line via the real PlayerHUDUpdater:fieldAddWeed.
-    fieldState.farmlandId = numericFarmlandId
+    -- Weed line still reads a live FieldState (mirrors the native PlayerHUDUpdater:fieldAddWeed); not in the density-map vote.
     local weedHeader, weedValue
-    if RealisticCropRotationHud ~= nil and RealisticCropRotationHud.getWeedLineFromGame ~= nil then
-        weedHeader, weedValue = RealisticCropRotationHud.getWeedLineFromGame(fieldState)
+    local field = self:getFieldByFarmlandId(farmlandId)
+    if field ~= nil and FieldState ~= nil
+        and type(field.posX) == "number" and type(field.posZ) == "number" then
+        local fieldState = FieldState.new()
+        if type(fieldState.update) == "function" then
+            fieldState:update(field.posX, field.posZ)
+            if fieldState.isValid then
+                fieldState.farmlandId = numericFarmlandId
+                if RealisticCropRotationHud ~= nil and RealisticCropRotationHud.getWeedLineFromGame ~= nil then
+                    weedHeader, weedValue = RealisticCropRotationHud.getWeedLineFromGame(fieldState)
+                end
+            end
+        end
     end
 
     local growthStageText, growthIsAction = RealisticCropRotationManager.classifyGrowthStage(fruitType, growthState)
