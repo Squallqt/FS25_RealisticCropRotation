@@ -889,7 +889,6 @@ function RealisticCropRotationDisease:registerConsoleCommands()
     addConsoleCommand("rcrDiseaseInfect", "Force a disease infection: rcrDiseaseInfect <farmlandId> <group> [severity]", "consoleInfect", self, "farmlandId; group; [severity]")
     addConsoleCommand("rcrDiseaseTick", "Run one disease update tick: rcrDiseaseTick [farmlandId]", "consoleTick", self, "[farmlandId]")
     addConsoleCommand("rcrDiseaseClear", "Clear disease state: rcrDiseaseClear [farmlandId]", "consoleClear", self, "[farmlandId]")
-    addConsoleCommand("rcrDiseaseSeverityScan", "TEMP diagnostic, read-only: rcrDiseaseSeverityScan <farmlandId> <group>", "consoleSeverityScan", self, "farmlandId; group")
 
     self.consoleCommandsRegistered = true
 end
@@ -901,7 +900,6 @@ function RealisticCropRotationDisease:unregisterConsoleCommands()
     removeConsoleCommand("rcrDiseaseInfect")
     removeConsoleCommand("rcrDiseaseTick")
     removeConsoleCommand("rcrDiseaseClear")
-    removeConsoleCommand("rcrDiseaseSeverityScan")
 
     self.consoleCommandsRegistered = false
 end
@@ -988,9 +986,9 @@ function RealisticCropRotationDisease:consoleDump(farmlandId)
     if #ids == 0 then return "No Realistic Crop Rotation farmland found" end
 
     local temperature = currentTemperature()
-    print(string.format(
+    Logging.info(
         "[RealisticCropRotation] weather temperature=%.1fC factor=%.2f raining=%s periodScale=%.2f",
-        temperature, temperatureFactor(temperature), tostring(isRaining()), periodScale()))
+        temperature, temperatureFactor(temperature), tostring(isRaining()), periodScale())
 
     for _, id in ipairs(ids) do
         local cropName, _, growthState = nil, nil, nil
@@ -1008,14 +1006,14 @@ function RealisticCropRotationDisease:consoleDump(farmlandId)
             protStr = string.format("FUNGICIDE=%.0f%%,NEMATICIDE=%.0f%%", fungCov * 100, nemaCov * 100)
         end
 
-        print(string.format(
+        Logging.info(
             "[RealisticCropRotation] disease farmland=%d crop=%s growth=%s load={%s} state={%s} protect={%s}",
             id,
             tostring(cropName),
             tostring(growthState),
             formatDiseaseLoads(self:getLoad(id)),
             formatDiseaseState(self:getState(id)),
-            protStr))
+            protStr)
     end
 
     return string.format("Printed disease state for %d farmland(s)", #ids)
@@ -1064,6 +1062,9 @@ function RealisticCropRotationDisease:consoleInfect(farmlandId, groupName, sever
     }
     self.crop[id] = cropName
 
+    -- Map overlay and real crop destruction are both applied immediately.
+    self:propagate(id)
+
     requestDiseaseConsoleBroadcast()
     return warning .. string.format("Forced %s infection on farmland %d (severity %.3f)", group, id, value)
 end
@@ -1106,38 +1107,4 @@ function RealisticCropRotationDisease:consoleClear(farmlandId)
     end
     requestDiseaseConsoleBroadcast()
     return "Cleared all disease state"
-end
-
----TEMP diagnostic, read-only (executeGet only): reads the crop's own density map directly (state 0 = destroyed), no Perlin reconstruction.
-function RealisticCropRotationDisease:consoleSeverityScan(farmlandId, groupName)
-    if g_server == nil then return "rcrDiseaseSeverityScan is available on server/host only" end
-    local id = tonumber(farmlandId)
-    local group = groupName ~= nil and string.upper(tostring(groupName)) or nil
-    if id == nil or id <= 0 or group == nil or group == "" then
-        return "Usage: rcrDiseaseSeverityScan <farmlandId> <group>"
-    end
-    local s = self.state[id] ~= nil and self.state[id][group] or nil
-    if s == nil then return "No active infection for that farmland/group" end
-
-    local mgr = self.manager
-    local field = (mgr ~= nil and type(mgr.getFieldByFarmlandId) == "function") and mgr:getFieldByFarmlandId(id) or nil
-    if field == nil then return "No field found" end
-    if g_fruitTypeManager == nil then return "No fruit type manager" end
-    local fruitTypeIndex = getFieldCrop(field)
-    if fruitTypeIndex == nil then return "No crop on that field" end
-    local desc = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
-    if desc == nil or desc.terrainDataPlaneId == nil then return "No terrain data plane for that crop" end
-
-    local curve = self:getCurve(group)
-    local dead = deadFractionForSeverity(s.severity, curve)
-
-    local cropModifier = DensityMapModifier.new(desc.terrainDataPlaneId, desc.startStateChannel, desc.numStateChannels, g_terrainNode)
-    field:getDensityMapPolygon():applyToModifier(cropModifier)
-    local destroyedFilter = DensityMapFilter.new(desc.terrainDataPlaneId, desc.startStateChannel, desc.numStateChannels)
-    destroyedFilter:setValueCompareParams(DensityValueCompareType.EQUAL, 0)
-    local _, hits, total = cropModifier:executeGet(destroyedFilter)
-    local actual = (total ~= nil and total > 0) and (hits / total) or -1
-
-    return string.format("severity=%.3f target_core=%.1f%% actual_destroyed_on_cropmap=%.1f%% (actual includes the speckled edge band, so a bit above target is expected)",
-        s.severity, dead * 100, actual * 100)
 end
