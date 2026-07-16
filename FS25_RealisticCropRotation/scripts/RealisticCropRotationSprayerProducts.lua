@@ -19,6 +19,14 @@ local hookInstalled = false
 -- Ground-paint value only (SPRAY_TYPE channel); the engine clears it on the crop's next growth-state transition.
 local treatmentSprayType = nil
 
+---Queues the client-side sprayer materials before the engine loads mod material holders.
+function RealisticCropRotationSprayerProducts.registerMaterialHolder(modDirectory)
+    if g_dedicatedServerInfo == nil and g_materialManager ~= nil then
+        g_materialManager:addModMaterialHolder(
+            modDirectory .. "effects/rcrSprayer_materialHolder.i3d")
+    end
+end
+
 ---Returns true when the given fillType index is one of the RCR sprayer products.
 -- @param integer fillTypeIndex fillType index (may be nil)
 -- @return boolean isProduct true for RCR_FUNGICIDE / RCR_NEMATICIDE

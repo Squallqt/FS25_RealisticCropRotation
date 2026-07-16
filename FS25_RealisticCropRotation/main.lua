@@ -519,6 +519,8 @@ end
 local function initRealisticCropRotation()
     RealisticCropRotation.cropConfig = loadCropConfig()
 
+    RealisticCropRotationSprayerProducts.registerMaterialHolder(modDirectory)
+
     Mission00.loadMission00Finished = Utils.appendedFunction(Mission00.loadMission00Finished, loadedMission)
 
     InGameMenu.onLoadMapFinished = Utils.appendedFunction(InGameMenu.onLoadMapFinished, function(_inGameMenu)
