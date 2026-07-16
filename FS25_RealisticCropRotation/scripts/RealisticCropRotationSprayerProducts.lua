@@ -10,13 +10,16 @@ RealisticCropRotationSprayerProducts.PRODUCT_TREATMENTS = {
     RCR_NEMATICIDE = "NEMATICIDE",
 }
 
+-- RCR product spray rate (l/s).
+RealisticCropRotationSprayerProducts.litersPerSecond = 0.0081
+
 -- fillTypeIndex -> true; refreshed each mission load since fillType indices may shift between savegames.
 local productFillTypeSet = {}
 -- fillTypeIndex -> "FUNGICIDE" | "NEMATICIDE"; same lifecycle as productFillTypeSet.
 local productTreatmentByFillType = {}
 local hookInstalled = false
 
--- Below this ground speed (km/h) the tool counts as stopped: no consumption, jet fades.
+-- Minimum ground speed (km/h) to spray.
 local MIN_WORK_SPEED = 0.5
 
 local PF_MOD_NAME = "FS25_precisionFarming"
@@ -258,6 +261,7 @@ local function ensureSprayTypes()
 
     local herbicideSprayType = g_sprayTypeManager:getSprayTypeByName("HERBICIDE")
     local litersPerSecond = herbicideSprayType ~= nil and herbicideSprayType.litersPerSecond or 0.0081
+    RealisticCropRotationSprayerProducts.litersPerSecond = litersPerSecond
     local sprayGroundType = herbicideSprayType ~= nil and herbicideSprayType.sprayGroundType or nil
 
     -- Reuses FERTILIZER's ground value for the paint channel (SPRAY_TYPE only, never SPRAY_LEVEL, so no fertilisation/nitrogen/yield).
@@ -405,7 +409,7 @@ local function installSprayerHook()
             return superFunc(self, workArea, dt)
         end
 
-        -- Guards mirror the vanilla activation path; RCR skips FSDensityMapUtil.updateSprayArea (no herbicide ground effect, no SPRAY_LEVEL).
+        -- Vanilla activation guards.
         if params.sprayFillLevel <= 0 then
             return 0, 0
         end
@@ -414,18 +418,22 @@ local function installSprayerHook()
             return 0, 0
         end
 
-        -- Stationary means no work. RCR has no changedArea to fall to zero, so speed is its work signal: leaving
-        -- isActive/lastSprayTime unset makes onEndWorkAreaProcessing skip consumption and lets the jet fade out.
+        -- No spraying while stopped.
         if self:getLastSpeed() <= MIN_WORK_SPEED then
             return 0, 0
         end
 
-        -- isActive drives the vanilla per-tick consumption in onEndWorkAreaProcessing; lastSprayTime drives the jet effect.
+        -- Mark active and refresh the effect timer.
         params.isActive = true
         params.lastSprayTime = g_time
         spec.isWorking = true
 
-        -- Treated-ground look plus curative/preventive protection; server only (protection gates the daily destroy pass).
+        -- Tank usage from the work area width.
+        if (params.usage or 0) <= 0 then
+            params.usage = RealisticCropRotationSprayerProducts.litersPerSecond * self:getLastSpeed() * (workArea.workWidth or 0) * dt * 0.001
+        end
+
+        -- Server: paint treated ground and disease protection.
         if self.isServer then
             paintTreatmentGround(self, workArea)
             paintDiseaseProtection(workArea, sprayFillType)
