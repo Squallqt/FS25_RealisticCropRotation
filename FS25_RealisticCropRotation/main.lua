@@ -226,21 +226,8 @@ end
 function refreshRealisticCropRotationFrame()
     if RealisticCropRotation.frame == nil then return end
     local frame = RealisticCropRotation.frame
-    -- Planning tab active (MP): only rebuild overview, never reset calendar selectors.
-    if type(frame.isHistoryTab) == "function" and not frame:isHistoryTab() then
-        if type(frame.buildRotationGroups) == "function" then
-            frame:buildRotationGroups()
-        end
-        if frame.listPlanOverview ~= nil then
-            frame.listPlanOverview:reloadData()
-        end
-        if type(frame.updateCalendarVisualsFromSelectors) == "function" then
-            frame:updateCalendarVisualsFromSelectors()
-        end
-    elseif frame.populateSidebar ~= nil then
-        frame:populateSidebar()
-    elseif frame.updateDetailPanel ~= nil then
-        frame:updateDetailPanel(frame.selectedId)
+    if type(frame.onServerSyncReceived) == "function" then
+        frame:onServerSyncReceived()
     end
 end
 

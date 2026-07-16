@@ -131,6 +131,7 @@ function RealisticCropRotationFrame.new(i18n, messageCenter)
     self.totalAreaHa   = 0
     self.isSubscribedToFarmlandChanges = false
     self.weatherCard = nil
+    self.refreshTimerMs = 0
     return self
 end
 
@@ -143,6 +144,7 @@ function RealisticCropRotationFrame:copyAttributes(src)
     self.totalAreaHa   = src.totalAreaHa or 0
     self.isSubscribedToFarmlandChanges = false
     self.weatherCard = nil
+    self.refreshTimerMs = 0
 end
 
 ---Unsubscribes and releases the frame.
@@ -226,6 +228,7 @@ end
 ---Reconciles history (server), populates the sidebar and requests a server sync.
 function RealisticCropRotationFrame:onFrameOpen()
     RealisticCropRotationFrame:superClass().onFrameOpen(self)
+    self.refreshTimerMs = 0
     self:subscribeFarmlandChanges()
     if g_currentMission ~= nil and g_currentMission:getIsServer() then
         local mgr = self:getManager()
@@ -248,7 +251,6 @@ function RealisticCropRotationFrame:onFrameOpen()
     if RealisticCropRotation ~= nil and RealisticCropRotation.requestServerSync ~= nil then
         RealisticCropRotation.requestServerSync("frameOpen")
     end
-    self:updateContainerVisibility()
     self:linkFocusNavigation()
 end
 
@@ -266,7 +268,7 @@ function RealisticCropRotationFrame:update(dt)
         superClass.update(self, dt)
     end
 
-    self.refreshTimerMs = (self.refreshTimerMs or 0) + (dt or 0)
+    self.refreshTimerMs = self.refreshTimerMs + dt
     if self.refreshTimerMs < RealisticCropRotationFrame.DETAIL_REFRESH_INTERVAL_MS then return end
     self.refreshTimerMs = 0
 
