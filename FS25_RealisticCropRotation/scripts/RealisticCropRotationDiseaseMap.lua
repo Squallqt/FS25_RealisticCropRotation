@@ -6,6 +6,7 @@ RealisticCropRotationDiseaseMap = RealisticCropRotationDiseaseMap or {}
 
 RealisticCropRotationDiseaseMap.PAGE_FIELD = "rcrDiseaseMapPageIndex"
 RealisticCropRotationDiseaseMap.UPDATE_INTERVAL_MS = 1000
+RealisticCropRotationDiseaseMap.HUD_UPDATE_INTERVAL_MS = 250
 
 -- Per-disease overlay colours by stable state id (cropConfig <diseaseGroup state=>): [false] default palette, [true] colour-blind-safe.
 RealisticCropRotationDiseaseMap.STATE_COLORS = {
@@ -79,6 +80,37 @@ end
 ---The persistent disease grid (BitVectorMap wrapper).
 local function getGrid()
     return RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
+end
+
+local function isVisualizationOverlayReady(overlayId)
+    if overlayId == nil or overlayId == 0 then return false end
+    if getIsDensityMapVisualizationOverlayReady ~= nil
+        and not getIsDensityMapVisualizationOverlayReady(overlayId) then return false end
+    return true
+end
+
+---Configures an overlay for one RCR treatment family.
+function RealisticCropRotationDiseaseMap:configureTreatmentOverlay(overlayId, treatmentFamily)
+    local grid = getGrid()
+    if overlayId == nil or grid == nil then return false end
+
+    local mapId, color
+    if treatmentFamily == "FUNGICIDE" then
+        mapId = grid.fungicideProtectionMapId
+        color = self.TREATMENT_COLOR_FUNGICIDE
+    elseif treatmentFamily == "NEMATICIDE" then
+        mapId = grid.nematicideProtectionMapId
+        color = self.TREATMENT_COLOR_NEMATICIDE
+    end
+    if mapId == nil or color == nil then return false end
+
+    resetDensityMapVisualizationOverlay(overlayId)
+    setOverlayColor(overlayId, 1, 1, 1, 1)
+    setDensityMapVisualizationOverlayStateColor(
+        overlayId, mapId, 0, 0, 0,
+        RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS,
+        1, color[1], color[2], color[3])
+    return true
 end
 
 ---Overlay colour for a disease's grid state id (colour-blind aware); falls back to a generic colour beyond the palette.
@@ -293,9 +325,19 @@ function RealisticCropRotationDiseaseMap:delete()
         for _, id in ipairs(self.treatmentOverlayIds) do delete(id) end
         self.treatmentOverlayIds = nil
     end
+    if self.hudTreatmentOverlayIds ~= nil then
+        for _, id in ipairs(self.hudTreatmentOverlayIds) do delete(id) end
+        self.hudTreatmentOverlayIds = nil
+    end
     self.infectionActiveSlot, self.infectionPendingSlot = nil, nil
     self.riskActiveSlot, self.riskPendingSlot = nil, nil
     self.treatmentActiveSlot, self.treatmentPendingSlot = nil, nil
+    self.hudTreatmentActiveSlot, self.hudTreatmentPendingSlot = nil, nil
+    self.hudTreatmentActiveFamily, self.hudTreatmentPendingFamily = nil, nil
+    self.hudTreatmentActiveRevision, self.hudTreatmentPendingRevision = nil, nil
+    self.hudTreatmentLastBuildTime = nil
+    self.hudIngameMap = nil
+    self.hudInstanceHooked = false
     self.lastBuildKey = nil
 end
 
@@ -493,6 +535,126 @@ function RealisticCropRotationDiseaseMap:draw(x, y, width, height)
         setOverlayUVs(overlayId, 0, 0, 0, 1, 1, 0, 1, 1)
         renderOverlay(overlayId, x, y, width, height)
     end
+end
+
+---Returns the live HUD minimap instance, never a fullscreen or menu map.
+function RealisticCropRotationDiseaseMap:getHudIngameMap()
+    local mission = g_currentMission
+    if mission == nil or mission.hud == nil then return nil end
+    return mission.hud.ingameMap
+end
+
+---Hooks the concrete HUD map instance after it exists; class hooks can miss its bound drawFields function.
+function RealisticCropRotationDiseaseMap:tryHookHudInstance()
+    if self.hudInstanceHooked then return true end
+    if Utils == nil or Utils.appendedFunction == nil then return false end
+
+    local map = self:getHudIngameMap()
+    if map == nil or map.drawFields == nil then return false end
+
+    map.drawFields = Utils.appendedFunction(map.drawFields, function(mapSelf)
+        RealisticCropRotationDiseaseMap:drawHudTreatmentOverlay(mapSelf)
+    end)
+    self.hudIngameMap = map
+    self.hudInstanceHooked = true
+    return true
+end
+
+---Rebuilds the HUD visualization only for a new family or changed treatment coverage.
+function RealisticCropRotationDiseaseMap:updateHudTreatmentOverlay(treatmentFamily)
+    local grid = getGrid()
+    if grid == nil or createDensityMapVisualizationOverlay == nil then return end
+
+    if self.hudTreatmentOverlayIds == nil then
+        local size = adjustedOverlaySize()
+        self.hudTreatmentOverlayIds = {
+            createDensityMapVisualizationOverlay("rcrHudTreatmentOverlayA", size, size),
+            createDensityMapVisualizationOverlay("rcrHudTreatmentOverlayB", size, size),
+        }
+    end
+
+    local pendingSlot = self.hudTreatmentPendingSlot
+    if pendingSlot ~= nil and isVisualizationOverlayReady(self.hudTreatmentOverlayIds[pendingSlot]) then
+        self.hudTreatmentActiveSlot = pendingSlot
+        self.hudTreatmentActiveFamily = self.hudTreatmentPendingFamily
+        self.hudTreatmentActiveRevision = self.hudTreatmentPendingRevision
+        self.hudTreatmentPendingSlot = nil
+        self.hudTreatmentPendingFamily = nil
+        self.hudTreatmentPendingRevision = nil
+        pendingSlot = nil
+    end
+    if pendingSlot ~= nil then return end
+
+    local revision = grid.protectionRevision or 0
+    local familyChanged = self.hudTreatmentActiveFamily ~= treatmentFamily
+    if not familyChanged and self.hudTreatmentActiveRevision == revision then return end
+
+    local now = g_time or 0
+    if not familyChanged and self.hudTreatmentLastBuildTime ~= nil
+        and now - self.hudTreatmentLastBuildTime < self.HUD_UPDATE_INTERVAL_MS then return end
+
+    local slot = self.hudTreatmentActiveSlot == 1 and 2 or 1
+    local overlayId = self.hudTreatmentOverlayIds[slot]
+    if not self:configureTreatmentOverlay(overlayId, treatmentFamily) then return end
+    generateDensityMapVisualizationOverlay(overlayId)
+    self.hudTreatmentPendingSlot = slot
+    self.hudTreatmentPendingFamily = treatmentFamily
+    self.hudTreatmentPendingRevision = revision
+    self.hudTreatmentLastBuildTime = now
+end
+
+---Renders one density overlay with the HUD minimap's native crop, rotation, pivot and alpha.
+function RealisticCropRotationDiseaseMap:renderHudMapOverlay(mapSelf, overlayId)
+    if overlayId == nil or overlayId == 0 or mapSelf == nil or mapSelf.layout == nil then return end
+
+    local width, height = mapSelf.layout:getMapSize()
+    local x, y = mapSelf.layout:getMapPosition()
+    local pivotX, pivotY = mapSelf.layout:getMapPivot()
+    local mx = x + width * mapSelf.mapExtensionOffsetX
+    local my = y + height * mapSelf.mapExtensionOffsetZ
+    local sizeX = width * mapSelf.mapExtensionScaleFactor
+    local sizeY = height * mapSelf.mapExtensionScaleFactor
+    local rotationPivotX = (pivotX + x) - mx
+    local rotationPivotY = (pivotY + y) - my
+
+    if mapSelf.clipX1 ~= nil then
+        local u1, v1, u2, v2, u3, v3, u4, v4
+        mx, my, sizeX, sizeY, u1, v1, u2, v2, u3, v3, u4, v4 = Overlay.getClippingUVs(
+            Overlay.DEFAULT_UVS, mx, my, sizeX, sizeY,
+            mapSelf.clipX1, mapSelf.clipY1, mapSelf.clipX2, mapSelf.clipY2)
+        if u1 == nil then return end
+        setOverlayUVs(overlayId, u1, v1, u2, v2, u3, v3, u4, v4)
+    end
+
+    setOverlayRotation(overlayId, mapSelf.layout:getMapRotation(), rotationPivotX, rotationPivotY)
+    setOverlayColor(overlayId, 1, 1, 1, math.sqrt(mapSelf.layout:getMapAlpha() or 1))
+    renderOverlay(overlayId, mx, my, sizeX, sizeY)
+
+    if mapSelf.clipX1 ~= nil then
+        setOverlayUVs(overlayId, unpack(Overlay.DEFAULT_UVS))
+    end
+end
+
+---Draws treatment coverage while the controlled sprayer contains an RCR product.
+function RealisticCropRotationDiseaseMap:drawHudTreatmentOverlay(mapSelf)
+    if mapSelf ~= self.hudIngameMap or mapSelf.isFullscreen == true then return end
+    if RealisticCropRotationSprayerProducts ~= nil
+        and RealisticCropRotationSprayerProducts.getIsPrecisionFarmingMinimapActive ~= nil
+        and RealisticCropRotationSprayerProducts.getIsPrecisionFarmingMinimapActive() then return end
+    if mapSelf.isVisible ~= nil and mapSelf.isVisible ~= true then return end
+    if g_gui ~= nil and g_gui.getIsGuiVisible ~= nil
+        and g_gui:getIsGuiVisible() and not g_gui:getIsOverlayGuiVisible() then return end
+
+    local treatmentFamily = RealisticCropRotationSprayerProducts ~= nil
+        and RealisticCropRotationSprayerProducts.getControlledProductTreatment ~= nil
+        and RealisticCropRotationSprayerProducts.getControlledProductTreatment() or nil
+    if treatmentFamily == nil then return end
+
+    self:updateHudTreatmentOverlay(treatmentFamily)
+    if self.hudTreatmentActiveFamily ~= treatmentFamily then return end
+    local activeSlot = self.hudTreatmentActiveSlot
+    local overlayId = activeSlot ~= nil and self.hudTreatmentOverlayIds[activeSlot] or nil
+    if overlayId ~= nil then self:renderHudMapOverlay(mapSelf, overlayId) end
 end
 
 -- Sub-selector layout

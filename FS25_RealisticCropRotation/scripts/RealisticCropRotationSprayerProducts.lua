@@ -30,6 +30,7 @@ local pfPatchedFunctionSet = {}
 local pfPatchRecords = {}
 local pfPatchTimer = 0
 local pfUpdateRegistered = false
+local pfTreatmentValueMap = nil
 
 -- Ground-paint value only (SPRAY_TYPE channel); the engine clears it on the crop's next growth-state transition.
 local treatmentSprayType = nil
@@ -71,28 +72,136 @@ local function getPrecisionFarmingEnvironment()
     return nil
 end
 
----Returns true when the active PF sprayer source contains an RCR product.
-local function isPrecisionFarmingRcrProductActive(vehicle)
-    if vehicle == nil or pfExtendedSprayer == nil or pfExtendedSprayer.getFillTypeSourceVehicle == nil then
-        return false
+---Resolves the active fill source with the same source order used by Sprayer and PF ExtendedSprayer.
+local function getSprayerFillSource(vehicle)
+    if vehicle == nil or type(vehicle.getSprayerFillUnitIndex) ~= "function" then return nil, nil end
+
+    if pfExtendedSprayer ~= nil and pfExtendedSprayer.getFillTypeSourceVehicle ~= nil
+        and vehicle.specializations ~= nil
+        and SpecializationUtil.hasSpecialization(pfExtendedSprayer, vehicle.specializations) then
+        return pfExtendedSprayer.getFillTypeSourceVehicle(vehicle)
     end
 
-    local sourceVehicle, fillUnitIndex = pfExtendedSprayer.getFillTypeSourceVehicle(vehicle)
-    if sourceVehicle == nil or fillUnitIndex == nil then
-        return false
+    local fillUnitIndex = vehicle:getSprayerFillUnitIndex()
+    if vehicle:getFillUnitFillLevel(fillUnitIndex) <= 0 then
+        local spec = vehicle.spec_sprayer
+        if spec ~= nil then
+            for _, fillType in ipairs(spec.supportedSprayTypes or {}) do
+                for _, source in ipairs((spec.fillTypeSources or {})[fillType] or {}) do
+                    if source.vehicle:getFillUnitFillLevel(source.fillUnitIndex) > 0
+                        and source.vehicle:getFillUnitFillType(source.fillUnitIndex) == fillType then
+                        return source.vehicle, source.fillUnitIndex
+                    end
+                end
+            end
+        end
     end
+
+    return vehicle, fillUnitIndex
+end
+
+---Returns the active product treatment supplied to a sprayer, including source tanks.
+function RealisticCropRotationSprayerProducts.getVehicleProductTreatment(vehicle)
+    local sourceVehicle, fillUnitIndex = getSprayerFillSource(vehicle)
+    if sourceVehicle == nil or fillUnitIndex == nil
+        or type(sourceVehicle.getFillUnitFillLevel) ~= "function"
+        or sourceVehicle:getFillUnitFillLevel(fillUnitIndex) <= 0 then return nil end
 
     local fillType = sourceVehicle:getFillUnitFillType(fillUnitIndex)
     if fillType == FillType.UNKNOWN then
         fillType = sourceVehicle:getFillUnitLastValidFillType(fillUnitIndex)
     end
 
-    return RealisticCropRotationSprayerProducts.isProductFillType(fillType)
+    return RealisticCropRotationSprayerProducts.getProductTreatment(fillType)
+end
+
+---Returns the RCR treatment currently loaded in a sprayer of the controlled vehicle.
+function RealisticCropRotationSprayerProducts.getControlledProductTreatment()
+    local controlledVehicle = g_localPlayer ~= nil and g_localPlayer:getCurrentVehicle() or nil
+    if controlledVehicle == nil then return nil end
+
+    local rootVehicle = type(controlledVehicle.getRootVehicle) == "function"
+        and controlledVehicle:getRootVehicle() or controlledVehicle
+    local vehicles = rootVehicle.childVehicles or { rootVehicle }
+    for _, vehicle in ipairs(vehicles) do
+        local treatment = RealisticCropRotationSprayerProducts.getVehicleProductTreatment(vehicle)
+        if treatment ~= nil then return treatment, vehicle end
+    end
+    return nil
+end
+
+---Returns whether PF owns the live treatment minimap overlay and zoom.
+function RealisticCropRotationSprayerProducts.getIsPrecisionFarmingMinimapActive()
+    return pfTreatmentValueMap ~= nil
+end
+
+---Creates the RCR ValueMap consumed by PF's native InGameMapExtension.
+local function registerPrecisionFarmingTreatmentMap(pfEnvironment)
+    local precisionFarming = pfEnvironment ~= nil and pfEnvironment.g_precisionFarming or nil
+    local valueMapClass = pfEnvironment ~= nil and pfEnvironment.ValueMap or nil
+    if precisionFarming == nil or valueMapClass == nil or valueMapClass.new == nil
+        or precisionFarming.registerValueMap == nil then return end
+
+    local valueMap = valueMapClass.new(precisionFarming)
+    valueMap.name = "rcrTreatmentMap"
+    valueMap.id = "RCR_TREATMENT"
+
+    function valueMap:getShowInMenu()
+        return false
+    end
+
+    function valueMap:getValueFilter()
+        return { true }
+    end
+
+    function valueMap:getMinimapZoomFactor()
+        return 3
+    end
+
+    function valueMap:buildOverlay(overlay)
+        local diseaseMap = RealisticCropRotationDiseaseMap
+        if diseaseMap ~= nil then
+            diseaseMap:configureTreatmentOverlay(overlay, self.rcrTreatmentFamily)
+        end
+    end
+
+    precisionFarming:registerValueMap(valueMap)
+    pfTreatmentValueMap = valueMap
+end
+
+---Drives the PF ValueMap with the same on-field and selected-vehicle state as ExtendedSprayer.
+local function updatePrecisionFarmingTreatmentMap()
+    if pfTreatmentValueMap == nil then return end
+
+    local treatment, vehicle = RealisticCropRotationSprayerProducts.getControlledProductTreatment()
+    local isOnField = false
+    if treatment ~= nil and vehicle ~= nil and type(vehicle.getPFStatisticInfo) == "function" then
+        local _, _, _, vehicleIsOnField = vehicle:getPFStatisticInfo()
+        isOnField = vehicleIsOnField == true
+    end
+
+    local previousVehicle = pfTreatmentValueMap.minimapSourceObject
+    if previousVehicle ~= nil and previousVehicle ~= vehicle then
+        pfTreatmentValueMap:setRequireMinimapDisplay(false, previousVehicle)
+    end
+
+    local grid = RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
+    local protectionRevision = grid ~= nil and grid.protectionRevision or 0
+    local familyChanged = pfTreatmentValueMap.rcrTreatmentFamily ~= treatment
+    local coverageChanged = pfTreatmentValueMap.rcrProtectionRevision ~= protectionRevision
+    pfTreatmentValueMap.rcrTreatmentFamily = treatment
+    pfTreatmentValueMap.rcrProtectionRevision = protectionRevision
+    pfTreatmentValueMap:setRequireMinimapDisplay(
+        treatment ~= nil and isOnField, vehicle,
+        vehicle ~= nil and type(vehicle.getIsSelected) == "function" and vehicle:getIsSelected() or false)
+    if familyChanged or coverageChanged then
+        pfTreatmentValueMap:setMinimapRequiresUpdate(true)
+    end
 end
 
 ---Runs PF's base-effect state update while exposing the vanilla effects for RCR products.
 local function runPrecisionFarmingVanillaEffectState(originalFunction, vehicle, force, ...)
-    local isRcrProduct = isPrecisionFarmingRcrProductActive(vehicle)
+    local isRcrProduct = RealisticCropRotationSprayerProducts.getVehicleProductTreatment(vehicle) ~= nil
     local effectsSpec = pfExtendedSprayerEffects ~= nil
         and vehicle[pfExtendedSprayerEffects.SPEC_TABLE_NAME] or nil
 
@@ -223,6 +332,7 @@ end
 
 ---Client update: repairs PF function copies created after mission load.
 function RealisticCropRotationSprayerProducts:update(dt)
+    updatePrecisionFarmingTreatmentMap()
     pfPatchTimer = pfPatchTimer + dt
     if pfPatchTimer >= PF_PATCH_REFRESH_INTERVAL then
         pfPatchTimer = pfPatchTimer - PF_PATCH_REFRESH_INTERVAL
@@ -433,11 +543,11 @@ local function installSprayerHook()
             params.usage = RealisticCropRotationSprayerProducts.litersPerSecond * self:getLastSpeed() * (workArea.workWidth or 0) * dt * 0.001
         end
 
-        -- Server: paint treated ground and disease protection.
+        -- The server owns the ground state; nearby clients mirror protection for immediate map feedback.
         if self.isServer then
             paintTreatmentGround(self, workArea)
-            paintDiseaseProtection(workArea, sprayFillType)
         end
+        paintDiseaseProtection(workArea, sprayFillType)
 
         return 0, 0
     end)
@@ -464,6 +574,7 @@ function RealisticCropRotationSprayerProducts.onMissionLoaded()
     pfExtendedSprayerEffects = pfEnvironment ~= nil and pfEnvironment.ExtendedSprayerEffects or nil
     if g_currentMission ~= nil and g_currentMission:getIsClient()
         and pfExtendedSprayer ~= nil and pfExtendedSprayerEffects ~= nil then
+        registerPrecisionFarmingTreatmentMap(pfEnvironment)
         patchPrecisionFarmingEffects()
         g_currentMission:addUpdateable(RealisticCropRotationSprayerProducts)
         pfUpdateRegistered = true
@@ -476,6 +587,7 @@ function RealisticCropRotationSprayerProducts.onMissionDeleted()
         g_currentMission:removeUpdateable(RealisticCropRotationSprayerProducts)
     end
     pfUpdateRegistered = false
+    pfTreatmentValueMap = nil
     restorePrecisionFarmingEffects()
     productFillTypeSet = {}
     productTreatmentByFillType = {}

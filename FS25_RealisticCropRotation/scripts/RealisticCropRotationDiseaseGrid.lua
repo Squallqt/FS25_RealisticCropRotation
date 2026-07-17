@@ -63,7 +63,7 @@ end
 -- File-local alias for the methods below.
 local fieldWorldBounds = RealisticCropRotationDiseaseGrid.fieldWorldBounds
 
-function RealisticCropRotationDiseaseGrid:loadMap(savegamePath)
+function RealisticCropRotationDiseaseGrid:loadMap(savegamePath, densityMapSyncer)
     -- Single real dynamic source for every custom map's size: the native ground-detail resolution.
     local resolvedSize = tonumber(g_currentMission.terrainDetailMapSize)
     self.size = resolvedSize
@@ -110,6 +110,13 @@ function RealisticCropRotationDiseaseGrid:loadMap(savegamePath)
     end
     if not loadedNemaProt then
         loadBitVectorMapNew(self.nematicideProtectionMapId, self.protectionMapSize, self.protectionMapSize, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, false)
+    end
+
+    if densityMapSyncer ~= nil and type(densityMapSyncer.addDensityMap) == "function" then
+        densityMapSyncer:addDensityMap(self.fungicideProtectionMapId)
+        densityMapSyncer:addDensityMap(self.nematicideProtectionMapId)
+    else
+        Logging.warning("[RealisticCropRotation] Density-map synchronizer unavailable; treatment coverage cannot synchronize")
     end
 
     -- Runtime-only risk display map (never saved: risk is derived from the synced history).

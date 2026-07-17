@@ -23,6 +23,7 @@ RealisticCropRotation.modDirectory = modDirectory
 RealisticCropRotation.modName = modName
 RealisticCropRotation.manager = nil
 RealisticCropRotation.disease = nil
+RealisticCropRotation.grid = nil
 RealisticCropRotation.frame = nil
 RealisticCropRotation.pendingSyncData = nil
 RealisticCropRotation.cropConfig = nil
@@ -125,6 +126,7 @@ RealisticCropRotation.broadcastUpdateable = nil
 RealisticCropRotation.farmlandOwnerChangeListener = nil
 RealisticCropRotation.periodChangedListener = nil
 RealisticCropRotation.dayChangedListener = nil
+RealisticCropRotation.hudMapUpdateable = nil
 
 ---Marks the rotation state dirty so a single coalesced broadcast fires soon (server).
 function RealisticCropRotation.requestBroadcast()
@@ -337,6 +339,15 @@ local function loadGuiAssets()
     end
 end
 
+---Creates and registers the treatment maps while the mission density-map synchronizer is accepting maps.
+local function initDiseaseTerrain(mission)
+    if mission == nil or RealisticCropRotation.grid ~= nil then return end
+
+    RealisticCropRotation.grid = RealisticCropRotationDiseaseGrid.new()
+    local savegameFolderPath = mission:getIsServer() and resolveSavegameFolderPath() or nil
+    RealisticCropRotation.grid:loadMap(savegameFolderPath, mission.densityMapSyncer)
+end
+
 ---Mission-load hook: builds the manager, loads state, wires server listeners.
 local function loadedMission()
     -- Reload crop config here to guarantee the engine XML API is fully ready.
@@ -354,7 +365,7 @@ local function loadedMission()
     RealisticCropRotation.manager = RealisticCropRotationManager.new()
     RealisticCropRotation.manager:initialize()
 
-    RealisticCropRotation.grid = RealisticCropRotationDiseaseGrid.new()
+    initDiseaseTerrain(g_currentMission)
     RealisticCropRotation.disease = RealisticCropRotationDisease.new(RealisticCropRotation.manager, RealisticCropRotation.grid)
     if type(RealisticCropRotation.disease.registerConsoleCommands) == "function" then
         RealisticCropRotation.disease:registerConsoleCommands()
@@ -364,9 +375,6 @@ local function loadedMission()
 
     if g_currentMission:getIsServer() then
         RealisticCropRotation.manager:loadFromXML(savegameFolderPath)
-        if RealisticCropRotation.grid ~= nil then
-            RealisticCropRotation.grid:loadMap(savegameFolderPath)
-        end
         if RealisticCropRotation.disease ~= nil then
             RealisticCropRotation.disease:loadFromXML(savegameFolderPath)
             -- Initial paint of the risk display map, during the loading screen (never on menu open).
@@ -434,10 +442,6 @@ local function loadedMission()
     end
 
     if not g_currentMission:getIsServer() then
-        -- Clients are not sent the .grle; they get an empty grid here and repaint from the synced disease state instead.
-        if RealisticCropRotation.grid ~= nil then
-            RealisticCropRotation.grid:loadMap(nil)
-        end
         if RealisticCropRotation.pendingSyncData ~= nil then
             local pending = RealisticCropRotation.pendingSyncData
             RealisticCropRotation.manager.service:applySyncData(
@@ -453,6 +457,20 @@ local function loadedMission()
             RealisticCropRotation.pendingSyncData = nil
         end
         RealisticCropRotation.requestServerSync("loadedMission")
+    end
+
+    if g_currentMission:getIsClient()
+        and RealisticCropRotationDiseaseMap ~= nil
+        and not RealisticCropRotationDiseaseMap:tryHookHudInstance() then
+        RealisticCropRotation.hudMapUpdateable = {
+            update = function(updateable)
+                if RealisticCropRotationDiseaseMap:tryHookHudInstance() then
+                    g_currentMission:removeUpdateable(updateable)
+                    RealisticCropRotation.hudMapUpdateable = nil
+                end
+            end,
+        }
+        g_currentMission:addUpdateable(RealisticCropRotation.hudMapUpdateable)
     end
 end
 
@@ -522,6 +540,7 @@ local function initRealisticCropRotation()
     RealisticCropRotationSprayerProducts.registerMaterialHolder(modDirectory)
 
     Mission00.loadMission00Finished = Utils.appendedFunction(Mission00.loadMission00Finished, loadedMission)
+    FSBaseMission.initTerrain = Utils.appendedFunction(FSBaseMission.initTerrain, initDiseaseTerrain)
 
     InGameMenu.onLoadMapFinished = Utils.appendedFunction(InGameMenu.onLoadMapFinished, function(_inGameMenu)
         loadInGameMenuGui()
@@ -539,6 +558,10 @@ local function initRealisticCropRotation()
             and type(g_currentMission.removeUpdateable) == "function" then
             g_currentMission:removeUpdateable(RealisticCropRotation.broadcastUpdateable)
         end
+        if g_currentMission ~= nil and RealisticCropRotation.hudMapUpdateable ~= nil
+            and type(g_currentMission.removeUpdateable) == "function" then
+            g_currentMission:removeUpdateable(RealisticCropRotation.hudMapUpdateable)
+        end
         if g_messageCenter ~= nil and RealisticCropRotation.farmlandOwnerChangeListener ~= nil then
             g_messageCenter:unsubscribeAll(RealisticCropRotation.farmlandOwnerChangeListener)
         end
@@ -549,6 +572,7 @@ local function initRealisticCropRotation()
             g_messageCenter:unsubscribeAll(RealisticCropRotation.dayChangedListener)
         end
         RealisticCropRotation.broadcastUpdateable = nil
+        RealisticCropRotation.hudMapUpdateable = nil
         RealisticCropRotation.farmlandOwnerChangeListener = nil
         RealisticCropRotation.periodChangedListener = nil
         RealisticCropRotation.dayChangedListener = nil
