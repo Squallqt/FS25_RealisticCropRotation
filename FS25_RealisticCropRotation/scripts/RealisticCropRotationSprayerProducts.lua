@@ -180,6 +180,15 @@ local function updatePrecisionFarmingTreatmentMap()
         isOnField = vehicleIsOnField == true
     end
 
+    local familyChanged = pfTreatmentValueMap.rcrTreatmentFamily ~= treatment
+    if familyChanged and treatment ~= nil and vehicle ~= nil and pfExtendedSprayer ~= nil then
+        local spec = vehicle[pfExtendedSprayer.SPEC_TABLE_NAME]
+        if spec ~= nil then
+            spec.pHMap:setRequireMinimapDisplay(false, vehicle)
+            spec.nitrogenMap:setRequireMinimapDisplay(false, vehicle)
+        end
+    end
+
     local previousVehicle = pfTreatmentValueMap.minimapSourceObject
     if previousVehicle ~= nil and previousVehicle ~= vehicle then
         pfTreatmentValueMap:setRequireMinimapDisplay(false, previousVehicle)
@@ -187,7 +196,6 @@ local function updatePrecisionFarmingTreatmentMap()
 
     local grid = RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
     local protectionRevision = grid ~= nil and grid.protectionRevision or 0
-    local familyChanged = pfTreatmentValueMap.rcrTreatmentFamily ~= treatment
     local coverageChanged = pfTreatmentValueMap.rcrProtectionRevision ~= protectionRevision
     pfTreatmentValueMap.rcrTreatmentFamily = treatment
     pfTreatmentValueMap.rcrProtectionRevision = protectionRevision
