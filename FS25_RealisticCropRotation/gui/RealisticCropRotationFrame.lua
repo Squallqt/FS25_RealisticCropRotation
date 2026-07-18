@@ -1515,16 +1515,24 @@ function RealisticCropRotationFrame:layoutHistoryTimeline(visibleCount)
         if connector ~= nil then connector:setVisible(i < visibleCount) end
     end
 
-    -- Centre the run inside the band a full row occupies, so a full row keeps its native position exactly (offset 0) and 1px card borders stay on the pixel grid.
+    -- Centre the run inside the band a full row occupies, so a full row keeps its native position (offset 0).
     local strip = self.historyTimeline
     if strip == nil or strip.setPosition == nil then return end
     local originalPos = self:getElementOriginalPosition(strip)
     if originalPos == nil then return end
 
-    local pitchPx = RealisticCropRotationFrame.TIMELINE_CARD_W_PX
-        + RealisticCropRotationFrame.TIMELINE_CONNECTOR_W_PX
-    local offsetPx = (slotCount - visibleCount) * pitchPx * 0.5
-    strip:setPosition(originalPos[1] + self:getNormalizedPixelWidth(offsetPx), originalPos[2])
+    local pitch = self:getNormalizedPixelWidth(
+        RealisticCropRotationFrame.TIMELINE_CARD_W_PX + RealisticCropRotationFrame.TIMELINE_CONNECTOR_W_PX
+    )
+    local offset = pitch * (slotCount - visibleCount) * 0.5
+
+    -- Snap the shift to a whole screen pixel: every card then keeps the sub-pixel phase it renders at when the row is full, so the 1px borders stay flush with the card edges.
+    local screenPixel = g_pixelSizeX
+    if screenPixel ~= nil and screenPixel > 0 then
+        offset = math.floor(offset / screenPixel + 0.5) * screenPixel
+    end
+
+    strip:setPosition(originalPos[1] + offset, originalPos[2])
 end
 
 ---Returns false (soil not sampled), true (PF data available), or nil (no PF installed).
