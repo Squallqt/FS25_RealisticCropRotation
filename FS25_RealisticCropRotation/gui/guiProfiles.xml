@@ -403,19 +403,6 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Empty dash -->
-    <Profile name="frSlotCropNameEmpty" extends="fs25_textDefault" with="anchorTopCenter">
-        <position value="0px -65px"/>
-        <size value="210px 26px"/>
-        <textSize value="24px"/>
-        <textBold value="true"/>
-        <textUpperCase value="false"/>
-        <textColor value="$preset_colorWhite_50"/>
-        <textAlignment value="center"/>
-        <textVerticalAlignment value="middle"/>
-        <textMaxNumLines value="1"/>
-    </Profile>
-
     <!-- Family badge background -->
     <Profile name="frSlotFamilyBadgeBg" extends="baseReference" with="anchorBottomCenter">
         <position value="0px 18px"/>

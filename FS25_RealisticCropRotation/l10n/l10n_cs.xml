@@ -64,8 +64,7 @@
         <e k="rcr_section_overview"     v="全局概览" />
         <e k="rcr_overview_total_area"  v="耕作面积: %.1f ha" />
 
-        <!-- Timeline slot labels and empty state -->
-        <e k="rcr_slot_empty"           v="未种植" />
+        <!-- Timeline slot labels -->
         <e k="rcr_slot_n4"              v="N-4" />
         <e k="rcr_slot_n3"              v="N-3" />
         <e k="rcr_slot_n2"              v="N-2" />

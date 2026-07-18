@@ -87,6 +87,12 @@ RealisticCropRotationFrame.GROUP_ICON_TEXT_GAP    = 5
 RealisticCropRotationFrame.GROUP_BADGE_PADDING_X  = 20
 RealisticCropRotationFrame.GROUP_BADGE_TEXT_SAFETY_PX = 20
 
+-- History timeline strip (pixels; converted at runtime). Strip is 1240px wide; cards 224px, connectors 25px, first card 8px in.
+RealisticCropRotationFrame.TIMELINE_STRIP_W_PX       = 1240
+RealisticCropRotationFrame.TIMELINE_CONTENT_START_PX = 8
+RealisticCropRotationFrame.TIMELINE_CARD_W_PX        = 224
+RealisticCropRotationFrame.TIMELINE_CONNECTOR_W_PX   = 25
+
 -- Annual calendar layout in pixels. The XML container is 1240 x 154 px.
 RealisticCropRotationFrame.CALENDAR_AXIS_X = 94
 RealisticCropRotationFrame.CALENDAR_AXIS_W = 1130
@@ -147,10 +153,16 @@ function RealisticCropRotationFrame:copyAttributes(src)
     self.refreshTimerMs = 0
 end
 
----Unsubscribes and releases the frame.
+---Unsubscribes and drops every owned reference before the GUI tree is destroyed.
 function RealisticCropRotationFrame:delete()
     self:unsubscribeFarmlandChanges()
     self.farmlandList = nil
+    self.rotationGroups = nil
+    self.planCropList = nil
+    self.coverCropList = nil
+    self.calendarLocalPlan = nil
+    self.calendarLocalCoverPlan = nil
+    self.selectedId = nil
     self.weatherCard = nil
     RealisticCropRotationFrame:superClass().delete(self)
 end
@@ -1380,16 +1392,28 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
 
     local history = (mgr ~= nil) and (mgr:getHistory(farmlandId) or {}) or {}
 
-    -- Slot 1 = current crop; slots 2..5 = history N-1..N-4 (present on the left).
+    -- Slot 1 = current crop (always shown); slots 2..5 = history N-1..N-4. History is dense/newest-first, so filled past slots form a contiguous run after the current card.
     local currentCropName, currentFamily, currentFallbackText = self:getCurrentSlotData(farmlandId)
     local currentBadgeKey = currentFamily == "COVER" and "rcr_cover_crop" or nil
-    self:updateTimelineSlot(1, currentCropName, currentFamily, currentFallbackText, currentBadgeKey)
 
+    -- The timeline never reaches further back than the player plans ahead: a 3-year plan stops at N-3. An unplanned field keeps the full 4-year depth.
+    local _, planLastYear = self:getPlanBounds(self:getPlanForFarmland(farmlandId))
+    local historyCount = 0
+    for histIdx = 1, math.min(4, planLastYear or 4) do
+        local hEntry = history[histIdx]
+        if hEntry ~= nil and hEntry.crop ~= nil and hEntry.crop ~= "" then
+            historyCount = histIdx
+        else
+            break
+        end
+    end
+
+    self:updateTimelineSlot(1, currentCropName, currentFamily, currentFallbackText, currentBadgeKey)
     for histIdx = 1, 4 do
-        local hEntry   = history[histIdx]
-        local cropName = hEntry and hEntry.crop or nil
+        local cropName = (histIdx <= historyCount) and history[histIdx].crop or nil
         self:updateTimelineSlot(histIdx + 1, cropName, self:getCropFamily(cropName), nil)
     end
+    self:layoutHistoryTimeline(1 + historyCount)
 
     -- Both soil gauges start at the same x (the wider of the two row titles) so neither track looks shorter just because its own label is narrower.
     local nitrogenTitleWidth = self:getTextRenderWidth(self.nitrogenRowTitle, self.i18n:getText("rcr_section_nitrogen"))
@@ -1422,14 +1446,15 @@ function RealisticCropRotationFrame:updateTimelineSlot(slotId, cropName, family,
     local badgeTxt = self[pfx .. "BadgeText"]
 
     local hasCrop = cropName ~= nil and cropName ~= ""
-    local dashOnly = not hasCrop and (fallbackText == nil or fallbackText == "")
+    -- Empty (no crop, no status text) = a slot past the history run: hide it entirely so the centred layout leaves no gap.
+    local isEmpty = not hasCrop and (fallbackText == nil or fallbackText == "")
     local familyColor = hasCrop and RealisticCropRotationFrame.FAMILY_RGBA[family] or nil
 
     if cardBg ~= nil then
-        cardBg:setVisible(not dashOnly)
+        cardBg:setVisible(not isEmpty)
     end
     if frame ~= nil then
-        frame:setVisible(not dashOnly)
+        frame:setVisible(not isEmpty)
     end
 
     if avatarBg ~= nil then
@@ -1448,13 +1473,11 @@ function RealisticCropRotationFrame:updateTimelineSlot(slotId, cropName, family,
     end
 
     if nameEl ~= nil then
+        nameEl:setVisible(not isEmpty)
         if hasCrop then
             nameEl:applyProfile("frSlotCropName")
             nameEl:setText(self:getCropDisplayName(cropName))
-        elseif dashOnly then
-            nameEl:applyProfile("frSlotCropNameEmpty")
-            nameEl:setText("-")
-        else
+        elseif not isEmpty then
             nameEl:applyProfile("frSlotCropNameCentered")
             nameEl:setText(fallbackText)
         end
@@ -1475,6 +1498,35 @@ function RealisticCropRotationFrame:updateTimelineSlot(slotId, cropName, family,
             self:resizePillToText(badgeBg, badgeTxt, familyText)
         end
     end
+end
+
+---Centres the visible history cards in the strip; empty tail slots and their connectors/rail labels are hidden so nothing is left blank.
+-- @param integer visibleCount Leading slots that carry a card (1-5)
+function RealisticCropRotationFrame:layoutHistoryTimeline(visibleCount)
+    visibleCount = math.max(1, math.min(5, math.floor(tonumber(visibleCount) or 1)))
+
+    -- Rail label i sits above card i; connector i bridges cards i and i+1.
+    for i = 1, 5 do
+        local rail = self["slot" .. i .. "Rail"]
+        if rail ~= nil then rail:setVisible(i <= visibleCount) end
+    end
+    for i = 1, 4 do
+        local connector = self["slot" .. i .. "Connector"]
+        if connector ~= nil then connector:setVisible(i < visibleCount) end
+    end
+
+    -- Shift the whole strip to centre the leading run; native card pitch is preserved, so spacing stays pixel-exact.
+    local strip = self.historyTimeline
+    if strip == nil or strip.setPosition == nil then return end
+    local originalPos = self:getElementOriginalPosition(strip)
+    if originalPos == nil then return end
+
+    local occupiedPx = visibleCount * RealisticCropRotationFrame.TIMELINE_CARD_W_PX
+        + (visibleCount - 1) * RealisticCropRotationFrame.TIMELINE_CONNECTOR_W_PX
+    local offsetPx = (RealisticCropRotationFrame.TIMELINE_STRIP_W_PX
+        - 2 * RealisticCropRotationFrame.TIMELINE_CONTENT_START_PX
+        - occupiedPx) * 0.5
+    strip:setPosition(originalPos[1] + self:getNormalizedPixelWidth(offsetPx), originalPos[2])
 end
 
 ---Returns false (soil not sampled), true (PF data available), or nil (no PF installed).
@@ -2954,7 +3006,7 @@ end
 -- @param table plan
 -- @return integer firstFilled, or nil
 -- @return integer lastFilled, or nil
-function RealisticCropRotationFrame:getGroupPlanBounds(plan)
+function RealisticCropRotationFrame:getPlanBounds(plan)
     local firstFilled, lastFilled = nil, nil
     for i = 1, 4 do
         if (plan ~= nil and (plan[i] or "") or "") ~= "" then
@@ -3110,7 +3162,7 @@ end
 function RealisticCropRotationFrame:layoutGroupRow(cell, group)
     if cell == nil or cell.getAttribute == nil or group == nil then return end
 
-    local firstFilled, lastFilled = self:getGroupPlanBounds(group.plan)
+    local firstFilled, lastFilled = self:getPlanBounds(group.plan)
     local currentX = nil
     for i = 1, 4 do
         local showSlot, hasCrop, displayName = self:getGroupSlotDisplay(group, i, firstFilled, lastFilled)
@@ -3180,7 +3232,7 @@ function RealisticCropRotationFrame:populateGroupCell(index, cell)
     end
 
     -- 4 crop zones: main crop badges.
-    local firstFilled, lastFilled = self:getGroupPlanBounds(group.plan)
+    local firstFilled, lastFilled = self:getPlanBounds(group.plan)
     for i = 1, 4 do
         local show, hasCrop, displayName, cropName = self:getGroupSlotDisplay(group, i, firstFilled, lastFilled)
         local family = hasCrop and self:getCropFamily(cropName) or nil

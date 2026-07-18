@@ -89,23 +89,23 @@
                 <RoundCorner profile="frSectionLine" id="historySectionLine"/>
             </GuiElement>
 
-            <!-- TIMELINE STRIP (y=-112..306): rail (season labels) + 5 slot cards -->
-            <GuiElement profile="frTimeline" position="20px -112px">
+            <!-- TIMELINE STRIP (y=-112..306): rail (season labels) + 5 slot cards. Centred at runtime; empty tail slots are hidden. -->
+            <GuiElement profile="frTimeline" position="20px -112px" id="historyTimeline">
 
                 <!-- Rail -->
-                <GuiElement profile="frRailCell" position="8px 0px">
+                <GuiElement profile="frRailCell" position="8px 0px" id="slot1Rail">
                     <Text profile="frRailSeasonLabelCurrent" text="$l10n_rcr_slot_current"/>
                 </GuiElement>
-                <GuiElement profile="frRailCell" position="257px 0px">
+                <GuiElement profile="frRailCell" position="257px 0px" id="slot2Rail">
                     <Text profile="frSlotSeasonLabel" text="$l10n_rcr_slot_n1"/>
                 </GuiElement>
-                <GuiElement profile="frRailCell" position="506px 0px">
+                <GuiElement profile="frRailCell" position="506px 0px" id="slot3Rail">
                     <Text profile="frSlotSeasonLabel" text="$l10n_rcr_slot_n2"/>
                 </GuiElement>
-                <GuiElement profile="frRailCell" position="755px 0px">
+                <GuiElement profile="frRailCell" position="755px 0px" id="slot4Rail">
                     <Text profile="frSlotSeasonLabel" text="$l10n_rcr_slot_n3"/>
                 </GuiElement>
-                <GuiElement profile="frRailCell" position="1004px 0px">
+                <GuiElement profile="frRailCell" position="1004px 0px" id="slot5Rail">
                     <Text profile="frSlotSeasonLabel" text="$l10n_rcr_slot_n4"/>
                 </GuiElement>
 
@@ -126,7 +126,7 @@
                 </GuiElement>
 
                 <!-- Connector 1 -->
-                <GuiElement profile="frHistoryTimelineConnector" position="232px -38px">
+                <GuiElement profile="frHistoryTimelineConnector" position="232px -38px" id="slot1Connector">
                     <Bitmap profile="frTimelineArrowIcon"/>
                 </GuiElement>
 
@@ -147,7 +147,7 @@
                 </GuiElement>
 
                 <!-- Connector 2 -->
-                <GuiElement profile="frHistoryTimelineConnector" position="481px -38px">
+                <GuiElement profile="frHistoryTimelineConnector" position="481px -38px" id="slot2Connector">
                     <Bitmap profile="frTimelineArrowIcon"/>
                 </GuiElement>
 
@@ -168,7 +168,7 @@
                 </GuiElement>
 
                 <!-- Connector 3 -->
-                <GuiElement profile="frHistoryTimelineConnector" position="730px -38px">
+                <GuiElement profile="frHistoryTimelineConnector" position="730px -38px" id="slot3Connector">
                     <Bitmap profile="frTimelineArrowIcon"/>
                 </GuiElement>
 
@@ -189,7 +189,7 @@
                 </GuiElement>
 
                 <!-- Connector 4 -->
-                <GuiElement profile="frHistoryTimelineConnector" position="979px -38px">
+                <GuiElement profile="frHistoryTimelineConnector" position="979px -38px" id="slot4Connector">
                     <Bitmap profile="frTimelineArrowIcon"/>
                 </GuiElement>
 

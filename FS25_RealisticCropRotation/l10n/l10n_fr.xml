@@ -64,8 +64,7 @@
         <e k="rcr_section_overview"     v="Aperçu Global" />
         <e k="rcr_overview_total_area"  v="Surface exploitée : %.1f ha" />
 
-        <!-- Timeline slot labels and empty state -->
-        <e k="rcr_slot_empty"           v="Non cultivé" />
+        <!-- Timeline slot labels -->
         <e k="rcr_slot_n4"              v="N-4" />
         <e k="rcr_slot_n3"              v="N-3" />
         <e k="rcr_slot_n2"              v="N-2" />
