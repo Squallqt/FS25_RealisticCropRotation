@@ -17,6 +17,7 @@ Features:
 - Nitrogen residue: legumes destroyed by tillage return real nitrogen to the soil (Precision Farming's nitrogen map, or one fertilizer level without it), split between the next crop and the rotation after
 - 9 diseases, real consequences: sclerotinia, phoma, take-all, septoria, rust, fusarium head blight, late blight, beet cyst nematode and clubroot each target specific crops; bring a host back too soon and soil pressure builds, and with the right weather that pressure can trigger an infection that destroys part of the field in a spreading, organic patch
 - Treatment: buy a fungicide (AMISTAR) or nematicide (VELUM PRIME) and spray it with any compatible sprayer. Fungicide protection is removed only where the crop is harvested or mown. Nematicide remains in the soil for three months per field, and reapplying it renews that duration
+- Field monitoring: the Crop Rotation tab shows each field's current crop, growth stage, required soil work, weeds, active disease with its recommended treatment, nitrogen and pH
 - Disease map: three views added to the existing in-game map (infected fields, a predictive pressure forecast, treated-ground coverage)
 - On-foot & weather info: the field HUD shows rotation history and active disease under your feet, and the menu header shows the next relevant weather event so you can time your spraying
 
@@ -50,6 +51,7 @@ Funktionen:
 - Stickstoffrückstand: Durch Bodenbearbeitung zerstörte Leguminosen geben echten Stickstoff an den Boden zurück (über die Stickstoffkarte von Precision Farming, ohne PF eine Düngestufe), aufgeteilt zwischen der nächsten Kultur und der folgenden Fruchtfolge
 - 9 Krankheiten mit echten Folgen: Sklerotinia, Phoma, Schwarzbeinigkeit, Septoria-Blattdürre, Rost, Ährenfusariose, Kraut- und Knollenfäule, Rübenzystennematode und Kohlhernie befallen jeweils bestimmte Kulturen; bringst du eine Wirtskultur zu früh zurück, baut sich Druck im Boden auf, und bei passendem Wetter kann dieser Druck eine Infektion auslösen, die einen Teil des Feldes in einem sich ausbreitenden, organischen Fleck zerstört
 - Behandlung: Kaufe ein Fungizid (AMISTAR) oder Nematizid (VELUM PRIME) und bringe es mit einer kompatiblen Feldspritze aus. Der Fungizidschutz endet nur auf der tatsächlich geernteten oder gemähten Fläche. Nematizid bleibt je Feld drei Monate im Boden; eine erneute Anwendung verlängert diese Dauer wieder auf drei Monate
+- Feldüberwachung: Der Fruchtfolge-Tab zeigt je Feld die aktuelle Kultur, das Wachstumsstadium, die nötige Bodenbearbeitung, Unkraut, die aktive Krankheit mit empfohlener Behandlung, Stickstoff und pH-Wert
 - Krankheitskarte: Drei neue Ansichten auf der bestehenden Spielkarte (befallene Felder, eine vorausschauende Druck-Prognose, die besprühte Fläche je Mittel)
 - Feld- und Wetterinfos: Die Feldanzeige zeigt Anbauhistorie und aktive Krankheiten direkt unter deinen Füßen, und die Menüleiste zeigt das nächste relevante Wetterereignis, damit du deine Spritzungen timen kannst
 
@@ -83,6 +85,7 @@ Fonctionnalités :
 - Reliquat d'azote : les légumineuses détruites par le travail du sol restituent un véritable reliquat d'azote (carte d'azote de Precision Farming, ou un niveau d'engrais sans PF), réparti entre la culture suivante et la rotation d'après
 - 9 maladies, de vraies conséquences : sclérotinia, phoma, piétin-échaudage, septoriose, rouille, fusariose de l'épi, mildiou, nématode à kystes de la betterave et hernie des crucifères ciblent chacune des cultures précises ; faire revenir une culture hôte trop tôt accumule la pression dans le sol, et avec une météo favorable, cette pression peut déclencher une infection qui détruit une partie de la parcelle en une tache organique qui s'étend
 - Traitement : achetez un fongicide (AMISTAR) ou un nématicide (VELUM PRIME) et pulvérisez-le avec un pulvérisateur compatible. La protection fongicide disparaît uniquement sur la surface réellement récoltée ou fauchée. Le nématicide reste trois mois dans le sol de chaque parcelle ; une nouvelle application renouvelle cette durée à trois mois
+- Suivi des parcelles : l'onglet Rotation des cultures affiche pour chaque parcelle la culture en place, le stade de croissance, le travail du sol requis, les adventices, la maladie active et son traitement recommandé, l'azote et le pH
 - Carte des maladies : trois nouvelles vues sur la carte du jeu existante (parcelles infectées, prévision de pression, zones traitées par produit)
 - Infos au sol & météo : la fiche de champ affiche l'historique de rotation et les maladies actives sous vos pieds, et l'en-tête du menu affiche le prochain événement météo pertinent pour bien choisir le moment de pulvériser
 
