@@ -175,10 +175,10 @@ function RealisticCropRotationHud.addTreatmentLine(fieldBox, farmlandId)
 
     local label = RealisticCropRotationHud.getText("rcr_treatment_hud_label", "Treatment")
 
-    if isPointProtected(grid.fungicideProtectionMapId, grid.protectionMapSize, px, pz) then
+    if isPointProtected(grid.fungicideProtectionMapId, grid.fungicideProtectionMapSize, px, pz) then
         fieldBox:addLine(label, RealisticCropRotationHud.getText("rcr_fillType_fungicide", "Fungicide"))
     end
-    if isPointProtected(grid.nematicideProtectionMapId, grid.protectionMapSize, px, pz) then
+    if isPointProtected(grid.nematicideProtectionMapId, grid.nematicideProtectionMapSize, px, pz) then
         local value = RealisticCropRotationHud.getText("rcr_fillType_nematicide", "Nematicide")
         local lifecycle = RealisticCropRotationTreatmentLifecycle
         local remaining = lifecycle ~= nil and type(lifecycle.getNematicidePeriodsRemaining) == "function"

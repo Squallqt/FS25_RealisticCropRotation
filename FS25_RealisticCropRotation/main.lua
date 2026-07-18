@@ -7,6 +7,7 @@ source(modDirectory .. "scripts/RealisticCropRotationRepository.lua")
 source(modDirectory .. "scripts/RealisticCropRotationService.lua")
 source(modDirectory .. "scripts/RealisticCropRotationManager.lua")
 source(modDirectory .. "scripts/RealisticCropRotationNitrogen.lua")
+source(modDirectory .. "scripts/RealisticCropRotationSoilUptake.lua")
 source(modDirectory .. "scripts/RealisticCropRotationDisease.lua")
 source(modDirectory .. "scripts/RealisticCropRotationDiseaseGrid.lua")
 source(modDirectory .. "scripts/RealisticCropRotationTreatmentLifecycle.lua")
@@ -590,6 +591,10 @@ local function initRealisticCropRotation()
         if RealisticCropRotationNitrogen ~= nil
             and type(RealisticCropRotationNitrogen.delete) == "function" then
             RealisticCropRotationNitrogen.delete()
+        end
+        if RealisticCropRotationSoilUptake ~= nil
+            and type(RealisticCropRotationSoilUptake.delete) == "function" then
+            RealisticCropRotationSoilUptake.delete()
         end
         if RealisticCropRotationTreatmentLifecycle ~= nil
             and type(RealisticCropRotationTreatmentLifecycle.delete) == "function" then

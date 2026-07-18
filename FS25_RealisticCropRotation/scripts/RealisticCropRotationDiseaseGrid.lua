@@ -1,5 +1,5 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
--- BitVectorMap storage for the disease system: overlay grid, per-treatment protection maps, runtime risk + speckle maps.
+-- BitVectorMap storage for the disease system: overlay grid, per-treatment protection maps, runtime risk + destruction mask.
 RealisticCropRotationDiseaseGrid = {}
 local RealisticCropRotationDiseaseGrid_mt = Class(RealisticCropRotationDiseaseGrid)
 
@@ -15,8 +15,8 @@ RealisticCropRotationDiseaseGrid.NEMATICIDE_PROTECTION_FILENAME = "realisticCrop
 -- Risk map: runtime-only display map (never saved), painted off the UI path.
 RealisticCropRotationDiseaseGrid.RISK_NUM_CHANNELS = 2
 
--- Scratch mask (never saved): recomputed by every destroy call to hold cells eligible for the transition-band speckle, then consumed.
-RealisticCropRotationDiseaseGrid.SPECKLE_NUM_CHANNELS = 1
+-- Scratch mask (never saved): recomputed for each core or transition-band destruction pass.
+RealisticCropRotationDiseaseGrid.DESTRUCTION_MASK_NUM_CHANNELS = 1
 
 function RealisticCropRotationDiseaseGrid.new()
     local self = setmetatable({}, RealisticCropRotationDiseaseGrid_mt)
@@ -26,13 +26,14 @@ function RealisticCropRotationDiseaseGrid.new()
     self.changeRevision = 0
     self.fungicideProtectionMapId = nil
     self.nematicideProtectionMapId = nil
-    self.protectionMapSize = nil
+    self.fungicideProtectionMapSize = nil
+    self.nematicideProtectionMapSize = nil
     self.protectionRevision = 0
     self.riskMapId = nil
     self.riskMapSize = nil
     self.riskNumChannels = RealisticCropRotationDiseaseGrid.RISK_NUM_CHANNELS
     self.riskRevision = 0
-    self.speckleMapId = nil
+    self.destructionMaskMapId = nil
     return self
 end
 
@@ -64,7 +65,7 @@ end
 local fieldWorldBounds = RealisticCropRotationDiseaseGrid.fieldWorldBounds
 
 function RealisticCropRotationDiseaseGrid:loadMap(savegamePath, densityMapSyncer)
-    -- Single real dynamic source for every custom map's size: the native ground-detail resolution.
+    -- Persistent maps default to the native ground-detail resolution.
     local resolvedSize = tonumber(g_currentMission.terrainDetailMapSize)
     self.size = resolvedSize
     self.riskMapSize = resolvedSize
@@ -86,9 +87,8 @@ function RealisticCropRotationDiseaseGrid:loadMap(savegamePath, densityMapSyncer
     local w = getBitVectorMapSize(self.mapId)
     self.size = tonumber(w) or self.size
 
-    self.protectionMapSize = resolvedSize
-
     self.fungicideProtectionMapId = createBitVectorMap("rcrFungicideProtection")
+    self.fungicideProtectionMapSize = resolvedSize
     local loadedFungProt = false
     if savegamePath ~= nil and savegamePath ~= "" then
         local fp = savegamePath .. RealisticCropRotationDiseaseGrid.FUNGICIDE_PROTECTION_FILENAME
@@ -97,10 +97,13 @@ function RealisticCropRotationDiseaseGrid:loadMap(savegamePath, densityMapSyncer
         end
     end
     if not loadedFungProt then
-        loadBitVectorMapNew(self.fungicideProtectionMapId, self.protectionMapSize, self.protectionMapSize, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, false)
+        loadBitVectorMapNew(self.fungicideProtectionMapId, self.fungicideProtectionMapSize, self.fungicideProtectionMapSize, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, false)
     end
+    local fungicideSize = getBitVectorMapSize(self.fungicideProtectionMapId)
+    self.fungicideProtectionMapSize = tonumber(fungicideSize) or self.fungicideProtectionMapSize
 
     self.nematicideProtectionMapId = createBitVectorMap("rcrNematicideProtection")
+    self.nematicideProtectionMapSize = resolvedSize
     local loadedNemaProt = false
     if savegamePath ~= nil and savegamePath ~= "" then
         local np = savegamePath .. RealisticCropRotationDiseaseGrid.NEMATICIDE_PROTECTION_FILENAME
@@ -109,8 +112,10 @@ function RealisticCropRotationDiseaseGrid:loadMap(savegamePath, densityMapSyncer
         end
     end
     if not loadedNemaProt then
-        loadBitVectorMapNew(self.nematicideProtectionMapId, self.protectionMapSize, self.protectionMapSize, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, false)
+        loadBitVectorMapNew(self.nematicideProtectionMapId, self.nematicideProtectionMapSize, self.nematicideProtectionMapSize, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, false)
     end
+    local nematicideSize = getBitVectorMapSize(self.nematicideProtectionMapId)
+    self.nematicideProtectionMapSize = tonumber(nematicideSize) or self.nematicideProtectionMapSize
 
     if densityMapSyncer ~= nil and type(densityMapSyncer.addDensityMap) == "function" then
         densityMapSyncer:addDensityMap(self.fungicideProtectionMapId)
@@ -123,9 +128,11 @@ function RealisticCropRotationDiseaseGrid:loadMap(savegamePath, densityMapSyncer
     self.riskMapId = createBitVectorMap("rcrRiskMap")
     loadBitVectorMapNew(self.riskMapId, self.riskMapSize, self.riskMapSize, self.riskNumChannels, false)
 
-    -- Runtime-only scratch mask (never saved: recomputed by every destroy call).
-    self.speckleMapId = createBitVectorMap("rcrSpeckleMask")
-    loadBitVectorMapNew(self.speckleMapId, self.protectionMapSize, self.protectionMapSize, RealisticCropRotationDiseaseGrid.SPECKLE_NUM_CHANNELS, false)
+    -- Runtime-only scratch mask (never saved: recomputed by every destruction pass).
+    local destructionMaskSize = tonumber(g_currentMission.fruitMapSize) or resolvedSize
+    self.destructionMaskMapId = createBitVectorMap("rcrDestructionMask")
+    loadBitVectorMapNew(self.destructionMaskMapId, destructionMaskSize, destructionMaskSize,
+        RealisticCropRotationDiseaseGrid.DESTRUCTION_MASK_NUM_CHANNELS, false)
 end
 
 function RealisticCropRotationDiseaseGrid:saveMap(savegamePath)
@@ -156,9 +163,9 @@ function RealisticCropRotationDiseaseGrid:deleteMap()
         delete(self.riskMapId)
         self.riskMapId = nil
     end
-    if self.speckleMapId ~= nil then
-        delete(self.speckleMapId)
-        self.speckleMapId = nil
+    if self.destructionMaskMapId ~= nil then
+        delete(self.destructionMaskMapId)
+        self.destructionMaskMapId = nil
     end
 end
 
