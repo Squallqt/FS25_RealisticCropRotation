@@ -22,7 +22,7 @@ Track every field's crop history, plan your rotation on a repeating 4-year calen
 - **Weather & temperature**: rain and temperature drive infection odds and daily spread for the 7 fungal diseases, each with its own favourable temperature window; the beet cyst nematode and clubroot ignore rain, but every new infection still incubates faster in warm weather and slower in cold weather
 - **Organic, progressive destruction**: an infected crop is destroyed in an irregular patch that spreads over the following days, with a scattered, speckled transition edge
 - **Season-length aware**: disease progression speed automatically scales with the save's days-per-period setting, so pacing is consistent on short or long seasons
-- **Sprayer treatment**: buyable fungicide (AMISTAR, Syngenta) and nematicide (VELUM PRIME, Bayer) stop an active infection from destroying more of the sprayed area and shield that ground against future damage from any disease in the same treatment family; take-all and clubroot have no chemical treatment and must be managed agronomically
+- **Sprayer treatment**: buyable fungicide (AMISTAR, Syngenta) and nematicide (VELUM PRIME, Bayer) stop an active infection from destroying more of the sprayed area and shield that ground against future damage from the same treatment family. Foliar fungicide is consumed only where a crop is harvested or mown; soil nematicide survives harvest and expires independently per field after three period changes. Reapplying nematicide renews that field's full three-period duration. Take-all and clubroot have no chemical treatment and must be managed agronomically
 - **Disease map**: 3 toggle-able views added to the existing in-game map (infected fields, a predictive pressure forecast, and treated-ground coverage), all colour-blind safe
 - **On-foot HUD**: the field-info box shows rotation history and active disease under your feet, plus a treatment line when standing on protected ground
 - **Weather forecast card**: the in-game menu header shows the next relevant weather event so you can time your spraying
@@ -66,8 +66,9 @@ Search for "Realistic Crop Rotation" on the official [Farming Simulator ModHub](
 1. Open the in-game Map and switch to the **Diseases** view to check infected fields and the pressure forecast
 2. Space host crops far enough apart in your rotation plan to keep soil inoculum low
 3. Treat active fungal infections with a fungicide sprayer (AMISTAR), or the beet cyst nematode with a nematicide sprayer (VELUM PRIME)
-4. For take-all and clubroot, rely on a non-host crop, a resistant variety, liming and a long enough rotation
-5. Harvest what remains after an infection and avoid returning a susceptible host until rotation decay lowers soil pressure
+4. Remember that harvesting or mowing removes fungicide protection only from the cut area; nematicide remains in the soil for three period changes and a new application renews its duration for that field
+5. For take-all and clubroot, rely on a non-host crop, a resistant variety, liming and a long enough rotation
+6. Harvest what remains after an infection and avoid returning a susceptible host until rotation decay lowers soil pressure
 
 ## Console Commands
 

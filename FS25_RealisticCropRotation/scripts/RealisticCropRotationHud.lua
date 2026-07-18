@@ -115,7 +115,7 @@ function RealisticCropRotationHud.addHistoryLines(fieldBox, farmlandId)
     end
 
     RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
-    RealisticCropRotationHud.addTreatmentLine(fieldBox)
+    RealisticCropRotationHud.addTreatmentLine(fieldBox, farmlandId)
 end
 
 ---World position -> farmland-local grid cell.
@@ -161,7 +161,7 @@ end
 
 ---Appends a treatment line for each protection family active under the player's feet.
 -- @param table fieldBox Field-info box with addLine
-function RealisticCropRotationHud.addTreatmentLine(fieldBox)
+function RealisticCropRotationHud.addTreatmentLine(fieldBox, farmlandId)
     if fieldBox == nil or fieldBox.addLine == nil then return end
 
     local grid = RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
@@ -179,7 +179,16 @@ function RealisticCropRotationHud.addTreatmentLine(fieldBox)
         fieldBox:addLine(label, RealisticCropRotationHud.getText("rcr_fillType_fungicide", "Fungicide"))
     end
     if isPointProtected(grid.nematicideProtectionMapId, grid.protectionMapSize, px, pz) then
-        fieldBox:addLine(label, RealisticCropRotationHud.getText("rcr_fillType_nematicide", "Nematicide"))
+        local value = RealisticCropRotationHud.getText("rcr_fillType_nematicide", "Nematicide")
+        local lifecycle = RealisticCropRotationTreatmentLifecycle
+        local remaining = lifecycle ~= nil and type(lifecycle.getNematicidePeriodsRemaining) == "function"
+            and lifecycle.getNematicidePeriodsRemaining(farmlandId) or nil
+        if remaining ~= nil then
+            value = string.format(
+                RealisticCropRotationHud.getText("rcr_treatment_nematicide_remaining", "%s (%d periods remaining)"),
+                value, remaining)
+        end
+        fieldBox:addLine(label, value)
     end
 end
 

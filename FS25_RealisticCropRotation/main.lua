@@ -9,9 +9,11 @@ source(modDirectory .. "scripts/RealisticCropRotationManager.lua")
 source(modDirectory .. "scripts/RealisticCropRotationNitrogen.lua")
 source(modDirectory .. "scripts/RealisticCropRotationDisease.lua")
 source(modDirectory .. "scripts/RealisticCropRotationDiseaseGrid.lua")
+source(modDirectory .. "scripts/RealisticCropRotationTreatmentLifecycle.lua")
 source(modDirectory .. "scripts/RealisticCropRotationDiseaseMap.lua")
 source(modDirectory .. "scripts/RealisticCropRotationHud.lua")
 source(modDirectory .. "scripts/RealisticCropRotationSprayerProducts.lua")
+source(modDirectory .. "events/RCRDiseaseNotificationEvent.lua")
 source(modDirectory .. "events/RCRHistoryRequestEvent.lua")
 source(modDirectory .. "events/RCRHistoryResponseEvent.lua")
 source(modDirectory .. "events/RCRPlanUpdateEvent.lua")
@@ -187,7 +189,7 @@ local function onPeriodChanged()
         return
     end
 
-    local changed = false
+    local changed = RealisticCropRotationTreatmentLifecycle.onPeriodChanged()
     local diseaseUpdated = false
     for _, farmlandId in ipairs(RealisticCropRotation.manager:getOwnedRotationFarmlandIds()) do
         local rotationChanged = RealisticCropRotation.manager:reconcileActiveCropForFarmland(farmlandId)
@@ -382,6 +384,7 @@ local function loadedMission()
                 RealisticCropRotation.disease:refreshRiskMap(true)
             end
         end
+        RealisticCropRotationTreatmentLifecycle.loadFromXML(savegameFolderPath)
         if g_messageCenter ~= nil and MessageType ~= nil and MessageType.FARMLAND_OWNER_CHANGED ~= nil then
             RealisticCropRotation.farmlandOwnerChangeListener = {
                 ownerChanged = function(_self, farmlandId, farmId, loadFromSavegame)
@@ -421,6 +424,9 @@ local function loadedMission()
         RealisticCropRotationNitrogen.install(RealisticCropRotation.manager)
     end
 
+    -- GIANTS runs cutter/mower density-map work on the server and nearby clients; mirror both paths so map coverage updates immediately.
+    RealisticCropRotationTreatmentLifecycle.install()
+
     g_currentMission.realisticCropRotationManager = RealisticCropRotation.manager
 
     if g_currentMission:getIsServer() and type(g_currentMission.addUpdateable) == "function" then
@@ -454,6 +460,7 @@ local function loadedMission()
                 and type(RealisticCropRotation.disease.applySyncData) == "function" then
                 RealisticCropRotation.disease:applySyncData(pending.diseaseState or {}, pending.diseaseCrop or {})
             end
+            RealisticCropRotationTreatmentLifecycle.applySyncData(pending.nematicideCountdown or {})
             RealisticCropRotation.pendingSyncData = nil
         end
         RealisticCropRotation.requestServerSync("loadedMission")
@@ -521,6 +528,7 @@ local function onSaveToXMLFile()
     if RealisticCropRotation.disease ~= nil then
         RealisticCropRotation.disease:saveToXML(savegameFolderPath)
     end
+    RealisticCropRotationTreatmentLifecycle.saveToXML(savegameFolderPath)
 end
 
 ---Sends the initial rotation snapshot to a joining client (server).
@@ -582,6 +590,10 @@ local function initRealisticCropRotation()
         if RealisticCropRotationNitrogen ~= nil
             and type(RealisticCropRotationNitrogen.delete) == "function" then
             RealisticCropRotationNitrogen.delete()
+        end
+        if RealisticCropRotationTreatmentLifecycle ~= nil
+            and type(RealisticCropRotationTreatmentLifecycle.delete) == "function" then
+            RealisticCropRotationTreatmentLifecycle.delete()
         end
         if RealisticCropRotationDiseaseMap ~= nil
             and type(RealisticCropRotationDiseaseMap.delete) == "function" then

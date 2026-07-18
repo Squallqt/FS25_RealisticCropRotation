@@ -23,6 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Krankheit" />
         <e k="rcr_disease_header_active" v="Krankheit (%s)" />
         <e k="rcr_treatment_hud_label"  v="Behandlung" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d Perioden verbleibend)" />
+        <e k="rcr_advice_nematicide_duration" v="Der Bodenschutz hält je Feld 3 Perioden; eine erneute Anwendung verlängert die Dauer." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Erwarteter Rückstand +%d (N+1) / +%d (N+2) kg/ha" />

@@ -23,6 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Choroba" />
         <e k="rcr_disease_header_active" v="Choroba (%s)" />
         <e k="rcr_treatment_hud_label"  v="Ošetření" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (zbývají %d období)" />
+        <e k="rcr_advice_nematicide_duration" v="Ochrana půdy trvá na každém poli 3 období; nová aplikace dobu obnoví." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Očekávaný zbytek +%d (N+1) / +%d (N+2) kg/ha" />

@@ -19,10 +19,12 @@
         <e k="rcr_disease_risk_low"       v="낮음" />
         <e k="rcr_disease_risk_moderate"  v="보통" />
         <e k="rcr_disease_risk_high"      v="높음" />
-        <e k="rcr_disease_notification" v="농지 %s에서 %s 발견" />
+        <e k="rcr_disease_notification" v="%s이(가) 농지 %s에서 발견됨" />
         <e k="rcr_disease_hud_label"    v="병해" />
         <e k="rcr_disease_header_active" v="병해(%s)" />
         <e k="rcr_treatment_hud_label"  v="방제" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (남은 기간 %d)" />
+        <e k="rcr_advice_nematicide_duration" v="토양 보호는 밭마다 3기간 지속되며 재살포하면 기간이 갱신됩니다." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="예상 잔류량 +%d (N+1) / +%d (N+2) kg/ha" />

@@ -19,10 +19,12 @@
         <e k="rcr_disease_risk_low"       v="低" />
         <e k="rcr_disease_risk_moderate"  v="中" />
         <e k="rcr_disease_risk_high"      v="高" />
-        <e k="rcr_disease_notification" v="在田地 %s 检测到 %s" />
+        <e k="rcr_disease_notification" v="%s 在田地 %s 被检测到" />
         <e k="rcr_disease_hud_label"    v="病害" />
         <e k="rcr_disease_header_active" v="病害（%s）" />
         <e k="rcr_treatment_hud_label"  v="防治" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s（剩余%d个周期）" />
+        <e k="rcr_advice_nematicide_duration" v="土壤保护在每块田地持续3个周期；重新施用会重置持续时间。" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="预期残留 +%d (N+1) / +%d (N+2) kg/ha" />

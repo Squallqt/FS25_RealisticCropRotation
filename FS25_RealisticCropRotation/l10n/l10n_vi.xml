@@ -23,6 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Dịch bệnh" />
         <e k="rcr_disease_header_active" v="Dịch bệnh (%s)" />
         <e k="rcr_treatment_hud_label"  v="Phun thuốc" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (còn %d kỳ)" />
+        <e k="rcr_advice_nematicide_duration" v="Bảo vệ đất kéo dài 3 kỳ cho mỗi ruộng; phun lại sẽ gia hạn thời gian." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Tồn dư dự kiến +%d (N+1) / +%d (N+2) kg/ha" />

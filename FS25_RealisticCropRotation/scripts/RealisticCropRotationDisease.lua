@@ -284,13 +284,13 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId, freshCycle)
         local rotated = previousCrop ~= nil and previousCrop ~= cropName
         if rotated then
             self.state[farmlandId] = nil
-            -- Also drops per-cell protection for this field: it is crop-cycle scoped and ends here.
+            -- Also drops the previous crop's foliar protection; soil nematicide keeps its independent countdown.
             if field ~= nil and self.grid ~= nil and type(self.grid.clearField) == "function" then
                 self.grid:clearField(field)
             end
-        elseif freshCycle and field ~= nil and self.grid ~= nil and type(self.grid.clearFieldProtection) == "function" then
-            -- Same-crop replant: the treatment is consumed by the new stand, disease state is untouched.
-            self.grid:clearFieldProtection(field)
+        elseif freshCycle and field ~= nil and self.grid ~= nil and type(self.grid.clearFieldProtectionFamily) == "function" then
+            -- Same-crop replant ends foliar protection; soil nematicide follows its timed lifecycle.
+            self.grid:clearFieldProtectionFamily(field, "FUNGICIDE")
         end
         self.crop[farmlandId] = cropName
     end
@@ -326,11 +326,9 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId, freshCycle)
                         }
                         -- Paints map presence for the new infection.
                         paintInfectionPresence(self.grid, field, group)
-                        if g_currentMission ~= nil and type(g_currentMission.addIngameNotification) == "function"
-                            and FSBaseMission ~= nil and g_i18n ~= nil then
-                            local diseaseName = diseaseDisplayName(group)
-                            local text = string.format(g_i18n:getText("rcr_disease_notification"), diseaseName, tostring(farmlandId))
-                            g_currentMission:addIngameNotification(FSBaseMission.INGAME_NOTIFICATION_CRITICAL, text)
+                        if RCRDiseaseNotificationEvent ~= nil
+                            and type(RCRDiseaseNotificationEvent.sendEvent) == "function" then
+                            RCRDiseaseNotificationEvent.sendEvent(farmlandId, group)
                         end
                     end
                 end
@@ -1096,7 +1094,12 @@ function RealisticCropRotationDisease:consoleClear(farmlandId)
         self.crop[id] = nil
         if self.grid ~= nil and type(self.grid.clearField) == "function" and self.manager ~= nil then
             local field = type(self.manager.getFieldByFarmlandId) == "function" and self.manager:getFieldByFarmlandId(id) or nil
-            if field ~= nil then self.grid:clearField(field) end
+            if field ~= nil then
+                self.grid:clearField(field)
+                if type(self.grid.clearFieldProtectionFamily) == "function" then
+                    self.grid:clearFieldProtectionFamily(field, "NEMATICIDE")
+                end
+            end
         end
         requestDiseaseConsoleBroadcast()
         return string.format("Cleared disease state for farmland %d", id)

@@ -23,6 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Växtsjukdom" />
         <e k="rcr_disease_header_active" v="Växtsjukdom (%s)" />
         <e k="rcr_treatment_hud_label"  v="Behandling" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d perioder återstår)" />
+        <e k="rcr_advice_nematicide_duration" v="Markskyddet varar 3 perioder per fält; en ny behandling förnyar tiden." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Förväntad rest +%d (N+1) / +%d (N+2) kg/ha" />

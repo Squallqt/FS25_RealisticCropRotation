@@ -207,7 +207,7 @@ function RealisticCropRotationDiseaseGrid:paintFarmlandRisk(field, farmlandId, b
     return true
 end
 
----Bbox + farmland-mask filter for a field's cells, reused by clearField and clearFieldProtection.
+---Bbox + farmland-mask filter for a field's cells, reused by clearField and clearFieldProtectionFamily.
 -- @param table field
 -- @return number minX, minZ, maxX, maxZ Field bbox, or nil if unbounded
 -- @return table farmlandFilter Farmland mask, or nil
@@ -247,33 +247,37 @@ function RealisticCropRotationDiseaseGrid:clearField(field)
     end
     self.changeRevision = (self.changeRevision or 0) + 1
 
-    -- Protection is crop-cycle scoped too: a real rotation ends it, same as the disease marks above.
-    self:clearFieldProtection(field, minX, minZ, maxX, maxZ, farmlandFilter)
+    -- Foliar protection ends with the harvested crop; soil nematicide follows its own timed lifecycle.
+    self:clearFieldProtectionFamily(field, "FUNGICIDE", minX, minZ, maxX, maxZ, farmlandFilter)
 end
 
----Wipes only this field's curative/preventive protection, leaving disease marks untouched.
+---Wipes one treatment family from this field, leaving disease marks untouched.
 -- @param table field
+-- @param string family "FUNGICIDE" | "NEMATICIDE"
 -- @param number minX, minZ, maxX, maxZ Optional field bbox, reused from clearField
 -- @param table farmlandFilter Optional farmland mask, reused from clearField
-function RealisticCropRotationDiseaseGrid:clearFieldProtection(field, minX, minZ, maxX, maxZ, farmlandFilter)
+function RealisticCropRotationDiseaseGrid:clearFieldProtectionFamily(field, family, minX, minZ, maxX, maxZ, farmlandFilter)
     if g_terrainNode == nil or DensityMapModifier == nil then return end
     if minX == nil then
         minX, minZ, maxX, maxZ, farmlandFilter = fieldClearParams(field)
         if minX == nil then return end
     end
 
-    for _, protectionMapId in ipairs({ self.fungicideProtectionMapId, self.nematicideProtectionMapId }) do
-        if protectionMapId ~= nil then
-            local protModifier = DensityMapModifier.new(protectionMapId, 0, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, g_terrainNode)
-            protModifier:setParallelogramWorldCoords(minX, minZ, maxX, minZ, minX, maxZ, DensityCoordType.POINT_POINT_POINT)
-            if farmlandFilter ~= nil then
-                protModifier:executeSet(0, farmlandFilter)
-            else
-                protModifier:executeSet(0)
-            end
-        end
+    local protectionMapId = family == "FUNGICIDE" and self.fungicideProtectionMapId
+        or family == "NEMATICIDE" and self.nematicideProtectionMapId or nil
+    if protectionMapId == nil then return end
+
+    local protModifier = DensityMapModifier.new(protectionMapId, 0, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, g_terrainNode)
+    protModifier:setParallelogramWorldCoords(minX, minZ, maxX, minZ, minX, maxZ, DensityCoordType.POINT_POINT_POINT)
+    local _, changed
+    if farmlandFilter ~= nil then
+        _, changed = protModifier:executeSetWithStats(0, farmlandFilter)
+    else
+        _, changed = protModifier:executeSetWithStats(0)
     end
-    self.protectionRevision = (self.protectionRevision or 0) + 1
+    if (changed or 0) > 0 then
+        self.protectionRevision = (self.protectionRevision or 0) + 1
+    end
 end
 
 function RealisticCropRotationDiseaseGrid:clearAll()
@@ -310,6 +314,12 @@ function RealisticCropRotationDiseaseGrid:paintProtection(family, sx, sz, wx, wz
     if (protChanged or 0) > 0 then
         self.protectionRevision = (self.protectionRevision or 0) + 1
     end
+    if family == "NEMATICIDE"
+        and RealisticCropRotationTreatmentLifecycle ~= nil
+        and type(RealisticCropRotationTreatmentLifecycle.onNematicideApplied) == "function" then
+        RealisticCropRotationTreatmentLifecycle.onNematicideApplied(
+            (sx + wx + hx) / 3, (sz + wz + hz) / 3)
+    end
 
     local gridModifier = DensityMapModifier.new(self.mapId, 0, self.numChannels, g_terrainNode)
     gridModifier:setParallelogramWorldCoords(sx, sz, wx, wz, hx, hz, DensityCoordType.POINT_POINT_POINT)
@@ -318,4 +328,25 @@ function RealisticCropRotationDiseaseGrid:paintProtection(family, sx, sz, wx, wz
     if (changed or 0) > 0 then
         self.changeRevision = (self.changeRevision or 0) + 1
     end
+end
+
+---Clears one treatment family from a world-space work-area parallelogram.
+-- @param string family "FUNGICIDE" | "NEMATICIDE"
+-- @param number sx, sz, wx, wz, hx, hz world-space parallelogram corners
+-- @return boolean changed True when protected cells were cleared
+function RealisticCropRotationDiseaseGrid:clearProtectionArea(family, sx, sz, wx, wz, hx, hz)
+    local protectionMapId = family == "FUNGICIDE" and self.fungicideProtectionMapId
+        or family == "NEMATICIDE" and self.nematicideProtectionMapId or nil
+    if protectionMapId == nil or g_terrainNode == nil or DensityMapModifier == nil then
+        return false
+    end
+
+    local modifier = DensityMapModifier.new(
+        protectionMapId, 0, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, g_terrainNode)
+    modifier:setParallelogramWorldCoords(sx, sz, wx, wz, hx, hz, DensityCoordType.POINT_POINT_POINT)
+    local _, changed = modifier:executeSetWithStats(0)
+    if (changed or 0) <= 0 then return false end
+
+    self.protectionRevision = (self.protectionRevision or 0) + 1
+    return true
 end

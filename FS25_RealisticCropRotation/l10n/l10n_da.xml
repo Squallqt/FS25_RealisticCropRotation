@@ -23,6 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Sygdom" />
         <e k="rcr_disease_header_active" v="Sygdom (%s)" />
         <e k="rcr_treatment_hud_label"  v="Behandling" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d perioder tilbage)" />
+        <e k="rcr_advice_nematicide_duration" v="Jordbeskyttelsen varer 3 perioder pr. mark; ny behandling fornyer varigheden." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Forventet rest +%d (N+1) / +%d (N+2) kg/ha" />

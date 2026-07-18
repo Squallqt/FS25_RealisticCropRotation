@@ -23,6 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Betegség" />
         <e k="rcr_disease_header_active" v="Betegség (%s)" />
         <e k="rcr_treatment_hud_label"  v="Kezelés" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d időszak van hátra)" />
+        <e k="rcr_advice_nematicide_duration" v="A talajvédelem táblánként 3 időszakig tart; az új kezelés megújítja az időtartamot." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Várható maradvány +%d (N+1) / +%d (N+2) kg/ha" />

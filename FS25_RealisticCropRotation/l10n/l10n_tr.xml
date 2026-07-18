@@ -19,10 +19,12 @@
         <e k="rcr_disease_risk_low"       v="Düşük" />
         <e k="rcr_disease_risk_moderate"  v="Orta" />
         <e k="rcr_disease_risk_high"      v="Yüksek" />
-        <e k="rcr_disease_notification" v="Tarla %s üzerinde %s tespit edildi" />
+        <e k="rcr_disease_notification" v="%s, Tarla %s üzerinde tespit edildi" />
         <e k="rcr_disease_hud_label"    v="Hastalık" />
         <e k="rcr_disease_header_active" v="Hastalık (%s)" />
         <e k="rcr_treatment_hud_label"  v="İlaçlama" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d dönem kaldı)" />
+        <e k="rcr_advice_nematicide_duration" v="Toprak koruması tarla başına 3 dönem sürer; yeniden uygulama süreyi yeniler." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Beklenen kalıntı +%d (N+1) / +%d (N+2) kg/ha" />

@@ -23,6 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Болезнь" />
         <e k="rcr_disease_header_active" v="Болезнь (%s)" />
         <e k="rcr_treatment_hud_label"  v="Обработка" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (осталось периодов: %d)" />
+        <e k="rcr_advice_nematicide_duration" v="Защита почвы действует 3 периода на каждом поле; повторное внесение обновляет срок." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Ожидаемый остаток +%d (N+1) / +%d (N+2) кг/га" />

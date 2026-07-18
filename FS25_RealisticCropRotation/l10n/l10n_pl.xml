@@ -23,6 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Choroba" />
         <e k="rcr_disease_header_active" v="Choroba (%s)" />
         <e k="rcr_treatment_hud_label"  v="Zabieg" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (pozostało okresów: %d)" />
+        <e k="rcr_advice_nematicide_duration" v="Ochrona gleby trwa 3 okresy na każdym polu; ponowny zabieg odnawia czas działania." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Spodziewana pozostałość +%d (N+1) / +%d (N+2) kg/ha" />

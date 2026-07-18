@@ -1870,7 +1870,11 @@ function RealisticCropRotationFrame:getWorstPressureAdviceText(farmlandId, curre
 
     local key = "rcr_advice_pressure_" .. bestBand .. "_" .. string.lower(bestGroup)
     if type(self.i18n.hasText) == "function" and self.i18n:hasText(key) then
-        return self.i18n:getText(key)
+        local text = self.i18n:getText(key)
+        if bestGroup == "BCN" then
+            text = text .. " " .. self.i18n:getText("rcr_advice_nematicide_duration")
+        end
+        return text
     end
     return nil
 end
@@ -1914,6 +1918,9 @@ function RealisticCropRotationFrame:updateAdviceStatusCard(currentFamily, farmla
             disease:getDisplayName(worstGroup),
             math.floor(worstSeverity * 100 + 0.5),
             disease:getTreatmentName(worstGroup))
+        if worstGroup == "BCN" then
+            text = text .. " " .. self.i18n:getText("rcr_advice_nematicide_duration")
+        end
     else
         -- 2) Planned-rotation-step evaluation, only for a real (non-fallow, known) current crop.
         local plan = self:getPlanForFarmland(farmlandId)

@@ -23,6 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Penyakit" />
         <e k="rcr_disease_header_active" v="Penyakit (%s)" />
         <e k="rcr_treatment_hud_label"  v="Penyemprotan" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d periode tersisa)" />
+        <e k="rcr_advice_nematicide_duration" v="Perlindungan tanah berlangsung 3 periode per ladang; aplikasi ulang memperbarui durasinya." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Residu diharapkan +%d (N+1) / +%d (N+2) kg/ha" />

@@ -23,6 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Gewasziekte" />
         <e k="rcr_disease_header_active" v="Gewasziekte (%s)" />
         <e k="rcr_treatment_hud_label"  v="Behandeling" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d periodes resterend)" />
+        <e k="rcr_advice_nematicide_duration" v="De bodembescherming duurt 3 periodes per veld; opnieuw toepassen vernieuwt de duur." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Verwacht residu +%d (N+1) / +%d (N+2) kg/ha" />

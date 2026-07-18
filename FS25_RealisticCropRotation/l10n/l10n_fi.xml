@@ -23,6 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Kasvitauti" />
         <e k="rcr_disease_header_active" v="Kasvitauti (%s)" />
         <e k="rcr_treatment_hud_label"  v="Torjunta" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d jaksoa jäljellä)" />
+        <e k="rcr_advice_nematicide_duration" v="Maaperän suoja kestää 3 jaksoa lohkoa kohti; uusi käsittely uusii keston." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Odotettu jäännös +%d (N+1) / +%d (N+2) kg/ha" />

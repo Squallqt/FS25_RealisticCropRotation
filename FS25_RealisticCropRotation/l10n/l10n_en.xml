@@ -23,6 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Disease" />
         <e k="rcr_disease_header_active" v="Disease (%s)" />
         <e k="rcr_treatment_hud_label"  v="Treatment" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d periods remaining)" />
+        <e k="rcr_advice_nematicide_duration" v="Soil protection lasts 3 periods per field; reapplication renews the duration." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Expected residue +%d (N+1) / +%d (N+2) kg/ha" />
