@@ -87,11 +87,10 @@ RealisticCropRotationFrame.GROUP_ICON_TEXT_GAP    = 5
 RealisticCropRotationFrame.GROUP_BADGE_PADDING_X  = 20
 RealisticCropRotationFrame.GROUP_BADGE_TEXT_SAFETY_PX = 20
 
--- History timeline strip (pixels; converted at runtime). Strip is 1240px wide; cards 224px, connectors 25px, first card 8px in.
-RealisticCropRotationFrame.TIMELINE_STRIP_W_PX       = 1240
-RealisticCropRotationFrame.TIMELINE_CONTENT_START_PX = 8
-RealisticCropRotationFrame.TIMELINE_CARD_W_PX        = 224
-RealisticCropRotationFrame.TIMELINE_CONNECTOR_W_PX   = 25
+-- History timeline geometry (pixels; converted at runtime). 5 slot cards of 224px joined by 25px connectors.
+RealisticCropRotationFrame.TIMELINE_SLOT_COUNT     = 5
+RealisticCropRotationFrame.TIMELINE_CARD_W_PX      = 224
+RealisticCropRotationFrame.TIMELINE_CONNECTOR_W_PX = 25
 
 -- Annual calendar layout in pixels. The XML container is 1240 x 154 px.
 RealisticCropRotationFrame.CALENDAR_AXIS_X = 94
@@ -1503,29 +1502,28 @@ end
 ---Centres the visible history cards in the strip; empty tail slots and their connectors/rail labels are hidden so nothing is left blank.
 -- @param integer visibleCount Leading slots that carry a card (1-5)
 function RealisticCropRotationFrame:layoutHistoryTimeline(visibleCount)
-    visibleCount = math.max(1, math.min(5, math.floor(tonumber(visibleCount) or 1)))
+    local slotCount = RealisticCropRotationFrame.TIMELINE_SLOT_COUNT
+    visibleCount = math.max(1, math.min(slotCount, math.floor(tonumber(visibleCount) or 1)))
 
     -- Rail label i sits above card i; connector i bridges cards i and i+1.
-    for i = 1, 5 do
+    for i = 1, slotCount do
         local rail = self["slot" .. i .. "Rail"]
         if rail ~= nil then rail:setVisible(i <= visibleCount) end
     end
-    for i = 1, 4 do
+    for i = 1, slotCount - 1 do
         local connector = self["slot" .. i .. "Connector"]
         if connector ~= nil then connector:setVisible(i < visibleCount) end
     end
 
-    -- Shift the whole strip to centre the leading run; native card pitch is preserved, so spacing stays pixel-exact.
+    -- Centre the run inside the band a full row occupies, so a full row keeps its native position exactly (offset 0) and 1px card borders stay on the pixel grid.
     local strip = self.historyTimeline
     if strip == nil or strip.setPosition == nil then return end
     local originalPos = self:getElementOriginalPosition(strip)
     if originalPos == nil then return end
 
-    local occupiedPx = visibleCount * RealisticCropRotationFrame.TIMELINE_CARD_W_PX
-        + (visibleCount - 1) * RealisticCropRotationFrame.TIMELINE_CONNECTOR_W_PX
-    local offsetPx = (RealisticCropRotationFrame.TIMELINE_STRIP_W_PX
-        - 2 * RealisticCropRotationFrame.TIMELINE_CONTENT_START_PX
-        - occupiedPx) * 0.5
+    local pitchPx = RealisticCropRotationFrame.TIMELINE_CARD_W_PX
+        + RealisticCropRotationFrame.TIMELINE_CONNECTOR_W_PX
+    local offsetPx = (slotCount - visibleCount) * pitchPx * 0.5
     strip:setPosition(originalPos[1] + self:getNormalizedPixelWidth(offsetPx), originalPos[2])
 end
 
