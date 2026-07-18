@@ -23,8 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Disease" />
         <e k="rcr_disease_header_active" v="Disease (%s)" />
         <e k="rcr_treatment_hud_label"  v="Treatment" />
-        <e k="rcr_treatment_nematicide_remaining" v="%s (%d periods remaining)" />
-        <e k="rcr_advice_nematicide_duration" v="Soil protection lasts 3 periods per field; reapplication renews the duration." />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d months remaining)" />
+        <e k="rcr_advice_nematicide_duration" v="Soil protection lasts 3 months per field; reapplication renews the duration." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Expected residue +%d (N+1) / +%d (N+2) kg/ha" />
@@ -201,18 +201,18 @@
         <e k="rcr_disease_treatment_none" v="No treatment" />
         <e k="rcr_disease_treatment_clubroot" v="None (resistant variety, liming, rotation)" />
         <e k="rcr_advice_pressure_high_phoma" v="High phoma pressure: avoid canola and mustard for ~4 years, bury residue; autumn fungicide on susceptible varieties." />
-        <e k="rcr_advice_pressure_high_pietin" v="High take-all pressure: insert a non-host break (oats, legume, oilseed); no effective fungicide, only rotation cures it." />
-        <e k="rcr_advice_pressure_high_septoriose" v="High septoria pressure: avoid wheat/barley on cereal residue, pick a tolerant variety; fungicide from stem elongation in a wet climate." />
-        <e k="rcr_advice_pressure_high_rouille" v="High rust pressure: sow a resistant variety and plan a fungicide; watch mild humid spells." />
-        <e k="rcr_advice_pressure_high_fusariose" v="High fusarium pressure: avoid wheat after maize, bury residue; fungicide at flowering if wet." />
-        <e k="rcr_advice_pressure_high_mildiou" v="High late blight pressure: plant a resistant variety and protect potatoes with fungicide as soon as it turns cool and wet." />
-        <e k="rcr_advice_pressure_high_hernie" v="High clubroot pressure: brassica break over 6 years, lime to raise pH and sow a resistant variety; no chemical treatment." />
+        <e k="rcr_advice_pressure_high_takeall" v="High take-all pressure: insert a non-host break (oats, legume, oilseed); no effective fungicide, only rotation cures it." />
+        <e k="rcr_advice_pressure_high_septoria" v="High septoria pressure: avoid wheat/barley on cereal residue, pick a tolerant variety; fungicide from stem elongation in a wet climate." />
+        <e k="rcr_advice_pressure_high_rust" v="High rust pressure: sow a resistant variety and plan a fungicide; watch mild humid spells." />
+        <e k="rcr_advice_pressure_high_fusarium" v="High fusarium pressure: avoid wheat after maize, bury residue; fungicide at flowering if wet." />
+        <e k="rcr_advice_pressure_high_lateblight" v="High late blight pressure: plant a resistant variety and protect potatoes with fungicide as soon as it turns cool and wet." />
+        <e k="rcr_advice_pressure_high_clubroot" v="High clubroot pressure: brassica break over 6 years, lime to raise pH and sow a resistant variety; no chemical treatment." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Moderate phoma pressure: lengthen the canola break and chop the stubble." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Moderate take-all pressure: avoid a third cereal in a row." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Moderate septoria pressure: watch spring rains and residue inoculum." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Moderate rust pressure: scout for pustules in mild weather." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Moderate fusarium pressure: space cereals and maize, manage residue." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Moderate late blight pressure: monitor cool wet weather and destroy volunteers." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Moderate clubroot pressure: lengthen the canola break and watch for acid pH." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Moderate take-all pressure: avoid a third cereal in a row." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Moderate septoria pressure: watch spring rains and residue inoculum." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Moderate rust pressure: scout for pustules in mild weather." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Moderate fusarium pressure: space cereals and maize, manage residue." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Moderate late blight pressure: monitor cool wet weather and destroy volunteers." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Moderate clubroot pressure: lengthen the canola break and watch for acid pH." />
     </elements>
 </l10n>

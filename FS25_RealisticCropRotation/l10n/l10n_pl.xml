@@ -23,8 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Choroba" />
         <e k="rcr_disease_header_active" v="Choroba (%s)" />
         <e k="rcr_treatment_hud_label"  v="Zabieg" />
-        <e k="rcr_treatment_nematicide_remaining" v="%s (pozostało okresów: %d)" />
-        <e k="rcr_advice_nematicide_duration" v="Ochrona gleby trwa 3 okresy na każdym polu; ponowny zabieg odnawia czas działania." />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (pozostało miesięcy: %d)" />
+        <e k="rcr_advice_nematicide_duration" v="Ochrona gleby trwa 3 miesiące na każdym polu; ponowny zabieg odnawia czas działania." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Spodziewana pozostałość +%d (N+1) / +%d (N+2) kg/ha" />
@@ -201,18 +201,18 @@
         <e k="rcr_disease_treatment_none" v="Brak zabiegu" />
         <e k="rcr_disease_treatment_clubroot" v="Brak (odmiana odporna, wapnowanie, płodozmian)" />
         <e k="rcr_advice_pressure_high_phoma" v="Wysoka presja suchej zgnilizny: przez około 4 lata unikaj rzepaku i gorczycy, przyoraj resztki; jesienny fungicyd na odmianach podatnych." />
-        <e k="rcr_advice_pressure_high_pietin" v="Wysoka presja zgorzeli podstawy źdźbła: wprowadź przerwę z rośliną niebędącą żywicielem (owies, bobowate, oleiste); żaden fungicyd nie działa, leczy tylko płodozmian." />
-        <e k="rcr_advice_pressure_high_septoriose" v="Wysoka presja septoriozy: nie uprawiaj pszenicy/jęczmienia na resztkach zbóż, wybierz odmianę tolerancyjną; w wilgotnym klimacie fungicyd od strzelania w źdźbło." />
-        <e k="rcr_advice_pressure_high_rouille" v="Wysoka presja rdzy: wysiej odmianę odporną i zaplanuj fungicyd; obserwuj łagodne wilgotne okresy." />
-        <e k="rcr_advice_pressure_high_fusariose" v="Wysoka presja fuzariozy: nie uprawiaj pszenicy po kukurydzy, przyoraj resztki; fungicyd w czasie kwitnienia przy deszczu." />
-        <e k="rcr_advice_pressure_high_mildiou" v="Wysoka presja zarazy ziemniaka: posadź odmianę odporną i chroń ziemniaki fungicydem, gdy tylko zrobi się chłodno i wilgotno." />
-        <e k="rcr_advice_pressure_high_hernie" v="Wysoka presja kiły: przerwa w uprawie kapustnych ponad 6 lat, wapnuj dla podniesienia pH i wysiej odmianę odporną; brak środków chemicznych." />
+        <e k="rcr_advice_pressure_high_takeall" v="Wysoka presja zgorzeli podstawy źdźbła: wprowadź przerwę z rośliną niebędącą żywicielem (owies, bobowate, oleiste); żaden fungicyd nie działa, leczy tylko płodozmian." />
+        <e k="rcr_advice_pressure_high_septoria" v="Wysoka presja septoriozy: nie uprawiaj pszenicy/jęczmienia na resztkach zbóż, wybierz odmianę tolerancyjną; w wilgotnym klimacie fungicyd od strzelania w źdźbło." />
+        <e k="rcr_advice_pressure_high_rust" v="Wysoka presja rdzy: wysiej odmianę odporną i zaplanuj fungicyd; obserwuj łagodne wilgotne okresy." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Wysoka presja fuzariozy: nie uprawiaj pszenicy po kukurydzy, przyoraj resztki; fungicyd w czasie kwitnienia przy deszczu." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Wysoka presja zarazy ziemniaka: posadź odmianę odporną i chroń ziemniaki fungicydem, gdy tylko zrobi się chłodno i wilgotno." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Wysoka presja kiły: przerwa w uprawie kapustnych ponad 6 lat, wapnuj dla podniesienia pH i wysiej odmianę odporną; brak środków chemicznych." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Umiarkowana presja suchej zgnilizny: wydłuż przerwę w uprawie rzepaku i rozdrobnij ściernisko." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Umiarkowana presja zgorzeli podstawy źdźbła: unikaj trzeciego zboża z rzędu." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Umiarkowana presja septoriozy: obserwuj wiosenne deszcze i inokulum w resztkach." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Umiarkowana presja rdzy: w łagodnej pogodzie wypatruj pustul." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Umiarkowana presja fuzariozy: rozłóż w czasie zboża i kukurydzę, zagospodaruj resztki." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Umiarkowana presja zarazy ziemniaka: monitoruj chłodną wilgotną pogodę i niszcz samosiewy." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Umiarkowana presja kiły: wydłuż przerwę w uprawie rzepaku i obserwuj kwaśne pH." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Umiarkowana presja zgorzeli podstawy źdźbła: unikaj trzeciego zboża z rzędu." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Umiarkowana presja septoriozy: obserwuj wiosenne deszcze i inokulum w resztkach." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Umiarkowana presja rdzy: w łagodnej pogodzie wypatruj pustul." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Umiarkowana presja fuzariozy: rozłóż w czasie zboża i kukurydzę, zagospodaruj resztki." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Umiarkowana presja zarazy ziemniaka: monitoruj chłodną wilgotną pogodę i niszcz samosiewy." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Umiarkowana presja kiły: wydłuż przerwę w uprawie rzepaku i obserwuj kwaśne pH." />
     </elements>
 </l10n>

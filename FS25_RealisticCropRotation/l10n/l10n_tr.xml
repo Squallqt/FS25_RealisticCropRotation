@@ -23,8 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Hastalık" />
         <e k="rcr_disease_header_active" v="Hastalık (%s)" />
         <e k="rcr_treatment_hud_label"  v="İlaçlama" />
-        <e k="rcr_treatment_nematicide_remaining" v="%s (%d dönem kaldı)" />
-        <e k="rcr_advice_nematicide_duration" v="Toprak koruması tarla başına 3 dönem sürer; yeniden uygulama süreyi yeniler." />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d ay kaldı)" />
+        <e k="rcr_advice_nematicide_duration" v="Toprak koruması tarla başına 3 ay sürer; yeniden uygulama süreyi yeniler." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Beklenen kalıntı +%d (N+1) / +%d (N+2) kg/ha" />
@@ -201,18 +201,18 @@
         <e k="rcr_disease_treatment_none" v="İlaçlama yok" />
         <e k="rcr_disease_treatment_clubroot" v="Yok (dayanıklı çeşit, kireçleme, münavebe)" />
         <e k="rcr_advice_pressure_high_phoma" v="Phoma baskısı yüksek: kanola ve hardalı yaklaşık 4 yıl ekmeyin, artıkları toprağa gömün; duyarlı çeşitlerde sonbaharda fungisit uygulayın." />
-        <e k="rcr_advice_pressure_high_pietin" v="Kök çürüklüğü baskısı yüksek: konukçu olmayan bir ara bitki (yulaf, baklagil, yağlı tohum) ekin; etkili fungisit yoktur, yalnızca münavebe iyileştirir." />
-        <e k="rcr_advice_pressure_high_septoriose" v="Septorya baskısı yüksek: tahıl artıkları üzerine buğday/arpa ekmeyin, dayanıklı çeşit seçin; nemli iklimde sapa kalkmadan itibaren fungisit uygulayın." />
-        <e k="rcr_advice_pressure_high_rouille" v="Pas baskısı yüksek: dayanıklı çeşit ekin ve fungisit planlayın; ılıman nemli dönemleri izleyin." />
-        <e k="rcr_advice_pressure_high_fusariose" v="Fusarium baskısı yüksek: mısırdan sonra buğday ekmeyin, artıkları gömün; yağışlıysa çiçeklenmede fungisit uygulayın." />
-        <e k="rcr_advice_pressure_high_mildiou" v="Mildiyö baskısı yüksek: dayanıklı çeşit ekin ve hava serin ve nemli olur olmaz patatesi fungisitle koruyun." />
-        <e k="rcr_advice_pressure_high_hernie" v="Kök uru baskısı yüksek: turpgil arasını 6 yıldan fazla tutun, pH'ı yükseltmek için kireçleyin ve dayanıklı çeşit ekin; kimyasal tedavi yoktur." />
+        <e k="rcr_advice_pressure_high_takeall" v="Kök çürüklüğü baskısı yüksek: konukçu olmayan bir ara bitki (yulaf, baklagil, yağlı tohum) ekin; etkili fungisit yoktur, yalnızca münavebe iyileştirir." />
+        <e k="rcr_advice_pressure_high_septoria" v="Septorya baskısı yüksek: tahıl artıkları üzerine buğday/arpa ekmeyin, dayanıklı çeşit seçin; nemli iklimde sapa kalkmadan itibaren fungisit uygulayın." />
+        <e k="rcr_advice_pressure_high_rust" v="Pas baskısı yüksek: dayanıklı çeşit ekin ve fungisit planlayın; ılıman nemli dönemleri izleyin." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Fusarium baskısı yüksek: mısırdan sonra buğday ekmeyin, artıkları gömün; yağışlıysa çiçeklenmede fungisit uygulayın." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Mildiyö baskısı yüksek: dayanıklı çeşit ekin ve hava serin ve nemli olur olmaz patatesi fungisitle koruyun." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Kök uru baskısı yüksek: turpgil arasını 6 yıldan fazla tutun, pH'ı yükseltmek için kireçleyin ve dayanıklı çeşit ekin; kimyasal tedavi yoktur." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Phoma baskısı orta: kanola arasını uzatın ve anızı parçalayın." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Kök çürüklüğü baskısı orta: üst üste üçüncü tahıldan kaçının." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Septorya baskısı orta: ilkbahar yağmurlarını ve artıklardaki inokulumu izleyin." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Pas baskısı orta: ılıman havada püstülleri kontrol edin." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Fusarium baskısı orta: tahıl ve mısırın arasını açın, artıkları yönetin." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Mildiyö baskısı orta: serin nemli havayı izleyin ve kendi gelen bitkileri yok edin." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Kök uru baskısı orta: kanola arasını uzatın ve asidik pH'a dikkat edin." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Kök çürüklüğü baskısı orta: üst üste üçüncü tahıldan kaçının." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Septorya baskısı orta: ilkbahar yağmurlarını ve artıklardaki inokulumu izleyin." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Pas baskısı orta: ılıman havada püstülleri kontrol edin." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Fusarium baskısı orta: tahıl ve mısırın arasını açın, artıkları yönetin." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Mildiyö baskısı orta: serin nemli havayı izleyin ve kendi gelen bitkileri yok edin." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Kök uru baskısı orta: kanola arasını uzatın ve asidik pH'a dikkat edin." />
     </elements>
 </l10n>

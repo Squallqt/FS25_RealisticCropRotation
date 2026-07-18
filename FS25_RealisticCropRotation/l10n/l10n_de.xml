@@ -23,8 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Krankheit" />
         <e k="rcr_disease_header_active" v="Krankheit (%s)" />
         <e k="rcr_treatment_hud_label"  v="Behandlung" />
-        <e k="rcr_treatment_nematicide_remaining" v="%s (%d Perioden verbleibend)" />
-        <e k="rcr_advice_nematicide_duration" v="Der Bodenschutz hält je Feld 3 Perioden; eine erneute Anwendung verlängert die Dauer." />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d Monate verbleibend)" />
+        <e k="rcr_advice_nematicide_duration" v="Der Bodenschutz hält je Feld 3 Monate; eine erneute Anwendung verlängert die Dauer." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Erwarteter Rückstand +%d (N+1) / +%d (N+2) kg/ha" />
@@ -201,18 +201,18 @@
         <e k="rcr_disease_treatment_none" v="Keine Behandlung" />
         <e k="rcr_disease_treatment_clubroot" v="Keine (resistente Sorte, Kalkung, Fruchtfolge)" />
         <e k="rcr_advice_pressure_high_phoma" v="Hoher Phoma-Druck: Raps und Senf ca. 4 Jahre meiden, Rückstände einarbeiten; Herbstfungizid bei anfälligen Sorten." />
-        <e k="rcr_advice_pressure_high_pietin" v="Hoher Schwarzbeinigkeits-Druck: eine Nichtwirtspause einlegen (Hafer, Leguminose, Ölfrucht); kein wirksames Fungizid, nur die Fruchtfolge hilft." />
-        <e k="rcr_advice_pressure_high_septoriose" v="Hoher Septoria-Druck: Weizen/Gerste nicht auf Getreiderückständen anbauen, tolerante Sorte wählen; Fungizid ab Schossbeginn bei feuchtem Klima." />
-        <e k="rcr_advice_pressure_high_rouille" v="Hoher Rost-Druck: resistente Sorte säen und Fungizid einplanen; auf mild-feuchte Phasen achten." />
-        <e k="rcr_advice_pressure_high_fusariose" v="Hoher Fusarium-Druck: Weizen nicht nach Mais anbauen, Rückstände einarbeiten; Fungizid zur Blüte bei Nässe." />
-        <e k="rcr_advice_pressure_high_mildiou" v="Hoher Krautfäule-Druck: resistente Sorte pflanzen und Kartoffeln mit Fungizid schützen, sobald es kühl und nass wird." />
-        <e k="rcr_advice_pressure_high_hernie" v="Hoher Kohlhernie-Druck: Anbaupause der Kreuzblütler über 6 Jahre, Kalkung zur pH-Anhebung und resistente Sorte säen; keine chemische Bekämpfung." />
+        <e k="rcr_advice_pressure_high_takeall" v="Hoher Schwarzbeinigkeits-Druck: eine Nichtwirtspause einlegen (Hafer, Leguminose, Ölfrucht); kein wirksames Fungizid, nur die Fruchtfolge hilft." />
+        <e k="rcr_advice_pressure_high_septoria" v="Hoher Septoria-Druck: Weizen/Gerste nicht auf Getreiderückständen anbauen, tolerante Sorte wählen; Fungizid ab Schossbeginn bei feuchtem Klima." />
+        <e k="rcr_advice_pressure_high_rust" v="Hoher Rost-Druck: resistente Sorte säen und Fungizid einplanen; auf mild-feuchte Phasen achten." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Hoher Fusarium-Druck: Weizen nicht nach Mais anbauen, Rückstände einarbeiten; Fungizid zur Blüte bei Nässe." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Hoher Krautfäule-Druck: resistente Sorte pflanzen und Kartoffeln mit Fungizid schützen, sobald es kühl und nass wird." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Hoher Kohlhernie-Druck: Anbaupause der Kreuzblütler über 6 Jahre, Kalkung zur pH-Anhebung und resistente Sorte säen; keine chemische Bekämpfung." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Mäßiger Phoma-Druck: die Rapspause verlängern und das Stroh häckseln." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Mäßiger Schwarzbeinigkeits-Druck: eine dritte Getreidefrucht in Folge vermeiden." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Mäßiger Septoria-Druck: Frühjahrsniederschläge und Inokulum aus den Rückständen beobachten." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Mäßiger Rost-Druck: bei milder Witterung auf Pusteln kontrollieren." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Mäßiger Fusarium-Druck: Getreide und Mais zeitlich strecken, Rückstände managen." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Mäßiger Krautfäule-Druck: kühl-nasse Witterung überwachen und Durchwuchskartoffeln beseitigen." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Mäßiger Kohlhernie-Druck: die Rapspause verlängern und auf sauren pH achten." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Mäßiger Schwarzbeinigkeits-Druck: eine dritte Getreidefrucht in Folge vermeiden." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Mäßiger Septoria-Druck: Frühjahrsniederschläge und Inokulum aus den Rückständen beobachten." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Mäßiger Rost-Druck: bei milder Witterung auf Pusteln kontrollieren." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Mäßiger Fusarium-Druck: Getreide und Mais zeitlich strecken, Rückstände managen." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Mäßiger Krautfäule-Druck: kühl-nasse Witterung überwachen und Durchwuchskartoffeln beseitigen." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Mäßiger Kohlhernie-Druck: die Rapspause verlängern und auf sauren pH achten." />
     </elements>
 </l10n>

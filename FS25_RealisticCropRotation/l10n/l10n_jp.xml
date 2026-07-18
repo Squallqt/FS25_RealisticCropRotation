@@ -23,8 +23,8 @@
         <e k="rcr_disease_hud_label"    v="病害" />
         <e k="rcr_disease_header_active" v="病害（%s）" />
         <e k="rcr_treatment_hud_label"  v="防除" />
-        <e k="rcr_treatment_nematicide_remaining" v="%s（残り%d期間）" />
-        <e k="rcr_advice_nematicide_duration" v="土壌保護は畑ごとに3期間続き、再散布で期間が更新されます。" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s（残り%dヶ月）" />
+        <e k="rcr_advice_nematicide_duration" v="土壌保護は畑ごとに3ヶ月続き、再散布で期間が更新されます。" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="予想残留 +%d (N+1) / +%d (N+2) kg/ha" />
@@ -201,18 +201,18 @@
         <e k="rcr_disease_treatment_none" v="防除なし" />
         <e k="rcr_disease_treatment_clubroot" v="なし（抵抗性品種・石灰散布・輪作）" />
         <e k="rcr_advice_pressure_high_phoma" v="茎枯病の圧力が高い。ナタネとカラシナを約4年避け、残渣をすき込む。感受性品種には秋に殺菌剤を散布する。" />
-        <e k="rcr_advice_pressure_high_pietin" v="立枯病の圧力が高い。非宿主作物（エンバク、マメ科、油糧作物）を挟んで断ち切る。有効な殺菌剤はなく、輪作だけが治せる。" />
-        <e k="rcr_advice_pressure_high_septoriose" v="葉枯病の圧力が高い。ムギ類の残渣の上にコムギ／オオムギを作付けせず、耐病性品種を選ぶ。多湿な気候では茎立ち期から殺菌剤を散布する。" />
-        <e k="rcr_advice_pressure_high_rouille" v="さび病の圧力が高い。抵抗性品種をまき、殺菌剤を計画する。温暖で多湿な時期に注意する。" />
-        <e k="rcr_advice_pressure_high_fusariose" v="赤かび病の圧力が高い。トウモロコシの後にコムギを作らず、残渣をすき込む。降雨があれば開花期に殺菌剤を散布する。" />
-        <e k="rcr_advice_pressure_high_mildiou" v="疫病の圧力が高い。抵抗性品種を植え、冷涼で多湿になり次第、殺菌剤でジャガイモを保護する。" />
-        <e k="rcr_advice_pressure_high_hernie" v="根こぶ病の圧力が高い。アブラナ科の間隔を6年以上とり、石灰でpHを上げ、抵抗性品種をまく。化学的防除法はない。" />
+        <e k="rcr_advice_pressure_high_takeall" v="立枯病の圧力が高い。非宿主作物（エンバク、マメ科、油糧作物）を挟んで断ち切る。有効な殺菌剤はなく、輪作だけが治せる。" />
+        <e k="rcr_advice_pressure_high_septoria" v="葉枯病の圧力が高い。ムギ類の残渣の上にコムギ／オオムギを作付けせず、耐病性品種を選ぶ。多湿な気候では茎立ち期から殺菌剤を散布する。" />
+        <e k="rcr_advice_pressure_high_rust" v="さび病の圧力が高い。抵抗性品種をまき、殺菌剤を計画する。温暖で多湿な時期に注意する。" />
+        <e k="rcr_advice_pressure_high_fusarium" v="赤かび病の圧力が高い。トウモロコシの後にコムギを作らず、残渣をすき込む。降雨があれば開花期に殺菌剤を散布する。" />
+        <e k="rcr_advice_pressure_high_lateblight" v="疫病の圧力が高い。抵抗性品種を植え、冷涼で多湿になり次第、殺菌剤でジャガイモを保護する。" />
+        <e k="rcr_advice_pressure_high_clubroot" v="根こぶ病の圧力が高い。アブラナ科の間隔を6年以上とり、石灰でpHを上げ、抵抗性品種をまく。化学的防除法はない。" />
         <e k="rcr_advice_pressure_moderate_phoma" v="茎枯病の圧力は中程度。ナタネの間隔を延ばし、刈り株を粉砕する。" />
-        <e k="rcr_advice_pressure_moderate_pietin" v="立枯病の圧力は中程度。3作連続のムギ類を避ける。" />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="葉枯病の圧力は中程度。春の降雨と残渣の伝染源に注意する。" />
-        <e k="rcr_advice_pressure_moderate_rouille" v="さび病の圧力は中程度。温暖な天候で胞子堆（病斑）の発生を見張る。" />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="赤かび病の圧力は中程度。ムギ類とトウモロコシの間隔をあけ、残渣を管理する。" />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="疫病の圧力は中程度。冷涼で多湿な天候を監視し、こぼれ生えを処分する。" />
-        <e k="rcr_advice_pressure_moderate_hernie" v="根こぶ病の圧力は中程度。ナタネの間隔を延ばし、酸性pHに注意する。" />
+        <e k="rcr_advice_pressure_moderate_takeall" v="立枯病の圧力は中程度。3作連続のムギ類を避ける。" />
+        <e k="rcr_advice_pressure_moderate_septoria" v="葉枯病の圧力は中程度。春の降雨と残渣の伝染源に注意する。" />
+        <e k="rcr_advice_pressure_moderate_rust" v="さび病の圧力は中程度。温暖な天候で胞子堆（病斑）の発生を見張る。" />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="赤かび病の圧力は中程度。ムギ類とトウモロコシの間隔をあけ、残渣を管理する。" />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="疫病の圧力は中程度。冷涼で多湿な天候を監視し、こぼれ生えを処分する。" />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="根こぶ病の圧力は中程度。ナタネの間隔を延ばし、酸性pHに注意する。" />
     </elements>
 </l10n>

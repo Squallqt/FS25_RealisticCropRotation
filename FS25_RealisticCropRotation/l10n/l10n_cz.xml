@@ -23,8 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Choroba" />
         <e k="rcr_disease_header_active" v="Choroba (%s)" />
         <e k="rcr_treatment_hud_label"  v="Ošetření" />
-        <e k="rcr_treatment_nematicide_remaining" v="%s (zbývají %d období)" />
-        <e k="rcr_advice_nematicide_duration" v="Ochrana půdy trvá na každém poli 3 období; nová aplikace dobu obnoví." />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (zbývá měsíců: %d)" />
+        <e k="rcr_advice_nematicide_duration" v="Ochrana půdy trvá na každém poli 3 měsíce; nová aplikace dobu obnoví." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Očekávaný zbytek +%d (N+1) / +%d (N+2) kg/ha" />
@@ -201,18 +201,18 @@
         <e k="rcr_disease_treatment_none" v="Žádné ošetření" />
         <e k="rcr_disease_treatment_clubroot" v="Žádné (odolná odrůda, vápnění, osevní postup)" />
         <e k="rcr_advice_pressure_high_phoma" v="Vysoký tlak fomové hniloby: asi 4 roky nepěstujte řepku a hořčici, zapravte zbytky; u náchylných odrůd podzimní fungicid." />
-        <e k="rcr_advice_pressure_high_pietin" v="Vysoký tlak černání pat stébel: zařaďte nehostitelskou přerušovací plodinu (oves, luskovina, olejnina); žádný fungicid nezabírá, léčí jen osevní postup." />
-        <e k="rcr_advice_pressure_high_septoriose" v="Vysoký tlak braničnatky: nepěstujte pšenici/ječmen na zbytcích obilnin, zvolte tolerantní odrůdu; ve vlhkém klimatu fungicid od sloupkování." />
-        <e k="rcr_advice_pressure_high_rouille" v="Vysoký tlak rzi: zasejte odolnou odrůdu a naplánujte fungicid; sledujte mírné vlhké období." />
-        <e k="rcr_advice_pressure_high_fusariose" v="Vysoký tlak fuzariózy: nepěstujte pšenici po kukuřici, zapravte zbytky; při dešti fungicid v době kvetení." />
-        <e k="rcr_advice_pressure_high_mildiou" v="Vysoký tlak plísně bramboru: vysaďte odolnou odrůdu a chraňte brambory fungicidem, jakmile se ochladí a je vlhko." />
-        <e k="rcr_advice_pressure_high_hernie" v="Vysoký tlak nádorovitosti: odstup brukvovitých přes 6 let, vápněním zvyšte pH a zasejte odolnou odrůdu; žádné chemické ošetření." />
+        <e k="rcr_advice_pressure_high_takeall" v="Vysoký tlak černání pat stébel: zařaďte nehostitelskou přerušovací plodinu (oves, luskovina, olejnina); žádný fungicid nezabírá, léčí jen osevní postup." />
+        <e k="rcr_advice_pressure_high_septoria" v="Vysoký tlak braničnatky: nepěstujte pšenici/ječmen na zbytcích obilnin, zvolte tolerantní odrůdu; ve vlhkém klimatu fungicid od sloupkování." />
+        <e k="rcr_advice_pressure_high_rust" v="Vysoký tlak rzi: zasejte odolnou odrůdu a naplánujte fungicid; sledujte mírné vlhké období." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Vysoký tlak fuzariózy: nepěstujte pšenici po kukuřici, zapravte zbytky; při dešti fungicid v době kvetení." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Vysoký tlak plísně bramboru: vysaďte odolnou odrůdu a chraňte brambory fungicidem, jakmile se ochladí a je vlhko." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Vysoký tlak nádorovitosti: odstup brukvovitých přes 6 let, vápněním zvyšte pH a zasejte odolnou odrůdu; žádné chemické ošetření." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Střední tlak fomové hniloby: prodlužte odstup řepky a rozdrťte strniště." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Střední tlak černání pat stébel: vyhněte se třetí obilnině v řadě." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Střední tlak braničnatky: sledujte jarní deště a inokulum ve zbytcích." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Střední tlak rzi: za mírného počasí sledujte výskyt pustul." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Střední tlak fuzariózy: proložte obilniny a kukuřici, hospodařte se zbytky." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Střední tlak plísně bramboru: sledujte chladné vlhké počasí a ničte výdrol." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Střední tlak nádorovitosti: prodlužte odstup řepky a sledujte kyselé pH." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Střední tlak černání pat stébel: vyhněte se třetí obilnině v řadě." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Střední tlak braničnatky: sledujte jarní deště a inokulum ve zbytcích." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Střední tlak rzi: za mírného počasí sledujte výskyt pustul." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Střední tlak fuzariózy: proložte obilniny a kukuřici, hospodařte se zbytky." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Střední tlak plísně bramboru: sledujte chladné vlhké počasí a ničte výdrol." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Střední tlak nádorovitosti: prodlužte odstup řepky a sledujte kyselé pH." />
     </elements>
 </l10n>

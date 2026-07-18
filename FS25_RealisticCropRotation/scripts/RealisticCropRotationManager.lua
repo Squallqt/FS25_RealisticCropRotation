@@ -6,11 +6,11 @@ local RealisticCropRotationManager_mt = Class(RealisticCropRotationManager)
 -- Active-crop cache TTL: UI/HUD reads are frequent, growth changes slowly.
 local ACTIVE_CROP_CACHE_TTL_MS = 10000
 
--- PF soil read cache TTL: nitrogen/pH only change when the player works the field, so a short TTL is safe.
-local SOIL_PF_CACHE_TTL_MS = 10000
+-- Grid resolution for locating one representative point per soil type.
+local SOIL_TYPE_LOCATOR_STEPS = 16
 
--- Soil scan grid resolution (menu only): FIELD_SCAN_STEPS^2 points over the field.
-local FIELD_SCAN_STEPS = 50
+-- Field share that must reach a level for that level to be reported.
+local VANILLA_LEVEL_COVERAGE = 0.90
 
 
 ---True on a multiplayer client (not the server/host).
@@ -193,6 +193,116 @@ local function normalizeFruitTypeIndex(fruitTypeIndex)
     local unknown = (FruitType ~= nil and FruitType.UNKNOWN) or 0
     if n == nil or n == unknown then return nil end
     return n
+end
+
+-- NATIVE FIELD AGGREGATES
+
+---Builds a density filter on a layer.
+-- @param integer mapId
+-- @param integer firstChannel
+-- @param integer numChannels
+-- @param integer compareType DensityValueCompareType
+-- @param number value
+-- @param number maxValue Upper bound for BETWEEN, or nil
+-- @return table filter, or nil
+local function makeDensityFilter(mapId, firstChannel, numChannels, compareType, value, maxValue)
+    if DensityMapFilter == nil or DensityValueCompareType == nil then return nil end
+    if mapId == nil or firstChannel == nil or numChannels == nil or compareType == nil then return nil end
+    local filter = DensityMapFilter.new(mapId, firstChannel, numChannels)
+    if filter == nil then return nil end
+    filter:setValueCompareParams(compareType, value, maxValue)
+    return filter
+end
+
+---Sums a density layer over a field's polygon.
+-- @param table field
+-- @param integer mapId
+-- @param integer firstChannel
+-- @param integer numChannels
+-- @param table filterA Optional density filter
+-- @param table filterB Optional second density filter
+-- @return number sum, number pixels, or nil when the field has no usable polygon
+local function aggregateFieldLayer(field, mapId, firstChannel, numChannels, filterA, filterB)
+    if field == nil or mapId == nil or firstChannel == nil or numChannels == nil then return nil end
+    if DensityMapModifier == nil or g_terrainNode == nil then return nil end
+    if type(field.getDensityMapPolygon) ~= "function" then return nil end
+
+    local polygon = field:getDensityMapPolygon()
+    if polygon == nil then return nil end
+
+    local modifier = DensityMapModifier.new(mapId, firstChannel, numChannels, g_terrainNode)
+    if modifier == nil then return nil end
+    polygon:applyToModifier(modifier)
+
+    local ok, sum, pixels = pcall(modifier.executeGet, modifier, filterA, filterB)
+    if not ok then return nil end
+    return tonumber(sum) or 0, tonumber(pixels) or 0
+end
+
+---Resolves a vanilla field density layer's map handle.
+-- @param integer layer FieldDensityMap entry
+-- @return integer mapId, integer firstChannel, integer numChannels, or nil
+local function getFieldGroundLayer(layer)
+    local system = g_currentMission ~= nil and g_currentMission.fieldGroundSystem or nil
+    if system == nil or layer == nil or type(system.getDensityMapData) ~= "function" then return nil end
+    local mapId, firstChannel, numChannels = system:getDensityMapData(layer)
+    if mapId == nil or firstChannel == nil or numChannels == nil then return nil end
+    return mapId, firstChannel, numChannels
+end
+
+---Deepest vanilla layer level covering VANILLA_LEVEL_COVERAGE of the field, plus the field-average ratio.
+-- @param table field
+-- @param integer layer FieldDensityMap entry
+-- @param integer maxLevel
+-- @return integer level Deepest sufficiently covered level, 0 when none, or nil when the field has no polygon
+-- @return number ratio Field average over maxLevel, for the bar fill
+local function getFieldLayerCoverageLevel(field, layer, maxLevel)
+    local mapId, firstChannel, numChannels = getFieldGroundLayer(layer)
+    if mapId == nil then return nil end
+
+    local sum, pixels = aggregateFieldLayer(field, mapId, firstChannel, numChannels)
+    if sum == nil or pixels == nil or pixels <= 0 then return nil end
+
+    local level = 0
+    for candidate = maxLevel, 1, -1 do
+        local filter = makeDensityFilter(mapId, firstChannel, numChannels,
+            DensityValueCompareType.BETWEEN, candidate, maxLevel)
+        local _, covered = aggregateFieldLayer(field, mapId, firstChannel, numChannels, filter)
+        if covered ~= nil and (covered / pixels) >= VANILLA_LEVEL_COVERAGE then
+            level = candidate
+            break
+        end
+    end
+
+    return level, (sum / pixels) / maxLevel
+end
+
+---Snaps a real-unit value onto PF's storage steps, measured from state 1 to the map maximum.
+-- @param number value Real-unit value
+-- @param function conv Internal-to-real converter
+-- @param integer maxInternal
+-- @return number snapped
+local function snapToValueStep(value, conv, maxInternal)
+    if value == nil or maxInternal == nil or maxInternal <= 1 then return value end
+    local low, high = conv(1), conv(maxInternal)
+    if low == nil or high == nil then return value end
+    local step = (high - low) / (maxInternal - 1)
+    if step <= 0 then return value end
+    return low + math.floor((value - low) / step + 0.5) * step
+end
+
+---Resolves a Precision Farming ValueMap's density handle.
+-- @param table valueMap
+-- @param integer defaultNumChannels Channel count for a map declaring none, or nil
+-- @return integer mapId, integer firstChannel, integer numChannels, or nil
+local function getValueMapLayer(valueMap, defaultNumChannels)
+    if valueMap == nil then return nil end
+    local mapId = tonumber(valueMap.bitVectorMap)
+    if mapId == nil then return nil end
+    local firstChannel = math.floor(tonumber(valueMap.firstChannel) or 0)
+    local numChannels = math.floor(tonumber(valueMap.numChannels) or defaultNumChannels or 0)
+    if numChannels <= 0 then return nil end
+    return mapId, firstChannel, numChannels
 end
 
 ---Samples the fruit type + growth state at a world position.
@@ -689,7 +799,6 @@ function RealisticCropRotationManager.new()
     self.repository = RealisticCropRotationRepository.new()
     self.service = RealisticCropRotationService.new(self.repository)
     self.activeCropNameCache = {}
-    self.soilPFCache = {}
     self.isInitialized = false
     return self
 end
@@ -700,7 +809,6 @@ function RealisticCropRotationManager:initialize()
     self.repository:clear()
     self.service:reset()
     self.activeCropNameCache = {}
-    self.soilPFCache = {}
     self.isInitialized = true
 end
 
@@ -709,7 +817,7 @@ function RealisticCropRotationManager:cleanup()
     self.repository:clear()
     self.service:reset()
     self.activeCropNameCache = {}
-    self.soilPFCache = {}
+    self.soilScanMemo = nil
     self.isInitialized = false
 end
 
@@ -1061,130 +1169,63 @@ function RealisticCropRotationManager:sampleFieldState(farmlandId)
     return sampleFieldStateAtField(field)
 end
 
----Vanilla lime level (LIME_LEVEL) for the no-PF fallback.
--- @param integer farmlandId
--- @return integer level
--- @return integer maxLevel
-function RealisticCropRotationManager:getCurrentLimeLevel(farmlandId)
-    local fieldState = self:sampleFieldState(farmlandId)
-    local limeLevel = fieldState ~= nil and fieldState.limeLevel or 0
-
+---Max level of a vanilla field density layer, from the field manager or the ground system.
+-- @param string managerField FieldManager attribute holding the max, or nil
+-- @param integer layer FieldDensityMap entry
+-- @return integer maxLevel At least 1
+local function getFieldLayerMaxLevel(managerField, layer)
     local maxLevel = nil
-    if g_fieldManager ~= nil then
-        maxLevel = tonumber(g_fieldManager.limeLevelMaxValue)
+    if g_fieldManager ~= nil and managerField ~= nil then
+        maxLevel = tonumber(g_fieldManager[managerField])
     end
     if maxLevel == nil and g_currentMission ~= nil and g_currentMission.fieldGroundSystem ~= nil
-        and FieldDensityMap ~= nil and FieldDensityMap.LIME_LEVEL ~= nil
-        and type(g_currentMission.fieldGroundSystem.getMaxValue) == "function" then
+        and layer ~= nil and type(g_currentMission.fieldGroundSystem.getMaxValue) == "function" then
         local ok, value = pcall(g_currentMission.fieldGroundSystem.getMaxValue,
-            g_currentMission.fieldGroundSystem, FieldDensityMap.LIME_LEVEL)
+            g_currentMission.fieldGroundSystem, layer)
         if ok then maxLevel = tonumber(value) end
     end
-
-    limeLevel = math.max(0, math.floor((tonumber(limeLevel) or 0) + 0.5))
-    maxLevel = math.max(1, math.floor((tonumber(maxLevel) or 1) + 0.5))
-    return math.min(limeLevel, maxLevel), maxLevel
+    return math.max(1, math.floor((tonumber(maxLevel) or 1) + 0.5))
 end
 
----Vanilla fertilisation level (SPRAY_LEVEL) for the no-PF fallback.
+---Vanilla lime level (LIME_LEVEL): deepest level covering most of the field.
 -- @param integer farmlandId
 -- @return integer level
 -- @return integer maxLevel
+-- @return number ratio Bar fill, 0..1
+function RealisticCropRotationManager:getCurrentLimeLevel(farmlandId)
+    local layer = FieldDensityMap ~= nil and FieldDensityMap.LIME_LEVEL or nil
+    local maxLevel = getFieldLayerMaxLevel("limeLevelMaxValue", layer)
+
+    local level, ratio = getFieldLayerCoverageLevel(self:getFieldByFarmlandId(farmlandId), layer, maxLevel)
+    if level == nil then
+        local fieldState = self:sampleFieldState(farmlandId)
+        level = math.max(0, math.floor((tonumber(fieldState ~= nil and fieldState.limeLevel or 0) or 0) + 0.5))
+        ratio = level / maxLevel
+    end
+
+    return math.min(level, maxLevel), maxLevel, math.max(0, math.min(1, ratio or 0))
+end
+
+---Vanilla fertilisation level (SPRAY_LEVEL): deepest level covering most of the field.
+-- @param integer farmlandId
+-- @return integer level
+-- @return integer maxLevel
+-- @return number ratio Bar fill, 0..1
 function RealisticCropRotationManager:getCurrentNitrogenLevel(farmlandId)
-    local fieldState = self:sampleFieldState(farmlandId)
-    local sprayLevel = fieldState ~= nil and fieldState.sprayLevel or 0
+    local layer = FieldDensityMap ~= nil and FieldDensityMap.SPRAY_LEVEL or nil
+    local maxLevel = getFieldLayerMaxLevel("sprayLevelMaxValue", layer)
 
-    local maxLevel = nil
-    if g_fieldManager ~= nil then
-        maxLevel = tonumber(g_fieldManager.sprayLevelMaxValue)
-    end
-    if maxLevel == nil and g_currentMission ~= nil and g_currentMission.fieldGroundSystem ~= nil
-        and FieldDensityMap ~= nil and FieldDensityMap.SPRAY_LEVEL ~= nil
-        and type(g_currentMission.fieldGroundSystem.getMaxValue) == "function" then
-        local ok, value = pcall(g_currentMission.fieldGroundSystem.getMaxValue,
-            g_currentMission.fieldGroundSystem, FieldDensityMap.SPRAY_LEVEL)
-        if ok then maxLevel = tonumber(value) end
+    local level, ratio = getFieldLayerCoverageLevel(self:getFieldByFarmlandId(farmlandId), layer, maxLevel)
+    if level == nil then
+        local fieldState = self:sampleFieldState(farmlandId)
+        level = math.max(0, math.floor((tonumber(fieldState ~= nil and fieldState.sprayLevel or 0) or 0) + 0.5))
+        ratio = level / maxLevel
     end
 
-    sprayLevel = math.max(0, math.floor((tonumber(sprayLevel) or 0) + 0.5))
-    maxLevel = math.max(1, math.floor((tonumber(maxLevel) or 1) + 0.5))
-    return math.min(sprayLevel, maxLevel), maxLevel
+    return math.min(level, maxLevel), maxLevel, math.max(0, math.min(1, ratio or 0))
 end
 
 -- Precision Farming soil reads (nitrogen + pH); vanilla fallback otherwise.
-
----Builds an { x, z } sample grid over the field bbox, masked to this farmland's ground so neighbours never leak in.
--- @param table field
--- @param integer farmlandId
--- @param integer customSteps Grid resolution override (optional; defaults to FIELD_SCAN_STEPS)
--- @return table points, or nil when no point is on the farmland
-function RealisticCropRotationManager:buildFieldSampleGrid(field, farmlandId, customSteps)
-    if field == nil then return nil end
-    if type(field.posX) ~= "number" or type(field.posZ) ~= "number" then return nil end
-
-    -- Real field bounding box (covers non-square fields); equal-area square is a fallback.
-    local minX, maxX, minZ, maxZ = fieldPolygonBounds(field)
-    if minX == nil then
-        local areaHa = getFieldAreaHa(field)
-        if areaHa <= 0 then areaHa = 1 end
-        local half = math.sqrt(areaHa * 10000) * 0.5
-        minX, maxX = field.posX - half, field.posX + half
-        minZ, maxZ = field.posZ - half, field.posZ + half
-    end
-
-    local steps = math.max(2, math.floor(tonumber(customSteps) or FIELD_SCAN_STEPS))
-    local stepX = (steps > 1) and ((maxX - minX) / (steps - 1)) or 0
-    local stepZ = (steps > 1) and ((maxZ - minZ) / (steps - 1)) or 0
-
-    local terrainDetailId = g_currentMission ~= nil and g_currentMission.terrainDetailId or nil
-    local canMask = terrainDetailId ~= nil and getDensityAtWorldPos ~= nil
-    local fm = g_farmlandManager
-    local canFarmland = farmlandId ~= nil and fm ~= nil
-        and type(fm.getFarmlandIdAtWorldPosition) == "function"
-
-    local points = {}
-    for i = 0, steps - 1 do
-        for j = 0, steps - 1 do
-            local x, z = minX + i * stepX, minZ + j * stepZ
-            local onField = not canMask or getDensityAtWorldPos(terrainDetailId, x, 0, z) ~= 0
-            if onField and canFarmland then
-                onField = fm:getFarmlandIdAtWorldPosition(x, z) == farmlandId
-            end
-            if onField then
-                points[#points + 1] = { x = x, z = z }
-            end
-        end
-    end
-
-    if #points == 0 then return nil end
-    return points
-end
-
----Returns a cached PF soil record while still within its TTL.
--- @param integer farmlandId
--- @param string kind Cache slot key
--- @return table values, or nil when missing/expired
-function RealisticCropRotationManager:getCachedPFSoil(farmlandId, kind)
-    local cache = self.soilPFCache
-    if cache == nil then return nil end
-    local entry = cache[farmlandId]
-    if entry == nil or entry[kind] == nil then return nil end
-    local nowMs = tonumber(g_time) or 0
-    if (nowMs - (entry[kind .. "Ms"] or 0)) >= SOIL_PF_CACHE_TTL_MS then return nil end
-    return entry[kind]
-end
-
----Stores a PF soil record under a cache slot, stamping the time.
--- @param integer farmlandId
--- @param string kind Cache slot key
--- @param table values
-function RealisticCropRotationManager:setCachedPFSoil(farmlandId, kind, values)
-    if self.soilPFCache == nil then self.soilPFCache = {} end
-    local entry = self.soilPFCache[farmlandId]
-    if entry == nil then entry = {}; self.soilPFCache[farmlandId] = entry end
-    entry[kind] = values
-    entry[kind .. "Ms"] = tonumber(g_time) or 0
-end
 
 ---Resolves PF's g_precisionFarming (sandboxed) via the FS25_precisionFarming env table.
 -- @return table precisionFarming, or nil when PF is absent
@@ -1212,7 +1253,65 @@ function RealisticCropRotationManager:isPFSoilLocked(pf, field)
     return phInternal <= 1
 end
 
----Single cached PF soil scan: actual N (tramlines excluded), pH, and both their targets are sampled live on the same grid.
+---Soil-type pixel counts over a field, keyed by PF's 1-based soil type index.
+-- @param table field
+-- @param table soilMap PF soil map
+-- @param table restrictFilter Optional filter narrowing the counted area
+-- @return table weights soilTypeIndex -> pixel count
+local function getFieldSoilTypeWeights(field, soilMap, restrictFilter)
+    local weights = {}
+    if field == nil or soilMap == nil then return weights end
+
+    local mapId = tonumber(soilMap.bitVectorMap)
+    local firstChannel = tonumber(soilMap.typeFirstChannel)
+    local numChannels = math.floor(tonumber(soilMap.typeNumChannels) or 0)
+    if mapId == nil or firstChannel == nil or numChannels <= 0 then return weights end
+
+    for value = 0, (2 ^ numChannels) - 1 do
+        local filter = makeDensityFilter(mapId, firstChannel, numChannels, DensityValueCompareType.EQUAL, value)
+        local _, pixels = aggregateFieldLayer(field, mapId, firstChannel, numChannels, filter, restrictFilter)
+        if pixels ~= nil and pixels > 0 then
+            weights[value + 1] = pixels
+        end
+    end
+    return weights
+end
+
+---Finds one representative world position per soil type present in a field.
+-- @param table field
+-- @param table soilMap PF soil map
+-- @param integer expectedCount Soil type count to locate before stopping
+-- @return table positions soilTypeIndex -> { x, z }
+local function locateSoilTypePositions(field, soilMap, expectedCount)
+    local positions = {}
+    if field == nil or soilMap == nil or type(soilMap.getTypeIndexAtWorldPos) ~= "function" then return positions end
+
+    local minX, maxX, minZ, maxZ = fieldPolygonBounds(field)
+    if minX == nil then return positions end
+
+    local vertices = getFieldPolygonVertices(field)
+    local steps = SOIL_TYPE_LOCATOR_STEPS
+    local stepX = (maxX - minX) / (steps - 1)
+    local stepZ = (maxZ - minZ) / (steps - 1)
+    local found = 0
+
+    for i = 0, steps - 1 do
+        for j = 0, steps - 1 do
+            local x, z = minX + i * stepX, minZ + j * stepZ
+            if vertices == nil or isPointInPolygon(x, z, vertices) then
+                local ok, index = pcall(soilMap.getTypeIndexAtWorldPos, soilMap, x, z)
+                if ok and type(index) == "number" and positions[index] == nil then
+                    positions[index] = { x = x, z = z }
+                    found = found + 1
+                    if expectedCount ~= nil and found >= expectedCount then return positions end
+                end
+            end
+        end
+    end
+    return positions
+end
+
+---Live PF soil read: field-average N and pH, with targets weighted by the field's soil-type mix.
 -- @param integer farmlandId
 -- @return table record, false when not analysed, or nil when PF is absent
 function RealisticCropRotationManager:scanFieldSoil(farmlandId)
@@ -1224,23 +1323,27 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId)
     local n = tonumber(farmlandId)
     if n == nil then return nil end
 
-    local cached = self:getCachedPFSoil(n, "soil")
-    if cached ~= nil then return cached end
+    -- Same-frame memo: one panel refresh reads nitrogen and pH four times.
+    local nowMs = tonumber(g_time) or 0
+    if self.soilScanMemo == nil or self.soilScanMemo.tMs ~= nowMs then
+        self.soilScanMemo = { tMs = nowMs }
+    end
+    local memo = self.soilScanMemo
+    local memoed = memo[n]
+    if memoed ~= nil then return memoed.value end
 
     local field = self:getFieldByFarmlandId(n)
-    if self:isPFSoilLocked(pf, field) then return false end
-
-    local points = self:buildFieldSampleGrid(field, n)
-    if points == nil then return nil end
+    if field == nil then return nil end
+    if self:isPFSoilLocked(pf, field) then
+        memo[n] = { value = false }
+        return false
+    end
 
     -- Capabilities, resolved once.
-    local nCanLevel  = nMap ~= nil and type(nMap.getLevelAtWorldPos) == "function"
-        and type(nMap.getNitrogenValueFromInternalValue) == "function"
-    local phCanLevel = phMap ~= nil and type(phMap.getLevelAtWorldPos) == "function"
-        and type(phMap.getPhValueFromInternalValue) == "function"
+    local nCanLevel  = nMap ~= nil and type(nMap.getNitrogenValueFromInternalValue) == "function"
+    local phCanLevel = phMap ~= nil and type(phMap.getPhValueFromInternalValue) == "function"
     local phCanOptimal = phMap ~= nil and type(phMap.getOptimalPHValueForSoilTypeIndex) == "function"
     local nCanTargetAtPos = nMap ~= nil and type(nMap.getTargetLevelAtWorldPos) == "function"
-    local canSoilTypeAtPos = soilMap ~= nil and type(soilMap.getTypeIndexAtWorldPos) == "function"
 
     local nMaxInternal = (nMap ~= nil and tonumber(nMap.maxValue)) or 45
     local function nConv(level)
@@ -1251,67 +1354,100 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId)
         return tonumber(phMap:getPhValueFromInternalValue(math.max(0, math.min(level, phMaxInternal))))
     end
 
-    local _, activeFruitTypeIndex = self:getActiveCropInfo(n)
+    local rec = {}
 
-    -- Actual and target sampled on the same grid; N actual skips tramline-adjacent pixels (blurred low), the target doesn't need that filter.
-    local TRAMLINE_MARGIN = 2.5
-    local nActSum, nActCnt, nCropSum, nCropCnt, phActSum, phActCnt = 0, 0, 0, 0, 0, 0
-    local nTargetSum, nTargetCnt, phTargetSum, phTargetCnt = 0, 0, 0, 0
-    local ok = pcall(function()
-        for _, p in ipairs(points) do
-            if phCanLevel then
-                local level = phMap:getLevelAtWorldPos(p.x, p.z)
-                if type(level) == "number" then phActSum = phActSum + level; phActCnt = phActCnt + 1 end
-            end
-            if canSoilTypeAtPos and phCanOptimal then
-                local soilTypeIndex = soilMap:getTypeIndexAtWorldPos(p.x, p.z)
-                if type(soilTypeIndex) == "number" then
-                    local opt = phMap:getOptimalPHValueForSoilTypeIndex(soilTypeIndex)
-                    if type(opt) == "number" and opt > 0 then
-                        if opt > 9 then opt = phConv(opt) end
-                        if type(opt) == "number" then phTargetSum = phTargetSum + opt; phTargetCnt = phTargetCnt + 1 end
-                    end
-                end
-            end
-            if nCanLevel and (activeFruitTypeIndex == nil
-                or getFruitTypeIndexAtWorldPos(p.x, p.z) == activeFruitTypeIndex) then
-                local level = nMap:getLevelAtWorldPos(p.x, p.z)
-                if type(level) == "number" then
-                    nCropSum = nCropSum + level; nCropCnt = nCropCnt + 1
-                    if nCanTargetAtPos then
-                        local target = nMap:getTargetLevelAtWorldPos(p.x, p.z)
-                        if type(target) == "number" then nTargetSum = nTargetSum + target; nTargetCnt = nTargetCnt + 1 end
-                    end
-                    local m = TRAMLINE_MARGIN
-                    if activeFruitTypeIndex == nil
-                        or (getFruitTypeIndexAtWorldPos(p.x + m, p.z) ~= nil
-                            and getFruitTypeIndexAtWorldPos(p.x - m, p.z) ~= nil
-                            and getFruitTypeIndexAtWorldPos(p.x, p.z + m) ~= nil
-                            and getFruitTypeIndexAtWorldPos(p.x, p.z - m) ~= nil) then
-                        nActSum = nActSum + level; nActCnt = nActCnt + 1
-                    end
-                end
+    -- Crop mask, shared by the nitrogen average and its target weighting.
+    local cropFilter = nil
+    local _, activeFruitTypeIndex = self:getActiveCropInfo(n)
+    if activeFruitTypeIndex ~= nil and g_fruitTypeManager ~= nil
+        and type(g_fruitTypeManager.getFruitTypeByIndex) == "function" then
+        local desc = g_fruitTypeManager:getFruitTypeByIndex(activeFruitTypeIndex)
+        local descChannels = desc ~= nil and math.floor(tonumber(desc.numStateChannels) or 0) or 0
+        if desc ~= nil and desc.terrainDataPlaneId ~= nil and descChannels > 0 then
+            cropFilter = makeDensityFilter(desc.terrainDataPlaneId, desc.startStateChannel, descChannels,
+                DensityValueCompareType.BETWEEN, 1, (2 ^ descChannels) - 1)
+        end
+    end
+
+    if phCanLevel then
+        local mapId, firstChannel, numChannels = getValueMapLayer(phMap)
+        if mapId ~= nil then
+            local sum, pixels = aggregateFieldLayer(field, mapId, firstChannel, numChannels)
+            if sum ~= nil and pixels > 0 then
+                rec.phActual = phConv(sum / pixels)
+                rec.phMin, rec.phMax = phConv(0) or 0, phConv(phMaxInternal) or 0
             end
         end
-    end)
-    if not ok then return nil end
-    -- No deep-crop pixels (tiny or fully-tramlined field): fall back to the whole cropped area.
-    if nActCnt == 0 then nActSum, nActCnt = nCropSum, nCropCnt end
-
-    -- Precise averages (no PF-legend snap) so the gauge fills exactly to the requirement.
-    local rec = {}
-    if nCanLevel and nActCnt > 0 then
-        rec.nActual = nConv(nActSum / nActCnt)
-        rec.nTarget = (nTargetCnt > 0) and math.floor(nConv(nTargetSum / nTargetCnt) + 0.5) or nil
-        rec.nMin, rec.nMax = nConv(0) or 0, nConv(nMaxInternal) or 0
-    end
-    if phCanLevel and phActCnt > 0 then
-        rec.phActual = phConv(phActSum / phActCnt)
-        rec.phTarget = (phTargetCnt > 0) and (phTargetSum / phTargetCnt) or nil
-        rec.phMin, rec.phMax = phConv(0) or 0, phConv(phMaxInternal) or 0
     end
 
-    self:setCachedPFSoil(n, "soil", rec)
+    if nCanLevel then
+        local mapId, firstChannel, numChannels = getValueMapLayer(nMap)
+        if mapId ~= nil then
+            -- Tramline pixels dropped via PF's tramline map.
+            local tramlineFilter = nil
+            local tMapId, tFirstChannel, tNumChannels = getValueMapLayer(pf.tramlineMap, 1)
+            if tMapId ~= nil then
+                tramlineFilter = makeDensityFilter(tMapId, tFirstChannel, tNumChannels,
+                    DensityValueCompareType.EQUAL, 0)
+            end
+
+            local sum, pixels = aggregateFieldLayer(field, mapId, firstChannel, numChannels, cropFilter, tramlineFilter)
+            -- Field entirely under tramlines: falls back to the whole cropped area.
+            if sum == nil or pixels == 0 then
+                sum, pixels = aggregateFieldLayer(field, mapId, firstChannel, numChannels, cropFilter)
+            end
+
+            if sum ~= nil and pixels > 0 then
+                rec.nActual = nConv(sum / pixels)
+            end
+        end
+    end
+
+    -- Targets weighted by the field's soil-type pixel counts.
+    local soilWeights = getFieldSoilTypeWeights(field, soilMap)
+    if next(soilWeights) ~= nil then
+        if phCanLevel and phCanOptimal then
+            local sum, total = 0, 0
+            for index, pixels in pairs(soilWeights) do
+                local ok, optimal = pcall(phMap.getOptimalPHValueForSoilTypeIndex, phMap, index)
+                if ok and type(optimal) == "number" and optimal > 0 then
+                    if optimal > 9 then optimal = phConv(optimal) end
+                    if type(optimal) == "number" then
+                        sum, total = sum + optimal * pixels, total + pixels
+                    end
+                end
+            end
+            if total > 0 then
+                rec.phTarget = snapToValueStep(sum / total, phConv, phMaxInternal)
+            end
+        end
+
+        if nCanLevel and nCanTargetAtPos and rec.nActual ~= nil then
+            -- Nitrogen target weighted over the cropped area only.
+            local cropWeights = getFieldSoilTypeWeights(field, soilMap, cropFilter)
+            if next(cropWeights) == nil then cropWeights = soilWeights end
+
+            local expectedCount = 0
+            for _ in pairs(cropWeights) do expectedCount = expectedCount + 1 end
+
+            local positions = locateSoilTypePositions(field, soilMap, expectedCount)
+            local sum, total = 0, 0
+            for index, pixels in pairs(cropWeights) do
+                local position = positions[index]
+                if position ~= nil then
+                    local ok, target = pcall(nMap.getTargetLevelAtWorldPos, nMap, position.x, position.z)
+                    if ok and type(target) == "number" then
+                        sum, total = sum + target * pixels, total + pixels
+                    end
+                end
+            end
+            if total > 0 then
+                rec.nTarget = snapToValueStep(nConv(sum / total), nConv, nMaxInternal)
+            end
+        end
+    end
+
+    memo[n] = { value = rec }
     return rec
 end
 
@@ -1319,13 +1455,11 @@ end
 -- @param integer farmlandId
 -- @return number actual, false when not analysed, or nil when no PF (vanilla fallback)
 -- @return number target Crop requirement, or nil when no crop
--- @return number min
--- @return number max
 function RealisticCropRotationManager:getNitrogenLevel(farmlandId)
     local rec = self:scanFieldSoil(farmlandId)
     if rec == nil or rec == false then return rec end
     if rec.nActual == nil then return nil end
-    return rec.nActual, rec.nTarget, rec.nMin, rec.nMax
+    return rec.nActual, rec.nTarget
 end
 
 ---PF soil pH: field-average real pH + soil-type optimal.
@@ -1340,6 +1474,7 @@ function RealisticCropRotationManager:getPHLevel(farmlandId)
     if rec.phActual == nil then return nil end
     return rec.phActual, rec.phTarget, rec.phMin, rec.phMax
 end
+
 
 ---Localised growth-tier label (growing / ready to prepare / ready to harvest / cut / withered).
 -- @param table fruitType

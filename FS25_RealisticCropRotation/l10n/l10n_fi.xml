@@ -23,8 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Kasvitauti" />
         <e k="rcr_disease_header_active" v="Kasvitauti (%s)" />
         <e k="rcr_treatment_hud_label"  v="Torjunta" />
-        <e k="rcr_treatment_nematicide_remaining" v="%s (%d jaksoa jäljellä)" />
-        <e k="rcr_advice_nematicide_duration" v="Maaperän suoja kestää 3 jaksoa lohkoa kohti; uusi käsittely uusii keston." />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d kuukautta jäljellä)" />
+        <e k="rcr_advice_nematicide_duration" v="Maaperän suoja kestää 3 kuukautta lohkoa kohti; uusi käsittely uusii keston." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Odotettu jäännös +%d (N+1) / +%d (N+2) kg/ha" />
@@ -201,18 +201,18 @@
         <e k="rcr_disease_treatment_none" v="Ei torjuntaa" />
         <e k="rcr_disease_treatment_clubroot" v="Ei mitään (kestävä lajike, kalkitus, viljelykierto)" />
         <e k="rcr_advice_pressure_high_phoma" v="Korkea Phoman paine: vältä rapsia ja sinappia noin 4 vuotta, muokkaa kasvijätteet maahan; syksyn sienitorjunta-aine alttiille lajikkeille." />
-        <e k="rcr_advice_pressure_high_pietin" v="Korkea tyvimädän paine: lisää isäntäkasviksi kelpaamaton katkokasvi (kaura, palkokasvi, öljykasvi); mikään sienitorjunta-aine ei tehoa, vain viljelykierto parantaa." />
-        <e k="rcr_advice_pressure_high_septoriose" v="Korkea Septorian paine: älä viljele vehnää/ohraa viljan jätteillä, valitse kestävä lajike; kosteassa ilmastossa sienitorjunta-aine korrenkasvusta alkaen." />
-        <e k="rcr_advice_pressure_high_rouille" v="Korkea ruosteen paine: kylvä kestävä lajike ja suunnittele sienitorjunta-aine; tarkkaile leutoja kosteita jaksoja." />
-        <e k="rcr_advice_pressure_high_fusariose" v="Korkea punahomeen paine: älä viljele vehnää maissin jälkeen, muokkaa kasvijätteet maahan; sienitorjunta-aine kukinnan aikaan sateella." />
-        <e k="rcr_advice_pressure_high_mildiou" v="Korkea perunaruton paine: istuta kestävä lajike ja suojaa perunat sienitorjunta-aineella heti kun sää viilenee ja kostuu." />
-        <e k="rcr_advice_pressure_high_hernie" v="Korkea möhöjuuren paine: tauko ristikukkaisista yli 6 vuotta, nosta pH:ta kalkitsemalla ja kylvä kestävä lajike; ei kemiallista torjuntaa." />
+        <e k="rcr_advice_pressure_high_takeall" v="Korkea tyvimädän paine: lisää isäntäkasviksi kelpaamaton katkokasvi (kaura, palkokasvi, öljykasvi); mikään sienitorjunta-aine ei tehoa, vain viljelykierto parantaa." />
+        <e k="rcr_advice_pressure_high_septoria" v="Korkea Septorian paine: älä viljele vehnää/ohraa viljan jätteillä, valitse kestävä lajike; kosteassa ilmastossa sienitorjunta-aine korrenkasvusta alkaen." />
+        <e k="rcr_advice_pressure_high_rust" v="Korkea ruosteen paine: kylvä kestävä lajike ja suunnittele sienitorjunta-aine; tarkkaile leutoja kosteita jaksoja." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Korkea punahomeen paine: älä viljele vehnää maissin jälkeen, muokkaa kasvijätteet maahan; sienitorjunta-aine kukinnan aikaan sateella." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Korkea perunaruton paine: istuta kestävä lajike ja suojaa perunat sienitorjunta-aineella heti kun sää viilenee ja kostuu." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Korkea möhöjuuren paine: tauko ristikukkaisista yli 6 vuotta, nosta pH:ta kalkitsemalla ja kylvä kestävä lajike; ei kemiallista torjuntaa." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Kohtalainen Phoman paine: pidennä taukoa rapsista ja silppua sänki." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Kohtalainen tyvimädän paine: vältä kolmatta viljaa peräkkäin." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Kohtalainen Septorian paine: tarkkaile kevätsateita ja kasvijätteiden tartuntaa." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Kohtalainen ruosteen paine: etsi itiöpesäkkeitä leudolla säällä." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Kohtalainen punahomeen paine: harvenna viljaa ja maissia, käsittele kasvijätteet." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Kohtalainen perunaruton paine: seuraa kylmää kosteaa säätä ja hävitä jälkikasvustot." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Kohtalainen möhöjuuren paine: pidennä taukoa rapsista ja tarkkaile hapanta pH:ta." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Kohtalainen tyvimädän paine: vältä kolmatta viljaa peräkkäin." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Kohtalainen Septorian paine: tarkkaile kevätsateita ja kasvijätteiden tartuntaa." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Kohtalainen ruosteen paine: etsi itiöpesäkkeitä leudolla säällä." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Kohtalainen punahomeen paine: harvenna viljaa ja maissia, käsittele kasvijätteet." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Kohtalainen perunaruton paine: seuraa kylmää kosteaa säätä ja hävitä jälkikasvustot." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Kohtalainen möhöjuuren paine: pidennä taukoa rapsista ja tarkkaile hapanta pH:ta." />
     </elements>
 </l10n>

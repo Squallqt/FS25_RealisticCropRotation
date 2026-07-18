@@ -23,8 +23,8 @@
         <e k="rcr_disease_hud_label"    v="病害" />
         <e k="rcr_disease_header_active" v="病害（%s）" />
         <e k="rcr_treatment_hud_label"  v="防治" />
-        <e k="rcr_treatment_nematicide_remaining" v="%s（剩餘%d個週期）" />
-        <e k="rcr_advice_nematicide_duration" v="土壤保護在每塊田地持續3個週期；重新施用會重設持續時間。" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s（剩餘%d個月）" />
+        <e k="rcr_advice_nematicide_duration" v="土壤保護在每塊田地持續3個月；重新施用會重設持續時間。" />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="預期殘留 +%d (N+1) / +%d (N+2) kg/ha" />
@@ -201,18 +201,18 @@
         <e k="rcr_disease_treatment_none" v="無防治" />
         <e k="rcr_disease_treatment_clubroot" v="無（抗病品種、施石灰、輪作）" />
         <e k="rcr_advice_pressure_high_phoma" v="黑脛病壓力高，約四年內避免種植油菜和芥菜，翻埋殘體；感病品種在秋季施用殺菌劑。" />
-        <e k="rcr_advice_pressure_high_pietin" v="全蝕病壓力高，插入一茬非寄主作物（燕麥、豆科、油料作物）打斷；沒有有效殺菌劑，只有輪作才能根治。" />
-        <e k="rcr_advice_pressure_high_septoriose" v="葉枯病壓力高，避免在穀物殘體上種植小麥/大麥，選用耐病品種；在潮濕氣候下從拔節期開始施用殺菌劑。" />
-        <e k="rcr_advice_pressure_high_rouille" v="鏽病壓力高，播種抗病品種並計劃施用殺菌劑；注意溫暖潮濕的時段。" />
-        <e k="rcr_advice_pressure_high_fusariose" v="赤黴病壓力高，避免玉米後種小麥，翻埋殘體；如遇降雨在花期施用殺菌劑。" />
-        <e k="rcr_advice_pressure_high_mildiou" v="晚疫病壓力高，種植抗病品種，一旦轉為涼爽潮濕即用殺菌劑保護馬鈴薯。" />
-        <e k="rcr_advice_pressure_high_hernie" v="根腫病壓力高，十字花科作物間隔超過六年，施石灰提高pH並播種抗病品種；無化學防治方法。" />
+        <e k="rcr_advice_pressure_high_takeall" v="全蝕病壓力高，插入一茬非寄主作物（燕麥、豆科、油料作物）打斷；沒有有效殺菌劑，只有輪作才能根治。" />
+        <e k="rcr_advice_pressure_high_septoria" v="葉枯病壓力高，避免在穀物殘體上種植小麥/大麥，選用耐病品種；在潮濕氣候下從拔節期開始施用殺菌劑。" />
+        <e k="rcr_advice_pressure_high_rust" v="鏽病壓力高，播種抗病品種並計劃施用殺菌劑；注意溫暖潮濕的時段。" />
+        <e k="rcr_advice_pressure_high_fusarium" v="赤黴病壓力高，避免玉米後種小麥，翻埋殘體；如遇降雨在花期施用殺菌劑。" />
+        <e k="rcr_advice_pressure_high_lateblight" v="晚疫病壓力高，種植抗病品種，一旦轉為涼爽潮濕即用殺菌劑保護馬鈴薯。" />
+        <e k="rcr_advice_pressure_high_clubroot" v="根腫病壓力高，十字花科作物間隔超過六年，施石灰提高pH並播種抗病品種；無化學防治方法。" />
         <e k="rcr_advice_pressure_moderate_phoma" v="黑脛病壓力中等，延長油菜的間隔並粉碎殘茬。" />
-        <e k="rcr_advice_pressure_moderate_pietin" v="全蝕病壓力中等，避免連續第三茬穀物。" />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="葉枯病壓力中等，留意春季降雨和殘體中的菌源。" />
-        <e k="rcr_advice_pressure_moderate_rouille" v="鏽病壓力中等，在溫暖天氣下注意偵察是否出現夏孢子堆。" />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="赤黴病壓力中等，拉開穀物與玉米的間隔，管理好殘體。" />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="晚疫病壓力中等，監測涼爽潮濕的天氣並清除自生苗。" />
-        <e k="rcr_advice_pressure_moderate_hernie" v="根腫病壓力中等，延長油菜的間隔並留意酸性pH。" />
+        <e k="rcr_advice_pressure_moderate_takeall" v="全蝕病壓力中等，避免連續第三茬穀物。" />
+        <e k="rcr_advice_pressure_moderate_septoria" v="葉枯病壓力中等，留意春季降雨和殘體中的菌源。" />
+        <e k="rcr_advice_pressure_moderate_rust" v="鏽病壓力中等，在溫暖天氣下注意偵察是否出現夏孢子堆。" />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="赤黴病壓力中等，拉開穀物與玉米的間隔，管理好殘體。" />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="晚疫病壓力中等，監測涼爽潮濕的天氣並清除自生苗。" />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="根腫病壓力中等，延長油菜的間隔並留意酸性pH。" />
     </elements>
 </l10n>

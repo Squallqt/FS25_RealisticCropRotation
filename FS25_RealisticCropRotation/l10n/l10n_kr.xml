@@ -23,8 +23,8 @@
         <e k="rcr_disease_hud_label"    v="병해" />
         <e k="rcr_disease_header_active" v="병해(%s)" />
         <e k="rcr_treatment_hud_label"  v="방제" />
-        <e k="rcr_treatment_nematicide_remaining" v="%s (남은 기간 %d)" />
-        <e k="rcr_advice_nematicide_duration" v="토양 보호는 밭마다 3기간 지속되며 재살포하면 기간이 갱신됩니다." />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d개월 남음)" />
+        <e k="rcr_advice_nematicide_duration" v="토양 보호는 밭마다 3개월 지속되며 재살포하면 기간이 갱신됩니다." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="예상 잔류량 +%d (N+1) / +%d (N+2) kg/ha" />
@@ -201,18 +201,18 @@
         <e k="rcr_disease_treatment_none" v="방제 없음" />
         <e k="rcr_disease_treatment_clubroot" v="없음(저항성 품종, 석회 시용, 윤작)" />
         <e k="rcr_advice_pressure_high_phoma" v="검은다리병 압력 높음: 유채와 겨자를 약 4년간 피하고 잔재물을 매몰하며, 감수성 품종에는 가을에 살균제를 살포한다." />
-        <e k="rcr_advice_pressure_high_pietin" v="뿌리썩음병 압력 높음: 비기주 작물(귀리, 콩과, 유지작물)을 넣어 끊는다. 효과적인 살균제가 없으며 오직 윤작으로만 치유된다." />
-        <e k="rcr_advice_pressure_high_septoriose" v="잎마름병 압력 높음: 곡류 잔재물 위에 밀/보리를 심지 말고 내병성 품종을 고르며, 습한 기후에서는 절간신장기부터 살균제를 살포한다." />
-        <e k="rcr_advice_pressure_high_rouille" v="녹병 압력 높음: 저항성 품종을 파종하고 살균제를 계획하며, 온화하고 습한 시기를 주시한다." />
-        <e k="rcr_advice_pressure_high_fusariose" v="붉은곰팡이병 압력 높음: 옥수수 뒤에 밀을 심지 말고 잔재물을 매몰하며, 비가 오면 개화기에 살균제를 살포한다." />
-        <e k="rcr_advice_pressure_high_mildiou" v="역병 압력 높음: 저항성 품종을 심고, 서늘하고 습해지는 즉시 살균제로 감자를 보호한다." />
-        <e k="rcr_advice_pressure_high_hernie" v="뿌리혹병 압력 높음: 배추과 작물 휴지기를 6년 넘게 두고, 석회로 pH를 높이며 저항성 품종을 파종한다. 화학적 방제법이 없다." />
+        <e k="rcr_advice_pressure_high_takeall" v="뿌리썩음병 압력 높음: 비기주 작물(귀리, 콩과, 유지작물)을 넣어 끊는다. 효과적인 살균제가 없으며 오직 윤작으로만 치유된다." />
+        <e k="rcr_advice_pressure_high_septoria" v="잎마름병 압력 높음: 곡류 잔재물 위에 밀/보리를 심지 말고 내병성 품종을 고르며, 습한 기후에서는 절간신장기부터 살균제를 살포한다." />
+        <e k="rcr_advice_pressure_high_rust" v="녹병 압력 높음: 저항성 품종을 파종하고 살균제를 계획하며, 온화하고 습한 시기를 주시한다." />
+        <e k="rcr_advice_pressure_high_fusarium" v="붉은곰팡이병 압력 높음: 옥수수 뒤에 밀을 심지 말고 잔재물을 매몰하며, 비가 오면 개화기에 살균제를 살포한다." />
+        <e k="rcr_advice_pressure_high_lateblight" v="역병 압력 높음: 저항성 품종을 심고, 서늘하고 습해지는 즉시 살균제로 감자를 보호한다." />
+        <e k="rcr_advice_pressure_high_clubroot" v="뿌리혹병 압력 높음: 배추과 작물 휴지기를 6년 넘게 두고, 석회로 pH를 높이며 저항성 품종을 파종한다. 화학적 방제법이 없다." />
         <e k="rcr_advice_pressure_moderate_phoma" v="검은다리병 압력 보통: 유채 휴지기를 늘리고 그루터기를 분쇄한다." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="뿌리썩음병 압력 보통: 연속 세 번째 곡류를 피한다." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="잎마름병 압력 보통: 봄비와 잔재물의 전염원을 주시한다." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="녹병 압력 보통: 온화한 날씨에 여름포자퇴(병반) 발생을 살핀다." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="붉은곰팡이병 압력 보통: 곡류와 옥수수의 간격을 넓히고 잔재물을 관리한다." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="역병 압력 보통: 서늘하고 습한 날씨를 관찰하고 자생주를 제거한다." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="뿌리혹병 압력 보통: 유채 휴지기를 늘리고 산성 pH를 주시한다." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="뿌리썩음병 압력 보통: 연속 세 번째 곡류를 피한다." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="잎마름병 압력 보통: 봄비와 잔재물의 전염원을 주시한다." />
+        <e k="rcr_advice_pressure_moderate_rust" v="녹병 압력 보통: 온화한 날씨에 여름포자퇴(병반) 발생을 살핀다." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="붉은곰팡이병 압력 보통: 곡류와 옥수수의 간격을 넓히고 잔재물을 관리한다." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="역병 압력 보통: 서늘하고 습한 날씨를 관찰하고 자생주를 제거한다." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="뿌리혹병 압력 보통: 유채 휴지기를 늘리고 산성 pH를 주시한다." />
     </elements>
 </l10n>

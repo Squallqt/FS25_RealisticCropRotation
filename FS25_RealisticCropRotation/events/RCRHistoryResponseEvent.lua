@@ -5,21 +5,6 @@ local RCRHistoryResponseEvent_mt = Class(RCRHistoryResponseEvent, Event)
 
 InitEventClass(RCRHistoryResponseEvent, "RCRHistoryResponseEvent")
 
----Counts farmlands that have history and the total number of entries.
--- @param table history Map of farmlandId -> entry list
--- @return integer farmlandCount, entryCount Farmlands with history, total entries
-local function countHistory(history)
-    local farmlandCount = 0
-    local entryCount = 0
-    for _, entries in pairs(history or {}) do
-        if entries ~= nil and #entries > 0 then
-            farmlandCount = farmlandCount + 1
-            entryCount = entryCount + #entries
-        end
-    end
-    return farmlandCount, entryCount
-end
-
 ---Creates an empty event instance for deserialization.
 -- @return RCRHistoryResponseEvent instance Empty event
 function RCRHistoryResponseEvent.emptyNew()

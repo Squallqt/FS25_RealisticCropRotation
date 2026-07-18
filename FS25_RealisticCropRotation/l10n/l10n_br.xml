@@ -23,8 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Doença" />
         <e k="rcr_disease_header_active" v="Doença (%s)" />
         <e k="rcr_treatment_hud_label"  v="Tratamento" />
-        <e k="rcr_treatment_nematicide_remaining" v="%s (%d períodos restantes)" />
-        <e k="rcr_advice_nematicide_duration" v="A proteção do solo dura 3 períodos por campo; uma nova aplicação renova a duração." />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d meses restantes)" />
+        <e k="rcr_advice_nematicide_duration" v="A proteção do solo dura 3 meses por campo; uma nova aplicação renova a duração." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Resíduo previsto +%d (N+1) / +%d (N+2) kg/ha" />
@@ -201,18 +201,18 @@
         <e k="rcr_disease_treatment_none" v="Nenhum tratamento" />
         <e k="rcr_disease_treatment_clubroot" v="Nenhum (variedade resistente, calagem, rotação)" />
         <e k="rcr_advice_pressure_high_phoma" v="Forte pressão de phoma: evite canola e mostarda por ~4 anos, incorpore os restos culturais; fungicida de outono em variedades suscetíveis." />
-        <e k="rcr_advice_pressure_high_pietin" v="Forte pressão de mal-do-pé: insira um corte não hospedeiro (aveia, leguminosa, oleaginosa); nenhum fungicida eficaz, só a rotação resolve." />
-        <e k="rcr_advice_pressure_high_septoriose" v="Forte pressão de septoriose: evite trigo/cevada sobre restos de cereais, escolha uma variedade tolerante; fungicida a partir do alongamento do colmo em clima úmido." />
-        <e k="rcr_advice_pressure_high_rouille" v="Forte pressão de ferrugem: semeie uma variedade resistente e planeje um fungicida; fique atento aos períodos amenos e úmidos." />
-        <e k="rcr_advice_pressure_high_fusariose" v="Forte pressão de giberela: evite trigo depois de milho, incorpore os restos culturais; fungicida na floração se chover." />
-        <e k="rcr_advice_pressure_high_mildiou" v="Forte pressão de requeima: plante uma variedade resistente e proteja as batatas com fungicida assim que o tempo ficar fresco e úmido." />
-        <e k="rcr_advice_pressure_high_hernie" v="Forte pressão de hérnia: intervalo entre brássicas superior a 6 anos, faça calagem para elevar o pH e semeie uma variedade resistente; sem tratamento químico." />
+        <e k="rcr_advice_pressure_high_takeall" v="Forte pressão de mal-do-pé: insira um corte não hospedeiro (aveia, leguminosa, oleaginosa); nenhum fungicida eficaz, só a rotação resolve." />
+        <e k="rcr_advice_pressure_high_septoria" v="Forte pressão de septoriose: evite trigo/cevada sobre restos de cereais, escolha uma variedade tolerante; fungicida a partir do alongamento do colmo em clima úmido." />
+        <e k="rcr_advice_pressure_high_rust" v="Forte pressão de ferrugem: semeie uma variedade resistente e planeje um fungicida; fique atento aos períodos amenos e úmidos." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Forte pressão de giberela: evite trigo depois de milho, incorpore os restos culturais; fungicida na floração se chover." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Forte pressão de requeima: plante uma variedade resistente e proteja as batatas com fungicida assim que o tempo ficar fresco e úmido." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Forte pressão de hérnia: intervalo entre brássicas superior a 6 anos, faça calagem para elevar o pH e semeie uma variedade resistente; sem tratamento químico." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Pressão de phoma moderada: alongue o intervalo da canola e triture a palhada." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Pressão de mal-do-pé moderada: evite o terceiro cereal seguido." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Pressão de septoriose moderada: monitore as chuvas de primavera e o inóculo dos restos culturais." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Pressão de ferrugem moderada: observe o aparecimento de pústulas com tempo ameno." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Pressão de giberela moderada: espace cereais e milho, faça o manejo dos restos culturais." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Pressão de requeima moderada: monitore o tempo fresco e úmido e destrua as plantas voluntárias." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Pressão de hérnia moderada: alongue o intervalo da canola e fique atento ao pH ácido." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Pressão de mal-do-pé moderada: evite o terceiro cereal seguido." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Pressão de septoriose moderada: monitore as chuvas de primavera e o inóculo dos restos culturais." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Pressão de ferrugem moderada: observe o aparecimento de pústulas com tempo ameno." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Pressão de giberela moderada: espace cereais e milho, faça o manejo dos restos culturais." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Pressão de requeima moderada: monitore o tempo fresco e úmido e destrua as plantas voluntárias." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Pressão de hérnia moderada: alongue o intervalo da canola e fique atento ao pH ácido." />
     </elements>
 </l10n>

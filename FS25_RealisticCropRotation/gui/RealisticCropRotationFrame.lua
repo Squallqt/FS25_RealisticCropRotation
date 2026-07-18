@@ -70,14 +70,10 @@ RealisticCropRotationFrame.SCORE_NO_RESIDUE_CAP = 79 -- no N returned: "excellen
 RealisticCropRotationFrame.SCORE_MONOCULTURE_CAP = 30 -- single-family plan: not a rotation, stays "poor"
 RealisticCropRotationFrame.SCORE_DISEASE_PENALTY_PER_YEAR = 10 -- shared-pathogen spacing
 
--- Gauge tolerance: PF's own map legend can't show a gap this small, so treat it as "reached".
-RealisticCropRotationFrame.PH_GAUGE_TOLERANCE = 0.1        -- pH units
-RealisticCropRotationFrame.N_GAUGE_TOLERANCE_RATIO = 0.03  -- fraction of the crop's N requirement
-
 -- Gap between a soil row's title and its gauge track.
 RealisticCropRotationFrame.SOIL_ROW_TITLE_GAP_PX = 16
 
--- Global overview crop badge layout (pixel values, converted at runtime); centers the icon+text pair in the badge and leaves a safety margin for the text to avoid clipping.
+-- Global overview crop badge layout, in pixels, converted at runtime.
 RealisticCropRotationFrame.GROUP_BADGE_Y          = 18
 RealisticCropRotationFrame.GROUP_BADGE_W          = 300
 RealisticCropRotationFrame.GROUP_BADGE_H          = 30
@@ -721,7 +717,7 @@ end
 -- @param table trackElement
 -- @param table fillElement
 -- @param table stateLabelElement
--- @param number alignWidth Width to align the track start to (the wider of this row's and its sibling row's title), instead of this row's own title width; nil uses this row's own width.
+-- @param number alignWidth Width to align the track start to, or nil for this row's own title width
 -- @return number trackWidth normalized, or nil
 function RealisticCropRotationFrame:layoutSoilGaugeTrack(titleElement, titleText, trackElement, fillElement, stateLabelElement, alignWidth)
     if titleElement == nil or trackElement == nil then return nil end
@@ -1335,10 +1331,11 @@ end
 
 ---Resolves the current timeline slot: active crop, else field status, else "no crop".
 -- @param integer farmlandId
+-- @param string statusLabel Field status resolved by the caller, or nil
 -- @return string cropName, or nil
 -- @return string family
 -- @return string fallbackText Status/empty text when there is no crop, or nil
-function RealisticCropRotationFrame:getCurrentSlotData(farmlandId)
+function RealisticCropRotationFrame:getCurrentSlotData(farmlandId, statusLabel)
     local mgr = self:getManager()
     local activeCropName = nil
     if mgr ~= nil and type(mgr.getActiveCropName) == "function" then
@@ -1354,10 +1351,6 @@ function RealisticCropRotationFrame:getCurrentSlotData(farmlandId)
         return activeCropName, self:getCropFamily(activeCropName), nil
     end
 
-    local statusLabel = nil
-    if mgr ~= nil and type(mgr.getCurrentFieldStatus) == "function" then
-        statusLabel = mgr:getCurrentFieldStatus(farmlandId)
-    end
     if statusLabel ~= nil and statusLabel ~= "" then
         return nil, "UNKNOWN", statusLabel
     end
@@ -1391,8 +1384,14 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
 
     local history = (mgr ~= nil) and (mgr:getHistory(farmlandId) or {}) or {}
 
-    -- Slot 1 = current crop (always shown); slots 2..5 = history N-1..N-4. History is dense/newest-first, so filled past slots form a contiguous run after the current card.
-    local currentCropName, currentFamily, currentFallbackText = self:getCurrentSlotData(farmlandId)
+    -- Single field-status read, passed to the timeline slot and the field card.
+    local statusLabel, statusKind, statusIndex = nil, nil, nil
+    if mgr ~= nil and type(mgr.getCurrentFieldStatus) == "function" then
+        statusLabel, statusKind, statusIndex = mgr:getCurrentFieldStatus(farmlandId)
+    end
+
+    -- Slot 1 = current crop, slots 2..5 = history N-1..N-4.
+    local currentCropName, currentFamily, currentFallbackText = self:getCurrentSlotData(farmlandId, statusLabel)
     local currentBadgeKey = currentFamily == "COVER" and "rcr_cover_crop" or nil
 
     -- The timeline never reaches further back than the player plans ahead: a 3-year plan stops at N-3. An unplanned field keeps the full 4-year depth.
@@ -1423,7 +1422,7 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
     self:updateNitrogenGauge(farmlandId, sharedRowTitleWidth)
     self:updateSoilPHGauge(farmlandId, sharedRowTitleWidth)
     self:updateAdvice(currentFamily, farmlandId, currentCropName)
-    self:updateFieldCard(farmlandId)
+    self:updateFieldCard(farmlandId, statusLabel, statusKind, statusIndex)
 end
 
 -- Timeline slot (slotId 1..5) — history tab
@@ -1526,7 +1525,7 @@ function RealisticCropRotationFrame:layoutHistoryTimeline(visibleCount)
     )
     local offset = pitch * (slotCount - visibleCount) * 0.5
 
-    -- Snap the shift to a whole screen pixel: every card then keeps the sub-pixel phase it renders at when the row is full, so the 1px borders stay flush with the card edges.
+    -- Shift snapped to a whole screen pixel, keeping the 1px borders flush.
     local screenPixel = g_pixelSizeX
     if screenPixel ~= nil and screenPixel > 0 then
         offset = math.floor(offset / screenPixel + 0.5) * screenPixel
@@ -1599,12 +1598,9 @@ function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId, sharedRowTit
             labelKey = "rcr_n_average_pf"
             stateText = string.format(self.i18n:getText("rcr_n_average_value"), actualN)
             if targetN ~= nil and targetN > 0 then
-                -- Crop planted: fill against the requirement, full once reached (within tolerance).
-                local tolerance = targetN * RealisticCropRotationFrame.N_GAUGE_TOLERANCE_RATIO
-                ratio = math.min((actualN + tolerance) / targetN, 1)
-                -- Bar is full within tolerance: say so instead of a "need" figure actual already exceeds.
-                valueText = (ratio >= 1) and self.i18n:getText("rcr_n_full")
-                    or string.format(self.i18n:getText("rcr_n_crop_need"), targetN)
+                -- Crop planted: fills against the requirement.
+                ratio = math.min(actualN / targetN, 1)
+                valueText = string.format(self.i18n:getText("rcr_n_crop_need"), targetN)
             else
                 -- No crop planted: empty gauge, just the soil's real average N.
                 ratio = 0
@@ -1616,13 +1612,15 @@ function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId, sharedRowTit
     if stateText == nil then
         local nLevel = 0
         local maxLevel = 1
+        local fillRatio = nil
         if mgr ~= nil and mgr.getCurrentNitrogenLevel ~= nil then
-            nLevel, maxLevel = mgr:getCurrentNitrogenLevel(farmlandId)
+            nLevel, maxLevel, fillRatio = mgr:getCurrentNitrogenLevel(farmlandId)
         end
 
         nLevel = tonumber(nLevel) or 0
         maxLevel = math.max(1, tonumber(maxLevel) or 1)
-        ratio = nLevel / maxLevel
+        -- Bar follows real coverage, the label states the level the field actually reached.
+        ratio = tonumber(fillRatio) or (nLevel / maxLevel)
         valueText = string.format("%d / %d", nLevel, maxLevel)
 
         if nLevel <= 0 then
@@ -1676,13 +1674,10 @@ function RealisticCropRotationFrame:updateSoilPHGauge(farmlandId, sharedRowTitle
             maxPH = tonumber(maxPH) or 0
             labelKey = "rcr_lime_average_pf"
             if targetPH ~= nil then
-                -- Full once reached (within tolerance): PF's own map legend can't show a smaller gap.
-                local tol = RealisticCropRotationFrame.PH_GAUGE_TOLERANCE
-                ratio = targetPH > 0 and math.min((actualPH + tol) / targetPH, 1) or 0
+                -- Fills against the soil's optimal pH.
+                ratio = targetPH > 0 and math.min(actualPH / targetPH, 1) or 0
                 stateText = string.format(self.i18n:getText("rcr_lime_average_value"), actualPH)
-                -- Bar is full within tolerance: say so instead of a target figure actual already meets.
-                valueText = (ratio >= 1) and self.i18n:getText("rcr_lime_full")
-                    or string.format(self.i18n:getText("rcr_lime_target"), targetPH)
+                valueText = string.format(self.i18n:getText("rcr_lime_target"), targetPH)
             else
                 ratio = maxPH > minPH and ((actualPH - minPH) / (maxPH - minPH)) or 0
                 stateText = string.format(self.i18n:getText("rcr_lime_average_value"), actualPH)
@@ -1693,13 +1688,15 @@ function RealisticCropRotationFrame:updateSoilPHGauge(farmlandId, sharedRowTitle
     if stateText == nil then
         local limeLevel = 0
         local maxLevel = 1
+        local fillRatio = nil
         if mgr ~= nil and mgr.getCurrentLimeLevel ~= nil then
-            limeLevel, maxLevel = mgr:getCurrentLimeLevel(farmlandId)
+            limeLevel, maxLevel, fillRatio = mgr:getCurrentLimeLevel(farmlandId)
         end
 
         limeLevel = tonumber(limeLevel) or 0
         maxLevel = math.max(1, tonumber(maxLevel) or 1)
-        ratio = limeLevel / maxLevel
+        -- Bar follows real coverage, the label states the level the field actually reached.
+        ratio = tonumber(fillRatio) or (limeLevel / maxLevel)
         valueText = string.format("%d / %d", limeLevel, maxLevel)
 
         if limeLevel <= 0 then
@@ -1733,7 +1730,10 @@ end
 
 ---Updates the field card: required soil work, weed line, growth stage, and active disease.
 -- @param integer farmlandId
-function RealisticCropRotationFrame:updateFieldCard(farmlandId)
+-- @param string actionLabel Field status label resolved by the caller, or nil
+-- @param string statusKind "soil" or "ground", or nil
+-- @param integer statusIndex Native state index, or nil
+function RealisticCropRotationFrame:updateFieldCard(farmlandId, actionLabel, statusKind, statusIndex)
     local mgr = self:getManager()
     local info = nil
     if mgr ~= nil and mgr.getFieldCropInfo ~= nil then
@@ -1746,11 +1746,6 @@ function RealisticCropRotationFrame:updateFieldCard(farmlandId)
     local weedText  = hasWeed and info.weedActionText or "-"
     local stageText = hasStage and info.growthStageText or "-"
 
-    -- Single source (getCurrentFieldStatus), shared with the sidebar, so the same state always gets the same label.
-    local actionLabel, statusKind, statusIndex = nil, nil, nil
-    if mgr ~= nil and type(mgr.getCurrentFieldStatus) == "function" then
-        actionLabel, statusKind, statusIndex = mgr:getCurrentFieldStatus(farmlandId)
-    end
     local hasAction = actionLabel ~= nil and actionLabel ~= ""
     local indices = MapOverlayGenerator ~= nil and MapOverlayGenerator.SOIL_STATE_INDEX or nil
     local isPriority = hasAction and statusKind == "soil" and indices ~= nil
@@ -1803,8 +1798,7 @@ function RealisticCropRotationFrame:updateFieldCard(farmlandId)
             RealisticCropRotation.disease:getDisplayName(worstDiseaseGroup)
         )
 
-        -- Treatment enum (FUNGICIDE | NEMATICIDE | NONE) maps to the same short fillType labels
-        -- already used for the sprayer tanks, so the KPI value stays a single short word.
+        -- Treatment enum mapped to the sprayer tanks' short fillType labels.
         local treatment = RealisticCropRotation.disease:getTreatment(worstDiseaseGroup)
         local treatmentKey = (treatment == "FUNGICIDE" and "rcr_fillType_fungicide")
             or (treatment == "NEMATICIDE" and "rcr_fillType_nematicide")

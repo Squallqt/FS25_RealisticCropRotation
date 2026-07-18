@@ -386,7 +386,7 @@ local function perlinAreaFraction(field, seed, threshold, octaves, frequency, pe
     return (hits or 0) / total
 end
 
----Binary-searches the Perlin GREATER threshold selecting `targetFraction` of the field; deterministic, so server and clients derive the same cut from the same seed + target.
+---Binary-searches the deterministic Perlin GREATER threshold selecting `targetFraction` of the field.
 -- @param table field
 -- @param integer seed
 -- @param number targetFraction

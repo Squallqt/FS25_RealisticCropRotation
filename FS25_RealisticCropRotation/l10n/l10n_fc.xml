@@ -23,8 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Maladie" />
         <e k="rcr_disease_header_active" v="Maladie (%s)" />
         <e k="rcr_treatment_hud_label"  v="Traitement" />
-        <e k="rcr_treatment_nematicide_remaining" v="%s (%d périodes restantes)" />
-        <e k="rcr_advice_nematicide_duration" v="La protection du sol dure 3 périodes par champ ; une nouvelle application renouvelle cette durée." />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d mois restants)" />
+        <e k="rcr_advice_nematicide_duration" v="La protection du sol dure 3 mois par champ ; une nouvelle application renouvelle cette durée." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Reliquat à venir +%d (N+1) / +%d (N+2) kg/ha" />
@@ -201,18 +201,18 @@
         <e k="rcr_disease_treatment_none" v="Aucun traitement" />
         <e k="rcr_disease_treatment_clubroot" v="Aucun (variété résistante, chaulage, rotation)" />
         <e k="rcr_advice_pressure_high_phoma" v="Forte pression phoma : évitez canola et moutarde ~4 ans, enfouissez les résidus ; fongicide d'automne sur variété sensible." />
-        <e k="rcr_advice_pressure_high_pietin" v="Forte pression piétin-échaudage : insérez une coupure non-hôte (avoine, légumineuse, oléagineux) ; aucun fongicide efficace, seule la rotation guérit." />
-        <e k="rcr_advice_pressure_high_septoriose" v="Forte pression septoriose : évitez blé/orge sur résidus de céréales, choisissez une variété tolérante ; fongicide dès la montaison en climat humide." />
-        <e k="rcr_advice_pressure_high_rouille" v="Forte pression rouille : semez une variété résistante et prévoyez un fongicide ; surveillez les périodes douces et humides." />
-        <e k="rcr_advice_pressure_high_fusariose" v="Forte pression fusariose : évitez blé après maïs, enfouissez les résidus ; fongicide à la floraison si pluie." />
-        <e k="rcr_advice_pressure_high_mildiou" v="Forte pression mildiou : plantez une variété résistante et protégez la pomme de terre au fongicide dès qu'il fait frais et humide." />
-        <e k="rcr_advice_pressure_high_hernie" v="Forte pression hernie : retour des brassicacées &gt; 6 ans, chaulez pour remonter le pH et semez une variété résistante ; aucun traitement chimique." />
+        <e k="rcr_advice_pressure_high_takeall" v="Forte pression piétin-échaudage : insérez une coupure non-hôte (avoine, légumineuse, oléagineux) ; aucun fongicide efficace, seule la rotation guérit." />
+        <e k="rcr_advice_pressure_high_septoria" v="Forte pression septoriose : évitez blé/orge sur résidus de céréales, choisissez une variété tolérante ; fongicide dès la montaison en climat humide." />
+        <e k="rcr_advice_pressure_high_rust" v="Forte pression rouille : semez une variété résistante et prévoyez un fongicide ; surveillez les périodes douces et humides." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Forte pression fusariose : évitez blé après maïs, enfouissez les résidus ; fongicide à la floraison si pluie." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Forte pression mildiou : plantez une variété résistante et protégez la pomme de terre au fongicide dès qu'il fait frais et humide." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Forte pression hernie : retour des brassicacées &gt; 6 ans, chaulez pour remonter le pH et semez une variété résistante ; aucun traitement chimique." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Pression phoma modérée : allongez le retour du canola et broyez les résidus." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Pression piétin modérée : évitez la troisième céréale d'affilée." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Pression septoriose modérée : surveillez les pluies de printemps et l'inoculum des résidus." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Pression rouille modérée : surveillez l'apparition des pustules par temps doux." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Pression fusariose modérée : espacez céréales et maïs, gérez les résidus." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Pression mildiou modérée : surveillez la météo fraîche et humide et détruisez les repousses." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Pression hernie modérée : allongez le retour du canola et surveillez le pH acide." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Pression piétin modérée : évitez la troisième céréale d'affilée." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Pression septoriose modérée : surveillez les pluies de printemps et l'inoculum des résidus." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Pression rouille modérée : surveillez l'apparition des pustules par temps doux." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Pression fusariose modérée : espacez céréales et maïs, gérez les résidus." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Pression mildiou modérée : surveillez la météo fraîche et humide et détruisez les repousses." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Pression hernie modérée : allongez le retour du canola et surveillez le pH acide." />
     </elements>
 </l10n>

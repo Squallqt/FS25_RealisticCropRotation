@@ -761,11 +761,6 @@ function RealisticCropRotationSoilUptake.consume(session)
         end
     end
 
-    if (pfNitrogenUpdated or pfPHUpdated) and session.manager ~= nil
-        and type(session.manager.soilPFCache) == "table"
-        and session.farmlandId ~= nil then
-        session.manager.soilPFCache[session.farmlandId] = nil
-    end
 end
 
 function RealisticCropRotationSoilUptake.delete()

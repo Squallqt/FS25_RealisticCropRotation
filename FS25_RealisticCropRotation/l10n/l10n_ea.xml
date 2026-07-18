@@ -23,8 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Enfermedad" />
         <e k="rcr_disease_header_active" v="Enfermedad (%s)" />
         <e k="rcr_treatment_hud_label"  v="Tratamiento" />
-        <e k="rcr_treatment_nematicide_remaining" v="%s (%d períodos restantes)" />
-        <e k="rcr_advice_nematicide_duration" v="La protección del suelo dura 3 períodos por campo; una nueva aplicación renueva la duración." />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d meses restantes)" />
+        <e k="rcr_advice_nematicide_duration" v="La protección del suelo dura 3 meses por campo; una nueva aplicación renueva la duración." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Residuo previsto +%d (N+1) / +%d (N+2) kg/ha" />
@@ -201,18 +201,18 @@
         <e k="rcr_disease_treatment_none" v="Ningún tratamiento" />
         <e k="rcr_disease_treatment_clubroot" v="Ninguno (variedad resistente, encalado, rotación)" />
         <e k="rcr_advice_pressure_high_phoma" v="Alta presión de phoma: evita canola y mostaza ~4 años, incorpora los rastrojos; fungicida otoñal en variedades susceptibles." />
-        <e k="rcr_advice_pressure_high_pietin" v="Alta presión de mal del pie: intercala un corte no hospedante (avena, leguminosa, oleaginosa); ningún fungicida eficaz, solo la rotación lo cura." />
-        <e k="rcr_advice_pressure_high_septoriose" v="Alta presión de septoriosis: evita trigo/cebada sobre rastrojos de cereal, elige una variedad tolerante; fungicida desde el encañado en clima húmedo." />
-        <e k="rcr_advice_pressure_high_rouille" v="Alta presión de roya: siembra una variedad resistente y planifica un fungicida; monitorea los periodos templados y húmedos." />
-        <e k="rcr_advice_pressure_high_fusariose" v="Alta presión de fusariosis: evita trigo después de maíz, incorpora los rastrojos; fungicida en floración si llueve." />
-        <e k="rcr_advice_pressure_high_mildiou" v="Alta presión de tizón tardío: planta una variedad resistente y protege las papas con fungicida apenas el clima se vuelve fresco y húmedo." />
-        <e k="rcr_advice_pressure_high_hernie" v="Alta presión de hernia: intervalo entre brasicáceas superior a 6 años, encala para subir el pH y siembra una variedad resistente; sin tratamiento químico." />
+        <e k="rcr_advice_pressure_high_takeall" v="Alta presión de mal del pie: intercala un corte no hospedante (avena, leguminosa, oleaginosa); ningún fungicida eficaz, solo la rotación lo cura." />
+        <e k="rcr_advice_pressure_high_septoria" v="Alta presión de septoriosis: evita trigo/cebada sobre rastrojos de cereal, elige una variedad tolerante; fungicida desde el encañado en clima húmedo." />
+        <e k="rcr_advice_pressure_high_rust" v="Alta presión de roya: siembra una variedad resistente y planifica un fungicida; monitorea los periodos templados y húmedos." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Alta presión de fusariosis: evita trigo después de maíz, incorpora los rastrojos; fungicida en floración si llueve." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Alta presión de tizón tardío: planta una variedad resistente y protege las papas con fungicida apenas el clima se vuelve fresco y húmedo." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Alta presión de hernia: intervalo entre brasicáceas superior a 6 años, encala para subir el pH y siembra una variedad resistente; sin tratamiento químico." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Presión de phoma moderada: alarga el intervalo de la canola y tritura el rastrojo." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Presión de mal del pie moderada: evita el tercer cereal seguido." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Presión de septoriosis moderada: monitorea las lluvias de primavera y el inóculo de los rastrojos." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Presión de roya moderada: explora la aparición de pústulas con clima templado." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Presión de fusariosis moderada: espacia cereales y maíz, maneja los rastrojos." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Presión de tizón tardío moderada: monitorea el clima fresco y húmedo y destruye los rebrotes espontáneos." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Presión de hernia moderada: alarga el intervalo de la canola y vigila el pH ácido." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Presión de mal del pie moderada: evita el tercer cereal seguido." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Presión de septoriosis moderada: monitorea las lluvias de primavera y el inóculo de los rastrojos." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Presión de roya moderada: explora la aparición de pústulas con clima templado." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Presión de fusariosis moderada: espacia cereales y maíz, maneja los rastrojos." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Presión de tizón tardío moderada: monitorea el clima fresco y húmedo y destruye los rebrotes espontáneos." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Presión de hernia moderada: alarga el intervalo de la canola y vigila el pH ácido." />
     </elements>
 </l10n>

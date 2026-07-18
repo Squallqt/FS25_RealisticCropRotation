@@ -23,8 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Sykdom" />
         <e k="rcr_disease_header_active" v="Sykdom (%s)" />
         <e k="rcr_treatment_hud_label"  v="Behandling" />
-        <e k="rcr_treatment_nematicide_remaining" v="%s (%d perioder gjenstår)" />
-        <e k="rcr_advice_nematicide_duration" v="Jordbeskyttelsen varer 3 perioder per jorde; ny behandling fornyer varigheten." />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d måneder gjenstår)" />
+        <e k="rcr_advice_nematicide_duration" v="Jordbeskyttelsen varer 3 måneder per jorde; ny behandling fornyer varigheten." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Forventet rest +%d (N+1) / +%d (N+2) kg/ha" />
@@ -201,18 +201,18 @@
         <e k="rcr_disease_treatment_none" v="Ingen behandling" />
         <e k="rcr_disease_treatment_clubroot" v="Ingen (resistent sort, kalking, vekstskifte)" />
         <e k="rcr_advice_pressure_high_phoma" v="Høyt phoma-trykk: unngå raps og sennep i ca. 4 år, mold ned planterester; soppmiddel om høsten på mottakelige sorter." />
-        <e k="rcr_advice_pressure_high_pietin" v="Høyt rotdreper-trykk: sett inn en ikke-vertsvekst som opphold (havre, belgvekst, oljevekst); ingen soppmiddel virker, bare vekstskifte kurerer." />
-        <e k="rcr_advice_pressure_high_septoriose" v="Høyt septoria-trykk: unngå hvete/bygg på kornrester, velg en tolerant sort; soppmiddel fra stråstrekking i et vått klima." />
-        <e k="rcr_advice_pressure_high_rouille" v="Høyt rust-trykk: så en resistent sort og planlegg et soppmiddel; følg med på milde fuktige perioder." />
-        <e k="rcr_advice_pressure_high_fusariose" v="Høyt fusarium-trykk: unngå hvete etter mais, mold ned planterester; soppmiddel ved blomstring hvis vått." />
-        <e k="rcr_advice_pressure_high_mildiou" v="Høyt tørråte-trykk: plant en resistent sort og beskytt poteter med soppmiddel så snart det blir kjølig og vått." />
-        <e k="rcr_advice_pressure_high_hernie" v="Høyt klumprot-trykk: opphold fra korsblomstrede i over 6 år, kalk for å heve pH og så en resistent sort; ingen kjemisk behandling." />
+        <e k="rcr_advice_pressure_high_takeall" v="Høyt rotdreper-trykk: sett inn en ikke-vertsvekst som opphold (havre, belgvekst, oljevekst); ingen soppmiddel virker, bare vekstskifte kurerer." />
+        <e k="rcr_advice_pressure_high_septoria" v="Høyt septoria-trykk: unngå hvete/bygg på kornrester, velg en tolerant sort; soppmiddel fra stråstrekking i et vått klima." />
+        <e k="rcr_advice_pressure_high_rust" v="Høyt rust-trykk: så en resistent sort og planlegg et soppmiddel; følg med på milde fuktige perioder." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Høyt fusarium-trykk: unngå hvete etter mais, mold ned planterester; soppmiddel ved blomstring hvis vått." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Høyt tørråte-trykk: plant en resistent sort og beskytt poteter med soppmiddel så snart det blir kjølig og vått." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Høyt klumprot-trykk: opphold fra korsblomstrede i over 6 år, kalk for å heve pH og så en resistent sort; ingen kjemisk behandling." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Moderat phoma-trykk: forleng oppholdet fra raps og kutt opp stubben." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Moderat rotdreper-trykk: unngå et tredje korn på rad." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Moderat septoria-trykk: følg med på vårregn og smitte i planterester." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Moderat rust-trykk: se etter pustler i mildt vær." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Moderat fusarium-trykk: spre korn og mais, håndter planterester." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Moderat tørråte-trykk: overvåk kjølig vått vær og fjern spillplanter." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Moderat klumprot-trykk: forleng oppholdet fra raps og følg med på sur pH." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Moderat rotdreper-trykk: unngå et tredje korn på rad." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Moderat septoria-trykk: følg med på vårregn og smitte i planterester." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Moderat rust-trykk: se etter pustler i mildt vær." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Moderat fusarium-trykk: spre korn og mais, håndter planterester." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Moderat tørråte-trykk: overvåk kjølig vått vær og fjern spillplanter." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Moderat klumprot-trykk: forleng oppholdet fra raps og følg med på sur pH." />
     </elements>
 </l10n>

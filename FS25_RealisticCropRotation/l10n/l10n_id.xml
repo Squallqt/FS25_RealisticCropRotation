@@ -23,8 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Penyakit" />
         <e k="rcr_disease_header_active" v="Penyakit (%s)" />
         <e k="rcr_treatment_hud_label"  v="Penyemprotan" />
-        <e k="rcr_treatment_nematicide_remaining" v="%s (%d periode tersisa)" />
-        <e k="rcr_advice_nematicide_duration" v="Perlindungan tanah berlangsung 3 periode per ladang; aplikasi ulang memperbarui durasinya." />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d bulan tersisa)" />
+        <e k="rcr_advice_nematicide_duration" v="Perlindungan tanah berlangsung 3 bulan per ladang; aplikasi ulang memperbarui durasinya." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Residu diharapkan +%d (N+1) / +%d (N+2) kg/ha" />
@@ -201,18 +201,18 @@
         <e k="rcr_disease_treatment_none" v="Tidak ada penyemprotan" />
         <e k="rcr_disease_treatment_clubroot" v="Tidak ada (varietas tahan, pengapuran, rotasi)" />
         <e k="rcr_advice_pressure_high_phoma" v="Tekanan phoma tinggi: hindari kanola dan sesawi sekitar 4 tahun, benamkan sisa tanaman; fungisida musim gugur pada varietas rentan." />
-        <e k="rcr_advice_pressure_high_pietin" v="Tekanan busuk akar tinggi: sisipkan jeda tanaman bukan inang (oat, legum, tanaman minyak); tidak ada fungisida efektif, hanya rotasi yang menyembuhkan." />
-        <e k="rcr_advice_pressure_high_septoriose" v="Tekanan septoria tinggi: hindari gandum/jelai di atas sisa serealia, pilih varietas toleran; fungisida sejak pemanjangan batang di iklim basah." />
-        <e k="rcr_advice_pressure_high_rouille" v="Tekanan karat tinggi: tanam varietas tahan dan rencanakan fungisida; pantau periode sejuk lembap." />
-        <e k="rcr_advice_pressure_high_fusariose" v="Tekanan fusarium tinggi: hindari gandum setelah jagung, benamkan sisa tanaman; fungisida saat pembungaan bila hujan." />
-        <e k="rcr_advice_pressure_high_mildiou" v="Tekanan hawar daun tinggi: tanam varietas tahan dan lindungi kentang dengan fungisida begitu cuaca menjadi sejuk dan basah." />
-        <e k="rcr_advice_pressure_high_hernie" v="Tekanan akar gada tinggi: jeda brassica lebih dari 6 tahun, kapur untuk menaikkan pH dan tanam varietas tahan; tidak ada pengendalian kimia." />
+        <e k="rcr_advice_pressure_high_takeall" v="Tekanan busuk akar tinggi: sisipkan jeda tanaman bukan inang (oat, legum, tanaman minyak); tidak ada fungisida efektif, hanya rotasi yang menyembuhkan." />
+        <e k="rcr_advice_pressure_high_septoria" v="Tekanan septoria tinggi: hindari gandum/jelai di atas sisa serealia, pilih varietas toleran; fungisida sejak pemanjangan batang di iklim basah." />
+        <e k="rcr_advice_pressure_high_rust" v="Tekanan karat tinggi: tanam varietas tahan dan rencanakan fungisida; pantau periode sejuk lembap." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Tekanan fusarium tinggi: hindari gandum setelah jagung, benamkan sisa tanaman; fungisida saat pembungaan bila hujan." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Tekanan hawar daun tinggi: tanam varietas tahan dan lindungi kentang dengan fungisida begitu cuaca menjadi sejuk dan basah." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Tekanan akar gada tinggi: jeda brassica lebih dari 6 tahun, kapur untuk menaikkan pH dan tanam varietas tahan; tidak ada pengendalian kimia." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Tekanan phoma sedang: perpanjang jeda kanola dan cacah tunggul." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Tekanan busuk akar sedang: hindari serealia ketiga berturut-turut." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Tekanan septoria sedang: pantau hujan musim semi dan inokulum dari sisa tanaman." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Tekanan karat sedang: periksa pustula pada cuaca sejuk." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Tekanan fusarium sedang: beri jarak serealia dan jagung, kelola sisa tanaman." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Tekanan hawar daun sedang: pantau cuaca sejuk basah dan musnahkan tanaman sukarela (volunteer)." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Tekanan akar gada sedang: perpanjang jeda kanola dan waspadai pH asam." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Tekanan busuk akar sedang: hindari serealia ketiga berturut-turut." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Tekanan septoria sedang: pantau hujan musim semi dan inokulum dari sisa tanaman." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Tekanan karat sedang: periksa pustula pada cuaca sejuk." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Tekanan fusarium sedang: beri jarak serealia dan jagung, kelola sisa tanaman." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Tekanan hawar daun sedang: pantau cuaca sejuk basah dan musnahkan tanaman sukarela (volunteer)." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Tekanan akar gada sedang: perpanjang jeda kanola dan waspadai pH asam." />
     </elements>
 </l10n>

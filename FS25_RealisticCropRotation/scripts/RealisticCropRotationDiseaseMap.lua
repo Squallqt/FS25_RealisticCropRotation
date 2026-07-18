@@ -509,7 +509,7 @@ function RealisticCropRotationDiseaseMap:updateOverlay(force)
     end
 end
 
----Draws the active view's overlay (double-buffered): a finished background slot becomes the new active slot, so the map is never blank after the first generation.
+---Draws the active view's overlay, promoting a finished background slot to active.
 function RealisticCropRotationDiseaseMap:draw(x, y, width, height)
     local overlayIds, pendingSlotField, activeSlotField
     if self:isPressurePage() then

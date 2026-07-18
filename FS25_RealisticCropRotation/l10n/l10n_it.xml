@@ -23,8 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Malattia" />
         <e k="rcr_disease_header_active" v="Malattia (%s)" />
         <e k="rcr_treatment_hud_label"  v="Trattamento" />
-        <e k="rcr_treatment_nematicide_remaining" v="%s (%d periodi rimanenti)" />
-        <e k="rcr_advice_nematicide_duration" v="La protezione del suolo dura 3 periodi per campo; una nuova applicazione rinnova la durata." />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d mesi rimanenti)" />
+        <e k="rcr_advice_nematicide_duration" v="La protezione del suolo dura 3 mesi per campo; una nuova applicazione rinnova la durata." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Residuo previsto +%d (N+1) / +%d (N+2) kg/ha" />
@@ -201,18 +201,18 @@
         <e k="rcr_disease_treatment_none" v="Nessun trattamento" />
         <e k="rcr_disease_treatment_clubroot" v="Nessuno (varietà resistente, calcitazione, rotazione)" />
         <e k="rcr_advice_pressure_high_phoma" v="Forte pressione di phoma: evita colza e senape per ~4 anni, interra i residui; fungicida autunnale sulle varietà sensibili." />
-        <e k="rcr_advice_pressure_high_pietin" v="Forte pressione di mal del piede: inserisci un'interruzione non ospite (avena, leguminosa, oleaginosa); nessun fungicida efficace, solo la rotazione risolve." />
-        <e k="rcr_advice_pressure_high_septoriose" v="Forte pressione di septoriosi: evita frumento/orzo sui residui di cereali, scegli una varietà tollerante; fungicida dalla levata in clima umido." />
-        <e k="rcr_advice_pressure_high_rouille" v="Forte pressione di ruggine: semina una varietà resistente e prevedi un fungicida; sorveglia i periodi miti e umidi." />
-        <e k="rcr_advice_pressure_high_fusariose" v="Forte pressione di fusariosi: evita frumento dopo mais, interra i residui; fungicida alla fioritura se piove." />
-        <e k="rcr_advice_pressure_high_mildiou" v="Forte pressione di peronospora: pianta una varietà resistente e proteggi le patate con fungicida appena il clima diventa fresco e umido." />
-        <e k="rcr_advice_pressure_high_hernie" v="Forte pressione di ernia: intervallo tra le brassicacee oltre 6 anni, calcitazione per alzare il pH e semina di una varietà resistente; nessun trattamento chimico." />
+        <e k="rcr_advice_pressure_high_takeall" v="Forte pressione di mal del piede: inserisci un'interruzione non ospite (avena, leguminosa, oleaginosa); nessun fungicida efficace, solo la rotazione risolve." />
+        <e k="rcr_advice_pressure_high_septoria" v="Forte pressione di septoriosi: evita frumento/orzo sui residui di cereali, scegli una varietà tollerante; fungicida dalla levata in clima umido." />
+        <e k="rcr_advice_pressure_high_rust" v="Forte pressione di ruggine: semina una varietà resistente e prevedi un fungicida; sorveglia i periodi miti e umidi." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Forte pressione di fusariosi: evita frumento dopo mais, interra i residui; fungicida alla fioritura se piove." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Forte pressione di peronospora: pianta una varietà resistente e proteggi le patate con fungicida appena il clima diventa fresco e umido." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Forte pressione di ernia: intervallo tra le brassicacee oltre 6 anni, calcitazione per alzare il pH e semina di una varietà resistente; nessun trattamento chimico." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Pressione di phoma moderata: allunga l'intervallo della colza e trincia le stoppie." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Pressione di mal del piede moderata: evita il terzo cereale consecutivo." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Pressione di septoriosi moderata: sorveglia le piogge primaverili e l'inoculo dei residui." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Pressione di ruggine moderata: controlla la comparsa delle pustole con clima mite." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Pressione di fusariosi moderata: distanzia cereali e mais, gestisci i residui." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Pressione di peronospora moderata: monitora il clima fresco e umido ed elimina i ricacci spontanei." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Pressione di ernia moderata: allunga l'intervallo della colza e sorveglia il pH acido." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Pressione di mal del piede moderata: evita il terzo cereale consecutivo." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Pressione di septoriosi moderata: sorveglia le piogge primaverili e l'inoculo dei residui." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Pressione di ruggine moderata: controlla la comparsa delle pustole con clima mite." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Pressione di fusariosi moderata: distanzia cereali e mais, gestisci i residui." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Pressione di peronospora moderata: monitora il clima fresco e umido ed elimina i ricacci spontanei." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Pressione di ernia moderata: allunga l'intervallo della colza e sorveglia il pH acido." />
     </elements>
 </l10n>

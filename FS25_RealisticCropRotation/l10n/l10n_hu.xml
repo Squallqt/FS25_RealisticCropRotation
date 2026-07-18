@@ -23,8 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Betegség" />
         <e k="rcr_disease_header_active" v="Betegség (%s)" />
         <e k="rcr_treatment_hud_label"  v="Kezelés" />
-        <e k="rcr_treatment_nematicide_remaining" v="%s (%d időszak van hátra)" />
-        <e k="rcr_advice_nematicide_duration" v="A talajvédelem táblánként 3 időszakig tart; az új kezelés megújítja az időtartamot." />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d hónap van hátra)" />
+        <e k="rcr_advice_nematicide_duration" v="A talajvédelem táblánként 3 hónapig tart; az új kezelés megújítja az időtartamot." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Várható maradvány +%d (N+1) / +%d (N+2) kg/ha" />
@@ -201,18 +201,18 @@
         <e k="rcr_disease_treatment_none" v="Nincs kezelés" />
         <e k="rcr_disease_treatment_clubroot" v="Nincs (rezisztens fajta, meszezés, vetésforgó)" />
         <e k="rcr_advice_pressure_high_phoma" v="Erős fómás nyomás: mintegy 4 évig kerülje a repcét és a mustárt, forgassa be a maradványokat; fogékony fajtán őszi gombaölő szer." />
-        <e k="rcr_advice_pressure_high_pietin" v="Erős szártőfeketedés-nyomás: iktasson be nem gazdanövény kihagyást (zab, hüvelyes, olajnövény); nincs hatékony gombaölő szer, csak a vetésforgó gyógyítja." />
-        <e k="rcr_advice_pressure_high_septoriose" v="Erős szeptória-nyomás: ne termesszen búzát/árpát gabonamaradványon, válasszon toleráns fajtát; nedves éghajlaton gombaölő szer szárba indulástól." />
-        <e k="rcr_advice_pressure_high_rouille" v="Erős rozsdanyomás: vessen rezisztens fajtát és tervezzen gombaölő szert; figyelje az enyhe, nedves időszakokat." />
-        <e k="rcr_advice_pressure_high_fusariose" v="Erős fuzáriózis-nyomás: ne termesszen búzát kukorica után, forgassa be a maradványokat; esős időben gombaölő szer virágzáskor." />
-        <e k="rcr_advice_pressure_high_mildiou" v="Erős burgonyavész-nyomás: telepítsen rezisztens fajtát és védje a burgonyát gombaölő szerrel, amint hűvösre és nedvesre fordul." />
-        <e k="rcr_advice_pressure_high_hernie" v="Erős gyökérgolyva-nyomás: 6 évnél hosszabb keresztesvirágú-kihagyás, meszezéssel emelje a pH-t és vessen rezisztens fajtát; nincs vegyszeres kezelés." />
+        <e k="rcr_advice_pressure_high_takeall" v="Erős szártőfeketedés-nyomás: iktasson be nem gazdanövény kihagyást (zab, hüvelyes, olajnövény); nincs hatékony gombaölő szer, csak a vetésforgó gyógyítja." />
+        <e k="rcr_advice_pressure_high_septoria" v="Erős szeptória-nyomás: ne termesszen búzát/árpát gabonamaradványon, válasszon toleráns fajtát; nedves éghajlaton gombaölő szer szárba indulástól." />
+        <e k="rcr_advice_pressure_high_rust" v="Erős rozsdanyomás: vessen rezisztens fajtát és tervezzen gombaölő szert; figyelje az enyhe, nedves időszakokat." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Erős fuzáriózis-nyomás: ne termesszen búzát kukorica után, forgassa be a maradványokat; esős időben gombaölő szer virágzáskor." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Erős burgonyavész-nyomás: telepítsen rezisztens fajtát és védje a burgonyát gombaölő szerrel, amint hűvösre és nedvesre fordul." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Erős gyökérgolyva-nyomás: 6 évnél hosszabb keresztesvirágú-kihagyás, meszezéssel emelje a pH-t és vessen rezisztens fajtát; nincs vegyszeres kezelés." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Mérsékelt fómás nyomás: hosszabbítsa meg a repce kihagyását és aprítsa fel a tarlót." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Mérsékelt szártőfeketedés-nyomás: kerülje a sorban harmadik gabonát." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Mérsékelt szeptória-nyomás: figyelje a tavaszi esőket és a maradványok fertőző anyagát." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Mérsékelt rozsdanyomás: enyhe időben figyelje a pusztulák megjelenését." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Mérsékelt fuzáriózis-nyomás: ritkítsa a gabonát és a kukoricát, kezelje a maradványokat." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Mérsékelt burgonyavész-nyomás: kövesse a hűvös, nedves időt és irtsa az árvakeléseket." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Mérsékelt gyökérgolyva-nyomás: hosszabbítsa meg a repce kihagyását és figyelje a savas pH-t." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Mérsékelt szártőfeketedés-nyomás: kerülje a sorban harmadik gabonát." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Mérsékelt szeptória-nyomás: figyelje a tavaszi esőket és a maradványok fertőző anyagát." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Mérsékelt rozsdanyomás: enyhe időben figyelje a pusztulák megjelenését." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Mérsékelt fuzáriózis-nyomás: ritkítsa a gabonát és a kukoricát, kezelje a maradványokat." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Mérsékelt burgonyavész-nyomás: kövesse a hűvös, nedves időt és irtsa az árvakeléseket." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Mérsékelt gyökérgolyva-nyomás: hosszabbítsa meg a repce kihagyását és figyelje a savas pH-t." />
     </elements>
 </l10n>

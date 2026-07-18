@@ -23,8 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Växtsjukdom" />
         <e k="rcr_disease_header_active" v="Växtsjukdom (%s)" />
         <e k="rcr_treatment_hud_label"  v="Behandling" />
-        <e k="rcr_treatment_nematicide_remaining" v="%s (%d perioder återstår)" />
-        <e k="rcr_advice_nematicide_duration" v="Markskyddet varar 3 perioder per fält; en ny behandling förnyar tiden." />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d månader återstår)" />
+        <e k="rcr_advice_nematicide_duration" v="Markskyddet varar 3 månader per fält; en ny behandling förnyar tiden." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Förväntad rest +%d (N+1) / +%d (N+2) kg/ha" />
@@ -201,18 +201,18 @@
         <e k="rcr_disease_treatment_none" v="Ingen behandling" />
         <e k="rcr_disease_treatment_clubroot" v="Ingen (resistent sort, kalkning, växtföljd)" />
         <e k="rcr_advice_pressure_high_phoma" v="Högt torrötetryck: undvik raps och senap i cirka 4 år, myllna ned skörderester; höstsvampmedel på mottagliga sorter." />
-        <e k="rcr_advice_pressure_high_pietin" v="Högt rotdödartryck: lägg in en icke-värdgröda som avbrott (havre, baljväxt, oljeväxt); inget svampmedel hjälper, bara växtföljd botar." />
-        <e k="rcr_advice_pressure_high_septoriose" v="Högt svartpricksjuketryck: undvik vete/korn på spannmålsrester, välj en tolerant sort; svampmedel från stråskjutning i ett vått klimat." />
-        <e k="rcr_advice_pressure_high_rouille" v="Högt rosttryck: så en resistent sort och planera ett svampmedel; håll koll på milda fuktiga perioder." />
-        <e k="rcr_advice_pressure_high_fusariose" v="Högt fusariostryck: undvik vete efter majs, myllna ned skörderester; svampmedel vid blomning om vått." />
-        <e k="rcr_advice_pressure_high_mildiou" v="Högt bladmögeltryck: plantera en resistent sort och skydda potatis med svampmedel så snart det blir svalt och vått." />
-        <e k="rcr_advice_pressure_high_hernie" v="Högt klumprotstryck: uppehåll från korsblommiga i över 6 år, kalka för att höja pH och så en resistent sort; ingen kemisk behandling." />
+        <e k="rcr_advice_pressure_high_takeall" v="Högt rotdödartryck: lägg in en icke-värdgröda som avbrott (havre, baljväxt, oljeväxt); inget svampmedel hjälper, bara växtföljd botar." />
+        <e k="rcr_advice_pressure_high_septoria" v="Högt svartpricksjuketryck: undvik vete/korn på spannmålsrester, välj en tolerant sort; svampmedel från stråskjutning i ett vått klimat." />
+        <e k="rcr_advice_pressure_high_rust" v="Högt rosttryck: så en resistent sort och planera ett svampmedel; håll koll på milda fuktiga perioder." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Högt fusariostryck: undvik vete efter majs, myllna ned skörderester; svampmedel vid blomning om vått." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Högt bladmögeltryck: plantera en resistent sort och skydda potatis med svampmedel så snart det blir svalt och vått." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Högt klumprotstryck: uppehåll från korsblommiga i över 6 år, kalka för att höja pH och så en resistent sort; ingen kemisk behandling." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Måttligt torrötetryck: förläng uppehållet från raps och hacka sönder stubben." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Måttligt rotdödartryck: undvik en tredje spannmål i rad." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Måttligt svartpricksjuketryck: håll koll på vårregn och smitta i skörderester." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Måttligt rosttryck: leta efter pustler i milt väder." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Måttligt fusariostryck: sprid ut spannmål och majs, hantera skörderester." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Måttligt bladmögeltryck: övervaka svalt vått väder och förstör spillplantor." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Måttligt klumprotstryck: förläng uppehållet från raps och håll koll på surt pH." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Måttligt rotdödartryck: undvik en tredje spannmål i rad." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Måttligt svartpricksjuketryck: håll koll på vårregn och smitta i skörderester." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Måttligt rosttryck: leta efter pustler i milt väder." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Måttligt fusariostryck: sprid ut spannmål och majs, hantera skörderester." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Måttligt bladmögeltryck: övervaka svalt vått väder och förstör spillplantor." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Måttligt klumprotstryck: förläng uppehållet från raps och håll koll på surt pH." />
     </elements>
 </l10n>

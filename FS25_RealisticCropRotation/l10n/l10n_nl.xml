@@ -23,8 +23,8 @@
         <e k="rcr_disease_hud_label"    v="Gewasziekte" />
         <e k="rcr_disease_header_active" v="Gewasziekte (%s)" />
         <e k="rcr_treatment_hud_label"  v="Behandeling" />
-        <e k="rcr_treatment_nematicide_remaining" v="%s (%d periodes resterend)" />
-        <e k="rcr_advice_nematicide_duration" v="De bodembescherming duurt 3 periodes per veld; opnieuw toepassen vernieuwt de duur." />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d maanden resterend)" />
+        <e k="rcr_advice_nematicide_duration" v="De bodembescherming duurt 3 maanden per veld; opnieuw toepassen vernieuwt de duur." />
 
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Verwacht residu +%d (N+1) / +%d (N+2) kg/ha" />
@@ -201,18 +201,18 @@
         <e k="rcr_disease_treatment_none" v="Geen behandeling" />
         <e k="rcr_disease_treatment_clubroot" v="Geen (resistent ras, bekalking, vruchtwisseling)" />
         <e k="rcr_advice_pressure_high_phoma" v="Hoge phoma-druk: vermijd koolzaad en mosterd ~4 jaar, werk de gewasresten onder; najaarsfungicide op vatbare rassen." />
-        <e k="rcr_advice_pressure_high_pietin" v="Hoge tarwehalmdoder-druk: voeg een niet-waardgewas in (haver, vlinderbloemige, oliehoudend gewas); geen werkzaam fungicide, alleen vruchtwisseling helpt." />
-        <e k="rcr_advice_pressure_high_septoriose" v="Hoge septoria-druk: teel geen tarwe/gerst op graanresten, kies een tolerant ras; fungicide vanaf de stengelstrekking in een vochtig klimaat." />
-        <e k="rcr_advice_pressure_high_rouille" v="Hoge roest-druk: zaai een resistent ras en plan een fungicide; let op zachte en vochtige perioden." />
-        <e k="rcr_advice_pressure_high_fusariose" v="Hoge fusarium-druk: teel geen tarwe na maïs, werk de resten onder; fungicide tijdens de bloei bij nat weer." />
-        <e k="rcr_advice_pressure_high_mildiou" v="Hoge phytophthora-druk: plant een resistent ras en bescherm de aardappelen met fungicide zodra het koel en nat wordt." />
-        <e k="rcr_advice_pressure_high_hernie" v="Hoge knolvoet-druk: teeltpauze van koolgewassen langer dan 6 jaar, bekalk om de pH te verhogen en zaai een resistent ras; geen chemische bestrijding." />
+        <e k="rcr_advice_pressure_high_takeall" v="Hoge tarwehalmdoder-druk: voeg een niet-waardgewas in (haver, vlinderbloemige, oliehoudend gewas); geen werkzaam fungicide, alleen vruchtwisseling helpt." />
+        <e k="rcr_advice_pressure_high_septoria" v="Hoge septoria-druk: teel geen tarwe/gerst op graanresten, kies een tolerant ras; fungicide vanaf de stengelstrekking in een vochtig klimaat." />
+        <e k="rcr_advice_pressure_high_rust" v="Hoge roest-druk: zaai een resistent ras en plan een fungicide; let op zachte en vochtige perioden." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Hoge fusarium-druk: teel geen tarwe na maïs, werk de resten onder; fungicide tijdens de bloei bij nat weer." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Hoge phytophthora-druk: plant een resistent ras en bescherm de aardappelen met fungicide zodra het koel en nat wordt." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Hoge knolvoet-druk: teeltpauze van koolgewassen langer dan 6 jaar, bekalk om de pH te verhogen en zaai een resistent ras; geen chemische bestrijding." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Matige phoma-druk: verleng de teeltpauze van koolzaad en klepel de stoppels." />
-        <e k="rcr_advice_pressure_moderate_pietin" v="Matige tarwehalmdoder-druk: vermijd een derde graangewas op rij." />
-        <e k="rcr_advice_pressure_moderate_septoriose" v="Matige septoria-druk: let op voorjaarsregens en inoculum uit de gewasresten." />
-        <e k="rcr_advice_pressure_moderate_rouille" v="Matige roest-druk: controleer op puisten bij zacht weer." />
-        <e k="rcr_advice_pressure_moderate_fusariose" v="Matige fusarium-druk: spreid granen en maïs, beheer de gewasresten." />
-        <e k="rcr_advice_pressure_moderate_mildiou" v="Matige phytophthora-druk: bewaak koel en nat weer en verwijder opslagplanten." />
-        <e k="rcr_advice_pressure_moderate_hernie" v="Matige knolvoet-druk: verleng de teeltpauze van koolzaad en let op een zure pH." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Matige tarwehalmdoder-druk: vermijd een derde graangewas op rij." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Matige septoria-druk: let op voorjaarsregens en inoculum uit de gewasresten." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Matige roest-druk: controleer op puisten bij zacht weer." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Matige fusarium-druk: spreid granen en maïs, beheer de gewasresten." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Matige phytophthora-druk: bewaak koel en nat weer en verwijder opslagplanten." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Matige knolvoet-druk: verleng de teeltpauze van koolzaad en let op een zure pH." />
     </elements>
 </l10n>

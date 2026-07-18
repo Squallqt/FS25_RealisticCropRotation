@@ -4,15 +4,15 @@ Crop rotation planning and disease simulation for Farming Simulator 25.
 
 [![Version](https://img.shields.io/badge/version-1.0.0.0-blue.svg)](https://github.com/Squallqt/FS25_RealisticCropRotation/releases)
 [![FS25](https://img.shields.io/badge/FS25-compatible-green.svg)](https://farming-simulator.com/)
-[![Multiplayer](https://img.shields.io/badge/multiplayer-supported-success.svg)](#)
-[![Languages](https://img.shields.io/badge/languages-27-blue.svg)](#)
+![Multiplayer](https://img.shields.io/badge/multiplayer-supported-success.svg)
+![Languages](https://img.shields.io/badge/languages-27-blue.svg)
 
 Track every field's crop history, plan your rotation on a repeating 4-year calendar from a dedicated in-game tab, and get a rotation grade based on real agronomy. Bring a host crop back too soon and nine realistic soil- and weather-driven diseases can take hold and spread. Available in singleplayer and multiplayer, with or without Precision Farming.
 
 ## Features
 
 - **Crop history & flexible planning**: track each field's last 4 crops and plan up to 4 years ahead from a dedicated "Crop Rotation" tab in the in-game menu (a 2-crop alternation works just as well as a full 4-crop sequence, only the filled year slots count toward the grade)
-- **Field monitoring**: current crop, growth stage, required soil work, weeds, nitrogen and pH for every field (Precision Farming's real maps when installed, vanilla fallback otherwise)
+- **Field monitoring**: current crop, growth stage, required soil work, weeds, active disease with its recommended treatment, nitrogen and pH for every field (Precision Farming's real maps when installed, vanilla fallback otherwise)
 - **Rotation grade (0-100)**: family and disease-specific return intervals, legume-to-cereal nitrogen handoff, crop diversity and planned nitrogen residue all weigh in; a monoculture is capped at "poor", a plan with no nitrogen-fixing crop can't reach "excellent". Bands: 0-19 bad, 20-39 poor, 40-59 fair, 60-79 good, 80-100 excellent
 - **Tailored advice**: a status card prioritizes an active outbreak on the field, then evaluates your planned next crop against family/disease spacing, then falls back to generic per-family guidance
 - **Rotation overview**: fields sharing an identical plan are grouped into one card with combined area, grade and residue
@@ -22,7 +22,7 @@ Track every field's crop history, plan your rotation on a repeating 4-year calen
 - **Weather & temperature**: rain and temperature drive infection odds and daily spread for the 7 fungal diseases, each with its own favourable temperature window; the beet cyst nematode and clubroot ignore rain, but every new infection still incubates faster in warm weather and slower in cold weather
 - **Organic, progressive destruction**: an infected crop is destroyed in an irregular patch that spreads over the following days, with a scattered, speckled transition edge
 - **Season-length aware**: disease progression speed automatically scales with the save's days-per-period setting, so pacing is consistent on short or long seasons
-- **Sprayer treatment**: buyable fungicide (AMISTAR, Syngenta) and nematicide (VELUM PRIME, Bayer) stop an active infection from destroying more of the sprayed area and shield that ground against future damage from the same treatment family. Foliar fungicide is consumed only where a crop is harvested or mown; soil nematicide survives harvest and expires independently per field after three period changes. Reapplying nematicide renews that field's full three-period duration. Take-all and clubroot have no chemical treatment and must be managed agronomically
+- **Sprayer treatment**: buyable fungicide (AMISTAR, Syngenta) and nematicide (VELUM PRIME, Bayer) stop an active infection from destroying more of the sprayed area and shield that ground against future damage from the same treatment family. Foliar fungicide is consumed only where a crop is harvested or mown; soil nematicide survives harvest and expires independently per field after three months. Reapplying nematicide renews that field's full three-month duration. Take-all and clubroot have no chemical treatment and must be managed agronomically
 - **Disease map**: 3 toggle-able views added to the existing in-game map (infected fields, a predictive pressure forecast, and treated-ground coverage), all colour-blind safe
 - **On-foot HUD**: the field-info box shows rotation history and active disease under your feet, plus a treatment line when standing on protected ground
 - **Weather forecast card**: the in-game menu header shows the next relevant weather event so you can time your spraying
@@ -34,7 +34,7 @@ Track every field's crop history, plan your rotation on a repeating 4-year calen
 Legumes destroyed by tillage (disc harrow / cultivator, not simple harvest) return nitrogen in two shares: the first to the next crop, the second carried over to the rotation after.
 
 | Crop | First share | Second share |
-|---|---|---|
+| --- | --- | --- |
 | Alfalfa | 80 kg N/ha | 50 kg N/ha |
 | Vetch-rye | 60 kg N/ha | 20 kg N/ha |
 | Clover | 50 kg N/ha | 20 kg N/ha |
@@ -47,9 +47,11 @@ Cover crops (oilseed radish, flowering catch crop) add an estimated flat +25 kg 
 ## Installation
 
 ### From ModHub
+
 Search for "Realistic Crop Rotation" on the official [Farming Simulator ModHub](https://www.farming-simulator.com/mods.php).
 
 ### Manual
+
 1. Place the downloaded `FS25_RealisticCropRotation.zip` file into your FS25 `mods/` directory (do not extract)
 2. Activate the mod in mod selection
 3. Access via the dedicated "Crop Rotation" tab in the InGame Menu (ESC)
@@ -57,16 +59,18 @@ Search for "Realistic Crop Rotation" on the official [Farming Simulator ModHub](
 ## Usage
 
 ### Planning a Rotation
+
 1. InGame Menu (ESC) > **Crop Rotation** tab > **Planning**
 2. Select a field in the sidebar to see its plan and rotation grade
 3. Pick a year slot and assign a crop (and optionally a cover crop) from the calendar
 4. Follow the per-field advice to avoid family and disease return-interval penalties
 
 ### Managing Disease Risk
+
 1. Open the in-game Map and switch to the **Diseases** view to check infected fields and the pressure forecast
 2. Space host crops far enough apart in your rotation plan to keep soil inoculum low
 3. Treat active fungal infections with a fungicide sprayer (AMISTAR), or the beet cyst nematode with a nematicide sprayer (VELUM PRIME)
-4. Remember that harvesting or mowing removes fungicide protection only from the cut area; nematicide remains in the soil for three period changes and a new application renews its duration for that field
+4. Remember that harvesting or mowing removes fungicide protection only from the cut area; nematicide remains in the soil for three months and a new application renews its duration for that field
 5. For take-all and clubroot, rely on a non-host crop, a resistant variety, liming and a long enough rotation
 6. Harvest what remains after an infection and avoid returning a susceptible host until rotation decay lowers soil pressure
 
@@ -75,7 +79,7 @@ Search for "Realistic Crop Rotation" on the official [Farming Simulator ModHub](
 Testing/admin tools registered by the mod (server/host only):
 
 | Command | Description |
-|---|---|
+| --- | --- |
 | `rcrDisease [farmlandId]` | Prints the current disease state |
 | `rcrDiseaseInfect <farmlandId> <group> [severity]` | Forces an infection |
 | `rcrDiseaseTick [farmlandId]` | Runs one disease update step |
@@ -86,6 +90,7 @@ Valid `<group>` values: `SCLEROTINIA`, `PHOMA`, `TAKEALL`, `SEPTORIA`, `RUST`, `
 ## Changelog
 
 ### v1.0.0.0
+
 - Initial release
 
 ## Support
