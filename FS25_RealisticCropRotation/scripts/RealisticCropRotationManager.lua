@@ -12,6 +12,9 @@ local SOIL_TYPE_LOCATOR_STEPS = 16
 -- Field share that must reach a level for that level to be reported.
 local VANILLA_LEVEL_COVERAGE = 0.90
 
+-- Field-ground share a soil/ground state must cover to become the field's status.
+local FIELD_STATE_COVERAGE = 0.50
+
 -- PF field-info only displays legend values (PrecisionFarming.xml showOnHud): nitrogen per 20 kg/ha, pH per 0.25.
 local PF_N_DISPLAY_STEP = 20
 local PF_PH_DISPLAY_STEP = 0.25
@@ -254,6 +257,27 @@ local function getFieldGroundLayer(layer)
     return mapId, firstChannel, numChannels
 end
 
+---Sums a vanilla field layer over a field, narrowed by an optional value filter and mask.
+-- @param table field
+-- @param integer layer FieldDensityMap entry
+-- @param integer compareType DensityValueCompareType, or nil to take the whole polygon
+-- @param number value
+-- @param number maxValue Upper bound for BETWEEN, or nil
+-- @param table maskFilter Optional second filter
+-- @return number sum, number pixels, or nil when the layer or polygon is unavailable
+local function aggregateFieldGroundLayer(field, layer, compareType, value, maxValue, maskFilter)
+    local mapId, firstChannel, numChannels = getFieldGroundLayer(layer)
+    if mapId == nil then return nil end
+
+    local filter = nil
+    if compareType ~= nil then
+        filter = makeDensityFilter(mapId, firstChannel, numChannels, compareType, value, maxValue)
+        if filter == nil then return nil end
+    end
+
+    return aggregateFieldLayer(field, mapId, firstChannel, numChannels, filter, maskFilter)
+end
+
 ---Deepest vanilla layer level covering VANILLA_LEVEL_COVERAGE of the field, plus the field-average ratio.
 -- @param table field
 -- @param integer layer FieldDensityMap entry
@@ -261,17 +285,13 @@ end
 -- @return integer level Deepest sufficiently covered level, 0 when none, or nil when the field has no polygon
 -- @return number ratio Field average over maxLevel, for the bar fill
 local function getFieldLayerCoverageLevel(field, layer, maxLevel)
-    local mapId, firstChannel, numChannels = getFieldGroundLayer(layer)
-    if mapId == nil then return nil end
-
-    local sum, pixels = aggregateFieldLayer(field, mapId, firstChannel, numChannels)
+    local sum, pixels = aggregateFieldGroundLayer(field, layer)
     if sum == nil or pixels == nil or pixels <= 0 then return nil end
 
     local level = 0
     for candidate = maxLevel, 1, -1 do
-        local filter = makeDensityFilter(mapId, firstChannel, numChannels,
+        local _, covered = aggregateFieldGroundLayer(field, layer,
             DensityValueCompareType.BETWEEN, candidate, maxLevel)
-        local _, covered = aggregateFieldLayer(field, mapId, firstChannel, numChannels, filter)
         if covered ~= nil and (covered / pixels) >= VANILLA_LEVEL_COVERAGE then
             level = candidate
             break
@@ -532,186 +552,134 @@ local function sampleFieldStateAtField(field)
     return fieldState
 end
 
----Live majority ground type from the GROUND_TYPE density map.
+---Field-ground mask (GROUND_TYPE above NONE) and the pixels it selects inside a field's polygon.
 -- @param table field
--- @return table groundType FieldGroundType entry, or nil
-local function getFieldGroundTypeFromDensityMap(field)
-    if g_currentMission == nil or g_currentMission.fieldGroundSystem == nil then return nil end
-    if getDensityAtWorldPos == nil or getTerrainHeightAtWorldPos == nil or g_terrainNode == nil then return nil end
-    if FieldGroundType == nil or type(FieldGroundType.getTypeByValue) ~= "function" then return nil end
-    if FieldDensityMap == nil or FieldDensityMap.GROUND_TYPE == nil then return nil end
+-- @return table filter, number pixels, or nil when the field has no worked ground
+local function getFieldGroundCoverage(field)
+    local layer = FieldDensityMap ~= nil and FieldDensityMap.GROUND_TYPE or nil
+    local mapId, firstChannel, numChannels = getFieldGroundLayer(layer)
+    if mapId == nil then return nil end
 
-    local mapId, firstChannel, numChannels =
-        g_currentMission.fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE)
-    if mapId == nil or firstChannel == nil or numChannels == nil then return nil end
+    local filter = makeDensityFilter(mapId, firstChannel, numChannels, DensityValueCompareType.GREATER, 0)
+    if filter == nil then return nil end
 
-    local samples = {}
-    if field ~= nil and type(field.posX) == "number" and type(field.posZ) == "number" then
-        table.insert(samples, { x = field.posX, z = field.posZ })
-    end
-    collectFieldInteriorSamples(field, samples)
-    if #samples == 0 then return nil end
-
-    local mask = 2 ^ numChannels - 1
-    local counts = {}
-    for _, sample in ipairs(samples) do
-        local wy = getTerrainHeightAtWorldPos(g_terrainNode, sample.x, 0, sample.z)
-        local bits = getDensityAtWorldPos(mapId, sample.x, wy, sample.z)
-        local value = bit32.band(bit32.rshift(bits, firstChannel), mask)
-        local groundType = FieldGroundType.getTypeByValue(value)
-        if groundType ~= nil then
-            counts[groundType] = (counts[groundType] or 0) + 1
-        end
-    end
-
-    local best, bestCount = nil, 0
-    for groundType, count in pairs(counts) do
-        if count > bestCount then best, bestCount = groundType, count end
-    end
-    return best
+    local _, pixels = aggregateFieldLayer(field, mapId, firstChannel, numChannels, filter)
+    if pixels == nil or pixels <= 0 then return nil end
+    return filter, pixels
 end
 
----Maps the live ground type to a GROWTH_STATE_INDEX (cultivated/plowed/stubble/seedbed).
+---Counts the field-ground pixels holding one exact value on a vanilla layer.
 -- @param table field
--- @return integer index, or nil
-local function getNativeGroundStateIndex(field)
-    if FieldGroundType == nil or MapOverlayGenerator == nil
-        or MapOverlayGenerator.GROWTH_STATE_INDEX == nil then
-        return nil
-    end
+-- @param integer layer FieldDensityMap entry
+-- @param integer value
+-- @param table groundFilter Field-ground mask, or nil when the value implies it
+-- @return number pixels
+local function countFieldLayerValue(field, layer, value, groundFilter)
+    if value == nil then return 0 end
+    local _, pixels = aggregateFieldGroundLayer(field, layer,
+        DensityValueCompareType.EQUAL, value, nil, groundFilter)
+    return pixels or 0
+end
 
-    -- Live read first (fresh, consistent with crop detection); falls back to the engine's periodic fieldState snapshot.
-    local groundType = getFieldGroundTypeFromDensityMap(field)
-    if groundType == nil and field ~= nil and field.fieldState ~= nil then
-        groundType = field.fieldState.groundType
-    end
-    if groundType == nil then return nil end
+---Ground types grouped by the GROWTH_STATE_INDEX the field card reports them as.
+-- @return table groups { index, types }, or nil
+local function getGroundStateGroups()
+    if FieldGroundType == nil or type(FieldGroundType.getValueByType) ~= "function" then return nil end
+    if MapOverlayGenerator == nil or MapOverlayGenerator.GROWTH_STATE_INDEX == nil then return nil end
 
     local indices = MapOverlayGenerator.GROWTH_STATE_INDEX
+    return {
+        { index = indices.PLOWED,          types = { FieldGroundType.PLOWED } },
+        { index = indices.STUBBLE_TILLAGE, types = { FieldGroundType.STUBBLE_TILLAGE } },
+        { index = indices.CULTIVATED,      types = { FieldGroundType.CULTIVATED } },
+        { index = indices.SEEDBED,         types = { FieldGroundType.SEEDBED, FieldGroundType.ROLLED_SEEDBED } },
+    }
+end
 
-    if groundType == FieldGroundType.CULTIVATED then
-        return indices.CULTIVATED
-    elseif groundType == FieldGroundType.PLOWED then
-        return indices.PLOWED
-    elseif groundType == FieldGroundType.STUBBLE_TILLAGE then
-        return indices.STUBBLE_TILLAGE
-    elseif groundType == FieldGroundType.SEEDBED
-        or groundType == FieldGroundType.ROLLED_SEEDBED then
-        return indices.SEEDBED
+---Ground state covering most of a field's worked ground.
+-- @param table field
+-- @param number groundPixels Field-ground pixel count from getFieldGroundCoverage
+-- @return integer index GROWTH_STATE_INDEX, or nil when no state covers the field
+local function getNativeGroundStateIndex(field, groundPixels)
+    local groups = getGroundStateGroups()
+    if field == nil or groups == nil or groundPixels == nil then return nil end
+
+    local layer = FieldDensityMap.GROUND_TYPE
+    local threshold = groundPixels * FIELD_STATE_COVERAGE
+    for _, group in ipairs(groups) do
+        if group.index ~= nil then
+            -- Only one group can pass a majority, so the first hit is the answer.
+            local pixels = 0
+            for _, groundType in ipairs(group.types) do
+                if groundType ~= nil then
+                    local ok, value = pcall(FieldGroundType.getValueByType, groundType)
+                    if ok then pixels = pixels + countFieldLayerValue(field, layer, tonumber(value), nil) end
+                end
+            end
+            if pixels > threshold then return group.index end
+        end
     end
 
     return nil
 end
 
----Reads a fieldState level field, rounded to the nearest integer.
--- @param table fieldState
--- @param string name Level field name
--- @return integer level
-local function getRoundedFieldStateLevel(fieldState, name)
-    return math.floor((tonumber(fieldState ~= nil and fieldState[name]) or 0) + 0.5)
-end
-
----Soil state at a point (watered/mulched/needs-rolling/needs-plowing) per gameplay flags.
--- @param table fieldState
--- @return integer index SOIL_STATE_INDEX, or nil
-local function getNativeSoilStateIndexFromFieldState(fieldState)
-    if fieldState == nil or MapOverlayGenerator == nil
-        or MapOverlayGenerator.SOIL_STATE_INDEX == nil then
-        return nil
-    end
+---Soil states the field card reports, each with the layer value the soil overlay paints.
+-- @return table states { index, layer, value } in classification order, or nil
+local function getSoilStateDefinitions()
+    if MapOverlayGenerator == nil or MapOverlayGenerator.SOIL_STATE_INDEX == nil then return nil end
+    if FieldDensityMap == nil then return nil end
 
     local indices = MapOverlayGenerator.SOIL_STATE_INDEX
     local gameplay = Platform ~= nil and Platform.gameplay or nil
     local missionInfo = g_currentMission ~= nil and g_currentMission.missionInfo or nil
+    local states = {}
 
-    if indices.WATERED ~= nil and getRoundedFieldStateLevel(fieldState, "waterLevel") == 1 then
-        return indices.WATERED
+    if indices.WATERED ~= nil then
+        table.insert(states, { index = indices.WATERED, layer = FieldDensityMap.WATER_LEVEL, value = 1 })
     end
-    if gameplay ~= nil and gameplay.useStubbleShred == true and indices.MULCHED ~= nil
-        and getRoundedFieldStateLevel(fieldState, "stubbleShredLevel") == 1 then
-        return indices.MULCHED
+    if indices.MULCHED ~= nil and gameplay ~= nil and gameplay.useStubbleShred == true then
+        table.insert(states, { index = indices.MULCHED, layer = FieldDensityMap.STUBBLE_SHRED_LEVEL, value = 1 })
     end
-    if gameplay ~= nil and gameplay.useRolling == true and indices.NEEDS_ROLLING ~= nil
-        and getRoundedFieldStateLevel(fieldState, "rollerLevel") == 1 then
-        return indices.NEEDS_ROLLING
+    if indices.NEEDS_ROLLING ~= nil and gameplay ~= nil and gameplay.useRolling == true then
+        table.insert(states, { index = indices.NEEDS_ROLLING, layer = FieldDensityMap.ROLLER_LEVEL, value = 1 })
     end
-    if gameplay ~= nil and gameplay.usePlowCounter == true
-        and missionInfo ~= nil and missionInfo.plowingRequiredEnabled == true
-        and indices.NEEDS_PLOWING ~= nil
-        and getRoundedFieldStateLevel(fieldState, "plowLevel") == 0 then
-        return indices.NEEDS_PLOWING
+    if indices.NEEDS_PLOWING ~= nil and gameplay ~= nil and gameplay.usePlowCounter == true
+        and missionInfo ~= nil and missionInfo.plowingRequiredEnabled == true then
+        -- Level 0 also matches every pixel off the field, hence the ground mask on every count.
+        table.insert(states, { index = indices.NEEDS_PLOWING, layer = FieldDensityMap.PLOW_LEVEL, value = 0 })
+    end
+
+    return states
+end
+
+---Soil state covering most of a field's worked ground.
+-- @param table field
+-- @param table groundFilter Field-ground mask from getFieldGroundCoverage
+-- @param number groundPixels Field-ground pixel count from getFieldGroundCoverage
+-- @return integer index SOIL_STATE_INDEX, or nil when no state covers the field
+local function getNativeSoilStateIndex(field, groundFilter, groundPixels)
+    local states = getSoilStateDefinitions()
+    if field == nil or states == nil or #states == 0 or groundPixels == nil then return nil end
+
+    local threshold = groundPixels * FIELD_STATE_COVERAGE
+    for _, state in ipairs(states) do
+        if state.layer ~= nil then
+            local pixels = countFieldLayerValue(field, state.layer, state.value, groundFilter)
+            if pixels > threshold then return state.index end
+        end
     end
 
     return nil
 end
 
----Ordered SOIL_STATE_INDEX list used to break ties when picking a majority soil state.
--- @return table indices
-local function getNativeSoilStatePriority()
-    if MapOverlayGenerator == nil or MapOverlayGenerator.SOIL_STATE_INDEX == nil then return {} end
-    local indices = MapOverlayGenerator.SOIL_STATE_INDEX
-    local result = {}
-    if indices.WATERED ~= nil then table.insert(result, indices.WATERED) end
-    if indices.MULCHED ~= nil then table.insert(result, indices.MULCHED) end
-    if indices.NEEDS_ROLLING ~= nil then table.insert(result, indices.NEEDS_ROLLING) end
-    if indices.NEEDS_PLOWING ~= nil then table.insert(result, indices.NEEDS_PLOWING) end
-    return result
-end
-
----Majority soil state over field samples, with a centre-point fallback.
--- @param table field
--- @return integer index SOIL_STATE_INDEX, or nil
-local function getNativeSoilStateIndex(field)
-    if field == nil then return nil end
-
-    local samples = {}
-    if type(field.posX) == "number" and type(field.posZ) == "number" then
-        table.insert(samples, { x = field.posX, z = field.posZ })
-    end
-    collectFieldInteriorSamples(field, samples)
-
-    local counts = {}
-    if #samples > 0 and FieldState ~= nil then
-        for _, sample in ipairs(samples) do
-            local fieldState = FieldState.new()
-            if type(fieldState.update) == "function" then
-                fieldState:update(sample.x, sample.z)
-                if fieldState.isValid then
-                    local index = getNativeSoilStateIndexFromFieldState(fieldState)
-                    if index ~= nil then
-                        counts[index] = (counts[index] or 0) + 1
-                    end
-                end
-            end
-        end
-    end
-
-    local best, bestCount = nil, 0
-    for _, index in ipairs(getNativeSoilStatePriority()) do
-        local count = counts[index] or 0
-        if count > bestCount then
-            best = index
-            bestCount = count
-        end
-    end
-    if best ~= nil then return best end
-
-    local fieldState = sampleFieldStateAtField(field)
-        or (field ~= nil and field.fieldState or nil)
-    return getNativeSoilStateIndexFromFieldState(fieldState)
-end
-
 ---Ground state -> native l10n label (GROWTH_MAP_* via MapOverlayGenerator.L10N_SYMBOL).
--- @param table field
--- @param integer groundStateIndex Resolved when nil
+-- @param integer index GROWTH_STATE_INDEX
 -- @return string label, or nil
-local function getNativeGroundStateLabel(field, groundStateIndex)
+local function getNativeGroundStateLabel(index)
     if MapOverlayGenerator == nil or MapOverlayGenerator.L10N_SYMBOL == nil
         or g_i18n == nil or type(g_i18n.getText) ~= "function" then
         return nil
     end
-
-    local index = groundStateIndex or getNativeGroundStateIndex(field)
     if index == nil then return nil end
 
     local symbols = MapOverlayGenerator.L10N_SYMBOL
@@ -735,17 +703,14 @@ local function getNativeGroundStateLabel(field, groundStateIndex)
 end
 
 ---Soil state -> native l10n label (SOIL_MAP_* via MapOverlayGenerator.L10N_SYMBOL).
--- @param table field
--- @param integer soilStateIndex Resolved when nil
+-- @param integer index SOIL_STATE_INDEX
 -- @return string label, or nil
-local function getNativeSoilStateLabel(field, soilStateIndex)
+local function getNativeSoilStateLabel(index)
     if MapOverlayGenerator == nil or MapOverlayGenerator.L10N_SYMBOL == nil
         or MapOverlayGenerator.SOIL_STATE_INDEX == nil
         or g_i18n == nil or type(g_i18n.getText) ~= "function" then
         return nil
     end
-
-    local index = soilStateIndex or getNativeSoilStateIndex(field)
     if index == nil then return nil end
 
     local symbols = MapOverlayGenerator.L10N_SYMBOL
@@ -809,6 +774,7 @@ function RealisticCropRotationManager:initialize()
     self.repository:clear()
     self.service:reset()
     self.activeCropNameCache = {}
+    self.fieldStateMemo = nil
     self.isInitialized = true
 end
 
@@ -817,6 +783,7 @@ function RealisticCropRotationManager:cleanup()
     self.repository:clear()
     self.service:reset()
     self.activeCropNameCache = {}
+    self.fieldStateMemo = nil
     self.soilScanMemo = nil
     self.isInitialized = false
 end
@@ -1033,15 +1000,41 @@ function RealisticCropRotationManager:reconcileActiveCropForFarmland(farmlandId)
     return changed
 end
 
+---Ground + soil state of a field, both resolved from a single field-ground read.
+-- @param integer farmlandId
+-- @return table states { groundIndex, soilIndex }, or nil
+function RealisticCropRotationManager:getFieldStateIndices(farmlandId)
+    local n = tonumber(farmlandId)
+    if n == nil then return nil end
+
+    -- Same-frame memo: opening the menu resolves the same fields for the sidebar and the reconcile pass.
+    local nowMs = tonumber(g_time) or 0
+    if self.fieldStateMemo == nil or self.fieldStateMemo.tMs ~= nowMs then
+        self.fieldStateMemo = { tMs = nowMs }
+    end
+    local memo = self.fieldStateMemo
+    if memo[n] ~= nil then return memo[n] end
+
+    local field = self:getFieldByFarmlandId(n)
+    if field == nil then return nil end
+
+    local groundFilter, groundPixels = getFieldGroundCoverage(field)
+    local entry = {
+        groundIndex = getNativeGroundStateIndex(field, groundPixels),
+        soilIndex = getNativeSoilStateIndex(field, groundFilter, groundPixels),
+    }
+    memo[n] = entry
+    return entry
+end
+
 ---True when the field's native ground state shows real tillage work, not just post-harvest stubble.
 -- @param integer farmlandId
 -- @return boolean isWorked
 function RealisticCropRotationManager:isFieldGroundWorked(farmlandId)
-    local field = self:getFieldByFarmlandId(farmlandId)
-    if field == nil or MapOverlayGenerator == nil or MapOverlayGenerator.GROWTH_STATE_INDEX == nil then
-        return false
-    end
-    local groundIndex = getNativeGroundStateIndex(field)
+    if MapOverlayGenerator == nil or MapOverlayGenerator.GROWTH_STATE_INDEX == nil then return false end
+
+    local states = self:getFieldStateIndices(farmlandId)
+    local groundIndex = states ~= nil and states.groundIndex or nil
     if groundIndex == nil then return false end
     return groundIndex ~= MapOverlayGenerator.GROWTH_STATE_INDEX.STUBBLE_TILLAGE
 end
@@ -1060,11 +1053,9 @@ end
 -- @return string kind "ground" or "soil"
 -- @return integer index Native state index
 function RealisticCropRotationManager:getCurrentFieldStatus(farmlandId)
-    local field = self:getFieldByFarmlandId(farmlandId)
-    if field == nil then return nil end
-
-    local soilIndex = getNativeSoilStateIndex(field)
-    local groundIndex = getNativeGroundStateIndex(field)
+    local states = self:getFieldStateIndices(farmlandId)
+    if states == nil then return nil end
+    local soilIndex, groundIndex = states.soilIndex, states.groundIndex
 
     local chosenKind, chosenIndex, bestRank = nil, nil, math.huge
     if soilIndex ~= nil then
@@ -1079,9 +1070,9 @@ function RealisticCropRotationManager:getCurrentFieldStatus(farmlandId)
 
     local label
     if chosenKind == "soil" then
-        label = getNativeSoilStateLabel(nil, chosenIndex)
+        label = getNativeSoilStateLabel(chosenIndex)
     else
-        label = getNativeGroundStateLabel(field, chosenIndex)
+        label = getNativeGroundStateLabel(chosenIndex)
     end
     if label == nil or label == "" then return nil end
     return label, chosenKind, chosenIndex
