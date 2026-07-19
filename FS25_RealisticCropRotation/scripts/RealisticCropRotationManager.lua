@@ -163,14 +163,16 @@ local function getFarmlandFieldAreaHa(farmland)
     return 0
 end
 
----Best rotation area in hectares: field area first, farmland field area fallback.
+---Best rotation area in hectares: measured worked ground first, field polygon fallback.
 -- @param table farmland
 -- @param table field
 -- @return number areaHa
 local function getRotationAreaHa(farmland, field)
-    local fieldArea = getFieldAreaHa(field)
-    if fieldArea > 0 then return fieldArea end
-    return getFarmlandFieldAreaHa(farmland)
+    -- The measured area is re-read from the terrain on every load, so it follows a field that was
+    -- enlarged or trimmed; field.areaHa is the map polygon, fixed once and never updated.
+    local measuredArea = getFarmlandFieldAreaHa(farmland)
+    if measuredArea > 0 then return measuredArea end
+    return getFieldAreaHa(field)
 end
 
 ---True when a farmland/field pair has a non-zero rotation area.
@@ -1360,10 +1362,13 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId)
         end
     end
 
+    -- Field-ground mask: the polygon can reach past the worked ground, and those pixels carry no soil reading.
+    local groundFilter = getFieldGroundCoverage(field)
+
     if phCanLevel then
         local mapId, firstChannel, numChannels = getValueMapLayer(phMap)
         if mapId ~= nil then
-            local sum, pixels = aggregateFieldLayer(field, mapId, firstChannel, numChannels)
+            local sum, pixels = aggregateFieldLayer(field, mapId, firstChannel, numChannels, groundFilter)
             if sum ~= nil and pixels > 0 then
                 rec.phActual = snapToDisplayStep(phConv(sum / pixels), PF_PH_DISPLAY_STEP)
                 rec.phMin, rec.phMax = phConv(0) or 0, phConv(phMaxInternal) or 0
@@ -1394,8 +1399,8 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId)
         end
     end
 
-    -- Targets weighted by the field's soil-type pixel counts.
-    local soilWeights = getFieldSoilTypeWeights(field, soilMap)
+    -- Targets weighted by the field's soil-type pixel counts, over worked ground only.
+    local soilWeights = getFieldSoilTypeWeights(field, soilMap, groundFilter)
     if next(soilWeights) ~= nil then
         if phCanLevel and phCanOptimal then
             local sum, total = 0, 0
