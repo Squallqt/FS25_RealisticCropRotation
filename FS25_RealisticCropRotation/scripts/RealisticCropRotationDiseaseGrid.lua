@@ -37,26 +37,10 @@ function RealisticCropRotationDiseaseGrid.new()
     return self
 end
 
----World-space axis-aligned bounding box of a field, from its polygon corner nodes (Field has no `fieldDimensions`).
+---World-space axis-aligned bounding box of a field, in this module's minX, minZ, maxX, maxZ order.
 -- @return number minX, minZ, maxX, maxZ, or nil when geometry is unavailable
 function RealisticCropRotationDiseaseGrid.fieldWorldBounds(field)
-    if field == nil or getWorldTranslation == nil then return nil end
-    local points = field.polygonPoints
-    if type(points) ~= "table" or #points == 0 then return nil end
-
-    local minX, maxX, minZ, maxZ
-    for _, node in ipairs(points) do
-        if node ~= nil then
-            local x, _, z = getWorldTranslation(node)
-            if type(x) == "number" and type(z) == "number" then
-                if minX == nil or x < minX then minX = x end
-                if maxX == nil or x > maxX then maxX = x end
-                if minZ == nil or z < minZ then minZ = z end
-                if maxZ == nil or z > maxZ then maxZ = z end
-            end
-        end
-    end
-
+    local minX, maxX, minZ, maxZ = RealisticCropRotationManager.fieldPolygonBounds(field)
     if minX == nil then return nil end
     return minX, minZ, maxX, maxZ
 end

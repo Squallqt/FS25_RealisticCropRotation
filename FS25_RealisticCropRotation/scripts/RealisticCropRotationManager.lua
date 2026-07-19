@@ -90,7 +90,7 @@ end
 ---World-space axis-aligned bounding box of a field's polygon corner nodes (Field has no `fieldDimensions`).
 -- @param table field
 -- @return number minX, maxX, minZ, maxZ, or nil when geometry is unavailable
-local function fieldPolygonBounds(field)
+function RealisticCropRotationManager.fieldPolygonBounds(field)
     local vertices = getFieldPolygonVertices(field)
     if vertices == nil then return nil end
 
@@ -103,6 +103,9 @@ local function fieldPolygonBounds(field)
     end
     return minX, maxX, minZ, maxZ
 end
+
+-- File-local alias for the functions below.
+local fieldPolygonBounds = RealisticCropRotationManager.fieldPolygonBounds
 
 ---True when a 2D point lies inside a polygon (ray-casting / even-odd rule).
 -- @param number x
@@ -168,8 +171,7 @@ end
 -- @param table field
 -- @return number areaHa
 local function getRotationAreaHa(farmland, field)
-    -- The measured area is re-read from the terrain on every load, so it follows a field that was
-    -- enlarged or trimmed; field.areaHa is the map polygon, fixed once and never updated.
+    -- Measured worked area first, map polygon as fallback.
     local measuredArea = getFarmlandFieldAreaHa(farmland)
     if measuredArea > 0 then return measuredArea end
     return getFieldAreaHa(field)
@@ -259,6 +261,15 @@ local function getFieldGroundLayer(layer)
     return mapId, firstChannel, numChannels
 end
 
+---Filter selecting worked field ground (GROUND_TYPE above NONE).
+-- @return table filter, or nil
+function RealisticCropRotationManager.makeFieldGroundFilter()
+    local layer = FieldDensityMap ~= nil and FieldDensityMap.GROUND_TYPE or nil
+    local mapId, firstChannel, numChannels = getFieldGroundLayer(layer)
+    if mapId == nil then return nil end
+    return makeDensityFilter(mapId, firstChannel, numChannels, DensityValueCompareType.GREATER, 0)
+end
+
 ---Sums a vanilla field layer over a field, narrowed by an optional value filter and mask.
 -- @param table field
 -- @param integer layer FieldDensityMap entry
@@ -287,13 +298,14 @@ end
 -- @return integer level Deepest sufficiently covered level, 0 when none, or nil when the field has no polygon
 -- @return number ratio Field average over maxLevel, for the bar fill
 local function getFieldLayerCoverageLevel(field, layer, maxLevel)
-    local sum, pixels = aggregateFieldGroundLayer(field, layer)
+    local groundFilter = RealisticCropRotationManager.makeFieldGroundFilter()
+    local sum, pixels = aggregateFieldGroundLayer(field, layer, nil, nil, nil, groundFilter)
     if sum == nil or pixels == nil or pixels <= 0 then return nil end
 
     local level = 0
     for candidate = maxLevel, 1, -1 do
         local _, covered = aggregateFieldGroundLayer(field, layer,
-            DensityValueCompareType.BETWEEN, candidate, maxLevel)
+            DensityValueCompareType.BETWEEN, candidate, maxLevel, groundFilter)
         if covered ~= nil and (covered / pixels) >= VANILLA_LEVEL_COVERAGE then
             level = candidate
             break
@@ -411,6 +423,7 @@ end
 -- @return integer fruitTypeIndex, or nil
 -- @return boolean sampled True when the density map could be read
 -- @return integer growthState Representative growth state, or nil
+-- Point sampled: off-field points return no fruit type and drop out of the vote.
 local function getFieldFruitTypeIndexFromDensityMap(field)
     if FSDensityMapUtil == nil or FSDensityMapUtil.getFruitTypeIndexAtWorldPos == nil then
         return nil, false
@@ -558,13 +571,10 @@ end
 -- @param table field
 -- @return table filter, number pixels, or nil when the field has no worked ground
 local function getFieldGroundCoverage(field)
-    local layer = FieldDensityMap ~= nil and FieldDensityMap.GROUND_TYPE or nil
-    local mapId, firstChannel, numChannels = getFieldGroundLayer(layer)
-    if mapId == nil then return nil end
-
-    local filter = makeDensityFilter(mapId, firstChannel, numChannels, DensityValueCompareType.GREATER, 0)
+    local filter = RealisticCropRotationManager.makeFieldGroundFilter()
     if filter == nil then return nil end
 
+    local mapId, firstChannel, numChannels = getFieldGroundLayer(FieldDensityMap.GROUND_TYPE)
     local _, pixels = aggregateFieldLayer(field, mapId, firstChannel, numChannels, filter)
     if pixels == nil or pixels <= 0 then return nil end
     return filter, pixels
@@ -610,7 +620,7 @@ local function getNativeGroundStateIndex(field, groundPixels)
     local threshold = groundPixels * FIELD_STATE_COVERAGE
     for _, group in ipairs(groups) do
         if group.index ~= nil then
-            -- Only one group can pass a majority, so the first hit is the answer.
+            -- First group above the threshold wins.
             local pixels = 0
             for _, groundType in ipairs(group.types) do
                 if groundType ~= nil then
@@ -647,7 +657,6 @@ local function getSoilStateDefinitions()
     end
     if indices.NEEDS_PLOWING ~= nil and gameplay ~= nil and gameplay.usePlowCounter == true
         and missionInfo ~= nil and missionInfo.plowingRequiredEnabled == true then
-        -- Level 0 also matches every pixel off the field, hence the ground mask on every count.
         table.insert(states, { index = indices.NEEDS_PLOWING, layer = FieldDensityMap.PLOW_LEVEL, value = 0 })
     end
 
@@ -1009,7 +1018,7 @@ function RealisticCropRotationManager:getFieldStateIndices(farmlandId)
     local n = tonumber(farmlandId)
     if n == nil then return nil end
 
-    -- Same-frame memo: opening the menu resolves the same fields for the sidebar and the reconcile pass.
+    -- Same-frame memo.
     local nowMs = tonumber(g_time) or 0
     if self.fieldStateMemo == nil or self.fieldStateMemo.tMs ~= nowMs then
         self.fieldStateMemo = { tMs = nowMs }
@@ -1362,7 +1371,7 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId)
         end
     end
 
-    -- Field-ground mask: the polygon can reach past the worked ground, and those pixels carry no soil reading.
+    -- Field-ground mask, shared by the pH average and its target weighting.
     local groundFilter = getFieldGroundCoverage(field)
 
     if phCanLevel then
@@ -1399,7 +1408,7 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId)
         end
     end
 
-    -- Targets weighted by the field's soil-type pixel counts, over worked ground only.
+    -- Targets weighted by soil-type pixel counts over worked ground.
     local soilWeights = getFieldSoilTypeWeights(field, soilMap, groundFilter)
     if next(soilWeights) ~= nil then
         if phCanLevel and phCanOptimal then
@@ -1555,17 +1564,14 @@ function RealisticCropRotationManager.getGrowthStageNumbers(fruitType, growthSta
         return string.format("%d/%d", minPreparing, minPreparing)
     end
 
-    local maxStage = tonumber(fruitType.numGrowthStates) or 0
-    local maxHarvest = tonumber(fruitType.maxHarvestingGrowthState) or 0
-    if maxHarvest > maxStage then
-        maxStage = maxHarvest
+    -- Denominator = maturity: first preparing state, else first harvest-ready state.
+    local maturity = tonumber(fruitType.minHarvestingGrowthState) or 0
+    if maturity <= 0 then return nil end
+    if minPreparing >= 1 and minPreparing < maturity then
+        maturity = minPreparing
     end
 
-    if maxStage <= 0 or growthState > maxStage then
-        return nil
-    end
-
-    return string.format("%d/%d", growthState, maxStage)
+    return string.format("%d/%d", math.min(growthState, maturity), maturity)
 end
 
 ---Per-field card info: growth stage + the on-foot weed line.

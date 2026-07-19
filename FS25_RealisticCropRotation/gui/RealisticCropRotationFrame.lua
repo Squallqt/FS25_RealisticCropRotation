@@ -505,11 +505,11 @@ function RealisticCropRotationFrame:buildFarmlandList()
     return mgr:getOwnedFarmlands() or {}
 end
 
----Formats a hectare value as "X.X ha".
+---Formats a hectare value as "X.XX ha".
 -- @param number areaHa
 -- @return string text
 function RealisticCropRotationFrame:formatAreaHa(areaHa)
-    return string.format("%.1f ha", tonumber(areaHa) or 0)
+    return string.format("%.2f ha", tonumber(areaHa) or 0)
 end
 
 ---True when the game's colour-blind mode is enabled.

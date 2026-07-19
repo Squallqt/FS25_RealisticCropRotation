@@ -170,7 +170,8 @@ local function paintInfectionPresence(grid, field, group)
     if polygon == nil then return end
     local gridModifier = DensityMapModifier.new(grid.mapId, 0, grid.numChannels, g_terrainNode)
     polygon:applyToModifier(gridModifier)
-    gridModifier:executeSet(diseaseState)
+    -- Painted on worked ground only.
+    gridModifier:executeSet(diseaseState, RealisticCropRotationManager.makeFieldGroundFilter())
     grid.changeRevision = (grid.changeRevision or 0) + 1
 end
 
@@ -381,9 +382,12 @@ local function perlinAreaFraction(field, seed, threshold, octaves, frequency, pe
     local perlin = PerlinNoiseFilter.new(groundTypeMapId, octaves, frequency, persistence, tonumber(seed) or 1)
     perlin:setValueCompareParams(DensityValueCompareType.GREATER, threshold)
 
-    local _, hits, total = modifier:executeGet(perlin)
-    if total == nil or total <= 0 then return 0 end
-    return (hits or 0) / total
+    -- Worked-ground pixels counted in their own pass.
+    local groundFilter = RealisticCropRotationManager.makeFieldGroundFilter()
+    local _, hits = modifier:executeGet(perlin, groundFilter)
+    local _, groundPixels = modifier:executeGet(groundFilter)
+    if groundPixels == nil or groundPixels <= 0 then return 0 end
+    return (hits or 0) / groundPixels
 end
 
 ---Binary-searches the deterministic Perlin GREATER threshold selecting `targetFraction` of the field.
@@ -705,20 +709,6 @@ function RealisticCropRotationDisease:refreshRiskMap(force)
     end
 end
 
----Worst active infection severity on a field, in [0,1] (0 when none). Server-authoritative.
--- @param integer farmlandId
--- @return number severity
-function RealisticCropRotationDisease:getSeverity(farmlandId)
-    local sev = 0
-    local st = self.state[tonumber(farmlandId) or farmlandId]
-    if st ~= nil then
-        for _, s in pairs(st) do
-            if (s.severity or 0) > sev then sev = s.severity end
-        end
-    end
-    return sev
-end
-
 ---Copies active disease state into a network-safe table.
 -- @return table state
 -- @return table crop
@@ -982,9 +972,12 @@ local function getProtectionCoverage(field, protectionMapId)
     local filter = DensityMapFilter.new(protectionMapId, 0, 1)
     filter:setValueCompareParams(DensityValueCompareType.EQUAL, 1)
 
-    local _, protectedPixels, totalPixels = modifier:executeGet(filter)
-    if totalPixels == nil or totalPixels <= 0 then return 0 end
-    return (protectedPixels or 0) / totalPixels
+    -- Worked-ground pixels counted in their own pass.
+    local groundFilter = RealisticCropRotationManager.makeFieldGroundFilter()
+    local _, protectedPixels = modifier:executeGet(filter, groundFilter)
+    local _, groundPixels = modifier:executeGet(groundFilter)
+    if groundPixels == nil or groundPixels <= 0 then return 0 end
+    return (protectedPixels or 0) / groundPixels
 end
 
 function RealisticCropRotationDisease:consoleDump(farmlandId)
