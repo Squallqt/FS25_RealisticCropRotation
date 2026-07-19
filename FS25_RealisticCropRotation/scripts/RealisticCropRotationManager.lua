@@ -12,6 +12,10 @@ local SOIL_TYPE_LOCATOR_STEPS = 16
 -- Field share that must reach a level for that level to be reported.
 local VANILLA_LEVEL_COVERAGE = 0.90
 
+-- PF field-info only displays legend values (PrecisionFarming.xml showOnHud): nitrogen per 20 kg/ha, pH per 0.25.
+local PF_N_DISPLAY_STEP = 20
+local PF_PH_DISPLAY_STEP = 0.25
+
 
 ---True on a multiplayer client (not the server/host).
 -- @return boolean isPureClient
@@ -280,15 +284,11 @@ end
 ---Snaps a real-unit value onto PF's storage steps, measured from state 1 to the map maximum.
 -- @param number value Real-unit value
 -- @param function conv Internal-to-real converter
--- @param integer maxInternal
+-- @param number step
 -- @return number snapped
-local function snapToValueStep(value, conv, maxInternal)
-    if value == nil or maxInternal == nil or maxInternal <= 1 then return value end
-    local low, high = conv(1), conv(maxInternal)
-    if low == nil or high == nil then return value end
-    local step = (high - low) / (maxInternal - 1)
-    if step <= 0 then return value end
-    return low + math.floor((value - low) / step + 0.5) * step
+local function snapToDisplayStep(value, step)
+    if value == nil or step == nil or step <= 0 then return value end
+    return math.floor(value / step + 0.5) * step
 end
 
 ---Resolves a Precision Farming ValueMap's density handle.
@@ -1374,7 +1374,7 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId)
         if mapId ~= nil then
             local sum, pixels = aggregateFieldLayer(field, mapId, firstChannel, numChannels)
             if sum ~= nil and pixels > 0 then
-                rec.phActual = phConv(sum / pixels)
+                rec.phActual = snapToDisplayStep(phConv(sum / pixels), PF_PH_DISPLAY_STEP)
                 rec.phMin, rec.phMax = phConv(0) or 0, phConv(phMaxInternal) or 0
             end
         end
@@ -1398,7 +1398,7 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId)
             end
 
             if sum ~= nil and pixels > 0 then
-                rec.nActual = nConv(sum / pixels)
+                rec.nActual = snapToDisplayStep(nConv(sum / pixels), PF_N_DISPLAY_STEP)
             end
         end
     end
@@ -1418,7 +1418,7 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId)
                 end
             end
             if total > 0 then
-                rec.phTarget = snapToValueStep(sum / total, phConv, phMaxInternal)
+                rec.phTarget = snapToDisplayStep(sum / total, PF_PH_DISPLAY_STEP)
             end
         end
 
@@ -1442,7 +1442,7 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId)
                 end
             end
             if total > 0 then
-                rec.nTarget = snapToValueStep(nConv(sum / total), nConv, nMaxInternal)
+                rec.nTarget = snapToDisplayStep(nConv(sum / total), PF_N_DISPLAY_STEP)
             end
         end
     end
