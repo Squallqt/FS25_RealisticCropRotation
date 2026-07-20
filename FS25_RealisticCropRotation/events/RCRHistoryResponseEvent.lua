@@ -19,8 +19,10 @@ end
 
 ---Reads the rotation snapshot and applies it on the client (buffers it when the manager is not ready yet).
 -- @param integer streamId Network stream identifier
--- @param Connection _connection Network connection (unused)
-function RCRHistoryResponseEvent:readStream(streamId, _connection)
+-- @param Connection connection Network connection
+function RCRHistoryResponseEvent:readStream(streamId, connection)
+    if not connection:getIsServer() then return end
+
     local farmlandCount = streamReadInt16(streamId)
     local received = {}
     local totalEntries = 0

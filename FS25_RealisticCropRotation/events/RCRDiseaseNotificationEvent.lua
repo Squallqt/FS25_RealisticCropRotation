@@ -18,6 +18,8 @@ function RCRDiseaseNotificationEvent.new(farmId, farmlandId, group)
 end
 
 function RCRDiseaseNotificationEvent:readStream(streamId, connection)
+    if not connection:getIsServer() then return end
+
     self.farmId = streamReadInt32(streamId)
     self.farmlandId = streamReadInt32(streamId)
     self.group = streamReadString(streamId)
