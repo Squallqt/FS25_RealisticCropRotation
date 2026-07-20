@@ -255,6 +255,7 @@ function RealisticCropRotationFrame:onFrameOpen()
     end
     self:populateSidebar()
     self:layoutCalendarLegend()
+    self:setMenuButtonInfoDirty()
     if RealisticCropRotation ~= nil and RealisticCropRotation.requestServerSync ~= nil then
         RealisticCropRotation.requestServerSync("frameOpen")
     end

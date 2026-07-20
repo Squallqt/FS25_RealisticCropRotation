@@ -1564,8 +1564,8 @@ function RealisticCropRotationManager.getGrowthStageNumbers(fruitType, growthSta
         return string.format("%d/%d", minPreparing, minPreparing)
     end
 
-    -- Denominator = maturity: first preparing state, else first harvest-ready state.
-    local maturity = tonumber(fruitType.minHarvestingGrowthState) or 0
+    -- Denominator = maturity: first preparing state, else last harvest-ready state.
+    local maturity = tonumber(fruitType.maxHarvestingGrowthState) or 0
     if maturity <= 0 then return nil end
     if minPreparing >= 1 and minPreparing < maturity then
         maturity = minPreparing
