@@ -19,7 +19,7 @@
         <e k="rcr_disease_risk_low"       v="Lav" />
         <e k="rcr_disease_risk_moderate"  v="Moderat" />
         <e k="rcr_disease_risk_high"      v="Høy" />
-        <e k="rcr_disease_notification" v="%s oppdaget på åker %s" />
+        <e k="rcr_disease_notification" v="%s oppdaget på jorde %s" />
         <e k="rcr_disease_hud_label"    v="Sykdom" />
         <e k="rcr_disease_header_active" v="Sykdom (%s)" />
         <e k="rcr_treatment_hud_label"  v="Behandling" />
@@ -106,9 +106,9 @@
         <e k="rcr_advice_afterRoot" v="Etter en rotvekst venter du fire år før rotvekster kommer tilbake, og følger opp med et korn for å bygge opp strukturen etter den sene opptakingen." />
         <e k="rcr_advice_afterVegetable" v="Etter en grønnsak venter du tre år før du gjentar den, med et korn som rent avbrudd." />
         <e k="rcr_advice_afterForage" v="Etter en eng utnytter et korn fruktbarheten og strukturen som er bygd opp under grasdekket." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Høyt sclerotinia-trykk: unngå raps, solsikke, soyabønne, ert, bønne, potet og gulrot i minst 3 år; soppmiddel ved blomstring i fuktig vær." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Høyt nematode-trykk: unngå sukkerbete, rødbete, raps, sennep og spinat i 3 år; nematicid eller resistent fangvekst." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderat sclerotinia-trykk: spre vertsvekstene og følg med på en fuktig blomstring." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Høyt sclerotinia-trykk: unngå raps, sennep, solsikke, soyabønne, ert, bønne, potet og gulrot i minst 3 år; soppmiddelet redder avlingen på sprøytet areal, men presser ikke sykdommen tilbake." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Høyt nematode-trykk: unngå sukkerbete, rødbete, raps, sennep og spinat i 3 år; nematicidet redder avlingen på sprøytet areal i 3 måneder." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderat sclerotinia-trykk: spre vertsvekstene, regn øker risikoen." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Moderat nematode-trykk: spre beter og korsblomstrede." />
         <e k="rcr_advice_no_current_crop" v="Ingen aktuell hovedvekst: råd tilgjengelig når en vekst oppdages." />
 
@@ -161,11 +161,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Ufullstendig plan" />
-        <e k="rcr_score_excellent"      v="Utmerket vekstskifte: lav sykdomsrisiko" />
-        <e k="rcr_score_good"           v="Godt vekstskifte: sykdomsrisiko under kontroll" />
-        <e k="rcr_score_fair"           v="Greit vekstskifte: økende sykdomsrisiko" />
-        <e k="rcr_score_poor"           v="Dårlig vekstskifte: høy sykdomsrisiko" />
-        <e k="rcr_score_bad"            v="Svært dårlig vekstskifte: alvorlig sykdomsrisiko" />
+        <e k="rcr_score_excellent"      v="Utmerket vekstskifte: lavest mulig sykdomspress" />
+        <e k="rcr_score_good"           v="Godt vekstskifte: sykdomspress under kontroll" />
+        <e k="rcr_score_fair"           v="Greit vekstskifte: økende sykdomspress" />
+        <e k="rcr_score_poor"           v="Dårlig vekstskifte: høyt sykdomspress" />
+        <e k="rcr_score_bad"            v="Svært dårlig vekstskifte: alvorlig sykdomspress" />
         <e k="rcr_score_label_low"      v="Dårlig poengsum" />
         <e k="rcr_score_label_optimal"  v="Optimal poengsum" />
         <e k="rcr_score_short_optimal"  v="OPTIMAL" />
@@ -190,7 +190,7 @@
         <e k="rcr_disease_name_clubroot" v="Klumprot" />
         <e k="rcr_disease_treatment_sclerotinia" v="Soppmiddel" />
         <e k="rcr_disease_treatment_phoma" v="Soppmiddel" />
-        <e k="rcr_disease_treatment_takeall" v="Ingen (vekstskifte)" />
+        <e k="rcr_disease_treatment_takeall" v="Ingen (kun vekstskifte)" />
         <e k="rcr_disease_treatment_septoria" v="Soppmiddel" />
         <e k="rcr_disease_treatment_rust" v="Soppmiddel" />
         <e k="rcr_disease_treatment_fusarium" v="Soppmiddel" />
@@ -199,20 +199,20 @@
         <e k="rcr_fillType_fungicide" v="Soppmiddel" />
         <e k="rcr_fillType_nematicide" v="Nematicid" />
         <e k="rcr_disease_treatment_none" v="Ingen behandling" />
-        <e k="rcr_disease_treatment_clubroot" v="Ingen (resistent sort, kalking, vekstskifte)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Høyt phoma-trykk: unngå raps og sennep i ca. 4 år, mold ned planterester; soppmiddel om høsten på mottakelige sorter." />
-        <e k="rcr_advice_pressure_high_takeall" v="Høyt rotdreper-trykk: sett inn en ikke-vertsvekst som opphold (havre, belgvekst, oljevekst); ingen soppmiddel virker, bare vekstskifte kurerer." />
-        <e k="rcr_advice_pressure_high_septoria" v="Høyt septoria-trykk: unngå hvete/bygg på kornrester, velg en tolerant sort; soppmiddel fra stråstrekking i et vått klima." />
-        <e k="rcr_advice_pressure_high_rust" v="Høyt rust-trykk: så en resistent sort og planlegg et soppmiddel; følg med på milde fuktige perioder." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Høyt fusarium-trykk: unngå hvete etter mais, mold ned planterester; soppmiddel ved blomstring hvis vått." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Høyt tørråte-trykk: plant en resistent sort og beskytt poteter med soppmiddel så snart det blir kjølig og vått." />
-        <e k="rcr_advice_pressure_high_clubroot" v="Høyt klumprot-trykk: opphold fra korsblomstrede i over 6 år, kalk for å heve pH og så en resistent sort; ingen kjemisk behandling." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Moderat phoma-trykk: forleng oppholdet fra raps og kutt opp stubben." />
+        <e k="rcr_disease_treatment_clubroot" v="Ingen (kun vekstskifte)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Høyt phoma-trykk: strekk oppholdet for raps og sennep til 4 år; soppmiddelet redder avlingen på sprøytet areal, men presser ikke sykdommen tilbake." />
+        <e k="rcr_advice_pressure_high_takeall" v="Høyt rotdreper-trykk: sett inn en ikke-vertsvekst som opphold (havre, belgvekst, oljevekst); ingen midler beskytter mot denne sykdommen, bare vekstskifte senker trykket." />
+        <e k="rcr_advice_pressure_high_septoria" v="Høyt septoria-trykk: spre hvete, bygg, rughvete og spelt; soppmiddelet redder avlingen på sprøytet areal, og regn framskynder epidemien." />
+        <e k="rcr_advice_pressure_high_rust" v="Høyt rust-trykk: både korn og raps er verter, spre dem; soppmiddelet redder avlingen på sprøytet areal, og milde fuktige perioder framskynder epidemien." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Høyt fusarium-trykk: unngå hvete etter mais og legg færre kornvekster på rad; soppmiddelet redder avlingen på sprøytet areal, og regn framskynder epidemien." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Høyt tørråte-trykk: spre potetene; soppmiddelet redder avlingen på sprøytet areal, og kjølig fuktig vær framskynder epidemien." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Høyt klumprot-trykk: strekk oppholdet for raps og sennep så langt som mulig; ingen midler beskytter mot denne sykdommen, bare vekstskifte virker." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Moderat phoma-trykk: forleng oppholdet for raps og sennep." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Moderat rotdreper-trykk: unngå et tredje korn på rad." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Moderat septoria-trykk: følg med på vårregn og smitte i planterester." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Moderat rust-trykk: se etter pustler i mildt vær." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="Moderat fusarium-trykk: spre korn og mais, håndter planterester." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Moderat tørråte-trykk: overvåk kjølig vått vær og fjern spillplanter." />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="Moderat klumprot-trykk: forleng oppholdet fra raps og følg med på sur pH." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Moderat septoria-trykk: spre kornvekstene, regn øker risikoen." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Moderat rust-trykk: spre korn og raps, milde fuktige perioder øker risikoen." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Moderat fusarium-trykk: spre korn og mais." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Moderat tørråte-trykk: spre potetene, kjølig fuktig vær øker risikoen." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Moderat klumprot-trykk: forleng oppholdet for raps og sennep." />
     </elements>
 </l10n>

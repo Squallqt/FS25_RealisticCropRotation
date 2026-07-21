@@ -31,3 +31,6 @@ temp/
 *~
 *.orig
 *.swp
+
+# Working docs
+*.md

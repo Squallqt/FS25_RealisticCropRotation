@@ -106,9 +106,9 @@
         <e k="rcr_advice_afterRoot" v="Bir kök bitkisinden sonra köklerin dönmesinden önce dört yıl bekle, ardından geç hasattan sonra yapıyı yeniden kurmak için bir tahıl." />
         <e k="rcr_advice_afterVegetable" v="Bir sebzeden sonra tekrarlamadan önce üç yıl bekle, temiz bir ara olarak bir tahıl ile." />
         <e k="rcr_advice_afterForage" v="Geçici bir çayırdan sonra tahıl, çim örtüsü altında biriken verimlilik ve yapıyı değerlendirir." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Sklerotinya baskısı yüksek: kanola, ayçiçeği, soya, bezelye, fasulye, patates ve havucu en az 3 yıl ekmeyin; nemli havada çiçeklenmede fungisit uygulayın." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Nematod baskısı yüksek: şeker pancarı, kırmızı pancar, kanola, hardal ve ıspanağı 3 yıl ekmeyin; nematisit ya da dayanıklı tuzak bitki kullanın." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Sklerotinya baskısı orta: konukçu bitkilerin arasını açın ve nemli çiçeklenmeye dikkat edin." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Sklerotinya baskısı yüksek: kanola, hardal, ayçiçeği, soya, bezelye, fasulye, patates ve havucu en az 3 yıl ekmeyin; fungisit ilaçlanan yerde ürünü kurtarır, hastalığı geriletmez." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Nematod baskısı yüksek: şeker pancarı, kırmızı pancar, kanola, hardal ve ıspanağı 3 yıl ekmeyin; nematisit ilaçlanan yerde ürünü 3 ay boyunca kurtarır." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Sklerotinya baskısı orta: konukçu bitkilerin arasını açın, yağmur riski artırır." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Nematod baskısı orta: pancar ve turpgillerin arasını açın." />
         <e k="rcr_advice_no_current_crop" v="Mevcut ana ekin yok: bir ekin algılandığında tavsiye sunulur." />
 
@@ -161,11 +161,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Eksik plan" />
-        <e k="rcr_score_excellent"      v="Mükemmel rotasyon: düşük hastalık riski" />
-        <e k="rcr_score_good"           v="İyi rotasyon: hastalık riski kontrol altında" />
-        <e k="rcr_score_fair"           v="Orta rotasyon: artan hastalık riski" />
-        <e k="rcr_score_poor"           v="Zayıf rotasyon: yüksek hastalık riski" />
-        <e k="rcr_score_bad"            v="Çok kötü rotasyon: çok yüksek hastalık riski" />
+        <e k="rcr_score_excellent"      v="Mükemmel rotasyon: hastalık baskısı en düşük" />
+        <e k="rcr_score_good"           v="İyi rotasyon: hastalık baskısı kontrol altında" />
+        <e k="rcr_score_fair"           v="Orta rotasyon: hastalık baskısı artıyor" />
+        <e k="rcr_score_poor"           v="Rotasyon geliştirilmeli: yüksek hastalık baskısı" />
+        <e k="rcr_score_bad"            v="Kötü rotasyon: ağır hastalık baskısı" />
         <e k="rcr_score_label_low"      v="Kötü puan" />
         <e k="rcr_score_label_optimal"  v="En uygun puan" />
         <e k="rcr_score_short_optimal"  v="OPTİMAL" />
@@ -190,7 +190,7 @@
         <e k="rcr_disease_name_clubroot" v="Kök uru hastalığı" />
         <e k="rcr_disease_treatment_sclerotinia" v="Fungisit" />
         <e k="rcr_disease_treatment_phoma" v="Fungisit" />
-        <e k="rcr_disease_treatment_takeall" v="Yok (münavebe)" />
+        <e k="rcr_disease_treatment_takeall" v="Yok (yalnızca münavebe)" />
         <e k="rcr_disease_treatment_septoria" v="Fungisit" />
         <e k="rcr_disease_treatment_rust" v="Fungisit" />
         <e k="rcr_disease_treatment_fusarium" v="Fungisit" />
@@ -199,20 +199,20 @@
         <e k="rcr_fillType_fungicide" v="Fungisit" />
         <e k="rcr_fillType_nematicide" v="Nematisit" />
         <e k="rcr_disease_treatment_none" v="İlaçlama yok" />
-        <e k="rcr_disease_treatment_clubroot" v="Yok (dayanıklı çeşit, kireçleme, münavebe)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Phoma baskısı yüksek: kanola ve hardalı yaklaşık 4 yıl ekmeyin, artıkları toprağa gömün; duyarlı çeşitlerde sonbaharda fungisit uygulayın." />
-        <e k="rcr_advice_pressure_high_takeall" v="Kök çürüklüğü baskısı yüksek: konukçu olmayan bir ara bitki (yulaf, baklagil, yağlı tohum) ekin; etkili fungisit yoktur, yalnızca münavebe iyileştirir." />
-        <e k="rcr_advice_pressure_high_septoria" v="Septorya baskısı yüksek: tahıl artıkları üzerine buğday/arpa ekmeyin, dayanıklı çeşit seçin; nemli iklimde sapa kalkmadan itibaren fungisit uygulayın." />
-        <e k="rcr_advice_pressure_high_rust" v="Pas baskısı yüksek: dayanıklı çeşit ekin ve fungisit planlayın; ılıman nemli dönemleri izleyin." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Fusarium baskısı yüksek: mısırdan sonra buğday ekmeyin, artıkları gömün; yağışlıysa çiçeklenmede fungisit uygulayın." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Mildiyö baskısı yüksek: dayanıklı çeşit ekin ve hava serin ve nemli olur olmaz patatesi fungisitle koruyun." />
-        <e k="rcr_advice_pressure_high_clubroot" v="Kök uru baskısı yüksek: turpgil arasını 6 yıldan fazla tutun, pH'ı yükseltmek için kireçleyin ve dayanıklı çeşit ekin; kimyasal tedavi yoktur." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Phoma baskısı orta: kanola arasını uzatın ve anızı parçalayın." />
+        <e k="rcr_disease_treatment_clubroot" v="Yok (yalnızca münavebe)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Phoma baskısı yüksek: kanola ve hardal arasını 4 yıla çıkarın; fungisit ilaçlanan yerde ürünü kurtarır, hastalığı geriletmez." />
+        <e k="rcr_advice_pressure_high_takeall" v="Kök çürüklüğü baskısı yüksek: konukçu olmayan bir ara bitki (yulaf, baklagil, yağlı tohum) ekin; bu hastalığa karşı koruyan bir ilaç yoktur, baskıyı yalnızca münavebe düşürür." />
+        <e k="rcr_advice_pressure_high_septoria" v="Septorya baskısı yüksek: buğday, arpa, tritikale ve speltin arasını açın; fungisit ilaçlanan yerde ürünü kurtarır, yağmur salgını hızlandırır." />
+        <e k="rcr_advice_pressure_high_rust" v="Pas baskısı yüksek: tahıllar da kanola da konukçudur, aralarını açın; fungisit ilaçlanan yerde ürünü kurtarır, ılıman ve nemli dönemler salgını hızlandırır." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Fusarium baskısı yüksek: mısırdan sonra buğday ekmeyin ve arka arkaya daha az tahıl koyun; fungisit ilaçlanan yerde ürünü kurtarır, yağmur salgını hızlandırır." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Mildiyö baskısı yüksek: patateslerin arasını açın; fungisit ilaçlanan yerde ürünü kurtarır, serin ve nemli hava salgını hızlandırır." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Kök uru baskısı yüksek: kanola ve hardal arasını olabildiğince uzatın; bu hastalığa karşı koruyan bir ilaç yoktur, yalnızca münavebe işe yarar." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Phoma baskısı orta: kanola ve hardal arasını uzatın." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Kök çürüklüğü baskısı orta: üst üste üçüncü tahıldan kaçının." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Septorya baskısı orta: ilkbahar yağmurlarını ve artıklardaki inokulumu izleyin." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Pas baskısı orta: ılıman havada püstülleri kontrol edin." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="Fusarium baskısı orta: tahıl ve mısırın arasını açın, artıkları yönetin." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Mildiyö baskısı orta: serin nemli havayı izleyin ve kendi gelen bitkileri yok edin." />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="Kök uru baskısı orta: kanola arasını uzatın ve asidik pH'a dikkat edin." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Septorya baskısı orta: tahılların arasını açın, yağmur riski artırır." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Pas baskısı orta: tahıl ve kanolanın arasını açın, ılıman ve nemli dönemler riski artırır." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Fusarium baskısı orta: tahıl ve mısırın arasını açın." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Mildiyö baskısı orta: patateslerin arasını açın, serin ve nemli hava riski artırır." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Kök uru baskısı orta: kanola ve hardal arasını uzatın." />
     </elements>
 </l10n>

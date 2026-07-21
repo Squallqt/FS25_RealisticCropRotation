@@ -106,9 +106,9 @@
         <e k="rcr_advice_afterRoot"      v="Nach einer Hackfrucht vier Jahre bis zur Wiederkehr lassen, dann Getreide, um die Struktur nach der späten Ernte wieder aufzubauen." />
         <e k="rcr_advice_afterVegetable" v="Nach Gemüse drei Jahre bis zur Wiederholung warten, mit Getreide als saubere Anbaupause." />
         <e k="rcr_advice_afterForage"    v="Nach einer Grasphase verwertet Getreide die unter der Grasnarbe aufgebaute Fruchtbarkeit und Struktur." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Hoher Sclerotinia-Druck: Raps, Sonnenblume, Soja, Erbse, Bohne, Kartoffel und Möhre mindestens 3 Jahre meiden; Fungizid zur Blüte bei feuchter Witterung." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Hoher Nematoden-Druck: Zuckerrübe, Rote Bete, Raps, Senf und Spinat 3 Jahre meiden; Nematizid oder resistente Fangpflanze." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Mäßiger Sclerotinia-Druck: Wirtskulturen zeitlich strecken und auf eine feuchte Blüte achten." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Hoher Sclerotinia-Druck: Raps, Senf, Sonnenblume, Soja, Erbse, Bohne, Kartoffel und Möhre mindestens 3 Jahre meiden; Fungizid rettet den Ertrag auf behandelten Flächen, drängt die Krankheit nicht zurück." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Hoher Nematoden-Druck: Zuckerrübe, Rote Bete, Raps, Senf und Spinat 3 Jahre meiden; Nematizid rettet den Ertrag auf behandelten Flächen für 3 Monate." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Mäßiger Sclerotinia-Druck: Wirtskulturen zeitlich strecken, Regen erhöht das Risiko." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Mäßiger Nematoden-Druck: Rüben und Kreuzblütler zeitlich strecken." />
         <e k="rcr_advice_no_current_crop" v="Keine aktuelle Hauptkultur: Empfehlung verfügbar, sobald eine Kultur erkannt wird." />
 
@@ -161,11 +161,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Unvollständiger Plan" />
-        <e k="rcr_score_excellent"      v="Ausgezeichnete Rotation: geringes Krankheitsrisiko" />
-        <e k="rcr_score_good"           v="Gute Rotation: Krankheitsrisiko unter Kontrolle" />
-        <e k="rcr_score_fair"           v="Angemessene Rotation: steigendes Krankheitsrisiko" />
-        <e k="rcr_score_poor"           v="Schlechte Rotation: hohes Krankheitsrisiko" />
-        <e k="rcr_score_bad"            v="Sehr schlechte Rotation: sehr hohes Krankheitsrisiko" />
+        <e k="rcr_score_excellent"      v="Ausgezeichnete Rotation: Krankheitsdruck minimal" />
+        <e k="rcr_score_good"           v="Gute Rotation: Krankheitsdruck unter Kontrolle" />
+        <e k="rcr_score_fair"           v="Angemessene Rotation: steigender Krankheitsdruck" />
+        <e k="rcr_score_poor"           v="Schlechte Rotation: hoher Krankheitsdruck" />
+        <e k="rcr_score_bad"            v="Sehr schlechte Rotation: sehr hoher Krankheitsdruck" />
         <e k="rcr_score_label_low"      v="Schlechte Bewertung" />
         <e k="rcr_score_label_optimal"  v="Optimale Bewertung" />
         <e k="rcr_score_short_optimal"  v="OPTIMAL" />
@@ -190,7 +190,7 @@
         <e k="rcr_disease_name_clubroot" v="Kohlhernie" />
         <e k="rcr_disease_treatment_sclerotinia" v="Fungizid" />
         <e k="rcr_disease_treatment_phoma" v="Fungizid" />
-        <e k="rcr_disease_treatment_takeall" v="Keine (Fruchtfolge)" />
+        <e k="rcr_disease_treatment_takeall" v="Keine (nur Fruchtfolge)" />
         <e k="rcr_disease_treatment_septoria" v="Fungizid" />
         <e k="rcr_disease_treatment_rust" v="Fungizid" />
         <e k="rcr_disease_treatment_fusarium" v="Fungizid" />
@@ -199,20 +199,20 @@
         <e k="rcr_fillType_fungicide" v="Fungizid" />
         <e k="rcr_fillType_nematicide" v="Nematizid" />
         <e k="rcr_disease_treatment_none" v="Keine Behandlung" />
-        <e k="rcr_disease_treatment_clubroot" v="Keine (resistente Sorte, Kalkung, Fruchtfolge)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Hoher Phoma-Druck: Raps und Senf ca. 4 Jahre meiden, Rückstände einarbeiten; Herbstfungizid bei anfälligen Sorten." />
-        <e k="rcr_advice_pressure_high_takeall" v="Hoher Schwarzbeinigkeits-Druck: eine Nichtwirtspause einlegen (Hafer, Leguminose, Ölfrucht); kein wirksames Fungizid, nur die Fruchtfolge hilft." />
-        <e k="rcr_advice_pressure_high_septoria" v="Hoher Septoria-Druck: Weizen/Gerste nicht auf Getreiderückständen anbauen, tolerante Sorte wählen; Fungizid ab Schossbeginn bei feuchtem Klima." />
-        <e k="rcr_advice_pressure_high_rust" v="Hoher Rost-Druck: resistente Sorte säen und Fungizid einplanen; auf mild-feuchte Phasen achten." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Hoher Fusarium-Druck: Weizen nicht nach Mais anbauen, Rückstände einarbeiten; Fungizid zur Blüte bei Nässe." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Hoher Krautfäule-Druck: resistente Sorte pflanzen und Kartoffeln mit Fungizid schützen, sobald es kühl und nass wird." />
-        <e k="rcr_advice_pressure_high_clubroot" v="Hoher Kohlhernie-Druck: Anbaupause der Kreuzblütler über 6 Jahre, Kalkung zur pH-Anhebung und resistente Sorte säen; keine chemische Bekämpfung." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Mäßiger Phoma-Druck: die Rapspause verlängern und das Stroh häckseln." />
+        <e k="rcr_disease_treatment_clubroot" v="Keine (nur Fruchtfolge)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Hoher Phoma-Druck: die Anbaupause von Raps und Senf auf 4 Jahre strecken; Fungizid rettet den Ertrag auf behandelten Flächen, drängt die Krankheit nicht zurück." />
+        <e k="rcr_advice_pressure_high_takeall" v="Hoher Schwarzbeinigkeits-Druck: eine Nichtwirtspause einlegen (Hafer, Leguminose, Ölfrucht); kein Mittel schützt vor dieser Krankheit, nur die Fruchtfolge senkt den Druck." />
+        <e k="rcr_advice_pressure_high_septoria" v="Hoher Septoria-Druck: Weizen, Gerste, Triticale und Dinkel zeitlich strecken; Fungizid rettet den Ertrag auf behandelten Flächen, Regen beschleunigt die Epidemie." />
+        <e k="rcr_advice_pressure_high_rust" v="Hoher Rost-Druck: Getreide und Raps sind beide Wirte, zeitlich strecken; Fungizid rettet den Ertrag auf behandelten Flächen, milde feuchte Phasen beschleunigen die Epidemie." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Hoher Fusarium-Druck: Weizen nicht nach Mais anbauen und weniger Getreide hintereinander stellen; Fungizid rettet den Ertrag auf behandelten Flächen, Regen beschleunigt die Epidemie." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Hoher Krautfäule-Druck: Kartoffeln zeitlich strecken; Fungizid rettet den Ertrag auf behandelten Flächen, kühles feuchtes Wetter beschleunigt die Epidemie." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Hoher Kohlhernie-Druck: die Anbaupause von Raps und Senf so weit wie möglich strecken; kein Mittel schützt vor dieser Krankheit, nur die Fruchtfolge wirkt." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Mäßiger Phoma-Druck: die Anbaupause von Raps und Senf verlängern." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Mäßiger Schwarzbeinigkeits-Druck: eine dritte Getreidefrucht in Folge vermeiden." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Mäßiger Septoria-Druck: Frühjahrsniederschläge und Inokulum aus den Rückständen beobachten." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Mäßiger Rost-Druck: bei milder Witterung auf Pusteln kontrollieren." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="Mäßiger Fusarium-Druck: Getreide und Mais zeitlich strecken, Rückstände managen." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Mäßiger Krautfäule-Druck: kühl-nasse Witterung überwachen und Durchwuchskartoffeln beseitigen." />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="Mäßiger Kohlhernie-Druck: die Rapspause verlängern und auf sauren pH achten." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Mäßiger Septoria-Druck: Getreide zeitlich strecken, Regen erhöht das Risiko." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Mäßiger Rost-Druck: Getreide und Raps zeitlich strecken, milde feuchte Phasen erhöhen das Risiko." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Mäßiger Fusarium-Druck: Getreide und Mais zeitlich strecken." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Mäßiger Krautfäule-Druck: Kartoffeln zeitlich strecken, kühles feuchtes Wetter erhöht das Risiko." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Mäßiger Kohlhernie-Druck: die Anbaupause von Raps und Senf verlängern." />
     </elements>
 </l10n>

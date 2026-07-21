@@ -19,7 +19,7 @@
         <e k="rcr_disease_risk_low"       v="낮음" />
         <e k="rcr_disease_risk_moderate"  v="보통" />
         <e k="rcr_disease_risk_high"      v="높음" />
-        <e k="rcr_disease_notification" v="%s이(가) 농지 %s에서 발견됨" />
+        <e k="rcr_disease_notification" v="병해 발생: %s, 밭 %s" />
         <e k="rcr_disease_hud_label"    v="병해" />
         <e k="rcr_disease_header_active" v="병해(%s)" />
         <e k="rcr_treatment_hud_label"  v="방제" />
@@ -106,9 +106,9 @@
         <e k="rcr_advice_afterRoot" v="뿌리 작물 다음에는 뿌리 작물이 돌아오기까지 4년을 기다리고, 늦은 수확 후 토양 구조를 회복하기 위해 곡물을 이어 심으세요." />
         <e k="rcr_advice_afterVegetable" v="채소 다음에는 반복하기 전에 3년을 기다리고, 곡물을 깔끔한 휴지로 두세요." />
         <e k="rcr_advice_afterForage" v="단기 초지 다음에는 곡물이 잔디 아래 쌓인 비옥도와 구조를 활용합니다." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="균핵병 압력 높음: 유채, 해바라기, 대두, 완두, 강낭콩, 감자, 당근을 최소 3년간 피하고, 습한 날씨에는 개화기에 살균제를 살포한다." />
-        <e k="rcr_advice_pressure_high_bcn"           v="선충 압력 높음: 사탕무, 비트, 유채, 겨자, 시금치를 3년간 피하고, 살선충제 또는 저항성 유인작물을 이용한다." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="균핵병 압력 보통: 기주 작물의 간격을 넓히고 습한 개화기를 주시한다." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="균핵병 압력 높음: 유채, 겨자, 해바라기, 대두, 완두, 강낭콩, 감자, 당근을 최소 3년간 심지 않는다. 살균제는 살포한 구역의 수확을 지킬 뿐 병을 물러나게 하지는 못한다." />
+        <e k="rcr_advice_pressure_high_bcn"           v="선충 압력 높음: 사탕무, 비트, 유채, 겨자, 시금치를 3년간 심지 않는다. 살선충제는 살포한 구역의 수확을 3개월간 지킨다." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="균핵병 압력 보통: 기주 작물의 간격을 넓힌다. 비가 오면 위험이 높아진다." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="선충 압력 보통: 사탕무와 배추과 작물의 간격을 넓힌다." />
         <e k="rcr_advice_no_current_crop" v="현재 주요 작물 없음: 작물이 감지되면 조언이 제공됩니다." />
 
@@ -161,11 +161,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="불완전한 계획" />
-        <e k="rcr_score_excellent"      v="우수한 윤작: 병해 위험 낮음" />
-        <e k="rcr_score_good"           v="좋은 윤작: 병해 위험 통제됨" />
-        <e k="rcr_score_fair"           v="보통 윤작: 병해 위험 증가" />
-        <e k="rcr_score_poor"           v="미흡한 윤작: 병해 위험 높음" />
-        <e k="rcr_score_bad"            v="나쁜 윤작: 병해 위험 심각" />
+        <e k="rcr_score_excellent"      v="우수한 윤작: 병해 압력 최저" />
+        <e k="rcr_score_good"           v="좋은 윤작: 병해 압력 억제됨" />
+        <e k="rcr_score_fair"           v="보통 윤작: 병해 압력 상승" />
+        <e k="rcr_score_poor"           v="개선이 필요한 윤작: 병해 압력 높음" />
+        <e k="rcr_score_bad"            v="나쁜 윤작: 병해 압력 심각" />
         <e k="rcr_score_label_low"      v="나쁜 점수" />
         <e k="rcr_score_label_optimal"  v="최적 점수" />
         <e k="rcr_score_short_optimal"  v="최적" />
@@ -190,7 +190,7 @@
         <e k="rcr_disease_name_clubroot" v="뿌리혹병" />
         <e k="rcr_disease_treatment_sclerotinia" v="살균제" />
         <e k="rcr_disease_treatment_phoma" v="살균제" />
-        <e k="rcr_disease_treatment_takeall" v="없음(윤작)" />
+        <e k="rcr_disease_treatment_takeall" v="없음(윤작만 유효)" />
         <e k="rcr_disease_treatment_septoria" v="살균제" />
         <e k="rcr_disease_treatment_rust" v="살균제" />
         <e k="rcr_disease_treatment_fusarium" v="살균제" />
@@ -199,20 +199,20 @@
         <e k="rcr_fillType_fungicide" v="살균제" />
         <e k="rcr_fillType_nematicide" v="살선충제" />
         <e k="rcr_disease_treatment_none" v="방제 없음" />
-        <e k="rcr_disease_treatment_clubroot" v="없음(저항성 품종, 석회 시용, 윤작)" />
-        <e k="rcr_advice_pressure_high_phoma" v="검은다리병 압력 높음: 유채와 겨자를 약 4년간 피하고 잔재물을 매몰하며, 감수성 품종에는 가을에 살균제를 살포한다." />
-        <e k="rcr_advice_pressure_high_takeall" v="뿌리썩음병 압력 높음: 비기주 작물(귀리, 콩과, 유지작물)을 넣어 끊는다. 효과적인 살균제가 없으며 오직 윤작으로만 치유된다." />
-        <e k="rcr_advice_pressure_high_septoria" v="잎마름병 압력 높음: 곡류 잔재물 위에 밀/보리를 심지 말고 내병성 품종을 고르며, 습한 기후에서는 절간신장기부터 살균제를 살포한다." />
-        <e k="rcr_advice_pressure_high_rust" v="녹병 압력 높음: 저항성 품종을 파종하고 살균제를 계획하며, 온화하고 습한 시기를 주시한다." />
-        <e k="rcr_advice_pressure_high_fusarium" v="붉은곰팡이병 압력 높음: 옥수수 뒤에 밀을 심지 말고 잔재물을 매몰하며, 비가 오면 개화기에 살균제를 살포한다." />
-        <e k="rcr_advice_pressure_high_lateblight" v="역병 압력 높음: 저항성 품종을 심고, 서늘하고 습해지는 즉시 살균제로 감자를 보호한다." />
-        <e k="rcr_advice_pressure_high_clubroot" v="뿌리혹병 압력 높음: 배추과 작물 휴지기를 6년 넘게 두고, 석회로 pH를 높이며 저항성 품종을 파종한다. 화학적 방제법이 없다." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="검은다리병 압력 보통: 유채 휴지기를 늘리고 그루터기를 분쇄한다." />
+        <e k="rcr_disease_treatment_clubroot" v="없음(윤작만 유효)" />
+        <e k="rcr_advice_pressure_high_phoma" v="검은다리병 압력 높음: 유채와 겨자의 재배 간격을 4년으로 늘린다. 살균제는 살포한 구역의 수확을 지킬 뿐 병을 물러나게 하지는 못한다." />
+        <e k="rcr_advice_pressure_high_takeall" v="뿌리썩음병 압력 높음: 비기주 작물(귀리, 콩과, 유지작물)을 사이에 넣는다. 이 병을 막아 주는 약제는 없으며 윤작만이 압력을 낮춘다." />
+        <e k="rcr_advice_pressure_high_septoria" v="잎마름병 압력 높음: 밀, 보리, 트리티케일, 스펠트밀의 간격을 넓힌다. 살균제는 살포한 구역의 수확을 지키고, 비는 확산을 앞당긴다." />
+        <e k="rcr_advice_pressure_high_rust" v="녹병 압력 높음: 곡류와 유채 모두 기주이므로 간격을 넓힌다. 살균제는 살포한 구역의 수확을 지키고, 온화하고 습한 시기는 확산을 앞당긴다." />
+        <e k="rcr_advice_pressure_high_fusarium" v="붉은곰팡이병 압력 높음: 옥수수 뒤에 밀을 심지 말고 곡류 연작을 줄인다. 살균제는 살포한 구역의 수확을 지키고, 비는 확산을 앞당긴다." />
+        <e k="rcr_advice_pressure_high_lateblight" v="역병 압력 높음: 감자의 간격을 넓힌다. 살균제는 살포한 구역의 수확을 지키고, 서늘하고 습한 날씨는 확산을 앞당긴다." />
+        <e k="rcr_advice_pressure_high_clubroot" v="뿌리혹병 압력 높음: 유채와 겨자의 재배 간격을 최대한 늘린다. 이 병을 막아 주는 약제는 없으며 윤작만이 효과가 있다." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="검은다리병 압력 보통: 유채와 겨자의 재배 간격을 늘린다." />
         <e k="rcr_advice_pressure_moderate_takeall" v="뿌리썩음병 압력 보통: 연속 세 번째 곡류를 피한다." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="잎마름병 압력 보통: 봄비와 잔재물의 전염원을 주시한다." />
-        <e k="rcr_advice_pressure_moderate_rust" v="녹병 압력 보통: 온화한 날씨에 여름포자퇴(병반) 발생을 살핀다." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="붉은곰팡이병 압력 보통: 곡류와 옥수수의 간격을 넓히고 잔재물을 관리한다." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="역병 압력 보통: 서늘하고 습한 날씨를 관찰하고 자생주를 제거한다." />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="뿌리혹병 압력 보통: 유채 휴지기를 늘리고 산성 pH를 주시한다." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="잎마름병 압력 보통: 곡류의 간격을 넓힌다. 비가 오면 위험이 높아진다." />
+        <e k="rcr_advice_pressure_moderate_rust" v="녹병 압력 보통: 곡류와 유채의 간격을 넓힌다. 온화하고 습하면 위험이 높아진다." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="붉은곰팡이병 압력 보통: 곡류와 옥수수의 간격을 넓힌다." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="역병 압력 보통: 감자의 간격을 넓힌다. 서늘하고 습하면 위험이 높아진다." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="뿌리혹병 압력 보통: 유채와 겨자의 재배 간격을 늘린다." />
     </elements>
 </l10n>

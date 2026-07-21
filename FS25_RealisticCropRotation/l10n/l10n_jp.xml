@@ -19,7 +19,7 @@
         <e k="rcr_disease_risk_low"       v="低" />
         <e k="rcr_disease_risk_moderate"  v="中" />
         <e k="rcr_disease_risk_high"      v="高" />
-        <e k="rcr_disease_notification" v="%s が圃場 %s で検出されました" />
+        <e k="rcr_disease_notification" v="%s が畑 %s で発生しました" />
         <e k="rcr_disease_hud_label"    v="病害" />
         <e k="rcr_disease_header_active" v="病害（%s）" />
         <e k="rcr_treatment_hud_label"  v="防除" />
@@ -106,9 +106,9 @@
         <e k="rcr_advice_afterRoot" v="根菜の後は、根菜が戻るまで4年あけ、遅い収穫の後に土壌構造を回復させるため穀物を続けてください。" />
         <e k="rcr_advice_afterVegetable" v="野菜の後は、繰り返す前に3年あけ、穀物をきれいな区切りとしてください。" />
         <e k="rcr_advice_afterForage" v="短期草地の後は、穀物が芝の下に蓄えられた地力と構造を活用します。" />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病の圧力が高い。ナタネ、ヒマワリ、ダイズ、エンドウ、インゲン、ジャガイモ、ニンジンを最低3年は避ける。多湿なら開花期に殺菌剤を散布する。" />
-        <e k="rcr_advice_pressure_high_bcn"           v="センチュウの圧力が高い。テンサイ、ビート、ナタネ、カラシナ、ホウレンソウを3年避ける。殺線虫剤または抵抗性のおとり作物を用いる。" />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病の圧力は中程度。宿主作物の間隔をあけ、多湿な開花期に注意する。" />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病の圧力が高い。ナタネ、カラシナ、ヒマワリ、ダイズ、エンドウ、インゲン、ジャガイモ、ニンジンを最低3年は避ける。殺菌剤は散布した場所の収穫を守るだけで、病気を後退させはしない。" />
+        <e k="rcr_advice_pressure_high_bcn"           v="センチュウの圧力が高い。テンサイ、ビート、ナタネ、カラシナ、ホウレンソウを3年避ける。殺線虫剤は散布した場所の収穫を3か月間守る。" />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病の圧力は中程度。宿主作物の間隔をあける。降雨はリスクを高める。" />
         <e k="rcr_advice_pressure_moderate_bcn"         v="センチュウの圧力は中程度。テンサイとアブラナ科の間隔をあける。" />
         <e k="rcr_advice_no_current_crop" v="現在の主要作物なし: 作物が検出されるとアドバイスが表示されます。" />
 
@@ -161,11 +161,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="計画が不完全" />
-        <e k="rcr_score_excellent"      v="優れた輪作。病害リスク低" />
-        <e k="rcr_score_good"           v="良い輪作。病害リスク抑制" />
-        <e k="rcr_score_fair"           v="まずまずの輪作。病害リスク上昇" />
-        <e k="rcr_score_poor"           v="不十分な輪作。病害リスク高" />
-        <e k="rcr_score_bad"            v="悪い輪作。病害リスク深刻" />
+        <e k="rcr_score_excellent"      v="優れた輪作。病害圧は最低水準" />
+        <e k="rcr_score_good"           v="良い輪作。病害圧を抑制" />
+        <e k="rcr_score_fair"           v="まずまずの輪作。病害圧が上昇" />
+        <e k="rcr_score_poor"           v="改善が必要な輪作。病害圧が高い" />
+        <e k="rcr_score_bad"            v="悪い輪作。病害圧が深刻" />
         <e k="rcr_score_label_low"      v="悪いスコア" />
         <e k="rcr_score_label_optimal"  v="最適スコア" />
         <e k="rcr_score_short_optimal"  v="最適" />
@@ -190,7 +190,7 @@
         <e k="rcr_disease_name_clubroot" v="根こぶ病" />
         <e k="rcr_disease_treatment_sclerotinia" v="殺菌剤" />
         <e k="rcr_disease_treatment_phoma" v="殺菌剤" />
-        <e k="rcr_disease_treatment_takeall" v="なし（輪作）" />
+        <e k="rcr_disease_treatment_takeall" v="なし（輪作のみ）" />
         <e k="rcr_disease_treatment_septoria" v="殺菌剤" />
         <e k="rcr_disease_treatment_rust" v="殺菌剤" />
         <e k="rcr_disease_treatment_fusarium" v="殺菌剤" />
@@ -199,20 +199,20 @@
         <e k="rcr_fillType_fungicide" v="殺菌剤" />
         <e k="rcr_fillType_nematicide" v="殺線虫剤" />
         <e k="rcr_disease_treatment_none" v="防除なし" />
-        <e k="rcr_disease_treatment_clubroot" v="なし（抵抗性品種・石灰散布・輪作）" />
-        <e k="rcr_advice_pressure_high_phoma" v="茎枯病の圧力が高い。ナタネとカラシナを約4年避け、残渣をすき込む。感受性品種には秋に殺菌剤を散布する。" />
-        <e k="rcr_advice_pressure_high_takeall" v="立枯病の圧力が高い。非宿主作物（エンバク、マメ科、油糧作物）を挟んで断ち切る。有効な殺菌剤はなく、輪作だけが治せる。" />
-        <e k="rcr_advice_pressure_high_septoria" v="葉枯病の圧力が高い。ムギ類の残渣の上にコムギ／オオムギを作付けせず、耐病性品種を選ぶ。多湿な気候では茎立ち期から殺菌剤を散布する。" />
-        <e k="rcr_advice_pressure_high_rust" v="さび病の圧力が高い。抵抗性品種をまき、殺菌剤を計画する。温暖で多湿な時期に注意する。" />
-        <e k="rcr_advice_pressure_high_fusarium" v="赤かび病の圧力が高い。トウモロコシの後にコムギを作らず、残渣をすき込む。降雨があれば開花期に殺菌剤を散布する。" />
-        <e k="rcr_advice_pressure_high_lateblight" v="疫病の圧力が高い。抵抗性品種を植え、冷涼で多湿になり次第、殺菌剤でジャガイモを保護する。" />
-        <e k="rcr_advice_pressure_high_clubroot" v="根こぶ病の圧力が高い。アブラナ科の間隔を6年以上とり、石灰でpHを上げ、抵抗性品種をまく。化学的防除法はない。" />
-        <e k="rcr_advice_pressure_moderate_phoma" v="茎枯病の圧力は中程度。ナタネの間隔を延ばし、刈り株を粉砕する。" />
+        <e k="rcr_disease_treatment_clubroot" v="なし（輪作のみ）" />
+        <e k="rcr_advice_pressure_high_phoma" v="根朽病の圧力が高い。ナタネとカラシナの間隔を4年に延ばす。殺菌剤は散布した場所の収穫を守るだけで、病気を後退させはしない。" />
+        <e k="rcr_advice_pressure_high_takeall" v="立枯病の圧力が高い。非宿主作物（エンバク、マメ科、油糧作物）を挟む。この病気を防ぐ薬剤はなく、輪作だけが圧力を下げる。" />
+        <e k="rcr_advice_pressure_high_septoria" v="葉枯病の圧力が高い。コムギ、オオムギ、ライ小麦、スペルト小麦の間隔をあける。殺菌剤は散布した場所の収穫を守り、降雨は流行を早める。" />
+        <e k="rcr_advice_pressure_high_rust" v="さび病の圧力が高い。ムギ類とナタネはどちらも宿主なので間隔をあける。殺菌剤は散布した場所の収穫を守り、温暖で多湿な時期は流行を早める。" />
+        <e k="rcr_advice_pressure_high_fusarium" v="赤かび病の圧力が高い。トウモロコシの後にコムギを作らず、ムギ類の連作を減らす。殺菌剤は散布した場所の収穫を守り、降雨は流行を早める。" />
+        <e k="rcr_advice_pressure_high_lateblight" v="疫病の圧力が高い。ジャガイモの間隔をあける。殺菌剤は散布した場所の収穫を守り、冷涼で多湿な天候は流行を早める。" />
+        <e k="rcr_advice_pressure_high_clubroot" v="根こぶ病の圧力が高い。ナタネとカラシナの間隔をできるだけ延ばす。この病気を防ぐ薬剤はなく、輪作だけが効く。" />
+        <e k="rcr_advice_pressure_moderate_phoma" v="根朽病の圧力は中程度。ナタネとカラシナの間隔を延ばす。" />
         <e k="rcr_advice_pressure_moderate_takeall" v="立枯病の圧力は中程度。3作連続のムギ類を避ける。" />
-        <e k="rcr_advice_pressure_moderate_septoria" v="葉枯病の圧力は中程度。春の降雨と残渣の伝染源に注意する。" />
-        <e k="rcr_advice_pressure_moderate_rust" v="さび病の圧力は中程度。温暖な天候で胞子堆（病斑）の発生を見張る。" />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="赤かび病の圧力は中程度。ムギ類とトウモロコシの間隔をあけ、残渣を管理する。" />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="疫病の圧力は中程度。冷涼で多湿な天候を監視し、こぼれ生えを処分する。" />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="根こぶ病の圧力は中程度。ナタネの間隔を延ばし、酸性pHに注意する。" />
+        <e k="rcr_advice_pressure_moderate_septoria" v="葉枯病の圧力は中程度。ムギ類の間隔をあける。降雨はリスクを高める。" />
+        <e k="rcr_advice_pressure_moderate_rust" v="さび病の圧力は中程度。ムギ類とナタネの間隔をあける。温暖で多湿な時期はリスクを高める。" />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="赤かび病の圧力は中程度。ムギ類とトウモロコシの間隔をあける。" />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="疫病の圧力は中程度。ジャガイモの間隔をあける。冷涼で多湿な天候はリスクを高める。" />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="根こぶ病の圧力は中程度。ナタネとカラシナの間隔を延ばす。" />
     </elements>
 </l10n>

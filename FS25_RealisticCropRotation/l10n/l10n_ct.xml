@@ -19,7 +19,7 @@
         <e k="rcr_disease_risk_low"       v="低" />
         <e k="rcr_disease_risk_moderate"  v="中" />
         <e k="rcr_disease_risk_high"      v="高" />
-        <e k="rcr_disease_notification" v="%s 在田地 %s 被偵測到" />
+        <e k="rcr_disease_notification" v="%s 在田塊 %s 出現" />
         <e k="rcr_disease_hud_label"    v="病害" />
         <e k="rcr_disease_header_active" v="病害（%s）" />
         <e k="rcr_treatment_hud_label"  v="防治" />
@@ -106,9 +106,9 @@
         <e k="rcr_advice_afterRoot" v="種植塊根作物後，需間隔四年再種塊根，隨後種穀物以在晚收後重建土壤結構。" />
         <e k="rcr_advice_afterVegetable" v="種植蔬菜後，需間隔三年再重複，以穀物作為乾淨的輪換間隔。" />
         <e k="rcr_advice_afterForage" v="短期草地之後，穀物可利用草皮下累積的肥力與結構。" />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病壓力高，至少三年內避免種植油菜、向日葵、大豆、豌豆、菜豆、馬鈴薯和胡蘿蔔；潮濕天氣下在花期施用殺菌劑。" />
-        <e k="rcr_advice_pressure_high_bcn"           v="線蟲壓力高，三年內避免種植甜菜、紅甜菜、油菜、芥菜和菠菜；使用殺線蟲劑或抗病誘捕作物。" />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病壓力中等，拉開寄主作物的間隔，並留意潮濕的花期。" />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病壓力高，至少三年內避免種植油菜、芥菜、向日葵、大豆、豌豆、菜豆、馬鈴薯和胡蘿蔔；殺菌劑只能保住已噴施地塊的收成，不會讓病害消退。" />
+        <e k="rcr_advice_pressure_high_bcn"           v="線蟲壓力高，三年內避免種植甜菜、紅甜菜、油菜、芥菜和菠菜；殺線蟲劑能在已噴施地塊保住收成三個月。" />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病壓力中等，拉開寄主作物的間隔，降雨會抬高風險。" />
         <e k="rcr_advice_pressure_moderate_bcn"         v="線蟲壓力中等，拉開甜菜與十字花科作物的間隔。" />
         <e k="rcr_advice_no_current_crop" v="目前無主要作物: 偵測到作物後將提供建議。" />
 
@@ -161,11 +161,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="計畫不完整" />
-        <e k="rcr_score_excellent"      v="輪作優異，病害風險低" />
-        <e k="rcr_score_good"           v="輪作良好，病害風險受控" />
-        <e k="rcr_score_fair"           v="輪作尚可，病害風險上升" />
-        <e k="rcr_score_poor"           v="輪作較差，病害風險高" />
-        <e k="rcr_score_bad"            v="輪作極差，病害風險嚴重" />
+        <e k="rcr_score_excellent"      v="輪作優異，病害壓力最低" />
+        <e k="rcr_score_good"           v="輪作良好，病害壓力受控" />
+        <e k="rcr_score_fair"           v="輪作尚可，病害壓力上升" />
+        <e k="rcr_score_poor"           v="輪作有待改進，病害壓力高" />
+        <e k="rcr_score_bad"            v="輪作極差，病害壓力嚴重" />
         <e k="rcr_score_label_low"      v="評分差" />
         <e k="rcr_score_label_optimal"  v="評分最佳" />
         <e k="rcr_score_short_optimal"  v="最佳" />
@@ -190,7 +190,7 @@
         <e k="rcr_disease_name_clubroot" v="根腫病" />
         <e k="rcr_disease_treatment_sclerotinia" v="殺菌劑" />
         <e k="rcr_disease_treatment_phoma" v="殺菌劑" />
-        <e k="rcr_disease_treatment_takeall" v="無（輪作）" />
+        <e k="rcr_disease_treatment_takeall" v="無（僅靠輪作）" />
         <e k="rcr_disease_treatment_septoria" v="殺菌劑" />
         <e k="rcr_disease_treatment_rust" v="殺菌劑" />
         <e k="rcr_disease_treatment_fusarium" v="殺菌劑" />
@@ -199,20 +199,20 @@
         <e k="rcr_fillType_fungicide" v="殺菌劑" />
         <e k="rcr_fillType_nematicide" v="殺線蟲劑" />
         <e k="rcr_disease_treatment_none" v="無防治" />
-        <e k="rcr_disease_treatment_clubroot" v="無（抗病品種、施石灰、輪作）" />
-        <e k="rcr_advice_pressure_high_phoma" v="黑脛病壓力高，約四年內避免種植油菜和芥菜，翻埋殘體；感病品種在秋季施用殺菌劑。" />
-        <e k="rcr_advice_pressure_high_takeall" v="全蝕病壓力高，插入一茬非寄主作物（燕麥、豆科、油料作物）打斷；沒有有效殺菌劑，只有輪作才能根治。" />
-        <e k="rcr_advice_pressure_high_septoria" v="葉枯病壓力高，避免在穀物殘體上種植小麥/大麥，選用耐病品種；在潮濕氣候下從拔節期開始施用殺菌劑。" />
-        <e k="rcr_advice_pressure_high_rust" v="鏽病壓力高，播種抗病品種並計劃施用殺菌劑；注意溫暖潮濕的時段。" />
-        <e k="rcr_advice_pressure_high_fusarium" v="赤黴病壓力高，避免玉米後種小麥，翻埋殘體；如遇降雨在花期施用殺菌劑。" />
-        <e k="rcr_advice_pressure_high_lateblight" v="晚疫病壓力高，種植抗病品種，一旦轉為涼爽潮濕即用殺菌劑保護馬鈴薯。" />
-        <e k="rcr_advice_pressure_high_clubroot" v="根腫病壓力高，十字花科作物間隔超過六年，施石灰提高pH並播種抗病品種；無化學防治方法。" />
-        <e k="rcr_advice_pressure_moderate_phoma" v="黑脛病壓力中等，延長油菜的間隔並粉碎殘茬。" />
+        <e k="rcr_disease_treatment_clubroot" v="無（僅靠輪作）" />
+        <e k="rcr_advice_pressure_high_phoma" v="黑脛病壓力高，把油菜和芥菜的間隔拉長到四年；殺菌劑只能保住已噴施地塊的收成，不會讓病害消退。" />
+        <e k="rcr_advice_pressure_high_takeall" v="全蝕病壓力高，插入一茬非寄主作物（燕麥、豆科、油料作物）；沒有任何藥劑能防護這種病害，只有輪作才能降低壓力。" />
+        <e k="rcr_advice_pressure_high_septoria" v="葉枯病壓力高，拉開小麥、大麥、小黑麥和斯佩爾特小麥的間隔；殺菌劑只能保住已噴施地塊的收成，降雨會加快流行。" />
+        <e k="rcr_advice_pressure_high_rust" v="鏽病壓力高，穀物和油菜都是寄主，要拉開間隔；殺菌劑只能保住已噴施地塊的收成，溫暖潮濕的天氣會加快流行。" />
+        <e k="rcr_advice_pressure_high_fusarium" v="赤黴病壓力高，避免玉米後種小麥，減少連續種植穀物；殺菌劑只能保住已噴施地塊的收成，降雨會加快流行。" />
+        <e k="rcr_advice_pressure_high_lateblight" v="晚疫病壓力高，拉開馬鈴薯的間隔；殺菌劑只能保住已噴施地塊的收成，涼爽潮濕的天氣會加快流行。" />
+        <e k="rcr_advice_pressure_high_clubroot" v="根腫病壓力高，盡量拉長油菜和芥菜的間隔；沒有任何藥劑能防護這種病害，只有輪作才有效。" />
+        <e k="rcr_advice_pressure_moderate_phoma" v="黑脛病壓力中等，拉長油菜和芥菜的間隔。" />
         <e k="rcr_advice_pressure_moderate_takeall" v="全蝕病壓力中等，避免連續第三茬穀物。" />
-        <e k="rcr_advice_pressure_moderate_septoria" v="葉枯病壓力中等，留意春季降雨和殘體中的菌源。" />
-        <e k="rcr_advice_pressure_moderate_rust" v="鏽病壓力中等，在溫暖天氣下注意偵察是否出現夏孢子堆。" />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="赤黴病壓力中等，拉開穀物與玉米的間隔，管理好殘體。" />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="晚疫病壓力中等，監測涼爽潮濕的天氣並清除自生苗。" />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="根腫病壓力中等，延長油菜的間隔並留意酸性pH。" />
+        <e k="rcr_advice_pressure_moderate_septoria" v="葉枯病壓力中等，拉開穀物的間隔，降雨會抬高風險。" />
+        <e k="rcr_advice_pressure_moderate_rust" v="鏽病壓力中等，拉開穀物與油菜的間隔，溫暖潮濕的天氣會抬高風險。" />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="赤黴病壓力中等，拉開穀物與玉米的間隔。" />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="晚疫病壓力中等，拉開馬鈴薯的間隔，涼爽潮濕的天氣會抬高風險。" />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="根腫病壓力中等，拉長油菜和芥菜的間隔。" />
     </elements>
 </l10n>
