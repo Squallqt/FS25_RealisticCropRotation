@@ -10,13 +10,24 @@ RealisticCropRotationSprayerProducts.PRODUCT_TREATMENTS = {
     RCR_NEMATICIDE = "NEMATICIDE",
 }
 
--- RCR product spray rate (l/s).
+-- Engine consumption at usageScale 1: l/ha = ENGINE_LHA_PER_LPS * litersPerSecond (Sprayer:getSprayerUsage).
+local ENGINE_LHA_PER_LPS = 36000
+
+-- Per-product spray rate (l/s): fungicide 200 l/ha foliar, nematicide 400 l/ha soil.
+RealisticCropRotationSprayerProducts.PRODUCT_LITERS_PER_SECOND = {
+    RCR_FUNGICIDE = 200 / ENGINE_LHA_PER_LPS,
+    RCR_NEMATICIDE = 400 / ENGINE_LHA_PER_LPS,
+}
+
+-- Fallback spray rate (l/s) when a product has no explicit rate.
 RealisticCropRotationSprayerProducts.litersPerSecond = 0.0081
 
 -- fillTypeIndex -> true; refreshed each mission load since fillType indices may shift between savegames.
 local productFillTypeSet = {}
 -- fillTypeIndex -> "FUNGICIDE" | "NEMATICIDE"; same lifecycle as productFillTypeSet.
 local productTreatmentByFillType = {}
+-- fillTypeIndex -> spray rate (l/s); same lifecycle as productFillTypeSet.
+local productLitersPerSecondByFillType = {}
 local hookInstalled = false
 
 -- Minimum ground speed (km/h) to spray.
@@ -394,12 +405,14 @@ local function ensureSprayTypes()
         if fillTypeIndex == nil then
             Logging.warning("[RealisticCropRotation] Missing fillType '%s'; its sprayType was not registered", name)
         else
+            local productLps = RealisticCropRotationSprayerProducts.PRODUCT_LITERS_PER_SECOND[name] or litersPerSecond
             productFillTypeSet[fillTypeIndex] = true
             productTreatmentByFillType[fillTypeIndex] = RealisticCropRotationSprayerProducts.PRODUCT_TREATMENTS[name]
+            productLitersPerSecondByFillType[fillTypeIndex] = productLps
 
             if g_sprayTypeManager:getSprayTypeByFillTypeIndex(fillTypeIndex) == nil then
                 -- HERBICIDE is the only engine sprayType accepting a custom fillType; its ground effect is neutralized below.
-                g_sprayTypeManager:addSprayType(name, litersPerSecond, "HERBICIDE", sprayGroundType, false)
+                g_sprayTypeManager:addSprayType(name, productLps, "HERBICIDE", sprayGroundType, false)
             end
         end
     end
@@ -548,7 +561,9 @@ local function installSprayerHook()
 
         -- Tank usage from the work area width.
         if (params.usage or 0) <= 0 then
-            params.usage = RealisticCropRotationSprayerProducts.litersPerSecond * self:getLastSpeed() * (workArea.workWidth or 0) * dt * 0.001
+            local lps = productLitersPerSecondByFillType[sprayFillType]
+                or RealisticCropRotationSprayerProducts.litersPerSecond
+            params.usage = lps * self:getLastSpeed() * (workArea.workWidth or 0) * dt * 0.001
         end
 
         -- The server owns the ground state; nearby clients mirror protection for immediate map feedback.
@@ -573,6 +588,7 @@ end
 function RealisticCropRotationSprayerProducts.onMissionLoaded()
     productFillTypeSet = {}
     productTreatmentByFillType = {}
+    productLitersPerSecondByFillType = {}
     ensureSprayTypes()
     -- Safety net only: the hook is normally installed at source time, before TypeManager:finalizeTypes snapshots it.
     installSprayerHook()
@@ -599,6 +615,7 @@ function RealisticCropRotationSprayerProducts.onMissionDeleted()
     restorePrecisionFarmingEffects()
     productFillTypeSet = {}
     productTreatmentByFillType = {}
+    productLitersPerSecondByFillType = {}
 end
 
 -- Source-time installation is the only moment the overwritten processSprayerArea reaches every sprayer vehicleType.
