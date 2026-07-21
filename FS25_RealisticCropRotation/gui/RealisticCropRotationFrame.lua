@@ -242,7 +242,10 @@ function RealisticCropRotationFrame:onFrameOpen()
         if mgr ~= nil and type(mgr.getOwnedFarmlands) == "function"
             and type(mgr.reconcileActiveCropForFarmland) == "function" then
             local changed = false
+            local dropCache = type(mgr.invalidateActiveCropCache) == "function"
             for _, entry in ipairs(mgr:getOwnedFarmlands() or {}) do
+                -- Menu open reads the ground again.
+                if dropCache then mgr:invalidateActiveCropCache(entry.farmlandId) end
                 if mgr:reconcileActiveCropForFarmland(entry.farmlandId) then
                     changed = true
                 end
@@ -1900,11 +1903,12 @@ function RealisticCropRotationFrame:getWorstPressureAdviceText(farmlandId, curre
     if next(cropDiseases) == nil then return nil end
 
     local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
-    if disease == nil or type(disease.getLoad) ~= "function" then return nil end
+    if disease == nil or type(disease.getPressure) ~= "function" then return nil end
     local D = RealisticCropRotationDisease
     if D == nil then return nil end
 
-    local load = disease:getLoad(farmlandId)
+    -- Same figure the pressure map paints.
+    local load = disease:getPressure(farmlandId)
     local bestBand, bestGroup, bestPressure = nil, nil, 0
     for group in pairs(cropDiseases) do
         local pressure = tonumber(load[group]) or 0
@@ -1938,15 +1942,9 @@ end
 -- @return number worstSeverity
 function RealisticCropRotationFrame:getWorstActiveDisease(farmlandId)
     local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
-    local activeState = (disease ~= nil and type(disease.getState) == "function")
-        and disease:getState(farmlandId) or nil
-    local worstGroup, worstSeverity = nil, 0
-    for group, s in pairs(activeState or {}) do
-        if (s.severity or 0) > worstSeverity then
-            worstGroup, worstSeverity = group, s.severity or 0
-        end
-    end
-    return worstGroup, worstSeverity
+    if disease == nil or type(disease.getWorstGroup) ~= "function" then return nil, 0 end
+    -- Same rule the disease map paints with.
+    return disease:getWorstGroup(farmlandId)
 end
 
 ---Refreshes the advice card: active outbreak > planned-step evaluation > per-family fallback, plus a soil-analysis note.

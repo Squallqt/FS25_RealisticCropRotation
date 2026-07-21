@@ -277,13 +277,13 @@ function RealisticCropRotationDiseaseGrid:clearAll()
     self.changeRevision = (self.changeRevision or 0) + 1
 end
 
----Marks the sprayed strip protected for the given family and clears its disease marks immediately.
+---Marks the sprayed strip protected for the given family.
 -- @param string family "FUNGICIDE" | "NEMATICIDE"
 -- @param number sx, sz, wx, wz, hx, hz world-space parallelogram corners of the sprayed strip
 function RealisticCropRotationDiseaseGrid:paintProtection(family, sx, sz, wx, wz, hx, hz)
     local protectionMapId = family == "FUNGICIDE" and self.fungicideProtectionMapId
         or family == "NEMATICIDE" and self.nematicideProtectionMapId or nil
-    if protectionMapId == nil or self.mapId == nil or g_terrainNode == nil
+    if protectionMapId == nil or g_terrainNode == nil
         or DensityMapModifier == nil or DensityMapFilter == nil
         or DensityCoordType == nil or DensityValueCompareType == nil
         or g_currentMission == nil or g_currentMission.fieldGroundSystem == nil
@@ -308,17 +308,9 @@ function RealisticCropRotationDiseaseGrid:paintProtection(family, sx, sz, wx, wz
     if family == "NEMATICIDE"
         and RealisticCropRotationTreatmentLifecycle ~= nil
         and type(RealisticCropRotationTreatmentLifecycle.onNematicideApplied) == "function" then
-        RealisticCropRotationTreatmentLifecycle.onNematicideApplied(
-            (sx + wx + hx) / 3, (sz + wz + hz) / 3)
+        RealisticCropRotationTreatmentLifecycle.onNematicideApplied(sx, sz, wx, wz, hx, hz)
     end
-
-    local gridModifier = DensityMapModifier.new(self.mapId, 0, self.numChannels, g_terrainNode)
-    gridModifier:setParallelogramWorldCoords(sx, sz, wx, wz, hx, hz, DensityCoordType.POINT_POINT_POINT)
-    -- Only bump changeRevision on a real change, or every spray tick forces an overlay rebuild (flicker).
-    local _, changed = gridModifier:executeSetWithStats(0, groundFilter)
-    if (changed or 0) > 0 then
-        self.changeRevision = (self.changeRevision or 0) + 1
-    end
+    -- Disease marks are left untouched.
 end
 
 ---Clears one treatment family from a world-space work-area parallelogram.

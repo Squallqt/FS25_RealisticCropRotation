@@ -3,42 +3,43 @@
 <realisticCropRotationCrops>
 
     <!-- Disease groups: shared-pathogen definitions referenced by each crop's disease attribute -->
+    <!-- ambient = wind-borne inoculum floor on the infection roll -->
     <diseaseGroups>
         <!-- Sclerotinia: fungal stem/flower rot of oilseeds, legumes and roots -->
         <diseaseGroup name="SCLEROTINIA" state="1" minInterval="3" infectFrom="0.50" infectTo="0.80"
-                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.0"
+                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.0"  ambient="0.03"
                       dailyGrowth="0.05"  destroySeverity="0.25" deadFractionMax="0.85" />
         <!-- Phoma/blackleg: fungal stem canker of brassica oilseeds -->
         <diseaseGroup name="PHOMA"       state="2" minInterval="4" infectFrom="0.20" infectTo="0.70"
-                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="1.8"
+                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="1.8"  ambient="0.02"
                       dailyGrowth="0.03"  destroySeverity="0.30" deadFractionMax="0.55" />
         <!-- Take-all: soil-borne cereal root disease, no fungicide (rotation only) -->
         <diseaseGroup name="TAKEALL"     state="3" minInterval="3" infectFrom="0.30" infectTo="0.80"
-                      fungal="true"  treatment="NONE"       weatherFactor="1.4"
+                      fungal="true"  treatment="NONE"       weatherFactor="1.4"  ambient="0.00"
                       dailyGrowth="0.035" destroySeverity="0.30" deadFractionMax="0.55" />
         <!-- Septoria leaf blotch: dominant fungal wheat/barley foliar disease -->
         <diseaseGroup name="SEPTORIA"    state="4" minInterval="2" infectFrom="0.25" infectTo="0.75"
-                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.3"
+                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.3"  ambient="0.09"
                       dailyGrowth="0.045" destroySeverity="0.25" deadFractionMax="0.55" />
         <!-- Rusts: fungal cereal/oilseed foliar disease, wind-borne -->
         <diseaseGroup name="RUST"        state="5" minInterval="2" infectFrom="0.30" infectTo="0.85"
-                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.4"
+                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.4"  ambient="0.10"
                       dailyGrowth="0.05"  destroySeverity="0.25" deadFractionMax="0.60" />
         <!-- Fusarium head blight: fungal disease favoured by cereal/maize residue -->
         <diseaseGroup name="FUSARIUM"    state="6" minInterval="2" infectFrom="0.50" infectTo="0.80"
-                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.0"
+                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.0"  ambient="0.05"
                       dailyGrowth="0.035" destroySeverity="0.30" deadFractionMax="0.45" />
         <!-- Late blight: weather-driven potato disease -->
         <diseaseGroup name="LATEBLIGHT"  state="7" minInterval="2" infectFrom="0.15" infectTo="0.85"
-                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.0"
+                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.0"  ambient="0.10"
                       dailyGrowth="0.05"  destroySeverity="0.28" deadFractionMax="0.70" />
         <!-- Beet cyst nematode: soil-borne, not rain-driven -->
         <diseaseGroup name="BCN"         state="8" minInterval="3" infectFrom="0.10" infectTo="0.90"
-                      fungal="false" treatment="NEMATICIDE"
+                      fungal="false" treatment="NEMATICIDE"                       ambient="0.00"
                       dailyGrowth="0.015" destroySeverity="0.30" deadFractionMax="0.45" />
         <!-- Clubroot: soil-borne brassica disease, long-lived spores -->
         <diseaseGroup name="CLUBROOT"    state="9" minInterval="6" infectFrom="0.10" infectTo="0.60"
-                      fungal="false" treatment="NONE"
+                      fungal="false" treatment="NONE"                             ambient="0.00"
                       dailyGrowth="0.02"  destroySeverity="0.30" deadFractionMax="0.60" />
     </diseaseGroups>
 

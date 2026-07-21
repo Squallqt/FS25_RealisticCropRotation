@@ -3,9 +3,6 @@
 RealisticCropRotationManager = {}
 local RealisticCropRotationManager_mt = Class(RealisticCropRotationManager)
 
--- Active-crop cache TTL: UI/HUD reads are frequent, growth changes slowly.
-local ACTIVE_CROP_CACHE_TTL_MS = 10000
-
 -- Grid resolution for locating one representative point per soil type.
 local SOIL_TYPE_LOCATOR_STEPS = 16
 
@@ -14,6 +11,9 @@ local VANILLA_LEVEL_COVERAGE = 0.90
 
 -- Field-ground share a soil/ground state must cover to become the field's status.
 local FIELD_STATE_COVERAGE = 0.50
+
+-- Field share a crop must cover to count as standing.
+local MIN_CROP_COVERAGE = 0.05
 
 -- PF field-info only displays legend values (PrecisionFarming.xml showOnHud): nitrogen per 20 kg/ha, pH per 0.25.
 local PF_N_DISPLAY_STEP = 20
@@ -339,204 +339,94 @@ local function getValueMapLayer(valueMap, defaultNumChannels)
     return mapId, firstChannel, numChannels
 end
 
----Samples the fruit type + growth state at a world position.
--- @param number x
--- @param number z
--- @return integer fruitTypeIndex, or nil
--- @return boolean sampled True when the density map could be read
--- @return integer growthState, or nil
-local function getFruitTypeIndexAtWorldPos(x, z)
-    if FSDensityMapUtil == nil or FSDensityMapUtil.getFruitTypeIndexAtWorldPos == nil then
-        return nil, false
-    end
-    if type(x) ~= "number" or type(z) ~= "number" then
-        return nil, false
-    end
-
-    local ok, fruitTypeIndex, growthState = pcall(FSDensityMapUtil.getFruitTypeIndexAtWorldPos, x, z)
-    if not ok then return nil, true end
-    return normalizeFruitTypeIndex(fruitTypeIndex), true, tonumber(growthState)
-end
-
----Appends interior sample points kept only when truly inside the field's polygon, not just its bounding box.
+---Dominant fruit type on a field, counted natively over its whole polygon.
 -- @param table field
--- @param table samples Accumulator of { x, z } points
-local function collectFieldInteriorSamples(field, samples)
-    local vertices = getFieldPolygonVertices(field)
-    local minX, maxX, minZ, maxZ = fieldPolygonBounds(field)
-    if vertices == nil or minX == nil then return end
+-- @return integer fruitTypeIndex, or nil
+-- @return integer growthState, or nil
+-- @return integer pixels Cells the winning crop covers
+local function getFieldFruitTypeIndex(field, hintFruitTypeIndex, capacity, hintGrowthState)
+    if field == nil or g_fruitTypeManager == nil
+        or DensityMapFilter == nil or DensityValueCompareType == nil then
+        return nil
+    end
+    local fruitTypes = type(g_fruitTypeManager.getFruitTypes) == "function"
+        and g_fruitTypeManager:getFruitTypes() or nil
+    if fruitTypes == nil then return nil end
 
-    -- Spread from near-edge to near-edge, not just the central band, so a localized destruction patch can't outvote crop near the borders.
-    local offsets = {
-        {0.15, 0.15}, {0.50, 0.15}, {0.85, 0.15},
-        {0.15, 0.50}, {0.50, 0.50}, {0.85, 0.50},
-        {0.15, 0.85}, {0.50, 0.85}, {0.85, 0.85},
-    }
+    local function countPixels(desc)
+        local filter = DensityMapFilter.new(desc.terrainDataPlaneId, desc.startStateChannel, desc.numStateChannels)
+        filter:setValueCompareParams(DensityValueCompareType.GREATER, 0)
+        local _, pixels = aggregateFieldLayer(field, desc.terrainDataPlaneId,
+            desc.startStateChannel, desc.numStateChannels, filter)
+        return pixels or 0
+    end
 
-    for _, offset in ipairs(offsets) do
-        local x = minX + (maxX - minX) * offset[1]
-        local z = minZ + (maxZ - minZ) * offset[2]
-        if isPointInPolygon(x, z, vertices) then
-            table.insert(samples, { x = x, z = z })
+    local function isReadable(desc)
+        return desc ~= nil and desc.terrainDataPlaneId ~= nil
+            and desc.startStateChannel ~= nil and desc.numStateChannels ~= nil
+    end
+
+    local bestDesc, bestPixels = nil, 0
+    -- The crop last seen here is tried first.
+    local hint = normalizeFruitTypeIndex(hintFruitTypeIndex)
+    if hint ~= nil then
+        local desc = g_fruitTypeManager:getFruitTypeByIndex(hint)
+        if isReadable(desc) then bestDesc, bestPixels = desc, countPixels(desc) end
+    end
+
+    -- The sweep stops once a crop passes half the field.
+    local majority = (tonumber(capacity) or 0) > 0 and capacity / 2 or nil
+    if majority == nil or bestPixels <= majority then
+        for _, desc in pairs(fruitTypes) do
+            if isReadable(desc) and desc ~= bestDesc then
+                local pixels = countPixels(desc)
+                if pixels > bestPixels then bestDesc, bestPixels = desc, pixels end
+                if majority ~= nil and bestPixels > majority then break end
+            end
         end
     end
-end
+    if bestDesc == nil or bestPixels <= 0 then return nil end
 
----True when a fruit type is a cover crop (cropConfig cover="true" or the native isCatchCrop flag).
--- @param table fruitType
--- @return boolean isCover
-local function isFruitTypeCoverCrop(fruitType)
-    if fruitType == nil then return false end
-    if fruitType.isCatchCrop == true then return true end
-    local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
-    if config == nil or config.coverCrops == nil or fruitType.name == nil then return false end
-    return config.coverCrops[string.upper(tostring(fruitType.name))] == true
-end
-
----True when a fruit type's growth state is cut/withered (harvested residue, not a live crop); cover crops are exempt.
--- @param table fruitType
--- @param number growthState
--- @return boolean isDone
-local function isFruitTypeCutOrWithered(fruitType, growthState)
-    if fruitType == nil or growthState == nil then return false end
-    if isFruitTypeCoverCrop(fruitType) then return false end
-
-    if type(fruitType.getIsCut) == "function" then
-        local ok, isCut = pcall(fruitType.getIsCut, fruitType, growthState)
-        if ok and isCut then return true end
-    elseif fruitType.cutState ~= nil and growthState == tonumber(fruitType.cutState) then
-        return true
+    -- Highest foliage state index the fruit declares.
+    local maxState = 0
+    for state in pairs(bestDesc.growthStateToName or {}) do
+        state = tonumber(state)
+        if state ~= nil and state > maxState then maxState = state end
+    end
+    for _, key in ipairs({ "numGrowthStates", "maxHarvestingGrowthState", "maxPreparingGrowthState",
+        "cutState", "witheredState", "mulchedState", "rolledCutState" }) do
+        local value = tonumber(bestDesc[key])
+        if value ~= nil and value > maxState then maxState = value end
     end
 
-    if type(fruitType.getIsWithered) == "function" then
-        local ok, isWithered = pcall(fruitType.getIsWithered, fruitType, growthState)
-        if ok and isWithered then return true end
-    elseif fruitType.witheredState ~= nil and growthState == tonumber(fruitType.witheredState) then
-        return true
+    -- Dominant stage of the winning fruit type, over the same polygon.
+    local bestState, bestStatePixels = nil, 0
+    local stateMajority = bestPixels / 2
+
+    local function countState(state)
+        local filter = DensityMapFilter.new(bestDesc.terrainDataPlaneId, bestDesc.startStateChannel, bestDesc.numStateChannels)
+        filter:setValueCompareParams(DensityValueCompareType.EQUAL, state)
+        local _, pixels = aggregateFieldLayer(field, bestDesc.terrainDataPlaneId,
+            bestDesc.startStateChannel, bestDesc.numStateChannels, filter)
+        return pixels or 0
     end
 
-    return false
-end
-
----Majority fruit type over field samples from the density map.
--- @param table field
--- @return integer fruitTypeIndex, or nil
--- @return boolean sampled True when the density map could be read
--- @return integer growthState Representative growth state, or nil
--- Point sampled: off-field points return no fruit type and drop out of the vote.
-local function getFieldFruitTypeIndexFromDensityMap(field)
-    if FSDensityMapUtil == nil or FSDensityMapUtil.getFruitTypeIndexAtWorldPos == nil then
-        return nil, false
+    -- The stage last seen here is tried first.
+    local stateHint = tonumber(hintGrowthState)
+    if stateHint ~= nil and stateHint >= 1 and stateHint <= maxState then
+        bestState, bestStatePixels = stateHint, countState(stateHint)
     end
-
-    local samples = {}
-    if field ~= nil and type(field.posX) == "number" and type(field.posZ) == "number" then
-        table.insert(samples, { x = field.posX, z = field.posZ })
-    end
-    collectFieldInteriorSamples(field, samples)
-
-    local sampled = false
-    local counts = {}
-    local growthStateCounts = {}
-    for _, sample in ipairs(samples) do
-        local fruitTypeIndex, didSample, growthState = getFruitTypeIndexAtWorldPos(sample.x, sample.z)
-        if didSample then
-            sampled = true
-            local fruitType = fruitTypeIndex ~= nil and g_fruitTypeManager ~= nil
-                and g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex) or nil
-            if fruitTypeIndex ~= nil and not isFruitTypeCutOrWithered(fruitType, tonumber(growthState)) then
-                counts[fruitTypeIndex] = (counts[fruitTypeIndex] or 0) + 1
-                growthState = tonumber(growthState)
-                if growthState ~= nil then
-                    growthState = math.floor(growthState + 0.5)
-                    growthStateCounts[fruitTypeIndex] = growthStateCounts[fruitTypeIndex] or {}
-                    growthStateCounts[fruitTypeIndex][growthState] = (growthStateCounts[fruitTypeIndex][growthState] or 0) + 1
-                end
+    if bestStatePixels <= stateMajority then
+        for state = 1, maxState do
+            if state ~= stateHint then
+                local pixels = countState(state)
+                if pixels > bestStatePixels then bestState, bestStatePixels = state, pixels end
+                if bestStatePixels > stateMajority then break end
             end
         end
     end
 
-    if not sampled then return nil, false end
-
-    local bestFruitTypeIndex = nil
-    local bestCount = 0
-    for fruitTypeIndex, count in pairs(counts) do
-        if count > bestCount then
-            bestFruitTypeIndex = fruitTypeIndex
-            bestCount = count
-        end
-    end
-    if bestFruitTypeIndex == nil then return nil, true end
-
-    local representativeGrowthState = nil
-    local representativeGrowthCount = 0
-    local states = growthStateCounts[bestFruitTypeIndex]
-    for growthState, count in pairs(states or {}) do
-        if count > representativeGrowthCount
-            or (count == representativeGrowthCount
-                and (representativeGrowthState == nil or growthState < representativeGrowthState)) then
-            representativeGrowthState = growthState
-            representativeGrowthCount = count
-        end
-    end
-
-    return bestFruitTypeIndex, true, representativeGrowthState
-end
-
----Fruit type from the engine's fieldState snapshot (server only); skips cut/withered.
--- @param table field
--- @return integer fruitTypeIndex, or nil
--- @return integer growthState, or nil
-local function getFieldFruitTypeIndexFromFieldState(field)
-    local fieldState = field ~= nil and field.fieldState or nil
-    if fieldState == nil then return nil end
-
-    local fruitTypeIndex = normalizeFruitTypeIndex(fieldState.fruitTypeIndex)
-    if fruitTypeIndex == nil then return nil end
-    local growthState = tonumber(fieldState.growthState or fieldState.lastGrowthState)
-
-    local fruitType = nil
-    if g_fruitTypeManager ~= nil and g_fruitTypeManager.getFruitTypeByIndex ~= nil then
-        fruitType = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
-    end
-
-    if isFruitTypeCutOrWithered(fruitType, growthState) then return nil end
-
-    return fruitTypeIndex, growthState
-end
-
----Active fruit type: density map first, fieldState fallback (server only) when the density map couldn't be read at all.
--- @param table field
--- @return integer fruitTypeIndex, or nil
--- @return integer growthState, or nil
-local function getFieldFruitTypeIndex(field)
-    local fruitTypeIndex, sampledDensityMap, growthState = getFieldFruitTypeIndexFromDensityMap(field)
-    if sampledDensityMap then return fruitTypeIndex, growthState end
-    if isPureClient() then return nil end
-    return getFieldFruitTypeIndexFromFieldState(field)
-end
-
----True when a fruit type still has any live (non-destroyed) area in the field polygon.
--- @param table field
--- @param integer fruitTypeIndex
--- @return boolean hasLiveArea
-local function fieldHasLiveFruitArea(field, fruitTypeIndex)
-    if field == nil or fruitTypeIndex == nil or g_fruitTypeManager == nil
-        or DensityMapModifier == nil or DensityMapFilter == nil or DensityValueCompareType == nil
-        or g_terrainNode == nil or type(field.getDensityMapPolygon) ~= "function" then
-        return false
-    end
-    local desc = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
-    if desc == nil or desc.terrainDataPlaneId == nil then return false end
-    local polygon = field:getDensityMapPolygon()
-    if polygon == nil then return false end
-
-    local modifier = DensityMapModifier.new(desc.terrainDataPlaneId, desc.startStateChannel, desc.numStateChannels, g_terrainNode)
-    polygon:applyToModifier(modifier)
-    local filter = DensityMapFilter.new(desc.terrainDataPlaneId, desc.startStateChannel, desc.numStateChannels)
-    filter:setValueCompareParams(DensityValueCompareType.GREATER, 0)
-    local _, hits = modifier:executeGet(filter)
-    return (tonumber(hits) or 0) > 0
+    return normalizeFruitTypeIndex(bestDesc.index), bestState, bestPixels
 end
 
 ---Resolves the active crop name (+ index, growth) from a field.
@@ -544,13 +434,13 @@ end
 -- @return string cropName, or nil
 -- @return integer fruitTypeIndex, or nil
 -- @return integer growthState, or nil
-local function getActiveCropNameFromField(field)
-    local fruitTypeIndex, growthState = getFieldFruitTypeIndex(field)
+local function getActiveCropNameFromField(field, hintFruitTypeIndex, capacity, hintGrowthState)
+    local fruitTypeIndex, growthState, pixels = getFieldFruitTypeIndex(field, hintFruitTypeIndex, capacity, hintGrowthState)
     if fruitTypeIndex == nil or g_fruitTypeManager == nil then return nil end
 
     local fruitType = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
     if fruitType == nil or fruitType.name == nil or fruitType.name == "" then return nil end
-    return tostring(fruitType.name), fruitTypeIndex, growthState
+    return tostring(fruitType.name), fruitTypeIndex, growthState, pixels
 end
 
 ---Builds a fresh, validated FieldState at the field centre.
@@ -826,6 +716,21 @@ function RealisticCropRotationManager:getAllHistory()
     return self.repository:getAllHistory()
 end
 
+---Crop standing on the field and not yet in history.
+-- @param integer farmlandId
+-- @return string cropName, or nil for none or a cover crop
+function RealisticCropRotationManager:getPendingHistoryCrop(farmlandId)
+    local cropName = self.repository:getLastKnownActiveCrop(farmlandId)
+    if cropName == nil or cropName == "" then
+        -- Field not reconciled yet: read the crop straight off the ground.
+        cropName = self:getActiveCropName(farmlandId)
+    end
+    if cropName == nil or cropName == "" then return nil end
+    cropName = string.upper(tostring(cropName))
+    if self.service ~= nil and self.service:isCoverCropForRotationHistory(nil, cropName) then return nil end
+    return cropName
+end
+
 ---Returns the 4-slot rotation plan for a farmland.
 -- @param integer farmlandId
 -- @return table plan
@@ -928,6 +833,26 @@ function RealisticCropRotationManager:getFieldByFarmlandId(farmlandId)
     return getUsableFieldFromFarmland(getFarmlandById(n))
 end
 
+---Cells a field's polygon holds on the fruit map, measured once per farmland.
+-- @param integer farmlandId
+-- @param table field
+-- @param integer fruitTypeIndex
+-- @return integer capacity, or nil
+function RealisticCropRotationManager:getFieldPixelCapacity(farmlandId, field, fruitTypeIndex)
+    self.fieldPixelCapacity = self.fieldPixelCapacity or {}
+    local cached = self.fieldPixelCapacity[farmlandId]
+    if cached ~= nil then return cached > 0 and cached or nil end
+
+    local desc = (fruitTypeIndex ~= nil and g_fruitTypeManager ~= nil)
+        and g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex) or nil
+    if desc == nil or desc.terrainDataPlaneId == nil then return nil end
+
+    local _, pixels = aggregateFieldLayer(field, desc.terrainDataPlaneId,
+        desc.startStateChannel, desc.numStateChannels)
+    self.fieldPixelCapacity[farmlandId] = tonumber(pixels) or 0
+    return (tonumber(pixels) or 0) > 0 and tonumber(pixels) or nil
+end
+
 ---Returns the currently active crop on a farmland (cached), cross-checked against the last confirmed crop.
 -- @param integer farmlandId
 -- @return string cropName, or nil
@@ -940,17 +865,30 @@ function RealisticCropRotationManager:getActiveCropInfo(farmlandId)
     local cache = self.activeCropNameCache
     local nowMs = tonumber(g_time) or 0
     local entry = cache ~= nil and cache[numericFarmlandId] or nil
-    if entry ~= nil and (nowMs - (entry.tMs or 0)) < ACTIVE_CROP_CACHE_TTL_MS then
-        return entry.name, entry.fruitTypeIndex, entry.growthState
+    if entry ~= nil and entry.tMs == nowMs then
+        return entry.name, entry.fruitTypeIndex, entry.growthState, entry.belowFloor == true
     end
 
     local field = self:getFieldByFarmlandId(numericFarmlandId)
-    local resolved, fruitTypeIndex, growthState = getActiveCropNameFromField(field)
+    local hint = entry ~= nil and entry.fruitTypeIndex or nil
+    if hint == nil and g_fruitTypeManager ~= nil
+        and type(g_fruitTypeManager.getFruitTypeByName) == "function" then
+        -- Cold cache
+        local lastCrop = self.repository:getLastKnownActiveCrop(numericFarmlandId)
+        local fruitType = lastCrop ~= nil and lastCrop ~= ""
+            and g_fruitTypeManager:getFruitTypeByName(lastCrop) or nil
+        hint = fruitType ~= nil and fruitType.index or nil
+    end
+    local capacity = self:getFieldPixelCapacity(numericFarmlandId, field, hint)
+    local resolved, fruitTypeIndex, growthState, cropPixels =
+        getActiveCropNameFromField(field, hint, capacity,
+            entry ~= nil and entry.growthState or self.repository:getLastKnownGrowthState(numericFarmlandId))
 
-    if resolved == nil and entry ~= nil and entry.fruitTypeIndex ~= nil
-        and fieldHasLiveFruitArea(field, entry.fruitTypeIndex) then
-        -- Falls back to the last confirmed crop.
-        resolved, fruitTypeIndex, growthState = entry.name, entry.fruitTypeIndex, entry.growthState
+    -- True when the crop covers less than the floor.
+    local belowFloor = false
+    if resolved ~= nil and cropPixels ~= nil then
+        capacity = capacity or self:getFieldPixelCapacity(numericFarmlandId, field, fruitTypeIndex)
+        belowFloor = capacity ~= nil and cropPixels < capacity * MIN_CROP_COVERAGE
     end
 
     if resolved == nil then
@@ -971,10 +909,11 @@ function RealisticCropRotationManager:getActiveCropInfo(farmlandId)
             name = resolved,
             fruitTypeIndex = fruitTypeIndex,
             growthState = growthState,
+            belowFloor = belowFloor,
             tMs = nowMs,
         }
     end
-    return resolved, fruitTypeIndex, growthState
+    return resolved, fruitTypeIndex, growthState, belowFloor
 end
 
 ---Returns just the active crop name on a farmland.
@@ -1001,9 +940,16 @@ function RealisticCropRotationManager:reconcileActiveCropForFarmland(farmlandId)
     if self.service == nil then return false end
     if isPureClient() then return false end
 
-    local currentCropName, currentFruitTypeIndex, currentGrowthState = self:getActiveCropInfo(farmlandId)
-    -- Only worth sampling ground state while the field is bare: irrelevant once a crop is growing.
-    local groundWorked = currentCropName == nil and self:isFieldGroundWorked(farmlandId)
+    local currentCropName, currentFruitTypeIndex, currentGrowthState, belowFloor =
+        self:getActiveCropInfo(farmlandId)
+
+    -- Ground state, sampled on a bare field or under a remnant.
+    local groundWorked = (currentCropName == nil or belowFloor) and self:isFieldGroundWorked(farmlandId)
+
+    -- A remnant on worked ground ends the cycle.
+    if currentCropName ~= nil and belowFloor and groundWorked then
+        currentCropName, currentFruitTypeIndex, currentGrowthState = nil, nil, nil
+    end
     local changed = self.service:reconcileActiveCrop(farmlandId, currentCropName, currentFruitTypeIndex, currentGrowthState, groundWorked)
     if changed then
         self:invalidateActiveCropCache(farmlandId)
@@ -1113,6 +1059,32 @@ function RealisticCropRotationManager:getOwnedRotationFarmlandIds()
     return result
 end
 
+---Unprefixed field label: the farmland or field name, or the raw id.
+-- @param integer farmlandId
+-- @return string label
+function RealisticCropRotationManager:getFarmlandLabel(farmlandId)
+    local farmland = getFarmlandById(farmlandId)
+    local field = self:getFieldByFarmlandId(farmlandId)
+    local rawName = farmland ~= nil and farmland.name or nil
+    if (rawName == nil or rawName == "") and field ~= nil then rawName = field.name end
+    if rawName == nil or rawName == "" then return tostring(farmlandId) end
+    return tostring(rawName)
+end
+
+---Field name with the localized prefix, unless the farmland carries a real name.
+-- @param integer farmlandId
+-- @return string displayName
+function RealisticCropRotationManager:getFarmlandDisplayName(farmlandId)
+    local label = self:getFarmlandLabel(farmlandId)
+    if tonumber(label) == nil then return label end
+
+    local prefix = "Field"
+    if g_i18n ~= nil and type(g_i18n.getText) == "function" then
+        prefix = g_i18n:getText("rcr_field_prefix") or prefix
+    end
+    return prefix .. " " .. label
+end
+
 ---Returns owned farmlands as display rows for the menu, sorted by field number.
 -- @return table rows { farmlandId, name, areaHa }
 function RealisticCropRotationManager:getOwnedFarmlands()
@@ -1130,26 +1102,16 @@ function RealisticCropRotationManager:getOwnedFarmlands()
         end
     end
 
-    local prefix = "Field"
-    if g_i18n ~= nil and type(g_i18n.getText) == "function" then
-        prefix = g_i18n:getText("rcr_field_prefix") or prefix
-    end
-
     for _, farmlandId in ipairs(farmlandIds) do
         local farmland = getFarmlandById(farmlandId)
         local field = self:getFieldByFarmlandId(farmlandId)
         if hasUsableRealisticCropRotationArea(farmland, field) then
-            local rawName = farmland ~= nil and farmland.name or nil
-            if (rawName == nil or rawName == "") and field ~= nil then rawName = field.name end
-            local displayName
-            if rawName == nil or rawName == "" or tonumber(rawName) ~= nil then
-                local label = rawName ~= nil and rawName ~= "" and rawName or tostring(farmlandId)
-                displayName = prefix .. " " .. label
-            else
-                displayName = rawName
-            end
             local areaHa = getRotationAreaHa(farmland, field)
-            table.insert(result, { farmlandId = farmlandId, name = displayName, areaHa = areaHa })
+            table.insert(result, {
+                farmlandId = farmlandId,
+                name = self:getFarmlandDisplayName(farmlandId),
+                areaHa = areaHa,
+            })
         end
     end
 
@@ -1576,39 +1538,39 @@ end
 
 ---Per-field card info: growth stage + the on-foot weed line.
 -- @param integer farmlandId
--- @return table info { growthStageText, growthIsAction, weedHeader, weedActionText }, or nil when no crop
+-- @return table info { growthStageText, growthIsAction, weedHeader, weedActionText }, or nil
 function RealisticCropRotationManager:getFieldCropInfo(farmlandId)
     local numericFarmlandId = tonumber(farmlandId)
     if numericFarmlandId == nil or numericFarmlandId <= 0 then return nil end
-    if g_fruitTypeManager == nil then return nil end
 
-    -- Reads the cached majority-vote crop.
-    local _, fruitTypeIndex, growthState = self:getActiveCropInfo(numericFarmlandId)
-    fruitTypeIndex = normalizeFruitTypeIndex(fruitTypeIndex)
-    if fruitTypeIndex == nil then return nil end
-
-    local fruitType = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
-    if fruitType == nil then return nil end
-    growthState = tonumber(growthState) or 0
-
-    -- Reads the weed line from a live FieldState (mirrors PlayerHUDUpdater:fieldAddWeed).
+    -- Weeds are read on bare ground too, no crop required.
     local weedHeader, weedValue
-    local field = self:getFieldByFarmlandId(farmlandId)
+    local field = self:getFieldByFarmlandId(numericFarmlandId)
     if field ~= nil and FieldState ~= nil
         and type(field.posX) == "number" and type(field.posZ) == "number" then
-        local fieldState = FieldState.new()
-        if type(fieldState.update) == "function" then
-            fieldState:update(field.posX, field.posZ)
-            if fieldState.isValid then
-                fieldState.farmlandId = numericFarmlandId
+        local state = FieldState.new()
+        if type(state.update) == "function" then
+            state:update(field.posX, field.posZ)
+            if state.isValid then
+                state.farmlandId = numericFarmlandId
                 if RealisticCropRotationHud ~= nil and RealisticCropRotationHud.getWeedLineFromGame ~= nil then
-                    weedHeader, weedValue = RealisticCropRotationHud.getWeedLineFromGame(fieldState)
+                    weedHeader, weedValue = RealisticCropRotationHud.getWeedLineFromGame(state)
                 end
             end
         end
     end
 
-    local growthStageText, growthIsAction = RealisticCropRotationManager.classifyGrowthStage(fruitType, growthState)
+    -- Reads the cached native crop.
+    local growthStageText, growthIsAction
+    if g_fruitTypeManager ~= nil then
+        local _, fruitTypeIndex, growthState = self:getActiveCropInfo(numericFarmlandId)
+        fruitTypeIndex = normalizeFruitTypeIndex(fruitTypeIndex)
+        local fruitType = fruitTypeIndex ~= nil and g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex) or nil
+        if fruitType ~= nil then
+            growthStageText, growthIsAction = RealisticCropRotationManager.classifyGrowthStage(
+                fruitType, tonumber(growthState) or 0)
+        end
+    end
 
     return {
         growthStageText = growthStageText,

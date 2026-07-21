@@ -14,6 +14,7 @@ source(modDirectory .. "scripts/RealisticCropRotationTreatmentLifecycle.lua")
 source(modDirectory .. "scripts/RealisticCropRotationDiseaseMap.lua")
 source(modDirectory .. "scripts/RealisticCropRotationHud.lua")
 source(modDirectory .. "scripts/RealisticCropRotationSprayerProducts.lua")
+source(modDirectory .. "events/RCRAdminCommandEvent.lua")
 source(modDirectory .. "events/RCRDiseaseNotificationEvent.lua")
 source(modDirectory .. "events/RCRHistoryRequestEvent.lua")
 source(modDirectory .. "events/RCRHistoryResponseEvent.lua")
@@ -49,7 +50,7 @@ local function loadCropConfig()
         return nil
     end
 
-    local config = { families = {}, nitrogen = {}, coverCrops = {}, diseases = {}, diseaseIntervals = {}, diseaseWindows = {}, diseaseFungal = {}, diseaseCurves = {}, diseaseStates = {}, diseaseTreatments = {}, diseaseWeatherFactors = {} }
+    local config = { families = {}, nitrogen = {}, coverCrops = {}, diseases = {}, diseaseIntervals = {}, diseaseWindows = {}, diseaseFungal = {}, diseaseCurves = {}, diseaseStates = {}, diseaseTreatments = {}, diseaseWeatherFactors = {}, diseaseAmbient = {} }
     local i = 0
     while true do
         local key = string.format("realisticCropRotationCrops.crop(%d)", i)
@@ -107,6 +108,8 @@ local function loadCropConfig()
             config.diseaseTreatments[upper] = (treatment ~= nil and treatment ~= "") and string.upper(treatment) or "NONE"
             -- Rain multiplier for fungal groups only (default RAIN_BONUS in Disease.lua when omitted).
             config.diseaseWeatherFactors[upper] = getXMLFloat(xmlFile, gkey .. "#weatherFactor")
+            -- Wind-borne inoculum floor on the infection roll.
+            config.diseaseAmbient[upper] = getXMLFloat(xmlFile, gkey .. "#ambient") or 0
             -- Daily destruction profile (optional; nil -> module fallbacks in getCurve): growth rate, destroy threshold, max destroyed share.
             config.diseaseCurves[upper] = {
                 dailyGrowth     = getXMLFloat(xmlFile, gkey .. "#dailyGrowth"),
@@ -199,7 +202,7 @@ local function onPeriodChanged()
         end
         if RealisticCropRotation.disease ~= nil then
             -- Infection roll + reset only here; severity progression and destruction run day by day (onDayChanged).
-            RealisticCropRotation.disease:evaluateInfection(farmlandId, rotationChanged)
+            RealisticCropRotation.disease:evaluateInfection(farmlandId)
             diseaseUpdated = true
         end
     end
