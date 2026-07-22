@@ -1,7 +1,6 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
 -- Mod bootstrap: source loading, lifecycle + density-map hooks, broadcast coalescing.
 local modDirectory = g_currentModDirectory
-local modName = g_currentModName
 
 source(modDirectory .. "scripts/RealisticCropRotationRepository.lua")
 source(modDirectory .. "scripts/RealisticCropRotationService.lua")
@@ -24,7 +23,6 @@ source(modDirectory .. "gui/RealisticCropRotationFrame.lua")
 
 RealisticCropRotation = {}
 RealisticCropRotation.modDirectory = modDirectory
-RealisticCropRotation.modName = modName
 RealisticCropRotation.manager = nil
 RealisticCropRotation.disease = nil
 RealisticCropRotation.grid = nil

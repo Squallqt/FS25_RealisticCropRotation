@@ -710,12 +710,6 @@ function RealisticCropRotationManager:getHistory(farmlandId)
     return self.repository:getHistory(farmlandId)
 end
 
----Returns the full history map.
--- @return table history
-function RealisticCropRotationManager:getAllHistory()
-    return self.repository:getAllHistory()
-end
-
 ---Crop standing on the field and not yet in history.
 -- @param integer farmlandId
 -- @return string cropName, or nil for none or a cover crop

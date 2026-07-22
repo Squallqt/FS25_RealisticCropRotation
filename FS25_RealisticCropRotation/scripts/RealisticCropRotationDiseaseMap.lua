@@ -23,11 +23,6 @@ RealisticCropRotationDiseaseMap.STATE_COLORS = {
 -- Last-resort colour for a state id beyond the palette (a 10th+ disease added without a colour).
 RealisticCropRotationDiseaseMap.STATE_COLOR_FALLBACK = { [false] = {0.86, 0.17, 0.14, 1}, [true] = {0.80, 0.40, 0.00, 1} }
 
--- Risk bands (cell values of the runtime risk map, written by Disease:refreshRiskMap).
-RealisticCropRotationDiseaseMap.RISK_LOW = 1
-RealisticCropRotationDiseaseMap.RISK_MODERATE = 2
-RealisticCropRotationDiseaseMap.RISK_HIGH = 3
-
 -- Fallback overlay texture resolution, used only when MapOverlayGenerator.OVERLAY_RESOLUTION is unavailable.
 RealisticCropRotationDiseaseMap.OVERLAY_BASE_RESOLUTION = 512
 

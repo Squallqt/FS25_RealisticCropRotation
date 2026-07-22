@@ -175,15 +175,6 @@ function RealisticCropRotationService:pushHistoryCrop(farmlandId, cropName, allo
     return self.repository:pushEntry(numericFarmlandId, normalizedCropName, allowDuplicate == true)
 end
 
----Normalizes then stores the last-known active crop for a farmland.
--- @param integer farmlandId
--- @param string cropName
--- @return boolean changed
-function RealisticCropRotationService:setLastKnownActiveCrop(farmlandId, cropName)
-    local normalizedCropName = self:normalizeCropName(cropName)
-    return self.repository:setLastKnownActiveCrop(farmlandId, normalizedCropName)
-end
-
 ---Rounds a growth state to a non-negative integer, or nil when invalid.
 -- @param number growthState
 -- @return integer growthState or nil
