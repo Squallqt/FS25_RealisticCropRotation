@@ -221,7 +221,7 @@
     </Profile>
 
     <Profile name="frSectionAccentAdvice" extends="frSectionAccent">
-        <color value="0.95 0.85 0.05 1.0"/>
+        <color value="$preset_fs25_colorGreen"/>
     </Profile>
 
     <Profile name="frSectionTitle" extends="fs25_textDefault" with="anchorMiddleLeft">
@@ -241,7 +241,7 @@
     </Profile>
 
     <Profile name="frSectionTitleAdvice" extends="frSectionTitle">
-        <textColor value="0.95 0.85 0.05 1.0"/>
+        <textColor value="$preset_fs25_colorGreen"/>
     </Profile>
 
     <Profile name="frSectionAccentField" extends="frSectionAccent">
@@ -556,6 +556,10 @@
         <color value="$preset_fs25_colorGreen"/>
     </Profile>
 
+    <Profile name="frAdviceStatusBadgeBgNeutralCentered" extends="frAdviceStatusBadgeBgNeutral">
+        <position value="18px -35px"/>
+    </Profile>
+
     <!-- Active-outbreak state -->
     <Profile name="frAdviceCardBgDanger" extends="frAdviceCardBgNeutral">
         <color value="0.30 0.06 0.05 0.85"/>
@@ -575,6 +579,10 @@
         <textAlignment value="center"/>
         <textVerticalAlignment value="middle"/>
         <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frAdviceStatusBadgeTextCentered" extends="frAdviceStatusBadgeText">
+        <position value="18px -35px"/>
     </Profile>
 
     <!-- Full-width header banner, centered, above the badge/body row -->
@@ -618,6 +626,11 @@
         <textAlignment value="left"/>
         <textVerticalAlignment value="middle"/>
         <textMaxNumLines value="3"/>
+    </Profile>
+
+    <Profile name="frAdviceTextNeutral" extends="frAdviceText">
+        <position value="72px -6px"/>
+        <size value="1148px 98px"/>
     </Profile>
 
     <!-- Field card (1240 x 82 px) -->

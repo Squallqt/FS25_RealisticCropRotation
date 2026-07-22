@@ -113,7 +113,6 @@
         <e k="rcr_advice_no_current_crop" v="Немає поточної основної культури: порада з'явиться після виявлення культури." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
-        <e k="rcr_advice_title_status" v="Поточний статус" />
         <e k="rcr_advice_title_ready" v="Сівозміна в порядку" />
         <e k="rcr_advice_title_warning" v="Конфлікт сівозміни" />
         <e k="rcr_advice_title_outbreak" v="Активний спалах хвороби" />

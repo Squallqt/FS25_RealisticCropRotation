@@ -113,7 +113,6 @@
         <e k="rcr_advice_no_current_crop" v="Nicio cultură principală actuală: sfat disponibil când este detectată o cultură." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
-        <e k="rcr_advice_title_status" v="Stare actuală" />
         <e k="rcr_advice_title_ready" v="Rotație optimă" />
         <e k="rcr_advice_title_warning" v="Conflict de rotație" />
         <e k="rcr_advice_title_outbreak" v="Infecție activă" />

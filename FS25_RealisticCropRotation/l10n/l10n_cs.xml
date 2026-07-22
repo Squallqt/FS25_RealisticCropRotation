@@ -113,7 +113,6 @@
         <e k="rcr_advice_no_current_crop" v="当前无主要作物: 检测到作物后将提供建议。" />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
-        <e k="rcr_advice_title_status" v="当前状态" />
         <e k="rcr_advice_title_ready" v="轮作良好" />
         <e k="rcr_advice_title_warning" v="轮作冲突" />
         <e k="rcr_advice_title_outbreak" v="活跃感染" />

@@ -113,7 +113,6 @@
         <e k="rcr_advice_no_current_crop" v="Žádná aktuální hlavní plodina: rada dostupná po detekci plodiny." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
-        <e k="rcr_advice_title_status" v="Aktuální stav" />
         <e k="rcr_advice_title_ready" v="Osevní postup v pořádku" />
         <e k="rcr_advice_title_warning" v="Konflikt osevního postupu" />
         <e k="rcr_advice_title_outbreak" v="Aktivní nákaza" />

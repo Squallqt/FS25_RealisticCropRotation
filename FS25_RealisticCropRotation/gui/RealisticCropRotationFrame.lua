@@ -1954,7 +1954,7 @@ end
 function RealisticCropRotationFrame:updateAdviceStatusCard(currentFamily, farmlandId, currentCropName)
     local visualState = "Neutral"
     local badgeSymbol = "i"
-    local title = self.i18n:getText("rcr_advice_title_status")
+    local title = ""
     local text
 
     -- 1) Active outbreak: the worst infection actually happening on this field right now.
@@ -2021,9 +2021,6 @@ function RealisticCropRotationFrame:updateAdviceStatusCard(currentFamily, farmla
     if self.adviceCardBg ~= nil and self.adviceCardBg.applyProfile ~= nil then
         self.adviceCardBg:applyProfile("frAdviceCardBg" .. visualState)
     end
-    if self.adviceStatusBadgeBg ~= nil and self.adviceStatusBadgeBg.applyProfile ~= nil then
-        self.adviceStatusBadgeBg:applyProfile("frAdviceStatusBadgeBg" .. visualState)
-    end
     if self.adviceTitle ~= nil and self.adviceTitle.applyProfile ~= nil then
         self.adviceTitle:applyProfile("frAdviceTitle" .. visualState)
     end
@@ -2033,6 +2030,23 @@ function RealisticCropRotationFrame:updateAdviceStatusCard(currentFamily, farmla
     if self.adviceTitle ~= nil then
         self.adviceTitle:setText(title)
     end
+
+    -- Status state hides the header and vertically centers the badge and text.
+    local isNeutral = visualState == "Neutral"
+    if self.adviceTitle ~= nil then self.adviceTitle:setVisible(not isNeutral) end
+    if self.adviceTitleDivider ~= nil then self.adviceTitleDivider:setVisible(not isNeutral) end
+    if self.adviceStatusBadgeBg ~= nil and self.adviceStatusBadgeBg.applyProfile ~= nil then
+        self.adviceStatusBadgeBg:applyProfile(isNeutral and "frAdviceStatusBadgeBgNeutralCentered"
+            or ("frAdviceStatusBadgeBg" .. visualState))
+    end
+    if self.adviceStatusBadgeText ~= nil and self.adviceStatusBadgeText.applyProfile ~= nil then
+        self.adviceStatusBadgeText:applyProfile(isNeutral and "frAdviceStatusBadgeTextCentered"
+            or "frAdviceStatusBadgeText")
+    end
+    if self.adviceText ~= nil and self.adviceText.applyProfile ~= nil then
+        self.adviceText:applyProfile(isNeutral and "frAdviceTextNeutral" or "frAdviceText")
+    end
+
     self.adviceText:setText(text)
 end
 

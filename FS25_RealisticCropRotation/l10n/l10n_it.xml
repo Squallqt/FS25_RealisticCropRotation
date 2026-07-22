@@ -113,7 +113,6 @@
         <e k="rcr_advice_no_current_crop" v="Nessuna coltura principale attuale: consiglio disponibile quando viene rilevata una coltura." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
-        <e k="rcr_advice_title_status" v="Stato attuale" />
         <e k="rcr_advice_title_ready" v="Rotazione ottimale" />
         <e k="rcr_advice_title_warning" v="Conflitto di rotazione" />
         <e k="rcr_advice_title_outbreak" v="Infezione attiva" />

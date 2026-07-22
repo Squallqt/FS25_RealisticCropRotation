@@ -224,7 +224,7 @@
                 <RoundCorner profile="frAdviceStatusBadgeBgNeutral" id="adviceStatusBadgeBg"/>
                 <Text profile="frAdviceStatusBadgeText" id="adviceStatusBadgeText" text=""/>
                 <Text profile="frAdviceTitleNeutral" id="adviceTitle" text=""/>
-                <RoundCorner profile="frAdviceTitleDivider"/>
+                <RoundCorner profile="frAdviceTitleDivider" id="adviceTitleDivider"/>
                 <Text profile="frAdviceText" id="adviceText" text=""/>
             </GuiElement>
 

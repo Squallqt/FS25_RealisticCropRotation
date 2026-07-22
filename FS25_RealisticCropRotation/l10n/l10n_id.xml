@@ -113,7 +113,6 @@
         <e k="rcr_advice_no_current_crop" v="Tidak ada tanaman utama saat ini: saran tersedia saat tanaman terdeteksi." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
-        <e k="rcr_advice_title_status" v="Status saat ini" />
         <e k="rcr_advice_title_ready" v="Rotasi optimal" />
         <e k="rcr_advice_title_warning" v="Konflik rotasi tanaman" />
         <e k="rcr_advice_title_outbreak" v="Wabah penyakit aktif" />
