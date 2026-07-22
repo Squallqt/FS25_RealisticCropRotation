@@ -1028,9 +1028,10 @@ function RealisticCropRotationDisease:unregisterConsoleCommands()
     self.consoleCommandsRegistered = false
 end
 
-local function formatDiseaseLoads(load)
+local function formatDiseaseValues(values, nestedField)
+    values = values or {}
     local groups = {}
-    for group in pairs(load or {}) do
+    for group in pairs(values) do
         groups[#groups + 1] = tostring(group)
     end
     table.sort(groups)
@@ -1039,26 +1040,22 @@ local function formatDiseaseLoads(load)
 
     local parts = {}
     for _, group in ipairs(groups) do
-        parts[#parts + 1] = string.format("%s=%.3f", group, tonumber(load[group]) or 0)
+        local value = values[group]
+        if nestedField ~= nil then
+            local data = value or {}
+            value = data[nestedField]
+        end
+        parts[#parts + 1] = string.format("%s=%.3f", group, tonumber(value) or 0)
     end
     return table.concat(parts, ", ")
 end
 
+local function formatDiseaseLoads(load)
+    return formatDiseaseValues(load)
+end
+
 local function formatDiseaseState(state)
-    local groups = {}
-    for group in pairs(state or {}) do
-        groups[#groups + 1] = tostring(group)
-    end
-    table.sort(groups)
-
-    if #groups == 0 then return "none" end
-
-    local parts = {}
-    for _, group in ipairs(groups) do
-        local data = state[group] or {}
-        parts[#parts + 1] = string.format("%s=%.3f", group, tonumber(data.severity) or 0)
-    end
-    return table.concat(parts, ", ")
+    return formatDiseaseValues(state, "severity")
 end
 
 local function collectDiseaseFarmlandIds(manager, farmlandId)

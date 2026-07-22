@@ -692,23 +692,27 @@ local function consumePFPH(session, target)
     return attempted
 end
 
-local function consumeVanillaSpray(session, target)
+---Applies a vanilla soil-layer change where the captured crop disappeared.
+-- @param table session
+-- @param table target
+-- @param integer change Zero clears the layer; a negative value is added
+local function consumeVanillaLayer(session, target, change)
     local writer = getWriter(target)
     if writer == nil then return end
     setWorldArea(writer, session.minX, session.minZ, session.maxX, session.maxZ)
     local positiveFilter = getValueFilter(target, DensityValueCompareType.GREATER, 0, nil)
     if positiveFilter == nil then return end
-    writer:executeSet(0, target.context.filter, positiveFilter)
+    if change == 0 then
+        writer:executeSet(0, target.context.filter, positiveFilter)
+    else
+        writer:executeAdd(change, target.context.filter, positiveFilter)
+    end
 end
 
-local function consumeVanillaLime(session, target)
-    local writer = getWriter(target)
-    if writer == nil then return end
-    setWorldArea(writer, session.minX, session.minZ, session.maxX, session.maxZ)
-    local positiveFilter = getValueFilter(target, DensityValueCompareType.GREATER, 0, nil)
-    if positiveFilter == nil then return end
-    writer:executeAdd(-1, target.context.filter, positiveFilter)
-end
+local VANILLA_LAYER_CHANGE = {
+    vanillaSpray = 0,
+    vanillaLime = -1,
+}
 
 ---Consumes nitrogen and lime only where the captured standing crop disappeared.
 -- @param table session Session returned by prepare
@@ -737,20 +741,19 @@ function RealisticCropRotationSoilUptake.consume(session)
                 pfNitrogenUpdated = consumePFNitrogen(session, target) or pfNitrogenUpdated
             elseif target.kind == "pfPH" then
                 pfPHUpdated = consumePFPH(session, target) or pfPHUpdated
-            elseif target.kind == "vanillaSpray" then
-                consumeVanillaSpray(session, target)
-            elseif target.kind == "vanillaLime" then
-                consumeVanillaLime(session, target)
+            else
+                local vanillaChange = VANILLA_LAYER_CHANGE[target.kind]
+                if vanillaChange ~= nil then
+                    consumeVanillaLayer(session, target, vanillaChange)
+                end
             end
         end
     end
 
     for _, target in ipairs(session.targets) do
-        if target.kind == "pfNitrogen" and pfNitrogenUpdated
-            and target.valueMap ~= nil
-            and type(target.valueMap.setMinimapRequiresUpdate) == "function" then
-            target.valueMap:setMinimapRequiresUpdate(true)
-        elseif target.kind == "pfPH" and pfPHUpdated
+        local shouldNotify = (target.kind == "pfNitrogen" and pfNitrogenUpdated)
+            or (target.kind == "pfPH" and pfPHUpdated)
+        if shouldNotify
             and target.valueMap ~= nil
             and type(target.valueMap.setMinimapRequiresUpdate) == "function" then
             target.valueMap:setMinimapRequiresUpdate(true)

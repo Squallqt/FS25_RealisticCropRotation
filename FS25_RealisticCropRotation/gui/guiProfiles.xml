@@ -220,9 +220,7 @@
         <color value="$preset_fs25_colorGreen"/>
     </Profile>
 
-    <Profile name="frSectionAccentAdvice" extends="frSectionAccent">
-        <color value="$preset_fs25_colorGreen"/>
-    </Profile>
+    <Profile name="frSectionAccentAdvice" extends="frSectionAccentN"/>
 
     <Profile name="frSectionTitle" extends="fs25_textDefault" with="anchorMiddleLeft">
         <position value="26px 0px"/>
@@ -240,9 +238,7 @@
         <textColor value="$preset_fs25_colorGreen"/>
     </Profile>
 
-    <Profile name="frSectionTitleAdvice" extends="frSectionTitle">
-        <textColor value="$preset_fs25_colorGreen"/>
-    </Profile>
+    <Profile name="frSectionTitleAdvice" extends="frSectionTitleN"/>
 
     <Profile name="frSectionAccentField" extends="frSectionAccent">
         <color value="$preset_fs25_colorOrangeDark"/>
@@ -823,10 +819,7 @@
     </Profile>
 
     <!-- color set in Lua -->
-    <Profile name="frCalendarCoverMarker" extends="baseReference" with="anchorTopLeft">
-        <color value="$preset_fs25_colorGreen"/>
-        <cornerSize value="0.17"/>
-    </Profile>
+    <Profile name="frCalendarCoverMarker" extends="frCalendarCropBar"/>
 
     <!-- Legend: anchored to timeline right edge; children positioned in Lua -->
     <Profile name="frCalendarLegend" extends="emptyPanel" with="anchorTopRight">
@@ -849,9 +842,7 @@
     </Profile>
 
     <!-- color set in Lua to FAMILY_RGBA.COVER -->
-    <Profile name="frCalendarLegendSwatchCover" extends="frCalendarLegendSwatch">
-        <color value="$preset_fs25_colorGreen"/>
-    </Profile>
+    <Profile name="frCalendarLegendSwatchCover" extends="frCalendarLegendSwatchSow"/>
 
     <!-- position/size set in Lua; bold to match frCalendarMonthLabel -->
     <Profile name="frCalendarLegendLabel" extends="fs25_textDefault" with="anchorTopLeft">

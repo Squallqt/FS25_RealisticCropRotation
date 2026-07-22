@@ -48,6 +48,34 @@ end
 -- File-local alias for the methods below.
 local fieldWorldBounds = RealisticCropRotationDiseaseGrid.fieldWorldBounds
 
+---Creates or loads one persistent treatment-protection map and records its actual size.
+-- @param table owner Disease-grid instance
+-- @param string savegamePath
+-- @param string mapIdField Instance field receiving the map ID
+-- @param string mapSizeField Instance field receiving the map size
+-- @param string mapName Internal BitVectorMap name
+-- @param string filename Savegame filename
+-- @param integer resolvedSize Default map size
+local function loadProtectionMap(owner, savegamePath, mapIdField, mapSizeField, mapName, filename, resolvedSize)
+    owner[mapIdField] = createBitVectorMap(mapName)
+    owner[mapSizeField] = resolvedSize
+    local loaded = false
+    if savegamePath ~= nil and savegamePath ~= "" then
+        local filePath = savegamePath .. filename
+        if fileExists ~= nil and fileExists(filePath) then
+            loaded = loadBitVectorMapFromFile(
+                owner[mapIdField], filePath, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS)
+        end
+    end
+    if not loaded then
+        loadBitVectorMapNew(
+            owner[mapIdField], owner[mapSizeField], owner[mapSizeField],
+            RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, false)
+    end
+    local actualSize = getBitVectorMapSize(owner[mapIdField])
+    owner[mapSizeField] = tonumber(actualSize) or owner[mapSizeField]
+end
+
 function RealisticCropRotationDiseaseGrid:loadMap(savegamePath, densityMapSyncer)
     -- Persistent maps default to the native ground-detail resolution.
     local resolvedSize = tonumber(g_currentMission.terrainDetailMapSize)
@@ -71,35 +99,12 @@ function RealisticCropRotationDiseaseGrid:loadMap(savegamePath, densityMapSyncer
     local w = getBitVectorMapSize(self.mapId)
     self.size = tonumber(w) or self.size
 
-    self.fungicideProtectionMapId = createBitVectorMap("rcrFungicideProtection")
-    self.fungicideProtectionMapSize = resolvedSize
-    local loadedFungProt = false
-    if savegamePath ~= nil and savegamePath ~= "" then
-        local fp = savegamePath .. RealisticCropRotationDiseaseGrid.FUNGICIDE_PROTECTION_FILENAME
-        if fileExists ~= nil and fileExists(fp) then
-            loadedFungProt = loadBitVectorMapFromFile(self.fungicideProtectionMapId, fp, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS)
-        end
-    end
-    if not loadedFungProt then
-        loadBitVectorMapNew(self.fungicideProtectionMapId, self.fungicideProtectionMapSize, self.fungicideProtectionMapSize, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, false)
-    end
-    local fungicideSize = getBitVectorMapSize(self.fungicideProtectionMapId)
-    self.fungicideProtectionMapSize = tonumber(fungicideSize) or self.fungicideProtectionMapSize
-
-    self.nematicideProtectionMapId = createBitVectorMap("rcrNematicideProtection")
-    self.nematicideProtectionMapSize = resolvedSize
-    local loadedNemaProt = false
-    if savegamePath ~= nil and savegamePath ~= "" then
-        local np = savegamePath .. RealisticCropRotationDiseaseGrid.NEMATICIDE_PROTECTION_FILENAME
-        if fileExists ~= nil and fileExists(np) then
-            loadedNemaProt = loadBitVectorMapFromFile(self.nematicideProtectionMapId, np, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS)
-        end
-    end
-    if not loadedNemaProt then
-        loadBitVectorMapNew(self.nematicideProtectionMapId, self.nematicideProtectionMapSize, self.nematicideProtectionMapSize, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, false)
-    end
-    local nematicideSize = getBitVectorMapSize(self.nematicideProtectionMapId)
-    self.nematicideProtectionMapSize = tonumber(nematicideSize) or self.nematicideProtectionMapSize
+    loadProtectionMap(
+        self, savegamePath, "fungicideProtectionMapId", "fungicideProtectionMapSize",
+        "rcrFungicideProtection", RealisticCropRotationDiseaseGrid.FUNGICIDE_PROTECTION_FILENAME, resolvedSize)
+    loadProtectionMap(
+        self, savegamePath, "nematicideProtectionMapId", "nematicideProtectionMapSize",
+        "rcrNematicideProtection", RealisticCropRotationDiseaseGrid.NEMATICIDE_PROTECTION_FILENAME, resolvedSize)
 
     if densityMapSyncer ~= nil and type(densityMapSyncer.addDensityMap) == "function" then
         densityMapSyncer:addDensityMap(self.fungicideProtectionMapId)

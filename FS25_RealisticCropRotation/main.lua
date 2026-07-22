@@ -48,7 +48,7 @@ local function loadCropConfig()
         return nil
     end
 
-    local config = { families = {}, nitrogen = {}, coverCrops = {}, diseases = {}, diseaseIntervals = {}, diseaseWindows = {}, diseaseFungal = {}, diseaseCurves = {}, diseaseStates = {}, diseaseTreatments = {}, diseaseWeatherFactors = {}, diseaseAmbient = {} }
+    local config = { families = {}, nitrogen = {}, coverCrops = {}, coverCropNames = {}, diseases = {}, diseaseIntervals = {}, diseaseWindows = {}, diseaseFungal = {}, diseaseCurves = {}, diseaseStates = {}, diseaseTreatments = {}, diseaseWeatherFactors = {}, diseaseAmbient = {} }
     local i = 0
     while true do
         local key = string.format("realisticCropRotationCrops.crop(%d)", i)
@@ -69,7 +69,12 @@ local function loadCropConfig()
             if n1 > 0 or n2 > 0 then
                 config.nitrogen[name] = { n1 = n1, n2 = n2 }
             end
-            if cover then config.coverCrops[name] = true end
+            if cover then
+                if not config.coverCrops[name] then
+                    config.coverCropNames[#config.coverCropNames + 1] = name
+                end
+                config.coverCrops[name] = true
+            end
             if disease ~= nil and disease ~= "" then
                 local set = {}
                 for g in string.gmatch(disease, "%S+") do set[string.upper(g)] = true end

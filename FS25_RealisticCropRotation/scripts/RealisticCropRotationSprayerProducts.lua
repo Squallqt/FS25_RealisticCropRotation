@@ -250,20 +250,11 @@ local function useVanillaSprayerEffects(vehicle)
 end
 
 local function createPatchedNozzleEffectState(originalFunction)
-    return function(vehicle, superFunc, effectData, dt, isTurnedOn, lastSpeed, ...)
+    return function(vehicle, ...)
         if useVanillaSprayerEffects(vehicle) then
             return false, 1
         end
-        return originalFunction(vehicle, superFunc, effectData, dt, isTurnedOn, lastSpeed, ...)
-    end
-end
-
-local function createPatchedCopiedNozzleEffectState(originalFunction)
-    return function(vehicle, effectData, dt, isTurnedOn, lastSpeed, ...)
-        if useVanillaSprayerEffects(vehicle) then
-            return false, 1
-        end
-        return originalFunction(vehicle, effectData, dt, isTurnedOn, lastSpeed, ...)
+        return originalFunction(vehicle, ...)
     end
 end
 
@@ -291,8 +282,8 @@ local function patchPrecisionFarmingTarget(functionName, target, createPatchedFu
 end
 
 ---Patches PF's class plus the copies already stored on vehicle types and loaded vehicles.
-local function patchPrecisionFarmingFunctionCopies(functionName, classFactory, copyFactory)
-    patchPrecisionFarmingTarget(functionName, pfExtendedSprayer, classFactory)
+local function patchPrecisionFarmingFunctionCopies(functionName, createPatchedFunction)
+    patchPrecisionFarmingTarget(functionName, pfExtendedSprayer, createPatchedFunction)
 
     if g_vehicleTypeManager ~= nil and g_vehicleTypeManager.types ~= nil then
         for _, vehicleType in pairs(g_vehicleTypeManager.types) do
@@ -300,7 +291,7 @@ local function patchPrecisionFarmingFunctionCopies(functionName, classFactory, c
                 and vehicleType.specializations ~= nil
                 and SpecializationUtil ~= nil
                 and SpecializationUtil.hasSpecialization(pfExtendedSprayer, vehicleType.specializations) then
-                patchPrecisionFarmingTarget(functionName, vehicleType.functions, copyFactory or classFactory)
+                patchPrecisionFarmingTarget(functionName, vehicleType.functions, createPatchedFunction)
             end
         end
     end
@@ -312,7 +303,7 @@ local function patchPrecisionFarmingFunctionCopies(functionName, classFactory, c
             if vehicle.specializations ~= nil
                 and SpecializationUtil ~= nil
                 and SpecializationUtil.hasSpecialization(pfExtendedSprayer, vehicle.specializations) then
-                patchPrecisionFarmingTarget(functionName, vehicle, copyFactory or classFactory)
+                patchPrecisionFarmingTarget(functionName, vehicle, createPatchedFunction)
             end
         end
     end
@@ -328,8 +319,7 @@ local function patchPrecisionFarmingEffects()
         "updateSprayerEffectState", pfExtendedSprayer, createPatchedUpdateSprayerEffectState)
     patchPrecisionFarmingFunctionCopies(
         "updateExtendedSprayerNozzleEffectState",
-        createPatchedNozzleEffectState,
-        createPatchedCopiedNozzleEffectState)
+        createPatchedNozzleEffectState)
 end
 
 ---Restores every PF function only when the currently installed function is still RCR's wrapper.

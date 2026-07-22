@@ -20,25 +20,88 @@ local function hasPlanData(plan)
     return false
 end
 
+---Resets every repository data table.
+-- @param table repository
+local function resetStorage(repository)
+    repository.history = {}
+    repository.plans = {}
+    repository.coverPlans = {}
+    repository.lastKnownActiveCrop = {}
+    repository.lastKnownGrowthState = {}
+end
+
+---Collects sorted positive numeric farmland IDs across all repository tables.
+-- @param table repository
+-- @return table farmlandIds
+local function collectFarmlandIds(repository)
+    local allIds = {}
+    local seen = {}
+    local stores = {
+        repository.history,
+        repository.plans,
+        repository.coverPlans,
+        repository.lastKnownActiveCrop,
+        repository.lastKnownGrowthState,
+    }
+    for _, store in ipairs(stores) do
+        for farmlandId in pairs(store) do
+            local numericId = tonumber(farmlandId)
+            if numericId ~= nil and numericId > 0 and not seen[numericId] then
+                seen[numericId] = true
+                allIds[#allIds + 1] = numericId
+            end
+        end
+    end
+    table.sort(allIds)
+    return allIds
+end
+
+---Writes one four-slot plan node.
+-- @param integer xmlFile
+-- @param string farmlandKey
+-- @param string nodeName
+-- @param table plan
+local function writePlan(xmlFile, farmlandKey, nodeName, plan)
+    local planKey = string.format("%s.%s(0)", farmlandKey, nodeName)
+    for planIndex = 1, 4 do
+        if plan[planIndex] ~= nil and plan[planIndex] ~= "" then
+            setXMLString(xmlFile, planKey .. "#year" .. planIndex, plan[planIndex])
+        end
+    end
+end
+
+---Reads one four-slot plan node.
+-- @param integer xmlFile
+-- @param string farmlandKey
+-- @param string nodeName
+-- @return table plan, or nil when empty or absent
+local function readPlan(xmlFile, farmlandKey, nodeName)
+    local planKey = string.format("%s.%s(0)", farmlandKey, nodeName)
+    if not hasXMLProperty(xmlFile, planKey) then return nil end
+
+    local plan = {"", "", "", ""}
+    local hasData = false
+    for planIndex = 1, 4 do
+        local value = getXMLString(xmlFile, planKey .. "#year" .. planIndex)
+        if value ~= nil and value ~= "" then
+            plan[planIndex] = value
+            hasData = true
+        end
+    end
+    return hasData and plan or nil
+end
+
 ---Creates an empty repository.
 -- @return RealisticCropRotationRepository instance
 function RealisticCropRotationRepository.new()
     local self = setmetatable({}, RealisticCropRotationRepository_mt)
-    self.history    = {}
-    self.plans      = {}
-    self.coverPlans = {}
-    self.lastKnownActiveCrop = {}
-    self.lastKnownGrowthState = {}
+    resetStorage(self)
     return self
 end
 
 ---Clears all stored history, plans and last-known state.
 function RealisticCropRotationRepository:clear()
-    self.history    = {}
-    self.plans      = {}
-    self.coverPlans = {}
-    self.lastKnownActiveCrop = {}
-    self.lastKnownGrowthState = {}
+    resetStorage(self)
 end
 
 ---Returns the history entries for a farmland (empty table when none).
@@ -263,29 +326,7 @@ function RealisticCropRotationRepository:saveToXML(savegamePath)
 
     setXMLInt(xmlFile, "realisticCropRotation#version", RealisticCropRotationRepository.SAVE_VERSION)
 
-    local allIds = {}
-    local seen = {}
-    for farmlandId in pairs(self.history) do
-        local n = tonumber(farmlandId)
-        if n ~= nil and n > 0 and not seen[n] then seen[n] = true; table.insert(allIds, n) end
-    end
-    for farmlandId in pairs(self.plans) do
-        local n = tonumber(farmlandId)
-        if n ~= nil and n > 0 and not seen[n] then seen[n] = true; table.insert(allIds, n) end
-    end
-    for farmlandId in pairs(self.coverPlans) do
-        local n = tonumber(farmlandId)
-        if n ~= nil and n > 0 and not seen[n] then seen[n] = true; table.insert(allIds, n) end
-    end
-    for farmlandId in pairs(self.lastKnownActiveCrop) do
-        local n = tonumber(farmlandId)
-        if n ~= nil and n > 0 and not seen[n] then seen[n] = true; table.insert(allIds, n) end
-    end
-    for farmlandId in pairs(self.lastKnownGrowthState) do
-        local n = tonumber(farmlandId)
-        if n ~= nil and n > 0 and not seen[n] then seen[n] = true; table.insert(allIds, n) end
-    end
-    table.sort(allIds)
+    local allIds = collectFarmlandIds(self)
 
     local farmlandIndex = 0
     for _, numericFarmlandId in ipairs(allIds) do
@@ -321,21 +362,11 @@ function RealisticCropRotationRepository:saveToXML(savegamePath)
             end
 
             if hasPlan then
-                local planKey = farmlandKey .. ".plan(0)"
-                for pi = 1, 4 do
-                    if plan[pi] ~= nil and plan[pi] ~= "" then
-                        setXMLString(xmlFile, planKey .. "#year" .. pi, plan[pi])
-                    end
-                end
+                writePlan(xmlFile, farmlandKey, "plan", plan)
             end
 
             if hasCoverPlan then
-                local coverPlanKey = farmlandKey .. ".coverPlan(0)"
-                for pi = 1, 4 do
-                    if coverPlan[pi] ~= nil and coverPlan[pi] ~= "" then
-                        setXMLString(xmlFile, coverPlanKey .. "#year" .. pi, coverPlan[pi])
-                    end
-                end
+                writePlan(xmlFile, farmlandKey, "coverPlan", coverPlan)
             end
 
             farmlandIndex = farmlandIndex + 1
@@ -371,11 +402,7 @@ function RealisticCropRotationRepository:loadFromXML(savegamePath)
             version, RealisticCropRotationRepository.SAVE_VERSION)
     end
 
-    self.history    = {}
-    self.plans      = {}
-    self.coverPlans = {}
-    self.lastKnownActiveCrop = {}
-    self.lastKnownGrowthState = {}
+    resetStorage(self)
 
     local farmlandIndex = 0
     while true do
@@ -409,33 +436,11 @@ function RealisticCropRotationRepository:loadFromXML(savegamePath)
                 self.history[farmlandId] = entries
             end
 
-            local planKey = farmlandKey .. ".plan(0)"
-            if hasXMLProperty(xmlFile, planKey) then
-                local plan = {"","","",""}
-                local hasPlan = false
-                for pi = 1, 4 do
-                    local val = getXMLString(xmlFile, planKey .. "#year" .. pi)
-                    if val ~= nil and val ~= "" then
-                        plan[pi] = val
-                        hasPlan = true
-                    end
-                end
-                if hasPlan then self.plans[farmlandId] = plan end
-            end
+            local plan = readPlan(xmlFile, farmlandKey, "plan")
+            if plan ~= nil then self.plans[farmlandId] = plan end
 
-            local coverPlanKey = farmlandKey .. ".coverPlan(0)"
-            if hasXMLProperty(xmlFile, coverPlanKey) then
-                local coverPlan = {"","","",""}
-                local hasCoverPlan = false
-                for pi = 1, 4 do
-                    local val = getXMLString(xmlFile, coverPlanKey .. "#year" .. pi)
-                    if val ~= nil and val ~= "" then
-                        coverPlan[pi] = val
-                        hasCoverPlan = true
-                    end
-                end
-                if hasCoverPlan then self.coverPlans[farmlandId] = coverPlan end
-            end
+            local coverPlan = readPlan(xmlFile, farmlandKey, "coverPlan")
+            if coverPlan ~= nil then self.coverPlans[farmlandId] = coverPlan end
         end
 
         farmlandIndex = farmlandIndex + 1

@@ -5,11 +5,6 @@ local RCRPlanUpdateEvent_mt = Class(RCRPlanUpdateEvent, Event)
 
 InitEventClass(RCRPlanUpdateEvent, "RCRPlanUpdateEvent")
 
-local VALID_COVER_CROPS = {
-    OILSEEDRADISH = true,
-    FLOWERINGCATCHCROP = true,
-}
-
 ---Creates an empty event instance for deserialization.
 -- @return RCRPlanUpdateEvent instance Empty event
 function RCRPlanUpdateEvent.emptyNew()
@@ -120,13 +115,15 @@ function RCRPlanUpdateEvent:run(connection)
 
             local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
             local family = config ~= nil and config.families ~= nil and config.families[self.cropName] or nil
+            local isConfiguredCover = config ~= nil and config.coverCrops ~= nil
+                and config.coverCrops[self.cropName] == true
             if isCoverUpdate then
-                if not VALID_COVER_CROPS[self.cropName] or family ~= "COVER" then
+                if not isConfiguredCover or family ~= "COVER" then
                     Logging.warning("[RealisticCropRotation][MP] Cover plan update rejected (invalid cover): farmland=%s crop=%s",
                         tostring(self.farmlandId), tostring(self.cropName))
                     return
                 end
-            elseif family == "COVER" or VALID_COVER_CROPS[self.cropName] then
+            elseif family == "COVER" or isConfiguredCover then
                 Logging.warning("[RealisticCropRotation][MP] Main plan update rejected (cover in main plan): farmland=%s crop=%s",
                     tostring(self.farmlandId), tostring(self.cropName))
                 return

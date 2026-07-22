@@ -363,6 +363,39 @@ function RealisticCropRotationDiseaseMap:buildKey()
     return table.concat(parts, "|")
 end
 
+---Returns the hidden overlay slot used for the next double-buffered build.
+-- @param table owner Disease-map instance
+-- @param table overlayIds Pair of overlay IDs
+-- @param string activeSlotField Instance field containing the active slot
+-- @return integer slot, or nil
+-- @return integer overlayId, or nil
+local function getInactiveOverlay(owner, overlayIds, activeSlotField)
+    if overlayIds == nil then return nil end
+    local slot = owner[activeSlotField] == 1 and 2 or 1
+    local overlayId = overlayIds[slot]
+    if overlayId == nil or overlayId == 0 then return nil end
+    return slot, overlayId
+end
+
+---Resets an overlay before assigning its state colours.
+-- @param integer overlayId
+local function resetOverlayBuild(overlayId)
+    resetDensityMapVisualizationOverlay(overlayId)
+    setOverlayColor(overlayId, 1, 1, 1, 1)
+end
+
+---Starts generation and publishes the hidden slot as pending.
+-- @param table owner Disease-map instance
+-- @param integer overlayId
+-- @param integer slot
+-- @param string pendingSlotField Instance field receiving the pending slot
+-- @return boolean success
+local function publishOverlayBuild(owner, overlayId, slot, pendingSlotField)
+    generateDensityMapVisualizationOverlay(overlayId)
+    owner[pendingSlotField] = slot
+    return true
+end
+
 -- Infection view — render straight from the persistent grid (no iteration).
 
 function RealisticCropRotationDiseaseMap:renderInfectionOverlay()
@@ -372,15 +405,13 @@ function RealisticCropRotationDiseaseMap:renderInfectionOverlay()
     end
 
     -- Regenerate into the slot NOT currently displayed (double-buffered), so the map keeps showing the last-good result meanwhile.
-    local slot = (self.infectionActiveSlot == 1) and 2 or 1
-    local overlayId = self.infectionOverlayIds[slot]
-    if overlayId == nil or overlayId == 0 then return false end
+    local slot, overlayId = getInactiveOverlay(self, self.infectionOverlayIds, "infectionActiveSlot")
+    if overlayId == nil then return false end
 
     local filter = self.filter or {}
     local colorBlind = self.isColorBlindMode == true
 
-    resetDensityMapVisualizationOverlay(overlayId)
-    setOverlayColor(overlayId, 1, 1, 1, 1)
+    resetOverlayBuild(overlayId)
 
     -- One native paint per enabled disease, straight from the destruction grid; row order matches orderedDiseaseGroups, so filter[i] gates disease i.
     for i, entry in ipairs(orderedDiseaseGroups()) do
@@ -391,9 +422,7 @@ function RealisticCropRotationDiseaseMap:renderInfectionOverlay()
         end
     end
 
-    generateDensityMapVisualizationOverlay(overlayId)
-    self.infectionPendingSlot = slot
-    return true
+    return publishOverlayBuild(self, overlayId, slot, "infectionPendingSlot")
 end
 
 -- Risk view — render straight from the runtime risk-band map (no iteration).
@@ -406,14 +435,12 @@ function RealisticCropRotationDiseaseMap:renderRiskOverlay()
     end
 
     -- Regenerate into the slot NOT currently displayed (double-buffered) -- see renderInfectionOverlay.
-    local slot = (self.riskActiveSlot == 1) and 2 or 1
-    local overlayId = self.riskOverlayIds[slot]
-    if overlayId == nil or overlayId == 0 then return false end
+    local slot, overlayId = getInactiveOverlay(self, self.riskOverlayIds, "riskActiveSlot")
+    if overlayId == nil then return false end
 
     local riskFilter = self.riskFilter or { true, true, true }
 
-    resetDensityMapVisualizationOverlay(overlayId)
-    setOverlayColor(overlayId, 1, 1, 1, 1)
+    resetOverlayBuild(overlayId)
 
     local colors = { self.RISK_COLOR_LOW, self.RISK_COLOR_MODERATE, self.RISK_COLOR_HIGH }
     for band = 1, 3 do
@@ -424,9 +451,7 @@ function RealisticCropRotationDiseaseMap:renderRiskOverlay()
         end
     end
 
-    generateDensityMapVisualizationOverlay(overlayId)
-    self.riskPendingSlot = slot
-    return true
+    return publishOverlayBuild(self, overlayId, slot, "riskPendingSlot")
 end
 
 -- Treatment-coverage view — render straight from the two per-cell protection maps.
@@ -438,15 +463,13 @@ function RealisticCropRotationDiseaseMap:renderTreatmentOverlay()
     if grid.fungicideProtectionMapId == nil and grid.nematicideProtectionMapId == nil then return false end
 
     -- Regenerate into the slot NOT currently displayed (double-buffered) -- see renderInfectionOverlay.
-    local slot = (self.treatmentActiveSlot == 1) and 2 or 1
-    local overlayId = self.treatmentOverlayIds[slot]
-    if overlayId == nil or overlayId == 0 then return false end
+    local slot, overlayId = getInactiveOverlay(self, self.treatmentOverlayIds, "treatmentActiveSlot")
+    if overlayId == nil then return false end
 
     local filter = self.treatmentFilter or { true, true }
     local protectionChannels = RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS
 
-    resetDensityMapVisualizationOverlay(overlayId)
-    setOverlayColor(overlayId, 1, 1, 1, 1)
+    resetOverlayBuild(overlayId)
 
     if filter[1] ~= false and grid.fungicideProtectionMapId ~= nil then
         local c = RealisticCropRotationDiseaseMap.TREATMENT_COLOR_FUNGICIDE
@@ -459,9 +482,7 @@ function RealisticCropRotationDiseaseMap:renderTreatmentOverlay()
             overlayId, grid.nematicideProtectionMapId, 0, 0, 0, protectionChannels, 1, c[1], c[2], c[3])
     end
 
-    generateDensityMapVisualizationOverlay(overlayId)
-    self.treatmentPendingSlot = slot
-    return true
+    return publishOverlayBuild(self, overlayId, slot, "treatmentPendingSlot")
 end
 
 -- Overlay update / draw

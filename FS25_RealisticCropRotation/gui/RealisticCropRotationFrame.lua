@@ -46,11 +46,6 @@ RealisticCropRotationFrame.FAMILY_RGBA = {
     FALLOW    = {0.20, 0.20, 0.20, 0.60},    -- neutral, no crop/cover implication
 }
 
-RealisticCropRotationFrame.COVER_CROP_NAMES = {
-    "OILSEEDRADISH",
-    "FLOWERINGCATCHCROP",
-}
-
 -- Min recommended return interval (years) per family; FORAGE has no constraint.
 RealisticCropRotationFrame.FAMILY_MIN_INTERVAL = {
     CEREAL    = 2,
@@ -1087,8 +1082,10 @@ function RealisticCropRotationFrame:buildPlanCropList()
         table.insert(self.planCropList, RealisticCropRotation.SPECIAL_CROP_FALLOW)
     end
 
-    -- Only offer cover crops whose fruitType is registered on this map.
-    for _, cropName in ipairs(RealisticCropRotationFrame.COVER_CROP_NAMES) do
+    -- Only offer configured cover crops whose fruitType is registered on this map.
+    local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
+    local coverCropNames = config ~= nil and config.coverCropNames or {}
+    for _, cropName in ipairs(coverCropNames) do
         local available = g_fruitTypeManager ~= nil and g_fruitTypeManager.getFruitTypeByName ~= nil
             and g_fruitTypeManager:getFruitTypeByName(cropName) ~= nil
         if available then
@@ -2519,33 +2516,40 @@ end
 ---Builds the main plan with the active slot overridden by the crop selector.
 -- @return table plan
 function RealisticCropRotationFrame:getPlanFromSelectors()
-    local sourcePlan = self.calendarLocalPlan
-    if sourcePlan == nil and self.selectedId ~= nil then
-        sourcePlan = self:getPlanForFarmland(self.selectedId)
-    end
-    local plan = self:copyFourSlotPlan(sourcePlan)
-    local slotIdx = self:getCalendarEditSlotIndex()
-    local sel = self.calendarEditCropSelector
-    if sel ~= nil and self.planCropList ~= nil then
-        plan[slotIdx] = self.planCropList[sel:getState()] or ""
-    end
-    return plan
+    return self:getPlanFromSelector(false)
 end
 
 ---Builds the cover plan with the active slot overridden by the cover selector.
 -- @return table coverPlan
 function RealisticCropRotationFrame:getCoverPlanFromSelectors()
-    local sourceCoverPlan = self.calendarLocalCoverPlan
-    if sourceCoverPlan == nil and self.selectedId ~= nil then
-        sourceCoverPlan = self:getCoverPlanForFarmland(self.selectedId)
+    return self:getPlanFromSelector(true)
+end
+
+---Builds a main or cover plan with the active slot overridden by its selector.
+-- @param boolean isCover True for the cover-crop plan
+-- @return table plan
+function RealisticCropRotationFrame:getPlanFromSelector(isCover)
+    local sourcePlan = self.calendarLocalPlan
+    local selector = self.calendarEditCropSelector
+    local cropList = self.planCropList
+    if isCover then
+        sourcePlan = self.calendarLocalCoverPlan
+        selector = self.calendarEditCoverSelector
+        cropList = self.coverCropList
     end
-    local coverPlan = self:copyFourSlotPlan(sourceCoverPlan)
+    if sourcePlan == nil and self.selectedId ~= nil then
+        if isCover then
+            sourcePlan = self:getCoverPlanForFarmland(self.selectedId)
+        else
+            sourcePlan = self:getPlanForFarmland(self.selectedId)
+        end
+    end
+    local plan = self:copyFourSlotPlan(sourcePlan)
     local slotIdx = self:getCalendarEditSlotIndex()
-    local sel = self.calendarEditCoverSelector
-    if sel ~= nil and self.coverCropList ~= nil then
-        coverPlan[slotIdx] = self.coverCropList[sel:getState()] or ""
+    if selector ~= nil and cropList ~= nil then
+        plan[slotIdx] = cropList[selector:getState()] or ""
     end
-    return coverPlan
+    return plan
 end
 
 ---Rebuilds local plans from the selectors and redraws the calendar (no save).
@@ -2654,15 +2658,34 @@ end
 ---Writes a slot's main crop (event on MP client, direct on server) and refreshes the UI.
 -- @param integer slotIdx Slot 1-4
 function RealisticCropRotationFrame:handleCalendarCropChange(slotIdx)
+    self:handleCalendarPlanChange(slotIdx, false)
+end
+
+---Writes a slot's cover crop (event on MP client, direct on server) and refreshes the UI.
+-- @param integer slotIdx Slot 1-4
+function RealisticCropRotationFrame:handleCalendarCoverChange(slotIdx)
+    self:handleCalendarPlanChange(slotIdx, true)
+end
+
+---Writes a main or cover crop slot and refreshes the calendar and overview.
+-- @param integer slotIdx Slot 1-4
+-- @param boolean isCover True for the cover-crop plan
+function RealisticCropRotationFrame:handleCalendarPlanChange(slotIdx, isCover)
     if self.isApplyingServerSync then return end
     if self.selectedId == nil then return end
-    local sel = self.calendarEditCropSelector
-    if sel == nil then return end
+    local selector = self.calendarEditCropSelector
+    local cropList = self.planCropList
+    local localPlanField = "calendarLocalPlan"
+    if isCover then
+        selector = self.calendarEditCoverSelector
+        cropList = self.coverCropList
+        localPlanField = "calendarLocalCoverPlan"
+    end
+    if selector == nil then return end
 
-    local state    = sel:getState()
-    local cropName = (self.planCropList ~= nil and self.planCropList[state]) or ""
-    self.calendarLocalPlan = self:copyFourSlotPlan(self.calendarLocalPlan)
-    self.calendarLocalPlan[slotIdx] = cropName
+    local cropName = (cropList ~= nil and cropList[selector:getState()]) or ""
+    self[localPlanField] = self:copyFourSlotPlan(self[localPlanField])
+    self[localPlanField][slotIdx] = cropName
 
     local isClientOnly = g_currentMission ~= nil and g_currentMission.getIsServer ~= nil
         and not g_currentMission:getIsServer()
@@ -2671,16 +2694,26 @@ function RealisticCropRotationFrame:handleCalendarCropChange(slotIdx)
         if g_client ~= nil and g_client.getServerConnection ~= nil and RCRPlanUpdateEvent ~= nil then
             local connection = g_client:getServerConnection()
             if connection ~= nil then
-                connection:sendEvent(RCRPlanUpdateEvent.new(self.selectedId, slotIdx, cropName, false))
+                connection:sendEvent(RCRPlanUpdateEvent.new(self.selectedId, slotIdx, cropName, isCover))
             end
         else
-            Logging.warning("[RealisticCropRotation][MP] Plan update not sent: client connection or event unavailable")
+            Logging.warning(isCover
+                and "[RealisticCropRotation][MP] Cover plan update not sent: client connection or event unavailable"
+                or "[RealisticCropRotation][MP] Plan update not sent: client connection or event unavailable")
         end
     else
         local mgr = self:getManager()
         local changed = false
-        if mgr ~= nil and mgr.setRotationPlanYear ~= nil then
-            changed = mgr:setRotationPlanYear(self.selectedId, slotIdx, cropName)
+        local setter = nil
+        if mgr ~= nil then
+            if isCover then
+                setter = mgr.setRotationCoverPlanYear
+            else
+                setter = mgr.setRotationPlanYear
+            end
+        end
+        if setter ~= nil then
+            changed = setter(mgr, self.selectedId, slotIdx, cropName)
         end
         if changed and RealisticCropRotation ~= nil and RealisticCropRotation.requestBroadcast ~= nil then
             RealisticCropRotation.requestBroadcast()
@@ -2690,50 +2723,6 @@ function RealisticCropRotationFrame:handleCalendarCropChange(slotIdx)
     self:renderCalendarFromLocalPlans()
 
     -- Refresh the overview from the repository (may lag one MP snapshot, never optimistic data).
-    self:buildRotationGroups()
-    if self.listPlanOverview ~= nil then
-        self.listPlanOverview:reloadData()
-    end
-end
-
----Writes a slot's cover crop (event on MP client, direct on server) and refreshes the UI.
--- @param integer slotIdx Slot 1-4
-function RealisticCropRotationFrame:handleCalendarCoverChange(slotIdx)
-    if self.isApplyingServerSync then return end
-    if self.selectedId == nil then return end
-    local sel = self.calendarEditCoverSelector
-    if sel == nil then return end
-
-    local state = sel:getState()
-    local cropName = (self.coverCropList ~= nil and self.coverCropList[state]) or ""
-    self.calendarLocalCoverPlan = self:copyFourSlotPlan(self.calendarLocalCoverPlan)
-    self.calendarLocalCoverPlan[slotIdx] = cropName
-
-    local isClientOnly = g_currentMission ~= nil and g_currentMission.getIsServer ~= nil
-        and not g_currentMission:getIsServer()
-
-    if isClientOnly then
-        if g_client ~= nil and g_client.getServerConnection ~= nil and RCRPlanUpdateEvent ~= nil then
-            local connection = g_client:getServerConnection()
-            if connection ~= nil then
-                connection:sendEvent(RCRPlanUpdateEvent.new(self.selectedId, slotIdx, cropName, true))
-            end
-        else
-            Logging.warning("[RealisticCropRotation][MP] Cover plan update not sent: client connection or event unavailable")
-        end
-    else
-        local mgr = self:getManager()
-        local changed = false
-        if mgr ~= nil and mgr.setRotationCoverPlanYear ~= nil then
-            changed = mgr:setRotationCoverPlanYear(self.selectedId, slotIdx, cropName)
-        end
-        if changed and RealisticCropRotation ~= nil and RealisticCropRotation.requestBroadcast ~= nil then
-            RealisticCropRotation.requestBroadcast()
-        end
-    end
-
-    self:renderCalendarFromLocalPlans()
-
     self:buildRotationGroups()
     if self.listPlanOverview ~= nil then
         self.listPlanOverview:reloadData()
@@ -2817,19 +2806,10 @@ function RealisticCropRotationFrame:updateScoreCard(plan, coverPlan)
         if posSize ~= nil then self.scoreCursorPos:setSize(posSize[1], posSize[2]) end
     end
 
-    -- Cursor color matches score zone (Lua-only, XML constraint does not apply)
+    -- Cursor color matches the same score zone used by overview badges.
     if self.scoreCursor ~= nil then
-        if score >= 80 then
-            self.scoreCursor.color = {0.325, 0.565, 0.071, 1.0}
-        elseif score >= 60 then
-            self.scoreCursor.color = {0.95, 0.85, 0.05, 1.0}
-        elseif score >= 40 then
-            self.scoreCursor.color = {0.75, 0.45, 0.05, 1.0}
-        elseif score >= 20 then
-            self.scoreCursor.color = {0.75, 0.20, 0.05, 1.0}
-        else
-            self.scoreCursor.color = {0.55, 0.05, 0.05, 1.0}
-        end
+        local _, r, g, b = self:getScoreLabel(score)
+        self.scoreCursor.color = {r, g, b, 1.0}
     end
 end
 
