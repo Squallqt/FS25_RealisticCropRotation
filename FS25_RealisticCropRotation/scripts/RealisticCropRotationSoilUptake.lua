@@ -456,13 +456,11 @@ local function internalPHState(pHMap, maxState, realValue, findUpper)
 end
 
 local function addTarget(session, target)
-    if target == nil then return false end
     local context = getMaskContext(target)
-    if context == nil then return false end
+    if context == nil then return end
     target.context = context
     session.targets[#session.targets + 1] = target
     session.contexts[context.key] = context
-    return true
 end
 
 local function buildPFSession(session, pf, desc)
@@ -696,22 +694,20 @@ end
 
 local function consumeVanillaSpray(session, target)
     local writer = getWriter(target)
-    if writer == nil then return false end
+    if writer == nil then return end
     setWorldArea(writer, session.minX, session.minZ, session.maxX, session.maxZ)
     local positiveFilter = getValueFilter(target, DensityValueCompareType.GREATER, 0, nil)
-    if positiveFilter == nil then return false end
+    if positiveFilter == nil then return end
     writer:executeSet(0, target.context.filter, positiveFilter)
-    return true
 end
 
 local function consumeVanillaLime(session, target)
     local writer = getWriter(target)
-    if writer == nil then return false end
+    if writer == nil then return end
     setWorldArea(writer, session.minX, session.minZ, session.maxX, session.maxZ)
     local positiveFilter = getValueFilter(target, DensityValueCompareType.GREATER, 0, nil)
-    if positiveFilter == nil then return false end
+    if positiveFilter == nil then return end
     writer:executeAdd(-1, target.context.filter, positiveFilter)
-    return true
 end
 
 ---Consumes nitrogen and lime only where the captured standing crop disappeared.

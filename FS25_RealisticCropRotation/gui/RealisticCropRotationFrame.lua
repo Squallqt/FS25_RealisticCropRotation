@@ -75,7 +75,6 @@ RealisticCropRotationFrame.SOIL_ROW_TITLE_GAP_PX = 16
 
 -- Global overview crop badge layout, in pixels, converted at runtime.
 RealisticCropRotationFrame.GROUP_BADGE_Y          = 18
-RealisticCropRotationFrame.GROUP_BADGE_W          = 300
 RealisticCropRotationFrame.GROUP_BADGE_H          = 30
 RealisticCropRotationFrame.GROUP_ICON_W           = 20
 RealisticCropRotationFrame.GROUP_ICON_H           = 20
@@ -260,7 +259,7 @@ function RealisticCropRotationFrame:onFrameOpen()
     self:layoutCalendarLegend()
     self:setMenuButtonInfoDirty()
     if RealisticCropRotation ~= nil and RealisticCropRotation.requestServerSync ~= nil then
-        RealisticCropRotation.requestServerSync("frameOpen")
+        RealisticCropRotation.requestServerSync()
     end
     self:linkFocusNavigation()
 
@@ -2077,11 +2076,6 @@ function RealisticCropRotationFrame:updatePlanningPanel(farmlandId)
     end
 
     self:updateCalendar(farmlandId)
-    local plan = self:getPlanForFarmland(farmlandId)
-    local coverPlan = self:getCoverPlanForFarmland(farmlandId)
-    self:updateScoreCard(plan, coverPlan)
-    self:updatePlannedResiduePill(self.planStatusPillBg, self.planStatusPillText, plan, coverPlan)
-    self:layoutHeroPills(self.planTitle, self.planStatusPillBg)
 end
 
 -- Annual calendar — crop selector + sow window + cover marker
@@ -3081,8 +3075,7 @@ function RealisticCropRotationFrame:layoutGroupBadgeContent(cell, slotIndex, dis
     if originalBadgePos == nil then return end
 
     local badgeSize = GuiUtils.getNormalizedScreenValues(string.format(
-        "%dpx %dpx",
-        RealisticCropRotationFrame.GROUP_BADGE_W,
+        "0px %dpx",
         RealisticCropRotationFrame.GROUP_BADGE_H
     ))
     local badgePos = {

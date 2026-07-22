@@ -169,7 +169,7 @@ local function paintInfectionPresence(grid, field, group, seed)
         return
     end
     local diseaseState = diseaseStateForGroup(group)
-    if diseaseState == nil or diseaseState <= 0 then return end
+    if diseaseState <= 0 then return end
     local polygon = field:getDensityMapPolygon()
     if polygon == nil then return end
     local gridModifier = DensityMapModifier.new(grid.mapId, 0, grid.numChannels, g_terrainNode)

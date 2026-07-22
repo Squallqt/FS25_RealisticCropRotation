@@ -81,7 +81,7 @@ function RealisticCropRotationService:getResidueStatesForTermination(farmlandId,
     local states = 0
     local terminated = self:getResidueEntry(self:normalizeCropName(terminatedCropName))
     if terminated ~= nil then states = states + (tonumber(terminated.n1) or 0) end
-    local history = self.repository:getHistory(farmlandId) or {}
+    local history = self.repository:getHistory(farmlandId)
     local previous = history[1] ~= nil and self:getResidueEntry(self:normalizeCropName(history[1].crop)) or nil
     if previous ~= nil then states = states + (tonumber(previous.n2) or 0) end
     if states < 0 then states = 0 end
@@ -355,7 +355,7 @@ end
 -- @param table receivedLastKnownActiveCrop
 -- @param table receivedLastKnownGrowthState
 function RealisticCropRotationService:applySyncData(receivedHistory, receivedPlans, receivedCoverPlans, receivedLastKnownActiveCrop, receivedLastKnownGrowthState)
-    self.repository:replaceAll(receivedHistory or {}, receivedPlans or {}, receivedCoverPlans or {}, receivedLastKnownActiveCrop or {}, receivedLastKnownGrowthState or {})
+    self.repository:replaceAll(receivedHistory, receivedPlans, receivedCoverPlans, receivedLastKnownActiveCrop, receivedLastKnownGrowthState)
 end
 
 ---Returns the snapshot to broadcast (server).

@@ -97,7 +97,7 @@ function RCRPlanUpdateEvent:run(connection)
     end
 
     -- cropName must be empty, a known fruit type, or the internal fallow token.
-    if self.cropName ~= nil and self.cropName ~= "" then
+    if self.cropName ~= "" then
         local isFallowCrop = RealisticCropRotation ~= nil
             and type(RealisticCropRotation.isFallowCrop) == "function"
             and RealisticCropRotation.isFallowCrop(self.cropName)
@@ -134,7 +134,7 @@ function RCRPlanUpdateEvent:run(connection)
         end
     end
 
-    local changed = false
+    local changed
     if isCoverUpdate then
         changed = manager:setRotationCoverPlanYear(self.farmlandId, self.yearIdx, self.cropName)
     else

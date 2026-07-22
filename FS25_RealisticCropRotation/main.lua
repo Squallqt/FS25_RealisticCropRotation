@@ -140,8 +140,7 @@ function RealisticCropRotation.requestBroadcast()
 end
 
 ---Asks the server for a full rotation snapshot (client).
--- @param string _reason Diagnostic label (unused)
-function RealisticCropRotation.requestServerSync(_reason)
+function RealisticCropRotation.requestServerSync()
     if g_client == nil or RCRHistoryRequestEvent == nil then return end
     if type(g_client.getServerConnection) ~= "function" then return end
     local connection = g_client:getServerConnection()
@@ -465,7 +464,7 @@ local function loadedMission()
             RealisticCropRotationTreatmentLifecycle.applySyncData(pending.nematicideCountdown or {})
             RealisticCropRotation.pendingSyncData = nil
         end
-        RealisticCropRotation.requestServerSync("loadedMission")
+        RealisticCropRotation.requestServerSync()
     end
 
     if g_currentMission:getIsClient()

@@ -512,7 +512,6 @@ end
 -- @param table workArea Work area giving the sprayed strip corners
 -- @param integer farmlandId Sole farmland allowed to receive the treatment
 local function paintTreatmentGround(self, workArea, farmlandId)
-    if self == nil or not self.isServer then return end
     if treatmentSprayType == nil then return end
     farmlandId = tonumber(farmlandId)
     if farmlandId == nil or farmlandId <= 0 then return end

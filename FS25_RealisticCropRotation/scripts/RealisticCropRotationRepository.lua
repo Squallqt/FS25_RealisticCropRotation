@@ -315,10 +315,8 @@ function RealisticCropRotationRepository:saveToXML(savegamePath)
             if hasHistory then
                 for i, entry in ipairs(entries) do
                     if i > RealisticCropRotationRepository.MAX_HISTORY then break end
-                    if entry ~= nil then
-                        local entryKey = string.format("%s.entry(%d)", farmlandKey, i - 1)
-                        setXMLString(xmlFile, entryKey .. "#crop", tostring(entry.crop or ""))
-                    end
+                    local entryKey = string.format("%s.entry(%d)", farmlandKey, i - 1)
+                    setXMLString(xmlFile, entryKey .. "#crop", tostring(entry.crop or ""))
                 end
             end
 
