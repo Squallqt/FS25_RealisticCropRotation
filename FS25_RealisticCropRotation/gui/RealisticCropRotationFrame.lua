@@ -263,6 +263,10 @@ function RealisticCropRotationFrame:onFrameOpen()
         RealisticCropRotation.requestServerSync("frameOpen")
     end
     self:linkFocusNavigation()
+
+    if FocusManager ~= nil and self.listFields ~= nil and #(self.farmlandList or {}) > 0 then
+        FocusManager:setFocus(self.listFields)
+    end
 end
 
 ---Unsubscribes from farmland change events when the frame closes.
