@@ -132,6 +132,8 @@ function RealisticCropRotationFrame.new(i18n, messageCenter)
     self.isSubscribedToFarmlandChanges = false
     self.weatherCard = nil
     self.refreshTimerMs = 0
+    self.isMenuOpen = false
+    self.useSnapshotActiveCrop = false
     return self
 end
 
@@ -145,6 +147,8 @@ function RealisticCropRotationFrame:copyAttributes(src)
     self.isSubscribedToFarmlandChanges = false
     self.weatherCard = nil
     self.refreshTimerMs = 0
+    self.isMenuOpen = false
+    self.useSnapshotActiveCrop = false
 end
 
 ---Unsubscribes and drops every owned reference before the GUI tree is destroyed.
@@ -158,6 +162,8 @@ function RealisticCropRotationFrame:delete()
     self.calendarLocalCoverPlan = nil
     self.selectedId = nil
     self.weatherCard = nil
+    self.isMenuOpen = false
+    self.useSnapshotActiveCrop = false
     RealisticCropRotationFrame:superClass().delete(self)
 end
 
@@ -229,37 +235,25 @@ function RealisticCropRotationFrame:initialize()
         end
     end
 
+    self:buildPlanCropList()
+    self:layoutCalendarLegend()
 end
 
----Reconciles history (server), populates the sidebar and requests a server sync.
+---Populates the stored snapshot immediately, then schedules authoritative reconciliation.
 function RealisticCropRotationFrame:onFrameOpen()
     RealisticCropRotationFrame:superClass().onFrameOpen(self)
+    self.isMenuOpen = true
     self.refreshTimerMs = 0
     self:subscribeFarmlandChanges()
-    if g_currentMission ~= nil and g_currentMission:getIsServer() then
-        local mgr = self:getManager()
-        if mgr ~= nil and type(mgr.getOwnedFarmlands) == "function"
-            and type(mgr.reconcileActiveCropForFarmland) == "function" then
-            local changed = false
-            local dropCache = type(mgr.invalidateActiveCropCache) == "function"
-            for _, entry in ipairs(mgr:getOwnedFarmlands() or {}) do
-                -- Menu open reads the ground again.
-                if dropCache then mgr:invalidateActiveCropCache(entry.farmlandId) end
-                if mgr:reconcileActiveCropForFarmland(entry.farmlandId) then
-                    changed = true
-                end
-            end
-            if changed and RealisticCropRotation ~= nil
-                and type(RealisticCropRotation.requestBroadcast) == "function" then
-                RealisticCropRotation.requestBroadcast()
-            end
-        end
-    end
-    self:populateSidebar()
-    self:layoutCalendarLegend()
+    self:populateSidebar(true)
     self:setMenuButtonInfoDirty()
-    if RealisticCropRotation ~= nil and RealisticCropRotation.requestServerSync ~= nil then
-        RealisticCropRotation.requestServerSync()
+    if g_currentMission ~= nil and g_currentMission:getIsServer() then
+        if RealisticCropRotation ~= nil
+            and type(RealisticCropRotation.requestMenuReconcile) == "function" then
+            RealisticCropRotation.requestMenuReconcile(self.selectedId)
+        end
+    elseif RealisticCropRotation ~= nil and RealisticCropRotation.requestServerSync ~= nil then
+        RealisticCropRotation.requestServerSync(self.selectedId)
     end
     self:linkFocusNavigation()
 
@@ -270,8 +264,29 @@ end
 
 ---Unsubscribes from farmland change events when the frame closes.
 function RealisticCropRotationFrame:onFrameClose()
+    self.isMenuOpen = false
     self:unsubscribeFarmlandChanges()
     RealisticCropRotationFrame:superClass().onFrameClose(self)
+end
+
+---Refreshes the selected panel immediately after its authoritative reconciliation.
+-- @param integer farmlandId Reconciled farmland
+function RealisticCropRotationFrame:onMenuReconcileFarmland(farmlandId)
+    if not self.isMenuOpen or tonumber(farmlandId) ~= tonumber(self.selectedId) then return end
+    if self:isHistoryTab() then
+        self:updateDetailPanel(self.selectedId)
+    else
+        self:updatePlanningPanel(self.selectedId)
+    end
+end
+
+---Reloads stored sidebar rows after a reconcile batch changed repository state.
+-- @param boolean changed True when at least one farmland changed
+function RealisticCropRotationFrame:onMenuReconcileComplete(changed)
+    if not self.isMenuOpen or not changed then return end
+    if self.listFields ~= nil then
+        self.listFields:reloadData()
+    end
 end
 
 ---Keeps the weather card and the history detail panel synchronized while this menu frame is active.
@@ -321,20 +336,50 @@ function RealisticCropRotationFrame:getManager()
     return g_currentMission.realisticCropRotationManager
 end
 
+---Returns the stored active crop during fast opening, otherwise the live field reading.
+-- @param integer farmlandId
+-- @param boolean useSnapshot True to avoid a density-map scan
+-- @return string cropName, or nil
+-- @return integer fruitTypeIndex, or nil
+function RealisticCropRotationFrame:getActiveCropInfoForDisplay(farmlandId, useSnapshot)
+    local mgr = self:getManager()
+    if mgr == nil then return nil end
+
+    if useSnapshot then
+        local repository = mgr.repository
+        local cropName = repository ~= nil and type(repository.getLastKnownActiveCrop) == "function"
+            and repository:getLastKnownActiveCrop(farmlandId) or nil
+        local fruitType = cropName ~= nil and cropName ~= ""
+            and g_fruitTypeManager ~= nil
+            and type(g_fruitTypeManager.getFruitTypeByName) == "function"
+            and g_fruitTypeManager:getFruitTypeByName(tostring(cropName)) or nil
+        return cropName, fruitType ~= nil and fruitType.index or nil
+    end
+
+    if type(mgr.getActiveCropInfo) == "function" then
+        return mgr:getActiveCropInfo(farmlandId)
+    end
+    if type(mgr.getActiveCropName) == "function" then
+        return mgr:getActiveCropName(farmlandId)
+    end
+    return nil
+end
+
 ---Updates the detail-tab residue pill: crop residue (n1/n2) or catch-crop cover residue, in kg/ha.
 -- @param table pillBg
 -- @param table pillText
 -- @param integer farmlandId
+-- @param boolean useSnapshot True to use the repository's active crop
 -- @return number width Resized pill width
-function RealisticCropRotationFrame:updateResiduePill(pillBg, pillText, farmlandId)
+function RealisticCropRotationFrame:updateResiduePill(pillBg, pillText, farmlandId, useSnapshot)
     local text = self.i18n:getText("rcr_status_current_no_residue")
     local hasBonus = false
 
     local mgr = self:getManager()
-    if mgr ~= nil and mgr.service ~= nil and type(mgr.getActiveCropInfo) == "function"
+    if mgr ~= nil and mgr.service ~= nil
         and type(mgr.service.getResidueEntry) == "function"
         and type(mgr.service.getNitrogenKgPerHaFromStateChange) == "function" then
-        local activeCropName, activeFruitTypeIndex = mgr:getActiveCropInfo(farmlandId)
+        local activeCropName, activeFruitTypeIndex = self:getActiveCropInfoForDisplay(farmlandId, useSnapshot)
         if activeCropName ~= nil and activeCropName ~= "" and not isFallowCrop(activeCropName) then
             local service = mgr.service
             local normalizedCropName = string.upper(tostring(activeCropName))
@@ -1114,11 +1159,12 @@ end
 -- SIDEBAR — SmoothList data source
 
 ---Rebuilds the field list + overview, restoring the prior selection, and refreshes panels.
-function RealisticCropRotationFrame:populateSidebar()
+-- @param boolean useSnapshot True to avoid active-crop scans during initial opening
+function RealisticCropRotationFrame:populateSidebar(useSnapshot)
+    self.useSnapshotActiveCrop = useSnapshot == true
     local previousSelectedId = self.selectedId
     self.farmlandList = self:buildFarmlandList()
     self.totalAreaHa = self:calculateTotalAreaHa(self.farmlandList)
-    self:buildPlanCropList()
     self.selectedId = nil
     if self.listFields ~= nil then
         self.listFields:reloadData()
@@ -1138,17 +1184,20 @@ function RealisticCropRotationFrame:populateSidebar()
             self.selectedId = self.farmlandList[selectedIndex].farmlandId
         end
     end
-    self:buildRotationGroups()
-    self:updateOverviewTotalArea()
-    if self.listPlanOverview ~= nil then
-        self.listPlanOverview:reloadData()
+    if not self:isHistoryTab() then
+        self:buildRotationGroups()
+        self:updateOverviewTotalArea()
+        if self.listPlanOverview ~= nil then
+            self.listPlanOverview:reloadData()
+        end
     end
     self:updateContainerVisibility()
     if self:isHistoryTab() then
-        self:updateDetailPanel(self.selectedId)
+        self:updateDetailPanel(self.selectedId, self.useSnapshotActiveCrop)
     else
         self:updatePlanningPanel(self.selectedId)
     end
+    self.useSnapshotActiveCrop = false
 end
 
 ---SmoothList data source: number of sections.
@@ -1217,21 +1266,11 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
     if nameEl ~= nil then nameEl:setText(string.upper(tostring(entry.name or ""))) end
     if areaEl ~= nil then areaEl:setText(self:formatAreaHa(entry.areaHa)) end
 
-    -- Real state, never history: active crop -> native ground state -> "no crop".
-    local activeCropName = nil
-    local activeFruitTypeIndex = nil
-    if mgr ~= nil and type(mgr.getActiveCropInfo) == "function" then
-        activeCropName, activeFruitTypeIndex = mgr:getActiveCropInfo(entry.farmlandId)
-    elseif mgr ~= nil and mgr.getActiveCropName ~= nil then
-        activeCropName = mgr:getActiveCropName(entry.farmlandId)
-    end
+    -- Open immediately from the authoritative snapshot; live reconciliation runs across frames.
+    local activeCropName = self:getActiveCropInfoForDisplay(entry.farmlandId, true)
 
     local iconFruitType = nil
-    if activeFruitTypeIndex ~= nil and g_fruitTypeManager ~= nil
-        and type(g_fruitTypeManager.getFruitTypeByIndex) == "function" then
-        iconFruitType = g_fruitTypeManager:getFruitTypeByIndex(activeFruitTypeIndex)
-    end
-    if iconFruitType == nil and activeCropName ~= nil and g_fruitTypeManager ~= nil
+    if activeCropName ~= nil and g_fruitTypeManager ~= nil
         and type(g_fruitTypeManager.getFruitTypeByName) == "function" then
         iconFruitType = g_fruitTypeManager:getFruitTypeByName(tostring(activeCropName))
     end
@@ -1308,7 +1347,7 @@ function RealisticCropRotationFrame:onListSelectionChanged(_list, _section, inde
     if entry ~= nil then
         self.selectedId = entry.farmlandId
         if self:isHistoryTab() then
-            self:updateDetailPanel(entry.farmlandId)
+            self:updateDetailPanel(entry.farmlandId, self.useSnapshotActiveCrop)
         else
             self:updatePlanningPanel(entry.farmlandId)
         end
@@ -1324,7 +1363,11 @@ function RealisticCropRotationFrame:onViewChanged()
     if self:isHistoryTab() then
         self:updateDetailPanel(self.selectedId)
     else
+        self:buildRotationGroups()
         self:updateOverviewTotalArea()
+        if self.listPlanOverview ~= nil then
+            self.listPlanOverview:reloadData()
+        end
         self:updatePlanningPanel(self.selectedId)
     end
     self:linkFocusNavigation()
@@ -1339,15 +1382,13 @@ end
 ---Resolves the current timeline slot: active crop, else field status, else "no crop".
 -- @param integer farmlandId
 -- @param string statusLabel Field status resolved by the caller, or nil
+-- @param boolean useSnapshot True to use the repository's active crop
 -- @return string cropName, or nil
 -- @return string family
 -- @return string fallbackText Status/empty text when there is no crop, or nil
-function RealisticCropRotationFrame:getCurrentSlotData(farmlandId, statusLabel)
+function RealisticCropRotationFrame:getCurrentSlotData(farmlandId, statusLabel, useSnapshot)
     local mgr = self:getManager()
-    local activeCropName = nil
-    if mgr ~= nil and type(mgr.getActiveCropName) == "function" then
-        activeCropName = mgr:getActiveCropName(farmlandId)
-    end
+    local activeCropName = self:getActiveCropInfoForDisplay(farmlandId, useSnapshot)
 
     if (activeCropName == nil or activeCropName == "") and RealisticCropRotation ~= nil
         and mgr ~= nil and type(mgr.isCurrentGapFallow) == "function" and mgr:isCurrentGapFallow(farmlandId) then
@@ -1367,7 +1408,8 @@ end
 
 ---Refreshes the whole history detail panel for a farmland (title, pills, timeline, gauges).
 -- @param integer farmlandId
-function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
+-- @param boolean useSnapshot True to avoid an active-crop density-map scan
+function RealisticCropRotationFrame:updateDetailPanel(farmlandId, useSnapshot)
     local farmlandList = self.farmlandList or {}
     if #farmlandList == 0 then return end
 
@@ -1386,7 +1428,7 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
     end
 
     local mgr = self:getManager()
-    self:updateResiduePill(self.statusPillBg, self.statusPillText, farmlandId)
+    self:updateResiduePill(self.statusPillBg, self.statusPillText, farmlandId, useSnapshot)
     self:layoutHeroPills(self.detailTitle, self.statusPillBg)
 
     local history = (mgr ~= nil) and (mgr:getHistory(farmlandId) or {}) or {}
@@ -1398,7 +1440,8 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
     end
 
     -- Slot 1 = current crop, slots 2..5 = history N-1..N-4.
-    local currentCropName, currentFamily, currentFallbackText = self:getCurrentSlotData(farmlandId, statusLabel)
+    local currentCropName, currentFamily, currentFallbackText =
+        self:getCurrentSlotData(farmlandId, statusLabel, useSnapshot)
     local currentBadgeKey = currentFamily == "COVER" and "rcr_cover_crop" or nil
 
     -- The timeline never reaches further back than the player plans ahead: a 3-year plan stops at N-3. An unplanned field keeps the full 4-year depth.
@@ -1426,7 +1469,8 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
     local sharedRowTitleWidth = (nitrogenTitleWidth ~= nil and limeTitleWidth ~= nil)
         and math.max(nitrogenTitleWidth, limeTitleWidth) or nil
 
-    self:updateNitrogenGauge(farmlandId, sharedRowTitleWidth)
+    local _, snapshotFruitTypeIndex = self:getActiveCropInfoForDisplay(farmlandId, useSnapshot)
+    self:updateNitrogenGauge(farmlandId, sharedRowTitleWidth, snapshotFruitTypeIndex, useSnapshot)
     self:updateSoilPHGauge(farmlandId, sharedRowTitleWidth)
     self:updateAdvice(currentFamily, farmlandId, currentCropName)
     self:updateFieldCard(farmlandId, statusLabel, statusKind, statusIndex)
@@ -1586,7 +1630,9 @@ end
 ---Updates the nitrogen gauge: PF average vs crop need, with a vanilla SPRAY_LEVEL fallback.
 -- @param integer farmlandId
 -- @param number sharedRowTitleWidth Shared row-title width (the wider of the N/pH titles), so both gauges align; nil falls back to this row's own title width.
-function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId, sharedRowTitleWidth)
+-- @param integer activeFruitTypeIndex Known active fruit type, or nil
+-- @param boolean useProvidedFruitType True to avoid resolving the active crop again
+function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId, sharedRowTitleWidth, activeFruitTypeIndex, useProvidedFruitType)
     local mgr = self:getManager()
     local ratio = 0
     local labelKey = "rcr_n_none"
@@ -1595,7 +1641,7 @@ function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId, sharedRowTit
 
     -- Precision Farming path: false = soil not analysed ("not sampled"); nil = no PF -> vanilla fallback.
     if mgr ~= nil and mgr.getNitrogenLevel ~= nil then
-        local actualN, targetN = mgr:getNitrogenLevel(farmlandId)
+        local actualN, targetN = mgr:getNitrogenLevel(farmlandId, activeFruitTypeIndex, useProvidedFruitType)
         if actualN == false then
             labelKey = "rcr_soil_value_unmeasured"
             stateText = self.i18n:getText("rcr_soil_value_unmeasured")
@@ -2519,7 +2565,7 @@ function RealisticCropRotationFrame:onServerSyncReceived()
 
     -- History tab: safe to rebuild from the server snapshot. Planner tab: never rebuild here, it would disrupt the MultiTextOption.
     if self:isHistoryTab() then
-        self:populateSidebar()
+        self:populateSidebar(true)
     else
         self:buildRotationGroups()
         if self.listPlanOverview ~= nil then

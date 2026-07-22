@@ -944,10 +944,19 @@ function RealisticCropRotationManager:reconcileActiveCropForFarmland(farmlandId)
     if currentCropName ~= nil and belowFloor and groundWorked then
         currentCropName, currentFruitTypeIndex, currentGrowthState = nil, nil, nil
     end
-    local changed = self.service:reconcileActiveCrop(farmlandId, currentCropName, currentFruitTypeIndex, currentGrowthState, groundWorked)
-    if changed then
-        self:invalidateActiveCropCache(farmlandId)
+
+    -- Keep the same-frame memo aligned with the effective crop so the UI can reuse this scan immediately.
+    local numericFarmlandId = tonumber(farmlandId)
+    local cacheEntry = numericFarmlandId ~= nil and self.activeCropNameCache ~= nil
+        and self.activeCropNameCache[numericFarmlandId] or nil
+    if cacheEntry ~= nil and cacheEntry.tMs == (tonumber(g_time) or 0) then
+        cacheEntry.name = currentCropName
+        cacheEntry.fruitTypeIndex = currentFruitTypeIndex
+        cacheEntry.growthState = currentGrowthState
+        cacheEntry.belowFloor = false
     end
+
+    local changed = self.service:reconcileActiveCrop(farmlandId, currentCropName, currentFruitTypeIndex, currentGrowthState, groundWorked)
     return changed
 end
 
@@ -1271,8 +1280,10 @@ end
 
 ---Live PF soil read: field-average N and pH, with targets weighted by the field's soil-type mix.
 -- @param integer farmlandId
+-- @param integer activeFruitTypeIndex Known active fruit type, or nil
+-- @param boolean useProvidedFruitType True to avoid resolving the active crop again
 -- @return table record, false when not analysed, or nil when PF is absent
-function RealisticCropRotationManager:scanFieldSoil(farmlandId)
+function RealisticCropRotationManager:scanFieldSoil(farmlandId, activeFruitTypeIndex, useProvidedFruitType)
     local pf = self:getPrecisionFarming()
     if pf == nil then return nil end
     local nMap, phMap, soilMap = pf.nitrogenMap, pf.pHMap, pf.soilMap
@@ -1316,7 +1327,9 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId)
 
     -- Crop mask, shared by the nitrogen average and its target weighting.
     local cropFilter = nil
-    local _, activeFruitTypeIndex = self:getActiveCropInfo(n)
+    if not useProvidedFruitType then
+        activeFruitTypeIndex = select(2, self:getActiveCropInfo(n))
+    end
     if activeFruitTypeIndex ~= nil and g_fruitTypeManager ~= nil
         and type(g_fruitTypeManager.getFruitTypeByIndex) == "function" then
         local desc = g_fruitTypeManager:getFruitTypeByIndex(activeFruitTypeIndex)
@@ -1414,10 +1427,12 @@ end
 
 ---PF nitrogen (kg/ha): field-average available N + crop requirement.
 -- @param integer farmlandId
+-- @param integer activeFruitTypeIndex Known active fruit type, or nil
+-- @param boolean useProvidedFruitType True to avoid resolving the active crop again
 -- @return number actual, false when not analysed, or nil when no PF (vanilla fallback)
 -- @return number target Crop requirement, or nil when no crop
-function RealisticCropRotationManager:getNitrogenLevel(farmlandId)
-    local rec = self:scanFieldSoil(farmlandId)
+function RealisticCropRotationManager:getNitrogenLevel(farmlandId, activeFruitTypeIndex, useProvidedFruitType)
+    local rec = self:scanFieldSoil(farmlandId, activeFruitTypeIndex, useProvidedFruitType)
     if rec == nil or rec == false then return rec end
     if rec.nActual == nil then return nil end
     return rec.nActual, rec.nTarget
@@ -1573,4 +1588,3 @@ function RealisticCropRotationManager:getFieldCropInfo(farmlandId)
         weedActionText  = weedValue,
     }
 end
-

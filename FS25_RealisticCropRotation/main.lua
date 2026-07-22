@@ -124,9 +124,12 @@ end
 
 -- Broadcast coalescing: hooks request a broadcast instead of emitting one per density-map change.
 RealisticCropRotation.BROADCAST_DEBOUNCE_MS = 500
+RealisticCropRotation.MENU_RECONCILE_COOLDOWN_MS = 2000
 RealisticCropRotation.broadcastDirty = false
 RealisticCropRotation.broadcastTimerMs = 0
 RealisticCropRotation.broadcastUpdateable = nil
+RealisticCropRotation.menuReconcileQueue = nil
+RealisticCropRotation.lastMenuReconcileMs = nil
 RealisticCropRotation.farmlandOwnerChangeListener = nil
 RealisticCropRotation.periodChangedListener = nil
 RealisticCropRotation.dayChangedListener = nil
@@ -140,12 +143,108 @@ function RealisticCropRotation.requestBroadcast()
 end
 
 ---Asks the server for a full rotation snapshot (client).
-function RealisticCropRotation.requestServerSync()
+-- @param integer selectedFarmlandId Farmland to reconcile first, or nil
+function RealisticCropRotation.requestServerSync(selectedFarmlandId)
     if g_client == nil or RCRHistoryRequestEvent == nil then return end
     if type(g_client.getServerConnection) ~= "function" then return end
     local connection = g_client:getServerConnection()
     if connection ~= nil then
-        connection:sendEvent(RCRHistoryRequestEvent.new())
+        connection:sendEvent(RCRHistoryRequestEvent.new(selectedFarmlandId))
+    end
+end
+
+---Moves a selected farmland to the next unprocessed position in a reconcile queue.
+-- @param table queue Active menu reconcile queue
+-- @param integer selectedFarmlandId Farmland to prioritize, or nil
+local function prioritizeMenuReconcile(queue, selectedFarmlandId)
+    local selected = tonumber(selectedFarmlandId)
+    if queue == nil or selected == nil or selected <= 0 then return end
+
+    local nextIndex = math.max(1, math.floor(tonumber(queue.index) or 1))
+    for index = nextIndex, #(queue.farmlandIds or {}) do
+        if tonumber(queue.farmlandIds[index]) == selected then
+            queue.farmlandIds[nextIndex], queue.farmlandIds[index] =
+                queue.farmlandIds[index], queue.farmlandIds[nextIndex]
+            return
+        end
+    end
+end
+
+---Schedules authoritative crop reconciliation without blocking menu opening.
+-- @param integer selectedFarmlandId Farmland to reconcile first, or nil
+-- @return boolean scheduled True when a queue is active or newly scheduled
+function RealisticCropRotation.requestMenuReconcile(selectedFarmlandId)
+    if g_currentMission == nil or not g_currentMission:getIsServer() then return false end
+    local manager = RealisticCropRotation.manager
+    if manager == nil
+        or type(manager.getOwnedRotationFarmlandIds) ~= "function"
+        or type(manager.reconcileActiveCropForFarmland) ~= "function" then
+        return false
+    end
+
+    local queue = RealisticCropRotation.menuReconcileQueue
+    if queue ~= nil then
+        prioritizeMenuReconcile(queue, selectedFarmlandId)
+        return true
+    end
+
+    local nowMs = tonumber(g_time) or 0
+    local lastMs = tonumber(RealisticCropRotation.lastMenuReconcileMs)
+    if lastMs ~= nil and nowMs >= lastMs
+        and nowMs - lastMs < RealisticCropRotation.MENU_RECONCILE_COOLDOWN_MS then
+        return false
+    end
+
+    local farmlandIds = manager:getOwnedRotationFarmlandIds() or {}
+    if #farmlandIds == 0 then return false end
+
+    queue = {
+        farmlandIds = farmlandIds,
+        index = 1,
+        changed = false,
+    }
+    prioritizeMenuReconcile(queue, selectedFarmlandId)
+    RealisticCropRotation.menuReconcileQueue = queue
+    RealisticCropRotation.lastMenuReconcileMs = nowMs
+    return true
+end
+
+---Reconciles one queued farmland per frame and emits one final coalesced broadcast.
+local function processMenuReconcileQueue()
+    local queue = RealisticCropRotation.menuReconcileQueue
+    if queue == nil then return end
+
+    local manager = RealisticCropRotation.manager
+    if manager == nil or type(manager.reconcileActiveCropForFarmland) ~= "function" then
+        RealisticCropRotation.menuReconcileQueue = nil
+        return
+    end
+
+    local farmlandId = queue.farmlandIds[queue.index]
+    if farmlandId == nil then
+        RealisticCropRotation.menuReconcileQueue = nil
+        return
+    end
+    queue.index = queue.index + 1
+
+    if type(manager.invalidateActiveCropCache) == "function" then
+        manager:invalidateActiveCropCache(farmlandId)
+    end
+    if manager:reconcileActiveCropForFarmland(farmlandId) then
+        queue.changed = true
+    end
+
+    local frame = RealisticCropRotation.frame
+    if frame ~= nil and type(frame.onMenuReconcileFarmland) == "function" then
+        frame:onMenuReconcileFarmland(farmlandId)
+    end
+
+    if queue.index > #queue.farmlandIds then
+        RealisticCropRotation.menuReconcileQueue = nil
+        if frame ~= nil and type(frame.onMenuReconcileComplete) == "function" then
+            frame:onMenuReconcileComplete(queue.changed)
+        end
+        RealisticCropRotation.requestBroadcast()
     end
 end
 
@@ -353,6 +452,9 @@ end
 
 ---Mission-load hook: builds the manager, loads state, wires server listeners.
 local function loadedMission()
+    RealisticCropRotation.menuReconcileQueue = nil
+    RealisticCropRotation.lastMenuReconcileMs = nil
+
     -- Reload crop config here to guarantee the engine XML API is fully ready.
     if RealisticCropRotation.cropConfig == nil then
         RealisticCropRotation.cropConfig = loadCropConfig()
@@ -433,6 +535,8 @@ local function loadedMission()
     if g_currentMission:getIsServer() and type(g_currentMission.addUpdateable) == "function" then
         RealisticCropRotation.broadcastUpdateable = {
             update = function(_self, dt)
+                -- Menu reconciliation is authoritative but incremental: one farmland per frame.
+                processMenuReconcileQueue()
                 -- Spread the day's disease work across frames: drain a few queued fields per frame instead of all at once.
                 if RealisticCropRotation.disease ~= nil
                     and type(RealisticCropRotation.disease.processDailyQueue) == "function" then
@@ -582,6 +686,8 @@ local function initRealisticCropRotation()
         end
         RealisticCropRotation.broadcastUpdateable = nil
         RealisticCropRotation.hudMapUpdateable = nil
+        RealisticCropRotation.menuReconcileQueue = nil
+        RealisticCropRotation.lastMenuReconcileMs = nil
         RealisticCropRotation.farmlandOwnerChangeListener = nil
         RealisticCropRotation.periodChangedListener = nil
         RealisticCropRotation.dayChangedListener = nil
