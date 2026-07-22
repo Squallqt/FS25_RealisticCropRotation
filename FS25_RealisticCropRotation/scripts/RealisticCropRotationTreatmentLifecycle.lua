@@ -5,23 +5,12 @@ RealisticCropRotationTreatmentLifecycle.NEMATICIDE_DURATION_PERIODS = 3
 local installed = false
 local nematicidePeriodsRemaining = {}
 
-local function farmlandAtPosition(x, z)
-    if g_farmlandManager == nil or type(g_farmlandManager.getFarmlandIdAtWorldPosition) ~= "function" then return end
-    local farmlandId = tonumber(g_farmlandManager:getFarmlandIdAtWorldPosition(x, z))
-    return farmlandId ~= nil and farmlandId > 0 and farmlandId or nil
-end
-
----Starts the countdown on every farmland the sprayed area touches.
--- @param number sx, sz, wx, wz, hx, hz Work-area parallelogram (start, +width, +height)
-function RealisticCropRotationTreatmentLifecycle.onNematicideApplied(sx, sz, wx, wz, hx, hz)
-    local xs = { sx, wx, hx, wx + hx - sx }
-    local zs = { sz, wz, hz, wz + hz - sz }
-    for i = 1, 4 do
-        local farmlandId = farmlandAtPosition(xs[i], zs[i])
-        if farmlandId ~= nil then
-            nematicidePeriodsRemaining[farmlandId] = RealisticCropRotationTreatmentLifecycle.NEMATICIDE_DURATION_PERIODS
-        end
-    end
+---Starts the countdown on the sole farmland selected for the sprayed area.
+-- @param integer farmlandId
+function RealisticCropRotationTreatmentLifecycle.onNematicideApplied(farmlandId)
+    farmlandId = tonumber(farmlandId)
+    if farmlandId == nil or farmlandId <= 0 then return end
+    nematicidePeriodsRemaining[farmlandId] = RealisticCropRotationTreatmentLifecycle.NEMATICIDE_DURATION_PERIODS
 end
 
 function RealisticCropRotationTreatmentLifecycle.getSyncData()

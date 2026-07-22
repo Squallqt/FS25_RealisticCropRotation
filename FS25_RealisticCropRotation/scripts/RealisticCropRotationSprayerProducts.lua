@@ -419,10 +419,33 @@ local function ensureSprayTypes()
 
 end
 
+---Returns the farmland selected by the sprayed strip's three work-area nodes.
+-- @param table workArea Work area whose start/width/height nodes give the sprayed strip
+-- @return integer|nil farmlandId
+local function getWorkAreaFarmlandId(workArea)
+    if workArea == nil or workArea.start == nil or workArea.width == nil or workArea.height == nil then
+        return nil
+    end
+    if getWorldTranslation == nil or g_farmlandManager == nil
+        or type(g_farmlandManager.getFarmlandIdAtWorldPosition) ~= "function" then
+        return nil
+    end
+
+    local sx, _, sz = getWorldTranslation(workArea.start)
+    local wx, _, wz = getWorldTranslation(workArea.width)
+    local hx, _, hz = getWorldTranslation(workArea.height)
+    if sx == nil or wx == nil or hx == nil then return nil end
+
+    local farmlandId = tonumber(g_farmlandManager:getFarmlandIdAtWorldPosition(
+        (sx + wx + hx) / 3, (sz + wz + hz) / 3))
+    return farmlandId ~= nil and farmlandId > 0 and farmlandId or nil
+end
+
 ---Server: paints curative/preventive disease protection under the sprayed strip and clears matching overlay marks.
 -- @param table workArea work area whose start/width/height nodes give the sprayed strip
 -- @param integer fillType RCR product fillType
-local function paintDiseaseProtection(workArea, fillType)
+-- @param integer farmlandId Sole farmland allowed to receive the treatment
+local function paintDiseaseProtection(workArea, fillType, farmlandId)
     if workArea == nil or workArea.start == nil or workArea.width == nil or workArea.height == nil then
         return
     end
@@ -439,7 +462,7 @@ local function paintDiseaseProtection(workArea, fillType)
     local hx, _, hz = getWorldTranslation(workArea.height)
     if sx == nil or wx == nil or hx == nil then return end
 
-    grid:paintProtection(treatmentType, sx, sz, wx, wz, hx, hz)
+    grid:paintProtection(treatmentType, farmlandId, sx, sz, wx, wz, hx, hz)
 end
 
 ---AI job-completion rule: prohibits re-working an already-protected cell.
@@ -487,15 +510,20 @@ end
 ---Paints the sprayed strip's ground look (SPRAY_TYPE only, no fertilisation/nitrogen/yield effect).
 -- @param table self Sprayer vehicle
 -- @param table workArea Work area giving the sprayed strip corners
-local function paintTreatmentGround(self, workArea)
+-- @param integer farmlandId Sole farmland allowed to receive the treatment
+local function paintTreatmentGround(self, workArea, farmlandId)
     if self == nil or not self.isServer then return end
     if treatmentSprayType == nil then return end
+    farmlandId = tonumber(farmlandId)
+    if farmlandId == nil or farmlandId <= 0 then return end
     if DensityMapModifier == nil or DensityMapFilter == nil or g_terrainNode == nil then return end
-    if getWorldTranslation == nil or DensityCoordType == nil or DensityValueCompareType == nil then return end
+    if getWorldTranslation == nil or getBitVectorMapNumChannels == nil
+        or DensityCoordType == nil or DensityValueCompareType == nil then return end
     if workArea == nil or workArea.start == nil or workArea.width == nil or workArea.height == nil then return end
 
     local mission = g_currentMission
-    if mission == nil or mission.fieldGroundSystem == nil or FieldDensityMap == nil then return end
+    if mission == nil or mission.fieldGroundSystem == nil or FieldDensityMap == nil
+        or g_farmlandManager == nil or type(g_farmlandManager.getLocalMap) ~= "function" then return end
 
     local sprayTypeMapId, sprayFirstChannel, sprayNumChannels =
         mission.fieldGroundSystem:getDensityMapData(FieldDensityMap.SPRAY_TYPE)
@@ -503,6 +531,8 @@ local function paintTreatmentGround(self, workArea)
     local groundTypeMapId, groundFirstChannel, groundNumChannels =
         mission.fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE)
     if groundTypeMapId == nil then return end
+    local farmlandLocalMap = g_farmlandManager:getLocalMap()
+    if farmlandLocalMap == nil then return end
 
     local sx, _, sz = getWorldTranslation(workArea.start)
     local wx, _, wz = getWorldTranslation(workArea.width)
@@ -515,9 +545,12 @@ local function paintTreatmentGround(self, workArea)
     -- Only paint where there is field ground (groundType > 0): never roads, yards or standing water.
     local fieldFilter = DensityMapFilter.new(groundTypeMapId, groundFirstChannel, groundNumChannels)
     fieldFilter:setValueCompareParams(DensityValueCompareType.GREATER, 0)
+    local farmlandFilter = DensityMapFilter.new(
+        farmlandLocalMap, 0, getBitVectorMapNumChannels(farmlandLocalMap))
+    farmlandFilter:setValueCompareParams(DensityValueCompareType.EQUAL, farmlandId)
 
     -- SPRAY_TYPE only (the fertiliser ground look); SPRAY_LEVEL is never touched, so no fertilisation.
-    modifier:executeSet(treatmentSprayType, fieldFilter)
+    modifier:executeSet(treatmentSprayType, farmlandFilter, fieldFilter)
 end
 
 ---Overwrites Sprayer.processSprayerArea once per game session; non-RCR fillTypes fall through unchanged.
@@ -554,6 +587,12 @@ local function installSprayerHook()
             return 0, 0
         end
 
+        -- Select one farmland for the complete work-area cycle; all following boom sections reuse it.
+        if not params.isActive then
+            params.rcrTargetFarmlandId = getWorkAreaFarmlandId(workArea)
+        end
+        local targetFarmlandId = params.rcrTargetFarmlandId
+
         -- Mark active and refresh the effect timer.
         params.isActive = true
         params.lastSprayTime = g_time
@@ -568,9 +607,9 @@ local function installSprayerHook()
 
         -- The server owns the ground state; nearby clients mirror protection for immediate map feedback.
         if self.isServer then
-            paintTreatmentGround(self, workArea)
+            paintTreatmentGround(self, workArea, targetFarmlandId)
         end
-        paintDiseaseProtection(workArea, sprayFillType)
+        paintDiseaseProtection(workArea, sprayFillType, targetFarmlandId)
 
         return 0, 0
     end)

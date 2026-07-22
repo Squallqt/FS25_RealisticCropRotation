@@ -279,13 +279,18 @@ end
 
 ---Marks the sprayed strip protected for the given family.
 -- @param string family "FUNGICIDE" | "NEMATICIDE"
+-- @param integer farmlandId Sole farmland allowed to receive the treatment
 -- @param number sx, sz, wx, wz, hx, hz world-space parallelogram corners of the sprayed strip
-function RealisticCropRotationDiseaseGrid:paintProtection(family, sx, sz, wx, wz, hx, hz)
+function RealisticCropRotationDiseaseGrid:paintProtection(family, farmlandId, sx, sz, wx, wz, hx, hz)
     local protectionMapId = family == "FUNGICIDE" and self.fungicideProtectionMapId
         or family == "NEMATICIDE" and self.nematicideProtectionMapId or nil
+    farmlandId = tonumber(farmlandId)
     if protectionMapId == nil or g_terrainNode == nil
         or DensityMapModifier == nil or DensityMapFilter == nil
         or DensityCoordType == nil or DensityValueCompareType == nil
+        or farmlandId == nil or farmlandId <= 0
+        or g_farmlandManager == nil or type(g_farmlandManager.getLocalMap) ~= "function"
+        or getBitVectorMapNumChannels == nil
         or g_currentMission == nil or g_currentMission.fieldGroundSystem == nil
         or FieldDensityMap == nil then
         return
@@ -293,22 +298,26 @@ function RealisticCropRotationDiseaseGrid:paintProtection(family, sx, sz, wx, wz
 
     local groundTypeMapId, groundFirstChannel, groundNumChannels =
         g_currentMission.fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE)
-    if groundTypeMapId == nil then return end
+    local farmlandLocalMap = g_farmlandManager:getLocalMap()
+    if groundTypeMapId == nil or farmlandLocalMap == nil then return end
 
     local groundFilter = DensityMapFilter.new(groundTypeMapId, groundFirstChannel, groundNumChannels)
     groundFilter:setValueCompareParams(DensityValueCompareType.GREATER, 0)
+    local farmlandFilter = DensityMapFilter.new(
+        farmlandLocalMap, 0, getBitVectorMapNumChannels(farmlandLocalMap))
+    farmlandFilter:setValueCompareParams(DensityValueCompareType.EQUAL, farmlandId)
 
     local protModifier = DensityMapModifier.new(protectionMapId, 0, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, g_terrainNode)
     protModifier:setParallelogramWorldCoords(sx, sz, wx, wz, hx, hz, DensityCoordType.POINT_POINT_POINT)
     -- Only bump protectionRevision (drives the treatment-coverage map view) when a cell was ACTUALLY newly marked.
-    local _, protChanged = protModifier:executeSetWithStats(1, groundFilter)
+    local _, protChanged = protModifier:executeSetWithStats(1, farmlandFilter, groundFilter)
     if (protChanged or 0) > 0 then
         self.protectionRevision = (self.protectionRevision or 0) + 1
     end
     if family == "NEMATICIDE"
         and RealisticCropRotationTreatmentLifecycle ~= nil
         and type(RealisticCropRotationTreatmentLifecycle.onNematicideApplied) == "function" then
-        RealisticCropRotationTreatmentLifecycle.onNematicideApplied(sx, sz, wx, wz, hx, hz)
+        RealisticCropRotationTreatmentLifecycle.onNematicideApplied(farmlandId)
     end
     -- Disease marks are left untouched.
 end
