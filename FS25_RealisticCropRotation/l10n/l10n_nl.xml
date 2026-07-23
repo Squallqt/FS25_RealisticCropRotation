@@ -57,8 +57,8 @@
         <e k="rcr_time_minutes" v="%d min" />
         <e k="rcr_time_hours" v="%d u" />
         <e k="rcr_time_hours_minutes" v="%d u %02d min" />
-        <e k="rcr_hud_previous_n1"      v="Vorig gewas (N-1)" />
-        <e k="rcr_hud_previous_n2"      v="Gewas daarvoor (N-2)" />
+        <e k="rcr_hud_previous_n1"      v="Vorige teelt (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Voorvorige teelt (N-2)" />
 
         <!-- Section bars -->
         <e k="rcr_section_history"      v="Gewasgeschiedenis" />

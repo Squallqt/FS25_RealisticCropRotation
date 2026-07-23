@@ -58,7 +58,7 @@
         <e k="rcr_time_hours" v="%d t" />
         <e k="rcr_time_hours_minutes" v="%d t %02d min" />
         <e k="rcr_hud_previous_n1"      v="Edellinen kasvi (N-1)" />
-        <e k="rcr_hud_previous_n2"      v="Sitä edeltävä kasvi (N-2)" />
+        <e k="rcr_hud_previous_n2"      v="Aiempi kasvi (N-2)" />
 
         <!-- Section bars -->
         <e k="rcr_section_history"      v="Kasvihistoria" />

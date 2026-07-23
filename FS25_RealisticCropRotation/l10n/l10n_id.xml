@@ -58,7 +58,7 @@
         <e k="rcr_time_hours" v="%d j" />
         <e k="rcr_time_hours_minutes" v="%d j %02d mnt" />
         <e k="rcr_hud_previous_n1"      v="Tanaman sebelumnya (N-1)" />
-        <e k="rcr_hud_previous_n2"      v="Tanaman sebelum itu (N-2)" />
+        <e k="rcr_hud_previous_n2"      v="Tanaman dua musim lalu (N-2)" />
 
         <!-- Section bars -->
         <e k="rcr_section_history"      v="Riwayat Tanaman" />

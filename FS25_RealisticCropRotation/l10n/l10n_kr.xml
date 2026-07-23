@@ -58,7 +58,7 @@
         <e k="rcr_time_hours" v="%d 시간" />
         <e k="rcr_time_hours_minutes" v="%d 시간 %02d 분" />
         <e k="rcr_hud_previous_n1"      v="이전 작물 (N-1)" />
-        <e k="rcr_hud_previous_n2"      v="그 이전 작물 (N-2)" />
+        <e k="rcr_hud_previous_n2"      v="두 작기 전 작물 (N-2)" />
 
         <!-- Section bars -->
         <e k="rcr_section_history"      v="작물 이력" />

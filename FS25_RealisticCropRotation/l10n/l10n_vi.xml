@@ -58,7 +58,7 @@
         <e k="rcr_time_hours" v="%d giờ" />
         <e k="rcr_time_hours_minutes" v="%d giờ %02d phút" />
         <e k="rcr_hud_previous_n1"      v="Cây trồng trước (N-1)" />
-        <e k="rcr_hud_previous_n2"      v="Cây trồng trước đó (N-2)" />
+        <e k="rcr_hud_previous_n2"      v="Cây trồng hai vụ trước (N-2)" />
 
         <!-- Section bars -->
         <e k="rcr_section_history"      v="Lịch sử cây trồng" />

@@ -58,7 +58,7 @@
         <e k="rcr_time_hours" v="%d godz" />
         <e k="rcr_time_hours_minutes" v="%d godz %02d min" />
         <e k="rcr_hud_previous_n1"      v="Poprzednia uprawa (N-1)" />
-        <e k="rcr_hud_previous_n2"      v="Uprawa wcześniejsza (N-2)" />
+        <e k="rcr_hud_previous_n2"      v="Przedostatnia uprawa (N-2)" />
 
         <!-- Section bars -->
         <e k="rcr_section_history"      v="Historia upraw" />

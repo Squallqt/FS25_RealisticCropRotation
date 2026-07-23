@@ -57,8 +57,8 @@
         <e k="rcr_time_minutes" v="%d min" />
         <e k="rcr_time_hours" v="%d h" />
         <e k="rcr_time_hours_minutes" v="%d h %02d min" />
-        <e k="rcr_hud_previous_n1"      v="Précédent cultural (N-1)" />
-        <e k="rcr_hud_previous_n2"      v="Anté-précédent (N-2)" />
+        <e k="rcr_hud_previous_n1"      v="Culture précédente (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Culture antérieure (N-2)" />
 
         <!-- Section bars -->
         <e k="rcr_section_history"      v="Historique des Cultures" />

@@ -58,7 +58,7 @@
         <e k="rcr_time_hours" v="%d год" />
         <e k="rcr_time_hours_minutes" v="%d год %02d хв" />
         <e k="rcr_hud_previous_n1"      v="Попередня культура (N-1)" />
-        <e k="rcr_hud_previous_n2"      v="Культура раніше (N-2)" />
+        <e k="rcr_hud_previous_n2"      v="Більш рання культура (N-2)" />
 
         <!-- Section bars -->
         <e k="rcr_section_history"      v="Історія культур" />

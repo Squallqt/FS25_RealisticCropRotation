@@ -58,7 +58,7 @@
         <e k="rcr_time_hours" v="%d h" />
         <e k="rcr_time_hours_minutes" v="%d h %02d min" />
         <e k="rcr_hud_previous_n1"      v="Vorfrucht (N-1)" />
-        <e k="rcr_hud_previous_n2"      v="Vor-Vorfrucht (N-2)" />
+        <e k="rcr_hud_previous_n2"      v="Vorvorfrucht (N-2)" />
 
         <!-- Section bars -->
         <e k="rcr_section_history"      v="Anbaugeschichte" />

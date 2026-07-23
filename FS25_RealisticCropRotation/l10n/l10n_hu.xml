@@ -58,7 +58,7 @@
         <e k="rcr_time_hours" v="%d ó" />
         <e k="rcr_time_hours_minutes" v="%d ó %02d perc" />
         <e k="rcr_hud_previous_n1"      v="Előző növény (N-1)" />
-        <e k="rcr_hud_previous_n2"      v="Azelőtti növény (N-2)" />
+        <e k="rcr_hud_previous_n2"      v="Korábbi növény (N-2)" />
 
         <!-- Section bars -->
         <e k="rcr_section_history"      v="Növénytörténet" />

@@ -58,7 +58,7 @@
         <e k="rcr_time_hours" v="%d 時間" />
         <e k="rcr_time_hours_minutes" v="%d 時間 %02d 分" />
         <e k="rcr_hud_previous_n1"      v="前作 (N-1)" />
-        <e k="rcr_hud_previous_n2"      v="前々作 (N-2)" />
+        <e k="rcr_hud_previous_n2"      v="2作前 (N-2)" />
 
         <!-- Section bars -->
         <e k="rcr_section_history"      v="作物履歴" />

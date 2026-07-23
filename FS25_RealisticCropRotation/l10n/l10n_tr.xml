@@ -58,7 +58,7 @@
         <e k="rcr_time_hours" v="%d sa" />
         <e k="rcr_time_hours_minutes" v="%d sa %02d dk" />
         <e k="rcr_hud_previous_n1"      v="Önceki ekin (N-1)" />
-        <e k="rcr_hud_previous_n2"      v="Daha önceki ekin (N-2)" />
+        <e k="rcr_hud_previous_n2"      v="İki dönem önceki ekin (N-2)" />
 
         <!-- Section bars -->
         <e k="rcr_section_history"      v="Ekin Geçmişi" />
