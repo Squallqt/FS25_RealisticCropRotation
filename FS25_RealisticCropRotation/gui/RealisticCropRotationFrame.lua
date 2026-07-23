@@ -69,7 +69,7 @@ RealisticCropRotationFrame.SCORE_DISEASE_PENALTY_PER_YEAR = 10 -- shared-pathoge
 RealisticCropRotationFrame.SOIL_ROW_TITLE_GAP_PX = 16
 
 -- Global overview crop badge layout, in pixels, converted at runtime.
-RealisticCropRotationFrame.GROUP_BADGE_Y          = 18
+RealisticCropRotationFrame.GROUP_BADGE_Y          = 16.5
 RealisticCropRotationFrame.GROUP_BADGE_H          = 30
 RealisticCropRotationFrame.GROUP_ICON_W           = 20
 RealisticCropRotationFrame.GROUP_ICON_H           = 20
@@ -181,6 +181,7 @@ function RealisticCropRotationFrame:onGuiSetupFinished()
             shadow = self.headerWeatherShadow,
             background = self.headerWeatherBg,
             accent = self.headerWeatherAccent,
+            accentBottom = self.headerWeatherAccentBottom,
             iconBackground = self.headerWeatherIconBg,
             icon = self.headerWeatherIcon,
             condition = self.headerWeatherText,
@@ -192,7 +193,6 @@ function RealisticCropRotationFrame:onGuiSetupFinished()
         })
     end
 
-    self:linkFocusNavigation()
     self:setupSectionLines()
 end
 
@@ -250,9 +250,7 @@ function RealisticCropRotationFrame:onFrameOpen()
     elseif RealisticCropRotation ~= nil and RealisticCropRotation.requestServerSync ~= nil then
         RealisticCropRotation.requestServerSync(self.selectedId)
     end
-    self:linkFocusNavigation()
-
-    if FocusManager ~= nil and self.listFields ~= nil and #(self.farmlandList or {}) > 0 then
+    if FocusManager ~= nil and self.listFields ~= nil and self.listFields:getItemCount() > 0 then
         FocusManager:setFocus(self.listFields)
     end
 end
@@ -302,6 +300,36 @@ function RealisticCropRotationFrame:update(dt)
     if self.selectedId ~= nil and self:isHistoryTab() then
         self:updateDetailPanel(self.selectedId)
     end
+end
+
+---Adds explicit sidebar navigation for controller and keyboard.
+function RealisticCropRotationFrame:inputEvent(action, value, eventUsed)
+    value = value or 0
+
+    if not eventUsed and self.listFields ~= nil and FocusManager:hasFocus(self.listFields)
+        and action == InputAction.MENU_AXIS_UP_DOWN
+        and value > g_analogStickVTolerance
+        and self.listFields:getSelectedIndexInSection() <= 1 then
+
+        if not FocusManager:isFocusInputLocked(action, value) then
+            FocusManager:lockFocusInput(action, 250, value)
+            FocusManager:setFocus(self.viewSelector, FocusManager.TOP)
+        end
+        return true
+    end
+
+    if not eventUsed and self.viewSelector ~= nil and FocusManager:hasFocus(self.viewSelector)
+        and action == InputAction.MENU_AXIS_UP_DOWN
+        and value < -g_analogStickVTolerance then
+
+        if not FocusManager:isFocusInputLocked(action, value) then
+            FocusManager:lockFocusInput(action, 250, value)
+            FocusManager:setFocus(self.listFields, FocusManager.BOTTOM)
+        end
+        return true
+    end
+
+    return RealisticCropRotationFrame:superClass().inputEvent(self, action, value, eventUsed)
 end
 
 ---Returns the menu button info: back + page nav always, plus "Clear plan" while Planning is active.
@@ -1026,30 +1054,6 @@ function RealisticCropRotationFrame:updateContainerVisibility()
     if self.weatherCard ~= nil then self.weatherCard:refresh(true) end
 end
 
----Links gamepad focus between the field list and the calendar editor selectors.
-function RealisticCropRotationFrame:linkFocusNavigation()
-    if FocusManager == nil then return end
-
-    local hasFields = #(self.farmlandList or {}) > 0
-    local cropSelector = self.calendarEditCropSelector
-    local coverSelector = self.calendarEditCoverSelector
-
-    if self.listFields ~= nil and FocusManager.RIGHT ~= nil then
-        local target = (hasFields and not self:isHistoryTab()) and cropSelector or nil
-        FocusManager:linkElements(self.listFields, FocusManager.RIGHT, target)
-    end
-
-    if cropSelector ~= nil and coverSelector ~= nil and FocusManager.RIGHT ~= nil then
-        FocusManager:linkElements(cropSelector, FocusManager.RIGHT, coverSelector)
-    end
-    if coverSelector ~= nil and cropSelector ~= nil and FocusManager.LEFT ~= nil then
-        FocusManager:linkElements(coverSelector, FocusManager.LEFT, cropSelector)
-    end
-    if cropSelector ~= nil and self.listFields ~= nil and FocusManager.LEFT ~= nil then
-        FocusManager:linkElements(cropSelector, FocusManager.LEFT, self.listFields)
-    end
-end
-
 ---Returns the 4-slot rotation plan for a farmland (empty plan as fallback).
 -- @param integer farmlandId
 -- @return table plan
@@ -1366,11 +1370,6 @@ function RealisticCropRotationFrame:onViewChanged()
             self.listPlanOverview:reloadData()
         end
         self:updatePlanningPanel(self.selectedId)
-    end
-    self:linkFocusNavigation()
-
-    if FocusManager ~= nil and self.listFields ~= nil and #(self.farmlandList or {}) > 0 then
-        FocusManager:setFocus(self.listFields)
     end
 end
 
@@ -2953,7 +2952,7 @@ function RealisticCropRotationFrame:getScoreLabel(score)
     elseif score >= 60 then return "rcr_score_short_good",  0.95,  0.85, 0.05
     elseif score >= 40 then return "rcr_score_short_fair",  0.75,  0.45, 0.05
     elseif score >= 20 then return "rcr_score_short_poor",  0.75,  0.20, 0.05
-    else                    return "rcr_score_short_bad",   0.55,  0.05, 0.05
+    else                    return "rcr_score_short_bad",   0.95,   0.0,  0.0
     end
 end
 
@@ -3140,7 +3139,7 @@ function RealisticCropRotationFrame:layoutGroupBadgeContent(cell, slotIndex, dis
 
     local iconYpx = RealisticCropRotationFrame.GROUP_BADGE_Y
         + math.floor((RealisticCropRotationFrame.GROUP_BADGE_H - RealisticCropRotationFrame.GROUP_ICON_H) * 0.5)
-    local iconPosY = GuiUtils.getNormalizedScreenValues(string.format("0px -%dpx", iconYpx))[2]
+    local iconPosY = GuiUtils.getNormalizedScreenValues(string.format("0px -%gpx", iconYpx))[2]
 
     if badgeEl ~= nil and badgeEl.setPosition ~= nil and badgeEl.setSize ~= nil then
         badgeEl:setPosition(badgePos[1], badgePos[2])

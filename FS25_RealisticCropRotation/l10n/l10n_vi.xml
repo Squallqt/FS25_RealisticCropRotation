@@ -178,7 +178,7 @@
         <e k="rcr_function_fungicideTank" v="Sử dụng AMISTAR trong máy phun để áp dụng xử lý thuốc trừ nấm cho cây trồng có nguy cơ." />
         <e k="rcr_function_nematicideTank" v="Sử dụng VELUM PRIME trong máy phun để áp dụng xử lý thuốc trừ tuyến trùng cho cây trồng phơi nhiễm tuyến trùng." />
         <!-- Disease system (9 pathogens) -->
-        <e k="rcr_disease_name_sclerotinia" v="Bệnh thối hạch (nấm Sclerotinia)" />
+        <e k="rcr_disease_name_sclerotinia" v="Bệnh thối hạch" />
         <e k="rcr_disease_name_phoma" v="Bệnh loét thân (Phoma)" />
         <e k="rcr_disease_name_takeall" v="Bệnh thối rễ ngũ cốc" />
         <e k="rcr_disease_name_septoria" v="Bệnh đốm lá Septoria" />

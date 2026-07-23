@@ -178,7 +178,7 @@
         <e k="rcr_function_fungicideTank" v="Használd az AMISTAR-t permetezőkben a veszélyeztetett kultúrák gombaölő kezeléséhez." />
         <e k="rcr_function_nematicideTank" v="Használd a VELUM PRIME-ot permetezőkben a fonálférgeknek kitett kultúrák nematicid kezeléséhez." />
         <!-- Disease system (9 pathogens) -->
-        <e k="rcr_disease_name_sclerotinia" v="Fehérpenészes rothadás (Sclerotinia)" />
+        <e k="rcr_disease_name_sclerotinia" v="Fehérpenészes rothadás" />
         <e k="rcr_disease_name_phoma" v="Fómás szárrothadás (Phoma)" />
         <e k="rcr_disease_name_takeall" v="Gyökér- és szártőfeketedés" />
         <e k="rcr_disease_name_septoria" v="Szeptóriás levélfoltosság" />

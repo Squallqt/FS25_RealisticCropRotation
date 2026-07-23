@@ -178,7 +178,7 @@
         <e k="rcr_function_fungicideTank" v="Brug AMISTAR i marksprøjter til at anvende en svampebehandling på udsatte afgrøder." />
         <e k="rcr_function_nematicideTank" v="Brug VELUM PRIME i marksprøjter til at anvende en nematodebehandling på afgrøder udsat for nematoder." />
         <!-- Disease system (9 pathogens) -->
-        <e k="rcr_disease_name_sclerotinia" v="Knoldbægersvamp (Sclerotinia)" />
+        <e k="rcr_disease_name_sclerotinia" v="Knoldbægersvamp" />
         <e k="rcr_disease_name_phoma" v="Knæksyge (Phoma)" />
         <e k="rcr_disease_name_takeall" v="Goldfodsyge" />
         <e k="rcr_disease_name_septoria" v="Hvedens bladplet (Septoria)" />

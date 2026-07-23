@@ -178,7 +178,7 @@
         <e k="rcr_function_fungicideTank" v="Bruk AMISTAR i åkersprøyter for å påføre en fungicidbehandling på utsatte vekster." />
         <e k="rcr_function_nematicideTank" v="Bruk VELUM PRIME i åkersprøyter for å påføre en nematicidbehandling på vekster utsatt for nematoder." />
         <!-- Disease system (9 pathogens) -->
-        <e k="rcr_disease_name_sclerotinia" v="Storknolla råtesopp (Sclerotinia)" />
+        <e k="rcr_disease_name_sclerotinia" v="Storknolla råtesopp" />
         <e k="rcr_disease_name_phoma" v="Phoma (rothalsråte)" />
         <e k="rcr_disease_name_takeall" v="Rotdreper" />
         <e k="rcr_disease_name_septoria" v="Hvetebladprikk (Septoria)" />

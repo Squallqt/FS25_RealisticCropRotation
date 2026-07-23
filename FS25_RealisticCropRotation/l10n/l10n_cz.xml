@@ -178,7 +178,7 @@
         <e k="rcr_function_fungicideTank" v="Použijte AMISTAR v postřikovačích k aplikaci fungicidního ošetření na ohrožené plodiny." />
         <e k="rcr_function_nematicideTank" v="Použijte VELUM PRIME v postřikovačích k aplikaci nematicidního ošetření na plodiny ohrožené háďátky." />
         <!-- Disease system (9 pathogens) -->
-        <e k="rcr_disease_name_sclerotinia" v="Sklerotiniová hniloba (bílá hniloba)" />
+        <e k="rcr_disease_name_sclerotinia" v="Sklerotiniová hniloba" />
         <e k="rcr_disease_name_phoma" v="Fomová hniloba (černání stonku řepky)" />
         <e k="rcr_disease_name_takeall" v="Černání pat stébel" />
         <e k="rcr_disease_name_septoria" v="Braničnatka pšeničná (listová skvrnitost)" />

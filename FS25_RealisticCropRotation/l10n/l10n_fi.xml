@@ -178,7 +178,7 @@
         <e k="rcr_function_fungicideTank" v="Käytä AMISTARia ruiskuissa fungisidikäsittelyyn riskialttiilla kasveilla." />
         <e k="rcr_function_nematicideTank" v="Käytä VELUM PRIMEa ruiskuissa nematisidikäsittelyyn sukkulamadoille altistuneilla kasveilla." />
         <!-- Disease system (9 pathogens) -->
-        <e k="rcr_disease_name_sclerotinia" v="Pahkahome (Sclerotinia)" />
+        <e k="rcr_disease_name_sclerotinia" v="Pahkahome" />
         <e k="rcr_disease_name_phoma" v="Phoma-varsitauti" />
         <e k="rcr_disease_name_takeall" v="Tyvi- ja juuristomätä" />
         <e k="rcr_disease_name_septoria" v="Vehnänruskolaikku (Septoria)" />

@@ -178,7 +178,7 @@
         <e k="rcr_function_fungicideTank" v="Folosește AMISTAR în pulverizatoare pentru a aplica un tratament fungicid pe culturile expuse riscului." />
         <e k="rcr_function_nematicideTank" v="Folosește VELUM PRIME în pulverizatoare pentru a aplica un tratament nematicid pe culturile expuse la nematozi." />
         <!-- Disease system (9 pathogens) -->
-        <e k="rcr_disease_name_sclerotinia" v="Putregaiul alb (Sclerotinia)" />
+        <e k="rcr_disease_name_sclerotinia" v="Putregaiul alb" />
         <e k="rcr_disease_name_phoma" v="Putregaiul uscat / cancerul tulpinii (Phoma)" />
         <e k="rcr_disease_name_takeall" v="Înnegrirea bazei paiului" />
         <e k="rcr_disease_name_septoria" v="Septorioza frunzelor" />

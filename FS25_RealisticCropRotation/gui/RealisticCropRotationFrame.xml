@@ -61,6 +61,7 @@
                 <RoundCorner     profile="frHeaderWeatherShadow"   id="headerWeatherShadow"/>
                 <RoundCorner     profile="frHeaderWeatherBg"       id="headerWeatherBg"/>
                 <ThreePartBitmap profile="frHeaderWeatherAccent"   id="headerWeatherAccent"/>
+                <ThreePartBitmap profile="frHeaderWeatherAccentBottom" id="headerWeatherAccentBottom"/>
                 <RoundCorner     profile="frHeaderWeatherIconBg"   id="headerWeatherIconBg"/>
                 <Bitmap          profile="frHeaderWeatherIcon"     id="headerWeatherIcon"/>
                 <Text            profile="frHeaderWeatherText"     id="headerWeatherText" text=""/>
@@ -75,8 +76,10 @@
 
             <!-- HERO CARD (y=0..56) -->
             <GuiElement profile="frHeroCard" position="0px 0px">
+                <RoundCorner     profile="frHeroCardShadow"/>
                 <RoundCorner     profile="frHeroCardBg"/>
                 <ThreePartBitmap profile="frHeroAccent"/>
+                <ThreePartBitmap profile="frHeroAccentBottom"/>
                 <Text profile="frHeroTitle" id="detailTitle"  text="-"/>
                 <RoundCorner profile="frStatusPillBg"   id="statusPillBg"/>
                 <Text        profile="frStatusPillText" id="statusPillText" text=""/>
@@ -299,8 +302,10 @@
 
             <!-- HERO CARD (y=0..56) -->
             <GuiElement profile="frHeroCard" position="0px 0px">
+                <RoundCorner     profile="frHeroCardShadow"/>
                 <RoundCorner     profile="frHeroCardBg"/>
                 <ThreePartBitmap profile="frHeroAccent"/>
+                <ThreePartBitmap profile="frHeroAccentBottom"/>
                 <Text profile="frHeroTitle" id="planTitle"  text="-"/>
                 <RoundCorner profile="frStatusPillBg"   id="planStatusPillBg"/>
                 <Text        profile="frStatusPillText" id="planStatusPillText" text=""/>
@@ -471,49 +476,48 @@
                         <!-- Card visuals -->
                         <RoundCorner profile="frGroupCardBg"      name="gCardBg"/>
                         <RoundCorner profile="frGroupCountLane"   name="gCountLane"/>
-                        <ThreePartBitmap profile="frGroupCardAccent" name="gCardAccent"/>
 
                         <!-- Field count -->
-                        <Text profile="frGroupCount" name="gCount" position="9px -14px" text=""/>
-                        <Text profile="frGroupArea"  name="gArea"  position="9px -50px" text=""/>
+                        <Text profile="frGroupCount" name="gCount" position="9px -10px" text=""/>
+                        <Text profile="frGroupArea"  name="gArea"  position="9px -45px" text=""/>
 
                         <!-- Empty-group summary -->
-                        <Text profile="frGroupPlanSummary" name="gPlanSummary" position="132px -18px" text="" visible="false"/>
+                        <Text profile="frGroupPlanSummary" name="gPlanSummary" position="132px -16.5px" text="" visible="false"/>
 
-                        <!-- Year labels (y=5) — visible only when badge is visible -->
-                        <Text profile="frGroupYearLabel" name="gYearLabel1" position="132px -5px"  text="$l10n_rcr_plan_year1" visible="false"/>
-                        <Text profile="frGroupYearLabel" name="gYearLabel2" position="334px -5px"  text="$l10n_rcr_plan_year2" visible="false"/>
-                        <Text profile="frGroupYearLabel" name="gYearLabel3" position="536px -5px"  text="$l10n_rcr_plan_year3" visible="false"/>
-                        <Text profile="frGroupYearLabel" name="gYearLabel4" position="738px -5px"  text="$l10n_rcr_plan_year4" visible="false"/>
+                        <!-- Year labels (y=3.5) — visible only when badge is visible -->
+                        <Text profile="frGroupYearLabel" name="gYearLabel1" position="132px -3.5px"  text="$l10n_rcr_plan_year1" visible="false"/>
+                        <Text profile="frGroupYearLabel" name="gYearLabel2" position="334px -3.5px"  text="$l10n_rcr_plan_year2" visible="false"/>
+                        <Text profile="frGroupYearLabel" name="gYearLabel3" position="536px -3.5px"  text="$l10n_rcr_plan_year3" visible="false"/>
+                        <Text profile="frGroupYearLabel" name="gYearLabel4" position="738px -3.5px"  text="$l10n_rcr_plan_year4" visible="false"/>
 
-                        <!-- Zone 1 (y=18, +4px from previous) -->
-                        <RoundCorner profile="frGroupBadge"      name="gBadge1" position="132px -18px" visible="false"/>
-                        <Bitmap      profile="frGroupCropIconCard" name="gCropIcon1" position="132px -23px" visible="false"/>
-                        <Text        profile="frGroupBadgeLabel" name="gLabel1" position="157px -18px" size="170px 30px" text="" visible="false"/>
+                        <!-- Zone 1 (y=16.5) -->
+                        <RoundCorner profile="frGroupBadge"      name="gBadge1" position="132px -16.5px" visible="false"/>
+                        <Bitmap      profile="frGroupCropIconCard" name="gCropIcon1" position="132px -21.5px" visible="false"/>
+                        <Text        profile="frGroupBadgeLabel" name="gLabel1" position="157px -16.5px" size="170px 30px" text="" visible="false"/>
 
                         <!-- Arrow 1 -->
-                        <Bitmap profile="frGroupArrow" name="gArrow1" position="310px -23px" visible="false"/>
+                        <Bitmap profile="frGroupArrow" name="gArrow1" position="310px -21.5px" visible="false"/>
 
                         <!-- Zone 2 -->
-                        <RoundCorner profile="frGroupBadge"      name="gBadge2" position="334px -18px" visible="false"/>
-                        <Bitmap      profile="frGroupCropIconCard" name="gCropIcon2" position="334px -23px" visible="false"/>
-                        <Text        profile="frGroupBadgeLabel" name="gLabel2" position="359px -18px" size="170px 30px" text="" visible="false"/>
+                        <RoundCorner profile="frGroupBadge"      name="gBadge2" position="334px -16.5px" visible="false"/>
+                        <Bitmap      profile="frGroupCropIconCard" name="gCropIcon2" position="334px -21.5px" visible="false"/>
+                        <Text        profile="frGroupBadgeLabel" name="gLabel2" position="359px -16.5px" size="170px 30px" text="" visible="false"/>
 
                         <!-- Arrow 2 -->
-                        <Bitmap profile="frGroupArrow" name="gArrow2" position="512px -23px" visible="false"/>
+                        <Bitmap profile="frGroupArrow" name="gArrow2" position="512px -21.5px" visible="false"/>
 
                         <!-- Zone 3 -->
-                        <RoundCorner profile="frGroupBadge"      name="gBadge3" position="536px -18px" visible="false"/>
-                        <Bitmap      profile="frGroupCropIconCard" name="gCropIcon3" position="536px -23px" visible="false"/>
-                        <Text        profile="frGroupBadgeLabel" name="gLabel3" position="561px -18px" size="170px 30px" text="" visible="false"/>
+                        <RoundCorner profile="frGroupBadge"      name="gBadge3" position="536px -16.5px" visible="false"/>
+                        <Bitmap      profile="frGroupCropIconCard" name="gCropIcon3" position="536px -21.5px" visible="false"/>
+                        <Text        profile="frGroupBadgeLabel" name="gLabel3" position="561px -16.5px" size="170px 30px" text="" visible="false"/>
 
                         <!-- Arrow 3 -->
-                        <Bitmap profile="frGroupArrow" name="gArrow3" position="714px -23px" visible="false"/>
+                        <Bitmap profile="frGroupArrow" name="gArrow3" position="714px -21.5px" visible="false"/>
 
                         <!-- Zone 4 -->
-                        <RoundCorner profile="frGroupBadge"      name="gBadge4" position="738px -18px" visible="false"/>
-                        <Bitmap      profile="frGroupCropIconCard" name="gCropIcon4" position="738px -23px" visible="false"/>
-                        <Text        profile="frGroupBadgeLabel" name="gLabel4" position="763px -18px" size="170px 30px" text="" visible="false"/>
+                        <RoundCorner profile="frGroupBadge"      name="gBadge4" position="738px -16.5px" visible="false"/>
+                        <Bitmap      profile="frGroupCropIconCard" name="gCropIcon4" position="738px -21.5px" visible="false"/>
+                        <Text        profile="frGroupBadgeLabel" name="gLabel4" position="763px -16.5px" size="170px 30px" text="" visible="false"/>
 
                         <!-- Right column: total rotation nitrogen residue above score -->
                         <BoxLayout profile="frOverviewMetaColumn" name="gMetaColumn">

@@ -178,7 +178,7 @@
         <e k="rcr_function_fungicideTank" v="Använd AMISTAR i växtskyddssprutor för att applicera en fungicidbehandling på riskutsatta grödor." />
         <e k="rcr_function_nematicideTank" v="Använd VELUM PRIME i växtskyddssprutor för att applicera en nematicidbehandling på grödor som utsätts för nematoder." />
         <!-- Disease system (9 pathogens) -->
-        <e k="rcr_disease_name_sclerotinia" v="Bomullsmögel (Sclerotinia)" />
+        <e k="rcr_disease_name_sclerotinia" v="Bomullsmögel" />
         <e k="rcr_disease_name_phoma" v="Torröta (Phoma)" />
         <e k="rcr_disease_name_takeall" v="Rotdödare" />
         <e k="rcr_disease_name_septoria" v="Svartpricksjuka (Septoria)" />

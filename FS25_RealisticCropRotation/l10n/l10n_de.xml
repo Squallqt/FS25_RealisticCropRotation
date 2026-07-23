@@ -178,7 +178,7 @@
         <e k="rcr_function_fungicideTank" v="Verwende AMISTAR in Feldspritzen, um eine Fungizidbehandlung auf gefährdeten Kulturen auszubringen." />
         <e k="rcr_function_nematicideTank" v="Verwende VELUM PRIME in Feldspritzen, um eine Nematizidbehandlung auf nematodengefährdeten Kulturen auszubringen." />
         <!-- Disease system (9 pathogens) -->
-        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia (Weißstängeligkeit)" />
+        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia" />
         <e k="rcr_disease_name_phoma" v="Phoma (Wurzelhalsfäule)" />
         <e k="rcr_disease_name_takeall" v="Schwarzbeinigkeit" />
         <e k="rcr_disease_name_septoria" v="Septoria-Blattdürre" />

@@ -178,7 +178,7 @@
         <e k="rcr_function_fungicideTank" v="Usa AMISTAR en pulverizadores para aplicar un tratamiento fungicida en cultivos en riesgo." />
         <e k="rcr_function_nematicideTank" v="Usa VELUM PRIME en pulverizadores para aplicar un tratamiento nematicida en cultivos expuestos a nematodos." />
         <!-- Disease system (9 pathogens) -->
-        <e k="rcr_disease_name_sclerotinia" v="Esclerotinia (podredumbre blanca)" />
+        <e k="rcr_disease_name_sclerotinia" v="Esclerotinia" />
         <e k="rcr_disease_name_phoma" v="Phoma (pie negro)" />
         <e k="rcr_disease_name_takeall" v="Mal del pie" />
         <e k="rcr_disease_name_septoria" v="Septoriosis" />

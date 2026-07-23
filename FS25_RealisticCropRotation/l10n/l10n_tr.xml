@@ -178,7 +178,7 @@
         <e k="rcr_function_fungicideTank" v="AMISTAR ürününü ilaçlama makinelerinde kullanarak risk altındaki ekinlere fungisit uygulaması yapın." />
         <e k="rcr_function_nematicideTank" v="VELUM PRIME ürününü ilaçlama makinelerinde kullanarak nematodlara maruz kalan ekinlere nematisit uygulaması yapın." />
         <!-- Disease system (9 pathogens) -->
-        <e k="rcr_disease_name_sclerotinia" v="Sklerotinya (beyaz küf)" />
+        <e k="rcr_disease_name_sclerotinia" v="Sklerotinya" />
         <e k="rcr_disease_name_phoma" v="Gövde kanseri (Phoma)" />
         <e k="rcr_disease_name_takeall" v="Buğday kök çürüklüğü" />
         <e k="rcr_disease_name_septoria" v="Septorya yaprak lekesi" />

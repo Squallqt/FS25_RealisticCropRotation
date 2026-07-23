@@ -178,7 +178,7 @@
         <e k="rcr_function_fungicideTank" v="Utilisez AMISTAR dans les pulvérisateurs pour appliquer un traitement fongicide sur les cultures à risque." />
         <e k="rcr_function_nematicideTank" v="Utilisez VELUM PRIME dans les pulvérisateurs pour appliquer un traitement nématicide sur les cultures exposées aux nématodes." />
         <!-- Disease system (9 pathogens) -->
-        <e k="rcr_disease_name_sclerotinia" v="Sclérotinia (pourriture blanche)" />
+        <e k="rcr_disease_name_sclerotinia" v="Sclérotinia" />
         <e k="rcr_disease_name_phoma" v="Phoma (nécrose du collet)" />
         <e k="rcr_disease_name_takeall" v="Piétin-échaudage" />
         <e k="rcr_disease_name_septoria" v="Septoriose" />

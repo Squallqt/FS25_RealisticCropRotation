@@ -178,7 +178,7 @@
         <e k="rcr_function_fungicideTank" v="Usa AMISTAR negli irroratori per applicare un trattamento fungicida sulle colture a rischio." />
         <e k="rcr_function_nematicideTank" v="Usa VELUM PRIME negli irroratori per applicare un trattamento nematocida sulle colture esposte ai nematodi." />
         <!-- Disease system (9 pathogens) -->
-        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia (muffa bianca)" />
+        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia" />
         <e k="rcr_disease_name_phoma" v="Phoma (cancro del colletto)" />
         <e k="rcr_disease_name_takeall" v="Mal del piede" />
         <e k="rcr_disease_name_septoria" v="Septoriosi" />

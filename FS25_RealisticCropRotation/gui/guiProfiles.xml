@@ -54,9 +54,16 @@
         <size value="1280px 56px"/>
     </Profile>
 
+    <Profile name="frHeroCardShadow" extends="baseReference" with="anchorTopLeft">
+        <position value="3px 3px"/>
+        <size value="1280px 56px"/>
+        <color value="0 0 0 0.28"/>
+        <cornerSize value="0.35"/>
+    </Profile>
+
     <Profile name="frHeroCardBg" extends="baseReference" with="anchorTopLeft">
         <size value="1280px 56px"/>
-        <color value="0 0 0 0.65"/>
+        <color value="$preset_fs25_colorMainDark"/>
         <cornerSize value="0.35"/>
     </Profile>
 
@@ -64,6 +71,8 @@
         <size value="1280px 3dp"/>
         <position value="0px 0px"/>
     </Profile>
+
+    <Profile name="frHeroAccentBottom" extends="frHeroAccent" with="anchorBottomLeft"/>
 
     <!-- Left-aligned title, vertically centered in the card -->
     <Profile name="frHeroTitle" extends="fs25_textDefault" with="anchorMiddleLeft">
@@ -91,7 +100,7 @@
     </Profile>
 
     <Profile name="frHeaderWeatherShadow" extends="baseReference" with="anchorTopLeft">
-        <position value="3px -3px"/>
+        <position value="3px 3px"/>
         <size value="297px 60px"/>
         <color value="0 0 0 0.28"/>
         <cornerSize value="0.28"/>
@@ -108,6 +117,8 @@
         <size value="300px 3dp"/>
         <position value="0px 0px"/>
     </Profile>
+
+    <Profile name="frHeaderWeatherAccentBottom" extends="frHeaderWeatherAccent" with="anchorBottomLeft"/>
 
     <!-- Dedicated icon tile, visually independent from the text hierarchy. -->
     <Profile name="frHeaderWeatherIconBg" extends="baseReference" with="anchorMiddleLeft">
@@ -704,7 +715,7 @@
 
     <Profile name="frCalendarBg" extends="baseReference" with="anchorTopLeft">
         <size value="1240px 238px"/>
-        <color value="0 0 0 0.42"/>
+        <color value="0 0 0 0.50"/>
         <cornerSize value="0.35"/>
     </Profile>
 
@@ -774,7 +785,7 @@
     <Profile name="frCalendarRowBg" extends="baseReference" with="anchorTopLeft">
         <position value="0px 0px"/>
         <size value="1240px 43px"/>
-        <color value="0 0 0 0.18"/>
+        <color value="$preset_fs25_colorGreyDark"/>
         <cornerSize value="0"/>
     </Profile>
 
@@ -932,7 +943,7 @@
 
     <Profile name="frOverviewBg" extends="baseReference" with="anchorTopLeft">
         <size value="1240px 312px"/>
-        <color value="0 0 0 0.22"/>
+        <color value="0 0 0 0.50"/>
         <cornerSize value="0.35"/>
     </Profile>
 
@@ -977,16 +988,9 @@
         <cornerSize value="0.35"/>
     </Profile>
 
-    <Profile name="frGroupCardAccent" extends="fs25_lineSeparatorTopHighlighted" with="anchorTopLeft">
-        <size value="1206px 3dp"/>
-        <position value="0px 0px"/>
-        <imageColor value="$preset_fs25_colorMainHighlight"/>
-    </Profile>
-
     <!-- Family zone background pill (color set in Lua) -->
     <Profile name="frGroupBadge" extends="baseReference" with="anchorTopLeft">
         <size value="300px 30px"/>
-        <color value="$preset_fs25_colorGrey"/>
         <cornerSize value="0.20"/>
     </Profile>
 
@@ -1049,7 +1053,7 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Right column: 22 + 6 + 22 = 50px, vertically centred in the 80px row. -->
+    <!-- Right column: 22 + 6 + 22 = 50px. -->
     <Profile name="frOverviewMetaColumn" extends="emptyPanel" with="anchorTopRight">
         <position value="-26px 0px"/>
         <size value="228px 80px"/>
@@ -1090,7 +1094,7 @@
 
     <!-- Cover crop recap — leaves the right lane free for the residue card. -->
     <Profile name="frGroupCoverRecap" extends="fs25_textDefault" with="anchorTopLeft">
-        <position value="132px -49px"/>
+        <position value="132px -47.5px"/>
         <size value="806px 14px"/>
         <textSize value="11px"/>
         <textBold value="false"/>
@@ -1105,7 +1109,7 @@
 
     <!-- Field names — bottom strip -->
     <Profile name="frGroupFieldNames" extends="fs25_textDefault" with="anchorTopLeft">
-        <position value="132px -64px"/>
+        <position value="132px -62.5px"/>
         <size value="1046px 14px"/>
         <textSize value="11px"/>
         <textBold value="true"/>

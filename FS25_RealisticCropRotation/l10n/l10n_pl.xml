@@ -178,7 +178,7 @@
         <e k="rcr_function_fungicideTank" v="Używaj AMISTAR w opryskiwaczach, aby stosować zabieg fungicydowy na uprawach zagrożonych." />
         <e k="rcr_function_nematicideTank" v="Używaj VELUM PRIME w opryskiwaczach, aby stosować zabieg nematocydowy na uprawach narażonych na nicienie." />
         <!-- Disease system (9 pathogens) -->
-        <e k="rcr_disease_name_sclerotinia" v="Zgnilizna twardzikowa (Sclerotinia)" />
+        <e k="rcr_disease_name_sclerotinia" v="Zgnilizna twardzikowa" />
         <e k="rcr_disease_name_phoma" v="Sucha zgnilizna kapustnych (Phoma)" />
         <e k="rcr_disease_name_takeall" v="Zgorzel podstawy źdźbła" />
         <e k="rcr_disease_name_septoria" v="Septorioza liści (paskowana)" />

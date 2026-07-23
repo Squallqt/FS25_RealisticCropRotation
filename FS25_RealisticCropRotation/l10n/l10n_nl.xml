@@ -178,7 +178,7 @@
         <e k="rcr_function_fungicideTank" v="Gebruik AMISTAR in veldspuiten om een fungicidebehandeling toe te passen op risicogewassen." />
         <e k="rcr_function_nematicideTank" v="Gebruik VELUM PRIME in veldspuiten om een nematicidebehandeling toe te passen op gewassen die aan nematoden zijn blootgesteld." />
         <!-- Disease system (9 pathogens) -->
-        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia (rattenkeutelziekte)" />
+        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia" />
         <e k="rcr_disease_name_phoma" v="Phoma (stengelkanker)" />
         <e k="rcr_disease_name_takeall" v="Tarwehalmdoder" />
         <e k="rcr_disease_name_septoria" v="Septoria-bladvlekkenziekte" />

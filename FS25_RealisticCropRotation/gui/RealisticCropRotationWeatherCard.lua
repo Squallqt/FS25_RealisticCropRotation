@@ -425,7 +425,7 @@ function RealisticCropRotationWeatherCard:layout(model)
         -- The XML-authored +3px x offset is preserved, so the shadow extends 3px to the right.
         c.shadow:setSize(targetWidth, c.shadow.size[2])
     end
-    for _, element in ipairs({c.background, c.accent}) do
+    for _, element in ipairs({c.background, c.accent, c.accentBottom}) do
         if element ~= nil and element.setSize ~= nil and element.size ~= nil then
             element:setSize(targetWidth, element.size[2])
         end
@@ -495,6 +495,7 @@ function RealisticCropRotationWeatherCard:render(model)
     end
 
     setElementColor(c.accent, model.color)
+    setElementColor(c.accentBottom, model.color)
     setElementColor(c.iconBackground, model.color)
 
     -- Apply measured geometry while hidden so the first visible frame is already final.

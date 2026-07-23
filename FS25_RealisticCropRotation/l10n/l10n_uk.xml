@@ -178,7 +178,7 @@
         <e k="rcr_function_fungicideTank" v="Використовуйте AMISTAR в обприскувачах для внесення фунгіцидної обробки на культури в зоні ризику." />
         <e k="rcr_function_nematicideTank" v="Використовуйте VELUM PRIME в обприскувачах для внесення нематицидної обробки на культури, уражені нематодами." />
         <!-- Disease system (9 pathogens) -->
-        <e k="rcr_disease_name_sclerotinia" v="Склеротиніоз (біла гниль)" />
+        <e k="rcr_disease_name_sclerotinia" v="Склеротиніоз" />
         <e k="rcr_disease_name_phoma" v="Фомоз (рак стебла)" />
         <e k="rcr_disease_name_takeall" v="Офіобольозна коренева гниль" />
         <e k="rcr_disease_name_septoria" v="Септоріоз листя" />
