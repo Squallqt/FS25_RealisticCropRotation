@@ -26,6 +26,16 @@
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d luni rămase)" />
         <e k="rcr_advice_nematicide_duration" v="Protecția solului durează 3 luni pentru fiecare teren; reaplicarea reînnoiește durata." />
 
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="absent" />
+        <e k="rcr_treatment_partial"  v="parțial (%d %%)" />
+        <e k="rcr_treatment_complete" v="complet" />
+        <e k="rcr_treatment_disease_absent"     v="Fără boală" />
+        <e k="rcr_treatment_disease_active"     v="Boală activă" />
+        <e k="rcr_treatment_disease_controlled" v="Boală sub control" />
+        <e k="rcr_treatment_until_harvest" v="Până la recoltare" />
+        <e k="rcr_treatment_months"        v="%d luni" />
+
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Reziduu așteptat +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="Reziduu total al rotației +%d kg/ha" />
@@ -54,7 +64,7 @@
         <e k="rcr_section_history"      v="Istoric Culturi" />
         <e k="rcr_section_nitrogen"     v="Stare Azot" />
         <e k="rcr_section_advice"       v="Sfat Agronomic" />
-        <e k="rcr_section_soil_indicators" v="Indicatori ai solului" />
+        <e k="rcr_section_soil_indicators" v="Sol și tratament" />
         <e k="rcr_section_field"        v="Starea actuală a parcelei" />
         <e k="rcr_section_lime"         v="Stare Var / pH" />
         <e k="rcr_section_plan"         v="Plan de Rotație" />
@@ -106,8 +116,8 @@
         <e k="rcr_advice_afterRoot" v="După o cultură de rădăcinoase, așteaptă patru ani înainte de revenirea rădăcinoaselor, urmată de o cereală pentru a reface structura după recoltarea târzie." />
         <e k="rcr_advice_afterVegetable" v="După o legumă, așteaptă trei ani înainte de a o repeta, cu o cereală ca întrerupere curată." />
         <e k="rcr_advice_afterForage" v="După o pajiște temporară, o cereală valorifică fertilitatea și structura acumulate sub covorul ierbos." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Presiune mare de putregai alb: evitați rapița, muștarul, floarea-soarelui, soia, mazărea, fasolea, cartoful și morcovul cel puțin 3 ani; fungicidul salvează recolta pe zonele tratate, nu face boala să regreseze." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Presiune mare de nematozi: evitați sfecla de zahăr, sfecla roșie, rapița, muștarul și spanacul 3 ani; nematicidul salvează recolta pe zonele tratate timp de 3 luni." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Presiune mare de putregai alb: dacă rapița, muștarul, floarea-soarelui, soia, mazărea, fasolea, cartoful sau morcovul revin în mai puțin de 3 ani, presiunea rămâne ridicată; fungicidul întârzie apariția și îngheață paguba pe zonele tratate, nu face boala să regreseze." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Presiune mare de nematozi: dacă sfecla de zahăr, sfecla roșie, rapița, muștarul sau spanacul revin în mai puțin de 3 ani, presiunea rămâne ridicată; nematicidul salvează recolta pe zonele tratate timp de 3 luni." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Presiune moderată de putregai alb: răriți culturile gazdă, ploaia crește riscul." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Presiune moderată de nematozi: răriți sfecla și cruciferele." />
         <e k="rcr_advice_no_current_crop" v="Nicio cultură principală actuală: sfat disponibil când este detectată o cultură." />
@@ -199,12 +209,12 @@
         <e k="rcr_fillType_nematicide" v="Nematicid" />
         <e k="rcr_disease_treatment_none" v="Niciun tratament" />
         <e k="rcr_disease_treatment_clubroot" v="Niciunul (doar rotație)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Presiune mare de Phoma: prelungiți pauza rapiței și a muștarului la 4 ani; fungicidul salvează recolta pe zonele tratate, nu face boala să regreseze." />
+        <e k="rcr_advice_pressure_high_phoma" v="Presiune mare de Phoma: dacă rapița sau muștarul revin în mai puțin de 4 ani, presiunea rămâne ridicată; fungicidul întârzie apariția și îngheață paguba pe zonele tratate, nu face boala să regreseze." />
         <e k="rcr_advice_pressure_high_takeall" v="Presiune mare de înnegrire a bazei paiului: introduceți o pauză cu o cultură negazdă (ovăz, leguminoasă, oleaginoasă); niciun produs nu protejează de această boală, doar rotația scade presiunea." />
-        <e k="rcr_advice_pressure_high_septoria" v="Presiune mare de septorioză: răriți grâul, orzul, triticalul și alacul; fungicidul salvează recolta pe zonele tratate, ploaia accelerează epidemia." />
-        <e k="rcr_advice_pressure_high_rust" v="Presiune mare de rugină: cerealele și rapița sunt ambele gazde, răriți-le; fungicidul salvează recolta pe zonele tratate, vremea blândă și umedă accelerează epidemia." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Presiune mare de fuzarioză: evitați grâul după porumb și înlănțuiți mai puține cereale; fungicidul salvează recolta pe zonele tratate, ploaia accelerează epidemia." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Presiune mare de mană: răriți cartofii; fungicidul salvează recolta pe zonele tratate, vremea răcoroasă și umedă accelerează epidemia." />
+        <e k="rcr_advice_pressure_high_septoria" v="Presiune mare de septorioză: răriți grâul, orzul, triticalul și alacul; fungicidul întârzie apariția și îngheață paguba pe zonele tratate, ploaia accelerează epidemia." />
+        <e k="rcr_advice_pressure_high_rust" v="Presiune mare de rugină: cerealele și rapița sunt ambele gazde, răriți-le; fungicidul întârzie apariția și îngheață paguba pe zonele tratate, vremea blândă și umedă accelerează epidemia." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Presiune mare de fuzarioză: evitați grâul după porumb și înlănțuiți mai puține cereale; fungicidul întârzie apariția și îngheață paguba pe zonele tratate, ploaia accelerează epidemia." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Presiune mare de mană: răriți cartofii; fungicidul întârzie apariția și îngheață paguba pe zonele tratate, vremea răcoroasă și umedă accelerează epidemia." />
         <e k="rcr_advice_pressure_high_clubroot" v="Presiune mare de hernie: prelungiți cât mai mult pauza rapiței și a muștarului; niciun produs nu protejează de această boală, doar rotația ajută." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Presiune moderată de Phoma: prelungiți pauza rapiței și a muștarului." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Presiune moderată de înnegrire a bazei paiului: evitați a treia cereală la rând." />

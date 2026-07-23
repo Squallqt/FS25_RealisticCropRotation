@@ -26,6 +26,16 @@
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d månader återstår)" />
         <e k="rcr_advice_nematicide_duration" v="Markskyddet varar 3 månader per fält; en ny behandling förnyar tiden." />
 
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="ingen" />
+        <e k="rcr_treatment_partial"  v="delvis (%d %%)" />
+        <e k="rcr_treatment_complete" v="full" />
+        <e k="rcr_treatment_disease_absent"     v="Ingen sjukdom" />
+        <e k="rcr_treatment_disease_active"     v="Sjukdom aktiv" />
+        <e k="rcr_treatment_disease_controlled" v="Sjukdom under kontroll" />
+        <e k="rcr_treatment_until_harvest" v="Fram till skörd" />
+        <e k="rcr_treatment_months"        v="%d månader" />
+
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Förväntad rest +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="Total växtföljdsrest +%d kg/ha" />
@@ -54,7 +64,7 @@
         <e k="rcr_section_history"      v="Grödhistorik" />
         <e k="rcr_section_nitrogen"     v="Kvävestatus" />
         <e k="rcr_section_advice"       v="Agronomiskt råd" />
-        <e k="rcr_section_soil_indicators" v="Markindikatorer" />
+        <e k="rcr_section_soil_indicators" v="Mark och behandling" />
         <e k="rcr_section_field"        v="Aktuell fältstatus" />
         <e k="rcr_section_lime"         v="Kalk-/pH-status" />
         <e k="rcr_section_plan"         v="Växtföljdsplan" />
@@ -106,8 +116,8 @@
         <e k="rcr_advice_afterRoot" v="Efter en rotfrukt, vänta fyra år innan rotfrukter återkommer, och följ med en spannmål för att bygga upp strukturen efter den sena upptagningen." />
         <e k="rcr_advice_afterVegetable" v="Efter en grönsak, vänta tre år innan du upprepar den, med en spannmål som ren avbrott." />
         <e k="rcr_advice_afterForage" v="Efter en vall utnyttjar en spannmål den bördighet och struktur som byggts upp under grässvålen." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Högt bomullsmögeltryck: undvik raps, senap, solros, sojaböna, ärt, böna, potatis och morot i minst 3 år; svampmedlet räddar skörden på besprutad mark, men pressar inte tillbaka sjukdomen." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Högt nematodtryck: undvik sockerbeta, rödbeta, raps, senap och spenat i 3 år; nematiciden räddar skörden på besprutad mark i 3 månader." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Högt bomullsmögeltryck: kommer raps, senap, solros, sojaböna, ärt, böna, potatis eller morot tillbaka inom 3 år, förblir trycket högt; svampmedlet bromsar utbrottet och fryser skadan på besprutad mark, men pressar inte tillbaka sjukdomen." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Högt nematodtryck: kommer sockerbeta, rödbeta, raps, senap eller spenat tillbaka inom 3 år, förblir trycket högt; nematiciden räddar skörden på besprutad mark i 3 månader." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Måttligt bomullsmögeltryck: sprid ut värdgrödorna, regn ökar risken." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Måttligt nematodtryck: sprid ut betor och korsblommiga." />
         <e k="rcr_advice_no_current_crop" v="Ingen aktuell huvudgröda: råd tillgängligt när en gröda upptäcks." />
@@ -199,12 +209,12 @@
         <e k="rcr_fillType_nematicide" v="Nematicid" />
         <e k="rcr_disease_treatment_none" v="Ingen behandling" />
         <e k="rcr_disease_treatment_clubroot" v="Ingen (endast växtföljd)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Högt torrötetryck: sträck ut uppehållet för raps och senap till 4 år; svampmedlet räddar skörden på besprutad mark, men pressar inte tillbaka sjukdomen." />
+        <e k="rcr_advice_pressure_high_phoma" v="Högt torrötetryck: kommer raps eller senap tillbaka inom 4 år, förblir trycket högt; svampmedlet bromsar utbrottet och fryser skadan på besprutad mark, men pressar inte tillbaka sjukdomen." />
         <e k="rcr_advice_pressure_high_takeall" v="Högt rotdödartryck: lägg in en icke-värdgröda som avbrott (havre, baljväxt, oljeväxt); inget medel skyddar mot denna sjukdom, bara växtföljd sänker trycket." />
-        <e k="rcr_advice_pressure_high_septoria" v="Högt svartpricksjuketryck: sprid ut vete, korn, rågvete och dinkel; svampmedlet räddar skörden på besprutad mark, och regn snabbar på epidemin." />
-        <e k="rcr_advice_pressure_high_rust" v="Högt rosttryck: både spannmål och raps är värdar, sprid ut dem; svampmedlet räddar skörden på besprutad mark, och milda fuktiga perioder snabbar på epidemin." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Högt fusariostryck: undvik vete efter majs och lägg färre spannmål i rad; svampmedlet räddar skörden på besprutad mark, och regn snabbar på epidemin." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Högt bladmögeltryck: sprid ut potatisen; svampmedlet räddar skörden på besprutad mark, och svalt fuktigt väder snabbar på epidemin." />
+        <e k="rcr_advice_pressure_high_septoria" v="Högt svartpricksjuketryck: sprid ut vete, korn, rågvete och dinkel; svampmedlet bromsar utbrottet och fryser skadan på besprutad mark, och regn snabbar på epidemin." />
+        <e k="rcr_advice_pressure_high_rust" v="Högt rosttryck: både spannmål och raps är värdar, sprid ut dem; svampmedlet bromsar utbrottet och fryser skadan på besprutad mark, och milda fuktiga perioder snabbar på epidemin." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Högt fusariostryck: undvik vete efter majs och lägg färre spannmål i rad; svampmedlet bromsar utbrottet och fryser skadan på besprutad mark, och regn snabbar på epidemin." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Högt bladmögeltryck: sprid ut potatisen; svampmedlet bromsar utbrottet och fryser skadan på besprutad mark, och svalt fuktigt väder snabbar på epidemin." />
         <e k="rcr_advice_pressure_high_clubroot" v="Högt klumprotstryck: sträck ut uppehållet för raps och senap så långt det går; inget medel skyddar mot denna sjukdom, bara växtföljd hjälper." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Måttligt torrötetryck: förläng uppehållet för raps och senap." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Måttligt rotdödartryck: undvik en tredje spannmål i rad." />

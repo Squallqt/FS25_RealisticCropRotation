@@ -26,6 +26,16 @@
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d måneder tilbage)" />
         <e k="rcr_advice_nematicide_duration" v="Jordbeskyttelsen varer 3 måneder pr. mark; ny behandling fornyer varigheden." />
 
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="ingen" />
+        <e k="rcr_treatment_partial"  v="delvis (%d %%)" />
+        <e k="rcr_treatment_complete" v="fuld" />
+        <e k="rcr_treatment_disease_absent"     v="Ingen sygdom" />
+        <e k="rcr_treatment_disease_active"     v="Sygdom aktiv" />
+        <e k="rcr_treatment_disease_controlled" v="Sygdom under kontrol" />
+        <e k="rcr_treatment_until_harvest" v="Indtil høst" />
+        <e k="rcr_treatment_months"        v="%d måneder" />
+
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Forventet rest +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="Samlet sædskifterest +%d kg/ha" />
@@ -54,7 +64,7 @@
         <e k="rcr_section_history"      v="Afgrødehistorik" />
         <e k="rcr_section_nitrogen"     v="Kvælstofstatus" />
         <e k="rcr_section_advice"       v="Agronomisk råd" />
-        <e k="rcr_section_soil_indicators" v="Jordindikatorer" />
+        <e k="rcr_section_soil_indicators" v="Jord og behandling" />
         <e k="rcr_section_field"        v="Aktuel markstatus" />
         <e k="rcr_section_lime"         v="Kalk-/pH-status" />
         <e k="rcr_section_plan"         v="Sædskifteplan" />
@@ -106,8 +116,8 @@
         <e k="rcr_advice_afterRoot" v="Efter en rodafgrøde vent fire år før rodafgrøder vender tilbage, og følg op med en kornafgrøde for at genopbygge strukturen efter den sene optagning." />
         <e k="rcr_advice_afterVegetable" v="Efter en grøntsag vent tre år før den gentages, med en kornafgrøde som ren afbrydelse." />
         <e k="rcr_advice_afterForage" v="Efter en kløvergræsmark udnytter en kornafgrøde den frugtbarhed og struktur, der er opbygget under græsset." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Højt sclerotinia-tryk: undgå raps, sennep, solsikke, sojabønne, ært, bønne, kartoffel og gulerod i mindst 3 år; svampemidlet redder udbyttet på sprøjtede områder, men trænger ikke sygdommen tilbage." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Højt nematode-tryk: undgå sukkerroe, rødbede, raps, sennep og spinat i 3 år; nematicidet redder udbyttet på sprøjtede områder i 3 måneder." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Højt sclerotinia-tryk: vender raps, sennep, solsikke, sojabønne, ært, bønne, kartoffel eller gulerod tilbage inden for 3 år, forbliver trykket højt; svampemidlet bremser opståen og fastfryser skaden på sprøjtede områder, men trænger ikke sygdommen tilbage." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Højt nematode-tryk: vender sukkerroe, rødbede, raps, sennep eller spinat tilbage inden for 3 år, forbliver trykket højt; nematicidet redder udbyttet på sprøjtede områder i 3 måneder." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderat sclerotinia-tryk: spred værtsafgrøderne, regn øger risikoen." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Moderat nematode-tryk: spred roer og korsblomstrede." />
         <e k="rcr_advice_no_current_crop" v="Ingen aktuel hovedafgrøde: råd tilgængeligt, når en afgrøde registreres." />
@@ -199,12 +209,12 @@
         <e k="rcr_fillType_nematicide" v="Nematicid" />
         <e k="rcr_disease_treatment_none" v="Ingen behandling" />
         <e k="rcr_disease_treatment_clubroot" v="Ingen (kun sædskifte)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Højt phoma-tryk: stræk pausen for raps og sennep til 4 år; svampemidlet redder udbyttet på sprøjtede områder, men trænger ikke sygdommen tilbage." />
+        <e k="rcr_advice_pressure_high_phoma" v="Højt phoma-tryk: vender raps eller sennep tilbage inden for 4 år, forbliver trykket højt; svampemidlet bremser opståen og fastfryser skaden på sprøjtede områder, men trænger ikke sygdommen tilbage." />
         <e k="rcr_advice_pressure_high_takeall" v="Højt goldfodsyge-tryk: indsæt en ikke-værtsafgrøde som pause (havre, bælgplante, olieafgrøde); intet middel beskytter mod denne sygdom, kun sædskifte sænker trykket." />
-        <e k="rcr_advice_pressure_high_septoria" v="Højt septoria-tryk: spred hvede, byg, triticale og spelt; svampemidlet redder udbyttet på sprøjtede områder, og regn fremskynder epidemien." />
-        <e k="rcr_advice_pressure_high_rust" v="Højt rust-tryk: både korn og raps er værter, spred dem; svampemidlet redder udbyttet på sprøjtede områder, og milde fugtige perioder fremskynder epidemien." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Højt fusarium-tryk: undgå hvede efter majs og læg færre kornafgrøder i træk; svampemidlet redder udbyttet på sprøjtede områder, og regn fremskynder epidemien." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Højt kartoffelskimmel-tryk: spred kartoflerne; svampemidlet redder udbyttet på sprøjtede områder, og køligt fugtigt vejr fremskynder epidemien." />
+        <e k="rcr_advice_pressure_high_septoria" v="Højt septoria-tryk: spred hvede, byg, triticale og spelt; svampemidlet bremser opståen og fastfryser skaden på sprøjtede områder, og regn fremskynder epidemien." />
+        <e k="rcr_advice_pressure_high_rust" v="Højt rust-tryk: både korn og raps er værter, spred dem; svampemidlet bremser opståen og fastfryser skaden på sprøjtede områder, og milde fugtige perioder fremskynder epidemien." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Højt fusarium-tryk: undgå hvede efter majs og læg færre kornafgrøder i træk; svampemidlet bremser opståen og fastfryser skaden på sprøjtede områder, og regn fremskynder epidemien." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Højt kartoffelskimmel-tryk: spred kartoflerne; svampemidlet bremser opståen og fastfryser skaden på sprøjtede områder, og køligt fugtigt vejr fremskynder epidemien." />
         <e k="rcr_advice_pressure_high_clubroot" v="Højt kålbrok-tryk: stræk pausen for raps og sennep så meget som muligt; intet middel beskytter mod denne sygdom, kun sædskifte virker." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Moderat phoma-tryk: forlæng pausen for raps og sennep." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Moderat goldfodsyge-tryk: undgå et tredje korn i træk." />

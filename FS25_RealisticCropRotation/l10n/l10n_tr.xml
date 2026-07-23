@@ -26,6 +26,16 @@
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d ay kaldı)" />
         <e k="rcr_advice_nematicide_duration" v="Toprak koruması tarla başına 3 ay sürer; yeniden uygulama süreyi yeniler." />
 
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="yok" />
+        <e k="rcr_treatment_partial"  v="kısmi (%%%d)" />
+        <e k="rcr_treatment_complete" v="tam" />
+        <e k="rcr_treatment_disease_absent"     v="Hastalık yok" />
+        <e k="rcr_treatment_disease_active"     v="Hastalık aktif" />
+        <e k="rcr_treatment_disease_controlled" v="Hastalık kontrol altında" />
+        <e k="rcr_treatment_until_harvest" v="Hasada kadar" />
+        <e k="rcr_treatment_months"        v="%d ay" />
+
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Beklenen kalıntı +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="Toplam rotasyon kalıntısı +%d kg/ha" />
@@ -54,7 +64,7 @@
         <e k="rcr_section_history"      v="Ekin Geçmişi" />
         <e k="rcr_section_nitrogen"     v="Azot Durumu" />
         <e k="rcr_section_advice"       v="Agronomik Tavsiye" />
-        <e k="rcr_section_soil_indicators" v="Toprak göstergeleri" />
+        <e k="rcr_section_soil_indicators" v="Toprak ve ilaçlama" />
         <e k="rcr_section_field"        v="Mevcut tarla durumu" />
         <e k="rcr_section_lime"         v="Kireç / pH Durumu" />
         <e k="rcr_section_plan"         v="Rotasyon Planı" />
@@ -106,8 +116,8 @@
         <e k="rcr_advice_afterRoot" v="Bir kök bitkisinden sonra köklerin dönmesinden önce dört yıl bekle, ardından geç hasattan sonra yapıyı yeniden kurmak için bir tahıl." />
         <e k="rcr_advice_afterVegetable" v="Bir sebzeden sonra tekrarlamadan önce üç yıl bekle, temiz bir ara olarak bir tahıl ile." />
         <e k="rcr_advice_afterForage" v="Geçici bir çayırdan sonra tahıl, çim örtüsü altında biriken verimlilik ve yapıyı değerlendirir." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Sklerotinya baskısı yüksek: kanola, hardal, ayçiçeği, soya, bezelye, fasulye, patates ve havucu en az 3 yıl ekmeyin; fungisit ilaçlanan yerde ürünü kurtarır, hastalığı geriletmez." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Nematod baskısı yüksek: şeker pancarı, kırmızı pancar, kanola, hardal ve ıspanağı 3 yıl ekmeyin; nematisit ilaçlanan yerde ürünü 3 ay boyunca kurtarır." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Sklerotinya baskısı yüksek: kanola, hardal, ayçiçeği, soya, bezelye, fasulye, patates veya havuç 3 yıl içinde geri dönerse baskı yüksek kalır; fungisit hastalığın başlangıcını yavaşlatır ve ilaçlanan yerdeki zararı dondurur, hastalığı geriletmez." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Nematod baskısı yüksek: şeker pancarı, kırmızı pancar, kanola, hardal veya ıspanak 3 yıl içinde geri dönerse baskı yüksek kalır; nematisit ilaçlanan yerde ürünü 3 ay boyunca kurtarır." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Sklerotinya baskısı orta: konukçu bitkilerin arasını açın, yağmur riski artırır." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Nematod baskısı orta: pancar ve turpgillerin arasını açın." />
         <e k="rcr_advice_no_current_crop" v="Mevcut ana ekin yok: bir ekin algılandığında tavsiye sunulur." />
@@ -199,12 +209,12 @@
         <e k="rcr_fillType_nematicide" v="Nematisit" />
         <e k="rcr_disease_treatment_none" v="İlaçlama yok" />
         <e k="rcr_disease_treatment_clubroot" v="Yok (yalnızca münavebe)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Phoma baskısı yüksek: kanola ve hardal arasını 4 yıla çıkarın; fungisit ilaçlanan yerde ürünü kurtarır, hastalığı geriletmez." />
+        <e k="rcr_advice_pressure_high_phoma" v="Phoma baskısı yüksek: kanola veya hardal 4 yıl içinde geri dönerse baskı yüksek kalır; fungisit hastalığın başlangıcını yavaşlatır ve ilaçlanan yerdeki zararı dondurur, hastalığı geriletmez." />
         <e k="rcr_advice_pressure_high_takeall" v="Kök çürüklüğü baskısı yüksek: konukçu olmayan bir ara bitki (yulaf, baklagil, yağlı tohum) ekin; bu hastalığa karşı koruyan bir ilaç yoktur, baskıyı yalnızca münavebe düşürür." />
-        <e k="rcr_advice_pressure_high_septoria" v="Septorya baskısı yüksek: buğday, arpa, tritikale ve speltin arasını açın; fungisit ilaçlanan yerde ürünü kurtarır, yağmur salgını hızlandırır." />
-        <e k="rcr_advice_pressure_high_rust" v="Pas baskısı yüksek: tahıllar da kanola da konukçudur, aralarını açın; fungisit ilaçlanan yerde ürünü kurtarır, ılıman ve nemli dönemler salgını hızlandırır." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Fusarium baskısı yüksek: mısırdan sonra buğday ekmeyin ve arka arkaya daha az tahıl koyun; fungisit ilaçlanan yerde ürünü kurtarır, yağmur salgını hızlandırır." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Mildiyö baskısı yüksek: patateslerin arasını açın; fungisit ilaçlanan yerde ürünü kurtarır, serin ve nemli hava salgını hızlandırır." />
+        <e k="rcr_advice_pressure_high_septoria" v="Septorya baskısı yüksek: buğday, arpa, tritikale ve speltin arasını açın; fungisit hastalığın başlangıcını yavaşlatır ve ilaçlanan yerdeki zararı dondurur, yağmur salgını hızlandırır." />
+        <e k="rcr_advice_pressure_high_rust" v="Pas baskısı yüksek: tahıllar da kanola da konukçudur, aralarını açın; fungisit hastalığın başlangıcını yavaşlatır ve ilaçlanan yerdeki zararı dondurur, ılıman ve nemli dönemler salgını hızlandırır." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Fusarium baskısı yüksek: mısırdan sonra buğday ekmeyin ve arka arkaya daha az tahıl koyun; fungisit hastalığın başlangıcını yavaşlatır ve ilaçlanan yerdeki zararı dondurur, yağmur salgını hızlandırır." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Mildiyö baskısı yüksek: patateslerin arasını açın; fungisit hastalığın başlangıcını yavaşlatır ve ilaçlanan yerdeki zararı dondurur, serin ve nemli hava salgını hızlandırır." />
         <e k="rcr_advice_pressure_high_clubroot" v="Kök uru baskısı yüksek: kanola ve hardal arasını olabildiğince uzatın; bu hastalığa karşı koruyan bir ilaç yoktur, yalnızca münavebe işe yarar." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Phoma baskısı orta: kanola ve hardal arasını uzatın." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Kök çürüklüğü baskısı orta: üst üste üçüncü tahıldan kaçının." />

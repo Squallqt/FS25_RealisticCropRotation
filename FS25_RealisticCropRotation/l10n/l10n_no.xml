@@ -26,6 +26,16 @@
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d måneder gjenstår)" />
         <e k="rcr_advice_nematicide_duration" v="Jordbeskyttelsen varer 3 måneder per jorde; ny behandling fornyer varigheten." />
 
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="ingen" />
+        <e k="rcr_treatment_partial"  v="delvis (%d %%)" />
+        <e k="rcr_treatment_complete" v="full" />
+        <e k="rcr_treatment_disease_absent"     v="Ingen sykdom" />
+        <e k="rcr_treatment_disease_active"     v="Sykdom aktiv" />
+        <e k="rcr_treatment_disease_controlled" v="Sykdom under kontroll" />
+        <e k="rcr_treatment_until_harvest" v="Frem til innhøsting" />
+        <e k="rcr_treatment_months"        v="%d måneder" />
+
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Forventet rest +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="Total vekstskifterest +%d kg/ha" />
@@ -54,7 +64,7 @@
         <e k="rcr_section_history"      v="Veksthistorikk" />
         <e k="rcr_section_nitrogen"     v="Nitrogenstatus" />
         <e k="rcr_section_advice"       v="Agronomisk råd" />
-        <e k="rcr_section_soil_indicators" v="Jordindikatorer" />
+        <e k="rcr_section_soil_indicators" v="Jord og behandling" />
         <e k="rcr_section_field"        v="Gjeldende jordestatus" />
         <e k="rcr_section_lime"         v="Kalk-/pH-status" />
         <e k="rcr_section_plan"         v="Vekstskifteplan" />
@@ -106,8 +116,8 @@
         <e k="rcr_advice_afterRoot" v="Etter en rotvekst venter du fire år før rotvekster kommer tilbake, og følger opp med et korn for å bygge opp strukturen etter den sene opptakingen." />
         <e k="rcr_advice_afterVegetable" v="Etter en grønnsak venter du tre år før du gjentar den, med et korn som rent avbrudd." />
         <e k="rcr_advice_afterForage" v="Etter en eng utnytter et korn fruktbarheten og strukturen som er bygd opp under grasdekket." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Høyt sclerotinia-trykk: unngå raps, sennep, solsikke, soyabønne, ert, bønne, potet og gulrot i minst 3 år; soppmiddelet redder avlingen på sprøytet areal, men presser ikke sykdommen tilbake." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Høyt nematode-trykk: unngå sukkerbete, rødbete, raps, sennep og spinat i 3 år; nematicidet redder avlingen på sprøytet areal i 3 måneder." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Høyt sclerotinia-trykk: kommer raps, sennep, solsikke, soyabønne, ert, bønne, potet eller gulrot tilbake innen 3 år, holder trykket seg høyt; soppmiddelet bremser utbruddet og fryser skaden på sprøytet areal, men presser ikke sykdommen tilbake." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Høyt nematode-trykk: kommer sukkerbete, rødbete, raps, sennep eller spinat tilbake innen 3 år, holder trykket seg høyt; nematicidet redder avlingen på sprøytet areal i 3 måneder." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderat sclerotinia-trykk: spre vertsvekstene, regn øker risikoen." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Moderat nematode-trykk: spre beter og korsblomstrede." />
         <e k="rcr_advice_no_current_crop" v="Ingen aktuell hovedvekst: råd tilgjengelig når en vekst oppdages." />
@@ -199,12 +209,12 @@
         <e k="rcr_fillType_nematicide" v="Nematicid" />
         <e k="rcr_disease_treatment_none" v="Ingen behandling" />
         <e k="rcr_disease_treatment_clubroot" v="Ingen (kun vekstskifte)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Høyt phoma-trykk: strekk oppholdet for raps og sennep til 4 år; soppmiddelet redder avlingen på sprøytet areal, men presser ikke sykdommen tilbake." />
+        <e k="rcr_advice_pressure_high_phoma" v="Høyt phoma-trykk: kommer raps eller sennep tilbake innen 4 år, holder trykket seg høyt; soppmiddelet bremser utbruddet og fryser skaden på sprøytet areal, men presser ikke sykdommen tilbake." />
         <e k="rcr_advice_pressure_high_takeall" v="Høyt rotdreper-trykk: sett inn en ikke-vertsvekst som opphold (havre, belgvekst, oljevekst); ingen midler beskytter mot denne sykdommen, bare vekstskifte senker trykket." />
-        <e k="rcr_advice_pressure_high_septoria" v="Høyt septoria-trykk: spre hvete, bygg, rughvete og spelt; soppmiddelet redder avlingen på sprøytet areal, og regn framskynder epidemien." />
-        <e k="rcr_advice_pressure_high_rust" v="Høyt rust-trykk: både korn og raps er verter, spre dem; soppmiddelet redder avlingen på sprøytet areal, og milde fuktige perioder framskynder epidemien." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Høyt fusarium-trykk: unngå hvete etter mais og legg færre kornvekster på rad; soppmiddelet redder avlingen på sprøytet areal, og regn framskynder epidemien." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Høyt tørråte-trykk: spre potetene; soppmiddelet redder avlingen på sprøytet areal, og kjølig fuktig vær framskynder epidemien." />
+        <e k="rcr_advice_pressure_high_septoria" v="Høyt septoria-trykk: spre hvete, bygg, rughvete og spelt; soppmiddelet bremser utbruddet og fryser skaden på sprøytet areal, og regn framskynder epidemien." />
+        <e k="rcr_advice_pressure_high_rust" v="Høyt rust-trykk: både korn og raps er verter, spre dem; soppmiddelet bremser utbruddet og fryser skaden på sprøytet areal, og milde fuktige perioder framskynder epidemien." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Høyt fusarium-trykk: unngå hvete etter mais og legg færre kornvekster på rad; soppmiddelet bremser utbruddet og fryser skaden på sprøytet areal, og regn framskynder epidemien." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Høyt tørråte-trykk: spre potetene; soppmiddelet bremser utbruddet og fryser skaden på sprøytet areal, og kjølig fuktig vær framskynder epidemien." />
         <e k="rcr_advice_pressure_high_clubroot" v="Høyt klumprot-trykk: strekk oppholdet for raps og sennep så langt som mulig; ingen midler beskytter mot denne sykdommen, bare vekstskifte virker." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Moderat phoma-trykk: forleng oppholdet for raps og sennep." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Moderat rotdreper-trykk: unngå et tredje korn på rad." />

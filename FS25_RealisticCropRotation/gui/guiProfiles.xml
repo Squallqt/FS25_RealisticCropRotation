@@ -437,14 +437,14 @@
         <cornerSize value="0.35"/>
     </Profile>
 
-    <!-- Unified soil indicators card (1240 x 132 px) -->
+    <!-- Unified soil indicators card (1240 x 198 px): nitrogen / pH / treatment, three 66px rows -->
 
     <Profile name="frSoilIndicatorsCard" extends="emptyPanel" with="anchorTopLeft">
-        <size value="1240px 132px"/>
+        <size value="1240px 198px"/>
     </Profile>
 
     <Profile name="frSoilIndicatorsCardBg" extends="frDetailCardBg">
-        <size value="1240px 132px"/>
+        <size value="1240px 198px"/>
     </Profile>
 
     <!-- Centered on its 66px zone (0..-66 for the top row, -66..-132 for the bottom row) -->
@@ -527,6 +527,31 @@
         <size value="1192px 1px"/>
         <color value="$preset_fs25_colorGreyLight"/>
         <cornerSize value="0"/>
+    </Profile>
+
+    <!-- Third row (treatment coverage): +66px offset from the top row, same charter as nitrogen/pH -->
+    <Profile name="frSoilRowTitleTreatment" extends="frSoilRowTitleTop">
+        <position value="24px -158px"/>
+    </Profile>
+
+    <Profile name="frSoilStateTreatment" extends="frSoilStateTop">
+        <position value="220px -140px"/>
+    </Profile>
+
+    <Profile name="frSoilValueTreatment" extends="frSoilValueTop">
+        <position value="-24px -140px"/>
+    </Profile>
+
+    <Profile name="frSoilTrackTreatment" extends="frSoilTrackTop">
+        <position value="230px -170px"/>
+    </Profile>
+
+    <Profile name="frSoilFillTreatment" extends="frSoilTrackTreatment">
+        <color value="$preset_fs25_colorGreen"/>
+    </Profile>
+
+    <Profile name="frSoilRowDivider2" extends="frSoilRowDivider">
+        <position value="24px -132px"/>
     </Profile>
 
     <!-- Agronomic advice card (1240 x 110 px) -->

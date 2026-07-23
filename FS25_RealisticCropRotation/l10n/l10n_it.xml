@@ -26,6 +26,16 @@
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d mesi rimanenti)" />
         <e k="rcr_advice_nematicide_duration" v="La protezione del suolo dura 3 mesi per campo; una nuova applicazione rinnova la durata." />
 
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="assente" />
+        <e k="rcr_treatment_partial"  v="parziale (%d %%)" />
+        <e k="rcr_treatment_complete" v="completo" />
+        <e k="rcr_treatment_disease_absent"     v="Nessuna malattia" />
+        <e k="rcr_treatment_disease_active"     v="Malattia attiva" />
+        <e k="rcr_treatment_disease_controlled" v="Malattia controllata" />
+        <e k="rcr_treatment_until_harvest" v="Fino al raccolto" />
+        <e k="rcr_treatment_months"        v="%d mesi" />
+
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Residuo previsto +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="Residuo totale rotazione +%d kg/ha" />
@@ -54,7 +64,7 @@
         <e k="rcr_section_history"      v="Storico Colture" />
         <e k="rcr_section_nitrogen"     v="Stato Azoto" />
         <e k="rcr_section_advice"       v="Consiglio Agronomico" />
-        <e k="rcr_section_soil_indicators" v="Indicatori del suolo" />
+        <e k="rcr_section_soil_indicators" v="Suolo e trattamento" />
         <e k="rcr_section_field"        v="Stato attuale del campo" />
         <e k="rcr_section_lime"         v="Stato Calce / pH" />
         <e k="rcr_section_plan"         v="Piano di Rotazione" />
@@ -106,8 +116,8 @@
         <e k="rcr_advice_afterRoot" v="Dopo una coltura da radice, attendi quattro anni prima che le radici tornino, poi un cereale per ricostruire la struttura dopo la raccolta tardiva." />
         <e k="rcr_advice_afterVegetable" v="Dopo un ortaggio, attendi tre anni prima di ripeterlo, con un cereale come rottura netta." />
         <e k="rcr_advice_afterForage" v="Dopo un prato di breve durata, un cereale valorizza la fertilità e la struttura accumulate sotto il cotico." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Forte pressione di sclerotinia: evita colza, senape, girasole, soia, pisello, fagiolo, patata e carota per almeno 3 anni; il fungicida salva il raccolto sulle zone trattate, non fa regredire la malattia." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Forte pressione di nematode: evita barbabietola da zucchero, barbabietola rossa, colza, senape e spinacio per 3 anni; il nematocida salva il raccolto sulle zone trattate per 3 mesi." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Forte pressione di sclerotinia: se colza, senape, girasole, soia, pisello, fagiolo, patata o carota tornano entro 3 anni, la pressione resta alta; il fungicida rallenta l'insorgenza e blocca il danno sulle zone trattate, non fa regredire la malattia." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Forte pressione di nematode: se barbabietola da zucchero, barbabietola rossa, colza, senape o spinacio tornano entro 3 anni, la pressione resta alta; il nematocida salva il raccolto sulle zone trattate per 3 mesi." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Pressione di sclerotinia moderata: distanzia le colture ospiti, la pioggia aumenta il rischio." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Pressione di nematode moderata: distanzia barbabietole e brassicacee." />
         <e k="rcr_advice_no_current_crop" v="Nessuna coltura principale attuale: consiglio disponibile quando viene rilevata una coltura." />
@@ -199,12 +209,12 @@
         <e k="rcr_fillType_nematicide" v="Nematocida" />
         <e k="rcr_disease_treatment_none" v="Nessun trattamento" />
         <e k="rcr_disease_treatment_clubroot" v="Nessuno (solo rotazione)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Forte pressione di phoma: allunga il ritorno di colza e senape a 4 anni; il fungicida salva il raccolto sulle zone trattate, non fa regredire la malattia." />
+        <e k="rcr_advice_pressure_high_phoma" v="Forte pressione di phoma: se colza o senape tornano entro 4 anni, la pressione resta alta; il fungicida rallenta l'insorgenza e blocca il danno sulle zone trattate, non fa regredire la malattia." />
         <e k="rcr_advice_pressure_high_takeall" v="Forte pressione di mal del piede: inserisci un'interruzione non ospite (avena, leguminosa, oleaginosa); nessun prodotto protegge da questa malattia, solo la rotazione abbassa la pressione." />
-        <e k="rcr_advice_pressure_high_septoria" v="Forte pressione di septoriosi: distanzia frumento, orzo, triticale e farro; il fungicida salva il raccolto sulle zone trattate, la pioggia accelera l'epidemia." />
-        <e k="rcr_advice_pressure_high_rust" v="Forte pressione di ruggine: cereali e colza sono entrambi ospiti, distanziali; il fungicida salva il raccolto sulle zone trattate, il clima mite e umido accelera l'epidemia." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Forte pressione di fusariosi: evita frumento dopo mais e concatena meno cereali; il fungicida salva il raccolto sulle zone trattate, la pioggia accelera l'epidemia." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Forte pressione di peronospora: distanzia le patate; il fungicida salva il raccolto sulle zone trattate, il clima fresco e umido accelera l'epidemia." />
+        <e k="rcr_advice_pressure_high_septoria" v="Forte pressione di septoriosi: distanzia frumento, orzo, triticale e farro; il fungicida rallenta l'insorgenza e blocca il danno sulle zone trattate, la pioggia accelera l'epidemia." />
+        <e k="rcr_advice_pressure_high_rust" v="Forte pressione di ruggine: cereali e colza sono entrambi ospiti, distanziali; il fungicida rallenta l'insorgenza e blocca il danno sulle zone trattate, il clima mite e umido accelera l'epidemia." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Forte pressione di fusariosi: evita frumento dopo mais e concatena meno cereali; il fungicida rallenta l'insorgenza e blocca il danno sulle zone trattate, la pioggia accelera l'epidemia." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Forte pressione di peronospora: distanzia le patate; il fungicida rallenta l'insorgenza e blocca il danno sulle zone trattate, il clima fresco e umido accelera l'epidemia." />
         <e k="rcr_advice_pressure_high_clubroot" v="Forte pressione di ernia: allunga il più possibile il ritorno di colza e senape; nessun prodotto protegge da questa malattia, solo la rotazione agisce." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Pressione di phoma moderata: allunga il ritorno di colza e senape." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Pressione di mal del piede moderata: evita il terzo cereale consecutivo." />

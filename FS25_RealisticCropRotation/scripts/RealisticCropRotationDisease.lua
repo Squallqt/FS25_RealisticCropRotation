@@ -350,6 +350,14 @@ function RealisticCropRotationDisease:isReplant(cropName, fruitTypeIndex, previo
     return service:isFreshReplantingGrowthDrop(fruitType, previousGrowth, growthState)
 end
 
+---Fungicide-treated share of a field's worked ground, safe when the grid or field is unavailable.
+-- @param table field
+-- @return number coverage [0,1]
+function RealisticCropRotationDisease:getFungicideCoverage(field)
+    return (self.grid ~= nil and field ~= nil and type(self.grid.getProtectionCoverage) == "function")
+        and self.grid:getProtectionCoverage(field, "FUNGICIDE") or 0
+end
+
 ---Server: rolls infection once per period for a living host inside its pathogen's growth window.
 -- @param integer farmlandId
 function RealisticCropRotationDisease:evaluateInfection(farmlandId)
@@ -395,16 +403,22 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId)
     local windows = (RealisticCropRotation.cropConfig and RealisticCropRotation.cropConfig.diseaseWindows) or {}
     local raining = isRaining()
     local temperature = currentTemperature()
+    -- Fungicide-treated ground share, resolved once, lazily (only fungal-fungicide groups read it).
+    local fungicideCoverage = nil
     for group, load in pairs(self:getLoad(farmlandId)) do
         if hostGroups[group] then
             local state = self.state[farmlandId]
             local alreadyInfected = state ~= nil and state[group] ~= nil
-            -- No protection check here: spraying excludes the destructive consequence, not the infection start.
             if not alreadyInfected then
                 local w = windows[group]
                 -- Susceptible inside the growth window only; an unreadable stage never blocks.
                 if w == nil or frac == nil or (frac >= w.from and frac <= (w.to or 1)) then
                     local chance = load * RealisticCropRotationDisease.INFECTION_SCALE * weatherModifier(raining, temperature, group)
+                    -- Preventive fungicide lowers the outbreak chance in proportion to the treated area; other families are unaffected.
+                    if self:getTreatment(group) == "FUNGICIDE" then
+                        if fungicideCoverage == nil then fungicideCoverage = self:getFungicideCoverage(field) end
+                        chance = chance * (1 - fungicideCoverage)
+                    end
                     if math.random() < chance then
                         self.state[farmlandId] = self.state[farmlandId] or {}
                         self.state[farmlandId][group] = {
@@ -656,14 +670,25 @@ function RealisticCropRotationDisease:propagate(farmlandId)
     local field = (mgr ~= nil and type(mgr.getFieldByFarmlandId) == "function")
         and mgr:getFieldByFarmlandId(farmlandId) or nil
     local activeDesc = nil
+    local hostCropName = nil
     if mgr ~= nil and type(mgr.invalidateActiveCropCache) == "function"
         and type(mgr.getActiveCropInfo) == "function" then
         mgr:invalidateActiveCropCache(farmlandId)
-        local activeCropName, fruitTypeIndex = mgr:getActiveCropInfo(farmlandId)
-        if activeCropName ~= nil and fruitTypeIndex ~= nil
-            and activeCropName == self.crop[farmlandId]
+        local fruitTypeIndex
+        hostCropName, fruitTypeIndex = mgr:getActiveCropInfo(farmlandId)
+        if hostCropName ~= nil and fruitTypeIndex ~= nil
+            and hostCropName == self.crop[farmlandId]
             and g_fruitTypeManager ~= nil then
             activeDesc = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
+        end
+
+        -- Fungal foliar host gone (harvested/rotated): end active fungal infections now; soil-borne (BCN, clubroot) and rotation pressure are kept.
+        if hostCropName == nil then
+            local standing = type(mgr.getPendingHistoryCrop) == "function" and mgr:getPendingHistoryCrop(farmlandId) or nil
+            if standing == nil and self:purgeFungalActive(farmlandId, field) then
+                groups = self.state[farmlandId]
+                if groups == nil then return end
+            end
         end
     end
     local raining = isRaining()
@@ -672,6 +697,8 @@ function RealisticCropRotationDisease:propagate(farmlandId)
     -- dailyGrowth is calibrated at REFERENCE_DAYS_PER_PERIOD; dividing by periodScale keeps it constant across season-length configs.
     local scale = periodScale()
     local destructionAttempted = false
+    -- Fungicide-treated ground share, resolved once, lazily (only fungal-fungicide groups read it).
+    local fungicideCoverage = nil
 
     for group, s in pairs(groups) do
         if s.incubation ~= nil and s.incubation > 0 then
@@ -685,6 +712,11 @@ function RealisticCropRotationDisease:propagate(farmlandId)
             -- Rain + temperature drive fungal speed; heavier soil inoculum accelerates the epidemic.
             local loadSpeed = 1 + RealisticCropRotationDisease.LOAD_SPEED_GAIN * math.min(1, loads[group] or 0)
             local growth = (curve.dailyGrowth / scale) * weatherModifier(raining, temperature, group) * loadSpeed
+            -- Curative fungicide freezes the climb in proportion to the treated area; other families are unaffected.
+            if self:getTreatment(group) == "FUNGICIDE" then
+                if fungicideCoverage == nil then fungicideCoverage = self:getFungicideCoverage(field) end
+                growth = growth * (1 - fungicideCoverage)
+            end
             s.severity = math.min(1, (s.severity or 0) + growth)
             if s.severity >= curve.destroySeverity then
                 -- Per-cell exclusion map for this group's treatment family; nil for NONE-treatment groups (rotation-only, no product shields them).
@@ -903,6 +935,25 @@ function RealisticCropRotationDisease:destructionSignature()
     return sig
 end
 
+---Repaints one field's overlay from its infection state, weakest colour first (stronger paints last, on top).
+-- @param table grid
+-- @param table field
+-- @param table stateForField group -> { severity, seed }
+local function repaintFieldOverlay(grid, field, stateForField)
+    if grid == nil or field == nil or stateForField == nil then return end
+    local ordered = {}
+    for group, s in pairs(stateForField) do
+        ordered[#ordered + 1] = { group = group, severity = tonumber(s.severity) or 0, seed = s.seed }
+    end
+    table.sort(ordered, function(a, b)
+        if a.severity == b.severity then return tostring(a.group) > tostring(b.group) end
+        return a.severity < b.severity
+    end)
+    for _, entry in ipairs(ordered) do
+        paintInfectionPresence(grid, field, entry.group, entry.seed)
+    end
+end
+
 ---Repaints the grid, one colour per field: its worst infection.
 function RealisticCropRotationDisease:rebuildGridFromState()
     local grid = self.grid
@@ -919,21 +970,37 @@ function RealisticCropRotationDisease:rebuildGridFromState()
         local fid = tonumber(farmlandId)
         local field = (mgr ~= nil and type(mgr.getFieldByFarmlandId) == "function")
             and mgr:getFieldByFarmlandId(fid) or nil
-        if field ~= nil then
-            -- Weakest first.
-            local ordered = {}
-            for group, s in pairs(self.state[farmlandId] or {}) do
-                ordered[#ordered + 1] = { group = group, severity = tonumber(s.severity) or 0, seed = s.seed }
-            end
-            table.sort(ordered, function(a, b)
-                if a.severity == b.severity then return tostring(a.group) > tostring(b.group) end
-                return a.severity < b.severity
-            end)
-            for _, entry in ipairs(ordered) do
-                paintInfectionPresence(grid, field, entry.group, entry.seed)
-            end
+        repaintFieldOverlay(grid, field, self.state[farmlandId])
+    end
+end
+
+---Server: drops active fungal infections on a field whose host crop is gone, keeping soil-borne groups (BCN, clubroot) and rotation pressure.
+-- @param integer farmlandId
+-- @param table field Field object, or nil
+-- @return boolean removedAny
+function RealisticCropRotationDisease:purgeFungalActive(farmlandId, field)
+    local groups = self.state[farmlandId]
+    if groups == nil then return false end
+    local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
+    local fungalSet = config ~= nil and config.diseaseFungal or nil
+    if fungalSet == nil then return false end
+
+    local removedAny = false
+    for group in pairs(groups) do
+        if fungalSet[group] == true then
+            groups[group] = nil
+            removedAny = true
         end
     end
+    if not removedAny then return false end
+    if next(groups) == nil then self.state[farmlandId] = nil end
+
+    -- Overlay + foliar protection end with the crop; any soil-borne infection left keeps its own colour.
+    if field ~= nil and self.grid ~= nil and type(self.grid.clearField) == "function" then
+        self.grid:clearField(field)
+        repaintFieldOverlay(self.grid, field, self.state[farmlandId])
+    end
+    return true
 end
 
 ---Persists the infection state to the savegame folder.
@@ -1078,33 +1145,6 @@ local function requestDiseaseConsoleBroadcast()
     end
 end
 
----Native aggregate check (executeGet): fraction of the field's polygon area marked protected.
--- @param table field
--- @param integer protectionMapId Protection density-map id, or nil
--- @return number coverage fraction [0,1]
-local function getProtectionCoverage(field, protectionMapId)
-    if field == nil or protectionMapId == nil or DensityMapModifier == nil or DensityMapFilter == nil
-        or g_terrainNode == nil or DensityValueCompareType == nil
-        or type(field.getDensityMapPolygon) ~= "function" then
-        return 0
-    end
-    local polygon = field:getDensityMapPolygon()
-    if polygon == nil then return 0 end
-
-    local modifier = DensityMapModifier.new(protectionMapId, 0, 1, g_terrainNode)
-    polygon:applyToModifier(modifier)
-
-    local filter = DensityMapFilter.new(protectionMapId, 0, 1)
-    filter:setValueCompareParams(DensityValueCompareType.EQUAL, 1)
-
-    -- Worked-ground pixels counted in their own pass.
-    local groundFilter = RealisticCropRotationManager.makeFieldGroundFilter()
-    local _, protectedPixels = modifier:executeGet(filter, groundFilter)
-    local _, groundPixels = modifier:executeGet(groundFilter)
-    if groundPixels == nil or groundPixels <= 0 then return 0 end
-    return (protectedPixels or 0) / groundPixels
-end
-
 function RealisticCropRotationDisease:consoleDump(farmlandId)
     local ids = collectDiseaseFarmlandIds(self.manager, farmlandId)
     if #ids == 0 then return "No Realistic Crop Rotation farmland found" end
@@ -1126,9 +1166,9 @@ function RealisticCropRotationDisease:consoleDump(farmlandId)
         local protStr = "n/a"
         local field = (self.manager ~= nil and type(self.manager.getFieldByFarmlandId) == "function")
             and self.manager:getFieldByFarmlandId(id) or nil
-        if field ~= nil and self.grid ~= nil then
-            local fungCov = getProtectionCoverage(field, self.grid.fungicideProtectionMapId)
-            local nemaCov = getProtectionCoverage(field, self.grid.nematicideProtectionMapId)
+        if field ~= nil and self.grid ~= nil and type(self.grid.getProtectionCoverage) == "function" then
+            local fungCov = self.grid:getProtectionCoverage(field, "FUNGICIDE")
+            local nemaCov = self.grid:getProtectionCoverage(field, "NEMATICIDE")
             protStr = string.format("FUNGICIDE=%.0f%%,NEMATICIDE=%.0f%%", fungCov * 100, nemaCov * 100)
         end
 

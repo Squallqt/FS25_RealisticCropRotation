@@ -26,6 +26,16 @@
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d maanden resterend)" />
         <e k="rcr_advice_nematicide_duration" v="De bodembescherming duurt 3 maanden per veld; opnieuw toepassen vernieuwt de duur." />
 
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="afwezig" />
+        <e k="rcr_treatment_partial"  v="gedeeltelijk (%d %%)" />
+        <e k="rcr_treatment_complete" v="volledig" />
+        <e k="rcr_treatment_disease_absent"     v="Geen ziekte" />
+        <e k="rcr_treatment_disease_active"     v="Ziekte actief" />
+        <e k="rcr_treatment_disease_controlled" v="Ziekte onder controle" />
+        <e k="rcr_treatment_until_harvest" v="Tot de oogst" />
+        <e k="rcr_treatment_months"        v="%d maanden" />
+
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Verwacht residu +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="Totaal rotatieresidu +%d kg/ha" />
@@ -54,7 +64,7 @@
         <e k="rcr_section_history"      v="Gewasgeschiedenis" />
         <e k="rcr_section_nitrogen"     v="Stikstofstatus" />
         <e k="rcr_section_advice"       v="Agronomisch advies" />
-        <e k="rcr_section_soil_indicators" v="Bodemindicatoren" />
+        <e k="rcr_section_soil_indicators" v="Bodem en behandeling" />
         <e k="rcr_section_field"        v="Huidige veldstatus" />
         <e k="rcr_section_lime"         v="Kalk-/pH-status" />
         <e k="rcr_section_plan"         v="Rotatieplan" />
@@ -106,8 +116,8 @@
         <e k="rcr_advice_afterRoot" v="Na een hakvrucht wacht je vier jaar voordat wortelgewassen terugkomen, gevolgd door een graan om de structuur na de late oogst te herstellen." />
         <e k="rcr_advice_afterVegetable" v="Na een groente wacht je drie jaar voordat je ze herhaalt, met een graan als schone onderbreking." />
         <e k="rcr_advice_afterForage" v="Na een tijdelijk grasland benut een graan de onder de zode opgebouwde vruchtbaarheid en structuur." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Hoge sclerotinia-druk: vermijd koolzaad, mosterd, zonnebloem, soja, erwt, boon, aardappel en wortel gedurende minstens 3 jaar; fungicide redt de opbrengst op bespoten grond, maar dringt de ziekte niet terug." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Hoge aaltjesdruk: vermijd suikerbiet, rode biet, koolzaad, mosterd en spinazie gedurende 3 jaar; nematicide redt de opbrengst op bespoten grond gedurende 3 maanden." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Hoge sclerotinia-druk: keren koolzaad, mosterd, zonnebloem, soja, erwt, boon, aardappel of wortel binnen 3 jaar terug, dan blijft de druk hoog; fungicide vertraagt het uitbreken en bevriest de schade op bespoten grond, maar dringt de ziekte niet terug." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Hoge aaltjesdruk: keren suikerbiet, rode biet, koolzaad, mosterd of spinazie binnen 3 jaar terug, dan blijft de druk hoog; nematicide redt de opbrengst op bespoten grond gedurende 3 maanden." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Matige sclerotinia-druk: spreid de waardgewassen, regen verhoogt het risico." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Matige aaltjesdruk: spreid bieten en koolgewassen." />
         <e k="rcr_advice_no_current_crop" v="Geen huidig hoofdgewas: advies beschikbaar zodra een gewas wordt gedetecteerd." />
@@ -199,12 +209,12 @@
         <e k="rcr_fillType_nematicide" v="Nematicide" />
         <e k="rcr_disease_treatment_none" v="Geen behandeling" />
         <e k="rcr_disease_treatment_clubroot" v="Geen (alleen vruchtwisseling)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Hoge phoma-druk: rek de teeltpauze van koolzaad en mosterd op tot 4 jaar; fungicide redt de opbrengst op bespoten grond, maar dringt de ziekte niet terug." />
+        <e k="rcr_advice_pressure_high_phoma" v="Hoge phoma-druk: keren koolzaad of mosterd binnen 4 jaar terug, dan blijft de druk hoog; fungicide vertraagt het uitbreken en bevriest de schade op bespoten grond, maar dringt de ziekte niet terug." />
         <e k="rcr_advice_pressure_high_takeall" v="Hoge tarwehalmdoder-druk: voeg een niet-waardgewas in (haver, vlinderbloemige, oliehoudend gewas); geen enkel middel beschermt tegen deze ziekte, alleen vruchtwisseling verlaagt de druk." />
-        <e k="rcr_advice_pressure_high_septoria" v="Hoge septoria-druk: spreid tarwe, gerst, triticale en spelt; fungicide redt de opbrengst op bespoten grond, regen versnelt de epidemie." />
-        <e k="rcr_advice_pressure_high_rust" v="Hoge roest-druk: granen en koolzaad zijn allebei waardplanten, spreid ze; fungicide redt de opbrengst op bespoten grond, zachte vochtige perioden versnellen de epidemie." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Hoge fusarium-druk: teel geen tarwe na maïs en zet minder granen achter elkaar; fungicide redt de opbrengst op bespoten grond, regen versnelt de epidemie." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Hoge phytophthora-druk: spreid de aardappelen; fungicide redt de opbrengst op bespoten grond, koel en nat weer versnelt de epidemie." />
+        <e k="rcr_advice_pressure_high_septoria" v="Hoge septoria-druk: spreid tarwe, gerst, triticale en spelt; fungicide vertraagt het uitbreken en bevriest de schade op bespoten grond, regen versnelt de epidemie." />
+        <e k="rcr_advice_pressure_high_rust" v="Hoge roest-druk: granen en koolzaad zijn allebei waardplanten, spreid ze; fungicide vertraagt het uitbreken en bevriest de schade op bespoten grond, zachte vochtige perioden versnellen de epidemie." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Hoge fusarium-druk: teel geen tarwe na maïs en zet minder granen achter elkaar; fungicide vertraagt het uitbreken en bevriest de schade op bespoten grond, regen versnelt de epidemie." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Hoge phytophthora-druk: spreid de aardappelen; fungicide vertraagt het uitbreken en bevriest de schade op bespoten grond, koel en nat weer versnelt de epidemie." />
         <e k="rcr_advice_pressure_high_clubroot" v="Hoge knolvoet-druk: rek de teeltpauze van koolzaad en mosterd zo ver mogelijk op; geen enkel middel beschermt tegen deze ziekte, alleen vruchtwisseling werkt." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Matige phoma-druk: verleng de teeltpauze van koolzaad en mosterd." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Matige tarwehalmdoder-druk: vermijd een derde graangewas op rij." />

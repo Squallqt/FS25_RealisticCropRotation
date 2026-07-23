@@ -26,6 +26,16 @@
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d kuukautta jäljellä)" />
         <e k="rcr_advice_nematicide_duration" v="Maaperän suoja kestää 3 kuukautta lohkoa kohti; uusi käsittely uusii keston." />
 
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="ei mitään" />
+        <e k="rcr_treatment_partial"  v="osittainen (%d %%)" />
+        <e k="rcr_treatment_complete" v="täysi" />
+        <e k="rcr_treatment_disease_absent"     v="Ei tautia" />
+        <e k="rcr_treatment_disease_active"     v="Tauti aktiivinen" />
+        <e k="rcr_treatment_disease_controlled" v="Tauti hallinnassa" />
+        <e k="rcr_treatment_until_harvest" v="Sadonkorjuuseen asti" />
+        <e k="rcr_treatment_months"        v="%d kuukautta" />
+
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Odotettu jäännös +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="Viljelykierron kokonaisjäännös +%d kg/ha" />
@@ -54,7 +64,7 @@
         <e k="rcr_section_history"      v="Kasvihistoria" />
         <e k="rcr_section_nitrogen"     v="Typpitila" />
         <e k="rcr_section_advice"       v="Agronominen neuvo" />
-        <e k="rcr_section_soil_indicators" v="Maaperän indikaattorit" />
+        <e k="rcr_section_soil_indicators" v="Maaperä ja torjunta" />
         <e k="rcr_section_field"        v="Pellon nykytila" />
         <e k="rcr_section_lime"         v="Kalkki-/pH-tila" />
         <e k="rcr_section_plan"         v="Viljelykiertosuunnitelma" />
@@ -106,8 +116,8 @@
         <e k="rcr_advice_afterRoot" v="Juurikasvin jälkeen odota neljä vuotta ennen juurikasvien paluuta, ja jatka viljalla rakenteen palauttamiseksi myöhäisen noston jälkeen." />
         <e k="rcr_advice_afterVegetable" v="Vihanneksen jälkeen odota kolme vuotta ennen sen toistamista, vilja puhtaana katkona." />
         <e k="rcr_advice_afterForage" v="Lyhytaikaisen nurmen jälkeen vilja hyödyntää turpeen alle kertyneen viljavuuden ja rakenteen." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Korkea pahkahomeen paine: vältä rapsia, sinappia, auringonkukkaa, soijapapua, hernettä, papua, perunaa ja porkkanaa vähintään 3 vuotta; sienitorjunta-aine pelastaa sadon ruiskutetuilla alueilla, mutta ei käännä tautia laskuun." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Korkea ankeroisen paine: vältä sokerijuurikasta, punajuurta, rapsia, sinappia ja pinaattia 3 vuotta; ankeroistorjunta-aine pelastaa sadon ruiskutetuilla alueilla 3 kuukauden ajan." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Korkea pahkahomeen paine: jos rapsi, sinappi, auringonkukka, soijapapu, herne, papu, peruna tai porkkana palaa alle 3 vuodessa, paine pysyy korkeana; sienitorjunta-aine hidastaa puhkeamista ja jäädyttää vahingon ruiskutetuilla alueilla, mutta ei käännä tautia laskuun." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Korkea ankeroisen paine: jos sokerijuurikas, punajuuri, rapsi, sinappi tai pinaatti palaa alle 3 vuodessa, paine pysyy korkeana; ankeroistorjunta-aine pelastaa sadon ruiskutetuilla alueilla 3 kuukauden ajan." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Kohtalainen pahkahomeen paine: harvenna isäntäkasvien viljelyä, sade nostaa riskiä." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Kohtalainen ankeroisen paine: harvenna juurikkaiden ja ristikukkaisten viljelyä." />
         <e k="rcr_advice_no_current_crop" v="Ei nykyistä pääkasvia: neuvo saatavilla, kun kasvi havaitaan." />
@@ -199,12 +209,12 @@
         <e k="rcr_fillType_nematicide" v="Ankeroistorjunta-aine" />
         <e k="rcr_disease_treatment_none" v="Ei torjuntaa" />
         <e k="rcr_disease_treatment_clubroot" v="Ei mitään (vain viljelykierto)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Korkea Phoman paine: pidennä rapsin ja sinapin viljelytauko 4 vuoteen; sienitorjunta-aine pelastaa sadon ruiskutetuilla alueilla, mutta ei käännä tautia laskuun." />
+        <e k="rcr_advice_pressure_high_phoma" v="Korkea Phoman paine: jos rapsi tai sinappi palaa alle 4 vuodessa, paine pysyy korkeana; sienitorjunta-aine hidastaa puhkeamista ja jäädyttää vahingon ruiskutetuilla alueilla, mutta ei käännä tautia laskuun." />
         <e k="rcr_advice_pressure_high_takeall" v="Korkea tyvimädän paine: lisää kiertoon isäntäkasviksi kelpaamaton katkokasvi (kaura, palkokasvi, öljykasvi); mikään aine ei suojaa tältä taudilta, vain viljelykierto laskee painetta." />
-        <e k="rcr_advice_pressure_high_septoria" v="Korkea Septorian paine: harvenna vehnän, ohran, ruisvehnän ja speltin viljelyä; sienitorjunta-aine pelastaa sadon ruiskutetuilla alueilla, ja sade nopeuttaa epidemiaa." />
-        <e k="rcr_advice_pressure_high_rust" v="Korkea ruosteen paine: sekä viljat että rapsi ovat isäntiä, harvenna niiden viljelyä; sienitorjunta-aine pelastaa sadon ruiskutetuilla alueilla, ja leuto kostea sää nopeuttaa epidemiaa." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Korkea punahomeen paine: älä viljele vehnää maissin jälkeen ja vähennä peräkkäisiä viljavuosia; sienitorjunta-aine pelastaa sadon ruiskutetuilla alueilla, ja sade nopeuttaa epidemiaa." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Korkea perunaruton paine: harvenna perunan viljelyä; sienitorjunta-aine pelastaa sadon ruiskutetuilla alueilla, ja viileä kostea sää nopeuttaa epidemiaa." />
+        <e k="rcr_advice_pressure_high_septoria" v="Korkea Septorian paine: harvenna vehnän, ohran, ruisvehnän ja speltin viljelyä; sienitorjunta-aine hidastaa puhkeamista ja jäädyttää vahingon ruiskutetuilla alueilla, ja sade nopeuttaa epidemiaa." />
+        <e k="rcr_advice_pressure_high_rust" v="Korkea ruosteen paine: sekä viljat että rapsi ovat isäntiä, harvenna niiden viljelyä; sienitorjunta-aine hidastaa puhkeamista ja jäädyttää vahingon ruiskutetuilla alueilla, ja leuto kostea sää nopeuttaa epidemiaa." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Korkea punahomeen paine: älä viljele vehnää maissin jälkeen ja vähennä peräkkäisiä viljavuosia; sienitorjunta-aine hidastaa puhkeamista ja jäädyttää vahingon ruiskutetuilla alueilla, ja sade nopeuttaa epidemiaa." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Korkea perunaruton paine: harvenna perunan viljelyä; sienitorjunta-aine hidastaa puhkeamista ja jäädyttää vahingon ruiskutetuilla alueilla, ja viileä kostea sää nopeuttaa epidemiaa." />
         <e k="rcr_advice_pressure_high_clubroot" v="Korkea möhöjuuren paine: pidennä rapsin ja sinapin viljelytauko niin pitkäksi kuin mahdollista; mikään aine ei suojaa tältä taudilta, vain viljelykierto auttaa." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Kohtalainen Phoman paine: pidennä rapsin ja sinapin viljelytaukoa." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Kohtalainen tyvimädän paine: vältä kolmatta viljaa peräkkäin." />

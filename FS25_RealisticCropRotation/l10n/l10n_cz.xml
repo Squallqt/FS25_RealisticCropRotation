@@ -26,6 +26,16 @@
         <e k="rcr_treatment_nematicide_remaining" v="%s (zbývá měsíců: %d)" />
         <e k="rcr_advice_nematicide_duration" v="Ochrana půdy trvá na každém poli 3 měsíce; nová aplikace dobu obnoví." />
 
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="chybí" />
+        <e k="rcr_treatment_partial"  v="částečné (%d %%)" />
+        <e k="rcr_treatment_complete" v="plné" />
+        <e k="rcr_treatment_disease_absent"     v="Bez choroby" />
+        <e k="rcr_treatment_disease_active"     v="Choroba aktivní" />
+        <e k="rcr_treatment_disease_controlled" v="Choroba pod kontrolou" />
+        <e k="rcr_treatment_until_harvest" v="Do sklizně" />
+        <e k="rcr_treatment_months"        v="%d měsíců" />
+
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Očekávaný zbytek +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="Celkový zbytek osevního postupu +%d kg/ha" />
@@ -54,7 +64,7 @@
         <e k="rcr_section_history"      v="Historie plodin" />
         <e k="rcr_section_nitrogen"     v="Stav dusíku" />
         <e k="rcr_section_advice"       v="Agronomická rada" />
-        <e k="rcr_section_soil_indicators" v="Ukazatele půdy" />
+        <e k="rcr_section_soil_indicators" v="Půda a ošetření" />
         <e k="rcr_section_field"        v="Aktuální stav pole" />
         <e k="rcr_section_lime"         v="Stav vápna / pH" />
         <e k="rcr_section_plan"         v="Plán osevního postupu" />
@@ -106,8 +116,8 @@
         <e k="rcr_advice_afterRoot" v="Po okopanině počkej čtyři roky, než se okopaniny vrátí, a poté obilninu pro obnovení struktury po pozdní sklizni." />
         <e k="rcr_advice_afterVegetable" v="Po zelenině počkej tři roky, než ji zopakuješ, s obilninou jako čistým přerušením." />
         <e k="rcr_advice_afterForage" v="Po dočasném travním porostu obilnina zhodnotí úrodnost a strukturu nahromaděnou pod drnem." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Vysoký tlak sklerotinie: nejméně 3 roky nepěstujte řepku, hořčici, slunečnici, sóju, hrách, fazol, brambory ani mrkev; fungicid zachrání sklizeň na ošetřených plochách, chorobu ale nezatlačí." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Vysoký tlak háďátka: 3 roky nepěstujte cukrovku, červenou řepu, řepku, hořčici ani špenát; nematicid zachrání sklizeň na ošetřených plochách po dobu 3 měsíců." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Vysoký tlak sklerotinie: pokud se řepka, hořčice, slunečnice, sója, hrách, fazol, brambory nebo mrkev vrátí do 3 let, tlak zůstává vysoký; fungicid zpomaluje nástup a zmrazuje škody na ošetřených plochách, chorobu ale nezatlačí." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Vysoký tlak háďátka: pokud se cukrovka, červená řepa, řepka, hořčice nebo špenát vrátí do 3 let, tlak zůstává vysoký; nematicid zachrání sklizeň na ošetřených plochách po dobu 3 měsíců." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Střední tlak sklerotinie: proložte hostitelské plodiny, déšť zvyšuje riziko." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Střední tlak háďátka: proložte řepu a brukvovité." />
         <e k="rcr_advice_no_current_crop" v="Žádná aktuální hlavní plodina: rada dostupná po detekci plodiny." />
@@ -199,12 +209,12 @@
         <e k="rcr_fillType_nematicide" v="Nematicid" />
         <e k="rcr_disease_treatment_none" v="Žádné ošetření" />
         <e k="rcr_disease_treatment_clubroot" v="Žádné (pouze osevní postup)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Vysoký tlak fomové hniloby: prodlužte odstup řepky a hořčice na 4 roky; fungicid zachrání sklizeň na ošetřených plochách, chorobu ale nezatlačí." />
+        <e k="rcr_advice_pressure_high_phoma" v="Vysoký tlak fomové hniloby: pokud se řepka nebo hořčice vrátí do 4 let, tlak zůstává vysoký; fungicid zpomaluje nástup a zmrazuje škody na ošetřených plochách, chorobu ale nezatlačí." />
         <e k="rcr_advice_pressure_high_takeall" v="Vysoký tlak černání pat stébel: zařaďte nehostitelskou přerušovací plodinu (oves, luskovina, olejnina); žádný přípravek proti této chorobě nechrání, tlak snižuje jen osevní postup." />
-        <e k="rcr_advice_pressure_high_septoria" v="Vysoký tlak braničnatky: proložte pšenici, ječmen, tritikale a špaldu; fungicid zachrání sklizeň na ošetřených plochách, déšť epidemii urychluje." />
-        <e k="rcr_advice_pressure_high_rust" v="Vysoký tlak rzi: obilniny i řepka jsou hostitelé, proložte je; fungicid zachrání sklizeň na ošetřených plochách, mírné vlhko epidemii urychluje." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Vysoký tlak fuzariózy: nepěstujte pšenici po kukuřici a zařaďte méně obilnin za sebou; fungicid zachrání sklizeň na ošetřených plochách, déšť epidemii urychluje." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Vysoký tlak plísně bramboru: proložte brambory; fungicid zachrání sklizeň na ošetřených plochách, chladné vlhké počasí epidemii urychluje." />
+        <e k="rcr_advice_pressure_high_septoria" v="Vysoký tlak braničnatky: proložte pšenici, ječmen, tritikale a špaldu; fungicid zpomaluje nástup a zmrazuje škody na ošetřených plochách, déšť epidemii urychluje." />
+        <e k="rcr_advice_pressure_high_rust" v="Vysoký tlak rzi: obilniny i řepka jsou hostitelé, proložte je; fungicid zpomaluje nástup a zmrazuje škody na ošetřených plochách, mírné vlhko epidemii urychluje." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Vysoký tlak fuzariózy: nepěstujte pšenici po kukuřici a zařaďte méně obilnin za sebou; fungicid zpomaluje nástup a zmrazuje škody na ošetřených plochách, déšť epidemii urychluje." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Vysoký tlak plísně bramboru: proložte brambory; fungicid zpomaluje nástup a zmrazuje škody na ošetřených plochách, chladné vlhké počasí epidemii urychluje." />
         <e k="rcr_advice_pressure_high_clubroot" v="Vysoký tlak nádorovitosti: prodlužte odstup řepky a hořčice na maximum; žádný přípravek proti této chorobě nechrání, účinkuje jen osevní postup." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Střední tlak fomové hniloby: prodlužte odstup řepky a hořčice." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Střední tlak černání pat stébel: vyhněte se třetí obilnině v řadě." />

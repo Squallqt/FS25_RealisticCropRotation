@@ -1459,15 +1459,19 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId, useSnapshot)
     end
     self:layoutHistoryTimeline(1 + historyCount)
 
-    -- Both soil gauges start at the same x (the wider of the two row titles) so neither track looks shorter just because its own label is narrower.
+    -- All three gauges start at the same x (the widest of the row titles) so no track looks shorter just because its own label is narrower.
     local nitrogenTitleWidth = self:getTextRenderWidth(self.nitrogenRowTitle, self.i18n:getText("rcr_section_nitrogen"))
     local limeTitleWidth = self:getTextRenderWidth(self.limeRowTitle, self.i18n:getText("rcr_section_lime"))
-    local sharedRowTitleWidth = (nitrogenTitleWidth ~= nil and limeTitleWidth ~= nil)
-        and math.max(nitrogenTitleWidth, limeTitleWidth) or nil
+    local treatmentTitleWidth = self:getTextRenderWidth(self.treatmentRowTitle, self.i18n:getText("rcr_treatment_hud_label"))
+    local sharedRowTitleWidth = nil
+    for _, w in pairs({ nitrogenTitleWidth, limeTitleWidth, treatmentTitleWidth }) do
+        sharedRowTitleWidth = math.max(sharedRowTitleWidth or 0, w)
+    end
 
     local _, snapshotFruitTypeIndex = self:getActiveCropInfoForDisplay(farmlandId, useSnapshot)
     self:updateNitrogenGauge(farmlandId, sharedRowTitleWidth, snapshotFruitTypeIndex, useSnapshot)
     self:updateSoilPHGauge(farmlandId, sharedRowTitleWidth)
+    self:updateTreatmentGauge(farmlandId, sharedRowTitleWidth)
     self:updateAdvice(currentFamily, farmlandId, currentCropName)
     self:updateFieldCard(farmlandId, statusLabel, statusKind, statusIndex)
 end
@@ -1772,6 +1776,109 @@ function RealisticCropRotationFrame:updateSoilPHGauge(farmlandId, sharedRowTitle
         end
         self.limeValueLabel:setText(valueText or "")
         self.limeValueLabel:setVisible(valueText ~= nil)
+    end
+end
+
+-- Treatment gauge (shares the soil-card charter: nitrogen / pH / treatment)
+
+RealisticCropRotationFrame.TREATMENT_COMPLETE_THRESHOLD = 0.95
+
+---Updates the treatment gauge: treated-area share, disease-control status, and remaining protection.
+-- @param integer farmlandId
+-- @param number sharedRowTitleWidth Shared row-title width (widest of the three), so all tracks align; nil falls back to this row's own title width.
+function RealisticCropRotationFrame:updateTreatmentGauge(farmlandId, sharedRowTitleWidth)
+    local mgr = self:getManager()
+    local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
+    local grid = RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
+    local field = (mgr ~= nil and type(mgr.getFieldByFarmlandId) == "function")
+        and mgr:getFieldByFarmlandId(farmlandId) or nil
+
+    local coverageOf = function(fam)
+        return (grid ~= nil and field ~= nil and type(grid.getProtectionCoverage) == "function")
+            and grid:getProtectionCoverage(field, fam) or 0
+    end
+
+    -- Among active diseases, point at the treatment family least able to cope (lowest coverage), so the gauge always shows the next action; ties go to the more severe disease.
+    local state = (disease ~= nil and type(disease.getState) == "function") and disease:getState(farmlandId) or nil
+    local anyActive = false
+    local family, coverage, worstSeverity = nil, 0, -1
+    if state ~= nil then
+        for group, s in pairs(state) do
+            local severity = tonumber(s.severity) or 0
+            if severity > 0 then
+                anyActive = true
+                local treatment = (disease ~= nil and type(disease.getTreatment) == "function") and disease:getTreatment(group) or "NONE"
+                if treatment == "FUNGICIDE" or treatment == "NEMATICIDE" then
+                    local cov = coverageOf(treatment)
+                    if family == nil or cov < coverage or (cov == coverage and severity > worstSeverity) then
+                        family, coverage, worstSeverity = treatment, cov, severity
+                    end
+                end
+            end
+        end
+    end
+    -- No outbreak: report whichever family was actually sprayed (preventive coverage); nothing sprayed stays generic.
+    if not anyActive then
+        local fung, nema = coverageOf("FUNGICIDE"), coverageOf("NEMATICIDE")
+        if fung > 0 or nema > 0 then
+            if nema > fung then family, coverage = "NEMATICIDE", nema else family, coverage = "FUNGICIDE", fung end
+        end
+    end
+    -- (Active but only rotation-only diseases: family stays nil, coverage 0, no product shields them.)
+
+    local complete = RealisticCropRotationFrame.TREATMENT_COMPLETE_THRESHOLD
+
+    -- Subject names the product in play so a switch between families stays legible; a rotation-only outbreak keeps the generic label.
+    local subject = (family == "FUNGICIDE" and self.i18n:getText("rcr_fillType_fungicide"))
+        or (family == "NEMATICIDE" and self.i18n:getText("rcr_fillType_nematicide"))
+        or self.i18n:getText("rcr_treatment_hud_label")
+
+    -- Treatment level, with the treated percentage surfaced on the partial state.
+    local levelText
+    if coverage <= 0.005 then
+        levelText = string.format("%s %s", subject, self.i18n:getText("rcr_treatment_absent"))
+    elseif coverage >= complete then
+        levelText = string.format("%s %s", subject, self.i18n:getText("rcr_treatment_complete"))
+    else
+        levelText = string.format("%s %s", subject,
+            string.format(self.i18n:getText("rcr_treatment_partial"), math.floor(coverage * 100 + 0.5)))
+    end
+
+    -- Disease status follows the shown family's coverage: controlled only when that treatment effectively holds it.
+    local diseaseKey = "rcr_treatment_disease_absent"
+    if anyActive then
+        diseaseKey = (family ~= nil and coverage >= complete)
+            and "rcr_treatment_disease_controlled" or "rcr_treatment_disease_active"
+    end
+    local stateText = string.format("%s · %s", levelText, self.i18n:getText(diseaseKey))
+
+    -- Remaining protection: fungicide lasts to harvest, nematicide counts down in months.
+    local valueText = nil
+    if coverage > 0.005 then
+        if family == "FUNGICIDE" then
+            valueText = self.i18n:getText("rcr_treatment_until_harvest")
+        elseif family == "NEMATICIDE" then
+            local lifecycle = RealisticCropRotationTreatmentLifecycle
+            local remaining = lifecycle ~= nil and type(lifecycle.getNematicidePeriodsRemaining) == "function"
+                and lifecycle.getNematicidePeriodsRemaining(farmlandId) or nil
+            if remaining ~= nil then
+                valueText = string.format(self.i18n:getText("rcr_treatment_months"), remaining)
+            end
+        end
+    end
+
+    local trackWidth = self:layoutSoilGaugeTrack(self.treatmentRowTitle, self.i18n:getText("rcr_treatment_hud_label"),
+        self.treatmentTrack, self.treatmentBarFill, self.treatmentStateLabel, sharedRowTitleWidth)
+    -- Bar saturates to full once the coverage counts as complete, like the nitrogen/pH gauges reaching their target.
+    self:setStatusBarFill(self.treatmentBarFill, coverage >= complete and 1 or coverage, trackWidth)
+
+    if self.treatmentStateLabel ~= nil then
+        self.treatmentStateLabel:setText(stateText)
+    end
+
+    if self.treatmentValueLabel ~= nil then
+        self.treatmentValueLabel:setText(valueText or "")
+        self.treatmentValueLabel:setVisible(valueText ~= nil)
     end
 end
 

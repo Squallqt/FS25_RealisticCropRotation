@@ -30,10 +30,10 @@ Rain and temperature drive both the onset and the spread of the seven fungal dis
 TREATMENTS
 Fungicide AMISTAR (Syngenta) and nematicide VELUM PRIME (Bayer), sprayed with any compatible sprayer.
 
-They are preventive: they save the yield on sprayed ground, they do not cure an established infection and do not push it back. Spray before, not after.
-- Fungicide: consumed only on the ground actually harvested or mown
-- Nematicide: three months in the soil per field, reapplying renews it
-- No product exists against take-all or clubroot. Only rotation keeps them in check.
+They only protect the ground you spray. Spray early and the disease is far less likely to appear there; spray after an outbreak and it stops spreading on the sprayed ground, but nothing brings back what is already lost. So spray before, not after.
+- Fungicide: used up on the ground you harvest or mow; harvesting ends the outbreak on the field, while the soil pressure and history stay
+- Nematicide: protects the sprayed ground for three months per field, spraying again renews it
+- No product works against take-all or clubroot. Only rotation keeps them down.
 
 NITROGEN RESIDUE
 A legume destroyed by tillage, not merely harvested, returns real nitrogen, split between the next crop and the one after. With Precision Farming it lands on the nitrogen map; without it the mod adds one fertilizer level.
@@ -43,6 +43,7 @@ In kg N/ha, next crop then the one after: alfalfa 80 then 50, vetch-rye 60 then 
 IN GAME
 - A dedicated "Crop Rotation" tab in the menu (ESC)
 - Three views on the map: infected fields, disease pressure, treated ground
+- Treatment gauge: the share of the field sprayed, the disease status, and how long protection lasts
 - Field card: current crop, growth stage, required soil work, weeds, active disease and its treatment, nitrogen, pH
 - On-foot HUD and a weather header so you can time your spraying
 
@@ -81,10 +82,10 @@ Regen und Temperatur steuern Ausbruch und Ausbreitung der sieben Pilzkrankheiten
 BEHANDLUNG
 Fungizid AMISTAR (Syngenta) und Nematizid VELUM PRIME (Bayer), ausgebracht mit jeder kompatiblen Feldspritze.
 
-Beide wirken vorbeugend: sie retten den Ertrag auf der behandelten Fläche, sie heilen keine ausgebrochene Infektion und drängen sie nicht zurück. Spritze vorher, nicht hinterher.
-- Fungizid: verbraucht sich nur auf der tatsächlich geernteten oder gemähten Fläche
-- Nematizid: drei Monate im Boden je Feld, eine erneute Anwendung verlängert die Dauer
-- Gegen Schwarzbeinigkeit und Kohlhernie gibt es kein Mittel. Nur die Fruchtfolge hält sie in Schach.
+Sie schützen nur die Fläche, die du spritzt. Spritze früh, und die Krankheit tritt dort viel seltener auf; spritze nach einem Ausbruch, und sie breitet sich auf der behandelten Fläche nicht weiter aus, doch bereits Verlorenes kommt nicht zurück. Also spritze vorher, nicht hinterher.
+- Fungizid: verbraucht sich auf der geernteten oder gemähten Fläche; die Ernte beendet den Ausbruch auf dem Feld, Bodendruck und Verlauf bleiben
+- Nematizid: schützt die behandelte Fläche drei Monate je Feld, eine erneute Anwendung verlängert die Dauer
+- Gegen Schwarzbeinigkeit und Kohlhernie hilft kein Mittel. Nur die Fruchtfolge drückt sie.
 
 STICKSTOFFRÜCKSTAND
 Eine durch Bodenbearbeitung zerstörte Leguminose, nicht bloß geerntet, gibt echten Stickstoff zurück, aufgeteilt auf die nächste und die übernächste Kultur. Mit Precision Farming landet er auf der Stickstoffkarte, ohne PF fügt der Mod eine Düngestufe hinzu.
@@ -94,6 +95,7 @@ In kg N/ha, nächste Kultur und danach: Luzerne 80 dann 50, Wicke-Roggen 60 dann
 IM SPIEL
 - Ein eigener Reiter "Fruchtfolge" im Menü (ESC)
 - Drei Ansichten auf der Karte: befallene Felder, Krankheitsdruck, behandelte Flächen
+- Behandlungsanzeige: der behandelte Flächenanteil, der Krankheitszustand und die verbleibende Schutzdauer
 - Feldkarte: aktuelle Kultur, Wachstumsstadium, nötige Bodenbearbeitung, Unkraut, aktive Krankheit und ihre Behandlung, Stickstoff, pH-Wert
 - Feldanzeige zu Fuß und Wetterleiste, damit du deine Spritzungen timen kannst
 
@@ -132,10 +134,10 @@ La pluie et la température pilotent le déclenchement et la propagation des sep
 TRAITEMENTS
 Fongicide AMISTAR (Syngenta) et nématicide VELUM PRIME (Bayer), à pulvériser avec un pulvérisateur compatible.
 
-Ils sont préventifs : ils sauvent la récolte sur les zones pulvérisées, ils ne soignent pas une infection déclarée et ne la font pas reculer. Pulvérisez avant, pas après.
-- Fongicide : consommé uniquement sur la surface réellement récoltée ou fauchée
-- Nématicide : trois mois dans le sol par parcelle, une nouvelle application renouvelle la durée
-- Aucun produit n'existe contre le piétin-échaudage ni la hernie des crucifères. Seule la rotation les contient.
+Ils ne protègent que la surface que vous pulvérisez. Pulvérisez tôt et la maladie a bien moins de risques d'apparaître ; pulvérisez après une attaque et elle cesse de s'étendre sur la zone traitée, mais rien ne récupère ce qui est déjà perdu. Alors pulvérisez avant, pas après.
+- Fongicide : consommé sur la surface récoltée ou fauchée ; récolter met fin à l'attaque sur la parcelle, la pression du sol et l'historique restent
+- Nématicide : protège la zone traitée pendant trois mois par parcelle, une nouvelle pulvérisation renouvelle la durée
+- Aucun produit ne marche contre le piétin-échaudage ni la hernie. Seule la rotation les fait baisser.
 
 RELIQUAT D'AZOTE
 Une légumineuse détruite au travail du sol, pas simplement récoltée, restitue un vrai reliquat d'azote, réparti entre la culture suivante et celle d'après. Avec Precision Farming il est déposé sur la carte d'azote, sans PF le mod ajoute un niveau d'engrais.
@@ -145,6 +147,7 @@ En kg N/ha, culture suivante puis la suivante : luzerne 80 puis 50, vesce-seigle
 DANS LE JEU
 - Un onglet dédié « Assolement » dans le menu (ÉCHAP)
 - Trois vues sur la carte : parcelles infectées, pression maladie, zones traitées
+- Jauge de traitement : la part de parcelle pulvérisée, l'état de la maladie et la durée de protection restante
 - Fiche de champ : culture en place, stade, travail du sol requis, mauvaises herbes, maladie active et son traitement, azote, pH
 - HUD à pied et en-tête météo pour choisir le moment de pulvériser
 

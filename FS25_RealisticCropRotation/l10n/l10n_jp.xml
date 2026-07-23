@@ -26,6 +26,16 @@
         <e k="rcr_treatment_nematicide_remaining" v="%s（残り%dヶ月）" />
         <e k="rcr_advice_nematicide_duration" v="土壌保護は畑ごとに3ヶ月続き、再散布で期間が更新されます。" />
 
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="なし" />
+        <e k="rcr_treatment_partial"  v="一部（%d%%）" />
+        <e k="rcr_treatment_complete" v="完了" />
+        <e k="rcr_treatment_disease_absent"     v="病害なし" />
+        <e k="rcr_treatment_disease_active"     v="病害発生中" />
+        <e k="rcr_treatment_disease_controlled" v="病害抑制中" />
+        <e k="rcr_treatment_until_harvest" v="収穫まで" />
+        <e k="rcr_treatment_months"        v="%dヶ月" />
+
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="予想残留 +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="輪作の合計残留 +%d kg/ha" />
@@ -54,7 +64,7 @@
         <e k="rcr_section_history"      v="作物履歴" />
         <e k="rcr_section_nitrogen"     v="窒素の状態" />
         <e k="rcr_section_advice"       v="農学的アドバイス" />
-        <e k="rcr_section_soil_indicators" v="土壌指標" />
+        <e k="rcr_section_soil_indicators" v="土壌と防除" />
         <e k="rcr_section_field"        v="現在の畑の状態" />
         <e k="rcr_section_lime"         v="石灰 / pH の状態" />
         <e k="rcr_section_plan"         v="輪作計画" />
@@ -106,8 +116,8 @@
         <e k="rcr_advice_afterRoot" v="根菜の後は、根菜が戻るまで4年あけ、遅い収穫の後に土壌構造を回復させるため穀物を続けてください。" />
         <e k="rcr_advice_afterVegetable" v="野菜の後は、繰り返す前に3年あけ、穀物をきれいな区切りとしてください。" />
         <e k="rcr_advice_afterForage" v="短期草地の後は、穀物が芝の下に蓄えられた地力と構造を活用します。" />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病の圧力が高い。ナタネ、カラシナ、ヒマワリ、ダイズ、エンドウ、インゲン、ジャガイモ、ニンジンを最低3年は避ける。殺菌剤は散布した場所の収穫を守るだけで、病気を後退させはしない。" />
-        <e k="rcr_advice_pressure_high_bcn"           v="センチュウの圧力が高い。テンサイ、ビート、ナタネ、カラシナ、ホウレンソウを3年避ける。殺線虫剤は散布した場所の収穫を3か月間守る。" />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病の圧力が高い。ナタネ、カラシナ、ヒマワリ、ダイズ、エンドウ、インゲン、ジャガイモ、ニンジンが3年以内に戻ると圧力は高いまま。殺菌剤は発病を遅らせ、散布した場所の被害を食い止めるが、病気を後退させはしない。" />
+        <e k="rcr_advice_pressure_high_bcn"           v="センチュウの圧力が高い。テンサイ、ビート、ナタネ、カラシナ、ホウレンソウが3年以内に戻ると圧力は高いまま。殺線虫剤は散布した場所の収穫を3か月間守る。" />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病の圧力は中程度。宿主作物の間隔をあける。降雨はリスクを高める。" />
         <e k="rcr_advice_pressure_moderate_bcn"         v="センチュウの圧力は中程度。テンサイとアブラナ科の間隔をあける。" />
         <e k="rcr_advice_no_current_crop" v="現在の主要作物なし: 作物が検出されるとアドバイスが表示されます。" />
@@ -199,12 +209,12 @@
         <e k="rcr_fillType_nematicide" v="殺線虫剤" />
         <e k="rcr_disease_treatment_none" v="防除なし" />
         <e k="rcr_disease_treatment_clubroot" v="なし（輪作のみ）" />
-        <e k="rcr_advice_pressure_high_phoma" v="根朽病の圧力が高い。ナタネとカラシナの間隔を4年に延ばす。殺菌剤は散布した場所の収穫を守るだけで、病気を後退させはしない。" />
+        <e k="rcr_advice_pressure_high_phoma" v="根朽病の圧力が高い。ナタネとカラシナが4年以内に戻ると圧力は高いまま。殺菌剤は発病を遅らせ、散布した場所の被害を食い止めるが、病気を後退させはしない。" />
         <e k="rcr_advice_pressure_high_takeall" v="立枯病の圧力が高い。非宿主作物（エンバク、マメ科、油糧作物）を挟む。この病気を防ぐ薬剤はなく、輪作だけが圧力を下げる。" />
-        <e k="rcr_advice_pressure_high_septoria" v="葉枯病の圧力が高い。コムギ、オオムギ、ライ小麦、スペルト小麦の間隔をあける。殺菌剤は散布した場所の収穫を守り、降雨は流行を早める。" />
-        <e k="rcr_advice_pressure_high_rust" v="さび病の圧力が高い。ムギ類とナタネはどちらも宿主なので間隔をあける。殺菌剤は散布した場所の収穫を守り、温暖で多湿な時期は流行を早める。" />
-        <e k="rcr_advice_pressure_high_fusarium" v="赤かび病の圧力が高い。トウモロコシの後にコムギを作らず、ムギ類の連作を減らす。殺菌剤は散布した場所の収穫を守り、降雨は流行を早める。" />
-        <e k="rcr_advice_pressure_high_lateblight" v="疫病の圧力が高い。ジャガイモの間隔をあける。殺菌剤は散布した場所の収穫を守り、冷涼で多湿な天候は流行を早める。" />
+        <e k="rcr_advice_pressure_high_septoria" v="葉枯病の圧力が高い。コムギ、オオムギ、ライ小麦、スペルト小麦の間隔をあける。殺菌剤は発病を遅らせ、散布した場所の被害を食い止め、降雨は流行を早める。" />
+        <e k="rcr_advice_pressure_high_rust" v="さび病の圧力が高い。ムギ類とナタネはどちらも宿主なので間隔をあける。殺菌剤は発病を遅らせ、散布した場所の被害を食い止め、温暖で多湿な時期は流行を早める。" />
+        <e k="rcr_advice_pressure_high_fusarium" v="赤かび病の圧力が高い。トウモロコシの後にコムギを作らず、ムギ類の連作を減らす。殺菌剤は発病を遅らせ、散布した場所の被害を食い止め、降雨は流行を早める。" />
+        <e k="rcr_advice_pressure_high_lateblight" v="疫病の圧力が高い。ジャガイモの間隔をあける。殺菌剤は発病を遅らせ、散布した場所の被害を食い止め、冷涼で多湿な天候は流行を早める。" />
         <e k="rcr_advice_pressure_high_clubroot" v="根こぶ病の圧力が高い。ナタネとカラシナの間隔をできるだけ延ばす。この病気を防ぐ薬剤はなく、輪作だけが効く。" />
         <e k="rcr_advice_pressure_moderate_phoma" v="根朽病の圧力は中程度。ナタネとカラシナの間隔を延ばす。" />
         <e k="rcr_advice_pressure_moderate_takeall" v="立枯病の圧力は中程度。3作連続のムギ類を避ける。" />

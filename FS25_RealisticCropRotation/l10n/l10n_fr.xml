@@ -26,6 +26,16 @@
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d mois restants)" />
         <e k="rcr_advice_nematicide_duration" v="La protection du sol dure 3 mois par parcelle ; une nouvelle application renouvelle cette durée." />
 
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="absent" />
+        <e k="rcr_treatment_partial"  v="partiel (%d %%)" />
+        <e k="rcr_treatment_complete" v="complet" />
+        <e k="rcr_treatment_disease_absent"     v="Maladie absente" />
+        <e k="rcr_treatment_disease_active"     v="Maladie active" />
+        <e k="rcr_treatment_disease_controlled" v="Maladie contrôlée" />
+        <e k="rcr_treatment_until_harvest" v="Jusqu'à la récolte" />
+        <e k="rcr_treatment_months"        v="%d mois" />
+
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Reliquat à venir +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="Reliquat total rotation +%d kg/ha" />
@@ -54,7 +64,7 @@
         <e k="rcr_section_history"      v="Historique des Cultures" />
         <e k="rcr_section_nitrogen"     v="Azote du sol" />
         <e k="rcr_section_advice"       v="Conseil Agronomique" />
-        <e k="rcr_section_soil_indicators" v="Indicateurs du sol" />
+        <e k="rcr_section_soil_indicators" v="Sol et traitement" />
         <e k="rcr_section_field"        v="État actuel de la parcelle" />
         <e k="rcr_section_lime"         v="pH / Chaulage" />
         <e k="rcr_section_plan"         v="Plan de Rotation" />
@@ -106,8 +116,8 @@
         <e k="rcr_advice_afterRoot"      v="Après une culture sarclée, attendez quatre ans avant d'y revenir, puis une céréale pour restructurer le sol après l'arrachage tardif." />
         <e k="rcr_advice_afterVegetable" v="Après un légume, attendez trois ans avant de le répéter, avec une céréale comme coupure nette." />
         <e k="rcr_advice_afterForage"    v="Après une prairie temporaire, une céréale valorise la fertilité et la structure accumulées sous le couvert." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Forte pression sclérotinia : évitez colza, moutarde, tournesol, soja, pois, haricot, pomme de terre et carotte pendant au moins 3 ans ; le fongicide sauve la récolte sur les zones traitées, il ne fait pas reculer la maladie." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Forte pression nématode : évitez betterave, betterave rouge, colza, moutarde et épinard 3 ans ; le nématicide sauve la récolte sur les zones traitées pendant 3 mois." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Forte pression sclérotinia : sous 3 ans d'écart entre cultures hôtes (colza, moutarde, tournesol, soja, pois, haricot, pomme de terre, carotte), la pression reste élevée ; le fongicide freine l'apparition et gèle les dégâts sur les zones traitées, il ne fait pas reculer la maladie." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Forte pression nématode : sous 3 ans d'écart entre cultures hôtes (betterave, betterave rouge, colza, moutarde, épinard), la pression reste élevée ; le nématicide sauve la récolte sur les zones traitées pendant 3 mois." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Pression sclérotinia modérée : espacez les cultures hôtes, la pluie fait monter le risque." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Pression nématode modérée : espacez betteraves et brassicacées." />
         <e k="rcr_advice_no_current_crop" v="Aucune culture principale actuelle : conseil disponible quand une culture est détectée." />
@@ -199,12 +209,12 @@
         <e k="rcr_fillType_nematicide" v="Nématicide" />
         <e k="rcr_disease_treatment_none" v="Aucun traitement" />
         <e k="rcr_disease_treatment_clubroot" v="Aucun (rotation seule)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Forte pression phoma : allongez le retour du colza et de la moutarde à 4 ans ; le fongicide sauve la récolte sur les zones traitées, il ne fait pas reculer la maladie." />
+        <e k="rcr_advice_pressure_high_phoma" v="Forte pression phoma : sous 4 ans d'écart entre deux colza ou moutarde, la pression reste élevée ; le fongicide freine l'apparition et gèle les dégâts sur les zones traitées, il ne fait pas reculer la maladie." />
         <e k="rcr_advice_pressure_high_takeall" v="Forte pression piétin-échaudage : insérez une coupure non-hôte (avoine, légumineuse, oléagineux) ; aucun produit ne protège cette maladie, seule la rotation fait baisser la pression." />
-        <e k="rcr_advice_pressure_high_septoria" v="Forte pression septoriose : espacez blé, orge, triticale et épeautre ; le fongicide sauve la récolte sur les zones traitées, la pluie accélère l'épidémie." />
-        <e k="rcr_advice_pressure_high_rust" v="Forte pression rouille : céréales et colza sont tous deux hôtes, espacez-les ; le fongicide sauve la récolte sur les zones traitées, la douceur humide accélère l'épidémie." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Forte pression fusariose : évitez le blé après maïs et enchaînez moins de céréales ; le fongicide sauve la récolte sur les zones traitées, la pluie accélère l'épidémie." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Forte pression mildiou : espacez les pommes de terre ; le fongicide sauve la récolte sur les zones traitées, le temps frais et humide accélère l'épidémie." />
+        <e k="rcr_advice_pressure_high_septoria" v="Forte pression septoriose : espacez blé, orge, triticale et épeautre ; le fongicide freine l'apparition et gèle les dégâts sur les zones traitées, la pluie accélère l'épidémie." />
+        <e k="rcr_advice_pressure_high_rust" v="Forte pression rouille : céréales et colza sont tous deux hôtes, espacez-les ; le fongicide freine l'apparition et gèle les dégâts sur les zones traitées, la douceur humide accélère l'épidémie." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Forte pression fusariose : évitez le blé après maïs et enchaînez moins de céréales ; le fongicide freine l'apparition et gèle les dégâts sur les zones traitées, la pluie accélère l'épidémie." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Forte pression mildiou : espacez les pommes de terre ; le fongicide freine l'apparition et gèle les dégâts sur les zones traitées, le temps frais et humide accélère l'épidémie." />
         <e k="rcr_advice_pressure_high_clubroot" v="Forte pression hernie : allongez au maximum le retour du colza et de la moutarde ; aucun produit ne protège cette maladie, seule la rotation agit." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Pression phoma modérée : allongez le retour du colza et de la moutarde." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Pression piétin modérée : évitez la troisième céréale d'affilée." />

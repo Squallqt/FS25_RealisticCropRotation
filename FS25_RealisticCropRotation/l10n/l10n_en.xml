@@ -26,6 +26,16 @@
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d months remaining)" />
         <e k="rcr_advice_nematicide_duration" v="Soil protection lasts 3 months per field; reapplication renews the duration." />
 
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="absent" />
+        <e k="rcr_treatment_partial"  v="partial (%d %%)" />
+        <e k="rcr_treatment_complete" v="full" />
+        <e k="rcr_treatment_disease_absent"     v="No disease" />
+        <e k="rcr_treatment_disease_active"     v="Disease active" />
+        <e k="rcr_treatment_disease_controlled" v="Disease controlled" />
+        <e k="rcr_treatment_until_harvest" v="Until harvest" />
+        <e k="rcr_treatment_months"        v="%d months" />
+
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Expected residue +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="Total rotation residue +%d kg/ha" />
@@ -54,7 +64,7 @@
         <e k="rcr_section_history"      v="Crop History" />
         <e k="rcr_section_nitrogen"     v="Nitrogen Status" />
         <e k="rcr_section_advice"       v="Agronomic Advice" />
-        <e k="rcr_section_soil_indicators" v="Soil Indicators" />
+        <e k="rcr_section_soil_indicators" v="Soil and Treatment" />
         <e k="rcr_section_field"        v="Current field status" />
         <e k="rcr_section_lime"         v="Lime / pH Status" />
         <e k="rcr_section_plan"         v="Rotation Plan" />
@@ -106,8 +116,8 @@
         <e k="rcr_advice_afterRoot"      v="After a root crop, allow four years before roots come back, and follow with a cereal to rebuild structure after the late lifting." />
         <e k="rcr_advice_afterVegetable" v="After a vegetable, wait three years before repeating it, with a cereal as a clean break." />
         <e k="rcr_advice_afterForage"    v="After a grass ley, a cereal cashes in the fertility and structure built up under the sward." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="High sclerotinia pressure: keep canola, mustard, sunflower, soybean, pea, bean, potato and carrot off this field for at least 3 years; fungicide saves the yield on sprayed ground, it does not push the disease back." />
-        <e k="rcr_advice_pressure_high_bcn"           v="High nematode pressure: keep sugar beet, beetroot, canola, mustard and spinach off for 3 years; nematicide saves the yield on sprayed ground for 3 months." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="High sclerotinia pressure: bring canola, mustard, sunflower, soybean, pea, bean, potato or carrot back within 3 years and the pressure stays high; fungicide slows the onset and freezes the damage on sprayed ground, it does not push the disease back." />
+        <e k="rcr_advice_pressure_high_bcn"           v="High nematode pressure: bring sugar beet, beetroot, canola, mustard or spinach back within 3 years and the pressure stays high; nematicide saves the yield on sprayed ground for 3 months." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderate sclerotinia pressure: space out host crops, rain raises the risk." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Moderate nematode pressure: space out beets and brassicas." />
         <e k="rcr_advice_no_current_crop" v="No current main crop: advice available when a crop is detected." />
@@ -199,12 +209,12 @@
         <e k="rcr_fillType_nematicide" v="Nematicide" />
         <e k="rcr_disease_treatment_none" v="No treatment" />
         <e k="rcr_disease_treatment_clubroot" v="None (rotation only)" />
-        <e k="rcr_advice_pressure_high_phoma" v="High phoma pressure: stretch canola and mustard to a 4-year return; fungicide saves the yield on sprayed ground, it does not push the disease back." />
+        <e k="rcr_advice_pressure_high_phoma" v="High phoma pressure: bring canola or mustard back within 4 years and the pressure stays high; fungicide slows the onset and freezes the damage on sprayed ground, it does not push the disease back." />
         <e k="rcr_advice_pressure_high_takeall" v="High take-all pressure: insert a non-host break (oat, legume, oilseed); no product shields this disease, only rotation brings the pressure down." />
-        <e k="rcr_advice_pressure_high_septoria" v="High septoria pressure: space out wheat, barley, triticale and spelt; fungicide saves the yield on sprayed ground, and rain speeds the epidemic up." />
-        <e k="rcr_advice_pressure_high_rust" v="High rust pressure: cereals and canola are both hosts, space them apart; fungicide saves the yield on sprayed ground, and mild damp spells speed the epidemic up." />
-        <e k="rcr_advice_pressure_high_fusarium" v="High fusarium pressure: avoid wheat after maize and chain fewer cereals; fungicide saves the yield on sprayed ground, and rain speeds the epidemic up." />
-        <e k="rcr_advice_pressure_high_lateblight" v="High late blight pressure: space out potatoes; fungicide saves the yield on sprayed ground, and cool damp weather speeds the epidemic up." />
+        <e k="rcr_advice_pressure_high_septoria" v="High septoria pressure: space out wheat, barley, triticale and spelt; fungicide slows the onset and freezes the damage on sprayed ground, and rain speeds the epidemic up." />
+        <e k="rcr_advice_pressure_high_rust" v="High rust pressure: cereals and canola are both hosts, space them apart; fungicide slows the onset and freezes the damage on sprayed ground, and mild damp spells speed the epidemic up." />
+        <e k="rcr_advice_pressure_high_fusarium" v="High fusarium pressure: avoid wheat after maize and chain fewer cereals; fungicide slows the onset and freezes the damage on sprayed ground, and rain speeds the epidemic up." />
+        <e k="rcr_advice_pressure_high_lateblight" v="High late blight pressure: space out potatoes; fungicide slows the onset and freezes the damage on sprayed ground, and cool damp weather speeds the epidemic up." />
         <e k="rcr_advice_pressure_high_clubroot" v="High clubroot pressure: stretch the canola and mustard return as far as you can; no product shields this disease, only rotation works." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Moderate phoma pressure: stretch the canola and mustard return." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Moderate take-all pressure: avoid a third cereal in a row." />

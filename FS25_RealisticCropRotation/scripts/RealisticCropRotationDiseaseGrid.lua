@@ -347,3 +347,32 @@ function RealisticCropRotationDiseaseGrid:clearProtectionArea(family, sx, sz, wx
     self.protectionRevision = (self.protectionRevision or 0) + 1
     return true
 end
+
+---Native aggregate (executeGet): fraction of a field's worked ground marked protected for a treatment family.
+-- @param table field
+-- @param string family "FUNGICIDE" | "NEMATICIDE"
+-- @return number coverage fraction [0,1]
+function RealisticCropRotationDiseaseGrid:getProtectionCoverage(field, family)
+    local protectionMapId = family == "FUNGICIDE" and self.fungicideProtectionMapId
+        or family == "NEMATICIDE" and self.nematicideProtectionMapId or nil
+    if field == nil or protectionMapId == nil or DensityMapModifier == nil or DensityMapFilter == nil
+        or g_terrainNode == nil or DensityValueCompareType == nil or RealisticCropRotationManager == nil
+        or type(field.getDensityMapPolygon) ~= "function" then
+        return 0
+    end
+    local polygon = field:getDensityMapPolygon()
+    if polygon == nil then return 0 end
+
+    local modifier = DensityMapModifier.new(protectionMapId, 0, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, g_terrainNode)
+    polygon:applyToModifier(modifier)
+
+    local filter = DensityMapFilter.new(protectionMapId, 0, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS)
+    filter:setValueCompareParams(DensityValueCompareType.EQUAL, 1)
+
+    -- Worked-ground pixels counted in their own pass.
+    local groundFilter = RealisticCropRotationManager.makeFieldGroundFilter()
+    local _, protectedPixels = modifier:executeGet(filter, groundFilter)
+    local _, groundPixels = modifier:executeGet(groundFilter)
+    if groundPixels == nil or groundPixels <= 0 then return 0 end
+    return (protectedPixels or 0) / groundPixels
+end

@@ -26,6 +26,16 @@
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d bulan tersisa)" />
         <e k="rcr_advice_nematicide_duration" v="Perlindungan tanah berlangsung 3 bulan per ladang; aplikasi ulang memperbarui durasinya." />
 
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="tidak ada" />
+        <e k="rcr_treatment_partial"  v="sebagian (%d%%)" />
+        <e k="rcr_treatment_complete" v="penuh" />
+        <e k="rcr_treatment_disease_absent"     v="Tidak ada penyakit" />
+        <e k="rcr_treatment_disease_active"     v="Penyakit aktif" />
+        <e k="rcr_treatment_disease_controlled" v="Penyakit terkendali" />
+        <e k="rcr_treatment_until_harvest" v="Sampai panen" />
+        <e k="rcr_treatment_months"        v="%d bulan" />
+
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Residu diharapkan +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="Total residu rotasi +%d kg/ha" />
@@ -54,7 +64,7 @@
         <e k="rcr_section_history"      v="Riwayat Tanaman" />
         <e k="rcr_section_nitrogen"     v="Status Nitrogen" />
         <e k="rcr_section_advice"       v="Saran Agronomi" />
-        <e k="rcr_section_soil_indicators" v="Indikator tanah" />
+        <e k="rcr_section_soil_indicators" v="Tanah dan penyemprotan" />
         <e k="rcr_section_field"        v="Status lahan saat ini" />
         <e k="rcr_section_lime"         v="Status Kapur / pH" />
         <e k="rcr_section_plan"         v="Rencana Rotasi" />
@@ -106,8 +116,8 @@
         <e k="rcr_advice_afterRoot" v="Setelah tanaman umbi, tunggu empat tahun sebelum umbi kembali, lalu serealia untuk membangun kembali struktur setelah pemanenan akhir." />
         <e k="rcr_advice_afterVegetable" v="Setelah sayuran, tunggu tiga tahun sebelum mengulanginya, dengan serealia sebagai jeda yang bersih." />
         <e k="rcr_advice_afterForage" v="Setelah padang rumput sementara, serealia memanfaatkan kesuburan dan struktur yang terbentuk di bawah rumput." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Tekanan sclerotinia tinggi: jangan tanam kanola, sesawi, bunga matahari, kedelai, kacang polong, buncis, kentang, dan wortel selama minimal 3 tahun; fungisida menyelamatkan hasil di bagian yang disemprot, tetapi tidak menyurutkan penyakit." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Tekanan nematoda tinggi: jangan tanam bit gula, bit merah, kanola, sesawi, dan bayam selama 3 tahun; nematisida menyelamatkan hasil di bagian yang disemprot selama 3 bulan." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Tekanan sclerotinia tinggi: jika kanola, sesawi, bunga matahari, kedelai, kacang polong, buncis, kentang, atau wortel kembali dalam 3 tahun, tekanan tetap tinggi; fungisida memperlambat munculnya penyakit dan membekukan kerusakan di bagian yang disemprot, tetapi tidak menyurutkan penyakit." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Tekanan nematoda tinggi: jika bit gula, bit merah, kanola, sesawi, atau bayam kembali dalam 3 tahun, tekanan tetap tinggi; nematisida menyelamatkan hasil di bagian yang disemprot selama 3 bulan." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Tekanan sclerotinia sedang: beri jarak tanaman inang, hujan menaikkan risiko." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Tekanan nematoda sedang: beri jarak bit dan brassica." />
         <e k="rcr_advice_no_current_crop" v="Tidak ada tanaman utama saat ini: saran tersedia saat tanaman terdeteksi." />
@@ -199,12 +209,12 @@
         <e k="rcr_fillType_nematicide" v="Nematisida" />
         <e k="rcr_disease_treatment_none" v="Tidak ada penyemprotan" />
         <e k="rcr_disease_treatment_clubroot" v="Tidak ada (hanya rotasi)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Tekanan phoma tinggi: perpanjang jeda kanola dan sesawi menjadi 4 tahun; fungisida menyelamatkan hasil di bagian yang disemprot, tetapi tidak menyurutkan penyakit." />
+        <e k="rcr_advice_pressure_high_phoma" v="Tekanan phoma tinggi: jika kanola atau sesawi kembali dalam 4 tahun, tekanan tetap tinggi; fungisida memperlambat munculnya penyakit dan membekukan kerusakan di bagian yang disemprot, tetapi tidak menyurutkan penyakit." />
         <e k="rcr_advice_pressure_high_takeall" v="Tekanan busuk akar tinggi: sisipkan jeda tanaman bukan inang (oat, legum, tanaman minyak); tidak ada produk yang melindungi dari penyakit ini, hanya rotasi yang menurunkan tekanan." />
-        <e k="rcr_advice_pressure_high_septoria" v="Tekanan septoria tinggi: beri jarak gandum, jelai, triticale, dan gandum spelt; fungisida menyelamatkan hasil di bagian yang disemprot, dan hujan mempercepat wabah." />
-        <e k="rcr_advice_pressure_high_rust" v="Tekanan karat tinggi: serealia dan kanola keduanya inang, beri jarak di antaranya; fungisida menyelamatkan hasil di bagian yang disemprot, dan cuaca hangat lembap mempercepat wabah." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Tekanan fusarium tinggi: hindari gandum setelah jagung dan kurangi serealia beruntun; fungisida menyelamatkan hasil di bagian yang disemprot, dan hujan mempercepat wabah." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Tekanan hawar daun tinggi: beri jarak kentang; fungisida menyelamatkan hasil di bagian yang disemprot, dan cuaca sejuk basah mempercepat wabah." />
+        <e k="rcr_advice_pressure_high_septoria" v="Tekanan septoria tinggi: beri jarak gandum, jelai, triticale, dan gandum spelt; fungisida memperlambat munculnya penyakit dan membekukan kerusakan di bagian yang disemprot, dan hujan mempercepat wabah." />
+        <e k="rcr_advice_pressure_high_rust" v="Tekanan karat tinggi: serealia dan kanola keduanya inang, beri jarak di antaranya; fungisida memperlambat munculnya penyakit dan membekukan kerusakan di bagian yang disemprot, dan cuaca hangat lembap mempercepat wabah." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Tekanan fusarium tinggi: hindari gandum setelah jagung dan kurangi serealia beruntun; fungisida memperlambat munculnya penyakit dan membekukan kerusakan di bagian yang disemprot, dan hujan mempercepat wabah." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Tekanan hawar daun tinggi: beri jarak kentang; fungisida memperlambat munculnya penyakit dan membekukan kerusakan di bagian yang disemprot, dan cuaca sejuk basah mempercepat wabah." />
         <e k="rcr_advice_pressure_high_clubroot" v="Tekanan akar gada tinggi: perpanjang jeda kanola dan sesawi sejauh mungkin; tidak ada produk yang melindungi dari penyakit ini, hanya rotasi yang berhasil." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Tekanan phoma sedang: perpanjang jeda kanola dan sesawi." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Tekanan busuk akar sedang: hindari serealia ketiga berturut-turut." />

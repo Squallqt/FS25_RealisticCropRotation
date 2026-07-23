@@ -26,6 +26,16 @@
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d meses restantes)" />
         <e k="rcr_advice_nematicide_duration" v="A proteção do solo dura 3 meses por campo; uma nova aplicação renova a duração." />
 
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="ausente" />
+        <e k="rcr_treatment_partial"  v="parcial (%d %%)" />
+        <e k="rcr_treatment_complete" v="completo" />
+        <e k="rcr_treatment_disease_absent"     v="Sem doença" />
+        <e k="rcr_treatment_disease_active"     v="Doença ativa" />
+        <e k="rcr_treatment_disease_controlled" v="Doença controlada" />
+        <e k="rcr_treatment_until_harvest" v="Até à colheita" />
+        <e k="rcr_treatment_months"        v="%d meses" />
+
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Resíduo previsto +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="Resíduo total da rotação +%d kg/ha" />
@@ -54,7 +64,7 @@
         <e k="rcr_section_history"      v="Histórico de Culturas" />
         <e k="rcr_section_nitrogen"     v="Estado do Azoto" />
         <e k="rcr_section_advice"       v="Conselho Agronómico" />
-        <e k="rcr_section_soil_indicators" v="Indicadores do solo" />
+        <e k="rcr_section_soil_indicators" v="Solo e tratamento" />
         <e k="rcr_section_field"        v="Estado atual do campo" />
         <e k="rcr_section_lime"         v="Estado Cal / pH" />
         <e k="rcr_section_plan"         v="Plano de Rotação" />
@@ -106,8 +116,8 @@
         <e k="rcr_advice_afterRoot" v="Depois de uma cultura de raiz, espere quatro anos antes de as raízes voltarem, seguindo com um cereal para refazer a estrutura após o arranque tardio." />
         <e k="rcr_advice_afterVegetable" v="Depois de um produto hortícola, espere três anos antes de o repetir, com um cereal como corte limpo." />
         <e k="rcr_advice_afterForage" v="Depois de uma pastagem temporária, um cereal valoriza a fertilidade e a estrutura acumuladas sob o relvado." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Forte pressão de esclerotínia: evite colza, mostarda, girassol, soja, ervilha, feijão, batata e cenoura durante pelo menos 3 anos; o fungicida salva a colheita nas zonas tratadas, não faz a doença recuar." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Forte pressão de nemátode: evite beterraba sacarina, beterraba de mesa, colza, mostarda e espinafre durante 3 anos; o nematicida salva a colheita nas zonas tratadas durante 3 meses." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Forte pressão de esclerotínia: se colza, mostarda, girassol, soja, ervilha, feijão, batata ou cenoura regressarem antes de 3 anos, a pressão mantém-se elevada; o fungicida atrasa o aparecimento e trava o dano nas zonas tratadas, não faz a doença recuar." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Forte pressão de nemátode: se beterraba sacarina, beterraba de mesa, colza, mostarda ou espinafre regressarem antes de 3 anos, a pressão mantém-se elevada; o nematicida salva a colheita nas zonas tratadas durante 3 meses." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Pressão de esclerotínia moderada: espace as culturas hospedeiras, a chuva aumenta o risco." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Pressão de nemátode moderada: espace beterrabas e brássicas." />
         <e k="rcr_advice_no_current_crop" v="Sem cultura principal atual: conselho disponível quando uma cultura for detetada." />
@@ -199,12 +209,12 @@
         <e k="rcr_fillType_nematicide" v="Nematicida" />
         <e k="rcr_disease_treatment_none" v="Nenhum tratamento" />
         <e k="rcr_disease_treatment_clubroot" v="Nenhum (apenas rotação)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Forte pressão de phoma: alargue o regresso da colza e da mostarda para 4 anos; o fungicida salva a colheita nas zonas tratadas, não faz a doença recuar." />
+        <e k="rcr_advice_pressure_high_phoma" v="Forte pressão de phoma: se colza ou mostarda regressarem antes de 4 anos, a pressão mantém-se elevada; o fungicida atrasa o aparecimento e trava o dano nas zonas tratadas, não faz a doença recuar." />
         <e k="rcr_advice_pressure_high_takeall" v="Forte pressão de mal-do-pé: introduza um corte não hospedeiro (aveia, leguminosa, oleaginosa); nenhum produto protege desta doença, só a rotação faz baixar a pressão." />
-        <e k="rcr_advice_pressure_high_septoria" v="Forte pressão de septoriose: espace trigo, cevada, triticale e espelta; o fungicida salva a colheita nas zonas tratadas, a chuva acelera a epidemia." />
-        <e k="rcr_advice_pressure_high_rust" v="Forte pressão de ferrugem: cereais e colza são ambos hospedeiros, espace-os; o fungicida salva a colheita nas zonas tratadas, o tempo ameno e húmido acelera a epidemia." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Forte pressão de fusariose: evite trigo depois de milho e encadeie menos cereais; o fungicida salva a colheita nas zonas tratadas, a chuva acelera a epidemia." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Forte pressão de míldio: espace as batatas; o fungicida salva a colheita nas zonas tratadas, o tempo fresco e húmido acelera a epidemia." />
+        <e k="rcr_advice_pressure_high_septoria" v="Forte pressão de septoriose: espace trigo, cevada, triticale e espelta; o fungicida atrasa o aparecimento e trava o dano nas zonas tratadas, a chuva acelera a epidemia." />
+        <e k="rcr_advice_pressure_high_rust" v="Forte pressão de ferrugem: cereais e colza são ambos hospedeiros, espace-os; o fungicida atrasa o aparecimento e trava o dano nas zonas tratadas, o tempo ameno e húmido acelera a epidemia." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Forte pressão de fusariose: evite trigo depois de milho e encadeie menos cereais; o fungicida atrasa o aparecimento e trava o dano nas zonas tratadas, a chuva acelera a epidemia." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Forte pressão de míldio: espace as batatas; o fungicida atrasa o aparecimento e trava o dano nas zonas tratadas, o tempo fresco e húmido acelera a epidemia." />
         <e k="rcr_advice_pressure_high_clubroot" v="Forte pressão de hérnia: alargue ao máximo o regresso da colza e da mostarda; nenhum produto protege desta doença, só a rotação atua." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Pressão de phoma moderada: alargue o regresso da colza e da mostarda." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Pressão de mal-do-pé moderada: evite o terceiro cereal seguido." />

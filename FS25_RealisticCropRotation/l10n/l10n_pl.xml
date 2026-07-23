@@ -26,6 +26,16 @@
         <e k="rcr_treatment_nematicide_remaining" v="%s (pozostało miesięcy: %d)" />
         <e k="rcr_advice_nematicide_duration" v="Ochrona gleby trwa 3 miesiące na każdym polu; ponowny zabieg odnawia czas działania." />
 
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="brak" />
+        <e k="rcr_treatment_partial"  v="częściowy (%d %%)" />
+        <e k="rcr_treatment_complete" v="pełny" />
+        <e k="rcr_treatment_disease_absent"     v="Brak choroby" />
+        <e k="rcr_treatment_disease_active"     v="Choroba aktywna" />
+        <e k="rcr_treatment_disease_controlled" v="Choroba pod kontrolą" />
+        <e k="rcr_treatment_until_harvest" v="Do zbioru" />
+        <e k="rcr_treatment_months"        v="%d miesięcy" />
+
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="Spodziewana pozostałość +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="Łączna pozostałość płodozmianu +%d kg/ha" />
@@ -54,7 +64,7 @@
         <e k="rcr_section_history"      v="Historia upraw" />
         <e k="rcr_section_nitrogen"     v="Stan azotu" />
         <e k="rcr_section_advice"       v="Porada agronomiczna" />
-        <e k="rcr_section_soil_indicators" v="Wskaźniki gleby" />
+        <e k="rcr_section_soil_indicators" v="Gleba i zabiegi" />
         <e k="rcr_section_field"        v="Aktualny stan pola" />
         <e k="rcr_section_lime"         v="Stan wapna / pH" />
         <e k="rcr_section_plan"         v="Plan płodozmianu" />
@@ -106,8 +116,8 @@
         <e k="rcr_advice_afterRoot" v="Po roślinie okopowej odczekaj cztery lata przed powrotem okopowych, a następnie zboże, aby odbudować strukturę po późnym zbiorze." />
         <e k="rcr_advice_afterVegetable" v="Po warzywie odczekaj trzy lata przed jego powtórzeniem, ze zbożem jako czystą przerwą." />
         <e k="rcr_advice_afterForage" v="Po użytku przemiennym z trawą zboże wykorzystuje żyzność i strukturę zgromadzone pod darnią." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Wysoka presja zgnilizny twardzikowej: przez co najmniej 3 lata unikaj rzepaku, gorczycy, słonecznika, soi, grochu, fasoli, ziemniaka i marchwi; fungicyd ratuje plon na opryskanych fragmentach, ale nie cofa choroby." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Wysoka presja mątwika: przez 3 lata unikaj buraka cukrowego, buraka ćwikłowego, rzepaku, gorczycy i szpinaku; nematocyd ratuje plon na opryskanych fragmentach przez 3 miesiące." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Wysoka presja zgnilizny twardzikowej: jeśli rzepak, gorczyca, słonecznik, soja, groch, fasola, ziemniak lub marchew wracają przed upływem 3 lat, presja pozostaje wysoka; fungicyd opóźnia wystąpienie i zamraża szkody na opryskanych fragmentach, ale nie cofa choroby." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Wysoka presja mątwika: jeśli burak cukrowy, burak ćwikłowy, rzepak, gorczyca lub szpinak wracają przed upływem 3 lat, presja pozostaje wysoka; nematocyd ratuje plon na opryskanych fragmentach przez 3 miesiące." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Umiarkowana presja zgnilizny twardzikowej: rozłóż w czasie rośliny żywicielskie, deszcz zwiększa ryzyko." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Umiarkowana presja mątwika: rozłóż w czasie buraki i kapustne." />
         <e k="rcr_advice_no_current_crop" v="Brak aktualnej uprawy głównej: porada dostępna po wykryciu uprawy." />
@@ -199,12 +209,12 @@
         <e k="rcr_fillType_nematicide" v="Nematocyd" />
         <e k="rcr_disease_treatment_none" v="Brak zabiegu" />
         <e k="rcr_disease_treatment_clubroot" v="Brak (tylko płodozmian)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Wysoka presja suchej zgnilizny: wydłuż przerwę w uprawie rzepaku i gorczycy do 4 lat; fungicyd ratuje plon na opryskanych fragmentach, ale nie cofa choroby." />
+        <e k="rcr_advice_pressure_high_phoma" v="Wysoka presja suchej zgnilizny: jeśli rzepak lub gorczyca wracają przed upływem 4 lat, presja pozostaje wysoka; fungicyd opóźnia wystąpienie i zamraża szkody na opryskanych fragmentach, ale nie cofa choroby." />
         <e k="rcr_advice_pressure_high_takeall" v="Wysoka presja zgorzeli podstawy źdźbła: wprowadź przerwę z rośliną niebędącą żywicielem (owies, bobowate, oleiste); żaden preparat nie chroni przed tą chorobą, presję obniża tylko płodozmian." />
-        <e k="rcr_advice_pressure_high_septoria" v="Wysoka presja septoriozy: rozłóż w czasie pszenicę, jęczmień, pszenżyto i orkisz; fungicyd ratuje plon na opryskanych fragmentach, a deszcz przyspiesza epidemię." />
-        <e k="rcr_advice_pressure_high_rust" v="Wysoka presja rdzy: zboża i rzepak są żywicielami, rozdziel je w czasie; fungicyd ratuje plon na opryskanych fragmentach, a łagodna wilgoć przyspiesza epidemię." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Wysoka presja fuzariozy: nie uprawiaj pszenicy po kukurydzy i ogranicz zboża po sobie; fungicyd ratuje plon na opryskanych fragmentach, a deszcz przyspiesza epidemię." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Wysoka presja zarazy ziemniaka: rozłóż w czasie ziemniaki; fungicyd ratuje plon na opryskanych fragmentach, a chłodna wilgotna pogoda przyspiesza epidemię." />
+        <e k="rcr_advice_pressure_high_septoria" v="Wysoka presja septoriozy: rozłóż w czasie pszenicę, jęczmień, pszenżyto i orkisz; fungicyd opóźnia wystąpienie i zamraża szkody na opryskanych fragmentach, a deszcz przyspiesza epidemię." />
+        <e k="rcr_advice_pressure_high_rust" v="Wysoka presja rdzy: zboża i rzepak są żywicielami, rozdziel je w czasie; fungicyd opóźnia wystąpienie i zamraża szkody na opryskanych fragmentach, a łagodna wilgoć przyspiesza epidemię." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Wysoka presja fuzariozy: nie uprawiaj pszenicy po kukurydzy i ogranicz zboża po sobie; fungicyd opóźnia wystąpienie i zamraża szkody na opryskanych fragmentach, a deszcz przyspiesza epidemię." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Wysoka presja zarazy ziemniaka: rozłóż w czasie ziemniaki; fungicyd opóźnia wystąpienie i zamraża szkody na opryskanych fragmentach, a chłodna wilgotna pogoda przyspiesza epidemię." />
         <e k="rcr_advice_pressure_high_clubroot" v="Wysoka presja kiły: maksymalnie wydłuż przerwę w uprawie rzepaku i gorczycy; żaden preparat nie chroni przed tą chorobą, działa tylko płodozmian." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Umiarkowana presja suchej zgnilizny: wydłuż przerwę w uprawie rzepaku i gorczycy." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Umiarkowana presja zgorzeli podstawy źdźbła: unikaj trzeciego zboża z rzędu." />

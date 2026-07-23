@@ -26,6 +26,16 @@
         <e k="rcr_treatment_nematicide_remaining" v="%s（剩余%d个月）" />
         <e k="rcr_advice_nematicide_duration" v="土壤保护在每块田地持续3个月；重新施用会重置持续时间。" />
 
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="无" />
+        <e k="rcr_treatment_partial"  v="部分（%d%%）" />
+        <e k="rcr_treatment_complete" v="完全" />
+        <e k="rcr_treatment_disease_absent"     v="无病害" />
+        <e k="rcr_treatment_disease_active"     v="病害活跃" />
+        <e k="rcr_treatment_disease_controlled" v="病害受控" />
+        <e k="rcr_treatment_until_harvest" v="直到收获" />
+        <e k="rcr_treatment_months"        v="%d个月" />
+
         <!-- Status labels -->
         <e k="rcr_status_current_residue" v="预期残留 +%d (N+1) / +%d (N+2) kg/ha" />
         <e k="rcr_status_planned_residue" v="轮作残留总计 +%d kg/ha" />
@@ -54,7 +64,7 @@
         <e k="rcr_section_history"      v="作物历史" />
         <e k="rcr_section_nitrogen"     v="氮素状态" />
         <e k="rcr_section_advice"       v="农艺建议" />
-        <e k="rcr_section_soil_indicators" v="土壤指标" />
+        <e k="rcr_section_soil_indicators" v="土壤与防治" />
         <e k="rcr_section_field"        v="当前田块状态" />
         <e k="rcr_section_lime"         v="石灰 / pH 状态" />
         <e k="rcr_section_plan"         v="轮作计划" />
@@ -106,8 +116,8 @@
         <e k="rcr_advice_afterRoot" v="种植块根作物后，需间隔四年再种块根，随后种谷物以在晚收后重建土壤结构。" />
         <e k="rcr_advice_afterVegetable" v="种植蔬菜后，需间隔三年再重复，以谷物作为干净的轮换间隔。" />
         <e k="rcr_advice_afterForage" v="短期草地之后，谷物可利用草皮下积累的肥力与结构。" />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病压力高，至少三年内避免种植油菜、芥菜、向日葵、大豆、豌豆、菜豆、马铃薯和胡萝卜；杀菌剂只能保住已喷施地块的收成，不会让病害消退。" />
-        <e k="rcr_advice_pressure_high_bcn"           v="线虫压力高，三年内避免种植甜菜、红甜菜、油菜、芥菜和菠菜；杀线虫剂能在已喷施地块保住收成三个月。" />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病压力高，若在3年内让油菜、芥菜、向日葵、大豆、豌豆、菜豆、马铃薯或胡萝卜轮作回归，压力仍然居高不下；杀菌剂能延缓发病并锁定已喷施地块的损失，但不会让病害消退。" />
+        <e k="rcr_advice_pressure_high_bcn"           v="线虫压力高，若在3年内让甜菜、红甜菜、油菜、芥菜或菠菜轮作回归，压力仍然居高不下；杀线虫剂能在已喷施地块保住收成三个月。" />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病压力中等，拉开寄主作物的间隔，降雨会抬高风险。" />
         <e k="rcr_advice_pressure_moderate_bcn"         v="线虫压力中等，拉开甜菜与十字花科作物的间隔。" />
         <e k="rcr_advice_no_current_crop" v="当前无主要作物: 检测到作物后将提供建议。" />
@@ -199,12 +209,12 @@
         <e k="rcr_fillType_nematicide" v="杀线虫剂" />
         <e k="rcr_disease_treatment_none" v="无防治" />
         <e k="rcr_disease_treatment_clubroot" v="无（仅靠轮作）" />
-        <e k="rcr_advice_pressure_high_phoma" v="黑胫病压力高，把油菜和芥菜的间隔拉长到四年；杀菌剂只能保住已喷施地块的收成，不会让病害消退。" />
+        <e k="rcr_advice_pressure_high_phoma" v="黑胫病压力高，若在4年内让油菜或芥菜轮作回归，压力仍然居高不下；杀菌剂能延缓发病并锁定已喷施地块的损失，不会让病害消退。" />
         <e k="rcr_advice_pressure_high_takeall" v="全蚀病压力高，插入一茬非寄主作物（燕麦、豆科、油料作物）；没有任何药剂能防护这种病害，只有轮作才能降低压力。" />
-        <e k="rcr_advice_pressure_high_septoria" v="叶枯病压力高，拉开小麦、大麦、小黑麦和斯佩尔特小麦的间隔；杀菌剂只能保住已喷施地块的收成，降雨会加快流行。" />
-        <e k="rcr_advice_pressure_high_rust" v="锈病压力高，谷物和油菜都是寄主，要拉开间隔；杀菌剂只能保住已喷施地块的收成，温暖潮湿的天气会加快流行。" />
-        <e k="rcr_advice_pressure_high_fusarium" v="赤霉病压力高，避免玉米后种小麦，减少连续种植谷物；杀菌剂只能保住已喷施地块的收成，降雨会加快流行。" />
-        <e k="rcr_advice_pressure_high_lateblight" v="晚疫病压力高，拉开马铃薯的间隔；杀菌剂只能保住已喷施地块的收成，凉爽潮湿的天气会加快流行。" />
+        <e k="rcr_advice_pressure_high_septoria" v="叶枯病压力高，拉开小麦、大麦、小黑麦和斯佩尔特小麦的间隔；杀菌剂能延缓发病并锁定已喷施地块的损失，降雨会加快流行。" />
+        <e k="rcr_advice_pressure_high_rust" v="锈病压力高，谷物和油菜都是寄主，要拉开间隔；杀菌剂能延缓发病并锁定已喷施地块的损失，温暖潮湿的天气会加快流行。" />
+        <e k="rcr_advice_pressure_high_fusarium" v="赤霉病压力高，避免玉米后种小麦，减少连续种植谷物；杀菌剂能延缓发病并锁定已喷施地块的损失，降雨会加快流行。" />
+        <e k="rcr_advice_pressure_high_lateblight" v="晚疫病压力高，拉开马铃薯的间隔；杀菌剂能延缓发病并锁定已喷施地块的损失，凉爽潮湿的天气会加快流行。" />
         <e k="rcr_advice_pressure_high_clubroot" v="根肿病压力高，尽量拉长油菜和芥菜的间隔；没有任何药剂能防护这种病害，只有轮作才有效。" />
         <e k="rcr_advice_pressure_moderate_phoma" v="黑胫病压力中等，拉长油菜和芥菜的间隔。" />
         <e k="rcr_advice_pressure_moderate_takeall" v="全蚀病压力中等，避免连续第三茬谷物。" />

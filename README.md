@@ -104,9 +104,10 @@ Search for "Realistic Crop Rotation" on the official [Farming Simulator ModHub](
 1. Open the in-game Map and switch to the **Diseases** view to check infected fields and the pressure forecast
 2. Space host crops far enough apart to keep soil pressure low. This works fully against the soil group
 3. Accept that rust, septoria, late blight and fusarium can still appear on a clean rotation. Watch the weather rather than the rotation for those
-4. Spray preventively on crops you want to protect. Treating after the destruction has started saves only what is still standing
-5. Harvesting or mowing removes fungicide protection from the cut area; nematicide stays in the soil for three months and a new application renews it
-6. For take-all and clubroot, only a non-host crop and a long enough rotation help
+4. Spray fungicide early on the crops you want to protect: where you spray, the disease rarely appears, and if it does show up, treating keeps it from spreading further there. It never heals what is already damaged, so spray before an outbreak, not after
+5. The Treatment gauge in the Crop Rotation tab shows how much of the field is sprayed, whether the disease is absent, active or under control, and how long protection lasts
+6. Harvesting ends the outbreak on the field and clears the fungicide; the soil disease pressure and the field history stay, so the next sensitive crop is still at risk. Nematicide protects the soil for three months and a new spray renews it
+7. For take-all and clubroot, only a non-host crop and a long enough rotation help
 
 ## Console Commands
 

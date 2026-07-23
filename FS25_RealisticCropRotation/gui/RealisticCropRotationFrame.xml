@@ -85,15 +85,15 @@
                 <Text        profile="frStatusPillText" id="statusPillText" text=""/>
             </GuiElement>
 
-            <!-- SECTION: CROP HISTORY (y=-66) -->
-            <GuiElement profile="frSectionBar" position="0px -66px">
+            <!-- SECTION: CROP HISTORY (y=-64) -->
+            <GuiElement profile="frSectionBar" position="0px -64px">
                 <RoundCorner profile="frSectionAccent" position="14px 0px"/>
                 <Text profile="frSectionTitle" id="historySectionTitle" text="$l10n_rcr_section_history"/>
                 <RoundCorner profile="frSectionLine" id="historySectionLine"/>
             </GuiElement>
 
-            <!-- TIMELINE STRIP (y=-112..306): rail (season labels) + 5 slot cards. Centred at runtime; empty tail slots are hidden. -->
-            <GuiElement profile="frTimeline" position="20px -112px" id="historyTimeline">
+            <!-- TIMELINE STRIP (y=-102..296): rail (season labels) + 5 slot cards. Centred at runtime; empty tail slots are hidden. -->
+            <GuiElement profile="frTimeline" position="20px -102px" id="historyTimeline">
 
                 <!-- Rail -->
                 <GuiElement profile="frRailCell" position="8px 0px" id="slot1Rail">
@@ -214,15 +214,15 @@
 
             </GuiElement>
 
-            <!-- SECTION: AGRONOMIC ADVICE (y=-330) -->
-            <GuiElement profile="frSectionBar" position="0px -330px">
+            <!-- SECTION: AGRONOMIC ADVICE (y=-304) -->
+            <GuiElement profile="frSectionBar" position="0px -304px">
                 <RoundCorner profile="frSectionAccentAdvice" position="14px 0px"/>
                 <Text profile="frSectionTitleAdvice" id="adviceSectionTitle" text="$l10n_rcr_section_advice"/>
                 <RoundCorner profile="frSectionLine" id="adviceSectionLine"/>
             </GuiElement>
 
-            <!-- ADVICE CARD (y=-374..484) -->
-            <GuiElement profile="frAdviceCard" position="20px -374px">
+            <!-- ADVICE CARD (y=-346..456) -->
+            <GuiElement profile="frAdviceCard" position="20px -346px">
                 <RoundCorner profile="frAdviceCardBgNeutral" id="adviceCardBg"/>
                 <RoundCorner profile="frAdviceStatusBadgeBgNeutral" id="adviceStatusBadgeBg"/>
                 <Text profile="frAdviceStatusBadgeText" id="adviceStatusBadgeText" text=""/>
@@ -231,15 +231,15 @@
                 <Text profile="frAdviceText" id="adviceText" text=""/>
             </GuiElement>
 
-            <!-- SECTION: SOIL INDICATORS (y=-508) -->
-            <GuiElement profile="frSectionBar" position="0px -508px">
+            <!-- SECTION: SOIL INDICATORS + TREATMENT (y=-462) -->
+            <GuiElement profile="frSectionBar" position="0px -462px">
                 <RoundCorner profile="frSectionAccentN" position="14px 0px"/>
                 <Text profile="frSectionTitleN" id="soilSectionTitle" text="$l10n_rcr_section_soil_indicators"/>
                 <RoundCorner profile="frSectionLine" id="soilSectionLine"/>
             </GuiElement>
 
-            <!-- UNIFIED SOIL CARD (y=-552..684) -->
-            <GuiElement profile="frSoilIndicatorsCard" position="20px -552px">
+            <!-- UNIFIED SOIL CARD (y=-504..702): nitrogen / pH / treatment -->
+            <GuiElement profile="frSoilIndicatorsCard" position="20px -504px">
                 <RoundCorner profile="frSoilIndicatorsCardBg"/>
 
                 <Text profile="frSoilRowTitleTop" id="nitrogenRowTitle" text="$l10n_rcr_section_nitrogen"/>
@@ -255,6 +255,14 @@
                 <Text profile="frSoilValueBottom" id="limeValueLabel" text="" visible="false"/>
                 <RoundCorner profile="frSoilTrackBottom" id="limeTrack"/>
                 <RoundCorner profile="frSoilFillBottom" id="limeBarFill" visible="false"/>
+
+                <RoundCorner profile="frSoilRowDivider2"/>
+
+                <Text profile="frSoilRowTitleTreatment" id="treatmentRowTitle" text="$l10n_rcr_treatment_hud_label"/>
+                <Text profile="frSoilStateTreatment" id="treatmentStateLabel" text=""/>
+                <Text profile="frSoilValueTreatment" id="treatmentValueLabel" text="" visible="false"/>
+                <RoundCorner profile="frSoilTrackTreatment" id="treatmentTrack"/>
+                <RoundCorner profile="frSoilFillTreatment" id="treatmentBarFill" visible="false"/>
             </GuiElement>
 
             <!-- SECTION: FIELD (soil work / weed / growth) (y=-708) -->
