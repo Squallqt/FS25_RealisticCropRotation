@@ -11,9 +11,7 @@ RealisticCropRotationFrame.HERO_PILL_MAX_W_PX = 420
 RealisticCropRotationFrame.HERO_PILL_TEXT_PADDING_PX = 24
 RealisticCropRotationFrame.HERO_TITLE_PILL_GAP_PX = 24
 local function isFallowCrop(cropName)
-    return RealisticCropRotation ~= nil
-        and type(RealisticCropRotation.isFallowCrop) == "function"
-        and RealisticCropRotation.isFallowCrop(cropName)
+    return RealisticCropRotation.isFallowCrop(cropName)
 end
 
 local function getFamilyTextKey(family)
@@ -243,10 +241,7 @@ function RealisticCropRotationFrame:onFrameOpen()
     self:populateSidebar(true)
     self:setMenuButtonInfoDirty()
     if g_currentMission ~= nil and g_currentMission:getIsServer() then
-        if RealisticCropRotation ~= nil
-            and type(RealisticCropRotation.requestMenuReconcile) == "function" then
-            RealisticCropRotation.requestMenuReconcile(self.selectedId)
-        end
+        RealisticCropRotation.requestMenuReconcile(self.selectedId)
     elseif RealisticCropRotation ~= nil and RealisticCropRotation.requestServerSync ~= nil then
         RealisticCropRotation.requestServerSync(self.selectedId)
     end
@@ -369,9 +364,7 @@ function RealisticCropRotationFrame:getActiveCropInfoForDisplay(farmlandId, useS
     if mgr == nil then return nil end
 
     if useSnapshot then
-        local repository = mgr.repository
-        local cropName = repository ~= nil and type(repository.getLastKnownActiveCrop) == "function"
-            and repository:getLastKnownActiveCrop(farmlandId) or nil
+        local cropName = mgr.repository:getLastKnownActiveCrop(farmlandId)
         local fruitType = cropName ~= nil and cropName ~= ""
             and g_fruitTypeManager ~= nil
             and type(g_fruitTypeManager.getFruitTypeByName) == "function"
@@ -379,13 +372,7 @@ function RealisticCropRotationFrame:getActiveCropInfoForDisplay(farmlandId, useS
         return cropName, fruitType ~= nil and fruitType.index or nil
     end
 
-    if type(mgr.getActiveCropInfo) == "function" then
-        return mgr:getActiveCropInfo(farmlandId)
-    end
-    if type(mgr.getActiveCropName) == "function" then
-        return mgr:getActiveCropName(farmlandId)
-    end
-    return nil
+    return mgr:getActiveCropInfo(farmlandId)
 end
 
 ---Updates the detail-tab residue pill: crop residue (n1/n2) or catch-crop cover residue, in kg/ha.
@@ -399,9 +386,7 @@ function RealisticCropRotationFrame:updateResiduePill(pillBg, pillText, farmland
     local hasBonus = false
 
     local mgr = self:getManager()
-    if mgr ~= nil and mgr.service ~= nil
-        and type(mgr.service.getResidueEntry) == "function"
-        and type(mgr.service.getNitrogenKgPerHaFromStateChange) == "function" then
+    if mgr ~= nil and mgr.service ~= nil then
         local activeCropName, activeFruitTypeIndex = self:getActiveCropInfoForDisplay(farmlandId, useSnapshot)
         if activeCropName ~= nil and activeCropName ~= "" and not isFallowCrop(activeCropName) then
             local service = mgr.service
@@ -412,8 +397,7 @@ function RealisticCropRotationFrame:updateResiduePill(pillBg, pillText, farmland
                 local n2Kg = math.floor((service:getNitrogenKgPerHaFromStateChange(tonumber(entry.n2) or 0) or 0) + 0.5)
                 text = string.format(self.i18n:getText("rcr_status_current_residue"), n1Kg, n2Kg)
                 hasBonus = true
-            elseif type(service.isCoverCropForRotationHistory) == "function"
-                and service:isCoverCropForRotationHistory(activeFruitTypeIndex, normalizedCropName) then
+            elseif service:isCoverCropForRotationHistory(activeFruitTypeIndex, normalizedCropName) then
                 local coverResidueKg = RealisticCropRotationService ~= nil
                     and tonumber(RealisticCropRotationService.COVER_CROP_RESIDUE_KG_HA) or 0
                 if coverResidueKg > 0 then
@@ -446,11 +430,6 @@ function RealisticCropRotationFrame:getPlanNitrogenResidueKgHa(plan, coverPlan)
     if mgr == nil or mgr.service == nil then return nil end
 
     local service = mgr.service
-    if type(service.getResidueEntry) ~= "function"
-        or type(service.getNitrogenKgPerHaFromStateChange) ~= "function" then
-        return nil
-    end
-
     local totalStateChange = 0
     for i = 1, 4 do
         local cropName = plan ~= nil and plan[i] or nil
@@ -474,11 +453,9 @@ function RealisticCropRotationFrame:getPlanNitrogenResidueKgHa(plan, coverPlan)
         end
     end
 
-    if type(service.getCoverResidueKgHa) == "function" then
-        local ok, coverResidueKgHa = pcall(service.getCoverResidueKgHa, service, coverPlan)
-        if ok and type(coverResidueKgHa) == "number" and coverResidueKgHa > 0 then
-            residueKgHa = residueKgHa + coverResidueKgHa
-        end
+    local ok, coverResidueKgHa = pcall(service.getCoverResidueKgHa, service, coverPlan)
+    if ok and type(coverResidueKgHa) == "number" and coverResidueKgHa > 0 then
+        residueKgHa = residueKgHa + coverResidueKgHa
     end
 
     if residueKgHa <= 0 then return nil end
@@ -1301,8 +1278,7 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
 
     -- No-crop fields: resolve the field status once (icon colour + text), MP-safe.
     local statusLabel, statusKind, statusIndex = nil, nil, nil
-    if activeCropName == nil and mgr ~= nil
-        and type(mgr.getCurrentFieldStatus) == "function" then
+    if activeCropName == nil and mgr ~= nil then
         statusLabel, statusKind, statusIndex = mgr:getCurrentFieldStatus(entry.farmlandId)
     end
 
@@ -1386,8 +1362,8 @@ function RealisticCropRotationFrame:getCurrentSlotData(farmlandId, statusLabel, 
     local mgr = self:getManager()
     local activeCropName = self:getActiveCropInfoForDisplay(farmlandId, useSnapshot)
 
-    if (activeCropName == nil or activeCropName == "") and RealisticCropRotation ~= nil
-        and mgr ~= nil and type(mgr.isCurrentGapFallow) == "function" and mgr:isCurrentGapFallow(farmlandId) then
+    if (activeCropName == nil or activeCropName == "")
+        and mgr ~= nil and mgr:isCurrentGapFallow(farmlandId) then
         activeCropName = RealisticCropRotation.SPECIAL_CROP_FALLOW
     end
 
@@ -1431,7 +1407,7 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId, useSnapshot)
 
     -- Single field-status read, passed to the timeline slot and the field card.
     local statusLabel, statusKind, statusIndex = nil, nil, nil
-    if mgr ~= nil and type(mgr.getCurrentFieldStatus) == "function" then
+    if mgr ~= nil then
         statusLabel, statusKind, statusIndex = mgr:getCurrentFieldStatus(farmlandId)
     end
 
@@ -1591,17 +1567,13 @@ function RealisticCropRotationFrame:getSoilAnalysisState(farmlandId)
     if mgr == nil then return nil end
 
     local hasAnalysedValue = false
-    if type(mgr.getNitrogenLevel) == "function" then
-        local actualN = mgr:getNitrogenLevel(farmlandId)
-        if actualN == false then return false end
-        hasAnalysedValue = hasAnalysedValue or actualN ~= nil
-    end
+    local actualN = mgr:getNitrogenLevel(farmlandId)
+    if actualN == false then return false end
+    hasAnalysedValue = hasAnalysedValue or actualN ~= nil
 
-    if type(mgr.getPHLevel) == "function" then
-        local actualPH = mgr:getPHLevel(farmlandId)
-        if actualPH == false then return false end
-        hasAnalysedValue = hasAnalysedValue or actualPH ~= nil
-    end
+    local actualPH = mgr:getPHLevel(farmlandId)
+    if actualPH == false then return false end
+    hasAnalysedValue = hasAnalysedValue or actualPH ~= nil
 
     return hasAnalysedValue and true or nil
 end
@@ -1790,16 +1762,15 @@ function RealisticCropRotationFrame:updateTreatmentGauge(farmlandId, sharedRowTi
     local mgr = self:getManager()
     local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
     local grid = RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
-    local field = (mgr ~= nil and type(mgr.getFieldByFarmlandId) == "function")
-        and mgr:getFieldByFarmlandId(farmlandId) or nil
+    local field = mgr ~= nil and mgr:getFieldByFarmlandId(farmlandId) or nil
 
     local coverageOf = function(fam)
-        return (grid ~= nil and field ~= nil and type(grid.getProtectionCoverage) == "function")
+        return (grid ~= nil and field ~= nil)
             and grid:getProtectionCoverage(field, fam) or 0
     end
 
     -- Among active diseases, point at the treatment family least able to cope (lowest coverage), so the gauge always shows the next action; ties go to the more severe disease.
-    local state = (disease ~= nil and type(disease.getState) == "function") and disease:getState(farmlandId) or nil
+    local state = disease ~= nil and disease:getState(farmlandId) or nil
     local anyActive = false
     local family, coverage, worstSeverity = nil, 0, -1
     if state ~= nil then
@@ -1807,7 +1778,7 @@ function RealisticCropRotationFrame:updateTreatmentGauge(farmlandId, sharedRowTi
             local severity = tonumber(s.severity) or 0
             if severity > 0 then
                 anyActive = true
-                local treatment = (disease ~= nil and type(disease.getTreatment) == "function") and disease:getTreatment(group) or "NONE"
+                local treatment = disease:getTreatment(group)
                 if treatment == "FUNGICIDE" or treatment == "NEMATICIDE" then
                     local cov = coverageOf(treatment)
                     if family == nil or cov < coverage or (cov == coverage and severity > worstSeverity) then
@@ -1858,9 +1829,7 @@ function RealisticCropRotationFrame:updateTreatmentGauge(farmlandId, sharedRowTi
         if family == "FUNGICIDE" then
             valueText = self.i18n:getText("rcr_treatment_until_harvest")
         elseif family == "NEMATICIDE" then
-            local lifecycle = RealisticCropRotationTreatmentLifecycle
-            local remaining = lifecycle ~= nil and type(lifecycle.getNematicidePeriodsRemaining) == "function"
-                and lifecycle.getNematicidePeriodsRemaining(farmlandId) or nil
+            local remaining = RealisticCropRotationTreatmentLifecycle.getNematicidePeriodsRemaining(farmlandId)
             if remaining ~= nil then
                 valueText = string.format(self.i18n:getText("rcr_treatment_months"), remaining)
             end
@@ -2029,8 +1998,7 @@ function RealisticCropRotationFrame:evaluateRotationStep(cropA, cropB)
 
     if worstGroup ~= nil then
         local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
-        local label = (disease ~= nil and type(disease.getDisplayName) == "function")
-            and disease:getDisplayName(worstGroup) or tostring(worstGroup)
+        local label = disease ~= nil and disease:getDisplayName(worstGroup) or tostring(worstGroup)
         return { kind = "disease", label = label, yearsRemaining = worstMinInterval - 1, minInterval = worstMinInterval }
     end
 
@@ -2055,7 +2023,7 @@ function RealisticCropRotationFrame:getWorstPressureAdviceText(farmlandId, curre
     if next(cropDiseases) == nil then return nil end
 
     local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
-    if disease == nil or type(disease.getPressure) ~= "function" then return nil end
+    if disease == nil then return nil end
     local D = RealisticCropRotationDisease
     if D == nil then return nil end
 
@@ -2094,7 +2062,7 @@ end
 -- @return number worstSeverity
 function RealisticCropRotationFrame:getWorstActiveDisease(farmlandId)
     local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
-    if disease == nil or type(disease.getWorstGroup) ~= "function" then return nil, 0 end
+    if disease == nil then return nil, 0 end
     -- Same rule the disease map paints with.
     return disease:getWorstGroup(farmlandId)
 end

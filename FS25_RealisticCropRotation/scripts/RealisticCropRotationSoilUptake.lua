@@ -22,10 +22,6 @@ local function warnOnce(key, message, ...)
 end
 
 local function fieldBounds(field)
-    if RealisticCropRotationDiseaseGrid == nil
-        or type(RealisticCropRotationDiseaseGrid.fieldWorldBounds) ~= "function" then
-        return nil
-    end
     return RealisticCropRotationDiseaseGrid.fieldWorldBounds(field)
 end
 
@@ -571,8 +567,7 @@ function RealisticCropRotationSoilUptake.prepare(manager, field, desc, farmlandI
         snapshotPixels = {},
     }
 
-    local pf = manager ~= nil and type(manager.getPrecisionFarming) == "function"
-        and manager:getPrecisionFarming() or nil
+    local pf = manager ~= nil and manager:getPrecisionFarming() or nil
     if pf ~= nil then
         buildPFSession(session, pf, desc)
     else

@@ -445,7 +445,7 @@ local function paintDiseaseProtection(workArea, fillType, farmlandId)
     if treatmentType == nil then return end
 
     local grid = RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
-    if grid == nil or type(grid.paintProtection) ~= "function" then return end
+    if grid == nil then return end
 
     local sx, _, sz = getWorldTranslation(workArea.start)
     local wx, _, wz = getWorldTranslation(workArea.width)

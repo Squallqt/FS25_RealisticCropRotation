@@ -153,27 +153,16 @@ function RCRHistoryResponseEvent:readStream(streamId, connection)
         return
     end
 
-    if manager.service ~= nil and type(manager.service.applySyncData) == "function" then
+    if manager.service ~= nil then
         manager.service:applySyncData(received, receivedPlans, receivedCoverPlans, receivedLastKnownActiveCrop, receivedLastKnownGrowthState)
     end
-    if RealisticCropRotation ~= nil
-        and RealisticCropRotation.disease ~= nil
-        and type(RealisticCropRotation.disease.applySyncData) == "function" then
+    if RealisticCropRotation ~= nil and RealisticCropRotation.disease ~= nil then
         RealisticCropRotation.disease:applySyncData(receivedDiseaseState, receivedDiseaseCrop)
     end
-    if RealisticCropRotationTreatmentLifecycle ~= nil
-        and type(RealisticCropRotationTreatmentLifecycle.applySyncData) == "function" then
-        RealisticCropRotationTreatmentLifecycle.applySyncData(receivedNematicideCountdown)
-    end
+    RealisticCropRotationTreatmentLifecycle.applySyncData(receivedNematicideCountdown)
 
     if RealisticCropRotation ~= nil and RealisticCropRotation.frame ~= nil then
-        if type(RealisticCropRotation.frame.onServerSyncReceived) == "function" then
-            RealisticCropRotation.frame:onServerSyncReceived()
-        elseif type(RealisticCropRotation.frame.populateSidebar) == "function" then
-            RealisticCropRotation.frame:populateSidebar()
-        elseif type(RealisticCropRotation.frame.updateDetailPanel) == "function" then
-            RealisticCropRotation.frame:updateDetailPanel(RealisticCropRotation.frame.selectedId)
-        end
+        RealisticCropRotation.frame:onServerSyncReceived()
     end
 end
 
@@ -182,7 +171,7 @@ end
 -- @param Connection _connection Network connection (unused)
 function RCRHistoryResponseEvent:writeStream(streamId, _connection)
     local manager = g_currentMission ~= nil and g_currentMission.realisticCropRotationManager or nil
-    if manager == nil or manager.service == nil or type(manager.service.getSyncData) ~= "function" then
+    if manager == nil or manager.service == nil then
         -- Empty snapshot: write one zero count per section readStream expects (7), or the client read pointer desyncs.
         for _ = 1, 7 do
             streamWriteInt16(streamId, 0)
@@ -194,8 +183,8 @@ function RCRHistoryResponseEvent:writeStream(streamId, _connection)
     history = history or {}
     lastKnownActiveCrop = lastKnownActiveCrop or {}
     lastKnownGrowthState = lastKnownGrowthState or {}
-    local plans = type(manager.getAllRotationPlans) == "function" and manager:getAllRotationPlans() or {}
-    local coverPlans = type(manager.getAllRotationCoverPlans) == "function" and manager:getAllRotationCoverPlans() or {}
+    local plans = manager:getAllRotationPlans() or {}
+    local coverPlans = manager:getAllRotationCoverPlans() or {}
 
     local farmlandIds = {}
     for farmlandId, entries in pairs(history) do
@@ -289,9 +278,7 @@ function RCRHistoryResponseEvent:writeStream(streamId, _connection)
     end
 
     local diseaseState, diseaseCrop = {}, {}
-    if RealisticCropRotation ~= nil
-        and RealisticCropRotation.disease ~= nil
-        and type(RealisticCropRotation.disease.getSyncData) == "function" then
+    if RealisticCropRotation ~= nil and RealisticCropRotation.disease ~= nil then
         diseaseState, diseaseCrop = RealisticCropRotation.disease:getSyncData()
     end
 
@@ -326,9 +313,7 @@ function RCRHistoryResponseEvent:writeStream(streamId, _connection)
     end
 
 
-    local nematicideCountdown = RealisticCropRotationTreatmentLifecycle ~= nil
-        and type(RealisticCropRotationTreatmentLifecycle.getSyncData) == "function"
-        and RealisticCropRotationTreatmentLifecycle.getSyncData() or {}
+    local nematicideCountdown = RealisticCropRotationTreatmentLifecycle.getSyncData() or {}
     local treatmentFarmlandIds = {}
     for farmlandId, remaining in pairs(nematicideCountdown) do
         local n = tonumber(farmlandId)

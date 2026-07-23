@@ -58,8 +58,7 @@ function RealisticCropRotationHud.getCropDisplayName(cropName)
 
     local normalizedName = string.upper(tostring(cropName))
 
-    if RealisticCropRotation ~= nil and type(RealisticCropRotation.isFallowCrop) == "function"
-        and RealisticCropRotation.isFallowCrop(normalizedName) then
+    if RealisticCropRotation.isFallowCrop(normalizedName) then
         return RealisticCropRotationHud.getText("rcr_fallow", "Fallow")
     end
 
@@ -145,7 +144,7 @@ function RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
     if fieldBox == nil or fieldBox.addLine == nil then return end
 
     local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
-    if disease == nil or type(disease.getState) ~= "function" then return end
+    if disease == nil then return end
 
     local groups = disease:getState(farmlandId)
     if groups == nil then return end
@@ -153,7 +152,7 @@ function RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
     local label = RealisticCropRotationHud.getText("rcr_disease_hud_label", "Disease")
     for group, s in pairs(groups) do
         if (s.severity or 0) > 0 then
-            local diseaseName = (type(disease.getDisplayName) == "function") and disease:getDisplayName(group) or tostring(group)
+            local diseaseName = disease:getDisplayName(group)
             fieldBox:addLine(label, diseaseName, true)
         end
     end
@@ -180,9 +179,7 @@ function RealisticCropRotationHud.addTreatmentLine(fieldBox, farmlandId)
     end
     if isPointProtected(grid.nematicideProtectionMapId, grid.nematicideProtectionMapSize, px, pz) then
         local value = RealisticCropRotationHud.getText("rcr_fillType_nematicide", "Nematicide")
-        local lifecycle = RealisticCropRotationTreatmentLifecycle
-        local remaining = lifecycle ~= nil and type(lifecycle.getNematicidePeriodsRemaining) == "function"
-            and lifecycle.getNematicidePeriodsRemaining(farmlandId) or nil
+        local remaining = RealisticCropRotationTreatmentLifecycle.getNematicidePeriodsRemaining(farmlandId)
         if remaining ~= nil then
             value = string.format(
                 RealisticCropRotationHud.getText("rcr_treatment_nematicide_remaining", "%s (%d periods remaining)"),

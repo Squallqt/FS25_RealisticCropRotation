@@ -29,8 +29,7 @@ function RealisticCropRotationTreatmentLifecycle.applySyncData(received)
     received = received or {}
     local manager = RealisticCropRotation ~= nil and RealisticCropRotation.manager or nil
     local grid = RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
-    if manager ~= nil and grid ~= nil and type(manager.getFieldByFarmlandId) == "function"
-        and type(grid.clearFieldProtectionFamily) == "function" then
+    if manager ~= nil and grid ~= nil then
         for farmlandId in pairs(nematicidePeriodsRemaining) do
             if received[farmlandId] == nil then
                 local field = manager:getFieldByFarmlandId(farmlandId)
@@ -50,11 +49,7 @@ function RealisticCropRotationTreatmentLifecycle.onPeriodChanged()
     if g_server == nil then return false end
     local manager = RealisticCropRotation ~= nil and RealisticCropRotation.manager or nil
     local grid = RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
-    if manager == nil or grid == nil
-        or type(manager.getFieldByFarmlandId) ~= "function"
-        or type(grid.clearFieldProtectionFamily) ~= "function" then
-        return false
-    end
+    if manager == nil or grid == nil then return false end
 
     local changed = false
     for farmlandId, remaining in pairs(nematicidePeriodsRemaining) do
@@ -118,7 +113,7 @@ end
 
 local function clearCutFungicide(sx, sz, wx, wz, hx, hz)
     local grid = RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
-    if grid == nil or type(grid.clearProtectionArea) ~= "function" then return end
+    if grid == nil then return end
     grid:clearProtectionArea("FUNGICIDE", sx, sz, wx, wz, hx, hz)
 end
 

@@ -93,9 +93,7 @@ function RCRPlanUpdateEvent:run(connection)
 
     -- cropName must be empty, a known fruit type, or the internal fallow token.
     if self.cropName ~= "" then
-        local isFallowCrop = RealisticCropRotation ~= nil
-            and type(RealisticCropRotation.isFallowCrop) == "function"
-            and RealisticCropRotation.isFallowCrop(self.cropName)
+        local isFallowCrop = RealisticCropRotation.isFallowCrop(self.cropName)
 
         if isFallowCrop then
             if isCoverUpdate then

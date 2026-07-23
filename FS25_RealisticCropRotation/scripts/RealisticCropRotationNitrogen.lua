@@ -14,7 +14,7 @@ local vanillaLevelFilter = nil
 ---Returns PF nitrogen density data, or nil when PF is absent.
 local function getPFData()
     if targetData ~= nil and targetData.mode == "pf" then return targetData end
-    if nitrogenMap == nil and manager ~= nil and type(manager.getPrecisionFarming) == "function" then
+    if nitrogenMap == nil and manager ~= nil then
         local pf = manager:getPrecisionFarming()
         nitrogenMap = pf ~= nil and pf.nitrogenMap or nil
     end
@@ -249,8 +249,7 @@ local function getTransition(data)
     end
 
     -- Crops with termination residue (n1) > 0 are the only ones that can deposit, so capture skips every other fruit plane.
-    if manager ~= nil and manager.service ~= nil
-        and type(manager.service.getResidueEntry) == "function" then
+    if manager ~= nil and manager.service ~= nil then
         for _, crop in ipairs(context.crops) do
             local entry = manager.service:getResidueEntry(crop.name)
             if entry ~= nil and (tonumber(entry.n1) or 0) > 0 then

@@ -181,11 +181,7 @@ end
 function RealisticCropRotation.requestMenuReconcile(selectedFarmlandId)
     if g_currentMission == nil or not g_currentMission:getIsServer() then return false end
     local manager = RealisticCropRotation.manager
-    if manager == nil
-        or type(manager.getOwnedRotationFarmlandIds) ~= "function"
-        or type(manager.reconcileActiveCropForFarmland) ~= "function" then
-        return false
-    end
+    if manager == nil then return false end
 
     local queue = RealisticCropRotation.menuReconcileQueue
     if queue ~= nil then
@@ -220,7 +216,7 @@ local function processMenuReconcileQueue()
     if queue == nil then return end
 
     local manager = RealisticCropRotation.manager
-    if manager == nil or type(manager.reconcileActiveCropForFarmland) ~= "function" then
+    if manager == nil then
         RealisticCropRotation.menuReconcileQueue = nil
         return
     end
@@ -232,21 +228,19 @@ local function processMenuReconcileQueue()
     end
     queue.index = queue.index + 1
 
-    if type(manager.invalidateActiveCropCache) == "function" then
-        manager:invalidateActiveCropCache(farmlandId)
-    end
+    manager:invalidateActiveCropCache(farmlandId)
     if manager:reconcileActiveCropForFarmland(farmlandId) then
         queue.changed = true
     end
 
     local frame = RealisticCropRotation.frame
-    if frame ~= nil and type(frame.onMenuReconcileFarmland) == "function" then
+    if frame ~= nil then
         frame:onMenuReconcileFarmland(farmlandId)
     end
 
     if queue.index > #queue.farmlandIds then
         RealisticCropRotation.menuReconcileQueue = nil
-        if frame ~= nil and type(frame.onMenuReconcileComplete) == "function" then
+        if frame ~= nil then
             frame:onMenuReconcileComplete(queue.changed)
         end
         RealisticCropRotation.requestBroadcast()
@@ -270,7 +264,7 @@ local refreshRealisticCropRotationFrame
 -- @param boolean loadFromSavegame True when triggered by savegame load
 local function onFarmlandOwnerChanged(farmlandId, _farmId, loadFromSavegame)
     if loadFromSavegame then return end
-    if RealisticCropRotation.manager == nil or type(RealisticCropRotation.manager.clearRotationPlan) ~= "function" then return end
+    if RealisticCropRotation.manager == nil then return end
 
     local changed = RealisticCropRotation.manager:clearRotationPlan(farmlandId)
     if changed then
@@ -279,8 +273,7 @@ local function onFarmlandOwnerChanged(farmlandId, _farmId, loadFromSavegame)
     end
 
     -- Ownership changed: wipe + repaint the risk display map so bought fields appear and sold fields disappear.
-    if RealisticCropRotation.disease ~= nil
-        and type(RealisticCropRotation.disease.refreshRiskMap) == "function" then
+    if RealisticCropRotation.disease ~= nil then
         RealisticCropRotation.disease:refreshRiskMap(true)
     end
 end
@@ -288,11 +281,7 @@ end
 ---Reconciles active crops and rolls disease infection for all owned farmlands on a period change (server).
 local function onPeriodChanged()
     if g_currentMission == nil or not g_currentMission:getIsServer() then return end
-    if RealisticCropRotation.manager == nil
-        or type(RealisticCropRotation.manager.getOwnedRotationFarmlandIds) ~= "function"
-        or type(RealisticCropRotation.manager.reconcileActiveCropForFarmland) ~= "function" then
-        return
-    end
+    if RealisticCropRotation.manager == nil then return end
 
     local changed = RealisticCropRotationTreatmentLifecycle.onPeriodChanged()
     local diseaseUpdated = false
@@ -316,8 +305,7 @@ local function onPeriodChanged()
     end
 
     -- Risk bands drift with the period (history decay): repaint only the fields whose band moved, off the UI path.
-    if RealisticCropRotation.disease ~= nil
-        and type(RealisticCropRotation.disease.refreshRiskMap) == "function" then
+    if RealisticCropRotation.disease ~= nil then
         RealisticCropRotation.disease:refreshRiskMap(false)
     end
 end
@@ -325,8 +313,7 @@ end
 ---Queues the day's disease progress; drained across frames by the broadcast updateable (server).
 local function onDayChanged()
     if g_currentMission == nil or not g_currentMission:getIsServer() then return end
-    if RealisticCropRotation.disease ~= nil
-        and type(RealisticCropRotation.disease.enqueueDailyProgress) == "function" then
+    if RealisticCropRotation.disease ~= nil then
         RealisticCropRotation.disease:enqueueDailyProgress()
     end
 end
@@ -334,10 +321,7 @@ end
 ---Refreshes the open menu frame after a state change (history or planning tab).
 function refreshRealisticCropRotationFrame()
     if RealisticCropRotation.frame == nil then return end
-    local frame = RealisticCropRotation.frame
-    if type(frame.onServerSyncReceived) == "function" then
-        frame:onServerSyncReceived()
-    end
+    RealisticCropRotation.frame:onServerSyncReceived()
 end
 
 ---Forces the tab-list alignment offset back to 0 (adding a tab leaves a stale offset).
@@ -467,19 +451,14 @@ local function loadedMission()
 
     loadGuiAssets()
     -- Wires RCR sprayer products; without this, Sprayer:onStartWorkAreaProcessing() gets a nil sprayType and aborts.
-    if RealisticCropRotationSprayerProducts ~= nil
-        and type(RealisticCropRotationSprayerProducts.onMissionLoaded) == "function" then
-        RealisticCropRotationSprayerProducts.onMissionLoaded()
-    end
+    RealisticCropRotationSprayerProducts.onMissionLoaded()
 
     RealisticCropRotation.manager = RealisticCropRotationManager.new()
     RealisticCropRotation.manager:initialize()
 
     initDiseaseTerrain(g_currentMission)
     RealisticCropRotation.disease = RealisticCropRotationDisease.new(RealisticCropRotation.manager, RealisticCropRotation.grid)
-    if type(RealisticCropRotation.disease.registerConsoleCommands) == "function" then
-        RealisticCropRotation.disease:registerConsoleCommands()
-    end
+    RealisticCropRotation.disease:registerConsoleCommands()
 
     local savegameFolderPath = resolveSavegameFolderPath()
 
@@ -488,9 +467,7 @@ local function loadedMission()
         if RealisticCropRotation.disease ~= nil then
             RealisticCropRotation.disease:loadFromXML(savegameFolderPath)
             -- Initial paint of the risk display map, during the loading screen (never on menu open).
-            if type(RealisticCropRotation.disease.refreshRiskMap) == "function" then
-                RealisticCropRotation.disease:refreshRiskMap(true)
-            end
+            RealisticCropRotation.disease:refreshRiskMap(true)
         end
         RealisticCropRotationTreatmentLifecycle.loadFromXML(savegameFolderPath)
         if g_messageCenter ~= nil and MessageType ~= nil and MessageType.FARMLAND_OWNER_CHANGED ~= nil then
@@ -543,8 +520,7 @@ local function loadedMission()
                 -- Menu reconciliation is authoritative but incremental: one farmland per frame.
                 processMenuReconcileQueue()
                 -- Spread the day's disease work across frames: drain a few queued fields per frame instead of all at once.
-                if RealisticCropRotation.disease ~= nil
-                    and type(RealisticCropRotation.disease.processDailyQueue) == "function" then
+                if RealisticCropRotation.disease ~= nil then
                     RealisticCropRotation.disease:processDailyQueue()
                 end
                 if not RealisticCropRotation.broadcastDirty then return end
@@ -566,8 +542,7 @@ local function loadedMission()
                 pending.coverPlans or {},
                 pending.lastKnownActiveCrop or {},
                 pending.lastKnownGrowthState or {})
-            if RealisticCropRotation.disease ~= nil
-                and type(RealisticCropRotation.disease.applySyncData) == "function" then
+            if RealisticCropRotation.disease ~= nil then
                 RealisticCropRotation.disease:applySyncData(pending.diseaseState or {}, pending.diseaseCrop or {})
             end
             RealisticCropRotationTreatmentLifecycle.applySyncData(pending.nematicideCountdown or {})
@@ -595,9 +570,7 @@ end
 local function loadInGameMenuGui()
     if g_gui == nil or type(g_gui.loadProfiles) ~= "function" then return end
     if g_inGameMenu == nil then return end
-    if RealisticCropRotationDiseaseMap ~= nil and type(RealisticCropRotationDiseaseMap.install) == "function" then
-        RealisticCropRotationDiseaseMap:install()
-    end
+    RealisticCropRotationDiseaseMap:install()
 
     if g_inGameMenu.pageRealisticCropRotation ~= nil then
         RealisticCropRotation.frame = g_inGameMenu.pageRealisticCropRotation
@@ -667,9 +640,7 @@ local function initRealisticCropRotation()
     FSBaseMission.saveSavegame = Utils.appendedFunction(FSBaseMission.saveSavegame, onSaveToXMLFile)
     FSBaseMission.sendInitialClientState = Utils.appendedFunction(FSBaseMission.sendInitialClientState, sendInitialClientState)
 
-    if RealisticCropRotationDiseaseMap ~= nil and type(RealisticCropRotationDiseaseMap.install) == "function" then
-        RealisticCropRotationDiseaseMap:install()
-    end
+    RealisticCropRotationDiseaseMap:install()
 
     BaseMission.delete = Utils.appendedFunction(BaseMission.delete, function()
         if g_currentMission ~= nil and RealisticCropRotation.broadcastUpdateable ~= nil
@@ -699,24 +670,11 @@ local function initRealisticCropRotation()
         RealisticCropRotation.broadcastDirty = false
         RealisticCropRotation.broadcastTimerMs = 0
 
-        if RealisticCropRotationNitrogen ~= nil
-            and type(RealisticCropRotationNitrogen.delete) == "function" then
-            RealisticCropRotationNitrogen.delete()
-        end
-        if RealisticCropRotationSoilUptake ~= nil
-            and type(RealisticCropRotationSoilUptake.delete) == "function" then
-            RealisticCropRotationSoilUptake.delete()
-        end
-        if RealisticCropRotationTreatmentLifecycle ~= nil
-            and type(RealisticCropRotationTreatmentLifecycle.delete) == "function" then
-            RealisticCropRotationTreatmentLifecycle.delete()
-        end
-        if RealisticCropRotationDiseaseMap ~= nil
-            and type(RealisticCropRotationDiseaseMap.delete) == "function" then
-            RealisticCropRotationDiseaseMap:delete()
-        end
-        if RealisticCropRotation.disease ~= nil
-            and type(RealisticCropRotation.disease.unregisterConsoleCommands) == "function" then
+        RealisticCropRotationNitrogen.delete()
+        RealisticCropRotationSoilUptake.delete()
+        RealisticCropRotationTreatmentLifecycle.delete()
+        RealisticCropRotationDiseaseMap:delete()
+        if RealisticCropRotation.disease ~= nil then
             RealisticCropRotation.disease:unregisterConsoleCommands()
         end
         if RealisticCropRotation.manager ~= nil then
@@ -735,10 +693,7 @@ local function initRealisticCropRotation()
         end
         RealisticCropRotation.frame = nil
         RealisticCropRotation.pendingSyncData = nil
-        if RealisticCropRotationSprayerProducts ~= nil
-            and type(RealisticCropRotationSprayerProducts.onMissionDeleted) == "function" then
-            RealisticCropRotationSprayerProducts.onMissionDeleted()
-        end
+        RealisticCropRotationSprayerProducts.onMissionDeleted()
     end)
 end
 

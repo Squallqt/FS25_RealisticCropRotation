@@ -781,7 +781,6 @@ end
 -- @param integer farmlandId
 -- @return boolean changed
 function RealisticCropRotationManager:clearRotationPlan(farmlandId)
-    if self.repository == nil or type(self.repository.clearPlan) ~= "function" then return false end
     return self.repository:clearPlan(farmlandId)
 end
 
@@ -1003,7 +1002,6 @@ end
 -- @param integer farmlandId
 -- @return boolean isFallow
 function RealisticCropRotationManager:isCurrentGapFallow(farmlandId)
-    if self.service == nil or type(self.service.isCurrentGapFallow) ~= "function" then return false end
     return self.service:isCurrentGapFallow(farmlandId)
 end
 

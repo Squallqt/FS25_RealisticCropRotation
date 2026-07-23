@@ -323,8 +323,6 @@ end
 -- @param integer farmlandId
 -- @return boolean isFallow
 function RealisticCropRotationService:isCurrentGapFallow(farmlandId)
-    if RealisticCropRotation == nil or type(RealisticCropRotation.isFallowCrop) ~= "function" then return false end
-
     local lastEntry = self.repository:getHistory(farmlandId)[1]
     local lastCrop = lastEntry ~= nil and lastEntry.crop or nil
     if lastCrop == nil or RealisticCropRotation.isFallowCrop(lastCrop) then return false end

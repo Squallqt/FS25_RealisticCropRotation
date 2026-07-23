@@ -38,14 +38,9 @@ function RCRHistoryRequestEvent:readStream(streamId, connection)
         Logging.warning("[RealisticCropRotation] RCRHistoryRequestEvent: manager not available, replying without reconcile")
     end
 
-    if RCRHistoryResponseEvent == nil or type(RCRHistoryResponseEvent.new) ~= "function" then
-        Logging.warning("[RealisticCropRotation] RCRHistoryRequestEvent: response event unavailable, cannot reply")
-    else
-        connection:sendEvent(RCRHistoryResponseEvent.new())
-    end
+    connection:sendEvent(RCRHistoryResponseEvent.new())
 
-    if manager ~= nil and RealisticCropRotation ~= nil
-        and type(RealisticCropRotation.requestMenuReconcile) == "function" then
+    if manager ~= nil then
         RealisticCropRotation.requestMenuReconcile(self.selectedFarmlandId)
     end
 end

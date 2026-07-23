@@ -56,9 +56,6 @@ end
 ---Pathogen groups ordered by their stable overlay state id (delegates to the shared source on RealisticCropRotationDisease).
 -- @return table list array of { group, state } sorted by state id
 local function orderedDiseaseGroups()
-    if RealisticCropRotationDisease == nil or type(RealisticCropRotationDisease.getOrderedGroups) ~= "function" then
-        return {}
-    end
     return RealisticCropRotationDisease.getOrderedGroups()
 end
 
@@ -121,8 +118,7 @@ local function getInfectionDisplayItems(colorBlind)
     local items = {}
     for _, entry in ipairs(orderedDiseaseGroups()) do
         local color = infectionStateColor(entry.state, colorBlind)
-        local name = (disease ~= nil and type(disease.getDisplayName) == "function")
-            and disease:getDisplayName(entry.group) or tostring(entry.group)
+        local name = disease ~= nil and disease:getDisplayName(entry.group) or tostring(entry.group)
         items[#items + 1] = {
             colors = { [false] = {color}, [true] = {color} },
             description = name,
@@ -495,7 +491,7 @@ function RealisticCropRotationDiseaseMap:updateOverlay(force)
     self:createRuntimeObjects()
 
     -- Safety belt (pressure view only): incremental per-field Lua comparison, native passes only for what actually moved.
-    if self:isPressurePage() and type(disease.refreshRiskMap) == "function" then
+    if self:isPressurePage() then
         disease:refreshRiskMap(false)
     end
 

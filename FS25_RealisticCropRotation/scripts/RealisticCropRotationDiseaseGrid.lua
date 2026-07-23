@@ -319,9 +319,7 @@ function RealisticCropRotationDiseaseGrid:paintProtection(family, farmlandId, sx
     if (protChanged or 0) > 0 then
         self.protectionRevision = (self.protectionRevision or 0) + 1
     end
-    if family == "NEMATICIDE"
-        and RealisticCropRotationTreatmentLifecycle ~= nil
-        and type(RealisticCropRotationTreatmentLifecycle.onNematicideApplied) == "function" then
+    if family == "NEMATICIDE" then
         RealisticCropRotationTreatmentLifecycle.onNematicideApplied(farmlandId)
     end
     -- Disease marks are left untouched.
