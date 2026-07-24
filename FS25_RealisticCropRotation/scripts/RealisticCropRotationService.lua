@@ -73,7 +73,7 @@ function RealisticCropRotationService:getResidueEntry(cropName)
     return nil
 end
 
----Nitrogen residue to deposit on termination, in PF states: the crop's own n1 plus the previous crop's carried-over n2.
+---Nitrogen residue to deposit on termination, in PF states: the crop's own n1 plus the last real crop's carried-over n2.
 -- @param integer farmlandId
 -- @param string terminatedCropName Crop being destroyed by the tool
 -- @return integer states
@@ -81,9 +81,20 @@ function RealisticCropRotationService:getResidueStatesForTermination(farmlandId,
     local states = 0
     local terminated = self:getResidueEntry(self:normalizeCropName(terminatedCropName))
     if terminated ~= nil then states = states + (tonumber(terminated.n1) or 0) end
+
+    -- Reach past fallow entries to the last real crop's carried-over n2.
     local history = self.repository:getHistory(farmlandId)
-    local previous = history[1] ~= nil and self:getResidueEntry(self:normalizeCropName(history[1].crop)) or nil
+    local previousCrop = nil
+    for i = 1, #history do
+        local crop = history[i] ~= nil and history[i].crop or nil
+        if crop ~= nil and not RealisticCropRotation.isFallowCrop(crop) then
+            previousCrop = crop
+            break
+        end
+    end
+    local previous = previousCrop ~= nil and self:getResidueEntry(self:normalizeCropName(previousCrop)) or nil
     if previous ~= nil then states = states + (tonumber(previous.n2) or 0) end
+
     if states < 0 then states = 0 end
     return math.floor(states)
 end

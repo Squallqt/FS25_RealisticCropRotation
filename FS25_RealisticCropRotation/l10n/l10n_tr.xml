@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s %s için planlandı: ekim nöbeti çakışması, mevcut ürünle aynı aile (%s), güvenli dönüş için %d yıl daha (toplam %d yıl) gerekiyor." />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s %s için planlandı: ekim nöbeti çakışması, mevcut ürünle %s riskini paylaşıyor, güvenli dönüş için %d yıl daha (toplam %d yıl) gerekiyor." />
         <e k="rcr_advice_plan_next_ok" v="%s %s için planlandı: iyi seçim, ekim nöbeti çakışması tespit edilmedi." />
+        <e k="rcr_advice_title_fallow" v="Dinlenme yılı" />
+        <e k="rcr_advice_fallow_current" v="Nadas sürüyor: toprak dinlenir ve konukçu bitki olmadığından hastalık baskısı azalır." />
+        <e k="rcr_advice_plan_next_fallow" v="Nadas %s için planlandı: toprağın dinlendiği ve sonraki ekinden önce hastalık döngüsünün kırıldığı bir dinlenme yılı." />
 
         <!-- Advice card, disease pressure list -->
 

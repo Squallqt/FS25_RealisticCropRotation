@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s planlagt for %s: vekstskiftekonflikt, samme familie (%s) som den nåværende veksten, det mangler %d år av %d før en trygg retur." />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s planlagt for %s: vekstskiftekonflikt, deler %s-risikoen med den nåværende veksten, det mangler %d år av %d før en trygg retur." />
         <e k="rcr_advice_plan_next_ok" v="%s planlagt for %s: godt valg, ingen vekstskiftekonflikt oppdaget." />
+        <e k="rcr_advice_title_fallow" v="Hvileår" />
+        <e k="rcr_advice_fallow_current" v="Brakklegging pågår: jorden hviler, og sykdomstrykket avtar uten en vertsvekst." />
+        <e k="rcr_advice_plan_next_fallow" v="Brakklegging planlagt for %s: et hvileår der jorden hviler og sykdomssyklusen brytes før neste vekst." />
 
         <!-- Advice card, disease pressure list -->
 

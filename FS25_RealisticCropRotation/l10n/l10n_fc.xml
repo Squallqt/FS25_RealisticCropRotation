@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s prévu en %s : conflit de rotation, même famille (%s) que la culture actuelle, il reste %d an(s) sur %d requis avant un retour sûr." />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s prévu en %s : conflit de rotation, risque %s partagé avec la culture actuelle, il reste %d an(s) sur %d requis avant un retour sûr." />
         <e k="rcr_advice_plan_next_ok" v="%s prévu en %s : bon choix, aucun conflit de rotation détecté." />
+        <e k="rcr_advice_title_fallow" v="Année de coupure" />
+        <e k="rcr_advice_fallow_current" v="Jachère en cours : le sol se repose et la pression des maladies retombe faute d'hôte." />
+        <e k="rcr_advice_plan_next_fallow" v="Jachère prévue en %s : année de coupure, le sol se repose et le cycle des maladies est rompu avant la reprise." />
 
         <!-- Advice card, disease pressure list -->
 

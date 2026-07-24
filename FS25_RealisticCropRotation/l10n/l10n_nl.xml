@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s gepland voor %s: vruchtwisselingsconflict, zelfde familie (%s) als het huidige gewas, nog %d jaar van %d nodig voor een veilige terugkeer." />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s gepland voor %s: vruchtwisselingsconflict, deelt het %s-risico met het huidige gewas, nog %d jaar van %d nodig voor een veilige terugkeer." />
         <e k="rcr_advice_plan_next_ok" v="%s gepland voor %s: goede keuze, geen vruchtwisselingsconflict gedetecteerd." />
+        <e k="rcr_advice_title_fallow" v="Rustjaar" />
+        <e k="rcr_advice_fallow_current" v="Braak in uitvoering: de bodem rust en de ziektedruk neemt af doordat er geen waardplant is." />
+        <e k="rcr_advice_plan_next_fallow" v="Braak gepland voor %s: een rustjaar waarin de bodem rust en de ziektecyclus vóór het volgende gewas wordt doorbroken." />
 
         <!-- Advice card, disease pressure list -->
 

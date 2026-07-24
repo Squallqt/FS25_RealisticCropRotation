@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s previsto para %s: conflicto de rotación, misma familia (%s) que el cultivo actual, faltan %d año(s) de %d antes de un retorno seguro." />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s previsto para %s: conflicto de rotación, comparte el riesgo de %s con el cultivo actual, faltan %d año(s) de %d antes de un retorno seguro." />
         <e k="rcr_advice_plan_next_ok" v="%s previsto para %s: buena elección, no se detecta conflicto de rotación." />
+        <e k="rcr_advice_title_fallow" v="Año de descanso" />
+        <e k="rcr_advice_fallow_current" v="Barbecho en curso: el suelo descansa y la presión de las enfermedades disminuye al no haber un cultivo hospedante." />
+        <e k="rcr_advice_plan_next_fallow" v="Barbecho previsto para %s: un año de descanso en el que el suelo reposa y se interrumpe el ciclo de las enfermedades antes del siguiente cultivo." />
 
         <!-- Advice card, disease pressure list -->
 

@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s dự kiến cho %s: xung đột luân canh, cùng họ (%s) với cây trồng hiện tại, còn thiếu %d/%d năm trước khi có thể quay lại an toàn." />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s dự kiến cho %s: xung đột luân canh, chung nguy cơ %s với cây trồng hiện tại, còn thiếu %d/%d năm trước khi có thể quay lại an toàn." />
         <e k="rcr_advice_plan_next_ok" v="%s dự kiến cho %s: lựa chọn tốt, không phát hiện xung đột luân canh." />
+        <e k="rcr_advice_title_fallow" v="Năm nghỉ" />
+        <e k="rcr_advice_fallow_current" v="Đang bỏ hóa: đất được nghỉ và áp lực bệnh hại giảm do không có cây ký chủ." />
+        <e k="rcr_advice_plan_next_fallow" v="Bỏ hóa dự kiến cho %s: một năm nghỉ để đất được nghỉ và chu kỳ bệnh bị cắt đứt trước khi trồng cây tiếp theo." />
 
         <!-- Advice card, disease pressure list -->
 

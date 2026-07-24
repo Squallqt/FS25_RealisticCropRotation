@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s direncanakan untuk %s: konflik rotasi tanaman, keluarga yang sama (%s) dengan tanaman saat ini, masih kurang %d dari %d tahun sebelum kembali dengan aman." />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s direncanakan untuk %s: konflik rotasi tanaman, berbagi risiko %s dengan tanaman saat ini, masih kurang %d dari %d tahun sebelum kembali dengan aman." />
         <e k="rcr_advice_plan_next_ok" v="%s direncanakan untuk %s: pilihan bagus, tidak ada konflik rotasi tanaman terdeteksi." />
+        <e k="rcr_advice_title_fallow" v="Tahun jeda" />
+        <e k="rcr_advice_fallow_current" v="Bera sedang berlangsung: tanah beristirahat dan tekanan penyakit berkurang karena tidak ada tanaman inang." />
+        <e k="rcr_advice_plan_next_fallow" v="Bera direncanakan untuk %s: tahun jeda saat tanah beristirahat dan siklus penyakit terputus sebelum tanaman berikutnya." />
 
         <!-- Advice card, disease pressure list -->
 

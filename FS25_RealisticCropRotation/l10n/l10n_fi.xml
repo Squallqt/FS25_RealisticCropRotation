@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s suunniteltu vuodelle %s: viljelykiertoristiriita, sama heimo (%s) kuin nykyisellä kasvilla, %d vuotta %d:stä puuttuu ennen turvallista paluuta." />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s suunniteltu vuodelle %s: viljelykiertoristiriita, jakaa %s-riskin nykyisen kasvin kanssa, %d vuotta %d:stä puuttuu ennen turvallista paluuta." />
         <e k="rcr_advice_plan_next_ok" v="%s suunniteltu vuodelle %s: hyvä valinta, viljelykiertoristiriitaa ei havaittu." />
+        <e k="rcr_advice_title_fallow" v="Välivuosi" />
+        <e k="rcr_advice_fallow_current" v="Kesanto käynnissä: maa lepää ja tautipaine vähenee ilman isäntäkasvia." />
+        <e k="rcr_advice_plan_next_fallow" v="Kesanto suunniteltu vuodelle %s: välivuosi, jolloin maa lepää ja tautikierto katkeaa ennen seuraavaa viljelykasvia." />
 
         <!-- Advice card, disease pressure list -->
 

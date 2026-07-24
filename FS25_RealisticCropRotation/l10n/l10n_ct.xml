@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s計畫種植於%s：輪作衝突，與目前作物同科（%s），距離安全輪作還差%d年（共需%d年）。" />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s計畫種植於%s：輪作衝突，與目前作物共享%s風險，距離安全輪作還差%d年（共需%d年）。" />
         <e k="rcr_advice_plan_next_ok" v="%s計畫種植於%s：選擇得當，未偵測到輪作衝突。" />
+        <e k="rcr_advice_title_fallow" v="休耕年" />
+        <e k="rcr_advice_fallow_current" v="正在休耕：土壤得到休養，病害因缺少寄主而逐漸減弱。" />
+        <e k="rcr_advice_plan_next_fallow" v="計畫於%s休耕：作為一個休耕年，土壤得到休養，病害循環在種植下一季作物前被打斷。" />
 
         <!-- Advice card, disease pressure list -->
 

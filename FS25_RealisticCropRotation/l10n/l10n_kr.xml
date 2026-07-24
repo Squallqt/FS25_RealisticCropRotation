@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s이(가) %s에 계획됨: 윤작 충돌, 현재 작물과 같은 과(%s)로, 안전한 복귀까지 %d/%d년이 부족합니다." />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s이(가) %s에 계획됨: 윤작 충돌, 현재 작물과 %s 위험을 공유하며, 안전한 복귀까지 %d/%d년이 부족합니다." />
         <e k="rcr_advice_plan_next_ok" v="%s이(가) %s에 계획됨: 좋은 선택이며, 윤작 충돌이 감지되지 않았습니다." />
+        <e k="rcr_advice_title_fallow" v="휴경 연도" />
+        <e k="rcr_advice_fallow_current" v="휴경 중: 토양이 쉬고 기주 작물이 없어 병해 압력이 낮아집니다." />
+        <e k="rcr_advice_plan_next_fallow" v="휴경이 %s에 계획됨: 토양이 쉬고 다음 작물 전에 병해 순환이 끊기는 휴경 연도입니다." />
 
         <!-- Advice card, disease pressure list -->
 

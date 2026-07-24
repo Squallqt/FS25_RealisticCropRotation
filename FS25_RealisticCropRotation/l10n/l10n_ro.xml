@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s planificată pentru %s: conflict de rotație, aceeași familie (%s) ca cultura actuală, mai sunt necesari %d din %d ani înainte de o revenire sigură." />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s planificată pentru %s: conflict de rotație, împarte riscul de %s cu cultura actuală, mai sunt necesari %d din %d ani înainte de o revenire sigură." />
         <e k="rcr_advice_plan_next_ok" v="%s planificată pentru %s: alegere bună, niciun conflict de rotație detectat." />
+        <e k="rcr_advice_title_fallow" v="An de pauză" />
+        <e k="rcr_advice_fallow_current" v="Pârloagă în curs: solul se odihnește, iar presiunea bolilor scade în lipsa unei plante-gazdă." />
+        <e k="rcr_advice_plan_next_fallow" v="Pârloagă planificată pentru %s: un an de pauză în care solul se odihnește, iar ciclul bolilor este întrerupt înaintea culturii următoare." />
 
         <!-- Advice card, disease pressure list -->
 

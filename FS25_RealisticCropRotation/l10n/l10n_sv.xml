@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s planerad till %s: växtföljdskonflikt, samma familj (%s) som den aktuella grödan, %d år av %d kvarstår innan en säker återkomst." />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s planerad till %s: växtföljdskonflikt, delar %s-risken med den aktuella grödan, %d år av %d kvarstår innan en säker återkomst." />
         <e k="rcr_advice_plan_next_ok" v="%s planerad till %s: bra val, ingen växtföljdskonflikt upptäckt." />
+        <e k="rcr_advice_title_fallow" v="Viloår" />
+        <e k="rcr_advice_fallow_current" v="Träda pågår: jorden vilar och sjukdomstrycket minskar utan en värdväxt." />
+        <e k="rcr_advice_plan_next_fallow" v="Träda planerad till %s: ett viloår då jorden vilar och sjukdomscykeln bryts före nästa gröda." />
 
         <!-- Advice card, disease pressure list -->
 

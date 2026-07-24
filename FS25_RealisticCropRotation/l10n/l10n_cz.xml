@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s naplánováno na %s: konflikt osevního postupu, stejná čeleď (%s) jako současná plodina, chybí %d rok(y) z %d před bezpečným návratem." />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s naplánováno na %s: konflikt osevního postupu, sdílí riziko %s se současnou plodinou, chybí %d rok(y) z %d před bezpečným návratem." />
         <e k="rcr_advice_plan_next_ok" v="%s naplánováno na %s: dobrá volba, nebyl zjištěn konflikt osevního postupu." />
+        <e k="rcr_advice_title_fallow" v="Rok přerušení" />
+        <e k="rcr_advice_fallow_current" v="Probíhá úhor: půda odpočívá a tlak chorob bez hostitelské plodiny slábne." />
+        <e k="rcr_advice_plan_next_fallow" v="Úhor naplánován na %s: rok přerušení, během něhož půda odpočívá a cyklus chorob se před následující plodinou přeruší." />
 
         <!-- Advice card, disease pressure list -->
 

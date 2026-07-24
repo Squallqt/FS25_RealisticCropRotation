@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s计划种植于%s：轮作冲突，与当前作物同科（%s），距离安全轮作还差%d年（共需%d年）。" />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s计划种植于%s：轮作冲突，与当前作物共享%s风险，距离安全轮作还差%d年（共需%d年）。" />
         <e k="rcr_advice_plan_next_ok" v="%s计划种植于%s：选择得当，未检测到轮作冲突。" />
+        <e k="rcr_advice_title_fallow" v="休耕年" />
+        <e k="rcr_advice_fallow_current" v="正在休耕：土壤得到休养，病害因缺少寄主而逐渐减弱。" />
+        <e k="rcr_advice_plan_next_fallow" v="计划于%s休耕：作为一个休耕年，土壤得到休养，病害循环在种植下一季作物前被打断。" />
 
         <!-- Advice card, disease pressure list -->
 

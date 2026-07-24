@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s prevista per %s: conflitto di rotazione, stessa famiglia (%s) della coltura attuale, mancano %d anno/i su %d prima di un ritorno sicuro." />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s prevista per %s: conflitto di rotazione, condivide il rischio di %s con la coltura attuale, mancano %d anno/i su %d prima di un ritorno sicuro." />
         <e k="rcr_advice_plan_next_ok" v="%s prevista per %s: buona scelta, nessun conflitto di rotazione rilevato." />
+        <e k="rcr_advice_title_fallow" v="Anno di pausa" />
+        <e k="rcr_advice_fallow_current" v="Maggese in corso: il terreno riposa e la pressione delle malattie diminuisce in assenza di una pianta ospite." />
+        <e k="rcr_advice_plan_next_fallow" v="Maggese previsto per %s: un anno di pausa in cui il terreno riposa e il ciclo delle malattie viene interrotto prima della coltura successiva." />
 
         <!-- Advice card, disease pressure list -->
 

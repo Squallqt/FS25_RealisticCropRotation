@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s planlagt til %s: sædskiftekonflikt, samme familie (%s) som den aktuelle afgrøde, der mangler %d år ud af %d, før det er sikkert at vende tilbage." />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s planlagt til %s: sædskiftekonflikt, deler %s-risikoen med den aktuelle afgrøde, der mangler %d år ud af %d, før det er sikkert at vende tilbage." />
         <e k="rcr_advice_plan_next_ok" v="%s planlagt til %s: godt valg, ingen sædskiftekonflikt fundet." />
+        <e k="rcr_advice_title_fallow" v="Pauseår" />
+        <e k="rcr_advice_fallow_current" v="Braklægning i gang: jorden hviler, og sygdomstrykket aftager uden en værtsplante." />
+        <e k="rcr_advice_plan_next_fallow" v="Brak planlagt til %s: et pauseår, hvor jorden hviler, og sygdomscyklussen brydes før den næste afgrøde." />
 
         <!-- Advice card, disease pressure list -->
 

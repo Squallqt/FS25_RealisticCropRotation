@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s zaplanowana na %s: konflikt płodozmianu, ta sama rodzina (%s) co obecna uprawa, brakuje %d roku/lat z %d przed bezpiecznym powrotem." />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s zaplanowana na %s: konflikt płodozmianu, dzieli ryzyko %s z obecną uprawą, brakuje %d roku/lat z %d przed bezpiecznym powrotem." />
         <e k="rcr_advice_plan_next_ok" v="%s zaplanowana na %s: dobry wybór, nie wykryto konfliktu płodozmianu." />
+        <e k="rcr_advice_title_fallow" v="Rok przerwy" />
+        <e k="rcr_advice_fallow_current" v="Ugór w trakcie: gleba odpoczywa, a presja chorób maleje z powodu braku rośliny żywicielskiej." />
+        <e k="rcr_advice_plan_next_fallow" v="Ugór zaplanowany na %s: rok przerwy, w którym gleba odpoczywa, a cykl chorób zostaje przerwany przed następną uprawą." />
 
         <!-- Advice card, disease pressure list -->
 

@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s geplant für %s: Fruchtfolgekonflikt, gleiche Familie (%s) wie die aktuelle Kultur, noch %d Jahr(e) von %d nötig, bevor eine sichere Rückkehr möglich ist." />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s geplant für %s: Fruchtfolgekonflikt, teilt sich das %s-Risiko mit der aktuellen Kultur, noch %d Jahr(e) von %d nötig, bevor eine sichere Rückkehr möglich ist." />
         <e k="rcr_advice_plan_next_ok" v="%s geplant für %s: gute Wahl, kein Fruchtfolgekonflikt festgestellt." />
+        <e k="rcr_advice_title_fallow" v="Anbaupause" />
+        <e k="rcr_advice_fallow_current" v="Brache im Gange: Der Boden ruht und der Krankheitsdruck nimmt ohne Wirtspflanze ab." />
+        <e k="rcr_advice_plan_next_fallow" v="Brache für %s geplant: eine Anbaupause, in der der Boden ruht und der Krankheitszyklus vor der nächsten Kultur unterbrochen wird." />
 
         <!-- Advice card, disease pressure list -->
 

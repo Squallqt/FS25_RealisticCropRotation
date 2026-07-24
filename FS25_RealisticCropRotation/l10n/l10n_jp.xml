@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%sを%sに予定：輪作の衝突。現在の作物と同じ科（%s）のため、安全な復帰まであと%d年（必要%d年のうち）不足しています。" />
         <e k="rcr_advice_plan_next_conflict_disease" v="%sを%sに予定：輪作の衝突。現在の作物と%sのリスクを共有しており、安全な復帰まであと%d年（必要%d年のうち）不足しています。" />
         <e k="rcr_advice_plan_next_ok" v="%sを%sに予定：良い選択です。輪作の衝突は検出されませんでした。" />
+        <e k="rcr_advice_title_fallow" v="休閑年" />
+        <e k="rcr_advice_fallow_current" v="休閑中：土壌が休まり、宿主作物がないため病害圧が低下します。" />
+        <e k="rcr_advice_plan_next_fallow" v="休閑を%sに予定：休閑年として土壌を休ませ、次の作物の前に病害サイクルを断ち切ります。" />
 
         <!-- Advice card, disease pressure list -->
 

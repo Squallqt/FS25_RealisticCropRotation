@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s planned for %s: rotation conflict, same family (%s) as the current crop, %d more year(s) needed out of %d before it's safe." />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s planned for %s: rotation conflict, shares %s risk with the current crop, %d more year(s) needed out of %d before it's safe." />
         <e k="rcr_advice_plan_next_ok" v="%s planned for %s: good choice, no rotation conflict detected." />
+        <e k="rcr_advice_title_fallow" v="Break year" />
+        <e k="rcr_advice_fallow_current" v="Fallow in progress: the soil rests and disease pressure fades without a host." />
+        <e k="rcr_advice_plan_next_fallow" v="Fallow planned for %s: a break year, the soil rests and the disease cycle is broken before the next crop." />
 
         <!-- Advice card, disease pressure list -->
 

@@ -1236,8 +1236,6 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
     local entry = (self.farmlandList or {})[index]
     if entry == nil then return end
 
-    local mgr      = self:getManager()
-
     -- Line 1: field name + area
     local nameEl = cell:getAttribute("fieldName")
     local areaEl = cell:getAttribute("fieldArea")
@@ -1245,12 +1243,12 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
     if areaEl ~= nil then areaEl:setText(self:formatAreaHa(entry.areaHa)) end
 
     -- Open immediately from the authoritative snapshot; live reconciliation runs across frames.
-    local activeCropName = self:getActiveCropInfoForDisplay(entry.farmlandId, true)
+    local state = self:resolveCurrentFieldState(entry.farmlandId, true, false)
 
     local iconFruitType = nil
-    if activeCropName ~= nil and g_fruitTypeManager ~= nil
+    if state.kind == "CROP" and state.cropName ~= nil and g_fruitTypeManager ~= nil
         and type(g_fruitTypeManager.getFruitTypeByName) == "function" then
-        iconFruitType = g_fruitTypeManager:getFruitTypeByName(tostring(activeCropName))
+        iconFruitType = g_fruitTypeManager:getFruitTypeByName(tostring(state.cropName))
     end
 
     local iconBgEl = cell:getAttribute("cropIconBackground")
@@ -1276,19 +1274,14 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
         if not loaded then iconEl:setVisible(false) end
     end
 
-    -- No-crop fields: resolve the field status once (icon colour + text), MP-safe.
-    local statusLabel, statusKind, statusIndex = nil, nil, nil
-    if activeCropName == nil and mgr ~= nil then
-        statusLabel, statusKind, statusIndex = mgr:getCurrentFieldStatus(entry.farmlandId)
-    end
-
+    -- Icon background: crop map colour, else the field-status colour.
     local iconBgColor = nil
     if iconFruitType ~= nil then
         iconBgColor = self:getFruitTypeMapColor(iconFruitType)
-    elseif statusKind == "soil" then
-        iconBgColor = self:getSoilStateMapColor(statusIndex)
-    elseif statusKind == "ground" then
-        iconBgColor = self:getGroundStateMapColor(statusIndex)
+    elseif state.kind == "STATUS" and state.statusKind == "soil" then
+        iconBgColor = self:getSoilStateMapColor(state.statusIndex)
+    elseif state.kind == "STATUS" and state.statusKind == "ground" then
+        iconBgColor = self:getGroundStateMapColor(state.statusIndex)
     end
     if iconBgReady then
         self:applyIconBackgroundColor(iconBgEl, iconBgColor)
@@ -1296,19 +1289,11 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
 
     local cropLineEl = cell:getAttribute("cropLine")
     if cropLineEl ~= nil then
-        if activeCropName ~= nil then
-            local family = self:getCropFamily(activeCropName)
-            local line   = self:getCropDisplayName(activeCropName)
-            if family ~= "UNKNOWN" then
-                local badgeKey = getFamilyTextKey(family)
-                line = line .. "  ·  " .. self.i18n:getText(badgeKey)
-            end
-            cropLineEl:setText(line)
-        elseif statusLabel ~= nil and statusLabel ~= "" then
-            cropLineEl:setText(statusLabel)
-        else
-            cropLineEl:setText(self.i18n:getText("rcr_sidebar_no_active_crop"))
+        local line = state.label
+        if state.kind == "CROP" and state.family ~= nil and state.family ~= "UNKNOWN" then
+            line = line .. "  ·  " .. self.i18n:getText(getFamilyTextKey(state.family))
         end
+        cropLineEl:setText(line)
     end
 end
 
@@ -1351,31 +1336,77 @@ end
 
 -- DETAIL PANEL (tab 1 — history / current crop / nitrogen / advice / pH)
 
----Resolves the current timeline slot: active crop, else field status, else "no crop".
+---True when the plan schedules a fallow for the gap after a crop (nil reads the last history crop).
 -- @param integer farmlandId
--- @param string statusLabel Field status resolved by the caller, or nil
+-- @param string currentCrop Crop currently on the field, or nil when bare
+-- @return boolean isFallowGap
+function RealisticCropRotationFrame:isPlannedFallowGap(farmlandId, currentCrop)
+    if currentCrop == nil then
+        return self:getManager():isCurrentGapFallow(farmlandId)
+    end
+    if isFallowCrop(currentCrop) then return false end
+    local plan = self:getPlanForFarmland(farmlandId)
+    local slot = self:findPlanSlotForCrop(plan, currentCrop)
+    return slot ~= nil and isFallowCrop(plan[(slot % 4) + 1])
+end
+
+---Resolves a field's current display state, shared by the sidebar and the detail card.
+-- @param integer farmlandId
+-- @param boolean useSnapshot Read the authoritative snapshot instead of a live field scan
+-- @param boolean inferFallow Show a planned fallow over a harvested or bare field (detail card only)
+-- @return table state { kind = "CROP"|"FALLOW"|"STATUS"|"NONE", cropName, family, label, statusKind, statusIndex }
+function RealisticCropRotationFrame:resolveCurrentFieldState(farmlandId, useSnapshot, inferFallow)
+    local cropName, belowFloor
+    if useSnapshot then
+        cropName = self:getActiveCropInfoForDisplay(farmlandId, true)
+    else
+        cropName, _, _, belowFloor = self:getManager():getActiveCropInfo(farmlandId)
+    end
+    local hasCrop = cropName ~= nil and cropName ~= ""
+
+    -- A planned fallow overrides a harvested (stubble) or bare field; a growing crop always wins.
+    if inferFallow and (not hasCrop or belowFloor)
+        and self:isPlannedFallowGap(farmlandId, hasCrop and cropName or nil) then
+        local fallow = RealisticCropRotation.SPECIAL_CROP_FALLOW
+        return { kind = "FALLOW", cropName = fallow, family = "FALLOW", label = self:getCropDisplayName(fallow) }
+    end
+
+    if hasCrop then
+        return { kind = "CROP", cropName = cropName,
+                 family = self:getCropFamily(cropName), label = self:getCropDisplayName(cropName) }
+    end
+
+    local statusLabel, statusKind, statusIndex = self:getManager():getCurrentFieldStatus(farmlandId)
+    if statusLabel ~= nil and statusLabel ~= "" then
+        return { kind = "STATUS", label = statusLabel, statusKind = statusKind, statusIndex = statusIndex }
+    end
+
+    return { kind = "NONE", label = self.i18n:getText("rcr_sidebar_no_active_crop") }
+end
+
+---Resolves the current timeline slot from the shared field state (planned fallow included).
+-- @param integer farmlandId
 -- @param boolean useSnapshot True to use the repository's active crop
 -- @return string cropName, or nil
 -- @return string family
 -- @return string fallbackText Status/empty text when there is no crop, or nil
-function RealisticCropRotationFrame:getCurrentSlotData(farmlandId, statusLabel, useSnapshot)
-    local mgr = self:getManager()
-    local activeCropName = self:getActiveCropInfoForDisplay(farmlandId, useSnapshot)
+-- @return table avatarColor RGBA for a field-status avatar, or nil
+function RealisticCropRotationFrame:getCurrentSlotData(farmlandId, useSnapshot)
+    local state = self:resolveCurrentFieldState(farmlandId, useSnapshot, true)
 
-    if (activeCropName == nil or activeCropName == "")
-        and mgr ~= nil and mgr:isCurrentGapFallow(farmlandId) then
-        activeCropName = RealisticCropRotation.SPECIAL_CROP_FALLOW
+    if state.kind == "CROP" or state.kind == "FALLOW" then
+        return state.cropName, state.family, nil, nil
     end
 
-    if activeCropName ~= nil and activeCropName ~= "" then
-        return activeCropName, self:getCropFamily(activeCropName), nil
+    local avatarColor = nil
+    if state.kind == "STATUS" then
+        if state.statusKind == "soil" then
+            avatarColor = self:getSoilStateMapColor(state.statusIndex)
+        elseif state.statusKind == "ground" then
+            avatarColor = self:getGroundStateMapColor(state.statusIndex)
+        end
     end
-
-    if statusLabel ~= nil and statusLabel ~= "" then
-        return nil, "UNKNOWN", statusLabel
-    end
-
-    return nil, "UNKNOWN", self.i18n:getText("rcr_sidebar_no_active_crop")
+    return nil, "UNKNOWN", state.label, avatarColor
 end
 
 ---Refreshes the whole history detail panel for a farmland (title, pills, timeline, gauges).
@@ -1405,15 +1436,15 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId, useSnapshot)
 
     local history = (mgr ~= nil) and (mgr:getHistory(farmlandId) or {}) or {}
 
-    -- Single field-status read, passed to the timeline slot and the field card.
+    -- Single field-status read for the field card.
     local statusLabel, statusKind, statusIndex = nil, nil, nil
     if mgr ~= nil then
         statusLabel, statusKind, statusIndex = mgr:getCurrentFieldStatus(farmlandId)
     end
 
     -- Slot 1 = current crop, slots 2..5 = history N-1..N-4.
-    local currentCropName, currentFamily, currentFallbackText =
-        self:getCurrentSlotData(farmlandId, statusLabel, useSnapshot)
+    local currentCropName, currentFamily, currentFallbackText, currentAvatarColor =
+        self:getCurrentSlotData(farmlandId, useSnapshot)
     local currentBadgeKey = currentFamily == "COVER" and "rcr_cover_crop" or nil
 
     -- The timeline never reaches further back than the player plans ahead: a 3-year plan stops at N-3. An unplanned field keeps the full 4-year depth.
@@ -1428,7 +1459,7 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId, useSnapshot)
         end
     end
 
-    self:updateTimelineSlot(1, currentCropName, currentFamily, currentFallbackText, currentBadgeKey)
+    self:updateTimelineSlot(1, currentCropName, currentFamily, currentFallbackText, currentBadgeKey, currentAvatarColor)
     for histIdx = 1, 4 do
         local cropName = (histIdx <= historyCount) and history[histIdx].crop or nil
         self:updateTimelineSlot(histIdx + 1, cropName, self:getCropFamily(cropName), nil)
@@ -1454,13 +1485,14 @@ end
 
 -- Timeline slot (slotId 1..5) — history tab
 
----Fills one history timeline slot: frame, avatar, crop name, family badge.
+---Fills one timeline slot: frame, avatar, crop name, family badge.
 -- @param integer slotId Slot 1-5 (1 = current)
 -- @param string cropName, or nil
 -- @param string family
 -- @param string fallbackText Text shown when no crop, or nil
 -- @param string badgeTextKey Override badge i18n key, or nil
-function RealisticCropRotationFrame:updateTimelineSlot(slotId, cropName, family, fallbackText, badgeTextKey)
+-- @param table avatarColor RGBA colouring the avatar for a no-crop field-status slot, or nil
+function RealisticCropRotationFrame:updateTimelineSlot(slotId, cropName, family, fallbackText, badgeTextKey, avatarColor)
     local pfx = "slot" .. tostring(slotId)
     local cardBg   = self[pfx .. "CardBg"]
     local frame    = self[pfx .. "Frame"]
@@ -1483,13 +1515,15 @@ function RealisticCropRotationFrame:updateTimelineSlot(slotId, cropName, family,
     end
 
     if avatarBg ~= nil then
-        avatarBg:setVisible(hasCrop)
+        avatarBg:setVisible(hasCrop or avatarColor ~= nil)
         if hasCrop then
             -- Native crop color, not family color — the badge below already shows the family.
             local fruitType = g_fruitTypeManager ~= nil and type(g_fruitTypeManager.getFruitTypeByName) == "function"
                 and g_fruitTypeManager:getFruitTypeByName(string.upper(cropName)) or nil
             local nativeColor = fruitType ~= nil and self:getFruitTypeMapColor(fruitType) or nil
             self:applyIconBackgroundColor(avatarBg, nativeColor or familyColor or RealisticCropRotationFrame.FAMILY_RGBA.FALLOW)
+        elseif avatarColor ~= nil then
+            self:applyIconBackgroundColor(avatarBg, avatarColor)
         end
     end
 
@@ -1499,9 +1533,9 @@ function RealisticCropRotationFrame:updateTimelineSlot(slotId, cropName, family,
 
     if nameEl ~= nil then
         nameEl:setVisible(not isEmpty)
-        if hasCrop then
+        if hasCrop or avatarColor ~= nil then
             nameEl:applyProfile("frSlotCropName")
-            nameEl:setText(self:getCropDisplayName(cropName))
+            nameEl:setText(hasCrop and self:getCropDisplayName(cropName) or fallbackText)
         elseif not isEmpty then
             nameEl:applyProfile("frSlotCropNameCentered")
             nameEl:setText(fallbackText)
@@ -2067,7 +2101,7 @@ function RealisticCropRotationFrame:getWorstActiveDisease(farmlandId)
     return disease:getWorstGroup(farmlandId)
 end
 
----Refreshes the advice card: active outbreak > planned-step evaluation > per-family fallback, plus a soil-analysis note.
+---Refreshes the advice card: active outbreak > fallow year > planned-step evaluation > per-family fallback, plus a soil-analysis note.
 -- @param string currentFamily
 -- @param integer farmlandId
 -- @param string currentCropName
@@ -2092,10 +2126,16 @@ function RealisticCropRotationFrame:updateAdviceStatusCard(currentFamily, farmla
         if worstGroup == "BCN" then
             text = text .. " " .. self.i18n:getText("rcr_advice_nematicide_duration")
         end
+    elseif currentFamily == "FALLOW" then
+        -- 2) Fallow year in progress: a rest and sanitary break, not a crop.
+        visualState = "Ready"
+        badgeSymbol = "OK"
+        title = self.i18n:getText("rcr_advice_title_fallow")
+        text = self.i18n:getText("rcr_advice_fallow_current")
     else
-        -- 2) Planned-rotation-step evaluation, only for a real (non-fallow, known) current crop.
+        -- 3) Planned-rotation-step evaluation, only for a real (known) current crop.
         local plan = self:getPlanForFarmland(farmlandId)
-        local slotIdx = (currentFamily ~= "FALLOW" and currentFamily ~= "UNKNOWN")
+        local slotIdx = (currentFamily ~= "UNKNOWN")
             and self:findPlanSlotForCrop(plan, currentCropName) or nil
         local nextCrop = slotIdx ~= nil and plan[(slotIdx % 4) + 1] or nil
         nextCrop = (nextCrop ~= nil and nextCrop ~= "") and nextCrop or nil
@@ -2103,26 +2143,34 @@ function RealisticCropRotationFrame:updateAdviceStatusCard(currentFamily, farmla
         if nextCrop ~= nil then
             local nextSlotIdx = (slotIdx % 4) + 1
             local yearLabel = self.i18n:getText("rcr_plan_year" .. nextSlotIdx)
-            local nextCropLabel = self:getCropDisplayName(nextCrop)
-            local conflict = self:evaluateRotationStep(currentCropName, nextCrop)
-
-            if conflict == nil then
+            if isFallowCrop(nextCrop) then
+                -- Fallow planned next: an intentional break before the following crop.
                 visualState = "Ready"
                 badgeSymbol = "OK"
-                title = self.i18n:getText("rcr_advice_title_ready")
-                text = string.format(self.i18n:getText("rcr_advice_plan_next_ok"), nextCropLabel, yearLabel)
+                title = self.i18n:getText("rcr_advice_title_fallow")
+                text = string.format(self.i18n:getText("rcr_advice_plan_next_fallow"), yearLabel)
             else
-                visualState = "Warning"
-                badgeSymbol = "!"
-                title = self.i18n:getText("rcr_advice_title_warning")
-                local key = conflict.kind == "disease"
-                    and "rcr_advice_plan_next_conflict_disease"
-                    or "rcr_advice_plan_next_conflict_family"
-                text = string.format(self.i18n:getText(key),
-                    nextCropLabel, yearLabel, conflict.label, conflict.yearsRemaining, conflict.minInterval)
+                local nextCropLabel = self:getCropDisplayName(nextCrop)
+                local conflict = self:evaluateRotationStep(currentCropName, nextCrop)
+
+                if conflict == nil then
+                    visualState = "Ready"
+                    badgeSymbol = "OK"
+                    title = self.i18n:getText("rcr_advice_title_ready")
+                    text = string.format(self.i18n:getText("rcr_advice_plan_next_ok"), nextCropLabel, yearLabel)
+                else
+                    visualState = "Warning"
+                    badgeSymbol = "!"
+                    title = self.i18n:getText("rcr_advice_title_warning")
+                    local key = conflict.kind == "disease"
+                        and "rcr_advice_plan_next_conflict_disease"
+                        or "rcr_advice_plan_next_conflict_family"
+                    text = string.format(self.i18n:getText(key),
+                        nextCropLabel, yearLabel, conflict.label, conflict.yearsRemaining, conflict.minInterval)
+                end
             end
         else
-            -- 3) No confirmed next step: today's generic per-family advice, unchanged wording.
+            -- 4) No confirmed next step: today's generic per-family advice, unchanged wording.
             local key = RealisticCropRotationFrame.ADVICE_KEY[currentFamily]
             text = key ~= nil and self.i18n:getText(key) or self.i18n:getText("rcr_advice_no_current_crop")
         end
@@ -2887,34 +2935,43 @@ function RealisticCropRotationFrame:updateScoreCard(plan, coverPlan)
     end
 end
 
----Scores a rotation 0-100 from family/pathogen spacing, legume->cereal bonus, diversity and residue.
+---Scores a rotation 0-100 from family/pathogen spacing (fallow years included as spacing), legume->cereal bonus, diversity and residue.
 -- @param table plan
 -- @param table coverPlan
 -- @return integer score
 function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
-    -- Ordered ring of scoring families (fallow excluded: it is a neutral break, not a crop).
-    local ring      = {}
-    local ringCover = {}
-    local ringDis   = {}
+    -- Occupied cycle in plan order: real crops carry a family, a fallow year is a spacing-only slot.
+    local slots = {}
     for i = 1, 4 do
         local crop = plan[i] or ""
         if crop ~= "" then
             local fam = self:getCropFamily(crop)
-            if fam ~= "UNKNOWN" and fam ~= "FALLOW" then
-                ring[#ring + 1] = fam
-                ringDis[#ring]  = self:getCropDiseases(crop)
+            if fam == "FALLOW" then
+                slots[#slots + 1] = { fam = "FALLOW" }
+            elseif fam ~= "UNKNOWN" then
                 local coverCrop = coverPlan ~= nil and coverPlan[i] or ""
-                ringCover[#ring] = coverCrop ~= nil and coverCrop ~= ""
+                slots[#slots + 1] = {
+                    fam      = fam,
+                    diseases = self:getCropDiseases(crop),
+                    hasCover = coverCrop ~= nil and coverCrop ~= "",
+                }
             end
         end
     end
 
-    local n = #ring
+    local m = #slots  -- cycle length, fallow years counted as spacing
+
+    -- Real crops only (fallow is a break, not a crop): drives the rotation gate and diversity.
+    local realIdx = {}
+    for i = 1, m do
+        if slots[i].fam ~= "FALLOW" then realIdx[#realIdx + 1] = i end
+    end
+    local n = #realIdx
     if n < 2 then return 0 end
 
-    -- Distinct families in the rotation.
+    -- Distinct families among the real crops.
     local seen = {}
-    for _, fam in ipairs(ring) do seen[fam] = true end
+    for _, i in ipairs(realIdx) do seen[slots[i].fam] = true end
     local uniqueCount = 0
     for _ in pairs(seen) do uniqueCount = uniqueCount + 1 end
 
@@ -2922,19 +2979,21 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
     local score = (n >= 3) and RealisticCropRotationFrame.SCORE_BASE_FULL
                             or  RealisticCropRotationFrame.SCORE_BASE_PARTIAL
 
-    -- Penalize same-family crops closer than their min return interval, on a cyclic ring.
-    for a = 1, n - 1 do
-        for b = a + 1, n do
-            if ring[a] == ring[b] then
-                local minInterval = RealisticCropRotationFrame.FAMILY_MIN_INTERVAL[ring[a]]
+    -- Penalize same-family crops closer than their min return interval, on the cyclic ring (a fallow between them counts as spacing).
+    for ia = 1, n - 1 do
+        for ib = ia + 1, n do
+            local pa, pb = realIdx[ia], realIdx[ib]
+            local fam = slots[pa].fam
+            if fam == slots[pb].fam then
+                local minInterval = RealisticCropRotationFrame.FAMILY_MIN_INTERVAL[fam]
                 if minInterval ~= nil then
-                    local forward  = b - a
-                    local interval = math.min(forward, n - forward)
+                    local forward  = pb - pa
+                    local interval = math.min(forward, m - forward)
                     if interval < minInterval then
                         local penalty = (minInterval - interval) * RealisticCropRotationFrame.SCORE_FAMILY_PENALTY_PER_YEAR
                         -- a cover sown in the shorter gap halves the penalty
-                        local gapStart = (forward <= n - forward) and a or b
-                        if ringCover[gapStart] then penalty = penalty / 2 end
+                        local gapStart = (forward <= m - forward) and pa or pb
+                        if slots[gapStart].hasCover then penalty = penalty / 2 end
                         score = score - penalty
                     end
                 end
@@ -2945,15 +3004,16 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
     -- Shared-pathogen pressure: same-family pairs already pay the family penalty above, so this adds only the extra disease interval beyond it.
     local diseaseIntervals = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig
         and RealisticCropRotation.cropConfig.diseaseIntervals or {}
-    for a = 1, n - 1 do
-        for b = a + 1, n do
-            local forward  = b - a
-            local interval = math.min(forward, n - forward)
-            local familyMinInterval = ring[a] == ring[b] and RealisticCropRotationFrame.FAMILY_MIN_INTERVAL[ring[a]] or nil
+    for ia = 1, n - 1 do
+        for ib = ia + 1, n do
+            local pa, pb = realIdx[ia], realIdx[ib]
+            local forward  = pb - pa
+            local interval = math.min(forward, m - forward)
+            local familyMinInterval = slots[pa].fam == slots[pb].fam and RealisticCropRotationFrame.FAMILY_MIN_INTERVAL[slots[pa].fam] or nil
             local diseaseBaseline = familyMinInterval ~= nil and math.max(interval, familyMinInterval) or interval
             local worst = 0
-            for group in pairs(ringDis[a] or {}) do
-                if (ringDis[b] or {})[group] then
+            for group in pairs(slots[pa].diseases or {}) do
+                if (slots[pb].diseases or {})[group] then
                     local minInterval = diseaseIntervals[group]
                     if minInterval ~= nil and diseaseBaseline < minInterval then
                         local pen = (minInterval - diseaseBaseline) * RealisticCropRotationFrame.SCORE_DISEASE_PENALTY_PER_YEAR
@@ -2966,10 +3026,10 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
     end
 
     if n >= 3 then
-        -- Legume directly followed by a cereal (cyclic): the returned nitrogen is put to use.
-        for k = 1, n do
-            local nextK = (k % n) + 1
-            if ring[k] == "LEGUME" and ring[nextK] == "CEREAL" then
+        -- Legume directly followed by a cereal (cyclic): the returned nitrogen is put to use; a fallow between them breaks the direct hand-off.
+        for k = 1, m do
+            local nextK = (k % m) + 1
+            if slots[k].fam == "LEGUME" and slots[nextK].fam == "CEREAL" then
                 score = score + RealisticCropRotationFrame.SCORE_LEGUME_CEREAL_BONUS
             end
         end

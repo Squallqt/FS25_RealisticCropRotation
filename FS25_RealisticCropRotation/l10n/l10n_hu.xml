@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s tervezve ide: %s, vetésforgó-ütközés: ugyanaz a család (%s), mint a jelenlegi növény; még %d év hiányzik a szükséges %d évből a biztonságos visszatéréshez." />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s tervezve ide: %s, vetésforgó-ütközés: megosztja a(z) %s kockázatát a jelenlegi növénnyel; még %d év hiányzik a szükséges %d évből a biztonságos visszatéréshez." />
         <e k="rcr_advice_plan_next_ok" v="%s tervezve ide: %s, jó választás, nincs vetésforgó-ütközés." />
+        <e k="rcr_advice_title_fallow" v="Pihentető év" />
+        <e k="rcr_advice_fallow_current" v="Ugar folyamatban: a talaj pihen, és gazdanövény hiányában csökken a betegségnyomás." />
+        <e k="rcr_advice_plan_next_fallow" v="Ugar tervezve erre: %s: pihentető év, amely során a talaj pihen, és a betegségciklus megszakad a következő növény előtt." />
 
         <!-- Advice card, disease pressure list -->
 

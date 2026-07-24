@@ -1013,9 +1013,10 @@
         <cornerSize value="0.35"/>
     </Profile>
 
-    <!-- Family zone background pill (color set in Lua) -->
+    <!-- Crop-zone pill: the unplanned slot keeps this grey; family slots override the colour in Lua -->
     <Profile name="frGroupBadge" extends="baseReference" with="anchorTopLeft">
         <size value="300px 30px"/>
+        <color value="$preset_fs25_colorGrey"/>
         <cornerSize value="0.20"/>
     </Profile>
 

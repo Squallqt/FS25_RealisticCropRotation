@@ -130,6 +130,9 @@
         <e k="rcr_advice_plan_next_conflict_family" v="%s previsto para %s: conflito de rotação, mesma família (%s) da cultura atual, faltam %d ano(s) de %d antes de um retorno seguro." />
         <e k="rcr_advice_plan_next_conflict_disease" v="%s previsto para %s: conflito de rotação, compartilha o risco de %s com a cultura atual, faltam %d ano(s) de %d antes de um retorno seguro." />
         <e k="rcr_advice_plan_next_ok" v="%s previsto para %s: boa escolha, nenhum conflito de rotação detectado." />
+        <e k="rcr_advice_title_fallow" v="Ano de pausa" />
+        <e k="rcr_advice_fallow_current" v="Pousio em andamento: o solo descansa e a pressão das doenças diminui na ausência de hospedeiro." />
+        <e k="rcr_advice_plan_next_fallow" v="Pousio previsto para %s: um ano de pausa em que o solo descansa e o ciclo das doenças é interrompido antes da próxima cultura." />
 
         <!-- Advice card, disease pressure list -->
 
