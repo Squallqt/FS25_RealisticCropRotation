@@ -364,8 +364,11 @@
                     <Bitmap profile="frCalendarCropIcon" id="calendarCropIcon[1]" visible="false"/>
                     <Bitmap profile="frCalendarCoverIcon" id="calendarCoverIcon[1]" visible="false"/>
                     <RoundCorner profile="frCalendarCropBar" id="calendarCropBar[1]" visible="false"/>
+                    <RoundCorner profile="frCalendarCropBar" id="calendarCropBarContinuation[1]" visible="false"/>
                     <RoundCorner profile="frCalendarHarvestBar" id="calendarHarvestBar[1]" visible="false"/>
+                    <RoundCorner profile="frCalendarHarvestBar" id="calendarHarvestBarContinuation[1]" visible="false"/>
                     <RoundCorner profile="frCalendarCoverMarker" id="calendarCoverMarker[1]" visible="false"/>
+                    <RoundCorner profile="frCalendarCoverMarker" id="calendarCoverMarkerContinuation[1]" visible="false"/>
                     <Button profile="frCalendarRowButton" id="calendarRowButton[1]" onClick="onCalendarRowClicked"/>
                 </GuiElement>
 
@@ -376,8 +379,11 @@
                     <Bitmap profile="frCalendarCropIcon" id="calendarCropIcon[2]" visible="false"/>
                     <Bitmap profile="frCalendarCoverIcon" id="calendarCoverIcon[2]" visible="false"/>
                     <RoundCorner profile="frCalendarCropBar" id="calendarCropBar[2]" visible="false"/>
+                    <RoundCorner profile="frCalendarCropBar" id="calendarCropBarContinuation[2]" visible="false"/>
                     <RoundCorner profile="frCalendarHarvestBar" id="calendarHarvestBar[2]" visible="false"/>
+                    <RoundCorner profile="frCalendarHarvestBar" id="calendarHarvestBarContinuation[2]" visible="false"/>
                     <RoundCorner profile="frCalendarCoverMarker" id="calendarCoverMarker[2]" visible="false"/>
+                    <RoundCorner profile="frCalendarCoverMarker" id="calendarCoverMarkerContinuation[2]" visible="false"/>
                     <Button profile="frCalendarRowButton" id="calendarRowButton[2]" onClick="onCalendarRowClicked"/>
                 </GuiElement>
 
@@ -388,8 +394,11 @@
                     <Bitmap profile="frCalendarCropIcon" id="calendarCropIcon[3]" visible="false"/>
                     <Bitmap profile="frCalendarCoverIcon" id="calendarCoverIcon[3]" visible="false"/>
                     <RoundCorner profile="frCalendarCropBar" id="calendarCropBar[3]" visible="false"/>
+                    <RoundCorner profile="frCalendarCropBar" id="calendarCropBarContinuation[3]" visible="false"/>
                     <RoundCorner profile="frCalendarHarvestBar" id="calendarHarvestBar[3]" visible="false"/>
+                    <RoundCorner profile="frCalendarHarvestBar" id="calendarHarvestBarContinuation[3]" visible="false"/>
                     <RoundCorner profile="frCalendarCoverMarker" id="calendarCoverMarker[3]" visible="false"/>
+                    <RoundCorner profile="frCalendarCoverMarker" id="calendarCoverMarkerContinuation[3]" visible="false"/>
                     <Button profile="frCalendarRowButton" id="calendarRowButton[3]" onClick="onCalendarRowClicked"/>
                 </GuiElement>
 
@@ -400,8 +409,11 @@
                     <Bitmap profile="frCalendarCropIcon" id="calendarCropIcon[4]" visible="false"/>
                     <Bitmap profile="frCalendarCoverIcon" id="calendarCoverIcon[4]" visible="false"/>
                     <RoundCorner profile="frCalendarCropBar" id="calendarCropBar[4]" visible="false"/>
+                    <RoundCorner profile="frCalendarCropBar" id="calendarCropBarContinuation[4]" visible="false"/>
                     <RoundCorner profile="frCalendarHarvestBar" id="calendarHarvestBar[4]" visible="false"/>
+                    <RoundCorner profile="frCalendarHarvestBar" id="calendarHarvestBarContinuation[4]" visible="false"/>
                     <RoundCorner profile="frCalendarCoverMarker" id="calendarCoverMarker[4]" visible="false"/>
+                    <RoundCorner profile="frCalendarCoverMarker" id="calendarCoverMarkerContinuation[4]" visible="false"/>
                     <Button profile="frCalendarRowButton" id="calendarRowButton[4]" onClick="onCalendarRowClicked"/>
                 </GuiElement>
 

@@ -2260,7 +2260,9 @@ function RealisticCropRotationFrame:applyCalendarRow(slotIdx, cropName, coverCro
     local cropIcon = self.calendarCropIcon[slotIdx]
     local coverIcon = self.calendarCoverIcon[slotIdx]
     local cropBar = self.calendarCropBar[slotIdx]
+    local cropBarContinuation = self.calendarCropBarContinuation[slotIdx]
     local coverMarker = self.calendarCoverMarker[slotIdx]
+    local coverMarkerContinuation = self.calendarCoverMarkerContinuation[slotIdx]
 
     local active = slotIdx == self:getCalendarEditSlotIndex()
     if active then
@@ -2277,23 +2279,17 @@ function RealisticCropRotationFrame:applyCalendarRow(slotIdx, cropName, coverCro
     local hasCover = coverCropName ~= nil and coverCropName ~= ""
     local axisX = RealisticCropRotationFrame.CALENDAR_AXIS_X
     local harvestBar = self.calendarHarvestBar[slotIdx]
+    local harvestBarContinuation = self.calendarHarvestBarContinuation[slotIdx]
 
     local SOW_Y, HARVEST_Y, COVER_Y, LANE_H = 3, 17, 31, 10
 
-    local function longestRun(flags)
-        local bestStart, bestLen = nil, 0
-        if flags ~= nil then
-            for _, run in ipairs(self:getFlagRuns(flags, periodCount)) do
-                if run.len > bestLen then bestStart, bestLen = run.start, run.len end
-            end
-        end
-        return bestStart, bestLen
-    end
-
-    local function placeBar(bar, startP, lenP, y, visible)
-        local show = visible and startP ~= nil and lenP ~= nil and lenP > 0
+    local function placeBar(bar, run, y, visible)
+        local show = visible and run ~= nil and run.len > 0
         bar:setVisible(show)
         if show then
+            local startP = run.start
+            local lenP = run.len
+
             -- Inset each end by its bounding grid-line width so the bar sits between lines.
             local leftInset  = self:getCalendarGridLineWidth(startP)
             local rightInset = self:getCalendarGridLineWidth(startP + lenP)
@@ -2310,25 +2306,29 @@ function RealisticCropRotationFrame:applyCalendarRow(slotIdx, cropName, coverCro
             bar:setPosition(leftEdge - bar.parent.absPosition[1], nil)
             bar:setSize(math.max(0.0001, rightEdge - leftEdge), nil)
         end
-        return show
+    end
+
+    local function placeRuns(primaryBar, continuationBar, flags, y, visible)
+        local runs = self:getFlagRuns(flags, periodCount)
+        placeBar(primaryBar, runs[1], y, visible)
+        placeBar(continuationBar, runs[2], y, visible)
     end
 
     -- main crop: planting (green, top) + harvest (orange, bottom)
     local plantFlags, harvestFlags = self:getCropPeriodFlags(cropName, periodCount, firstPeriod)
-    local pStart, pLen = longestRun(plantFlags)
-    local hStart, hLen = longestRun(harvestFlags)
-    placeBar(cropBar, pStart, pLen, SOW_Y, hasCrop)
-    placeBar(harvestBar, hStart, hLen, HARVEST_Y, hasCrop)
+    placeRuns(cropBar, cropBarContinuation, plantFlags, SOW_Y, hasCrop)
+    placeRuns(harvestBar, harvestBarContinuation, harvestFlags, HARVEST_Y, hasCrop)
 
     -- cover crop: planting only (never harvested), middle lane, tinted to its planner-card colour to read as a cover, not a main crop.
-    local cStart, cLen = nil, nil
+    local coverFlags = nil
     if hasCover then
-        cStart, cLen = longestRun(self:getCropPeriodFlags(coverCropName, periodCount, firstPeriod))
+        coverFlags = self:getCropPeriodFlags(coverCropName, periodCount, firstPeriod)
     end
-    if placeBar(coverMarker, cStart, cLen, COVER_Y, hasCover) then
-        coverMarker.color = RealisticCropRotationFrame.FAMILY_RGBA[self:getCropFamily(coverCropName)]
-            or RealisticCropRotationFrame.FAMILY_RGBA.COVER
-    end
+    local coverColor = RealisticCropRotationFrame.FAMILY_RGBA[self:getCropFamily(coverCropName)]
+        or RealisticCropRotationFrame.FAMILY_RGBA.COVER
+    coverMarker.color = coverColor
+    coverMarkerContinuation.color = coverColor
+    placeRuns(coverMarker, coverMarkerContinuation, coverFlags, COVER_Y, hasCover)
 end
 
 ---Returns a defensive 4-slot copy of a plan (empty strings for gaps).
