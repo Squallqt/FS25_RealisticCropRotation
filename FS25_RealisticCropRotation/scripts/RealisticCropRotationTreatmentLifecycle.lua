@@ -27,14 +27,12 @@ end
 
 function RealisticCropRotationTreatmentLifecycle.applySyncData(received)
     received = received or {}
-    local manager = RealisticCropRotation ~= nil and RealisticCropRotation.manager or nil
-    local grid = RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
-    if manager ~= nil and grid ~= nil then
-        for farmlandId in pairs(nematicidePeriodsRemaining) do
-            if received[farmlandId] == nil then
-                local field = manager:getFieldByFarmlandId(farmlandId)
-                if field ~= nil then grid:clearFieldProtectionFamily(field, "NEMATICIDE") end
-            end
+    local manager = RealisticCropRotation.manager
+    local grid = RealisticCropRotation.grid
+    for farmlandId in pairs(nematicidePeriodsRemaining) do
+        if received[farmlandId] == nil then
+            local field = manager:getFieldByFarmlandId(farmlandId)
+            if field ~= nil then grid:clearFieldProtectionFamily(field, "NEMATICIDE") end
         end
     end
 
@@ -47,9 +45,8 @@ end
 
 function RealisticCropRotationTreatmentLifecycle.onPeriodChanged()
     if g_server == nil then return false end
-    local manager = RealisticCropRotation ~= nil and RealisticCropRotation.manager or nil
-    local grid = RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
-    if manager == nil or grid == nil then return false end
+    local manager = RealisticCropRotation.manager
+    local grid = RealisticCropRotation.grid
 
     local changed = false
     for farmlandId, remaining in pairs(nematicidePeriodsRemaining) do
@@ -112,9 +109,7 @@ function RealisticCropRotationTreatmentLifecycle.delete()
 end
 
 local function clearCutFungicide(sx, sz, wx, wz, hx, hz)
-    local grid = RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
-    if grid == nil then return end
-    grid:clearProtectionArea("FUNGICIDE", sx, sz, wx, wz, hx, hz)
+    RealisticCropRotation.grid:clearProtectionArea("FUNGICIDE", sx, sz, wx, wz, hx, hz)
 end
 
 function RealisticCropRotationTreatmentLifecycle.install()

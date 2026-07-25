@@ -71,7 +71,7 @@
             </GuiElement>
         </GuiElement>
 
-        <!-- Detail container: hero + history/nitrogen/lime/advice/field sections, 864px total -->
+        <!-- Detail container: hero + history + advice + unified soil/treatment + field sections, 864px total -->
         <GuiElement profile="frDetailContainer" id="detailsContainer">
 
             <!-- HERO CARD (y=0..56) -->
@@ -265,7 +265,7 @@
                 <RoundCorner profile="frSoilFillTreatment" id="treatmentBarFill" visible="false"/>
             </GuiElement>
 
-            <!-- SECTION: FIELD (soil work / weed / growth) (y=-708) -->
+            <!-- SECTION: FIELD (soil work / weed / disease / growth) (y=-708) -->
             <GuiElement profile="frSectionBar" position="0px -708px">
                 <RoundCorner profile="frSectionAccentField" position="14px 0px"/>
                 <Text profile="frSectionTitleField" id="fieldSectionTitle" text="$l10n_rcr_section_field"/>
@@ -465,7 +465,7 @@
                 <Text profile="frOverviewTotalArea" id="overviewTotalArea" text=""/>
             </GuiElement>
 
-            <!-- GLOBAL OVERVIEW LIST (y=-520..790) -->
+            <!-- GLOBAL OVERVIEW LIST (y=-520..832) -->
             <GuiElement profile="frOverviewWrap" position="20px -520px">
                 <RoundCorner profile="frOverviewBg"/>
 

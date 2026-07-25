@@ -42,7 +42,6 @@ function RCRDiseaseNotificationEvent:run(_connection)
 
     local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
     local diseaseName = disease ~= nil and disease:getDisplayName(self.group) or self.group
-    -- Player-facing field label.
     local manager = RealisticCropRotation ~= nil and RealisticCropRotation.manager or nil
     local fieldLabel = manager ~= nil
         and manager:getFarmlandLabel(self.farmlandId) or tostring(self.farmlandId)

@@ -65,7 +65,7 @@ local function isMasterUserConnection(connection)
     if type(userManager.getUserByUserId) ~= "function" then return false end
 
     local user = userManager:getUserByUserId(userId)
-    return user ~= nil and user.isMasterUser == true
+    return user ~= nil and user:getIsMasterUser() == true
 end
 
 ---Runs the relayed command after checking admin rights (server only).

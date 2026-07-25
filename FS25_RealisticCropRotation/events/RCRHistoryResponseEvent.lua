@@ -103,7 +103,7 @@ function RCRHistoryResponseEvent:readStream(streamId, connection)
     for _ = 1, diseaseFarmlandCount do
         local farmlandId = streamReadInt32(streamId)
         local cropName = streamReadString(streamId)
-        local groupCount = streamReadInt8(streamId)
+        local groupCount = streamReadUInt8(streamId)
         if farmlandId > 0 then
             if cropName ~= nil and cropName ~= "" then
                 receivedDiseaseCrop[farmlandId] = cropName
@@ -301,7 +301,7 @@ function RCRHistoryResponseEvent:writeStream(streamId, _connection)
 
         streamWriteInt32(streamId, farmlandId)
         streamWriteString(streamId, tostring(diseaseCrop[farmlandId] or diseaseCrop[tostring(farmlandId)] or ""))
-        streamWriteInt8(streamId, math.min(#groupNames, 255))
+        streamWriteUInt8(streamId, math.min(#groupNames, 255))
 
         for i, groupName in ipairs(groupNames) do
             if i > 255 then break end

@@ -22,7 +22,7 @@ DISEASES
 Nine diseases, each tied to specific host crops: sclerotinia, phoma, take-all, septoria, rust, fusarium head blight, late blight, beet cyst nematode, clubroot.
 
 Two families you should not confuse:
-- Soil diseases (take-all, clubroot, nematode, sclerotinia, phoma): they survive in the ground between crops. A long enough rotation clears them completely. That is your reward.
+- Soil-persistent diseases (take-all, clubroot, nematode, sclerotinia, phoma): they survive in the ground between crops. A long rotation clears take-all, clubroot and nematode completely; sclerotinia and phoma retain a small regional background risk.
 - Wind-carried diseases (rust, septoria, late blight, fusarium): spores drift in from the whole region and can strike even a perfect rotation. The weather decides, not your plan.
 
 Rain and temperature drive both the onset and the spread of the seven fungal diseases. The nematode and clubroot ignore rain, but every infection incubates faster in warm weather and slower in cold. Pacing scales automatically with your save's season length.
@@ -30,7 +30,7 @@ Rain and temperature drive both the onset and the spread of the seven fungal dis
 TREATMENTS
 Fungicide AMISTAR (Syngenta) and nematicide VELUM PRIME (Bayer), sprayed with any compatible sprayer.
 
-They only protect the ground you spray. Spray early and the disease is far less likely to appear there; spray after an outbreak and it stops spreading on the sprayed ground, but nothing brings back what is already lost. So spray before, not after.
+Protection is measured from the share of the field you spray. Fungicide lowers the field-wide outbreak chance and slows an established infection in proportion to that coverage; sprayed cells are also excluded from destruction. Nematicide excludes treated cells from nematode destruction but does not change field-level severity. Neither product restores lost crop, so spray early.
 - Fungicide: used up on the ground you harvest or mow; harvesting ends the outbreak on the field, while the soil pressure and history stay
 - Nematicide: protects the sprayed ground for three months per field, spraying again renews it
 - No product works against take-all or clubroot. Only rotation keeps them down.
@@ -74,7 +74,7 @@ KRANKHEITEN
 Neun Krankheiten, jede an bestimmte Wirtskulturen gebunden: Sklerotinia, Phoma, Schwarzbeinigkeit, Septoria-Blattdürre, Rost, Ährenfusariose, Kraut- und Knollenfäule, Rübenzystennematode, Kohlhernie.
 
 Zwei Gruppen, die du nicht verwechseln solltest:
-- Krankheiten aus dem Boden (Schwarzbeinigkeit, Kohlhernie, Nematode, Sklerotinia, Phoma): sie überdauern zwischen zwei Kulturen in der Erde. Eine ausreichend lange Fruchtfolge beseitigt sie vollständig. Das ist deine Belohnung.
+- Krankheiten mit Bodenpersistenz (Schwarzbeinigkeit, Kohlhernie, Nematode, Sklerotinia, Phoma): sie überdauern zwischen zwei Kulturen in der Erde. Eine lange Fruchtfolge beseitigt Schwarzbeinigkeit, Kohlhernie und Nematoden vollständig; bei Sklerotinia und Phoma bleibt ein geringes regionales Hintergrundrisiko.
 - Krankheiten aus der Luft (Rost, Septoria, Kraut- und Knollenfäule, Fusariose): die Sporen kommen aus der ganzen Region angeflogen und treffen auch eine perfekte Fruchtfolge. Hier entscheidet das Wetter, nicht dein Plan.
 
 Regen und Temperatur steuern Ausbruch und Ausbreitung der sieben Pilzkrankheiten. Nematode und Kohlhernie ignorieren Regen, doch jede Infektion inkubiert bei Wärme schneller und bei Kälte langsamer. Das Tempo passt sich automatisch der Jahreszeitenlänge deines Spielstands an.
@@ -82,7 +82,7 @@ Regen und Temperatur steuern Ausbruch und Ausbreitung der sieben Pilzkrankheiten
 BEHANDLUNG
 Fungizid AMISTAR (Syngenta) und Nematizid VELUM PRIME (Bayer), ausgebracht mit jeder kompatiblen Feldspritze.
 
-Sie schützen nur die Fläche, die du spritzt. Spritze früh, und die Krankheit tritt dort viel seltener auf; spritze nach einem Ausbruch, und sie breitet sich auf der behandelten Fläche nicht weiter aus, doch bereits Verlorenes kommt nicht zurück. Also spritze vorher, nicht hinterher.
+Der Schutz richtet sich nach dem besprühten Anteil des Feldes. Fungizid senkt die Ausbruchswahrscheinlichkeit für das ganze Feld und verlangsamt eine bestehende Infektion proportional zu dieser Abdeckung; behandelte Zellen werden außerdem von der Zerstörung ausgenommen. Nematizid bewahrt behandelte Zellen vor Nematodenschäden, verändert aber nicht den Schweregrad auf Feldebene. Kein Mittel stellt bereits verlorene Pflanzen wieder her, also spritze früh.
 - Fungizid: verbraucht sich auf der geernteten oder gemähten Fläche; die Ernte beendet den Ausbruch auf dem Feld, Bodendruck und Verlauf bleiben
 - Nematizid: schützt die behandelte Fläche drei Monate je Feld, eine erneute Anwendung verlängert die Dauer
 - Gegen Schwarzbeinigkeit und Kohlhernie hilft kein Mittel. Nur die Fruchtfolge drückt sie.
@@ -126,7 +126,7 @@ MALADIES
 Neuf maladies, chacune liée à des cultures hôtes précises : sclérotinia, phoma, piétin-échaudage, septoriose, rouille, fusariose de l'épi, mildiou, nématode à kystes de la betterave, hernie des crucifères.
 
 Deux familles à ne pas confondre :
-- Maladies du sol (piétin, hernie, nématode, sclérotinia, phoma) : elles survivent dans la terre entre deux cultures. Une rotation assez longue les fait disparaître complètement. C'est votre récompense.
+- Maladies persistantes dans le sol (piétin, hernie, nématode, sclérotinia, phoma) : elles survivent dans la terre entre deux cultures. Une rotation longue fait disparaître complètement le piétin, la hernie et le nématode ; un faible risque ambiant régional subsiste pour le sclérotinia et le phoma.
 - Maladies du vent (rouille, septoriose, mildiou, fusariose) : les spores arrivent de toute la région et peuvent frapper même une rotation parfaite. C'est la météo qui décide, pas votre plan.
 
 La pluie et la température pilotent le déclenchement et la propagation des sept maladies fongiques. Le nématode et la hernie ignorent la pluie, mais toute infection incube plus vite au chaud et plus lentement au froid. La vitesse s'adapte à la longueur de saison de votre partie.
@@ -134,7 +134,7 @@ La pluie et la température pilotent le déclenchement et la propagation des sep
 TRAITEMENTS
 Fongicide AMISTAR (Syngenta) et nématicide VELUM PRIME (Bayer), à pulvériser avec un pulvérisateur compatible.
 
-Ils ne protègent que la surface que vous pulvérisez. Pulvérisez tôt et la maladie a bien moins de risques d'apparaître ; pulvérisez après une attaque et elle cesse de s'étendre sur la zone traitée, mais rien ne récupère ce qui est déjà perdu. Alors pulvérisez avant, pas après.
+La protection dépend de la part de la parcelle pulvérisée. Le fongicide réduit le risque d'attaque à l'échelle de la parcelle et ralentit une infection établie proportionnellement à cette couverture ; les cellules traitées sont aussi exclues de la destruction. Le nématicide préserve les cellules traitées des dégâts du nématode, sans modifier la sévérité à l'échelle de la parcelle. Aucun produit ne restaure une culture déjà perdue : pulvérisez donc tôt.
 - Fongicide : consommé sur la surface récoltée ou fauchée ; récolter met fin à l'attaque sur la parcelle, la pression du sol et l'historique restent
 - Nématicide : protège la zone traitée pendant trois mois par parcelle, une nouvelle pulvérisation renouvelle la durée
 - Aucun produit ne marche contre le piétin-échaudage ni la hernie. Seule la rotation les fait baisser.

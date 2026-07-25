@@ -317,7 +317,6 @@ end
 
 ---Snaps a real-unit value onto PF's storage steps, measured from state 1 to the map maximum.
 -- @param number value Real-unit value
--- @param function conv Internal-to-real converter
 -- @param number step
 -- @return number snapped
 local function snapToDisplayStep(value, step)
@@ -339,8 +338,11 @@ local function getValueMapLayer(valueMap, defaultNumChannels)
     return mapId, firstChannel, numChannels
 end
 
----Dominant fruit type on a field, counted natively over its whole polygon.
+---Dominant map-visible fruit type on a field, counted natively over its whole polygon.
 -- @param table field
+-- @param integer hintFruitTypeIndex Previously detected fruit type, or nil
+-- @param number capacity Field pixel capacity, or nil
+-- @param integer hintGrowthState Previously detected growth state, or nil
 -- @return integer fruitTypeIndex, or nil
 -- @return integer growthState, or nil
 -- @return integer pixels Cells the winning crop covers
@@ -362,7 +364,7 @@ local function getFieldFruitTypeIndex(field, hintFruitTypeIndex, capacity, hintG
     end
 
     local function isReadable(desc)
-        return desc ~= nil and desc.terrainDataPlaneId ~= nil
+        return desc ~= nil and desc.shownOnMap == true and desc.terrainDataPlaneId ~= nil
             and desc.startStateChannel ~= nil and desc.numStateChannels ~= nil
     end
 
@@ -431,6 +433,9 @@ end
 
 ---Resolves the active crop name (+ index, growth) from a field.
 -- @param table field
+-- @param integer hintFruitTypeIndex Previously detected fruit type, or nil
+-- @param number capacity Field pixel capacity, or nil
+-- @param integer hintGrowthState Previously detected growth state, or nil
 -- @return string cropName, or nil
 -- @return integer fruitTypeIndex, or nil
 -- @return integer growthState, or nil
@@ -669,7 +674,6 @@ function RealisticCropRotationManager.new()
     return self
 end
 
----Initializes the manager once (clears state).
 function RealisticCropRotationManager:initialize()
     if self.isInitialized then return end
     self.repository:clear()
@@ -679,7 +683,6 @@ function RealisticCropRotationManager:initialize()
     self.isInitialized = true
 end
 
----Clears all state and marks the manager uninitialized.
 function RealisticCropRotationManager:cleanup()
     self.repository:clear()
     self.service:reset()
@@ -721,7 +724,7 @@ function RealisticCropRotationManager:getPendingHistoryCrop(farmlandId)
     end
     if cropName == nil or cropName == "" then return nil end
     cropName = string.upper(tostring(cropName))
-    if self.service ~= nil and self.service:isCoverCropForRotationHistory(nil, cropName) then return nil end
+    if self.service:isCoverCropForRotationHistory(nil, cropName) then return nil end
     return cropName
 end
 
@@ -738,17 +741,48 @@ function RealisticCropRotationManager:getAllRotationPlans()
     return self.repository:getAllPlans()
 end
 
----Sets one year slot of a farmland's rotation plan.
+---Normalizes and validates a main-plan or cover-plan crop name against the loaded crop configuration.
+-- @param string cropName
+-- @param boolean isCover
+-- @return string normalizedName, or nil
+-- @return boolean valid
+local function normalizePlanCropName(cropName, isCover)
+    local value = string.upper(tostring(cropName or ""))
+    if value == "" then return value, true end
+    if RealisticCropRotation.isFallowCrop(value) then
+        if isCover then return nil, false end
+        return value, true
+    end
+    if g_fruitTypeManager == nil or type(g_fruitTypeManager.getFruitTypeByName) ~= "function"
+        or g_fruitTypeManager:getFruitTypeByName(value) == nil then
+        return nil, false
+    end
+
+    local config = RealisticCropRotation.cropConfig
+    local family = config ~= nil and config.families ~= nil and config.families[value] or nil
+    local configuredCover = config ~= nil and config.coverCrops ~= nil and config.coverCrops[value] == true
+    if isCover then
+        if family ~= "COVER" or not configuredCover then return nil, false end
+    elseif family == nil or family == "COVER" or configuredCover then
+        return nil, false
+    end
+
+    return value, true
+end
+
+---Validates and sets one year slot of a farmland's main-crop rotation plan.
 -- @param integer farmlandId
 -- @param integer yearIdx Slot 1-4
--- @param string family Crop family, or "" to clear
+-- @param string cropName Crop name, or "" to clear
 -- @return boolean changed
-function RealisticCropRotationManager:setRotationPlanYear(farmlandId, yearIdx, family)
+-- @return boolean valid
+function RealisticCropRotationManager:setRotationPlanYear(farmlandId, yearIdx, cropName)
     local n = tonumber(farmlandId)
     local y = tonumber(yearIdx)
-    if n == nil or n <= 0 or y == nil or y < 1 or y > 4 then return false end
-    self.repository:setPlanYear(n, y, family)
-    return true
+    if n == nil or n <= 0 or y == nil or y < 1 or y > 4 then return false, false end
+    local value, valid = normalizePlanCropName(cropName, false)
+    if not valid then return false, false end
+    return self.repository:setPlanYear(n, y, value)
 end
 
 ---Returns the 4-slot cover-crop plan for a farmland.
@@ -764,17 +798,19 @@ function RealisticCropRotationManager:getAllRotationCoverPlans()
     return self.repository:getAllCoverPlans()
 end
 
----Sets one year slot of a farmland's cover-crop plan.
+---Validates and sets one year slot of a farmland's cover-crop plan.
 -- @param integer farmlandId
 -- @param integer yearIdx Slot 1-4
 -- @param string cropName Cover crop name, or "" to clear
 -- @return boolean changed
+-- @return boolean valid
 function RealisticCropRotationManager:setRotationCoverPlanYear(farmlandId, yearIdx, cropName)
     local n = tonumber(farmlandId)
     local y = tonumber(yearIdx)
-    if n == nil or n <= 0 or y == nil or y < 1 or y > 4 then return false end
-    self.repository:setCoverPlanYear(n, y, cropName)
-    return true
+    if n == nil or n <= 0 or y == nil or y < 1 or y > 4 then return false, false end
+    local value, valid = normalizePlanCropName(cropName, true)
+    if not valid then return false, false end
+    return self.repository:setCoverPlanYear(n, y, value)
 end
 
 ---Clears a farmland's main and cover plans.
@@ -857,7 +893,7 @@ function RealisticCropRotationManager:getActiveCropInfo(farmlandId)
 
     local cache = self.activeCropNameCache
     local nowMs = tonumber(g_time) or 0
-    local entry = cache ~= nil and cache[numericFarmlandId] or nil
+    local entry = cache[numericFarmlandId]
     if entry ~= nil and entry.tMs == nowMs then
         return entry.name, entry.fruitTypeIndex, entry.growthState, entry.belowFloor == true
     end
@@ -897,15 +933,13 @@ function RealisticCropRotationManager:getActiveCropInfo(farmlandId)
         end
     end
 
-    if cache ~= nil then
-        cache[numericFarmlandId] = {
-            name = resolved,
-            fruitTypeIndex = fruitTypeIndex,
-            growthState = growthState,
-            belowFloor = belowFloor,
-            tMs = nowMs,
-        }
-    end
+    cache[numericFarmlandId] = {
+        name = resolved,
+        fruitTypeIndex = fruitTypeIndex,
+        growthState = growthState,
+        belowFloor = belowFloor,
+        tMs = nowMs,
+    }
     return resolved, fruitTypeIndex, growthState, belowFloor
 end
 
@@ -920,7 +954,6 @@ end
 ---Drops the cached active-crop entry for a farmland.
 -- @param integer farmlandId
 function RealisticCropRotationManager:invalidateActiveCropCache(farmlandId)
-    if self.activeCropNameCache == nil then return end
     local n = tonumber(farmlandId)
     if n == nil then return end
     self.activeCropNameCache[n] = nil
@@ -930,7 +963,6 @@ end
 -- @param integer farmlandId
 -- @return boolean changed
 function RealisticCropRotationManager:reconcileActiveCropForFarmland(farmlandId)
-    if self.service == nil then return false end
     if isPureClient() then return false end
 
     local currentCropName, currentFruitTypeIndex, currentGrowthState, belowFloor =
@@ -946,7 +978,7 @@ function RealisticCropRotationManager:reconcileActiveCropForFarmland(farmlandId)
 
     -- Keep the same-frame memo aligned with the effective crop so the UI can reuse this scan immediately.
     local numericFarmlandId = tonumber(farmlandId)
-    local cacheEntry = numericFarmlandId ~= nil and self.activeCropNameCache ~= nil
+    local cacheEntry = numericFarmlandId ~= nil
         and self.activeCropNameCache[numericFarmlandId] or nil
     if cacheEntry ~= nil and cacheEntry.tMs == (tonumber(g_time) or 0) then
         cacheEntry.name = currentCropName
@@ -1204,18 +1236,12 @@ function RealisticCropRotationManager:getPrecisionFarming()
     return nil
 end
 
----True when a field is not yet soil-analysed (pH reads back the floor value, which a real pH never does). Fail-open.
+---True when a field is not yet soil-analysed (pH reads back the floor value, which a real pH never does).
 -- @param table pf precisionFarming
 -- @param table field
 -- @return boolean locked
 function RealisticCropRotationManager:isPFSoilLocked(pf, field)
-    if pf == nil or field == nil then return false end
-    local phMap = pf.pHMap
-    if phMap == nil or type(phMap.getLevelAtWorldPos) ~= "function" then return false end
-    if type(field.posX) ~= "number" or type(field.posZ) ~= "number" then return false end
-    local ok, phInternal = pcall(phMap.getLevelAtWorldPos, phMap, field.posX, field.posZ)
-    if not ok or type(phInternal) ~= "number" then return false end
-    return phInternal <= 1
+    return pf.pHMap:getLevelAtWorldPos(field.posX, field.posZ) <= 1
 end
 
 ---Soil-type pixel counts over a field, keyed by PF's 1-based soil type index.

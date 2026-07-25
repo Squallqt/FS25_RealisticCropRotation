@@ -48,7 +48,7 @@
         <position value="0px -28px"/>
     </Profile>
 
-    <!-- Hero card (1240 x 88 px) -->
+    <!-- Hero card (1280 x 56 px) -->
 
     <Profile name="frHeroCard" extends="emptyPanel" with="anchorTopLeft">
         <size value="1280px 56px"/>
@@ -447,7 +447,7 @@
         <size value="1240px 198px"/>
     </Profile>
 
-    <!-- Centered on its 66px zone (0..-66 for the top row, -66..-132 for the bottom row) -->
+    <!-- Centered on the first two 66px zones -->
     <Profile name="frSoilRowTitleTop" extends="fs25_textDefault" with="anchorTopLeft">
         <position value="24px -24px"/>
         <size value="220px 20px"/>
@@ -529,7 +529,7 @@
         <cornerSize value="0"/>
     </Profile>
 
-    <!-- Third row (treatment coverage): +66px offset from the top row, same charter as nitrogen/pH -->
+    <!-- Third row (treatment coverage): third 66px zone, same layout as nitrogen/pH -->
     <Profile name="frSoilRowTitleTreatment" extends="frSoilRowTitleTop">
         <position value="24px -158px"/>
     </Profile>
@@ -891,9 +891,7 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Score card (1240 x 70 px) -->
-
-    <!-- Score card: 80px — text left, cursor track right, labels below track -->
+    <!-- Score card (1240 x 56 px): text left, cursor track right -->
     <Profile name="frScoreCard" extends="emptyPanel" with="anchorTopLeft">
         <size value="1240px 56px"/>
     </Profile>

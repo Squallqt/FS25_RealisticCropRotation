@@ -3,7 +3,7 @@
 <realisticCropRotationCrops>
 
     <!-- Disease groups: shared-pathogen definitions referenced by each crop's disease attribute -->
-    <!-- ambient = wind-borne inoculum floor on the infection roll -->
+    <!-- ambient = regional background floor on the infection roll -->
     <diseaseGroups>
         <!-- Sclerotinia: fungal stem/flower rot of oilseeds, legumes and roots -->
         <diseaseGroup name="SCLEROTINIA" state="1" minInterval="3" infectFrom="0.50" infectTo="0.80"

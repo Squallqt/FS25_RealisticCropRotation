@@ -99,7 +99,6 @@ function RealisticCropRotationRepository.new()
     return self
 end
 
----Clears all stored history, plans and last-known state.
 function RealisticCropRotationRepository:clear()
     resetStorage(self)
 end
@@ -156,17 +155,26 @@ function RealisticCropRotationRepository:getAllPlans()
     return self.plans
 end
 
----Sets one year slot of a farmland's rotation plan.
+---Sets one main-plan year slot and reports validity separately from whether storage changed.
 -- @param integer farmlandId
 -- @param integer yearIdx Slot 1-4
--- @param string family Crop family, or "" to clear
-function RealisticCropRotationRepository:setPlanYear(farmlandId, yearIdx, family)
+-- @param string cropName Crop name, or "" to clear
+-- @return boolean changed
+-- @return boolean valid
+function RealisticCropRotationRepository:setPlanYear(farmlandId, yearIdx, cropName)
     yearIdx = tonumber(yearIdx) or 0
-    if yearIdx < 1 or yearIdx > 4 then return end
-    if self.plans[farmlandId] == nil then
-        self.plans[farmlandId] = {"","","",""}
+    if yearIdx < 1 or yearIdx > 4 then return false, false end
+    local value = tostring(cropName or "")
+    local plan = self.plans[farmlandId]
+    if (plan ~= nil and plan[yearIdx] or "") == value then
+        return false, true
     end
-    self.plans[farmlandId][yearIdx] = tostring(family or "")
+    if plan == nil then
+        plan = {"","","",""}
+        self.plans[farmlandId] = plan
+    end
+    plan[yearIdx] = value
+    return true, true
 end
 
 ---Returns the 4-slot cover-crop plan for a farmland.
@@ -182,17 +190,26 @@ function RealisticCropRotationRepository:getAllCoverPlans()
     return self.coverPlans
 end
 
----Sets one year slot of a farmland's cover-crop plan.
+---Sets one cover-plan year slot and reports validity separately from whether storage changed.
 -- @param integer farmlandId
 -- @param integer yearIdx Slot 1-4
 -- @param string cropName Cover crop name, or "" to clear
+-- @return boolean changed
+-- @return boolean valid
 function RealisticCropRotationRepository:setCoverPlanYear(farmlandId, yearIdx, cropName)
     yearIdx = tonumber(yearIdx) or 0
-    if yearIdx < 1 or yearIdx > 4 then return end
-    if self.coverPlans[farmlandId] == nil then
-        self.coverPlans[farmlandId] = {"","","",""}
+    if yearIdx < 1 or yearIdx > 4 then return false, false end
+    local value = tostring(cropName or "")
+    local plan = self.coverPlans[farmlandId]
+    if (plan ~= nil and plan[yearIdx] or "") == value then
+        return false, true
     end
-    self.coverPlans[farmlandId][yearIdx] = tostring(cropName or "")
+    if plan == nil then
+        plan = {"","","",""}
+        self.coverPlans[farmlandId] = plan
+    end
+    plan[yearIdx] = value
+    return true, true
 end
 
 ---Removes a farmland's main and cover plans.

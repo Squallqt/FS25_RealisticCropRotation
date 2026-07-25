@@ -41,7 +41,6 @@ RealisticCropRotationDiseaseMap.TREATMENT_COLOR_NEMATICIDE = {0.00, 0.25, 0.50, 
 
 -- Local helpers — ALL declared before any method that references them.
 
----i18n lookup with a fallback when the key is missing.
 local function getText(key, fallback)
     if g_i18n ~= nil and type(g_i18n.hasText) == "function" and g_i18n:hasText(key) then
         return g_i18n:getText(key)
@@ -59,17 +58,14 @@ local function orderedDiseaseGroups()
     return RealisticCropRotationDisease.getOrderedGroups()
 end
 
----Number of pathogen groups the infection view lists (one filter row + one colour each).
 local function diseaseCount()
     return #orderedDiseaseGroups()
 end
 
----The disease model (client-safe reads only).
 local function getDisease()
     return RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
 end
 
----The persistent disease grid (BitVectorMap wrapper).
 local function getGrid()
     return RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
 end
@@ -81,7 +77,6 @@ local function isVisualizationOverlayReady(overlayId)
     return true
 end
 
----Configures an overlay for one RCR treatment family.
 function RealisticCropRotationDiseaseMap:configureTreatmentOverlay(overlayId, treatmentFamily)
     local grid = getGrid()
     if overlayId == nil or grid == nil then return false end
@@ -105,14 +100,12 @@ function RealisticCropRotationDiseaseMap:configureTreatmentOverlay(overlayId, tr
     return true
 end
 
----Overlay colour for a disease's grid state id (colour-blind aware); falls back to a generic colour beyond the palette.
 local function infectionStateColor(state, colorBlind)
     local entry = RealisticCropRotationDiseaseMap.STATE_COLORS[state]
         or RealisticCropRotationDiseaseMap.STATE_COLOR_FALLBACK
     return entry[colorBlind == true] or entry[false] or {1, 1, 1, 1}
 end
 
----Filter rows for the infection sub-page: one per disease, built from config (l10n name, colour by state id).
 local function getInfectionDisplayItems(colorBlind)
     local disease = getDisease()
     local items = {}
@@ -128,7 +121,6 @@ local function getInfectionDisplayItems(colorBlind)
     return items
 end
 
----Filter list rows for the risk sub-page.
 local function getRiskDisplayItems()
     local low = RealisticCropRotationDiseaseMap.RISK_COLOR_LOW
     local mod = RealisticCropRotationDiseaseMap.RISK_COLOR_MODERATE
@@ -140,7 +132,6 @@ local function getRiskDisplayItems()
     }
 end
 
----Filter rows for the treatment-coverage sub-page: one per product family, reusing the fillType l10n titles (rcr_fillType_fungicide / rcr_fillType_nematicide).
 local function getTreatmentDisplayItems()
     local fung = RealisticCropRotationDiseaseMap.TREATMENT_COLOR_FUNGICIDE
     local nema = RealisticCropRotationDiseaseMap.TREATMENT_COLOR_NEMATICIDE
@@ -150,7 +141,6 @@ local function getTreatmentDisplayItems()
     }
 end
 
----Count selected filter entries.
 local function countSelected(filter, n)
     local count = 0
     for i = 1, (n or 2) do
@@ -159,7 +149,6 @@ local function countSelected(filter, n)
     return count
 end
 
----Ensure the map-overview selector forwards clicks to the frame handler.
 local function ensureSelectorCallback(frame)
     if frame == nil or frame.mapOverviewSelector == nil then return end
     if frame.rcrDiseaseMapSelectorCallbackSet then return end
@@ -268,7 +257,6 @@ local function adjustedOverlaySize()
     end
 end
 
----Creates two value overlays per sub-page (double-buffered) so async regeneration into the hidden slot avoids a blank gap on refresh.
 function RealisticCropRotationDiseaseMap:createRuntimeObjects()
     if createDensityMapVisualizationOverlay == nil then return end
     local grid = getGrid()
@@ -423,7 +411,6 @@ end
 
 -- Risk view — render straight from the runtime risk-band map (no iteration).
 
----Colours the pressure view from the runtime risk-band map: one native call per band (1..3), painted off the UI path by Disease:refreshRiskMap.
 function RealisticCropRotationDiseaseMap:renderRiskOverlay()
     local grid = getGrid()
     if grid == nil or grid.riskMapId == nil or self.riskOverlayIds == nil then
@@ -452,7 +439,6 @@ end
 
 -- Treatment-coverage view — render straight from the two per-cell protection maps.
 
----Colours the treatment-coverage view from the two per-cell protection maps written by the sprayer (same coverage the daily destroy pass excludes).
 function RealisticCropRotationDiseaseMap:renderTreatmentOverlay()
     local grid = getGrid()
     if grid == nil or self.treatmentOverlayIds == nil then return false end
@@ -521,7 +507,6 @@ function RealisticCropRotationDiseaseMap:updateOverlay(force)
     end
 end
 
----Draws the active view's overlay, promoting a finished background slot to active.
 function RealisticCropRotationDiseaseMap:draw(x, y, width, height)
     local overlayIds, pendingSlotField, activeSlotField
     if self:isPressurePage() then
@@ -549,14 +534,12 @@ function RealisticCropRotationDiseaseMap:draw(x, y, width, height)
     end
 end
 
----Returns the live HUD minimap instance, never a fullscreen or menu map.
 function RealisticCropRotationDiseaseMap:getHudIngameMap()
     local mission = g_currentMission
     if mission == nil or mission.hud == nil then return nil end
     return mission.hud.ingameMap
 end
 
----Hooks the concrete HUD map instance after it exists; class hooks can miss its bound drawFields function.
 function RealisticCropRotationDiseaseMap:tryHookHudInstance()
     if self.hudInstanceHooked then return true end
     if Utils == nil or Utils.appendedFunction == nil then return false end
@@ -572,7 +555,6 @@ function RealisticCropRotationDiseaseMap:tryHookHudInstance()
     return true
 end
 
----Rebuilds the HUD visualization only for a new family or changed treatment coverage.
 function RealisticCropRotationDiseaseMap:updateHudTreatmentOverlay(treatmentFamily)
     local grid = getGrid()
     if grid == nil or createDensityMapVisualizationOverlay == nil then return end
@@ -615,7 +597,6 @@ function RealisticCropRotationDiseaseMap:updateHudTreatmentOverlay(treatmentFami
     self.hudTreatmentLastBuildTime = now
 end
 
----Renders one density overlay with the HUD minimap's native crop, rotation, pivot and alpha.
 function RealisticCropRotationDiseaseMap:renderHudMapOverlay(mapSelf, overlayId)
     if overlayId == nil or overlayId == 0 or mapSelf == nil or mapSelf.layout == nil then return end
 
@@ -647,7 +628,6 @@ function RealisticCropRotationDiseaseMap:renderHudMapOverlay(mapSelf, overlayId)
     end
 end
 
----Draws treatment coverage while the controlled sprayer contains an RCR product.
 function RealisticCropRotationDiseaseMap:drawHudTreatmentOverlay(mapSelf)
     if mapSelf ~= self.hudIngameMap or mapSelf.isFullscreen == true then return end
     if RealisticCropRotationSprayerProducts ~= nil

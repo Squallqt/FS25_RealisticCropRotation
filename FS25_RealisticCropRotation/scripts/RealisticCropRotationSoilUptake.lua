@@ -567,7 +567,7 @@ function RealisticCropRotationSoilUptake.prepare(manager, field, desc, farmlandI
         snapshotPixels = {},
     }
 
-    local pf = manager ~= nil and manager:getPrecisionFarming() or nil
+    local pf = manager:getPrecisionFarming()
     if pf ~= nil then
         buildPFSession(session, pf, desc)
     else

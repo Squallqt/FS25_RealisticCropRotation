@@ -38,8 +38,8 @@ function RealisticCropRotation.isFallowCrop(cropName)
         and string.upper(tostring(cropName)) == RealisticCropRotation.SPECIAL_CROP_FALLOW
 end
 
----Loads cropConfig.xml into the crop and disease-group config table.
--- @return table config Crop config, or nil on failure
+---Loads cropConfig.xml into the crop and disease-group configuration table.
+-- @return table config Crop configuration, or nil when the XML cannot be loaded
 local function loadCropConfig()
     local filePath = modDirectory .. "cropConfig.xml"
     local xmlFile = loadXMLFile("RealisticCropRotationCropConfig", filePath)
@@ -101,19 +101,19 @@ local function loadCropConfig()
             if from ~= nil and to ~= nil then
                 config.diseaseWindows[upper] = { from = from, to = to }
             end
-            -- Fungal pathogens get the rain bonus; soil animals/protists do not.
+            -- Fungal pathogens receive the rain bonus; soil animals and protists do not.
             config.diseaseFungal[upper] = getXMLBool(xmlFile, gkey .. "#fungal") == true
-            -- Stable per-disease overlay id (1..N): the in-game map paints each disease its own colour from this id.
+            -- Stable per-disease overlay id, with parse order as the fallback.
             local state = getXMLInt(xmlFile, gkey .. "#state")
             config.diseaseStates[upper] = (state ~= nil and state > 0) and state or autoState
-            -- Reference treatment family for the field panel/advice and sprayer treatment (FUNGICIDE | NEMATICIDE | NONE).
+            -- Treatment family used by the field panel and sprayer logic.
             local treatment = getXMLString(xmlFile, gkey .. "#treatment")
             config.diseaseTreatments[upper] = (treatment ~= nil and treatment ~= "") and string.upper(treatment) or "NONE"
-            -- Rain multiplier for fungal groups only (default RAIN_BONUS in Disease.lua when omitted).
+            -- Optional rain multiplier for fungal disease groups.
             config.diseaseWeatherFactors[upper] = getXMLFloat(xmlFile, gkey .. "#weatherFactor")
-            -- Wind-borne inoculum floor on the infection roll.
+            -- Regional background inoculum floor used by the infection roll.
             config.diseaseAmbient[upper] = getXMLFloat(xmlFile, gkey .. "#ambient") or 0
-            -- Daily destruction profile (optional; nil -> module fallbacks in getCurve): growth rate, destroy threshold, max destroyed share.
+            -- Optional daily growth, destruction threshold and maximum destroyed share.
             config.diseaseCurves[upper] = {
                 dailyGrowth     = getXMLFloat(xmlFile, gkey .. "#dailyGrowth"),
                 destroySeverity = getXMLFloat(xmlFile, gkey .. "#destroySeverity"),
@@ -140,7 +140,7 @@ RealisticCropRotation.periodChangedListener = nil
 RealisticCropRotation.dayChangedListener = nil
 RealisticCropRotation.hudMapUpdateable = nil
 
----Marks the rotation state dirty so a single coalesced broadcast fires soon (server).
+---Marks rotation state dirty so one coalesced server broadcast is sent.
 function RealisticCropRotation.requestBroadcast()
     if g_server == nil then return end
     RealisticCropRotation.broadcastDirty = true
@@ -150,7 +150,7 @@ end
 ---Asks the server for a full rotation snapshot (client).
 -- @param integer selectedFarmlandId Farmland to reconcile first, or nil
 function RealisticCropRotation.requestServerSync(selectedFarmlandId)
-    if g_client == nil or RCRHistoryRequestEvent == nil then return end
+    if g_client == nil then return end
     if type(g_client.getServerConnection) ~= "function" then return end
     local connection = g_client:getServerConnection()
     if connection ~= nil then
@@ -158,7 +158,7 @@ function RealisticCropRotation.requestServerSync(selectedFarmlandId)
     end
 end
 
----Moves a selected farmland to the next unprocessed position in a reconcile queue.
+---Moves the selected farmland to the next unprocessed position in a reconcile queue.
 -- @param table queue Active menu reconcile queue
 -- @param integer selectedFarmlandId Farmland to prioritize, or nil
 local function prioritizeMenuReconcile(queue, selectedFarmlandId)
@@ -247,11 +247,11 @@ local function processMenuReconcileQueue()
     end
 end
 
----Broadcasts the rotation snapshot to all clients now (server).
+---Broadcasts the current rotation snapshot to every connected client.
 local function flushRealisticCropRotationBroadcast()
     RealisticCropRotation.broadcastDirty = false
     RealisticCropRotation.broadcastTimerMs = 0
-    if g_server ~= nil and RCRHistoryResponseEvent ~= nil then
+    if g_server ~= nil then
         g_server:broadcastEvent(RCRHistoryResponseEvent.new(), false)
     end
 end
@@ -264,7 +264,6 @@ local refreshRealisticCropRotationFrame
 -- @param boolean loadFromSavegame True when triggered by savegame load
 local function onFarmlandOwnerChanged(farmlandId, _farmId, loadFromSavegame)
     if loadFromSavegame then return end
-    if RealisticCropRotation.manager == nil then return end
 
     local changed = RealisticCropRotation.manager:clearRotationPlan(farmlandId)
     if changed then
@@ -272,16 +271,13 @@ local function onFarmlandOwnerChanged(farmlandId, _farmId, loadFromSavegame)
         RealisticCropRotation.requestBroadcast()
     end
 
-    -- Ownership changed: wipe + repaint the risk display map so bought fields appear and sold fields disappear.
-    if RealisticCropRotation.disease ~= nil then
-        RealisticCropRotation.disease:refreshRiskMap(true)
-    end
+    -- Ownership changed: repaint the risk map so bought and sold fields match their new visibility.
+    RealisticCropRotation.disease:refreshRiskMap(true)
 end
 
----Reconciles active crops and rolls disease infection for all owned farmlands on a period change (server).
+---Reconciles active crops and evaluates disease infection for owned farmlands on a period change.
 local function onPeriodChanged()
     if g_currentMission == nil or not g_currentMission:getIsServer() then return end
-    if RealisticCropRotation.manager == nil then return end
 
     local changed = RealisticCropRotationTreatmentLifecycle.onPeriodChanged()
     local diseaseUpdated = false
@@ -290,11 +286,9 @@ local function onPeriodChanged()
         if rotationChanged then
             changed = true
         end
-        if RealisticCropRotation.disease ~= nil then
-            -- Infection roll + reset only here; severity progression and destruction run day by day (onDayChanged).
-            RealisticCropRotation.disease:evaluateInfection(farmlandId)
-            diseaseUpdated = true
-        end
+        -- Infection rolls run per period; severity and destruction progress daily.
+        RealisticCropRotation.disease:evaluateInfection(farmlandId)
+        diseaseUpdated = true
     end
 
     if changed then
@@ -304,27 +298,22 @@ local function onPeriodChanged()
         RealisticCropRotation.requestBroadcast()
     end
 
-    -- Risk bands drift with the period (history decay): repaint only the fields whose band moved, off the UI path.
-    if RealisticCropRotation.disease ~= nil then
-        RealisticCropRotation.disease:refreshRiskMap(false)
-    end
+    RealisticCropRotation.disease:refreshRiskMap(false)
 end
 
----Queues the day's disease progress; drained across frames by the broadcast updateable (server).
+---Queues daily disease progression for incremental processing across frames.
 local function onDayChanged()
     if g_currentMission == nil or not g_currentMission:getIsServer() then return end
-    if RealisticCropRotation.disease ~= nil then
-        RealisticCropRotation.disease:enqueueDailyProgress()
-    end
+    RealisticCropRotation.disease:enqueueDailyProgress()
 end
 
----Refreshes the open menu frame after a state change (history or planning tab).
+---Refreshes the open history or planning frame after authoritative state changes.
 function refreshRealisticCropRotationFrame()
     if RealisticCropRotation.frame == nil then return end
     RealisticCropRotation.frame:onServerSyncReceived()
 end
 
----Forces the tab-list alignment offset back to 0 (adding a tab leaves a stale offset).
+---Forces the tab-list alignment offset back to zero after inserting the custom page.
 local function applyTabListAlignmentFix()
     if RealisticCropRotation.tabListFixApplied then return end
     if InGameMenu == nil or InGameMenu.rebuildTabList == nil then return end
@@ -395,7 +384,7 @@ function RealisticCropRotation.addInGameMenuPage(frameFieldName, predicateFunc, 
     return frame
 end
 
----Resolves the current savegame folder path with a trailing slash.
+---Resolves the current savegame folder and ensures it has a trailing separator.
 -- @return string path Savegame folder path, or nil when unavailable
 local function resolveSavegameFolderPath()
     if g_currentMission == nil or g_currentMission.missionInfo == nil then return nil end
@@ -412,7 +401,7 @@ local function resolveSavegameFolderPath()
     return path
 end
 
----Loads GUI profiles + menu icon config (once). Skipped on dedicated server.
+---Loads GUI profiles and the menu icon texture configuration once.
 local function loadGuiAssets()
     if g_gui == nil or type(g_gui.loadProfiles) ~= "function" then return end
 
@@ -430,7 +419,7 @@ local function loadGuiAssets()
     end
 end
 
----Creates and registers the treatment maps while the mission density-map synchronizer is accepting maps.
+---Creates and registers treatment maps while the mission density-map synchronizer accepts maps.
 local function initDiseaseTerrain(mission)
     if mission == nil or RealisticCropRotation.grid ~= nil then return end
 
@@ -439,7 +428,7 @@ local function initDiseaseTerrain(mission)
     RealisticCropRotation.grid:loadMap(savegameFolderPath, mission.densityMapSyncer)
 end
 
----Mission-load hook: builds the manager, loads state, wires server listeners.
+---Builds runtime services, loads persisted state and registers mission listeners.
 local function loadedMission()
     RealisticCropRotation.menuReconcileQueue = nil
     RealisticCropRotation.lastMenuReconcileMs = nil
@@ -464,11 +453,9 @@ local function loadedMission()
 
     if g_currentMission:getIsServer() then
         RealisticCropRotation.manager:loadFromXML(savegameFolderPath)
-        if RealisticCropRotation.disease ~= nil then
-            RealisticCropRotation.disease:loadFromXML(savegameFolderPath)
-            -- Initial paint of the risk display map, during the loading screen (never on menu open).
-            RealisticCropRotation.disease:refreshRiskMap(true)
-        end
+        RealisticCropRotation.disease:loadFromXML(savegameFolderPath)
+        -- Paint the initial risk map during loading, never on menu open.
+        RealisticCropRotation.disease:refreshRiskMap(true)
         RealisticCropRotationTreatmentLifecycle.loadFromXML(savegameFolderPath)
         if g_messageCenter ~= nil and MessageType ~= nil and MessageType.FARMLAND_OWNER_CHANGED ~= nil then
             RealisticCropRotation.farmlandOwnerChangeListener = {
@@ -517,12 +504,10 @@ local function loadedMission()
     if g_currentMission:getIsServer() and type(g_currentMission.addUpdateable) == "function" then
         RealisticCropRotation.broadcastUpdateable = {
             update = function(_self, dt)
-                -- Menu reconciliation is authoritative but incremental: one farmland per frame.
+                -- Menu reconciliation is authoritative and limited to one farmland per frame.
                 processMenuReconcileQueue()
-                -- Spread the day's disease work across frames: drain a few queued fields per frame instead of all at once.
-                if RealisticCropRotation.disease ~= nil then
-                    RealisticCropRotation.disease:processDailyQueue()
-                end
+                -- Daily disease work is also drained incrementally to keep frame time bounded.
+                RealisticCropRotation.disease:processDailyQueue()
                 if not RealisticCropRotation.broadcastDirty then return end
                 RealisticCropRotation.broadcastTimerMs = (RealisticCropRotation.broadcastTimerMs or 0) - (dt or 0)
                 if RealisticCropRotation.broadcastTimerMs <= 0 then
@@ -542,9 +527,7 @@ local function loadedMission()
                 pending.coverPlans or {},
                 pending.lastKnownActiveCrop or {},
                 pending.lastKnownGrowthState or {})
-            if RealisticCropRotation.disease ~= nil then
-                RealisticCropRotation.disease:applySyncData(pending.diseaseState or {}, pending.diseaseCrop or {})
-            end
+            RealisticCropRotation.disease:applySyncData(pending.diseaseState or {}, pending.diseaseCrop or {})
             RealisticCropRotationTreatmentLifecycle.applySyncData(pending.nematicideCountdown or {})
             RealisticCropRotation.pendingSyncData = nil
         end
@@ -566,7 +549,7 @@ local function loadedMission()
     end
 end
 
----Builds the GUI page + menu tab once the in-game menu is ready (skipped on dedicated server).
+---Builds the GUI page and menu tab once the in-game menu is available.
 local function loadInGameMenuGui()
     if g_gui == nil or type(g_gui.loadProfiles) ~= "function" then return end
     if g_inGameMenu == nil then return end
@@ -597,7 +580,7 @@ local function loadInGameMenuGui()
     end
 end
 
----Save hook: persists rotation state (server only).
+---Persists server-side rotation, treatment and disease state with the savegame.
 local function onSaveToXMLFile()
     if g_currentMission == nil or g_currentMission.missionInfo == nil then return end
     if not g_currentMission:getIsServer() then return end
@@ -624,7 +607,7 @@ local function sendInitialClientState(_self, connection)
     connection:sendEvent(RCRHistoryResponseEvent.new())
 end
 
----Mod entry point: loads config and installs the engine hooks.
+---Loads configuration and installs the mission and menu hooks for the mod.
 local function initRealisticCropRotation()
     RealisticCropRotation.cropConfig = loadCropConfig()
 

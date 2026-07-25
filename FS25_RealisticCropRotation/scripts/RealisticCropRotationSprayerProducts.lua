@@ -46,7 +46,6 @@ local pfTreatmentValueMap = nil
 -- Ground-paint value only (SPRAY_TYPE channel); the engine clears it on the crop's next growth-state transition.
 local treatmentSprayType = nil
 
----Returns the loaded Precision Farming script environment, if available.
 local function getPrecisionFarmingEnvironment()
     local globalEnvironment = _G
     local globalMetaTable = getmetatable(_G)
@@ -83,7 +82,6 @@ local function getPrecisionFarmingEnvironment()
     return nil
 end
 
----Resolves the active fill source with the same source order used by Sprayer and PF ExtendedSprayer.
 local function getSprayerFillSource(vehicle)
     if vehicle == nil or type(vehicle.getSprayerFillUnitIndex) ~= "function" then return nil, nil end
 
@@ -111,7 +109,6 @@ local function getSprayerFillSource(vehicle)
     return vehicle, fillUnitIndex
 end
 
----Returns the active product treatment supplied to a sprayer, including source tanks.
 function RealisticCropRotationSprayerProducts.getVehicleProductTreatment(vehicle)
     local sourceVehicle, fillUnitIndex = getSprayerFillSource(vehicle)
     if sourceVehicle == nil or fillUnitIndex == nil
@@ -126,7 +123,6 @@ function RealisticCropRotationSprayerProducts.getVehicleProductTreatment(vehicle
     return RealisticCropRotationSprayerProducts.getProductTreatment(fillType)
 end
 
----Returns the RCR treatment currently loaded in a sprayer of the controlled vehicle.
 function RealisticCropRotationSprayerProducts.getControlledProductTreatment()
     local controlledVehicle = g_localPlayer ~= nil and g_localPlayer:getCurrentVehicle() or nil
     if controlledVehicle == nil then return nil end
@@ -141,12 +137,10 @@ function RealisticCropRotationSprayerProducts.getControlledProductTreatment()
     return nil
 end
 
----Returns whether PF owns the live treatment minimap overlay and zoom.
 function RealisticCropRotationSprayerProducts.getIsPrecisionFarmingMinimapActive()
     return pfTreatmentValueMap ~= nil
 end
 
----Creates the RCR ValueMap consumed by PF's native InGameMapExtension.
 local function registerPrecisionFarmingTreatmentMap(pfEnvironment)
     local precisionFarming = pfEnvironment ~= nil and pfEnvironment.g_precisionFarming or nil
     local valueMapClass = pfEnvironment ~= nil and pfEnvironment.ValueMap or nil
@@ -180,7 +174,6 @@ local function registerPrecisionFarmingTreatmentMap(pfEnvironment)
     pfTreatmentValueMap = valueMap
 end
 
----Drives the PF ValueMap with the same on-field and selected-vehicle state as ExtendedSprayer.
 local function updatePrecisionFarmingTreatmentMap()
     if pfTreatmentValueMap == nil then return end
 
@@ -218,7 +211,6 @@ local function updatePrecisionFarmingTreatmentMap()
     end
 end
 
----Runs PF's base-effect state update while exposing the vanilla effects for RCR products.
 local function runPrecisionFarmingVanillaEffectState(originalFunction, vehicle, force, ...)
     local isRcrProduct = RealisticCropRotationSprayerProducts.getVehicleProductTreatment(vehicle) ~= nil
     local effectsSpec = pfExtendedSprayerEffects ~= nil
@@ -258,7 +250,6 @@ local function createPatchedNozzleEffectState(originalFunction)
     end
 end
 
----Patches one PF function holder without stacking an RCR wrapper on an existing RCR wrapper.
 local function patchPrecisionFarmingTarget(functionName, target, createPatchedFunction)
     if target == nil or target[functionName] == nil then
         return
@@ -281,7 +272,6 @@ local function patchPrecisionFarmingTarget(functionName, target, createPatchedFu
     target[functionName] = patchedFunction
 end
 
----Patches PF's class plus the copies already stored on vehicle types and loaded vehicles.
 local function patchPrecisionFarmingFunctionCopies(functionName, createPatchedFunction)
     patchPrecisionFarmingTarget(functionName, pfExtendedSprayer, createPatchedFunction)
 
@@ -309,7 +299,6 @@ local function patchPrecisionFarmingFunctionCopies(functionName, createPatchedFu
     end
 end
 
----Installs or repairs the two PF visual hooks required to retain vanilla RCR spray effects.
 local function patchPrecisionFarmingEffects()
     if pfExtendedSprayer == nil or pfExtendedSprayerEffects == nil then
         return
@@ -322,7 +311,6 @@ local function patchPrecisionFarmingEffects()
         createPatchedNozzleEffectState)
 end
 
----Restores every PF function only when the currently installed function is still RCR's wrapper.
 local function restorePrecisionFarmingEffects()
     for functionName, functionRecords in pairs(pfPatchRecords) do
         for target, record in pairs(functionRecords) do
@@ -339,7 +327,6 @@ local function restorePrecisionFarmingEffects()
     pfPatchTimer = 0
 end
 
----Client update: repairs PF function copies created after mission load.
 function RealisticCropRotationSprayerProducts:update(dt)
     updatePrecisionFarmingTreatmentMap()
     pfPatchTimer = pfPatchTimer + dt
@@ -349,7 +336,6 @@ function RealisticCropRotationSprayerProducts:update(dt)
     end
 end
 
----Queues the client-side sprayer materials before the engine loads mod material holders.
 function RealisticCropRotationSprayerProducts.registerMaterialHolder(modDirectory)
     if g_dedicatedServerInfo == nil and g_materialManager ~= nil then
         g_materialManager:addModMaterialHolder(
@@ -371,7 +357,6 @@ function RealisticCropRotationSprayerProducts.getProductTreatment(fillTypeIndex)
     return fillTypeIndex ~= nil and productTreatmentByFillType[fillTypeIndex] or nil
 end
 
----Registers the RCR sprayTypes at the HERBICIDE flow rate, until per-product dosing is decided.
 local function ensureSprayTypes()
     if g_fillTypeManager == nil or g_sprayTypeManager == nil then
         Logging.warning("[RealisticCropRotation] fillType/sprayType managers unavailable; RCR sprayer products were not wired")
@@ -431,28 +416,30 @@ local function getWorkAreaFarmlandId(workArea)
     return farmlandId ~= nil and farmlandId > 0 and farmlandId or nil
 end
 
----Server: paints curative/preventive disease protection under the sprayed strip and clears matching overlay marks.
+---Server: paints disease protection under the sprayed strip and returns changed/total pixels for native sprayer statistics.
 -- @param table workArea work area whose start/width/height nodes give the sprayed strip
 -- @param integer fillType RCR product fillType
 -- @param integer farmlandId Sole farmland allowed to receive the treatment
+-- @return number changedPixels
+-- @return number totalPixels
 local function paintDiseaseProtection(workArea, fillType, farmlandId)
     if workArea == nil or workArea.start == nil or workArea.width == nil or workArea.height == nil then
-        return
+        return 0, 0
     end
-    if getWorldTranslation == nil then return end
+    if getWorldTranslation == nil then return 0, 0 end
 
     local treatmentType = RealisticCropRotationSprayerProducts.getProductTreatment(fillType)
-    if treatmentType == nil then return end
+    if treatmentType == nil then return 0, 0 end
 
     local grid = RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
-    if grid == nil then return end
+    if grid == nil then return 0, 0 end
 
     local sx, _, sz = getWorldTranslation(workArea.start)
     local wx, _, wz = getWorldTranslation(workArea.width)
     local hx, _, hz = getWorldTranslation(workArea.height)
-    if sx == nil or wx == nil or hx == nil then return end
+    if sx == nil or wx == nil or hx == nil then return 0, 0 end
 
-    grid:paintProtection(treatmentType, farmlandId, sx, sz, wx, wz, hx, hz)
+    return grid:paintProtection(treatmentType, farmlandId, sx, sz, wx, wz, hx, hz)
 end
 
 ---AI job-completion rule: prohibits re-working an already-protected cell.
@@ -542,7 +529,6 @@ local function paintTreatmentGround(self, workArea, farmlandId)
     modifier:executeSet(treatmentSprayType, farmlandFilter, fieldFilter)
 end
 
----Overwrites Sprayer.processSprayerArea once per game session; non-RCR fillTypes fall through unchanged.
 local function installSprayerHook()
     if hookInstalled then
         return
@@ -598,9 +584,13 @@ local function installSprayerHook()
         if self.isServer then
             paintTreatmentGround(self, workArea, targetFarmlandId)
         end
-        paintDiseaseProtection(workArea, sprayFillType, targetFarmlandId)
+        local changedArea, totalArea =
+            paintDiseaseProtection(workArea, sprayFillType, targetFarmlandId)
+        params.lastChangedArea = params.lastChangedArea + changedArea
+        params.lastStatsArea = params.lastStatsArea + changedArea
+        params.lastTotalArea = params.lastTotalArea + totalArea
 
-        return 0, 0
+        return changedArea, totalArea
     end)
 
     -- AI job completion: without this, the HERBICIDE sprayType has no weed-replacement data for a custom fillType, so the AI never sees the field as done.
@@ -612,7 +602,6 @@ local function installSprayerHook()
     hookInstalled = true
 end
 
----Mission-load entry point; called from main.lua after the GUI assets load.
 function RealisticCropRotationSprayerProducts.onMissionLoaded()
     productFillTypeSet = {}
     productTreatmentByFillType = {}
@@ -633,7 +622,6 @@ function RealisticCropRotationSprayerProducts.onMissionLoaded()
     end
 end
 
----Mission teardown: forget the mission-scoped fillType indices.
 function RealisticCropRotationSprayerProducts.onMissionDeleted()
     if pfUpdateRegistered and g_currentMission ~= nil then
         g_currentMission:removeUpdateable(RealisticCropRotationSprayerProducts)

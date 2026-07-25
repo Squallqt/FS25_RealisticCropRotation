@@ -19,7 +19,6 @@ function RealisticCropRotationService.new(repository)
     return self
 end
 
----Resets caches.
 function RealisticCropRotationService:reset()
     self.cropNameByFruitTypeIndex = {}
 end
@@ -168,7 +167,7 @@ function RealisticCropRotationService:isCoverCropForRotationHistory(fruitTypeInd
     return false
 end
 
----Pushes a non-cover crop onto a farmland's rotation history.
+---Pushes a map-visible, non-cover crop onto a farmland's rotation history.
 -- @param integer farmlandId
 -- @param string cropName
 -- @param boolean allowDuplicate Allow repeating the most recent crop
@@ -179,6 +178,8 @@ function RealisticCropRotationService:pushHistoryCrop(farmlandId, cropName, allo
 
     local normalizedCropName = self:normalizeCropName(cropName)
     if normalizedCropName == nil then return false end
+    local fruitType = self:getFruitTypeByCropName(normalizedCropName)
+    if fruitType ~= nil and fruitType.shownOnMap == false then return false end
     if self:isCoverCropForRotationHistory(nil, normalizedCropName) then
         return false
     end

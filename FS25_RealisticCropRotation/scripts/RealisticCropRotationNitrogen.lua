@@ -11,10 +11,9 @@ local pfWriters = {}
 local vanillaModifier = nil
 local vanillaLevelFilter = nil
 
----Returns PF nitrogen density data, or nil when PF is absent.
 local function getPFData()
     if targetData ~= nil and targetData.mode == "pf" then return targetData end
-    if nitrogenMap == nil and manager ~= nil then
+    if nitrogenMap == nil then
         local pf = manager:getPrecisionFarming()
         nitrogenMap = pf ~= nil and pf.nitrogenMap or nil
     end
@@ -36,7 +35,6 @@ local function getPFData()
     return targetData
 end
 
----Returns vanilla spray-level density data.
 local function getVanillaData()
     if targetData ~= nil and targetData.mode == "vanilla" then return targetData end
     local mission = g_currentMission
@@ -63,7 +61,6 @@ local function getTargetData()
     return getPFData() or getVanillaData()
 end
 
----Returns every non-cover fruit type with a density plane (any termination can carry the previous n2).
 local function getConfiguredCrops()
     local result = {}
     if g_fruitTypeManager == nil or type(g_fruitTypeManager.getFruitTypes) ~= "function" then
@@ -144,7 +141,6 @@ local function createMask(context, name, sizeX, sizeY, numChannels)
     return mapId, modifier
 end
 
----Builds cached two-bit transition masks: 1=regular, 2=pre-mulched, 3=rejected.
 local function getTransition(data)
     if data == nil or createBitVectorMap == nil or loadBitVectorMapNew == nil
         or getBitVectorMapSize == nil or DensityMapModifier == nil
@@ -249,23 +245,17 @@ local function getTransition(data)
     end
 
     -- Crops with termination residue (n1) > 0 are the only ones that can deposit, so capture skips every other fruit plane.
-    if manager ~= nil and manager.service ~= nil then
-        for _, crop in ipairs(context.crops) do
-            local entry = manager.service:getResidueEntry(crop.name)
-            if entry ~= nil and (tonumber(entry.n1) or 0) > 0 then
-                table.insert(context.n1Crops, crop)
-            end
+    for _, crop in ipairs(context.crops) do
+        local entry = manager.service:getResidueEntry(crop.name)
+        if entry ~= nil and (tonumber(entry.n1) or 0) > 0 then
+            table.insert(context.n1Crops, crop)
         end
-    else
-        -- Service unavailable: fall back to scanning every crop.
-        context.n1Crops = context.crops
     end
 
     transition = context
     return transition
 end
 
----Captures the given crops' pixels before native destruction (only their mask groups are cleared, stamp-deduplicated).
 local function capture(context, crops, sx, sz, wx, wz, hx, hz)
     context.captureStamp = context.captureStamp + 1
     local stamp = context.captureStamp
@@ -296,7 +286,6 @@ local function capture(context, crops, sx, sz, wx, wz, hx, hz)
     return active
 end
 
----Keeps only transitions into the destroyed state, including final crop termination.
 local function retainDestroyed(active)
     for _, crop in ipairs(active) do
         if crop.mulchedState > 0 then
@@ -309,7 +298,6 @@ local function retainDestroyed(active)
     end
 end
 
----Cached PF writer for a residue size: add states below the cap, clamp the rest to maxValue.
 local function getPFWriter(data, states)
     local key = string.format("%d|%d|%d|%d",
         data.mapId, data.firstChannel, data.numChannels, states)
@@ -426,9 +414,7 @@ local function resetContext(context)
     end
 end
 
----Cheap pre-filter before mask capture: skips density-map work off-farmland, and captures only the static n1>0 crop subset unless the previous crop carries n2.
 local function prepare(sx, sz, wx, wz, hx, hz)
-    if manager == nil or manager.service == nil then return nil end
     local farmlandId = getFarmlandId(sx, sz, wx, wz, hx, hz)
     if farmlandId == nil then return nil end
 
@@ -454,7 +440,6 @@ function RealisticCropRotationNitrogen.delete()
 end
 
 function RealisticCropRotationNitrogen.install(rcrManager)
-    if rcrManager == nil or rcrManager.service == nil then return end
     manager = rcrManager
     if installed then return end
     if g_currentMission == nil or type(g_currentMission.getIsServer) ~= "function"

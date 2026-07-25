@@ -129,7 +129,6 @@ local function worldToGridCell(worldX, worldZ, mapSize)
         math.floor(mapSize * (worldZ + terrainSize * 0.5) / terrainSize)
 end
 
----True when the given world position is marked protected in the per-cell map (one native getBitVectorMapPoint read, no loop).
 local function isPointProtected(protectionMapId, mapSize, worldX, worldZ)
     if protectionMapId == nil or getBitVectorMapPoint == nil or worldX == nil then return false end
     local localX, localZ = worldToGridCell(worldX, worldZ, mapSize)
@@ -150,8 +149,10 @@ function RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
     if groups == nil then return end
 
     local label = RealisticCropRotationHud.getText("rcr_disease_hud_label", "Disease")
-    for group, s in pairs(groups) do
-        if (s.severity or 0) > 0 then
+    for _, entry in ipairs(RealisticCropRotationDisease.getOrderedGroups()) do
+        local group = entry.group
+        local s = groups[group]
+        if s ~= nil and (s.severity or 0) > 0 then
             local diseaseName = disease:getDisplayName(group)
             fieldBox:addLine(label, diseaseName, true)
         end
@@ -160,6 +161,7 @@ end
 
 ---Appends a treatment line for each protection family active under the player's feet.
 -- @param table fieldBox Field-info box with addLine
+-- @param integer farmlandId
 function RealisticCropRotationHud.addTreatmentLine(fieldBox, farmlandId)
     if fieldBox == nil or fieldBox.addLine == nil then return end
 

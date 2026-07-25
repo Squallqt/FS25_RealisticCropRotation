@@ -36,19 +36,15 @@ local function cleanLeadingSeparator(text)
 end
 
 local function setVisible(element, visible)
-    if element ~= nil and element.setVisible ~= nil then
-        element:setVisible(visible == true)
-    end
+    element:setVisible(visible == true)
 end
 
 local function setText(element, text)
-    if element ~= nil and element.setText ~= nil then
-        element:setText(text or "")
-    end
+    element:setText(text or "")
 end
 
 local function setElementColor(element, color)
-    if element == nil or color == nil then return end
+    if color == nil then return end
 
     local rgba = {color[1] or 1, color[2] or 1, color[3] or 1, color[4] or 1}
     element.color = {rgba[1], rgba[2], rgba[3], rgba[4]}
@@ -342,41 +338,33 @@ function RealisticCropRotationWeatherCard:measure(element, text)
     return 0
 end
 
----Caches the exact right edge from the XML-authored card position.
 function RealisticCropRotationWeatherCard:captureRightEdge()
     local root = self.controls.root
-    if self.cardRightEdge == nil and root ~= nil and root.absPosition ~= nil and root.absSize ~= nil then
+    if self.cardRightEdge == nil then
         self.cardRightEdge = root.absPosition[1] + root.absSize[1]
     end
 end
 
 ---Returns the width available between the menu title and the card's fixed right edge.
--- @return number normalized width, or nil
+-- @return number normalizedWidth
 function RealisticCropRotationWeatherCard:getAvailableWidth()
     local root = self.controls.root
     local title = self.controls.menuHeaderTitle
-    if root == nil or title == nil or title.absPosition == nil then return nil end
 
     self:captureRightEdge()
-    if self.cardRightEdge == nil then return nil end
 
     local titleWidth = self:measure(title, title.text or "")
     local titleRight = title.absPosition[1] + titleWidth
     return self.cardRightEdge - titleRight - self:px(RealisticCropRotationWeatherCard.TITLE_GAP_PX)
 end
 
----Keeps the card vertically aligned to the existing menu logo without changing its authored right edge.
 function RealisticCropRotationWeatherCard:alignToMenuLogo()
     local root = self.controls.root
     local logo = self.controls.menuHeaderIconBg
-    if root == nil or logo == nil or root.setAbsolutePosition == nil then return end
-    if root.absPosition == nil or logo.absPosition == nil then return end
 
     self:captureRightEdge()
     local x = root.absPosition[1]
-    if self.cardRightEdge ~= nil and root.size ~= nil then
-        x = self.cardRightEdge - root.size[1]
-    end
+    x = self.cardRightEdge - root.size[1]
     root:setAbsolutePosition(x, logo.absPosition[2])
 end
 
@@ -385,7 +373,6 @@ end
 function RealisticCropRotationWeatherCard:layout(model)
     local c = self.controls
     local root = c.root
-    if root == nil or root.setSize == nil then return end
 
     local contentLeft = self:px(RealisticCropRotationWeatherCard.CONTENT_LEFT_PX)
     local conditionDividerGap = self:px(RealisticCropRotationWeatherCard.CONDITION_DIVIDER_GAP_PX)
@@ -418,35 +405,25 @@ function RealisticCropRotationWeatherCard:layout(model)
         + timingTextWidth
         + rightPadding
     local fittedConditionWidth = math.max(0, targetWidth - fixedWidth)
-    local rootHeight = root.size ~= nil and root.size[2] or 0
+    local rootHeight = root.size[2]
     root:setSize(targetWidth, rootHeight)
 
-    if c.shadow ~= nil and c.shadow.setSize ~= nil and c.shadow.size ~= nil then
-        -- The XML-authored +3px x offset is preserved, so the shadow extends 3px to the right.
-        c.shadow:setSize(targetWidth, c.shadow.size[2])
-    end
+    -- The XML-authored +3px x offset is preserved, so the shadow extends 3px to the right.
+    c.shadow:setSize(targetWidth, c.shadow.size[2])
     for _, element in ipairs({c.background, c.accent, c.accentBottom}) do
-        if element ~= nil and element.setSize ~= nil and element.size ~= nil then
-            element:setSize(targetWidth, element.size[2])
-        end
+        element:setSize(targetWidth, element.size[2])
     end
 
-    if c.condition ~= nil then
-        if c.condition.setSize ~= nil and c.condition.size ~= nil then
-            c.condition:setSize(fittedConditionWidth, c.condition.size[2])
-        end
-        if c.condition.setPosition ~= nil and self.owner ~= nil
-            and self.owner.getElementOriginalPosition ~= nil then
-            local original = self.owner:getElementOriginalPosition(c.condition)
-            if original ~= nil then
-                c.condition:setPosition(contentLeft, original[2])
-            end
+    c.condition:setSize(fittedConditionWidth, c.condition.size[2])
+    if self.owner ~= nil and self.owner.getElementOriginalPosition ~= nil then
+        local original = self.owner:getElementOriginalPosition(c.condition)
+        if original ~= nil then
+            c.condition:setPosition(contentLeft, original[2])
         end
     end
 
     local dividerX = contentLeft + fittedConditionWidth + conditionDividerGap
-    if c.divider ~= nil and c.divider.setPosition ~= nil and self.owner ~= nil
-        and self.owner.getElementOriginalPosition ~= nil then
+    if self.owner ~= nil and self.owner.getElementOriginalPosition ~= nil then
         local original = self.owner:getElementOriginalPosition(c.divider)
         if original ~= nil then
             c.divider:setPosition(dividerX, original[2])
@@ -454,13 +431,10 @@ function RealisticCropRotationWeatherCard:layout(model)
     end
 
     for _, element in ipairs({c.window, c.status}) do
-        if element ~= nil and element.setSize ~= nil and element.size ~= nil then
-            element:setSize(timingTextWidth, element.size[2])
-        end
+        element:setSize(timingTextWidth, element.size[2])
     end
 
-    if c.window ~= nil and c.window.setPosition ~= nil and self.owner ~= nil
-        and self.owner.getElementOriginalPosition ~= nil then
+    if self.owner ~= nil and self.owner.getElementOriginalPosition ~= nil then
         local original = self.owner:getElementOriginalPosition(c.window)
         if original ~= nil then
             -- Without a live/countdown state, the exact schedule becomes the sole centred message.
@@ -468,7 +442,9 @@ function RealisticCropRotationWeatherCard:layout(model)
         end
     end
 
-    if root.invalidateLayout ~= nil then root:invalidateLayout() end
+    if root.invalidateLayout ~= nil then
+        root:invalidateLayout()
+    end
     self:alignToMenuLogo()
 end
 
@@ -490,9 +466,7 @@ function RealisticCropRotationWeatherCard:render(model)
     setVisible(c.status, model.status ~= "")
     setVisible(c.icon, true)
 
-    if c.icon ~= nil and c.icon.setImageSlice ~= nil then
-        c.icon:setImageSlice(nil, model.sliceId)
-    end
+    c.icon:setImageSlice(nil, model.sliceId)
 
     setElementColor(c.accent, model.color)
     setElementColor(c.accentBottom, model.color)

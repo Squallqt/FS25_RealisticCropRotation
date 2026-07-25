@@ -29,10 +29,10 @@ Nine diseases, each tied to specific host crops: sclerotinia, phoma, take-all, s
 
 | | Diseases | Behaviour |
 | --- | --- | --- |
-| **Soil diseases** | take-all, clubroot, beet cyst nematode, sclerotinia, phoma | They survive in the ground between crops. A long enough rotation clears them completely. This is what rotation rewards you for. |
+| **Soil-persistent diseases** | take-all, clubroot, beet cyst nematode, sclerotinia, phoma | They survive in the ground between crops. Rotation can clear take-all, clubroot and beet cyst nematode completely; sclerotinia and phoma retain a small regional background risk. |
 | **Wind-carried diseases** | rust, septoria, late blight, fusarium | Spores drift in from the whole region. They can strike even a perfect rotation, and the weather decides, not your plan. |
 
-Each disease carries an `ambient` value in `cropConfig.xml`: the baseline the wind keeps supplying, which no rotation can clear. It is `0.00` for the soil group, so a clean rotation still wipes those out entirely.
+Each disease carries an `ambient` value in `cropConfig.xml`: the regional baseline that rotation cannot remove while a host is standing. It is `0.00` for take-all, beet cyst nematode and clubroot, but remains low and non-zero for sclerotinia and phoma.
 
 ### How an infection runs
 
@@ -47,7 +47,7 @@ Rain and temperature drive both the onset and the daily spread of the seven fung
 
 Buyable fungicide (AMISTAR, Syngenta) and nematicide (VELUM PRIME, Bayer), sprayed with any compatible sprayer.
 
-**Both are preventive.** They save the yield on sprayed ground by excluding those cells from destruction. They do not stop an infection from starting, do not reduce severity and do not push an established infection back. Spray before, not after.
+**Coverage matters for both products, and neither restores lost crop.** Fungicide lowers the field-wide chance of a fungal outbreak and slows an established infection in proportion to coverage; sprayed cells are also excluded from destruction. Nematicide excludes treated cells from nematode destruction but does not change field-level severity. Spray before, not after.
 
 - **Fungicide**: consumed only on the ground actually harvested or mown, and cleared when the field is replanted or rotated
 - **Nematicide**: three months in the soil per field, surviving harvest; reapplying renews the full duration
