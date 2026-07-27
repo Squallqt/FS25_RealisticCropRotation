@@ -6,6 +6,7 @@ Crop rotation planning and disease simulation for Farming Simulator 25.
 [![FS25](https://img.shields.io/badge/FS25-compatible-green.svg)](https://farming-simulator.com/)
 ![Multiplayer](https://img.shields.io/badge/multiplayer-supported-success.svg)
 ![Languages](https://img.shields.io/badge/languages-27-blue.svg)
+[![License](https://img.shields.io/badge/license-proprietary-red.svg)](LICENSE)
 
 Every field remembers its last 4 crops. Bring a host crop back too soon and the disease builds up in the soil, until the right weather triggers an infection that eats away part of the field. Plan your rotation on a repeating 4-year calendar from a dedicated in-game tab, get a grade based on real agronomy, and see the consequences before you sow.
 
