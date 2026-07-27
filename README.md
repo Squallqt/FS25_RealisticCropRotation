@@ -134,8 +134,19 @@ Valid `<group>` values: `SCLEROTINIA`, `PHOMA`, `TAKEALL`, `SEPTORIA`, `RUST`, `
 
 ## Support
 
-- **Issues & suggestions**: [GitHub Issues](https://github.com/Squallqt/FS25_RealisticCropRotation/issues)
+* [GitHub Issues](https://github.com/Squallqt/FS25_RealisticCropRotation/issues)
+* [GitHub Discussions](https://github.com/Squallqt/FS25_RealisticCropRotation/discussions)
 
 ## License
 
-All Rights Reserved © 2026 Squallqt. Not affiliated with or endorsed by GIANTS Software GmbH.
+Copyright © 2026 Squallqt. All rights reserved.
+
+This project is proprietary software and is not distributed under an
+open-source license.
+
+Downloading an official release for private use with Farming Simulator 25 is
+permitted. Copying, modifying, converting, redistributing, reuploading,
+commercializing, or reusing any part of this project requires prior written
+authorization.
+
+See the [LICENSE](LICENSE) file for the complete terms.
