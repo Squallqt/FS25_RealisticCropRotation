@@ -21,10 +21,6 @@ local function warnOnce(key, message, ...)
     end
 end
 
-local function fieldBounds(field)
-    return RealisticCropRotationDiseaseGrid.fieldWorldBounds(field)
-end
-
 local function setWorldArea(modifier, minX, minZ, maxX, maxZ)
     modifier:setParallelogramWorldCoords(
         minX, minZ, maxX, minZ, minX, maxZ, DensityCoordType.POINT_POINT_POINT)
@@ -141,15 +137,21 @@ local function getCropFilters(desc)
     return filters
 end
 
-local function snapshotContext(context, field, cropFilters, minX, minZ, maxX, maxZ)
+local function snapshotContext(context, region, cropFilters, minX, minZ, maxX, maxZ)
     setWorldArea(context.modifier, minX, minZ, maxX, maxZ)
     context.modifier:executeSet(0)
 
-    local polygon = field:getDensityMapPolygon()
-    if polygon == nil then return nil end
-    polygon:applyToModifier(context.modifier)
+    if not RealisticCropRotationManager.applyRegionToModifier(region, context.modifier) then return nil end
     local _, paintedPixels = context.modifier:executeSetWithStats(1, cropFilters.present)
     paintedPixels = tonumber(paintedPixels) or 0
+
+    -- Parcel mask folded into the snapshot mask.
+    local outsideFilter = RealisticCropRotationManager.makeOutsideRegionFilter(region)
+    if outsideFilter ~= nil then
+        local _, droppedPixels = context.modifier:executeSetWithStats(0, outsideFilter)
+        paintedPixels = paintedPixels - (tonumber(droppedPixels) or 0)
+    end
+
     for _, filter in ipairs(cropFilters.excluded) do
         local _, removedPixels = context.modifier:executeSetWithStats(
             0, context.filter, filter)
@@ -537,26 +539,25 @@ end
 
 ---Captures standing crop at every soil target's native resolution before disease destruction.
 -- @param table manager RCR manager
--- @param table field Game field
+-- @param table region Read region
 -- @param table desc Fruit type being destroyed
 -- @param integer farmlandId
 -- @return table session, or nil
-function RealisticCropRotationSoilUptake.prepare(manager, field, desc, farmlandId)
-    if g_server == nil or field == nil or desc == nil
-        or type(field.getDensityMapPolygon) ~= "function"
+function RealisticCropRotationSoilUptake.prepare(manager, region, desc, farmlandId)
+    if g_server == nil or region == nil or desc == nil
         or DensityCoordType == nil or DensityMapModifier == nil
         or DensityMapFilter == nil or DensityValueCompareType == nil then
         return nil
     end
 
-    local minX, minZ, maxX, maxZ = fieldBounds(field)
+    local minX, minZ, maxX, maxZ = RealisticCropRotationManager.regionWorldBounds(region)
     local cropFilters = getCropFilters(desc)
     if minX == nil or cropFilters == nil then return nil end
 
     local session = {
         manager = manager,
         farmlandId = tonumber(farmlandId),
-        field = field,
+        region = region,
         cropFilters = cropFilters,
         minX = minX,
         minZ = minZ,
@@ -576,7 +577,7 @@ function RealisticCropRotationSoilUptake.prepare(manager, field, desc, farmlandI
     if #session.targets == 0 then return nil end
 
     for key, context in pairs(session.contexts) do
-        local pixels = snapshotContext(context, field, cropFilters, minX, minZ, maxX, maxZ)
+        local pixels = snapshotContext(context, region, cropFilters, minX, minZ, maxX, maxZ)
         if pixels == nil then return nil end
         session.snapshotPixels[key] = pixels
     end
@@ -712,15 +713,13 @@ local VANILLA_LAYER_CHANGE = {
 ---Consumes nitrogen and lime only where the captured standing crop disappeared.
 -- @param table session Session returned by prepare
 function RealisticCropRotationSoilUptake.consume(session)
-    if session == nil or session.field == nil or session.cropFilters == nil then return end
+    if session == nil or session.region == nil or session.cropFilters == nil then return end
     if session.consumed then return end
-    local polygon = session.field:getDensityMapPolygon()
-    if polygon == nil then return end
     session.consumed = true
 
     local activeContexts = {}
     for key, context in pairs(session.contexts) do
-        polygon:applyToModifier(context.modifier)
+        if not RealisticCropRotationManager.applyRegionToModifier(session.region, context.modifier) then return end
         local _, survivingPixels = context.modifier:executeSetWithStats(
             0, context.filter, session.cropFilters.present)
         local killedPixels = (tonumber(session.snapshotPixels[key]) or 0)

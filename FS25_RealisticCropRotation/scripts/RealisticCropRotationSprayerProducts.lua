@@ -492,23 +492,16 @@ local function paintTreatmentGround(self, workArea, farmlandId)
     if treatmentSprayType == nil then return end
     farmlandId = tonumber(farmlandId)
     if farmlandId == nil or farmlandId <= 0 then return end
-    if DensityMapModifier == nil or DensityMapFilter == nil or g_terrainNode == nil then return end
-    if getWorldTranslation == nil or getBitVectorMapNumChannels == nil
-        or DensityCoordType == nil or DensityValueCompareType == nil then return end
+    if DensityMapModifier == nil or g_terrainNode == nil then return end
+    if getWorldTranslation == nil or DensityCoordType == nil then return end
     if workArea == nil or workArea.start == nil or workArea.width == nil or workArea.height == nil then return end
 
     local mission = g_currentMission
-    if mission == nil or mission.fieldGroundSystem == nil or FieldDensityMap == nil
-        or g_farmlandManager == nil or type(g_farmlandManager.getLocalMap) ~= "function" then return end
+    if mission == nil or mission.fieldGroundSystem == nil or FieldDensityMap == nil then return end
 
     local sprayTypeMapId, sprayFirstChannel, sprayNumChannels =
         mission.fieldGroundSystem:getDensityMapData(FieldDensityMap.SPRAY_TYPE)
     if sprayTypeMapId == nil then return end
-    local groundTypeMapId, groundFirstChannel, groundNumChannels =
-        mission.fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE)
-    if groundTypeMapId == nil then return end
-    local farmlandLocalMap = g_farmlandManager:getLocalMap()
-    if farmlandLocalMap == nil then return end
 
     local sx, _, sz = getWorldTranslation(workArea.start)
     local wx, _, wz = getWorldTranslation(workArea.width)
@@ -519,11 +512,9 @@ local function paintTreatmentGround(self, workArea, farmlandId)
     modifier:setParallelogramWorldCoords(sx, sz, wx, wz, hx, hz, DensityCoordType.POINT_POINT_POINT)
 
     -- Only paint where there is field ground (groundType > 0): never roads, yards or standing water.
-    local fieldFilter = DensityMapFilter.new(groundTypeMapId, groundFirstChannel, groundNumChannels)
-    fieldFilter:setValueCompareParams(DensityValueCompareType.GREATER, 0)
-    local farmlandFilter = DensityMapFilter.new(
-        farmlandLocalMap, 0, getBitVectorMapNumChannels(farmlandLocalMap))
-    farmlandFilter:setValueCompareParams(DensityValueCompareType.EQUAL, farmlandId)
+    local fieldFilter = RealisticCropRotationManager.makeFieldGroundFilter()
+    local farmlandFilter = RealisticCropRotationManager.makeFarmlandFilter(farmlandId)
+    if fieldFilter == nil or farmlandFilter == nil then return end
 
     -- SPRAY_TYPE only (the fertiliser ground look); SPRAY_LEVEL is never touched, so no fertilisation.
     modifier:executeSet(treatmentSprayType, farmlandFilter, fieldFilter)

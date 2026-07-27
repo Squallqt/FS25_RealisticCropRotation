@@ -31,8 +31,8 @@ function RealisticCropRotationTreatmentLifecycle.applySyncData(received)
     local grid = RealisticCropRotation.grid
     for farmlandId in pairs(nematicidePeriodsRemaining) do
         if received[farmlandId] == nil then
-            local field = manager:getFieldByFarmlandId(farmlandId)
-            if field ~= nil then grid:clearFieldProtectionFamily(field, "NEMATICIDE") end
+            local region = manager:getFieldRegion(farmlandId)
+            if region ~= nil then grid:clearFieldProtectionFamily(region, farmlandId, "NEMATICIDE") end
         end
     end
 
@@ -52,9 +52,9 @@ function RealisticCropRotationTreatmentLifecycle.onPeriodChanged()
     for farmlandId, remaining in pairs(nematicidePeriodsRemaining) do
         remaining = remaining - 1
         if remaining <= 0 then
-            local field = manager:getFieldByFarmlandId(farmlandId)
-            if field ~= nil then
-                grid:clearFieldProtectionFamily(field, "NEMATICIDE")
+            local region = manager:getFieldRegion(farmlandId)
+            if region ~= nil then
+                grid:clearFieldProtectionFamily(region, farmlandId, "NEMATICIDE")
             end
             nematicidePeriodsRemaining[farmlandId] = nil
             changed = true

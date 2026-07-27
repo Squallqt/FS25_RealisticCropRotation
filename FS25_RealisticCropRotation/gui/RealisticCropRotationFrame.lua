@@ -1633,11 +1633,11 @@ function RealisticCropRotationFrame:updateTreatmentGauge(farmlandId, sharedRowTi
     local mgr = self:getManager()
     local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
     local grid = RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
-    local field = mgr:getFieldByFarmlandId(farmlandId)
+    local region = mgr:getFieldRegion(farmlandId)
 
     local coverageOf = function(fam)
-        return (grid ~= nil and field ~= nil)
-            and grid:getProtectionCoverage(field, fam) or 0
+        return (grid ~= nil and region ~= nil)
+            and grid:getProtectionCoverage(region, fam) or 0
     end
 
     -- Among active diseases, point at the treatment family least able to cope (lowest coverage), so the gauge always shows the next action; ties go to the more severe disease.
