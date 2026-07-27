@@ -173,11 +173,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Ufullstendig plan" />
-        <e k="rcr_score_excellent"      v="Utmerket vekstskifte: lavest mulig sykdomspress" />
-        <e k="rcr_score_good"           v="Godt vekstskifte: sykdomspress under kontroll" />
-        <e k="rcr_score_fair"           v="Greit vekstskifte: økende sykdomspress" />
-        <e k="rcr_score_poor"           v="Dårlig vekstskifte: høyt sykdomspress" />
-        <e k="rcr_score_bad"            v="Svært dårlig vekstskifte: alvorlig sykdomspress" />
+        <e k="rcr_score_excellent"      v="Utmerket vekstskifte: god agronomisk balanse" />
+        <e k="rcr_score_good"           v="Godt vekstskifte: noen punkter kan forbedres" />
+        <e k="rcr_score_fair"           v="Greit vekstskifte: enkelte vekster kommer tilbake for fort" />
+        <e k="rcr_score_poor"           v="Dårlig vekstskifte: vekstene ligger for tett" />
+        <e k="rcr_score_bad"            v="Svært dårlig vekstskifte: de samme vekstene følger hverandre" />
         <e k="rcr_score_label_low"      v="Dårlig poengsum" />
         <e k="rcr_score_label_optimal"  v="Optimal poengsum" />
         <e k="rcr_score_short_optimal"  v="OPTIMAL" />

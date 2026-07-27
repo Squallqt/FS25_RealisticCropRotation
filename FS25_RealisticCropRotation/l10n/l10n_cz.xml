@@ -173,11 +173,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Neúplný plán" />
-        <e k="rcr_score_excellent"      v="Vynikající osevní postup: nejnižší tlak chorob" />
-        <e k="rcr_score_good"           v="Dobrý osevní postup: tlak chorob pod kontrolou" />
-        <e k="rcr_score_fair"           v="Průměrný osevní postup: tlak chorob roste" />
-        <e k="rcr_score_poor"           v="Osevní postup ke zlepšení: vysoký tlak chorob" />
-        <e k="rcr_score_bad"            v="Špatný osevní postup: silný tlak chorob" />
+        <e k="rcr_score_excellent"      v="Vynikající osevní postup: plodiny jsou dobře vyvážené" />
+        <e k="rcr_score_good"           v="Dobrý osevní postup: pár věcí lze zlepšit" />
+        <e k="rcr_score_fair"           v="Průměrný osevní postup: některé plodiny se vrací příliš brzy" />
+        <e k="rcr_score_poor"           v="Osevní postup ke zlepšení: plodiny na sebe navazují příliš blízko" />
+        <e k="rcr_score_bad"            v="Špatný osevní postup: stejné plodiny se opakují pořád dokola" />
         <e k="rcr_score_label_low"      v="Špatné skóre" />
         <e k="rcr_score_label_optimal"  v="Optimální skóre" />
         <e k="rcr_score_short_optimal"  v="OPTIMÁLNÍ" />

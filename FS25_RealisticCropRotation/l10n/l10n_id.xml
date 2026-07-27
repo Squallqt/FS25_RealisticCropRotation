@@ -173,11 +173,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Rencana tidak lengkap" />
-        <e k="rcr_score_excellent"      v="Rotasi sangat baik: tekanan penyakit paling rendah" />
-        <e k="rcr_score_good"           v="Rotasi baik: tekanan penyakit terkendali" />
-        <e k="rcr_score_fair"           v="Rotasi cukup: tekanan penyakit meningkat" />
-        <e k="rcr_score_poor"           v="Rotasi perlu diperbaiki: tekanan penyakit tinggi" />
-        <e k="rcr_score_bad"            v="Rotasi buruk: tekanan penyakit parah" />
+        <e k="rcr_score_excellent"      v="Rotasi sangat baik: keseimbangan agronomi tercapai" />
+        <e k="rcr_score_good"           v="Rotasi baik: ada beberapa hal yang bisa ditingkatkan" />
+        <e k="rcr_score_fair"           v="Rotasi cukup: beberapa tanaman kembali terlalu cepat" />
+        <e k="rcr_score_poor"           v="Rotasi perlu diperbaiki: tanaman terlalu berdekatan" />
+        <e k="rcr_score_bad"            v="Rotasi buruk: tanaman yang sama ditanam berturut-turut" />
         <e k="rcr_score_label_low"      v="Skor buruk" />
         <e k="rcr_score_label_optimal"  v="Skor optimal" />
         <e k="rcr_score_short_optimal"  v="OPTIMAL" />

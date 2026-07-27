@@ -49,13 +49,12 @@ RealisticCropRotationFrame.FAMILY_MIN_INTERVAL = {
     ROOT      = 4,
 }
 
-RealisticCropRotationFrame.SCORE_BASE_FULL    = 60  -- 3+ crops: a real rotation pattern
-RealisticCropRotationFrame.SCORE_BASE_PARTIAL = 40  -- only 2 crops
+RealisticCropRotationFrame.SCORE_BASE_FULL    = 85  -- 3+ crops: a real rotation pattern
+RealisticCropRotationFrame.SCORE_BASE_PARTIAL = 55  -- only 2 crops
 RealisticCropRotationFrame.SCORE_FAMILY_PENALTY_PER_YEAR = 20
 RealisticCropRotationFrame.SCORE_LEGUME_CEREAL_BONUS = 8
-RealisticCropRotationFrame.SCORE_DIVERSITY_BONUS_MAX = 25
+RealisticCropRotationFrame.SCORE_SOWING_ALTERNATION_BONUS = 10 -- winter and spring sowings in the same cycle
 RealisticCropRotationFrame.SCORE_RESIDUE_BONUS = 10  -- N-restoring crop/cover present
-RealisticCropRotationFrame.SCORE_NO_RESIDUE_CAP = 79 -- no N returned: "excellent" stays locked
 RealisticCropRotationFrame.SCORE_MONOCULTURE_CAP = 30 -- single-family plan: not a rotation, stays "poor"
 RealisticCropRotationFrame.SCORE_DISEASE_PENALTY_PER_YEAR = 10 -- shared-pathogen spacing
 
@@ -2142,6 +2141,24 @@ function RealisticCropRotationFrame:getCropPeriodFlags(cropName, periodCount, fi
     return plant, harvest
 end
 
+---Returns a crop's sowing season from its planting window.
+-- @param string cropName
+-- @return string "WINTER" when autumn/winter sowing is allowed, "SPRING" when only the first half of the year is, or nil
+function RealisticCropRotationFrame:getCropSowingSeason(cropName)
+    local periodCount, firstPeriod = self:getCalendarPeriodInfo()
+    local plant = self:getCropPeriodFlags(cropName, periodCount, firstPeriod)
+    if plant == nil then return nil end
+
+    local autumnFirst = math.floor(periodCount / 2) + 1
+    for i = autumnFirst, periodCount do
+        if plant[i] then return "WINTER" end
+    end
+    for i = 1, autumnFirst - 1 do
+        if plant[i] then return "SPRING" end
+    end
+    return nil
+end
+
 ---Returns contiguous true-runs in a flag array as { start, len } entries.
 -- @param table flags
 -- @param integer periodCount
@@ -2664,7 +2681,7 @@ function RealisticCropRotationFrame:updateScoreCard(plan, coverPlan)
     self.scoreCursor.color = {r, g, b, 1.0}
 end
 
----Scores a rotation 0-100 from family/pathogen spacing (fallow years included as spacing), legume->cereal bonus, diversity and residue.
+---Scores a rotation 0-100 from family/pathogen spacing (fallow years included as spacing), legume->cereal sequencing, sowing alternation and restored nitrogen.
 -- @param table plan
 -- @param table coverPlan
 -- @return integer score
@@ -2683,6 +2700,7 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
                     fam      = fam,
                     diseases = self:getCropDiseases(crop),
                     hasCover = coverCrop ~= nil and coverCrop ~= "",
+                    sowing   = self:getCropSowingSeason(crop),
                 }
             end
         end
@@ -2690,7 +2708,7 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
 
     local m = #slots  -- cycle length, fallow years counted as spacing
 
-    -- Real crops only (fallow is a break, not a crop): drives the rotation gate and diversity.
+    -- Real crops only (fallow is a break, not a crop): drives the rotation gate.
     local realIdx = {}
     for i = 1, m do
         if slots[i].fam ~= "FALLOW" then realIdx[#realIdx + 1] = i end
@@ -2704,7 +2722,7 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
     local uniqueCount = 0
     for _ in pairs(seen) do uniqueCount = uniqueCount + 1 end
 
-    -- Build the score upward: a bare rotation is the floor, good agronomy earns points.
+    -- Starting score, before the agronomic penalties and bonuses.
     local score = (n >= 3) and RealisticCropRotationFrame.SCORE_BASE_FULL
                             or  RealisticCropRotationFrame.SCORE_BASE_PARTIAL
 
@@ -2762,16 +2780,21 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
                 score = score + RealisticCropRotationFrame.SCORE_LEGUME_CEREAL_BONUS
             end
         end
-
-        -- Diversity bonus: share of distinct families among the rotation crops.
-        score = score + (uniqueCount / n) * RealisticCropRotationFrame.SCORE_DIVERSITY_BONUS_MAX
     end
 
-    -- Nitrogen restored (legume/cover) rewards; none keeps "excellent" out of reach.
+    -- Sowing alternation: the cycle carries both a winter-sown and a spring-sown crop.
+    local hasWinter, hasSpring = false, false
+    for _, i in ipairs(realIdx) do
+        if slots[i].sowing == "WINTER" then hasWinter = true
+        elseif slots[i].sowing == "SPRING" then hasSpring = true end
+    end
+    if hasWinter and hasSpring then
+        score = score + RealisticCropRotationFrame.SCORE_SOWING_ALTERNATION_BONUS
+    end
+
+    -- Nitrogen restored by a legume or a cover crop.
     if self:getPlanNitrogenResidueKgHa(plan, coverPlan) ~= nil then
         score = score + RealisticCropRotationFrame.SCORE_RESIDUE_BONUS
-    else
-        score = math.min(score, RealisticCropRotationFrame.SCORE_NO_RESIDUE_CAP)
     end
 
     -- A single-family plan is a monoculture: it stays "poor" even when the family carries no return-interval penalty.

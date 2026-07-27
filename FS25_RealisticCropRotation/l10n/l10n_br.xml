@@ -173,11 +173,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Plano incompleto" />
-        <e k="rcr_score_excellent"      v="Rotação excelente: pressão de doenças no mínimo" />
-        <e k="rcr_score_good"           v="Boa rotação: pressão de doenças sob controle" />
-        <e k="rcr_score_fair"           v="Rotação razoável: pressão de doenças crescente" />
-        <e k="rcr_score_poor"           v="Rotação ruim: alta pressão de doenças" />
-        <e k="rcr_score_bad"            v="Rotação péssima: pressão de doenças severa" />
+        <e k="rcr_score_excellent"      v="Rotação excelente: equilíbrio agronômico alcançado" />
+        <e k="rcr_score_good"           v="Boa rotação: alguns pontos a melhorar" />
+        <e k="rcr_score_fair"           v="Rotação razoável: algumas culturas voltam cedo demais" />
+        <e k="rcr_score_poor"           v="Rotação a melhorar: culturas muito próximas" />
+        <e k="rcr_score_bad"            v="Rotação ruim: as mesmas culturas se repetem" />
         <e k="rcr_score_label_low"      v="Pontuação ruim" />
         <e k="rcr_score_label_optimal"  v="Pontuação ótima" />
         <e k="rcr_score_short_optimal"  v="ÓTIMA" />

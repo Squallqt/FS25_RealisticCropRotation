@@ -173,11 +173,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Hiányos terv" />
-        <e k="rcr_score_excellent"      v="Kiváló vetésforgó: legalacsonyabb betegségnyomás" />
-        <e k="rcr_score_good"           v="Jó vetésforgó: betegségnyomás kordában" />
-        <e k="rcr_score_fair"           v="Megfelelő vetésforgó: nő a betegségnyomás" />
-        <e k="rcr_score_poor"           v="Javítandó vetésforgó: magas betegségnyomás" />
-        <e k="rcr_score_bad"            v="Rossz vetésforgó: súlyos betegségnyomás" />
+        <e k="rcr_score_excellent"      v="Kiváló vetésforgó: jó agronómiai egyensúly" />
+        <e k="rcr_score_good"           v="Jó vetésforgó: néhány ponton javítható" />
+        <e k="rcr_score_fair"           v="Megfelelő vetésforgó: egyes növények túl hamar térnek vissza" />
+        <e k="rcr_score_poor"           v="Javítandó vetésforgó: a növények túl közel vannak egymáshoz" />
+        <e k="rcr_score_bad"            v="Rossz vetésforgó: ugyanazok a növények követik egymást" />
         <e k="rcr_score_label_low"      v="Rossz pontszám" />
         <e k="rcr_score_label_optimal"  v="Optimális pontszám" />
         <e k="rcr_score_short_optimal"  v="OPTIMÁLIS" />

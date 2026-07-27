@@ -173,11 +173,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Kế hoạch chưa đầy đủ" />
-        <e k="rcr_score_excellent"      v="Luân canh xuất sắc: áp lực bệnh hại thấp nhất" />
-        <e k="rcr_score_good"           v="Luân canh tốt: áp lực bệnh hại trong tầm kiểm soát" />
-        <e k="rcr_score_fair"           v="Luân canh khá: áp lực bệnh hại đang tăng" />
-        <e k="rcr_score_poor"           v="Luân canh cần cải thiện: áp lực bệnh hại cao" />
-        <e k="rcr_score_bad"            v="Luân canh kém: áp lực bệnh hại nghiêm trọng" />
+        <e k="rcr_score_excellent"      v="Luân canh xuất sắc: cân bằng nông học tốt" />
+        <e k="rcr_score_good"           v="Luân canh tốt: còn vài điểm có thể cải thiện" />
+        <e k="rcr_score_fair"           v="Luân canh khá: một số cây trồng quay lại quá sớm" />
+        <e k="rcr_score_poor"           v="Luân canh cần cải thiện: các cây trồng quá gần nhau" />
+        <e k="rcr_score_bad"            v="Luân canh kém: cùng loại cây trồng lặp lại liên tục" />
         <e k="rcr_score_label_low"      v="Điểm kém" />
         <e k="rcr_score_label_optimal"  v="Điểm tối ưu" />
         <e k="rcr_score_short_optimal"  v="TỐI ƯU" />

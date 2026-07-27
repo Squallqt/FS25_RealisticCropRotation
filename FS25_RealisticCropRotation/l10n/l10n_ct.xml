@@ -173,11 +173,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="計畫不完整" />
-        <e k="rcr_score_excellent"      v="輪作優異，病害壓力最低" />
-        <e k="rcr_score_good"           v="輪作良好，病害壓力受控" />
-        <e k="rcr_score_fair"           v="輪作尚可，病害壓力上升" />
-        <e k="rcr_score_poor"           v="輪作有待改進，病害壓力高" />
-        <e k="rcr_score_bad"            v="輪作極差，病害壓力嚴重" />
+        <e k="rcr_score_excellent"      v="輪作優異，作物搭配合理" />
+        <e k="rcr_score_good"           v="輪作良好，仍有改進空間" />
+        <e k="rcr_score_fair"           v="輪作尚可，部分作物回歸過快" />
+        <e k="rcr_score_poor"           v="輪作有待改進，作物間隔過近" />
+        <e k="rcr_score_bad"            v="輪作極差，相同作物連續種植" />
         <e k="rcr_score_label_low"      v="評分差" />
         <e k="rcr_score_label_optimal"  v="評分最佳" />
         <e k="rcr_score_short_optimal"  v="最佳" />

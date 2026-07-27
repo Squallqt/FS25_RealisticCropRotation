@@ -173,11 +173,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Ufuldstændig plan" />
-        <e k="rcr_score_excellent"      v="Fremragende sædskifte: lavest muligt sygdomstryk" />
-        <e k="rcr_score_good"           v="Godt sædskifte: sygdomstryk under kontrol" />
-        <e k="rcr_score_fair"           v="Rimeligt sædskifte: stigende sygdomstryk" />
-        <e k="rcr_score_poor"           v="Dårligt sædskifte: højt sygdomstryk" />
-        <e k="rcr_score_bad"            v="Meget dårligt sædskifte: alvorligt sygdomstryk" />
+        <e k="rcr_score_excellent"      v="Fremragende sædskifte: god agronomisk balance" />
+        <e k="rcr_score_good"           v="Godt sædskifte: nogle punkter kan forbedres" />
+        <e k="rcr_score_fair"           v="Rimeligt sædskifte: nogle afgrøder kommer igen for hurtigt" />
+        <e k="rcr_score_poor"           v="Dårligt sædskifte: afgrøderne ligger for tæt" />
+        <e k="rcr_score_bad"            v="Meget dårligt sædskifte: de samme afgrøder gentager sig" />
         <e k="rcr_score_label_low"      v="Dårlig score" />
         <e k="rcr_score_label_optimal"  v="Optimal score" />
         <e k="rcr_score_short_optimal"  v="OPTIMAL" />

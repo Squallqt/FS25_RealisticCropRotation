@@ -173,11 +173,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Onvolledig plan" />
-        <e k="rcr_score_excellent"      v="Uitstekende rotatie: ziektedruk op zijn laagst" />
-        <e k="rcr_score_good"           v="Goede rotatie: ziektedruk onder controle" />
-        <e k="rcr_score_fair"           v="Redelijke rotatie: oplopende ziektedruk" />
-        <e k="rcr_score_poor"           v="Slechte rotatie: hoge ziektedruk" />
-        <e k="rcr_score_bad"            v="Zeer slechte rotatie: ernstige ziektedruk" />
+        <e k="rcr_score_excellent"      v="Uitstekende rotatie: goede agronomische balans" />
+        <e k="rcr_score_good"           v="Goede rotatie: enkele punten voor verbetering" />
+        <e k="rcr_score_fair"           v="Redelijke rotatie: sommige gewassen komen te snel terug" />
+        <e k="rcr_score_poor"           v="Slechte rotatie: gewassen staan te dicht op elkaar" />
+        <e k="rcr_score_bad"            v="Zeer slechte rotatie: dezelfde gewassen volgen elkaar op" />
         <e k="rcr_score_label_low"      v="Slechte score" />
         <e k="rcr_score_label_optimal"  v="Optimale score" />
         <e k="rcr_score_short_optimal"  v="OPTIMAAL" />

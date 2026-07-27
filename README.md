@@ -16,8 +16,8 @@ Singleplayer and multiplayer, with or without Precision Farming.
 
 - **Crop history**: the last 4 crops of every field, recorded automatically
 - **4-year rotation calendar**: plan with 2, 3 or 4 crops, plus an optional cover crop per year
-- **Rotation grade (0-100)**: family and disease-specific return intervals, the nitrogen a legume hands to the next cereal, crop diversity and planned nitrogen residue all weigh in
-- **Diversity pays**: a 2-crop plan tops out at 50 ("fair"), you need 3 crops or more to reach "good" (60), and nitrogen returned by a legume or a cover crop to reach "excellent" (80). A single-family plan is capped at 30 ("poor")
+- **Rotation grade (0-100)**: family and disease-specific return intervals, winter/spring sowing alternation, the nitrogen a legume hands to the next cereal and planned nitrogen residue all weigh in
+- **Diversity pays**: a 2-crop plan tops out at 75 ("good"), you need 3 crops or more to reach "excellent" (80). A single-family plan is capped at 30 ("poor")
 - **Grade bands**: 0-19 bad, 20-39 poor, 40-59 fair, 60-79 good, 80-100 excellent
 - **Tailored advice**: an active outbreak takes priority, then the planned next crop is checked against family and disease spacing, then generic per-family guidance
 - **Rotation overview**: fields sharing an identical plan are grouped into one card with combined area, grade and residue

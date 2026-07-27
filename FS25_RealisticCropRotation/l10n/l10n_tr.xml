@@ -173,11 +173,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Eksik plan" />
-        <e k="rcr_score_excellent"      v="Mükemmel rotasyon: hastalık baskısı en düşük" />
-        <e k="rcr_score_good"           v="İyi rotasyon: hastalık baskısı kontrol altında" />
-        <e k="rcr_score_fair"           v="Orta rotasyon: hastalık baskısı artıyor" />
-        <e k="rcr_score_poor"           v="Rotasyon geliştirilmeli: yüksek hastalık baskısı" />
-        <e k="rcr_score_bad"            v="Kötü rotasyon: ağır hastalık baskısı" />
+        <e k="rcr_score_excellent"      v="Mükemmel rotasyon: iyi agronomik denge" />
+        <e k="rcr_score_good"           v="İyi rotasyon: birkaç nokta geliştirilebilir" />
+        <e k="rcr_score_fair"           v="Orta rotasyon: bazı ürünler çok erken geri dönüyor" />
+        <e k="rcr_score_poor"           v="Rotasyon geliştirilmeli: ürünler birbirine çok yakın" />
+        <e k="rcr_score_bad"            v="Kötü rotasyon: aynı ürünler art arda geliyor" />
         <e k="rcr_score_label_low"      v="Kötü puan" />
         <e k="rcr_score_label_optimal"  v="En uygun puan" />
         <e k="rcr_score_short_optimal"  v="OPTİMAL" />

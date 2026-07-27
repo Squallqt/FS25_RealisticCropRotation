@@ -173,11 +173,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="불완전한 계획" />
-        <e k="rcr_score_excellent"      v="우수한 윤작: 병해 압력 최저" />
-        <e k="rcr_score_good"           v="좋은 윤작: 병해 압력 억제됨" />
-        <e k="rcr_score_fair"           v="보통 윤작: 병해 압력 상승" />
-        <e k="rcr_score_poor"           v="개선이 필요한 윤작: 병해 압력 높음" />
-        <e k="rcr_score_bad"            v="나쁜 윤작: 병해 압력 심각" />
+        <e k="rcr_score_excellent"      v="우수한 윤작: 작물 균형이 잘 잡혀 있음" />
+        <e k="rcr_score_good"           v="좋은 윤작: 개선할 점이 조금 있음" />
+        <e k="rcr_score_fair"           v="보통 윤작: 일부 작물이 너무 빨리 돌아옴" />
+        <e k="rcr_score_poor"           v="개선이 필요한 윤작: 작물 간격이 너무 좁음" />
+        <e k="rcr_score_bad"            v="나쁜 윤작: 같은 작물이 연속으로 재배됨" />
         <e k="rcr_score_label_low"      v="나쁜 점수" />
         <e k="rcr_score_label_optimal"  v="최적 점수" />
         <e k="rcr_score_short_optimal"  v="최적" />

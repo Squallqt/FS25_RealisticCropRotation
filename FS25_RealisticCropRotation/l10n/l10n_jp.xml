@@ -173,11 +173,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="計画が不完全" />
-        <e k="rcr_score_excellent"      v="優れた輪作。病害圧は最低水準" />
-        <e k="rcr_score_good"           v="良い輪作。病害圧を抑制" />
-        <e k="rcr_score_fair"           v="まずまずの輪作。病害圧が上昇" />
-        <e k="rcr_score_poor"           v="改善が必要な輪作。病害圧が高い" />
-        <e k="rcr_score_bad"            v="悪い輪作。病害圧が深刻" />
+        <e k="rcr_score_excellent"      v="優れた輪作。作物のバランスが取れている" />
+        <e k="rcr_score_good"           v="良い輪作。改善できる点がいくつかある" />
+        <e k="rcr_score_fair"           v="まずまずの輪作。一部の作物の間隔が短すぎる" />
+        <e k="rcr_score_poor"           v="改善が必要な輪作。作物同士の間隔が近すぎる" />
+        <e k="rcr_score_bad"            v="悪い輪作。同じ作物が連続して植えられている" />
         <e k="rcr_score_label_low"      v="悪いスコア" />
         <e k="rcr_score_label_optimal"  v="最適スコア" />
         <e k="rcr_score_short_optimal"  v="最適" />

@@ -173,11 +173,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Plan niekompletny" />
-        <e k="rcr_score_excellent"      v="Doskonały płodozmian: najniższa presja chorób" />
-        <e k="rcr_score_good"           v="Dobry płodozmian: presja chorób pod kontrolą" />
-        <e k="rcr_score_fair"           v="Przeciętny płodozmian: presja chorób rośnie" />
-        <e k="rcr_score_poor"           v="Płodozmian do poprawy: wysoka presja chorób" />
-        <e k="rcr_score_bad"            v="Zły płodozmian: poważna presja chorób" />
+        <e k="rcr_score_excellent"      v="Doskonały płodozmian: dobra równowaga agronomiczna" />
+        <e k="rcr_score_good"           v="Dobry płodozmian: kilka rzeczy można poprawić" />
+        <e k="rcr_score_fair"           v="Przeciętny płodozmian: niektóre uprawy wracają zbyt szybko" />
+        <e k="rcr_score_poor"           v="Płodozmian do poprawy: uprawy są zbyt blisko siebie" />
+        <e k="rcr_score_bad"            v="Zły płodozmian: te same uprawy następują po sobie" />
         <e k="rcr_score_label_low"      v="Zły wynik" />
         <e k="rcr_score_label_optimal"  v="Optymalny wynik" />
         <e k="rcr_score_short_optimal"  v="OPTYMALNY" />

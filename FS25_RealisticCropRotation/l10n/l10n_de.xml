@@ -173,11 +173,11 @@
 
         <!-- Planning tab — score -->
         <e k="rcr_score_incomplete"     v="Unvollständiger Plan" />
-        <e k="rcr_score_excellent"      v="Ausgezeichnete Rotation: Krankheitsdruck minimal" />
-        <e k="rcr_score_good"           v="Gute Rotation: Krankheitsdruck unter Kontrolle" />
-        <e k="rcr_score_fair"           v="Angemessene Rotation: steigender Krankheitsdruck" />
-        <e k="rcr_score_poor"           v="Schlechte Rotation: hoher Krankheitsdruck" />
-        <e k="rcr_score_bad"            v="Sehr schlechte Rotation: sehr hoher Krankheitsdruck" />
+        <e k="rcr_score_excellent"      v="Ausgezeichnete Rotation: agronomisch gut ausbalanciert" />
+        <e k="rcr_score_good"           v="Gute Rotation: einige Punkte lassen sich verbessern" />
+        <e k="rcr_score_fair"           v="Angemessene Rotation: manche Kulturen kehren zu früh zurück" />
+        <e k="rcr_score_poor"           v="Schlechte Rotation: Kulturen stehen zu dicht beieinander" />
+        <e k="rcr_score_bad"            v="Sehr schlechte Rotation: dieselben Kulturen folgen aufeinander" />
         <e k="rcr_score_label_low"      v="Schlechte Bewertung" />
         <e k="rcr_score_label_optimal"  v="Optimale Bewertung" />
         <e k="rcr_score_short_optimal"  v="OPTIMAL" />
