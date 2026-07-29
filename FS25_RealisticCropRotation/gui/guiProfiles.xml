@@ -185,7 +185,7 @@
     <Profile name="frStatusPillBg" extends="baseReference" with="anchorMiddleRight">
         <position value="-50px 0px"/>
         <size value="196px 28px"/>
-        <color value="$preset_fs25_colorGrey"/>
+        <color value="$preset_fs25_colorGreyLight"/>
         <cornerSize value="0.20"/>
     </Profile>
 
@@ -215,7 +215,7 @@
     <Profile name="frSectionLine" extends="baseReference" with="anchorMiddleLeft">
         <position value="0px 0px"/>
         <size value="0px 1px"/>
-        <color value="$preset_fs25_colorGreyDark"/>
+        <color value="$preset_fs25_colorGreyLight"/>
         <cornerSize value="0"/>
     </Profile>
 
@@ -320,13 +320,13 @@
     <!-- Card frame -->
     <Profile name="frSlotFrameH" extends="baseReference" with="anchorTopLeft">
         <size value="224px 1px"/>
-        <color value="$preset_fs25_colorGreyDark"/>
+        <color value="$preset_fs25_colorGreyLight"/>
         <cornerSize value="0"/>
     </Profile>
 
     <Profile name="frSlotFrameV" extends="baseReference" with="anchorTopLeft">
         <size value="1px 156px"/>
-        <color value="$preset_fs25_colorGreyDark"/>
+        <color value="$preset_fs25_colorGreyLight"/>
         <cornerSize value="0"/>
     </Profile>
 
@@ -724,7 +724,7 @@
     <Profile name="frFieldDivider" extends="baseReference" with="anchorTopCenter">
         <position value="0px -18px"/>
         <size value="1px 46px"/>
-        <color value="$preset_fs25_colorGrey"/>
+        <color value="$preset_fs25_colorGreyLight"/>
         <cornerSize value="0.05"/>
     </Profile>
 
