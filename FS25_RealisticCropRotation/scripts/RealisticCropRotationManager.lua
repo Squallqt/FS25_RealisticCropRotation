@@ -15,7 +15,7 @@ local FIELD_STATE_COVERAGE = 0.50
 -- Field share a crop must cover to count as standing.
 local MIN_CROP_COVERAGE = 0.05
 
--- Minimum field area used by Precision Farming to consider a farmland relevant.
+-- Minimum field area considered relevant for crop rotation.
 local MIN_ROTATION_AREA_HA = 0.01
 
 -- PF field-info only displays legend values (PrecisionFarming.xml showOnHud): nitrogen per 20 kg/ha, pH per 0.25.
@@ -118,25 +118,6 @@ local function isPointInPolygon(x, z, vertices)
     return inside
 end
 
----Returns the cultivable area of a field in hectares (0 when unknown).
--- @param table field
--- @return number areaHa
-local function getFieldAreaHa(field)
-    if type(field) ~= "table" then return 0 end
-    local areaHa = tonumber(field.areaHa) or 0
-    return areaHa > 0 and areaHa or 0
-end
-
----Returns the cultivable agricultural area of a farmland in hectares (0 when unknown).
--- @param table farmland
--- @return number areaHa
-local function getFarmlandFieldAreaHa(farmland)
-    if type(farmland) ~= "table" then return 0 end
-    -- Cultivable agricultural area, different from areaInHa which is the full buyable parcel (may include yards/buildable land).
-    local totalFieldArea = tonumber(farmland.totalFieldArea) or 0
-    return totalFieldArea > 0 and totalFieldArea or 0
-end
-
 ---Normalizes a fruit-type index, mapping UNKNOWN/invalid to nil.
 -- @param integer fruitTypeIndex
 -- @return integer index, or nil
@@ -231,6 +212,23 @@ local function locateParcelSamplePoint(region)
     return bestX, bestZ
 end
 
+---Builds a parcel bounding-box region narrowed by its farmland mask.
+-- @param integer farmlandId
+-- @return table region, or nil when the parcel mask is unavailable
+local function buildFarmlandRegion(farmlandId)
+    local minX, minZ, maxX, maxZ = getFarmlandBounds(getFarmlandById(farmlandId))
+    if minX == nil then return nil end
+
+    local filter = makeFarmlandFilter(farmlandId)
+    if filter == nil then return nil end
+
+    return {
+        farmlandId = farmlandId,
+        minX = minX, minZ = minZ, maxX = maxX, maxZ = maxZ,
+        filter = filter,
+    }
+end
+
 ---Builds the ground area a farmland's native reads run over: the mapped field's polygon, or the parcel's bounding box narrowed by the farmland mask.
 -- @param integer farmlandId
 -- @param table field Mapped Field object, or nil
@@ -245,17 +243,10 @@ local function buildFieldRegion(farmlandId, field)
         }
     end
 
-    local minX, minZ, maxX, maxZ = getFarmlandBounds(getFarmlandById(farmlandId))
-    if minX == nil then return nil end
-    local filter = makeFarmlandFilter(farmlandId)
-    if filter == nil then return nil end
-
-    local region = {
-        farmlandId = farmlandId,
-        minX = minX, minZ = minZ, maxX = maxX, maxZ = maxZ,
-        filter = filter,
-    }
-    region.sampleX, region.sampleZ = locateParcelSamplePoint(region)
+    local region = buildFarmlandRegion(farmlandId)
+    if region ~= nil then
+        region.sampleX, region.sampleZ = locateParcelSamplePoint(region)
+    end
     return region
 end
 
@@ -567,7 +558,8 @@ local function measureRegionFieldAreaHa(region)
     if pixels == nil or pixels <= 0 then return 0 end
 
     local terrainSize = g_currentMission ~= nil and tonumber(g_currentMission.terrainSize) or nil
-    local mapSize = g_currentMission ~= nil and tonumber(g_currentMission.terrainDetailMapSize) or nil
+    local mapId = FieldDensityMap ~= nil and getFieldGroundLayer(FieldDensityMap.GROUND_TYPE) or nil
+    local mapSize = mapId ~= nil and getDensityMapSize(mapId) or nil
     if terrainSize == nil or mapSize == nil or mapSize <= 0 then return 0 end
 
     local pixelSize = terrainSize / mapSize
@@ -957,20 +949,11 @@ function RealisticCropRotationManager:getFieldRegion(farmlandId)
     return region
 end
 
----Rotation area of a farmland in hectares: its cultivable area, the mapped field's polygon, or its measured field ground.
+---Current field-ground area of a farmland in hectares.
 -- @param integer farmlandId
 -- @return number areaHa
 function RealisticCropRotationManager:getRotationAreaHa(farmlandId)
-    local areaHa = getFarmlandFieldAreaHa(getFarmlandById(farmlandId))
-    if areaHa > MIN_ROTATION_AREA_HA then return areaHa end
-
-    local region = self:getFieldRegion(farmlandId)
-    if region == nil then return 0 end
-
-    areaHa = getFieldAreaHa(region.field)
-    if areaHa > MIN_ROTATION_AREA_HA then return areaHa end
-
-    areaHa = measureRegionFieldAreaHa(region)
+    local areaHa = measureRegionFieldAreaHa(buildFarmlandRegion(farmlandId))
     return areaHa > MIN_ROTATION_AREA_HA and areaHa or 0
 end
 
