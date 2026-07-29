@@ -33,6 +33,7 @@
         <e k="rcr_treatment_disease_absent"     v="无病害" />
         <e k="rcr_treatment_disease_active"     v="病害活跃" />
         <e k="rcr_treatment_disease_controlled" v="病害受控" />
+        <e k="rcr_treatment_disease_partially_controlled" v="病害部分受控" />
         <e k="rcr_treatment_until_harvest" v="直到收获" />
         <e k="rcr_treatment_months"        v="%d个月" />
 

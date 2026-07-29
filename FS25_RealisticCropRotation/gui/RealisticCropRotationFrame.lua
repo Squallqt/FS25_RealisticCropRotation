@@ -1642,6 +1642,7 @@ function RealisticCropRotationFrame:updateTreatmentGauge(farmlandId, sharedRowTi
     -- Among active diseases, point at the treatment family least able to cope (lowest coverage), so the gauge always shows the next action; ties go to the more severe disease.
     local state = disease ~= nil and disease:getState(farmlandId) or nil
     local anyActive = false
+    local hasRotationOnlyActive = false
     local family, coverage, worstSeverity = nil, 0, -1
     if state ~= nil then
         for group, s in pairs(state) do
@@ -1649,7 +1650,9 @@ function RealisticCropRotationFrame:updateTreatmentGauge(farmlandId, sharedRowTi
             if severity > 0 then
                 anyActive = true
                 local treatment = disease:getTreatment(group)
-                if treatment == "FUNGICIDE" or treatment == "NEMATICIDE" then
+                if treatment == "NONE" then
+                    hasRotationOnlyActive = true
+                elseif treatment == "FUNGICIDE" or treatment == "NEMATICIDE" then
                     local cov = coverageOf(treatment)
                     if family == nil or cov < coverage or (cov == coverage and severity > worstSeverity) then
                         family, coverage, worstSeverity = treatment, cov, severity
@@ -1685,11 +1688,16 @@ function RealisticCropRotationFrame:updateTreatmentGauge(farmlandId, sharedRowTi
             string.format(self.i18n:getText("rcr_treatment_partial"), math.floor(coverage * 100 + 0.5)))
     end
 
-    -- Disease status follows the shown family's coverage: controlled only when that treatment effectively holds it.
+    -- Disease status follows the shown family's coverage; rotation-only outbreaks keep a completed treatment from claiming full control.
     local diseaseKey = "rcr_treatment_disease_absent"
     if anyActive then
-        diseaseKey = (family ~= nil and coverage >= complete)
-            and "rcr_treatment_disease_controlled" or "rcr_treatment_disease_active"
+        if family ~= nil and coverage >= complete then
+            diseaseKey = hasRotationOnlyActive
+                and "rcr_treatment_disease_partially_controlled"
+                or "rcr_treatment_disease_controlled"
+        else
+            diseaseKey = "rcr_treatment_disease_active"
+        end
     end
     local stateText = string.format("%s · %s", levelText, self.i18n:getText(diseaseKey))
 

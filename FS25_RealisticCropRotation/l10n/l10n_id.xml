@@ -33,6 +33,7 @@
         <e k="rcr_treatment_disease_absent"     v="Tidak ada penyakit" />
         <e k="rcr_treatment_disease_active"     v="Penyakit aktif" />
         <e k="rcr_treatment_disease_controlled" v="Penyakit terkendali" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Penyakit terkendali sebagian" />
         <e k="rcr_treatment_until_harvest" v="Sampai panen" />
         <e k="rcr_treatment_months"        v="%d bulan" />
 

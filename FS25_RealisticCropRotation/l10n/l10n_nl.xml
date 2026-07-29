@@ -33,6 +33,7 @@
         <e k="rcr_treatment_disease_absent"     v="Geen ziekte" />
         <e k="rcr_treatment_disease_active"     v="Ziekte actief" />
         <e k="rcr_treatment_disease_controlled" v="Ziekte onder controle" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Ziekte gedeeltelijk onder controle" />
         <e k="rcr_treatment_until_harvest" v="Tot de oogst" />
         <e k="rcr_treatment_months"        v="%d maanden" />
 

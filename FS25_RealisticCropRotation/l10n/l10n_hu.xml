@@ -33,6 +33,7 @@
         <e k="rcr_treatment_disease_absent"     v="Nincs betegség" />
         <e k="rcr_treatment_disease_active"     v="Betegség aktív" />
         <e k="rcr_treatment_disease_controlled" v="Betegség kordában" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Betegség részben kordában tartva" />
         <e k="rcr_treatment_until_harvest" v="Betakarításig" />
         <e k="rcr_treatment_months"        v="%d hónap" />
 

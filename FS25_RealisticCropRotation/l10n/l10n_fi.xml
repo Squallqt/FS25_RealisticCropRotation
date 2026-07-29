@@ -33,6 +33,7 @@
         <e k="rcr_treatment_disease_absent"     v="Ei tautia" />
         <e k="rcr_treatment_disease_active"     v="Tauti aktiivinen" />
         <e k="rcr_treatment_disease_controlled" v="Tauti hallinnassa" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Tauti osittain hallinnassa" />
         <e k="rcr_treatment_until_harvest" v="Sadonkorjuuseen asti" />
         <e k="rcr_treatment_months"        v="%d kuukautta" />
 

@@ -33,6 +33,7 @@
         <e k="rcr_treatment_disease_absent"     v="Brak choroby" />
         <e k="rcr_treatment_disease_active"     v="Choroba aktywna" />
         <e k="rcr_treatment_disease_controlled" v="Choroba pod kontrolą" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Choroba częściowo pod kontrolą" />
         <e k="rcr_treatment_until_harvest" v="Do zbioru" />
         <e k="rcr_treatment_months"        v="%d miesięcy" />
 

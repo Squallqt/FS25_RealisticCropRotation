@@ -33,6 +33,7 @@
         <e k="rcr_treatment_disease_absent"     v="병해 없음" />
         <e k="rcr_treatment_disease_active"     v="병해 활성" />
         <e k="rcr_treatment_disease_controlled" v="병해 억제됨" />
+        <e k="rcr_treatment_disease_partially_controlled" v="병해가 부분적으로 억제됨" />
         <e k="rcr_treatment_until_harvest" v="수확까지" />
         <e k="rcr_treatment_months"        v="%d개월" />
 

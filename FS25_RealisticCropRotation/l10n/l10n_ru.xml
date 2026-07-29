@@ -33,6 +33,7 @@
         <e k="rcr_treatment_disease_absent"     v="Болезни нет" />
         <e k="rcr_treatment_disease_active"     v="Болезнь активна" />
         <e k="rcr_treatment_disease_controlled" v="Болезнь под контролем" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Болезнь частично под контролем" />
         <e k="rcr_treatment_until_harvest" v="До уборки" />
         <e k="rcr_treatment_months"        v="%d месяцев" />
 

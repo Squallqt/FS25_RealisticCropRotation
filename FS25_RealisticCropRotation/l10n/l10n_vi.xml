@@ -33,6 +33,7 @@
         <e k="rcr_treatment_disease_absent"     v="Không có bệnh" />
         <e k="rcr_treatment_disease_active"     v="Bệnh đang hoạt động" />
         <e k="rcr_treatment_disease_controlled" v="Bệnh được kiểm soát" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Bệnh được kiểm soát một phần" />
         <e k="rcr_treatment_until_harvest" v="Đến khi thu hoạch" />
         <e k="rcr_treatment_months"        v="%d tháng" />
 

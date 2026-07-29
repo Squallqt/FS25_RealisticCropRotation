@@ -33,6 +33,7 @@
         <e k="rcr_treatment_disease_absent"     v="Bez choroby" />
         <e k="rcr_treatment_disease_active"     v="Choroba aktivní" />
         <e k="rcr_treatment_disease_controlled" v="Choroba pod kontrolou" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Choroba částečně pod kontrolou" />
         <e k="rcr_treatment_until_harvest" v="Do sklizně" />
         <e k="rcr_treatment_months"        v="%d měsíců" />
 

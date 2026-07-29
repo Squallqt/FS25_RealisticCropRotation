@@ -33,6 +33,7 @@
         <e k="rcr_treatment_disease_absent"     v="Fără boală" />
         <e k="rcr_treatment_disease_active"     v="Boală activă" />
         <e k="rcr_treatment_disease_controlled" v="Boală sub control" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Boală parțial controlată" />
         <e k="rcr_treatment_until_harvest" v="Până la recoltare" />
         <e k="rcr_treatment_months"        v="%d luni" />
 

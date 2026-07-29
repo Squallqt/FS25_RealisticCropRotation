@@ -33,6 +33,7 @@
         <e k="rcr_treatment_disease_absent"     v="Hastalık yok" />
         <e k="rcr_treatment_disease_active"     v="Hastalık aktif" />
         <e k="rcr_treatment_disease_controlled" v="Hastalık kontrol altında" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Hastalık kısmen kontrol altında" />
         <e k="rcr_treatment_until_harvest" v="Hasada kadar" />
         <e k="rcr_treatment_months"        v="%d ay" />
 
