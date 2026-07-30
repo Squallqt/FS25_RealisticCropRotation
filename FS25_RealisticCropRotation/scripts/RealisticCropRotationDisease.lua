@@ -10,10 +10,9 @@ RealisticCropRotationDisease.INITIAL_SEVERITY = 0.10
 -- Per-pathogen rates come from cropConfig; these are fallbacks, calibrated at REFERENCE_DAYS_PER_PERIOD and rescaled by periodScale.
 RealisticCropRotationDisease.REFERENCE_DAYS_PER_PERIOD = 9 -- calibration baseline for the day-based constants below
 RealisticCropRotationDisease.DEFAULT_DAILY_GROWTH = 0.04 -- severity gained per in-game day at the reference (fallback)
-RealisticCropRotationDisease.DESTROY_SEVERITY = 0.25 -- latent period: damage only above this (fallback)
+RealisticCropRotationDisease.DESTROY_SEVERITY = 0.25 -- crop damage begins above this attack level (fallback)
 RealisticCropRotationDisease.LOAD_SPEED_GAIN = 1.0  -- stronger effective pressure speeds the epidemic (x1..x2 by load)
-RealisticCropRotationDisease.INCUBATION_DAYS = 3    -- warm-weather latent period before severity climbs, at the reference
--- Temperature response (Celsius): weather-driven growth and every incubation use the same optimal plateau and frost/heat floor.
+-- Temperature response (Celsius): weather-driven growth uses the same optimal plateau and frost/heat floor.
 RealisticCropRotationDisease.TEMP_MIN = 3           -- at/below: coldest favourability (TEMP_FLOOR)
 RealisticCropRotationDisease.TEMP_OPT_LOW = 10
 RealisticCropRotationDisease.TEMP_OPT_HIGH = 25
@@ -524,11 +523,7 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId)
                             severity = RealisticCropRotationDisease.INITIAL_SEVERITY,
                             -- seeds the Perlin destruction pattern; synced + saved so every client regenerates the identical dead area
                             seed = math.random(1, 1000000),
-                            -- temperature-paced latent period, scaled to the save's calendar (periodScale)
-                            incubation = RealisticCropRotationDisease.INCUBATION_DAYS * periodScale(),
                         }
-                        paintInfectionPresence(self.grid, region, group, self.state[farmlandId][group].seed)
-                        RCRDiseaseNotificationEvent.sendEvent(farmlandId, group)
                     end
                 end
             end
@@ -634,6 +629,15 @@ function RealisticCropRotationDisease:getCurve(group)
         deadFractionMax = (params ~= nil and params.deadFractionMax) or D.DESTROY_DEAD_FRACTION_MAX,
         power           = D.DESTROY_RAMP_POWER,
     }
+end
+
+---True once the attack level can produce crop damage and the outbreak becomes visible to the player.
+-- @param string group
+-- @param table state
+-- @return boolean visible
+function RealisticCropRotationDisease:isOutbreakVisible(group, state)
+    if state == nil then return false end
+    return deadFractionForSeverity(state.severity, self:getCurve(group)) > 0
 end
 
 local function applyDestructionPass(desc, region, seed, threshold, protectionMapId, grid, speckled)
@@ -791,14 +795,10 @@ function RealisticCropRotationDisease:propagate(farmlandId)
     local fungicideCoverage = nil
 
     for group, s in pairs(groups) do
-        if s.incubation ~= nil and s.incubation > 0 then
-            -- Temperature-paced incubation: warm days burn it down fast, frost nearly stalls it.
-            s.incubation = s.incubation - temperatureFactor(temperature)
-            if s.incubation <= 0 then s.incubation = nil end
-        elseif activeDesc ~= nil then
+        if activeDesc ~= nil then
             -- Severity climbs only under a living host.
-            s.incubation = nil
             local curve = self:getCurve(group)
+            local wasVisible = self:isOutbreakVisible(group, s)
             -- Weather drives sensitive groups; stronger effective pressure accelerates the epidemic.
             local loadSpeed = 1 + RealisticCropRotationDisease.LOAD_SPEED_GAIN * math.min(1, loads[group] or 0)
             local growth = (curve.dailyGrowth / scale) * weatherModifier(raining, temperature, group) * loadSpeed
@@ -808,7 +808,12 @@ function RealisticCropRotationDisease:propagate(farmlandId)
                 growth = growth * (1 - fungicideCoverage)
             end
             s.severity = math.min(1, (s.severity or 0) + growth)
-            if s.severity >= curve.destroySeverity then
+            local isVisible = self:isOutbreakVisible(group, s)
+            if isVisible and not wasVisible then
+                paintInfectionPresence(self.grid, region, group, s.seed)
+                RCRDiseaseNotificationEvent.sendEvent(farmlandId, group)
+            end
+            if isVisible then
                 -- Per-cell exclusion map for this group's treatment family; nil for NONE-treatment groups (rotation-only, no product shields them).
                 local treatment = self:getTreatment(group)
                 local protectionMapId = nil
@@ -924,7 +929,7 @@ function RealisticCropRotationDisease:refreshRiskMap(force)
     end
 end
 
----Copies active disease state into a network-safe table.
+---Copies player-visible outbreak state into a network-safe table.
 -- @return table state
 -- @return table crop
 -- @return table reservoir
@@ -936,13 +941,18 @@ function RealisticCropRotationDisease:getSyncData()
     for farmlandId, groups in pairs(self.state or {}) do
         local n = tonumber(farmlandId)
         if n ~= nil and n > 0 and groups ~= nil then
-            outState[n] = {}
+            local syncedGroups = {}
             for group, data in pairs(groups) do
-                local groupName = tostring(group)
-                outState[n][groupName] = {
-                    severity = tonumber(data.severity) or 0,
-                    seed = tonumber(data.seed) or 0,
-                }
+                if self:isOutbreakVisible(group, data) then
+                    local groupName = tostring(group)
+                    syncedGroups[groupName] = {
+                        severity = tonumber(data.severity) or 0,
+                        seed = tonumber(data.seed) or 0,
+                    }
+                end
+            end
+            if next(syncedGroups) ~= nil then
+                outState[n] = syncedGroups
             end
         end
     end
@@ -972,7 +982,7 @@ function RealisticCropRotationDisease:getSyncData()
     return outState, outCrop, outReservoir
 end
 
----Applies active disease state received from the server.
+---Applies player-visible outbreak state received from the server.
 -- @param table state
 -- @param table crop
 -- @param table reservoir
@@ -1017,7 +1027,7 @@ function RealisticCropRotationDisease:applySyncData(state, crop, reservoir)
         end
     end
 
-    -- Clients never run the destruction loop; they rebuild the active-infection overlay from the synced seed + severity instead.
+    -- Clients never run the destruction loop; they rebuild the visible-outbreak overlay from the synced seed + severity instead.
     if g_server == nil then
         self:rebuildGridFromState()
         -- Risk derives from the synced history, so a sync is the client's cue to repaint any bands that moved.
@@ -1025,7 +1035,7 @@ function RealisticCropRotationDisease:applySyncData(state, crop, reservoir)
     end
 end
 
----Worst infection on a field: highest severity, ties broken by overlay state id.
+---Worst visible outbreak on a field: highest severity, ties broken by overlay state id.
 -- @param integer farmlandId
 -- @param function isEnabled Optional predicate on the group name
 -- @return string group, or nil
@@ -1034,7 +1044,7 @@ function RealisticCropRotationDisease:getWorstGroup(farmlandId, isEnabled)
     local groups = self:getState(farmlandId)
     local bestGroup, bestSeverity, bestState = nil, -1, nil
     for group, s in pairs(groups or {}) do
-        if isEnabled == nil or isEnabled(group) then
+        if self:isOutbreakVisible(group, s) and (isEnabled == nil or isEnabled(group)) then
             local severity = tonumber(s.severity) or 0
             local state = diseaseStateForGroup(group)
             if severity > bestSeverity
@@ -1047,18 +1057,19 @@ function RealisticCropRotationDisease:getWorstGroup(farmlandId, isEnabled)
     return bestGroup, bestSeverity
 end
 
----Order-independent signature of the active infection set.
+---Order-independent signature of the visible outbreak overlay.
 -- @return string signature
-function RealisticCropRotationDisease:destructionSignature()
+function RealisticCropRotationDisease:outbreakOverlaySignature()
     local parts = {}
     for farmlandId, groups in pairs(self.state) do
         local fid = math.floor(tonumber(farmlandId) or 0)
         for group, data in pairs(groups) do
-            local groupName = tostring(group)
-            local seed = math.floor(tonumber(data.seed) or 0)
-            local severity = tonumber(data.severity) or 0
-            parts[#parts + 1] = string.format(
-                "%d:%d:%s:%d:%.9g", fid, #groupName, groupName, seed, severity)
+            if self:isOutbreakVisible(group, data) then
+                local groupName = tostring(group)
+                local seed = math.floor(tonumber(data.seed) or 0)
+                parts[#parts + 1] = string.format(
+                    "%d:%d:%s:%d", fid, #groupName, groupName, seed)
+            end
         end
     end
     table.sort(parts)
@@ -1069,11 +1080,18 @@ end
 -- @param table grid
 -- @param table region
 -- @param table stateForField group -> { severity, seed }
-local function repaintFieldOverlay(grid, region, stateForField)
+-- @param RealisticCropRotationDisease disease
+local function repaintFieldOverlay(grid, region, stateForField, disease)
     if region == nil or stateForField == nil then return end
     local ordered = {}
     for group, s in pairs(stateForField) do
-        ordered[#ordered + 1] = { group = group, severity = tonumber(s.severity) or 0, seed = s.seed }
+        if disease:isOutbreakVisible(group, s) then
+            ordered[#ordered + 1] = {
+                group = group,
+                severity = tonumber(s.severity) or 0,
+                seed = s.seed,
+            }
+        end
     end
     table.sort(ordered, function(a, b)
         if a.severity == b.severity then return tostring(a.group) > tostring(b.group) end
@@ -1087,7 +1105,7 @@ end
 function RealisticCropRotationDisease:rebuildGridFromState()
     local grid = self.grid
     if grid.mapId == nil then return end
-    local signature = self:destructionSignature()
+    local signature = self:outbreakOverlaySignature()
     if signature == self.lastGridSignature then return end
     self.lastGridSignature = signature
 
@@ -1095,7 +1113,7 @@ function RealisticCropRotationDisease:rebuildGridFromState()
     grid:clearAll()
     for farmlandId in pairs(self.state) do
         local fid = tonumber(farmlandId)
-        repaintFieldOverlay(grid, mgr:getFieldRegion(fid), self.state[farmlandId])
+        repaintFieldOverlay(grid, mgr:getFieldRegion(fid), self.state[farmlandId], self)
     end
 end
 
@@ -1122,7 +1140,7 @@ local function sortedDiseaseGroupNames(groups)
     return names
 end
 
----Persists active outbreaks and local reservoirs to the savegame folder.
+---Persists internal infections and local disease risk to the savegame folder.
 -- @param string savegamePath Savegame folder path (trailing slash)
 function RealisticCropRotationDisease:saveToXML(savegamePath)
     if savegamePath == nil or savegamePath == "" then return end
@@ -1146,8 +1164,6 @@ function RealisticCropRotationDisease:saveToXML(savegamePath)
             setXMLString(xmlFile, gKey .. "#name", group)
             setXMLFloat(xmlFile, gKey .. "#severity", s.severity or 0)
             setXMLInt(xmlFile, gKey .. "#seed", math.floor(tonumber(s.seed) or 0))
-            -- Latent period, kept across reloads.
-            if s.incubation ~= nil then setXMLFloat(xmlFile, gKey .. "#incubation", s.incubation) end
         end
 
         local fieldReservoir = self.reservoir[farmlandId] or {}
@@ -1195,7 +1211,6 @@ function RealisticCropRotationDisease:loadFromXML(savegamePath)
                     self.state[id][name] = {
                         severity = getXMLFloat(xmlFile, gKey .. "#severity") or 0,
                         seed = getXMLInt(xmlFile, gKey .. "#seed") or math.random(1, 1000000),
-                        incubation = getXMLFloat(xmlFile, gKey .. "#incubation"),
                     }
                 end
                 gi = gi + 1
@@ -1378,11 +1393,11 @@ function RealisticCropRotationDisease:consoleInfect(farmlandId, groupName, sever
     }
     self.crop[id] = cropName
 
-    -- Paints map presence, then applies destruction at the exact forced attack level without advancing a disease day.
+    -- Applies the exact forced attack level without advancing a disease day.
     local region = self.manager:getFieldRegion(id)
-    paintInfectionPresence(self.grid, region, group, self.state[id][group].seed)
     local curve = self:getCurve(group)
-    if value >= curve.destroySeverity then
+    if self:isOutbreakVisible(group, self.state[id][group]) then
+        paintInfectionPresence(self.grid, region, group, self.state[id][group].seed)
         local activeDesc = fruitTypeIndex ~= nil and g_fruitTypeManager ~= nil
             and g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex) or nil
         local treatment = self:getTreatment(group)

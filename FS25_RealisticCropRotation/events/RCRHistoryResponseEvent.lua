@@ -187,7 +187,7 @@ function RCRHistoryResponseEvent:readStream(streamId, connection)
     end
 end
 
----Writes the full rotation snapshot, including active disease and local reservoirs.
+---Writes the full rotation snapshot, including visible outbreaks and local disease risk.
 -- @param integer streamId Network stream identifier
 -- @param Connection _connection Network connection (unused)
 function RCRHistoryResponseEvent:writeStream(streamId, _connection)

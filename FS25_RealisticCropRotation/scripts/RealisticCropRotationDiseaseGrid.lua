@@ -1,11 +1,10 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
--- BitVectorMap storage for the disease system: overlay grid, per-treatment protection maps, runtime risk + destruction mask.
+-- BitVectorMap storage for the disease system: runtime disease/risk grids, persistent protection maps and a destruction mask.
 RealisticCropRotationDiseaseGrid = {}
 local RealisticCropRotationDiseaseGrid_mt = Class(RealisticCropRotationDiseaseGrid)
 
 -- 4 channels hold a per-disease state 0..15 (0 = clean), enough for the 9 pathogens, each painted its own colour.
 RealisticCropRotationDiseaseGrid.NUM_CHANNELS = 4
-RealisticCropRotationDiseaseGrid.FILENAME = "realisticCropRotationDiseaseGrid.grle"
 
 -- Per-cell protection, one bitvector per treatment family: a protected cell is excluded from all future destruction, so the same write cures and prevents.
 RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS = 1
@@ -69,24 +68,13 @@ local function loadProtectionMap(owner, savegamePath, mapIdField, mapSizeField, 
 end
 
 function RealisticCropRotationDiseaseGrid:loadMap(savegamePath, densityMapSyncer)
-    -- Persistent maps default to the native ground-detail resolution.
+    -- Maps default to the native ground-detail resolution.
     local resolvedSize = tonumber(g_currentMission.terrainDetailMapSize)
     self.size = resolvedSize
     self.riskMapSize = resolvedSize
 
     self.mapId = createBitVectorMap("rcrDiseaseGrid")
-    local loaded = false
-
-    if savegamePath ~= nil and savegamePath ~= "" then
-        local filePath = savegamePath .. RealisticCropRotationDiseaseGrid.FILENAME
-        if fileExists ~= nil and fileExists(filePath) then
-            loaded = loadBitVectorMapFromFile(self.mapId, filePath, self.numChannels)
-        end
-    end
-
-    if not loaded then
-        loadBitVectorMapNew(self.mapId, self.size, self.size, self.numChannels, false)
-    end
+    loadBitVectorMapNew(self.mapId, self.size, self.size, self.numChannels, false)
 
     local w = getBitVectorMapSize(self.mapId)
     self.size = tonumber(w) or self.size
@@ -117,8 +105,7 @@ function RealisticCropRotationDiseaseGrid:loadMap(savegamePath, densityMapSyncer
 end
 
 function RealisticCropRotationDiseaseGrid:saveMap(savegamePath)
-    if self.mapId == nil or savegamePath == nil or savegamePath == "" then return end
-    saveBitVectorMapToFile(self.mapId, savegamePath .. RealisticCropRotationDiseaseGrid.FILENAME)
+    if savegamePath == nil or savegamePath == "" then return end
     if self.fungicideProtectionMapId ~= nil then
         saveBitVectorMapToFile(self.fungicideProtectionMapId, savegamePath .. RealisticCropRotationDiseaseGrid.FUNGICIDE_PROTECTION_FILENAME)
     end

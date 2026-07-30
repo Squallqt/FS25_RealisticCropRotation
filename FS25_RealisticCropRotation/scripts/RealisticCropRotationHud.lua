@@ -136,7 +136,7 @@ local function isPointProtected(protectionMapId, mapSize, worldX, worldZ)
     return (getBitVectorMapPoint(protectionMapId, localX, localZ, 0, 1) or 0) > 0
 end
 
----Appends a disease status line for every group with active severity, regardless of protection.
+---Appends a disease status line for every visible outbreak, regardless of protection.
 -- @param table fieldBox Field-info box with addLine
 -- @param integer farmlandId
 function RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
@@ -152,7 +152,7 @@ function RealisticCropRotationHud.addDiseaseLine(fieldBox, farmlandId)
     for _, entry in ipairs(RealisticCropRotationDisease.getOrderedGroups()) do
         local group = entry.group
         local s = groups[group]
-        if s ~= nil and (s.severity or 0) > 0 then
+        if disease:isOutbreakVisible(group, s) then
             local diseaseName = disease:getDisplayName(group)
             fieldBox:addLine(label, diseaseName, true)
         end

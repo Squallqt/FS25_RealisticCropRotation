@@ -500,6 +500,8 @@ local function loadedMission()
     if g_currentMission:getIsServer() then
         RealisticCropRotation.manager:loadFromXML(savegameFolderPath)
         RealisticCropRotation.disease:loadFromXML(savegameFolderPath)
+        -- The disease overlay is derived from authoritative outbreak state and is rebuilt on every load.
+        RealisticCropRotation.disease:rebuildGridFromState()
         local environment = g_currentMission.environment
         RealisticCropRotation.disease:advanceCalendar(
             environment ~= nil and environment.currentYear or nil)

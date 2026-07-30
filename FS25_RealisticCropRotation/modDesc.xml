@@ -10,10 +10,11 @@
     <description>
         <en><![CDATA[Make crop rotation matter.
 
-Every field remembers its last 4 crops. Plan which crops return, watch the disease risk, and protect a sensitive crop before an outbreak destroys part of it.
+Every field remembers its last 4 rotation entries, whether crops or fallow years. Plan what returns, watch the disease risk, and protect a sensitive crop before an outbreak destroys part of it.
 
 PLANNING
-- A rotation calendar with a real repeating cycle of 2, 3 or 4 crops, including the return from the last slot to the first
+- A rotation calendar with a real repeating cycle of 2, 3 or 4 yearly slots, filled with crops or fallow, including the return from the last slot to the first
+- A planned fallow slot adds one full year of spacing before the next sensitive crop; it does not instantly clear the field or guarantee that every disease has disappeared
 - An instant 0-100 grade, tailored advice, and conflicts flagged before you sow
 - Diversity pays: rotate more crops, avoid repeating the same family, and alternate winter and spring sowings
 - Fields sharing a plan are grouped, with combined area, grade and residue
@@ -23,10 +24,12 @@ Nine diseases affect specific crops: sclerotinia, phoma, take-all, septoria, rus
 
 How it works:
 - A first outbreak can happen even if the field has never been affected. Favourable weather raises the chance for weather-sensitive diseases. Rust and late blight never remain in the field after the crop.
-- After a real outbreak, sclerotinia, phoma, take-all, septoria, fusarium, beet cyst nematode or clubroot can remain in the field after harvest. The more advanced the outbreak, the greater the risk for a future sensitive crop. A healthy crop adds no new disease to the field.
+- After a real outbreak, sclerotinia, phoma, take-all, septoria, fusarium, beet cyst nematode or clubroot can remain in the field after harvest. The more advanced the outbreak, the greater the risk for a future sensitive crop. A crop that is never infected adds no new disease to the field.
 - This remaining risk falls once per calendar year. Beet cyst nematode and clubroot can become very weak, but they may remain in the field indefinitely.
 
 Spacing sensitive crops gives the risk time to fall. The planner warns when a crop returns too soon, and still checks crop-family diversity separately. The Disease Risk map highlights fields where the current crop is more likely to become infected; favourable weather can raise the chance further.
+
+An infection starts at a low attack level and progresses each day. It remains hidden until it begins to damage the crop; before then, only the Disease Risk map and preventive advice show that conditions are favourable. Once damage begins, the outbreak appears on the Infected Fields map, field card and on-foot HUD, and a notification is sent.
 
 TREATMENTS
 Fungicide AMISTAR (Syngenta) and nematicide VELUM PRIME (Bayer), sprayed with any compatible sprayer.
@@ -45,7 +48,7 @@ IN GAME
 - A dedicated "Crop Rotation" tab in the menu (ESC)
 - Three views on the map: infected fields, disease risk, treated ground
 - Treatment gauge: the share of the field sprayed, the disease status, and how long protection lasts
-- Field card: current crop, growth stage, required soil work, weeds, active disease and its treatment, nitrogen, pH
+- Field card: current crop, growth stage, required soil work, weeds, detected disease and its treatment, nitrogen, pH
 - On-foot HUD and a weather header so you can time your spraying
 
 CONSOLE COMMANDS (host or an admin client)
@@ -63,10 +66,11 @@ Issues & suggestions: https://github.com/Squallqt/FS25_RealisticCropRotation
 Please download this mod only from the official Farming Simulator ModHub and keep the original link. Reuploading, redistribution, modification or copying of this mod or any of its files, in whole or in part, is not permitted without the author's written consent.]]></en>
         <de><![CDATA[Gib deiner Fruchtfolge eine echte Bedeutung.
 
-Jedes Feld merkt sich seine letzten 4 Kulturen. Plane, welche Kulturen zurückkehren, beobachte das Krankheitsrisiko und schütze eine empfindliche Kultur, bevor ein Ausbruch einen Teil davon zerstört.
+Jedes Feld speichert die letzten 4 Einträge seiner Fruchtfolge, also Kulturen oder Brachejahre. Plane, was zurückkehrt, beobachte das Krankheitsrisiko und schütze eine empfindliche Kultur, bevor ein Ausbruch einen Teil davon zerstört.
 
 PLANUNG
-- Ein Fruchtfolgekalender mit einem echten, sich wiederholenden Zyklus aus 2, 3 oder 4 Kulturen, einschließlich der Rückkehr vom letzten zum ersten Platz
+- Ein Fruchtfolgekalender mit einem echten, sich wiederholenden Zyklus aus 2, 3 oder 4 Planungsjahren, die mit Kulturen oder Brache belegt werden, einschließlich der Rückkehr vom letzten zum ersten Platz
+- Ein geplantes Brachejahr schafft ein volles Jahr Abstand vor der nächsten empfindlichen Kultur; es bereinigt das Feld nicht sofort und garantiert nicht, dass jede Krankheit verschwunden ist
 - Sofortige Note von 0 bis 100, passende Empfehlung und Konflikte, die vor der Aussaat gemeldet werden
 - Vielfalt zahlt sich aus: mehr Kulturen im Wechsel, dieselbe Familie nicht wiederholen, Winter- und Sommeraussaat abwechseln
 - Felder mit gleichem Plan werden zusammengefasst, mit summierter Fläche, Note und Rückstand
@@ -76,10 +80,12 @@ Neun Krankheiten befallen bestimmte Kulturen: Sklerotinia, Phoma, Schwarzbeinigk
 
 So funktioniert es:
 - Ein erster Befall kann auch auf einem Feld auftreten, das noch nie betroffen war. Günstiges Wetter erhöht das Risiko für wetterabhängige Krankheiten. Rost und Kraut- und Knollenfäule bleiben nach der Kultur nie im Feld.
-- Nach einem tatsächlichen Befall können Sklerotinia, Phoma, Schwarzbeinigkeit, Septoria, Fusariose, Rübenzystennematode oder Kohlhernie nach der Ernte im Feld bleiben. Je weiter der Befall fortgeschritten war, desto größer ist das Risiko für eine spätere empfindliche Kultur. Eine gesunde Kultur fügt dem Feld keine neue Krankheit hinzu.
+- Nach einem tatsächlichen Befall können Sklerotinia, Phoma, Schwarzbeinigkeit, Septoria, Fusariose, Rübenzystennematode oder Kohlhernie nach der Ernte im Feld bleiben. Je weiter der Befall fortgeschritten war, desto größer ist das Risiko für eine spätere empfindliche Kultur. Eine Kultur, die nie infiziert war, fügt dem Feld keine neue Krankheit hinzu.
 - Dieses verbleibende Risiko sinkt einmal pro Kalenderjahr. Rübenzystennematode und Kohlhernie können sehr schwach werden, aber unbegrenzt im Feld bleiben.
 
 Größere Abstände zwischen empfindlichen Kulturen geben dem Risiko Zeit zu sinken. Der Planer warnt, wenn eine Kultur zu früh zurückkehrt, und bewertet die Vielfalt der Kulturfamilien weiterhin getrennt. Die Karte "Krankheitsrisiko" markiert Felder, auf denen die aktuelle Kultur leichter erkranken kann; günstiges Wetter kann die Gefahr weiter erhöhen.
+
+Eine Infektion beginnt mit geringer Befallsstärke und schreitet täglich fort. Sie bleibt verborgen, bis sie die Kultur zu schädigen beginnt; vorher zeigen nur die Karte "Krankheitsrisiko" und vorbeugende Hinweise günstige Bedingungen an. Sobald Schäden beginnen, erscheint der Befall auf der Karte "Befallene Felder", der Feldkarte und der Feldanzeige zu Fuß, und eine Meldung wird gesendet.
 
 BEHANDLUNG
 Fungizid AMISTAR (Syngenta) und Nematizid VELUM PRIME (Bayer), ausgebracht mit jeder kompatiblen Feldspritze.
@@ -98,7 +104,7 @@ IM SPIEL
 - Ein eigener Reiter "Fruchtfolge" im Menü (ESC)
 - Drei Ansichten auf der Karte: befallene Felder, Krankheitsrisiko, behandelte Flächen
 - Behandlungsanzeige: der behandelte Flächenanteil, der Krankheitszustand und die verbleibende Schutzdauer
-- Feldkarte: aktuelle Kultur, Wachstumsstadium, nötige Bodenbearbeitung, Unkraut, aktive Krankheit und ihre Behandlung, Stickstoff, pH-Wert
+- Feldkarte: aktuelle Kultur, Wachstumsstadium, nötige Bodenbearbeitung, Unkraut, erkannte Krankheit und ihre Behandlung, Stickstoff, pH-Wert
 - Feldanzeige zu Fuß und Wetterleiste, damit du deine Spritzungen timen kannst
 
 KONSOLENBEFEHLE (Host oder Admin-Client)
@@ -116,10 +122,11 @@ Issues & Vorschläge: https://github.com/Squallqt/FS25_RealisticCropRotation
 Bitte lade diesen Mod ausschließlich aus dem offiziellen Farming Simulator ModHub herunter und behalte den originalen Link bei. Das erneute Hochladen, die Weitergabe, Veränderung oder das Kopieren dieses Mods oder seiner Dateien, ganz oder teilweise, ist ohne die schriftliche Zustimmung des Autors nicht gestattet.]]></de>
         <fr><![CDATA[Donnez un rôle réel à vos rotations.
 
-Chaque parcelle garde la mémoire de ses 4 dernières cultures. Planifiez leur retour, surveillez le risque de maladie et protégez une culture sensible avant qu'une attaque n'en détruise une partie.
+Chaque parcelle garde la mémoire de ses 4 dernières entrées de rotation, cultures ou années de jachère. Planifiez la suite, surveillez le risque de maladie et protégez une culture sensible avant qu'une attaque n'en détruise une partie.
 
 PLANIFICATION
-- Un calendrier avec un vrai cycle répétitif de 2, 3 ou 4 cultures, retour du dernier emplacement au premier compris
+- Un calendrier avec un vrai cycle répétitif de 2, 3 ou 4 emplacements annuels, occupés par des cultures ou une jachère, retour du dernier emplacement au premier compris
+- Une jachère planifiée ajoute une année complète d'espacement avant la prochaine culture sensible ; elle ne nettoie pas immédiatement la parcelle et ne garantit pas la disparition de toutes les maladies
 - Une note instantanée de 0 à 100, un conseil adapté et les conflits signalés avant de semer
 - La diversité paie : variez les cultures, évitez de répéter la même famille, alternez semis d'hiver et de printemps
 - Les parcelles au même plan sont regroupées, avec surface, note et reliquat cumulés
@@ -129,10 +136,12 @@ Neuf maladies touchent des cultures précises : sclérotinia, phoma, piétin-éc
 
 Le fonctionnement est simple :
 - Une première attaque peut se produire même sur une parcelle qui n'a jamais été touchée. Une météo favorable augmente le risque pour les maladies qui y sont sensibles. La rouille et le mildiou ne restent jamais dans la parcelle après la culture.
-- Après une véritable attaque, le sclérotinia, le phoma, le piétin-échaudage, la septoriose, la fusariose, le nématode à kystes ou la hernie peuvent rester dans la parcelle après la récolte. Plus l'attaque était avancée, plus le risque sera élevé pour une prochaine culture sensible. Une culture restée saine n'ajoute aucune nouvelle maladie à la parcelle.
+- Après une véritable attaque, le sclérotinia, le phoma, le piétin-échaudage, la septoriose, la fusariose, le nématode à kystes ou la hernie peuvent rester dans la parcelle après la récolte. Plus l'attaque était avancée, plus le risque sera élevé pour une prochaine culture sensible. Une culture qui n'a jamais été infectée n'ajoute aucune nouvelle maladie à la parcelle.
 - Ce risque diminue une fois par année civile. Le nématode à kystes et la hernie peuvent devenir très faibles, mais rester indéfiniment dans la parcelle.
 
 Espacer les cultures sensibles laisse au risque le temps de diminuer. Le planificateur avertit lorsqu'une culture revient trop tôt et continue d'évaluer séparément la diversité des familles. La carte « Risque de maladie » signale les parcelles où la culture actuelle a le plus de chances d'être touchée ; une météo favorable peut encore augmenter ce risque.
+
+Une infection commence à un faible niveau d'attaque et progresse chaque jour. Elle reste cachée jusqu'au début des dégâts sur la culture ; avant cela, seuls la carte « Risque de maladie » et les conseils préventifs indiquent que les conditions sont favorables. Dès que les dégâts commencent, l'attaque apparaît sur la carte « Parcelles infectées », la fiche de champ et le HUD à pied, et une notification est envoyée.
 
 TRAITEMENTS
 Fongicide AMISTAR (Syngenta) et nématicide VELUM PRIME (Bayer), à pulvériser avec un pulvérisateur compatible.
@@ -151,7 +160,7 @@ DANS LE JEU
 - Un onglet dédié « Assolement » dans le menu (ÉCHAP)
 - Trois vues sur la carte : parcelles infectées, risque de maladie, zones traitées
 - Jauge de traitement : la part de parcelle pulvérisée, l'état de la maladie et la durée de protection restante
-- Fiche de champ : culture en place, stade, travail du sol requis, mauvaises herbes, maladie active et son traitement, azote, pH
+- Fiche de champ : culture en place, stade, travail du sol requis, mauvaises herbes, maladie détectée et son traitement, azote, pH
 - HUD à pied et en-tête météo pour choisir le moment de pulvériser
 
 COMMANDES CONSOLE (hôte ou client admin)

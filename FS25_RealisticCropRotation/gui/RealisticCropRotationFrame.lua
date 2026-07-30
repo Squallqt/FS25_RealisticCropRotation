@@ -1652,7 +1652,7 @@ function RealisticCropRotationFrame:updateTreatmentGauge(farmlandId, sharedRowTi
             and grid:getProtectionCoverage(region, fam) or 0
     end
 
-    -- Among active diseases, point at the treatment family least able to cope (lowest coverage), so the gauge always shows the next action; ties go to the more severe disease.
+    -- Among visible outbreaks, point at the treatment family least able to cope (lowest coverage), so the gauge always shows the next action; ties go to the more severe disease.
     local state = disease ~= nil and disease:getState(farmlandId) or nil
     local anyActive = false
     local hasRotationOnlyActive = false
@@ -1660,7 +1660,7 @@ function RealisticCropRotationFrame:updateTreatmentGauge(farmlandId, sharedRowTi
     if state ~= nil then
         for group, s in pairs(state) do
             local severity = tonumber(s.severity) or 0
-            if severity > 0 then
+            if disease:isOutbreakVisible(group, s) then
                 anyActive = true
                 local treatment = disease:getTreatment(group)
                 if treatment == "NONE" then
@@ -1737,7 +1737,7 @@ function RealisticCropRotationFrame:updateTreatmentGauge(farmlandId, sharedRowTi
     self.treatmentValueLabel:setVisible(valueText ~= nil)
 end
 
----Updates the field card: required soil work, weed line, growth stage, and active disease.
+---Updates the field card: required soil work, weed line, growth stage, and visible disease.
 -- @param integer farmlandId
 -- @param string actionLabel Field status label resolved by the caller, or nil
 -- @param string statusKind "soil" or "ground", or nil
@@ -1912,7 +1912,7 @@ function RealisticCropRotationFrame:getWorstActiveDisease(farmlandId)
     return disease:getWorstGroup(farmlandId)
 end
 
----Refreshes the advice card: active outbreak > fallow year > planned-step evaluation > per-family fallback, plus a soil-analysis note.
+---Refreshes the advice card: visible outbreak > fallow year > planned-step evaluation > per-family fallback, plus a soil-analysis note.
 -- @param string currentFamily
 -- @param integer farmlandId
 -- @param string currentCropName

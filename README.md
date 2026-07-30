@@ -8,18 +8,19 @@ Crop rotation planning and disease simulation for Farming Simulator 25.
 ![Languages](https://img.shields.io/badge/languages-27-blue.svg)
 [![License](https://img.shields.io/badge/license-proprietary-red.svg)](LICENSE)
 
-Every field remembers its last 4 crops. Plan a repeating 2-, 3- or 4-year rotation, watch the disease risk, and protect a sensitive crop before an outbreak destroys part of it.
+Every field remembers its last 4 rotation entries, whether crops or fallow years. Plan a repeating 2-, 3- or 4-year rotation, watch the disease risk, and protect a sensitive crop before an outbreak destroys part of it.
 
 Singleplayer and multiplayer, with or without Precision Farming.
 
 ## Planning
 
-- **Crop history**: the last 4 crops of every field, recorded automatically
-- **2- to 4-year rotation calendar**: plan with 2, 3 or 4 crops, plus an optional cover crop per year; the selected slots form the real repeating cycle, including the return from its last crop to its first
+- **Rotation history**: the last 4 rotation entries of every field, crops or fallow years, recorded automatically
+- **2- to 4-year rotation calendar**: fill 2, 3 or 4 yearly slots with crops or fallow, plus an optional cover crop per year; the selected slots form the real repeating cycle, including the return from its last slot to its first
+- **Planned fallow**: a fallow slot adds a full year of spacing before the next sensitive crop; it does not instantly clear the field or guarantee that every disease has disappeared
 - **Rotation grade (0-100)**: family and disease-specific return intervals, winter/spring sowing alternation, the nitrogen a legume hands to the next cereal and planned nitrogen residue all weigh in
 - **Diversity pays**: a 2-crop plan tops out at 75 ("good"), you need 3 crops or more to reach "excellent" (80). A single-family plan is capped at 30 ("poor")
 - **Grade bands**: 0-19 bad, 20-39 poor, 40-59 fair, 60-79 good, 80-100 excellent
-- **Tailored advice**: an active outbreak takes priority, then the planner warns when the next crop returns too soon, before showing general advice for its crop family
+- **Tailored advice**: a detected outbreak takes priority, then the planner warns when the next crop returns too soon, before showing general advice for its crop family
 - **Rotation overview**: fields sharing an identical plan are grouped into one card with combined area, grade and residue
 
 ## Diseases
@@ -28,7 +29,7 @@ Nine diseases affect specific crops: sclerotinia, phoma, take-all, septoria, rus
 
 ### The rules
 
-- **Only sensitive crops can be affected**: each disease has its own list of crops. A crop that stays healthy adds no new disease to the field.
+- **Only sensitive crops can be affected**: each disease has its own list of crops. A crop that is never infected adds no new disease to the field.
 - **A first outbreak can happen on a clean field**: favourable weather raises the chance for weather-sensitive diseases. Rust and late blight never remain in the field after the crop.
 - **A real outbreak can affect future crops**: after harvest, sclerotinia, phoma, take-all, septoria, fusarium, beet cyst nematode or clubroot can remain in the field. The more advanced the outbreak, the greater the risk when a sensitive crop returns.
 - **The risk falls with time**: it drops once per calendar year. Beet cyst nematode and clubroot can become very weak, but they may remain in the field indefinitely.
@@ -38,9 +39,9 @@ Nine diseases affect specific crops: sclerotinia, phoma, take-all, septoria, rus
 
 1. The Disease Risk map highlights fields where the current crop is more likely to become infected. Current weather can raise that chance further.
 2. Once per period, the mod checks whether an outbreak starts while the crop is at a vulnerable growth stage.
-3. A new outbreak starts after a short delay, then becomes more serious each day and can destroy the crop in an irregular patch. Temperature controls the initial delay; rain and temperature also favour some diseases.
+3. A new infection starts at a low attack level and progresses each day. It remains hidden until it begins to damage the crop; before then, only the Disease Risk map and preventive advice can warn you that conditions are favourable.
 4. Fungicide can prevent or slow supported diseases and protect sprayed crop, but it never restores destroyed crop or cleans a field that is already affected.
-5. Harvest ends the active outbreak. A crop that stayed healthy adds nothing new to the field; a crop that was affected may increase the risk for future sensitive crops.
+5. Harvest ends the active outbreak. A crop that was never infected adds nothing new to the field; even an infection harvested before visible damage may leave a low future risk.
 
 ## Treatments
 
@@ -70,11 +71,11 @@ Cover crops (oilseed radish, flowering catch crop) add an estimated flat +25 kg 
 ## Interface
 
 - **Crop Rotation tab** in the InGame Menu (ESC), with Agronomy and Planning views
-- **Field monitoring**: current crop, growth stage, required soil work, weeds, active disease with its treatment, nitrogen and pH (Precision Farming's real maps when installed, vanilla fallback otherwise)
+- **Field monitoring**: current crop, growth stage, required soil work, weeds, detected disease with its treatment, nitrogen and pH (Precision Farming's real maps when installed, vanilla fallback otherwise)
 - **Disease map**: 3 toggle-able views on the existing in-game map (infected fields, disease risk, treated-ground coverage), all colour-blind safe
-- **On-foot HUD**: rotation history and active disease under your feet, plus a treatment line when standing on protected ground
+- **On-foot HUD**: rotation history and detected disease under your feet, plus a treatment line when standing on protected ground
 - **Weather forecast card**: the menu header shows the next relevant weather event so you can time your spraying
-- **Full multiplayer sync**: server-authoritative history, plans, active disease and remaining field risk; debounced broadcast, full sync on menu open or join, server-side validation of client plan edits, savegame persistence
+- **Full multiplayer sync**: server-authoritative history, plans, detected disease and remaining field risk; debounced broadcast, full sync on menu open or join, server-side validation of client plan edits, savegame persistence
 - **27 languages**
 
 ## Installation
@@ -95,12 +96,12 @@ Search for "Realistic Crop Rotation" on the official [Farming Simulator ModHub](
 
 1. InGame Menu (ESC) > **Crop Rotation** tab > **Planning**
 2. Select a field in the sidebar to see its plan and rotation grade
-3. Pick a year slot and assign a crop, and optionally a cover crop, from the calendar
+3. Pick a year slot and assign a crop or fallow year, and optionally a cover crop, from the calendar
 4. Follow the per-field advice to avoid family and disease return-interval penalties
 
 ### Managing disease risk
 
-1. Open the **Diseases** map to distinguish active outbreaks from fields where the current crop is at risk
+1. Open the **Diseases** map to distinguish detected outbreaks from fields where the current crop is at risk
 2. Use the planner's complete repeating cycle to keep sensitive crops apart; its last slot is always checked against its first
 3. Watch the weather because some diseases can still start on a field that has never been affected
 4. Spray early: treatment can prevent or slow damage, but it never repairs destroyed crop or cleans an already affected field
