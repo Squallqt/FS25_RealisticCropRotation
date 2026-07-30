@@ -1360,7 +1360,7 @@ function RealisticCropRotationDisease:consoleInfect(farmlandId, groupName, sever
     local value = tonumber(severity) or RealisticCropRotationDisease.INITIAL_SEVERITY
     value = math.max(0, math.min(1, value))
 
-    local cropName = self.manager:getActiveCropInfo(id)
+    local cropName, fruitTypeIndex = self.manager:getActiveCropInfo(id)
 
     -- Debug tool: forcing stays permissive (infects even a non-host crop), but warns the tester it's an artificial infection.
     local warning = ""
@@ -1378,9 +1378,21 @@ function RealisticCropRotationDisease:consoleInfect(farmlandId, groupName, sever
     }
     self.crop[id] = cropName
 
-    -- Paints map presence, then applies real destruction if severity already clears the threshold.
-    paintInfectionPresence(self.grid, self.manager:getFieldRegion(id), group, self.state[id][group].seed)
-    self:propagate(id)
+    -- Paints map presence, then applies destruction at the exact forced attack level without advancing a disease day.
+    local region = self.manager:getFieldRegion(id)
+    paintInfectionPresence(self.grid, region, group, self.state[id][group].seed)
+    local curve = self:getCurve(group)
+    if value >= curve.destroySeverity then
+        local activeDesc = fruitTypeIndex ~= nil and g_fruitTypeManager ~= nil
+            and g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex) or nil
+        local treatment = self:getTreatment(group)
+        local protectionMapId = nil
+        if treatment == "FUNGICIDE" then protectionMapId = self.grid.fungicideProtectionMapId
+        elseif treatment == "NEMATICIDE" then protectionMapId = self.grid.nematicideProtectionMapId end
+        destroyCropField(region, activeDesc, id, self.state[id][group].seed, value, curve,
+            self.grid, protectionMapId, self.manager)
+        self.manager:invalidateActiveCropCache(id)
+    end
 
     requestDiseaseConsoleBroadcast()
     return warning .. string.format("Forced %s infection on farmland %d (attack level %.3f)", group, id, value)
