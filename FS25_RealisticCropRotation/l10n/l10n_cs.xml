@@ -14,7 +14,7 @@
         <e k="rcr_tab_planning"         v="规划" />
         <e k="rcr_section_disease_map"     v="疾病" />
         <e k="rcr_disease_sub_infections" v="受感染地块" />
-        <e k="rcr_disease_sub_pressure"   v="病害压力" />
+        <e k="rcr_disease_sub_pressure"   v="病害风险" />
         <e k="rcr_disease_sub_treatment"  v="防治" />
         <e k="rcr_disease_risk_low"       v="低" />
         <e k="rcr_disease_risk_moderate"  v="中" />
@@ -117,23 +117,23 @@
         <e k="rcr_advice_afterRoot" v="种植块根作物后，需间隔四年再种块根，随后种谷物以在晚收后重建土壤结构。" />
         <e k="rcr_advice_afterVegetable" v="种植蔬菜后，需间隔三年再重复，以谷物作为干净的轮换间隔。" />
         <e k="rcr_advice_afterForage" v="短期草地之后，谷物可利用草皮下积累的肥力与结构。" />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病压力高，若在3年内让油菜、芥菜、向日葵、大豆、豌豆、菜豆、马铃薯或胡萝卜轮作回归，压力仍然居高不下；杀菌剂能延缓发病并锁定已喷施地块的损失，但不会让病害消退。" />
-        <e k="rcr_advice_pressure_high_bcn"           v="线虫压力高，若在3年内让甜菜、红甜菜、油菜、芥菜或菠菜轮作回归，压力仍然居高不下；杀线虫剂能在已喷施地块保住收成三个月。" />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病压力中等，拉开寄主作物的间隔，降雨会抬高风险。" />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="线虫压力中等，拉开甜菜与十字花科作物的间隔。" />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病风险高：油菜、芥菜、向日葵、大豆、豌豆、菜豆、马铃薯和胡萝卜至少间隔3年；杀菌剂可限制已喷施区域的损失，但不会清除地块中的病害。" />
+        <e k="rcr_advice_pressure_high_bcn"           v="线虫风险高：甜菜、红甜菜、油菜、芥菜和菠菜至少间隔3年；杀线虫剂可保护已喷施区域，但不会清除线虫。" />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病风险中等：拉开油菜、芥菜、向日葵、大豆、豌豆、菜豆、马铃薯和胡萝卜的种植间隔；降雨会提高风险。" />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="线虫风险中等：拉开甜菜、红甜菜、油菜、芥菜和菠菜的种植间隔。" />
         <e k="rcr_advice_no_current_crop" v="当前无主要作物: 检测到作物后将提供建议。" />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="轮作良好" />
         <e k="rcr_advice_title_warning" v="轮作冲突" />
         <e k="rcr_advice_title_outbreak" v="活跃感染" />
-        <e k="rcr_advice_outbreak" v="%s正在此地块活跃，严重程度%d%%。建议处理方式：%s。" />
+        <e k="rcr_advice_outbreak" v="%s正在此地块发病，受害程度%d%%。建议处理：%s。" />
         <e k="rcr_advice_plan_next_conflict_family" v="%s计划种植于%s：轮作冲突，与当前作物同科（%s），距离安全轮作还差%d年（共需%d年）。" />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s计划种植于%s：轮作冲突，与当前作物共享%s风险，距离安全轮作还差%d年（共需%d年）。" />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s计划种植于%s：轮作冲突。它和当前作物可能感染同一种病害（%s），还需等待%d年（建议间隔%d年）。" />
         <e k="rcr_advice_plan_next_ok" v="%s计划种植于%s：选择得当，未检测到轮作冲突。" />
         <e k="rcr_advice_title_fallow" v="休耕年" />
-        <e k="rcr_advice_fallow_current" v="正在休耕：土壤得到休养，病害因缺少寄主而逐渐减弱。" />
-        <e k="rcr_advice_plan_next_fallow" v="计划于%s休耕：作为一个休耕年，土壤得到休养，病害循环在种植下一季作物前被打断。" />
+        <e k="rcr_advice_fallow_current" v="正在休耕：今年不种植主要作物。这会延长下一次种植易感作物前的间隔，但不会立即清除病害。" />
+        <e k="rcr_advice_plan_next_fallow" v="计划于%s休耕：一年内不种植主要作物。这会延长下一次种植易感作物前的间隔，但不能保证所有病害都已消失。" />
 
         <!-- Advice card, disease pressure list -->
 
@@ -213,19 +213,19 @@
         <e k="rcr_fillType_nematicide" v="杀线虫剂" />
         <e k="rcr_disease_treatment_none" v="无防治" />
         <e k="rcr_disease_treatment_clubroot" v="无（仅靠轮作）" />
-        <e k="rcr_advice_pressure_high_phoma" v="黑胫病压力高，若在4年内让油菜或芥菜轮作回归，压力仍然居高不下；杀菌剂能延缓发病并锁定已喷施地块的损失，不会让病害消退。" />
-        <e k="rcr_advice_pressure_high_takeall" v="全蚀病压力高，插入一茬非寄主作物（燕麦、豆科、油料作物）；没有任何药剂能防护这种病害，只有轮作才能降低压力。" />
-        <e k="rcr_advice_pressure_high_septoria" v="壳针孢病压力高，谷物残留物可能增加压力；降雨会提高即时风险，杀菌剂可限制已喷施地块的损失。" />
-        <e k="rcr_advice_pressure_high_rust" v="锈病压力高，温暖潮湿的天气会提高即时风险，杀菌剂可限制已喷施地块的损失。" />
-        <e k="rcr_advice_pressure_high_fusarium" v="镰刀菌病压力高，避免玉米后种小麦，减少连续种植谷物；杀菌剂能延缓发病并锁定已喷施地块的损失，降雨会加快流行。" />
-        <e k="rcr_advice_pressure_high_lateblight" v="晚疫病压力高，凉爽潮湿的天气会提高即时风险，杀菌剂可限制已喷施地块的损失。" />
-        <e k="rcr_advice_pressure_high_clubroot" v="根肿病压力高，尽量拉长油菜和芥菜的间隔；没有任何药剂能防护这种病害，只有轮作才有效。" />
-        <e k="rcr_advice_pressure_moderate_phoma" v="黑胫病压力中等，拉长油菜和芥菜的间隔。" />
-        <e k="rcr_advice_pressure_moderate_takeall" v="全蚀病压力中等，避免连续第三茬谷物。" />
-        <e k="rcr_advice_pressure_moderate_septoria" v="壳针孢病压力中等，谷物残留物可能增加压力；降雨会提高即时风险。" />
-        <e k="rcr_advice_pressure_moderate_rust" v="锈病压力中等，温暖潮湿的天气会提高即时风险。" />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="镰刀菌病压力中等，拉开谷物与玉米的间隔。" />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="晚疫病压力中等，凉爽潮湿的天气会提高即时风险。" />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="根肿病压力中等，拉长油菜和芥菜的间隔。" />
+        <e k="rcr_advice_pressure_high_phoma" v="黑胫病风险高：油菜和芥菜至少间隔4年；杀菌剂可限制已喷施区域的损失，但不会清除地块中的病害。" />
+        <e k="rcr_advice_pressure_high_takeall" v="全蚀病风险高：在谷物之间种植燕麦、豆科或油料作物；没有药剂能防治这种病害，延长轮作间隔可降低风险。" />
+        <e k="rcr_advice_pressure_high_septoria" v="壳针孢病风险高：降雨会提高近期发病风险，杀菌剂可限制已喷施区域的损失。" />
+        <e k="rcr_advice_pressure_high_rust" v="锈病风险高：温暖潮湿的天气会提高近期发病风险，杀菌剂可限制已喷施区域的损失。" />
+        <e k="rcr_advice_pressure_high_fusarium" v="镰刀菌病风险高：避免玉米后种小麦，并减少连续种植谷物；杀菌剂可限制已喷施区域的损失，降雨会提高风险。" />
+        <e k="rcr_advice_pressure_high_lateblight" v="晚疫病风险高：凉爽潮湿的天气会提高近期发病风险，杀菌剂可限制已喷施区域的损失。" />
+        <e k="rcr_advice_pressure_high_clubroot" v="根肿病风险高：尽量拉长油菜和芥菜的种植间隔；没有药剂能防治这种病害，延长轮作间隔可降低风险。" />
+        <e k="rcr_advice_pressure_moderate_phoma" v="黑胫病风险中等：拉长油菜和芥菜的种植间隔。" />
+        <e k="rcr_advice_pressure_moderate_takeall" v="全蚀病风险中等：避免连续第三茬种植谷物。" />
+        <e k="rcr_advice_pressure_moderate_septoria" v="壳针孢病风险中等：降雨会提高近期发病风险。" />
+        <e k="rcr_advice_pressure_moderate_rust" v="锈病风险中等：温暖潮湿的天气会提高近期发病风险。" />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="镰刀菌病风险中等：拉开谷物和玉米的种植间隔。" />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="晚疫病风险中等：凉爽潮湿的天气会提高近期发病风险。" />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="根肿病风险中等：拉长油菜和芥菜的种植间隔。" />
     </elements>
 </l10n>

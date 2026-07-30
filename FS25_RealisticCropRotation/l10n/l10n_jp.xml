@@ -14,7 +14,7 @@
         <e k="rcr_tab_planning"         v="計画" />
         <e k="rcr_section_disease_map"     v="病害" />
         <e k="rcr_disease_sub_infections" v="感染中の畑" />
-        <e k="rcr_disease_sub_pressure"   v="病害圧" />
+        <e k="rcr_disease_sub_pressure"   v="病害リスク" />
         <e k="rcr_disease_sub_treatment"  v="防除" />
         <e k="rcr_disease_risk_low"       v="低" />
         <e k="rcr_disease_risk_moderate"  v="中" />
@@ -117,23 +117,23 @@
         <e k="rcr_advice_afterRoot" v="根菜の後は、根菜が戻るまで4年あけ、遅い収穫の後に土壌構造を回復させるため穀物を続けてください。" />
         <e k="rcr_advice_afterVegetable" v="野菜の後は、繰り返す前に3年あけ、穀物をきれいな区切りとしてください。" />
         <e k="rcr_advice_afterForage" v="短期草地の後は、穀物が芝の下に蓄えられた地力と構造を活用します。" />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病の圧力が高い。ナタネ、カラシナ、ヒマワリ、ダイズ、エンドウ、インゲン、ジャガイモ、ニンジンが3年以内に戻ると圧力は高いまま。殺菌剤は発病を遅らせ、散布した場所の被害を食い止めるが、病気を後退させはしない。" />
-        <e k="rcr_advice_pressure_high_bcn"           v="センチュウの圧力が高い。テンサイ、ビート、ナタネ、カラシナ、ホウレンソウが3年以内に戻ると圧力は高いまま。殺線虫剤は散布した場所の収穫を3か月間守る。" />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病の圧力は中程度。宿主作物の間隔をあける。降雨はリスクを高める。" />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="センチュウの圧力は中程度。テンサイとアブラナ科の間隔をあける。" />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病のリスクが高い。ナタネ、カラシナ、ヒマワリ、ダイズ、エンドウ、インゲン、ジャガイモ、ニンジンの栽培間隔を3年以上あける。殺菌剤は散布した場所の被害を抑えるが、畑から病気を取り除くことはできない。" />
+        <e k="rcr_advice_pressure_high_bcn"           v="センチュウのリスクが高い。テンサイ、ビート、ナタネ、カラシナ、ホウレンソウの栽培間隔を3年以上あける。殺線虫剤は処理した場所を守るが、センチュウを取り除くことはできない。" />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病のリスクは中程度。ナタネ、カラシナ、ヒマワリ、ダイズ、エンドウ、インゲン、ジャガイモ、ニンジンの栽培間隔をあける。降雨はリスクを高める。" />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="センチュウのリスクは中程度。テンサイ、ビート、ナタネ、カラシナ、ホウレンソウの栽培間隔をあける。" />
         <e k="rcr_advice_no_current_crop" v="現在の主要作物なし: 作物が検出されるとアドバイスが表示されます。" />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="輪作良好" />
         <e k="rcr_advice_title_warning" v="輪作の衝突" />
         <e k="rcr_advice_title_outbreak" v="感染が発生中" />
-        <e k="rcr_advice_outbreak" v="%sがこの畑で発生中。重症度%d%%。推奨される対処：%s。" />
+        <e k="rcr_advice_outbreak" v="%sがこの畑で発生中。被害レベル%d%%。推奨される対処：%s。" />
         <e k="rcr_advice_plan_next_conflict_family" v="%sを%sに予定：輪作の衝突。現在の作物と同じ科（%s）のため、安全な復帰まであと%d年（必要%d年のうち）不足しています。" />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%sを%sに予定：輪作の衝突。現在の作物と%sのリスクを共有しており、安全な復帰まであと%d年（必要%d年のうち）不足しています。" />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%sを%sに予定：輪作の衝突。現在の作物にも同じ病害（%s）が発生する可能性があります。あと%d年不足しています（推奨間隔%d年）。" />
         <e k="rcr_advice_plan_next_ok" v="%sを%sに予定：良い選択です。輪作の衝突は検出されませんでした。" />
         <e k="rcr_advice_title_fallow" v="休閑年" />
-        <e k="rcr_advice_fallow_current" v="休閑中：土壌が休まり、宿主作物がないため病害圧が低下します。" />
-        <e k="rcr_advice_plan_next_fallow" v="休閑を%sに予定：休閑年として土壌を休ませ、次の作物の前に病害サイクルを断ち切ります。" />
+        <e k="rcr_advice_fallow_current" v="休閑中：今年は主作物を栽培しません。次の病気にかかりやすい作物までの間隔は延びますが、病気がすぐに消えるわけではありません。" />
+        <e k="rcr_advice_plan_next_fallow" v="休閑を%sに予定：1年間は主作物を栽培しません。次の病気にかかりやすい作物までの間隔は延びますが、すべての病気が消えるとは限りません。" />
 
         <!-- Advice card, disease pressure list -->
 
@@ -213,19 +213,19 @@
         <e k="rcr_fillType_nematicide" v="殺線虫剤" />
         <e k="rcr_disease_treatment_none" v="防除なし" />
         <e k="rcr_disease_treatment_clubroot" v="なし（輪作のみ）" />
-        <e k="rcr_advice_pressure_high_phoma" v="根朽病の圧力が高い。ナタネとカラシナが4年以内に戻ると圧力は高いまま。殺菌剤は発病を遅らせ、散布した場所の被害を食い止めるが、病気を後退させはしない。" />
-        <e k="rcr_advice_pressure_high_takeall" v="立枯病の圧力が高い。非宿主作物（エンバク、マメ科、油糧作物）を挟む。この病気を防ぐ薬剤はなく、輪作だけが圧力を下げる。" />
-        <e k="rcr_advice_pressure_high_septoria" v="セプトリア病の圧力が高い。ムギ類の残さは圧力を高めることがある。降雨は直近の感染リスクを高め、殺菌剤は散布した場所の被害を抑える。" />
-        <e k="rcr_advice_pressure_high_rust" v="さび病の圧力が高い。温暖で多湿な天候は直近の感染リスクを高め、殺菌剤は散布した場所の被害を抑える。" />
-        <e k="rcr_advice_pressure_high_fusarium" v="フザリウム病の圧力が高い。トウモロコシの後にコムギを作らず、ムギ類の連作を減らす。殺菌剤は発病を遅らせ、散布した場所の被害を食い止め、降雨は流行を早める。" />
-        <e k="rcr_advice_pressure_high_lateblight" v="疫病の圧力が高い。冷涼で多湿な天候は直近の感染リスクを高め、殺菌剤は散布した場所の被害を抑える。" />
-        <e k="rcr_advice_pressure_high_clubroot" v="根こぶ病の圧力が高い。ナタネとカラシナの間隔をできるだけ延ばす。この病気を防ぐ薬剤はなく、輪作だけが効く。" />
-        <e k="rcr_advice_pressure_moderate_phoma" v="根朽病の圧力は中程度。ナタネとカラシナの間隔を延ばす。" />
-        <e k="rcr_advice_pressure_moderate_takeall" v="立枯病の圧力は中程度。3作連続のムギ類を避ける。" />
-        <e k="rcr_advice_pressure_moderate_septoria" v="セプトリア病の圧力は中程度。ムギ類の残さは圧力を高めることがある。降雨は直近の感染リスクを高める。" />
-        <e k="rcr_advice_pressure_moderate_rust" v="さび病の圧力は中程度。温暖で多湿な天候は直近の感染リスクを高める。" />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="フザリウム病の圧力は中程度。ムギ類とトウモロコシの間隔をあける。" />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="疫病の圧力は中程度。冷涼で多湿な天候は直近の感染リスクを高める。" />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="根こぶ病の圧力は中程度。ナタネとカラシナの間隔を延ばす。" />
+        <e k="rcr_advice_pressure_high_phoma" v="根朽病のリスクが高い。ナタネとカラシナの栽培間隔を4年以上あける。殺菌剤は散布した場所の被害を抑えるが、畑から病気を取り除くことはできない。" />
+        <e k="rcr_advice_pressure_high_takeall" v="立枯病のリスクが高い。ムギ類の間にエンバク、マメ科、油糧作物を栽培する。この病気を防ぐ薬剤はなく、輪作間隔を延ばすことでリスクが下がる。" />
+        <e k="rcr_advice_pressure_high_septoria" v="セプトリア病のリスクが高い。降雨は直近の発病リスクを高め、殺菌剤は散布した場所の被害を抑える。" />
+        <e k="rcr_advice_pressure_high_rust" v="さび病のリスクが高い。温暖で多湿な天候は直近の発病リスクを高め、殺菌剤は散布した場所の被害を抑える。" />
+        <e k="rcr_advice_pressure_high_fusarium" v="フザリウム病のリスクが高い。トウモロコシの後にコムギを作らず、ムギ類の連作を減らす。殺菌剤は散布した場所の被害を抑え、降雨はリスクを高める。" />
+        <e k="rcr_advice_pressure_high_lateblight" v="疫病のリスクが高い。冷涼で多湿な天候は直近の発病リスクを高め、殺菌剤は散布した場所の被害を抑える。" />
+        <e k="rcr_advice_pressure_high_clubroot" v="根こぶ病のリスクが高い。ナタネとカラシナの栽培間隔をできるだけ延ばす。この病気を防ぐ薬剤はなく、輪作間隔を延ばすことでリスクが下がる。" />
+        <e k="rcr_advice_pressure_moderate_phoma" v="根朽病のリスクは中程度。ナタネとカラシナの栽培間隔を延ばす。" />
+        <e k="rcr_advice_pressure_moderate_takeall" v="立枯病のリスクは中程度。ムギ類の3作連続栽培を避ける。" />
+        <e k="rcr_advice_pressure_moderate_septoria" v="セプトリア病のリスクは中程度。降雨は直近の発病リスクを高める。" />
+        <e k="rcr_advice_pressure_moderate_rust" v="さび病のリスクは中程度。温暖で多湿な天候は直近の発病リスクを高める。" />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="フザリウム病のリスクは中程度。ムギ類とトウモロコシの栽培間隔をあける。" />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="疫病のリスクは中程度。冷涼で多湿な天候は直近の発病リスクを高める。" />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="根こぶ病のリスクは中程度。ナタネとカラシナの栽培間隔を延ばす。" />
     </elements>
 </l10n>

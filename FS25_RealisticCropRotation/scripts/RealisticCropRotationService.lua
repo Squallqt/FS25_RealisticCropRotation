@@ -23,8 +23,8 @@ function RealisticCropRotationService:reset()
     self.cropNameByFruitTypeIndex = {}
 end
 
----Converts a legacy state change into kg N/ha.
--- @param number stateChange Number of legacy states
+---Converts a configured nitrogen state change into kg N/ha.
+-- @param number stateChange Number of nitrogen states
 -- @return number kgPerHa
 function RealisticCropRotationService:getNitrogenKgPerHaFromStateChange(stateChange)
     return (stateChange or 0) * RealisticCropRotationService.PF_STATE_PER_UNIT

@@ -14,7 +14,7 @@
         <e k="rcr_tab_planning"         v="Tervezés" />
         <e k="rcr_section_disease_map"     v="Betegségek" />
         <e k="rcr_disease_sub_infections" v="Fertőzött táblák" />
-        <e k="rcr_disease_sub_pressure"   v="Betegségnyomás" />
+        <e k="rcr_disease_sub_pressure"   v="Betegségkockázat" />
         <e k="rcr_disease_sub_treatment"  v="Kezelések" />
         <e k="rcr_disease_risk_low"       v="Alacsony" />
         <e k="rcr_disease_risk_moderate"  v="Mérsékelt" />
@@ -117,23 +117,23 @@
         <e k="rcr_advice_afterRoot" v="Kapásnövény után várj négy évet a kapások visszatéréséig, majd gabonát a szerkezet helyreállítására a késői betakarítás után." />
         <e k="rcr_advice_afterVegetable" v="Zöldség után várj három évet az ismétlése előtt, gabonával mint tiszta megszakítás." />
         <e k="rcr_advice_afterForage" v="Ideiglenes gyep után a gabona hasznosítja a gyep alatt felhalmozott termékenységet és szerkezetet." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Erős fehérpenész-nyomás: ha a repce, mustár, napraforgó, szója, borsó, bab, burgonya vagy sárgarépa 3 éven belül visszatér, a nyomás magas marad; a gombaölő szer lassítja a fellépést és befagyasztja a kárt a permetezett részeken, de a betegséget nem szorítja vissza." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Erős fonálféreg-nyomás: ha a cukorrépa, cékla, repce, mustár vagy spenót 3 éven belül visszatér, a nyomás magas marad; a fonálféregölő szer 3 hónapon át megmenti a termést a permetezett részeken." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Mérsékelt fehérpenész-nyomás: ritkítsa a gazdanövényeket, az eső növeli a kockázatot." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Mérsékelt fonálféreg-nyomás: ritkítsa a répát és a keresztesvirágúakat." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Magas fehérpenész-kockázat: a repce, mustár, napraforgó, szója, borsó, bab, burgonya és sárgarépa között tartson legalább 3 év szünetet; a gombaölő szer mérsékli a kárt a permetezett részeken, de nem távolítja el a betegséget a tábláról." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Magas fonálféreg-kockázat: a cukorrépa, cékla, repce, mustár és spenót között tartson legalább 3 év szünetet; a fonálféregölő szer védi a kezelt területet, de nem távolítja el a fonálférgeket." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Mérsékelt fehérpenész-kockázat: ritkítsa a repcét, mustárt, napraforgót, szóját, borsót, babot, burgonyát és sárgarépát; az eső növeli a kockázatot." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Mérsékelt fonálféreg-kockázat: ritkítsa a cukorrépát, céklát, repcét, mustárt és spenótot." />
         <e k="rcr_advice_no_current_crop" v="Nincs jelenlegi főnövény: a tanács elérhető, ha növényt észlel." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Vetésforgó rendben" />
         <e k="rcr_advice_title_warning" v="Vetésforgó-ütközés" />
         <e k="rcr_advice_title_outbreak" v="Aktív fertőzés" />
-        <e k="rcr_advice_outbreak" v="%s aktív ezen a táblán, súlyosság %d %%. Javasolt kezelés: %s." />
+        <e k="rcr_advice_outbreak" v="%s aktív ezen a táblán, a fertőzés mértéke %d %%. Javasolt kezelés: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s tervezve ide: %s, vetésforgó-ütközés: ugyanaz a család (%s), mint a jelenlegi növény; még %d év hiányzik a szükséges %d évből a biztonságos visszatéréshez." />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s tervezve ide: %s, vetésforgó-ütközés: megosztja a(z) %s kockázatát a jelenlegi növénnyel; még %d év hiányzik a szükséges %d évből a biztonságos visszatéréshez." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s tervezve ide: %s, vetésforgó-ütközés. Ugyanaz a betegség (%s) a jelenlegi növényt is érintheti; még %d év hiányzik az ajánlott %d éves időközből." />
         <e k="rcr_advice_plan_next_ok" v="%s tervezve ide: %s, jó választás, nincs vetésforgó-ütközés." />
         <e k="rcr_advice_title_fallow" v="Pihentető év" />
-        <e k="rcr_advice_fallow_current" v="Ugar folyamatban: a talaj pihen, és gazdanövény hiányában csökken a betegségnyomás." />
-        <e k="rcr_advice_plan_next_fallow" v="Ugar tervezve erre: %s: pihentető év, amely során a talaj pihen, és a betegségciklus megszakad a következő növény előtt." />
+        <e k="rcr_advice_fallow_current" v="Ugar folyamatban: idén nincs főnövény. Ez több időt hagy a következő érzékeny növény előtt, de nem távolítja el azonnal a betegséget." />
+        <e k="rcr_advice_plan_next_fallow" v="Ugar tervezve erre: %s: egy évig nem lesz főnövény. Ez több időt hagy a következő érzékeny növény előtt, de nem garantálja, hogy minden betegség eltűnik." />
 
         <!-- Advice card, disease pressure list -->
 
@@ -213,19 +213,19 @@
         <e k="rcr_fillType_nematicide" v="Fonálféregölő szer" />
         <e k="rcr_disease_treatment_none" v="Nincs kezelés" />
         <e k="rcr_disease_treatment_clubroot" v="Nincs (csak vetésforgó)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Erős fómás nyomás: ha a repce vagy mustár 4 éven belül visszatér, a nyomás magas marad; a gombaölő szer lassítja a fellépést és befagyasztja a kárt a permetezett részeken, de a betegséget nem szorítja vissza." />
-        <e k="rcr_advice_pressure_high_takeall" v="Erős szártőfeketedés-nyomás: iktasson be nem gazdanövény kihagyást (zab, hüvelyes, olajnövény); egyetlen szer sem véd e betegség ellen, a nyomást csak a vetésforgó csökkenti." />
-        <e k="rcr_advice_pressure_high_septoria" v="Erős szeptórianyomás: a gabonamaradványok növelhetik a nyomást; az eső növeli a közvetlen kockázatot, a gombaölő szer pedig korlátozza a kárt a permetezett részeken." />
-        <e k="rcr_advice_pressure_high_rust" v="Erős rozsdanyomás: az enyhe, nedves idő növeli a közvetlen kockázatot, a gombaölő szer pedig korlátozza a kárt a permetezett részeken." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Erős fuzáriózis-nyomás: ne termesszen búzát kukorica után, és vessen kevesebb gabonát egymás után; a gombaölő szer lassítja a fellépést és befagyasztja a kárt a permetezett részeken, az eső pedig gyorsítja a járványt." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Erős burgonyavész-nyomás: a hűvös, nedves idő növeli a közvetlen kockázatot, a gombaölő szer pedig korlátozza a kárt a permetezett részeken." />
-        <e k="rcr_advice_pressure_high_clubroot" v="Erős gyökérgolyva-nyomás: nyújtsa a lehető leghosszabbra a repce és a mustár visszatérését; egyetlen szer sem véd e betegség ellen, csak a vetésforgó segít." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Mérsékelt fómás nyomás: nyújtsa meg a repce és a mustár visszatérését." />
-        <e k="rcr_advice_pressure_moderate_takeall" v="Mérsékelt szártőfeketedés-nyomás: kerülje a sorban harmadik gabonát." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Mérsékelt szeptórianyomás: a gabonamaradványok növelhetik a nyomást; az eső növeli a közvetlen kockázatot." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Mérsékelt rozsdanyomás: az enyhe, nedves idő növeli a közvetlen kockázatot." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="Mérsékelt fuzáriózis-nyomás: ritkítsa a gabonaféléket és a kukoricát." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Mérsékelt burgonyavész-nyomás: a hűvös, nedves idő növeli a közvetlen kockázatot." />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="Mérsékelt gyökérgolyva-nyomás: nyújtsa meg a repce és a mustár visszatérését." />
+        <e k="rcr_advice_pressure_high_phoma" v="Magas fómás betegségkockázat: a repce és mustár között tartson legalább 4 év szünetet; a gombaölő szer mérsékli a kárt a permetezett részeken, de nem távolítja el a betegséget a tábláról." />
+        <e k="rcr_advice_pressure_high_takeall" v="Magas szártőfeketedés-kockázat: a gabonák közé iktasson zabot, hüvelyest vagy olajnövényt; e betegség ellen nincs védő készítmény, a hosszabb vetésforgó csökkenti a kockázatot." />
+        <e k="rcr_advice_pressure_high_septoria" v="Magas szeptóriakockázat: az eső növeli a közvetlen kockázatot, a gombaölő szer pedig mérsékli a kárt a permetezett részeken." />
+        <e k="rcr_advice_pressure_high_rust" v="Magas rozsdakockázat: az enyhe, nedves idő növeli a közvetlen kockázatot, a gombaölő szer pedig mérsékli a kárt a permetezett részeken." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Magas fuzárióziskockázat: ne termesszen búzát kukorica után, és ritkítsa az egymást követő gabonákat; a gombaölő szer mérsékli a kárt a permetezett részeken, az eső pedig növeli a kockázatot." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Magas burgonyavész-kockázat: a hűvös, nedves idő növeli a közvetlen kockázatot, a gombaölő szer pedig mérsékli a kárt a permetezett részeken." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Magas gyökérgolyva-kockázat: nyújtsa a lehető leghosszabbra a repce és a mustár közötti szünetet; e betegség ellen nincs védő készítmény, a hosszabb vetésforgó csökkenti a kockázatot." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Mérsékelt fómás betegségkockázat: nyújtsa meg a repce és a mustár közötti szünetet." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Mérsékelt szártőfeketedés-kockázat: kerülje a sorban harmadik gabonát." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Mérsékelt szeptóriakockázat: az eső növeli a közvetlen kockázatot." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Mérsékelt rozsdakockázat: az enyhe, nedves idő növeli a közvetlen kockázatot." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Mérsékelt fuzárióziskockázat: ritkítsa a gabonaféléket és a kukoricát." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Mérsékelt burgonyavész-kockázat: a hűvös, nedves idő növeli a közvetlen kockázatot." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Mérsékelt gyökérgolyva-kockázat: nyújtsa meg a repce és a mustár közötti szünetet." />
     </elements>
 </l10n>

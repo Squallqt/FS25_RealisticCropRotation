@@ -4,16 +4,16 @@ RealisticCropRotationDisease = {}
 local RealisticCropRotationDisease_mt = Class(RealisticCropRotationDisease)
 
 RealisticCropRotationDisease.INFECTION_SCALE = 0.6  -- infection probability = load * this * weatherMod
-RealisticCropRotationDisease.RAIN_BONUS = 1.6       -- fungal diseases (SCLEROTINIA) are amplified by rain
+RealisticCropRotationDisease.RAIN_BONUS = 1.6       -- weather-driven diseases are amplified by rain
 RealisticCropRotationDisease.INOCULUM_FLOOR = RealisticCropRotationDiseaseModel.INOCULUM_FLOOR
 RealisticCropRotationDisease.INITIAL_SEVERITY = 0.10
 -- Per-pathogen rates come from cropConfig; these are fallbacks, calibrated at REFERENCE_DAYS_PER_PERIOD and rescaled by periodScale.
 RealisticCropRotationDisease.REFERENCE_DAYS_PER_PERIOD = 9 -- calibration baseline for the day-based constants below
 RealisticCropRotationDisease.DEFAULT_DAILY_GROWTH = 0.04 -- severity gained per in-game day at the reference (fallback)
 RealisticCropRotationDisease.DESTROY_SEVERITY = 0.25 -- latent period: damage only above this (fallback)
-RealisticCropRotationDisease.LOAD_SPEED_GAIN = 1.0  -- heavy soil inoculum speeds the epidemic (x1..x2 by load)
+RealisticCropRotationDisease.LOAD_SPEED_GAIN = 1.0  -- stronger effective pressure speeds the epidemic (x1..x2 by load)
 RealisticCropRotationDisease.INCUBATION_DAYS = 3    -- warm-weather latent period before severity climbs, at the reference
--- Fungal favourability by temperature (Celsius): full speed on the optimal plateau, tapering to a floor at frost/heat.
+-- Temperature response (Celsius): weather-driven growth and every incubation use the same optimal plateau and frost/heat floor.
 RealisticCropRotationDisease.TEMP_MIN = 3           -- at/below: coldest favourability (TEMP_FLOOR)
 RealisticCropRotationDisease.TEMP_OPT_LOW = 10
 RealisticCropRotationDisease.TEMP_OPT_HIGH = 25
@@ -502,7 +502,7 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId)
     local windows = (RealisticCropRotation.cropConfig and RealisticCropRotation.cropConfig.diseaseWindows) or {}
     local raining = isRaining()
     local temperature = currentTemperature()
-    -- Fungicide-treated ground share, resolved once, lazily (only fungal-fungicide groups read it).
+    -- Fungicide-treated ground share, resolved once and only when a FUNGICIDE group needs it.
     local fungicideCoverage = nil
     for group, load in pairs(effectiveLoadForCrop(self, farmlandId, cropName)) do
         if hostGroups[group] then
@@ -770,7 +770,7 @@ function RealisticCropRotationDisease:propagate(farmlandId)
         activeDesc = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
     end
 
-    -- A foyer ends with its crop; its final severity is deposited before active state is cleared.
+    -- An outbreak ends with its crop; its final severity is deposited before active state is cleared.
     if hostCropName == nil then
         local standing = mgr:getPendingHistoryCrop(farmlandId)
         if standing == nil then
@@ -787,7 +787,7 @@ function RealisticCropRotationDisease:propagate(farmlandId)
     -- dailyGrowth is calibrated at REFERENCE_DAYS_PER_PERIOD; dividing by periodScale keeps it constant across season-length configs.
     local scale = periodScale()
     local destructionAttempted = false
-    -- Fungicide-treated ground share, resolved once, lazily (only fungal-fungicide groups read it).
+    -- Fungicide-treated ground share, resolved once and only when a FUNGICIDE group needs it.
     local fungicideCoverage = nil
 
     for group, s in pairs(groups) do
@@ -799,7 +799,7 @@ function RealisticCropRotationDisease:propagate(farmlandId)
             -- Severity climbs only under a living host.
             s.incubation = nil
             local curve = self:getCurve(group)
-            -- Rain + temperature drive fungal speed; heavier soil inoculum accelerates the epidemic.
+            -- Weather drives sensitive groups; stronger effective pressure accelerates the epidemic.
             local loadSpeed = 1 + RealisticCropRotationDisease.LOAD_SPEED_GAIN * math.min(1, loads[group] or 0)
             local growth = (curve.dailyGrowth / scale) * weatherModifier(raining, temperature, group) * loadSpeed
             -- Curative fungicide freezes the climb in proportion to the treated area; other families are unaffected.
@@ -1129,7 +1129,6 @@ function RealisticCropRotationDisease:saveToXML(savegamePath)
     local xmlFile = createXMLFile("rcrDisease", savegamePath .. "realisticCropRotationDisease.xml", "realisticCropRotationDisease")
     if xmlFile == nil or xmlFile == 0 then return end
 
-    setXMLInt(xmlFile, "realisticCropRotationDisease#reservoirVersion", 1)
     if self.lastReservoirYear ~= nil then
         setXMLInt(xmlFile, "realisticCropRotationDisease#lastReservoirYear",
             math.floor(tonumber(self.lastReservoirYear) or 0))
@@ -1175,15 +1174,8 @@ function RealisticCropRotationDisease:loadFromXML(savegamePath)
     self.state, self.crop, self.growth, self.reservoir = {}, {}, {}, {}
     local environment = g_currentMission ~= nil and g_currentMission.environment or nil
     local currentYear = environment ~= nil and tonumber(environment.currentYear) or nil
-    local reservoirVersion =
-        getXMLInt(xmlFile, "realisticCropRotationDisease#reservoirVersion") or 0
-    if reservoirVersion >= 1 then
-        self.lastReservoirYear =
-            getXMLInt(xmlFile, "realisticCropRotationDisease#lastReservoirYear") or currentYear
-    else
-        -- Beta 4 migration: preserve active outbreaks, start local reservoirs clean.
-        self.lastReservoirYear = currentYear
-    end
+    self.lastReservoirYear =
+        getXMLInt(xmlFile, "realisticCropRotationDisease#lastReservoirYear") or currentYear
 
     local fi = 0
     while true do
@@ -1209,21 +1201,19 @@ function RealisticCropRotationDisease:loadFromXML(savegamePath)
                 gi = gi + 1
             end
 
-            if reservoirVersion >= 1 then
-                local ri = 0
-                while true do
-                    local rKey = string.format("%s.reservoir(%d)", fKey, ri)
-                    if not hasXMLProperty(xmlFile, rKey) then break end
-                    local name = getXMLString(xmlFile, rKey .. "#name")
-                    local load = RealisticCropRotationDiseaseModel.normalizeLoad(
-                        getXMLFloat(xmlFile, rKey .. "#load"),
-                        RealisticCropRotationDisease.INOCULUM_FLOOR)
-                    if name ~= nil and name ~= "" and load > 0 then
-                        self.reservoir[id] = self.reservoir[id] or {}
-                        self.reservoir[id][string.upper(tostring(name))] = load
-                    end
-                    ri = ri + 1
+            local ri = 0
+            while true do
+                local rKey = string.format("%s.reservoir(%d)", fKey, ri)
+                if not hasXMLProperty(xmlFile, rKey) then break end
+                local name = getXMLString(xmlFile, rKey .. "#name")
+                local load = RealisticCropRotationDiseaseModel.normalizeLoad(
+                    getXMLFloat(xmlFile, rKey .. "#load"),
+                    RealisticCropRotationDisease.INOCULUM_FLOOR)
+                if name ~= nil and name ~= "" and load > 0 then
+                    self.reservoir[id] = self.reservoir[id] or {}
+                    self.reservoir[id][string.upper(tostring(name))] = load
                 end
+                ri = ri + 1
             end
         end
         fi = fi + 1
@@ -1236,9 +1226,9 @@ function RealisticCropRotationDisease:registerConsoleCommands()
     if self.consoleCommandsRegistered or type(addConsoleCommand) ~= "function" then return end
 
     addConsoleCommand("rcrDisease", "Print Realistic Crop Rotation disease state", "consoleDump", self, "[farmlandId]")
-    addConsoleCommand("rcrDiseaseInfect", "Force a disease infection: rcrDiseaseInfect <farmlandId> <group> [severity]", "consoleInfect", self, "farmlandId; group; [severity]")
+    addConsoleCommand("rcrDiseaseInfect", "Force a disease infection: rcrDiseaseInfect <farmlandId> <group> [attackLevel]", "consoleInfect", self, "farmlandId; group; [attackLevel]")
     addConsoleCommand("rcrDiseaseTick", "Run one disease update tick: rcrDiseaseTick [farmlandId]", "consoleTick", self, "[farmlandId]")
-    addConsoleCommand("rcrDiseaseClear", "Clear active disease and reservoir: rcrDiseaseClear [farmlandId]", "consoleClear", self, "[farmlandId]")
+    addConsoleCommand("rcrDiseaseClear", "Clear all disease data: rcrDiseaseClear [farmlandId]", "consoleClear", self, "[farmlandId]")
 
     self.consoleCommandsRegistered = true
 end
@@ -1326,7 +1316,7 @@ function RealisticCropRotationDisease:consoleDump(farmlandId)
 
         -- Load feeds the infection roll, pressure feeds the map, reservoir is the saved local source.
         Logging.info(
-            "[RealisticCropRotation] disease farmland=%d crop=%s growth=%s reservoir={%s} load={%s} pressure={%s} band=%d state={%s} protect={%s}",
+            "[RealisticCropRotation] disease farmland=%d crop=%s growth=%s fieldRisk={%s} effectiveRisk={%s} mapRisk={%s} riskBand=%d active={%s} protection={%s}",
             id,
             tostring(cropName),
             tostring(growthState),
@@ -1351,7 +1341,7 @@ function RealisticCropRotationDisease:consoleInfect(farmlandId, groupName, sever
 
     local id = tonumber(farmlandId)
     if id == nil or id <= 0 then
-        return "Usage: rcrDiseaseInfect <farmlandId> <group> [severity]"
+        return "Usage: rcrDiseaseInfect <farmlandId> <group> [attackLevel]"
     end
 
     local group = groupName ~= nil and string.upper(tostring(groupName)) or nil
@@ -1377,7 +1367,7 @@ function RealisticCropRotationDisease:consoleInfect(farmlandId, groupName, sever
     local hostGroups = cropDiseaseGroups(cropName)
     if hostGroups == nil or not hostGroups[group] then
         local cropLabel = (cropName ~= nil and cropName ~= "") and tostring(cropName) or "(no crop)"
-        warning = string.format("WARNING: %s is not a natural host for %s (forced infection for testing). ",
+        warning = string.format("WARNING: %s cannot naturally be affected by %s (forced infection for testing). ",
             cropLabel, self:getDisplayName(group))
     end
 
@@ -1393,7 +1383,7 @@ function RealisticCropRotationDisease:consoleInfect(farmlandId, groupName, sever
     self:propagate(id)
 
     requestDiseaseConsoleBroadcast()
-    return warning .. string.format("Forced %s infection on farmland %d (severity %.3f)", group, id, value)
+    return warning .. string.format("Forced %s infection on farmland %d (attack level %.3f)", group, id, value)
 end
 
 function RealisticCropRotationDisease:consoleTick(farmlandId)
@@ -1434,7 +1424,7 @@ function RealisticCropRotationDisease:consoleClear(farmlandId)
             self.grid:clearFieldDisease(region, id)
         end
         requestDiseaseConsoleBroadcast()
-        return string.format("Cleared active disease and reservoir for farmland %d", id)
+        return string.format("Cleared all disease data for farmland %d", id)
     end
 
     self.state = {}
@@ -1447,5 +1437,5 @@ function RealisticCropRotationDisease:consoleClear(farmlandId)
     self.dayQueued = {}
     self.grid:clearAll()
     requestDiseaseConsoleBroadcast()
-    return "Cleared all active disease and reservoirs"
+    return "Cleared all disease data"
 end

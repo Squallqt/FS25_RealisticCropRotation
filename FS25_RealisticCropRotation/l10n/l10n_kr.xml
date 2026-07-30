@@ -14,7 +14,7 @@
         <e k="rcr_tab_planning"         v="계획" />
         <e k="rcr_section_disease_map"     v="병해" />
         <e k="rcr_disease_sub_infections" v="감염된 농지" />
-        <e k="rcr_disease_sub_pressure"   v="병해 압력" />
+        <e k="rcr_disease_sub_pressure"   v="병해 위험" />
         <e k="rcr_disease_sub_treatment"  v="방제" />
         <e k="rcr_disease_risk_low"       v="낮음" />
         <e k="rcr_disease_risk_moderate"  v="보통" />
@@ -117,23 +117,23 @@
         <e k="rcr_advice_afterRoot" v="뿌리 작물 다음에는 뿌리 작물이 돌아오기까지 4년을 기다리고, 늦은 수확 후 토양 구조를 회복하기 위해 곡물을 이어 심으세요." />
         <e k="rcr_advice_afterVegetable" v="채소 다음에는 반복하기 전에 3년을 기다리고, 곡물을 깔끔한 휴지로 두세요." />
         <e k="rcr_advice_afterForage" v="단기 초지 다음에는 곡물이 잔디 아래 쌓인 비옥도와 구조를 활용합니다." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="균핵병 압력 높음: 유채, 겨자, 해바라기, 대두, 완두, 강낭콩, 감자, 당근이 3년 이내에 돌아오면 압력은 여전히 높다. 살균제는 발병을 늦추고 살포한 구역의 피해를 묶어 두지만, 병을 물러나게 하지는 못한다." />
-        <e k="rcr_advice_pressure_high_bcn"           v="선충 압력 높음: 사탕무, 비트, 유채, 겨자, 시금치가 3년 이내에 돌아오면 압력은 여전히 높다. 살선충제는 살포한 구역의 수확을 3개월간 지킨다." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="균핵병 압력 보통: 기주 작물의 간격을 넓힌다. 비가 오면 위험이 높아진다." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="선충 압력 보통: 사탕무와 배추과 작물의 간격을 넓힌다." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="균핵병 위험 높음: 유채, 겨자, 해바라기, 대두, 완두, 강낭콩, 감자, 당근의 재배 간격을 3년 이상 둡니다. 살균제는 살포한 구역의 피해를 줄이지만 밭에서 병을 없애지는 못합니다." />
+        <e k="rcr_advice_pressure_high_bcn"           v="선충 위험 높음: 사탕무, 비트, 유채, 겨자, 시금치의 재배 간격을 3년 이상 둡니다. 살선충제는 처리한 구역을 보호하지만 선충을 없애지는 못합니다." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="균핵병 위험 보통: 유채, 겨자, 해바라기, 대두, 완두, 강낭콩, 감자, 당근의 재배 간격을 늘립니다. 비가 오면 위험이 높아집니다." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="선충 위험 보통: 사탕무, 비트, 유채, 겨자, 시금치의 재배 간격을 늘립니다." />
         <e k="rcr_advice_no_current_crop" v="현재 주요 작물 없음: 작물이 감지되면 조언이 제공됩니다." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="윤작 양호" />
         <e k="rcr_advice_title_warning" v="윤작 충돌" />
         <e k="rcr_advice_title_outbreak" v="활성 감염" />
-        <e k="rcr_advice_outbreak" v="%s이(가) 이 밭에서 활성 상태입니다, 심각도 %d%%. 권장 처리: %s." />
+        <e k="rcr_advice_outbreak" v="%s이(가) 이 밭에서 발생 중입니다. 피해 수준 %d%%. 권장 처리: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s이(가) %s에 계획됨: 윤작 충돌, 현재 작물과 같은 과(%s)로, 안전한 복귀까지 %d/%d년이 부족합니다." />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s이(가) %s에 계획됨: 윤작 충돌, 현재 작물과 %s 위험을 공유하며, 안전한 복귀까지 %d/%d년이 부족합니다." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s이(가) %s에 계획됨: 윤작 충돌. 현재 작물에도 같은 병해(%s)가 발생할 수 있습니다. %d년이 더 필요합니다(권장 간격 %d년)." />
         <e k="rcr_advice_plan_next_ok" v="%s이(가) %s에 계획됨: 좋은 선택이며, 윤작 충돌이 감지되지 않았습니다." />
         <e k="rcr_advice_title_fallow" v="휴경 연도" />
-        <e k="rcr_advice_fallow_current" v="휴경 중: 토양이 쉬고 기주 작물이 없어 병해 압력이 낮아집니다." />
-        <e k="rcr_advice_plan_next_fallow" v="휴경이 %s에 계획됨: 토양이 쉬고 다음 작물 전에 병해 순환이 끊기는 휴경 연도입니다." />
+        <e k="rcr_advice_fallow_current" v="휴경 중: 올해는 주요 작물을 재배하지 않습니다. 다음 취약 작물까지의 기간은 늘어나지만 병이 즉시 사라지지는 않습니다." />
+        <e k="rcr_advice_plan_next_fallow" v="휴경이 %s에 계획됨: 1년 동안 주요 작물을 재배하지 않습니다. 다음 취약 작물까지의 기간은 늘어나지만 모든 병이 사라진다고 보장할 수는 없습니다." />
 
         <!-- Advice card, disease pressure list -->
 
@@ -213,19 +213,19 @@
         <e k="rcr_fillType_nematicide" v="살선충제" />
         <e k="rcr_disease_treatment_none" v="방제 없음" />
         <e k="rcr_disease_treatment_clubroot" v="없음(윤작만 유효)" />
-        <e k="rcr_advice_pressure_high_phoma" v="검은다리병 압력 높음: 유채와 겨자가 4년 이내에 돌아오면 압력은 여전히 높다. 살균제는 발병을 늦추고 살포한 구역의 피해를 묶어 두지만, 병을 물러나게 하지는 못한다." />
-        <e k="rcr_advice_pressure_high_takeall" v="뿌리썩음병 압력 높음: 비기주 작물(귀리, 콩과, 유지작물)을 사이에 넣는다. 이 병을 막아 주는 약제는 없으며 윤작만이 압력을 낮춘다." />
-        <e k="rcr_advice_pressure_high_septoria" v="셉토리아병 압력 높음: 곡류 잔재가 압력을 높일 수 있다. 비는 즉각적인 감염 위험을 높이고, 살균제는 살포한 구역의 피해를 줄인다." />
-        <e k="rcr_advice_pressure_high_rust" v="녹병 압력 높음: 온화하고 습한 날씨는 즉각적인 감염 위험을 높이고, 살균제는 살포한 구역의 피해를 줄인다." />
-        <e k="rcr_advice_pressure_high_fusarium" v="푸사리움병 압력 높음: 옥수수 뒤에 밀을 심지 말고 곡류 연작을 줄인다. 살균제는 발병을 늦추고 살포한 구역의 피해를 묶어 두며, 비는 확산을 앞당긴다." />
-        <e k="rcr_advice_pressure_high_lateblight" v="역병 압력 높음: 서늘하고 습한 날씨는 즉각적인 감염 위험을 높이고, 살균제는 살포한 구역의 피해를 줄인다." />
-        <e k="rcr_advice_pressure_high_clubroot" v="뿌리혹병 압력 높음: 유채와 겨자의 재배 간격을 최대한 늘린다. 이 병을 막아 주는 약제는 없으며 윤작만이 효과가 있다." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="검은다리병 압력 보통: 유채와 겨자의 재배 간격을 늘린다." />
-        <e k="rcr_advice_pressure_moderate_takeall" v="뿌리썩음병 압력 보통: 연속 세 번째 곡류를 피한다." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="셉토리아병 압력 보통: 곡류 잔재가 압력을 높일 수 있다. 비는 즉각적인 감염 위험을 높인다." />
-        <e k="rcr_advice_pressure_moderate_rust" v="녹병 압력 보통: 온화하고 습한 날씨는 즉각적인 감염 위험을 높인다." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="푸사리움병 압력 보통: 곡류와 옥수수의 간격을 넓힌다." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="역병 압력 보통: 서늘하고 습한 날씨는 즉각적인 감염 위험을 높인다." />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="뿌리혹병 압력 보통: 유채와 겨자의 재배 간격을 늘린다." />
+        <e k="rcr_advice_pressure_high_phoma" v="검은다리병 위험 높음: 유채와 겨자의 재배 간격을 4년 이상 둡니다. 살균제는 살포한 구역의 피해를 줄이지만 밭에서 병을 없애지는 못합니다." />
+        <e k="rcr_advice_pressure_high_takeall" v="뿌리썩음병 위험 높음: 곡류 사이에 귀리, 콩과 또는 유지작물을 재배합니다. 이 병을 막아 주는 약제는 없으며 윤작 간격을 늘리면 위험이 낮아집니다." />
+        <e k="rcr_advice_pressure_high_septoria" v="셉토리아병 위험 높음: 비는 가까운 시기의 발병 위험을 높이고 살균제는 살포한 구역의 피해를 줄입니다." />
+        <e k="rcr_advice_pressure_high_rust" v="녹병 위험 높음: 온화하고 습한 날씨는 가까운 시기의 발병 위험을 높이고 살균제는 살포한 구역의 피해를 줄입니다." />
+        <e k="rcr_advice_pressure_high_fusarium" v="푸사리움병 위험 높음: 옥수수 뒤에 밀을 심지 말고 곡류 연작을 줄입니다. 살균제는 살포한 구역의 피해를 줄이고 비는 위험을 높입니다." />
+        <e k="rcr_advice_pressure_high_lateblight" v="역병 위험 높음: 서늘하고 습한 날씨는 가까운 시기의 발병 위험을 높이고 살균제는 살포한 구역의 피해를 줄입니다." />
+        <e k="rcr_advice_pressure_high_clubroot" v="뿌리혹병 위험 높음: 유채와 겨자의 재배 간격을 최대한 늘립니다. 이 병을 막아 주는 약제는 없으며 윤작 간격을 늘리면 위험이 낮아집니다." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="검은다리병 위험 보통: 유채와 겨자의 재배 간격을 늘립니다." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="뿌리썩음병 위험 보통: 곡류를 세 번 연속 재배하지 마십시오." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="셉토리아병 위험 보통: 비는 가까운 시기의 발병 위험을 높입니다." />
+        <e k="rcr_advice_pressure_moderate_rust" v="녹병 위험 보통: 온화하고 습한 날씨는 가까운 시기의 발병 위험을 높입니다." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="푸사리움병 위험 보통: 곡류와 옥수수의 재배 간격을 늘립니다." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="역병 위험 보통: 서늘하고 습한 날씨는 가까운 시기의 발병 위험을 높입니다." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="뿌리혹병 위험 보통: 유채와 겨자의 재배 간격을 늘립니다." />
     </elements>
 </l10n>

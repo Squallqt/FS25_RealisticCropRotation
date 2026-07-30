@@ -14,7 +14,7 @@
         <e k="rcr_tab_planning"         v="Planning" />
         <e k="rcr_section_disease_map"     v="Diseases" />
         <e k="rcr_disease_sub_infections" v="Infected fields" />
-        <e k="rcr_disease_sub_pressure"   v="Disease pressure" />
+        <e k="rcr_disease_sub_pressure"   v="Disease risk" />
         <e k="rcr_disease_sub_treatment"  v="Treatments" />
         <e k="rcr_disease_risk_low"       v="Low" />
         <e k="rcr_disease_risk_moderate"  v="Moderate" />
@@ -117,25 +117,25 @@
         <e k="rcr_advice_afterRoot"      v="After a root crop, allow four years before roots come back, and follow with a cereal to rebuild structure after the late lifting." />
         <e k="rcr_advice_afterVegetable" v="After a vegetable, wait three years before repeating it, with a cereal as a clean break." />
         <e k="rcr_advice_afterForage"    v="After a grass ley, a cereal cashes in the fertility and structure built up under the sward." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="High sclerotinia pressure: bring canola, mustard, sunflower, soybean, pea, bean, potato or carrot back within 3 years and the pressure stays high; fungicide slows the onset and freezes the damage on sprayed ground, it does not push the disease back." />
-        <e k="rcr_advice_pressure_high_bcn"           v="High nematode pressure: bring sugar beet, beetroot, canola, mustard or spinach back within 3 years and the pressure stays high; nematicide saves the yield on sprayed ground for 3 months." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderate sclerotinia pressure: space out host crops, rain raises the risk." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Moderate nematode pressure: space out beets and brassicas." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="High sclerotinia risk: wait at least 3 years before bringing canola, mustard, sunflower, soybean, pea, bean, potato or carrot back; fungicide limits damage on sprayed ground but does not clean the field." />
+        <e k="rcr_advice_pressure_high_bcn"           v="High nematode risk: wait at least 3 years before bringing sugar beet, beetroot, canola, mustard or spinach back; nematicide protects sprayed ground but does not remove nematodes." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderate sclerotinia risk: leave more time before bringing canola, mustard, sunflower, soybean, pea, bean, potato or carrot back; rain can raise the risk." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Moderate nematode risk: leave more time before bringing beets, canola, mustard or spinach back." />
         <e k="rcr_advice_no_current_crop" v="No current main crop: advice available when a crop is detected." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Rotation on track" />
         <e k="rcr_advice_title_warning" v="Rotation conflict" />
         <e k="rcr_advice_title_outbreak" v="Active outbreak" />
-        <e k="rcr_advice_outbreak" v="%s is active on this field, severity %d%%. Recommended treatment: %s." />
+        <e k="rcr_advice_outbreak" v="%s is active on this field. Attack level: %d%%. Recommended treatment: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s planned for %s: rotation conflict, same family (%s) as the current crop, %d more year(s) needed out of %d before it's safe." />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s planned for %s: rotation conflict, shares %s risk with the current crop, %d more year(s) needed out of %d before it's safe." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s planned for %s: it and the current crop can both be affected by %s. Wait %d more year(s); the recommended interval is %d year(s)." />
         <e k="rcr_advice_plan_next_ok" v="%s planned for %s: good choice, no rotation conflict detected." />
         <e k="rcr_advice_title_fallow" v="Break year" />
-        <e k="rcr_advice_fallow_current" v="Fallow in progress: the soil rests and disease pressure fades without a host." />
-        <e k="rcr_advice_plan_next_fallow" v="Fallow planned for %s: a break year, the soil rests and the disease cycle is broken before the next crop." />
+        <e k="rcr_advice_fallow_current" v="Fallow in progress: no main crop is grown this year. This adds time before the next sensitive crop but does not remove disease immediately." />
+        <e k="rcr_advice_plan_next_fallow" v="Fallow planned for %s: no main crop will be grown for one year. This adds time before the next sensitive crop but does not guarantee that every disease is gone." />
 
-        <!-- Advice card, disease pressure list -->
+        <!-- Advice card, disease risk list -->
 
         <!-- Field card — required actions / growth -->
         <e k="rcr_action_header"        v="Soil condition" />
@@ -213,19 +213,19 @@
         <e k="rcr_fillType_nematicide" v="Nematicide" />
         <e k="rcr_disease_treatment_none" v="No treatment" />
         <e k="rcr_disease_treatment_clubroot" v="None (rotation only)" />
-        <e k="rcr_advice_pressure_high_phoma" v="High phoma pressure: bring canola or mustard back within 4 years and the pressure stays high; fungicide slows the onset and freezes the damage on sprayed ground, it does not push the disease back." />
-        <e k="rcr_advice_pressure_high_takeall" v="High take-all pressure: insert a non-host break (oat, legume, oilseed); no product shields this disease, only rotation brings the pressure down." />
-        <e k="rcr_advice_pressure_high_septoria" v="High septoria pressure: cereal residue can add pressure; rain raises the immediate risk, and fungicide limits damage on sprayed ground." />
-        <e k="rcr_advice_pressure_high_rust" v="High rust pressure: mild damp weather raises the immediate risk, and fungicide limits damage on sprayed ground." />
-        <e k="rcr_advice_pressure_high_fusarium" v="High fusarium pressure: avoid wheat after maize and chain fewer cereals; fungicide slows the onset and freezes the damage on sprayed ground, and rain speeds the epidemic up." />
-        <e k="rcr_advice_pressure_high_lateblight" v="High late blight pressure: cool damp weather raises the immediate risk, and fungicide limits damage on sprayed ground." />
-        <e k="rcr_advice_pressure_high_clubroot" v="High clubroot pressure: stretch the canola and mustard return as far as you can; no product shields this disease, only rotation works." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Moderate phoma pressure: stretch the canola and mustard return." />
-        <e k="rcr_advice_pressure_moderate_takeall" v="Moderate take-all pressure: avoid a third cereal in a row." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Moderate septoria pressure: cereal residue can add pressure; rain raises the immediate risk." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Moderate rust pressure: mild damp weather raises the immediate risk." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="Moderate fusarium pressure: space out cereals and maize." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Moderate late blight pressure: cool damp weather raises the immediate risk." />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="Moderate clubroot pressure: stretch the canola and mustard return." />
+        <e k="rcr_advice_pressure_high_phoma" v="High phoma risk: wait at least 4 years before bringing canola or mustard back; fungicide limits damage on sprayed ground but does not clean the field." />
+        <e k="rcr_advice_pressure_high_takeall" v="High take-all risk: break the cereal sequence with oat, a legume or an oilseed; no product protects against this disease, and more time between sensitive cereals lowers future risk." />
+        <e k="rcr_advice_pressure_high_septoria" v="High septoria risk: rain can raise the risk further, and fungicide limits damage on sprayed ground." />
+        <e k="rcr_advice_pressure_high_rust" v="High rust risk: mild damp weather can raise the risk further, and fungicide limits damage on sprayed ground." />
+        <e k="rcr_advice_pressure_high_fusarium" v="High fusarium risk: avoid wheat directly after maize and consecutive cereals; fungicide limits damage on sprayed ground, and rain can accelerate the disease." />
+        <e k="rcr_advice_pressure_high_lateblight" v="High late blight risk: cool damp weather can raise the risk further, and fungicide limits damage on sprayed ground." />
+        <e k="rcr_advice_pressure_high_clubroot" v="High clubroot risk: wait as long as possible before bringing canola or mustard back; no product protects against this disease, which can remain in the field indefinitely." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Moderate phoma risk: leave more time before bringing canola or mustard back." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Moderate take-all risk: avoid a third cereal in a row." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Moderate septoria risk: rain can raise the risk further." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Moderate rust risk: mild damp weather can raise the risk further." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Moderate fusarium risk: leave more time between cereals and maize." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Moderate late blight risk: cool damp weather can raise the risk further." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Moderate clubroot risk: leave more time before bringing canola or mustard back." />
     </elements>
 </l10n>

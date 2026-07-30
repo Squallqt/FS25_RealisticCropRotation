@@ -14,7 +14,7 @@
         <e k="rcr_tab_planning"         v="Suunnittelu" />
         <e k="rcr_section_disease_map"     v="Taudit" />
         <e k="rcr_disease_sub_infections" v="Tartunnan saaneet pellot" />
-        <e k="rcr_disease_sub_pressure"   v="Tautipaine" />
+        <e k="rcr_disease_sub_pressure"   v="Tautiriski" />
         <e k="rcr_disease_sub_treatment"  v="Torjunta" />
         <e k="rcr_disease_risk_low"       v="Matala" />
         <e k="rcr_disease_risk_moderate"  v="Kohtalainen" />
@@ -117,23 +117,23 @@
         <e k="rcr_advice_afterRoot" v="Juurikasvin jälkeen odota neljä vuotta ennen juurikasvien paluuta, ja jatka viljalla rakenteen palauttamiseksi myöhäisen noston jälkeen." />
         <e k="rcr_advice_afterVegetable" v="Vihanneksen jälkeen odota kolme vuotta ennen sen toistamista, vilja puhtaana katkona." />
         <e k="rcr_advice_afterForage" v="Lyhytaikaisen nurmen jälkeen vilja hyödyntää turpeen alle kertyneen viljavuuden ja rakenteen." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Korkea pahkahomeen paine: jos rapsi, sinappi, auringonkukka, soijapapu, herne, papu, peruna tai porkkana palaa alle 3 vuodessa, paine pysyy korkeana; sienitorjunta-aine hidastaa puhkeamista ja jäädyttää vahingon ruiskutetuilla alueilla, mutta ei käännä tautia laskuun." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Korkea ankeroisen paine: jos sokerijuurikas, punajuuri, rapsi, sinappi tai pinaatti palaa alle 3 vuodessa, paine pysyy korkeana; ankeroistorjunta-aine pelastaa sadon ruiskutetuilla alueilla 3 kuukauden ajan." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Kohtalainen pahkahomeen paine: harvenna isäntäkasvien viljelyä, sade nostaa riskiä." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Kohtalainen ankeroisen paine: harvenna juurikkaiden ja ristikukkaisten viljelyä." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Suuri pahkahomeen riski: Odota vähintään 3 vuotta ennen kuin viljelet uudelleen rapsia, sinappia, auringonkukkaa, soijapapua, hernettä, papua, perunaa tai porkkanaa; sienitorjunta-aine rajoittaa vahinkoa käsitellyillä alueilla, mutta ei poista tautia lohkolta." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Suuri ankeroisriski: Odota vähintään 3 vuotta ennen kuin viljelet uudelleen sokerijuurikasta, punajuurta, rapsia, sinappia tai pinaattia; ankeroistorjunta-aine suojaa käsiteltyjä alueita, mutta ei poista ankeroisia." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Kohtalainen pahkahomeen riski: Odota pidempään ennen kuin viljelet uudelleen rapsia, sinappia, auringonkukkaa, soijapapua, hernettä, papua, perunaa tai porkkanaa; sade voi lisätä riskiä." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Kohtalainen ankeroisriski: Odota pidempään ennen kuin viljelet uudelleen juurikkaita, rapsia, sinappia tai pinaattia." />
         <e k="rcr_advice_no_current_crop" v="Ei nykyistä pääkasvia: neuvo saatavilla, kun kasvi havaitaan." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Viljelykierto kunnossa" />
         <e k="rcr_advice_title_warning" v="Viljelykiertoristiriita" />
         <e k="rcr_advice_title_outbreak" v="Aktiivinen tautipesäke" />
-        <e k="rcr_advice_outbreak" v="%s on aktiivinen tällä lohkolla, vakavuus %d %%. Suositeltu hoito: %s." />
+        <e k="rcr_advice_outbreak" v="%s on aktiivinen tällä lohkolla. Taudin voimakkuus: %d %%. Suositeltu käsittely: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s suunniteltu vuodelle %s: viljelykiertoristiriita, sama heimo (%s) kuin nykyisellä kasvilla, %d vuotta %d:stä puuttuu ennen turvallista paluuta." />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s suunniteltu vuodelle %s: viljelykiertoristiriita, jakaa %s-riskin nykyisen kasvin kanssa, %d vuotta %d:stä puuttuu ennen turvallista paluuta." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s suunniteltu vuodelle %s: tauti %s voi vaikuttaa sekä tähän että nykyiseen kasviin. Odota vielä %d vuotta; suositeltu väli on %d vuotta." />
         <e k="rcr_advice_plan_next_ok" v="%s suunniteltu vuodelle %s: hyvä valinta, viljelykiertoristiriitaa ei havaittu." />
         <e k="rcr_advice_title_fallow" v="Välivuosi" />
-        <e k="rcr_advice_fallow_current" v="Kesanto käynnissä: maa lepää ja tautipaine vähenee ilman isäntäkasvia." />
-        <e k="rcr_advice_plan_next_fallow" v="Kesanto suunniteltu vuodelle %s: välivuosi, jolloin maa lepää ja tautikierto katkeaa ennen seuraavaa viljelykasvia." />
+        <e k="rcr_advice_fallow_current" v="Kesanto käynnissä: Tänä vuonna ei viljellä pääkasvia. Tämä lisää aikaa ennen seuraavaa herkkää kasvia, mutta ei poista tautia heti." />
+        <e k="rcr_advice_plan_next_fallow" v="Kesanto suunniteltu vuodelle %s: Pääkasvia ei viljellä yhteen vuoteen. Tämä lisää aikaa ennen seuraavaa herkkää kasvia, mutta ei takaa kaikkien tautien häviämistä." />
 
         <!-- Advice card, disease pressure list -->
 
@@ -213,19 +213,19 @@
         <e k="rcr_fillType_nematicide" v="Ankeroistorjunta-aine" />
         <e k="rcr_disease_treatment_none" v="Ei torjuntaa" />
         <e k="rcr_disease_treatment_clubroot" v="Ei mitään (vain viljelykierto)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Korkea Phoman paine: jos rapsi tai sinappi palaa alle 4 vuodessa, paine pysyy korkeana; sienitorjunta-aine hidastaa puhkeamista ja jäädyttää vahingon ruiskutetuilla alueilla, mutta ei käännä tautia laskuun." />
-        <e k="rcr_advice_pressure_high_takeall" v="Korkea tyvimädän paine: lisää kiertoon isäntäkasviksi kelpaamaton katkokasvi (kaura, palkokasvi, öljykasvi); mikään aine ei suojaa tältä taudilta, vain viljelykierto laskee painetta." />
-        <e k="rcr_advice_pressure_high_septoria" v="Korkea Septorian paine: viljajäämät voivat lisätä painetta; sade nostaa välitöntä riskiä ja sienitorjunta-aine rajoittaa vahinkoa ruiskutetuilla alueilla." />
-        <e k="rcr_advice_pressure_high_rust" v="Korkea ruosteen paine: leuto kostea sää nostaa välitöntä riskiä ja sienitorjunta-aine rajoittaa vahinkoa ruiskutetuilla alueilla." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Korkea Fusariumin paine: älä viljele vehnää maissin jälkeen ja vähennä peräkkäisiä viljavuosia; sienitorjunta-aine hidastaa puhkeamista ja jäädyttää vahingon ruiskutetuilla alueilla, ja sade nopeuttaa epidemiaa." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Korkea perunaruton paine: viileä kostea sää nostaa välitöntä riskiä ja sienitorjunta-aine rajoittaa vahinkoa ruiskutetuilla alueilla." />
-        <e k="rcr_advice_pressure_high_clubroot" v="Korkea möhöjuuren paine: pidennä rapsin ja sinapin viljelytauko niin pitkäksi kuin mahdollista; mikään aine ei suojaa tältä taudilta, vain viljelykierto auttaa." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Kohtalainen Phoman paine: pidennä rapsin ja sinapin viljelytaukoa." />
-        <e k="rcr_advice_pressure_moderate_takeall" v="Kohtalainen tyvimädän paine: vältä kolmatta viljaa peräkkäin." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Kohtalainen Septorian paine: viljajäämät voivat lisätä painetta; sade nostaa välitöntä riskiä." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Kohtalainen ruosteen paine: leuto kostea sää nostaa välitöntä riskiä." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="Kohtalainen Fusariumin paine: harvenna viljan ja maissin viljelyä." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Kohtalainen perunaruton paine: viileä kostea sää nostaa välitöntä riskiä." />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="Kohtalainen möhöjuuren paine: pidennä rapsin ja sinapin viljelytaukoa." />
+        <e k="rcr_advice_pressure_high_phoma" v="Suuri Phoma-riski: Odota vähintään 4 vuotta ennen kuin viljelet uudelleen rapsia tai sinappia; sienitorjunta-aine rajoittaa vahinkoa käsitellyillä alueilla, mutta ei poista tautia lohkolta." />
+        <e k="rcr_advice_pressure_high_takeall" v="Suuri tyvimädän riski: Katkaise viljojen sarja kauralla, palkokasvilla tai öljykasvilla; mikään aine ei suojaa tältä taudilta, ja pidempi aika herkkien viljojen välillä pienentää tulevaa riskiä." />
+        <e k="rcr_advice_pressure_high_septoria" v="Suuri Septoria-riski: Sade voi lisätä riskiä entisestään, ja sienitorjunta-aine rajoittaa vahinkoa käsitellyillä alueilla." />
+        <e k="rcr_advice_pressure_high_rust" v="Suuri ruosteriski: Leuto ja kostea sää voi lisätä riskiä entisestään, ja sienitorjunta-aine rajoittaa vahinkoa käsitellyillä alueilla." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Suuri Fusarium-riski: Vältä vehnää heti maissin jälkeen ja peräkkäisiä viljoja; sienitorjunta-aine rajoittaa vahinkoa käsitellyillä alueilla, ja sade voi nopeuttaa tautia." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Suuri perunaruton riski: Viileä ja kostea sää voi lisätä riskiä entisestään, ja sienitorjunta-aine rajoittaa vahinkoa käsitellyillä alueilla." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Suuri möhöjuuren riski: Odota mahdollisimman pitkään ennen kuin viljelet uudelleen rapsia tai sinappia; mikään aine ei suojaa tältä taudilta, joka voi säilyä lohkolla määräämättömän ajan." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Kohtalainen Phoma-riski: Odota pidempään ennen kuin viljelet uudelleen rapsia tai sinappia." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Kohtalainen tyvimädän riski: Vältä kolmatta viljaa peräkkäin." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Kohtalainen Septoria-riski: Sade voi lisätä riskiä entisestään." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Kohtalainen ruosteriski: Leuto ja kostea sää voi lisätä riskiä entisestään." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Kohtalainen Fusarium-riski: Jätä enemmän aikaa viljojen ja maissin väliin." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Kohtalainen perunaruton riski: Viileä ja kostea sää voi lisätä riskiä entisestään." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Kohtalainen möhöjuuren riski: Odota pidempään ennen kuin viljelet uudelleen rapsia tai sinappia." />
     </elements>
 </l10n>

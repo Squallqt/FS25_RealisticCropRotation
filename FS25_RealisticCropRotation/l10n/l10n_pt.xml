@@ -14,11 +14,11 @@
         <e k="rcr_tab_planning"         v="Planeamento" />
         <e k="rcr_section_disease_map"     v="Doenças" />
         <e k="rcr_disease_sub_infections" v="Campos infetados" />
-        <e k="rcr_disease_sub_pressure"   v="Pressão de doenças" />
+        <e k="rcr_disease_sub_pressure"   v="Risco de doenças" />
         <e k="rcr_disease_sub_treatment"  v="Tratamentos" />
-        <e k="rcr_disease_risk_low"       v="Baixa" />
-        <e k="rcr_disease_risk_moderate"  v="Moderada" />
-        <e k="rcr_disease_risk_high"      v="Alta" />
+        <e k="rcr_disease_risk_low"       v="Baixo" />
+        <e k="rcr_disease_risk_moderate"  v="Moderado" />
+        <e k="rcr_disease_risk_high"      v="Alto" />
         <e k="rcr_disease_notification" v="Aparecimento de %s no campo %s" />
         <e k="rcr_disease_hud_label"    v="Doença" />
         <e k="rcr_disease_header_active" v="Doença (%s)" />
@@ -117,23 +117,23 @@
         <e k="rcr_advice_afterRoot" v="Depois de uma cultura de raiz, espere quatro anos antes de as raízes voltarem, seguindo com um cereal para refazer a estrutura após o arranque tardio." />
         <e k="rcr_advice_afterVegetable" v="Depois de um produto hortícola, espere três anos antes de o repetir, com um cereal como corte limpo." />
         <e k="rcr_advice_afterForage" v="Depois de uma pastagem temporária, um cereal valoriza a fertilidade e a estrutura acumuladas sob o relvado." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Forte pressão de esclerotínia: se colza, mostarda, girassol, soja, ervilha, feijão, batata ou cenoura regressarem antes de 3 anos, a pressão mantém-se elevada; o fungicida atrasa o aparecimento e trava o dano nas zonas tratadas, não faz a doença recuar." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Forte pressão de nemátode: se beterraba sacarina, beterraba de mesa, colza, mostarda ou espinafre regressarem antes de 3 anos, a pressão mantém-se elevada; o nematicida salva a colheita nas zonas tratadas durante 3 meses." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Pressão de esclerotínia moderada: espace as culturas hospedeiras, a chuva aumenta o risco." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Pressão de nemátode moderada: espace beterrabas e brássicas." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Risco elevado de esclerotínia: espere pelo menos 3 anos antes de voltar a cultivar colza, mostarda, girassol, soja, ervilha, feijão, batata ou cenoura; o fungicida limita os danos nas zonas tratadas, mas não elimina a doença do campo." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Risco elevado de nemátodes: espere pelo menos 3 anos antes de voltar a cultivar beterraba sacarina, beterraba de mesa, colza, mostarda ou espinafre; o nematicida protege as zonas tratadas, mas não elimina os nemátodes." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Risco moderado de esclerotínia: espere mais tempo antes de voltar a cultivar colza, mostarda, girassol, soja, ervilha, feijão, batata ou cenoura; a chuva pode aumentar o risco." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Risco moderado de nemátodes: espere mais tempo antes de voltar a cultivar beterrabas, colza, mostarda ou espinafre." />
         <e k="rcr_advice_no_current_crop" v="Sem cultura principal atual: conselho disponível quando uma cultura for detetada." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Rotação otimizada" />
         <e k="rcr_advice_title_warning" v="Conflito de rotação" />
         <e k="rcr_advice_title_outbreak" v="Infeção ativa" />
-        <e k="rcr_advice_outbreak" v="%s está ativa neste campo, gravidade %d %%. Tratamento recomendado: %s." />
+        <e k="rcr_advice_outbreak" v="%s está ativa neste campo. Nível de ataque: %d %%. Tratamento recomendado: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s previsto para %s: conflito de rotação, mesma família (%s) da cultura atual, faltam %d ano(s) de %d antes de um regresso seguro." />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s previsto para %s: conflito de rotação, partilha o risco de %s com a cultura atual, faltam %d ano(s) de %d antes de um regresso seguro." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s prevista para %s: tanto esta cultura como a atual podem ser afetadas por %s. Espere mais %d ano(s); o intervalo recomendado é de %d ano(s)." />
         <e k="rcr_advice_plan_next_ok" v="%s previsto para %s: boa escolha, nenhum conflito de rotação detetado." />
         <e k="rcr_advice_title_fallow" v="Ano de pausa" />
-        <e k="rcr_advice_fallow_current" v="Pousio em curso: o solo descansa e a pressão das doenças diminui na ausência de uma planta hospedeira." />
-        <e k="rcr_advice_plan_next_fallow" v="Pousio previsto para %s: um ano de pausa em que o solo descansa e o ciclo das doenças é interrompido antes da cultura seguinte." />
+        <e k="rcr_advice_fallow_current" v="Pousio em curso: este ano não é cultivada nenhuma cultura principal. Isto acrescenta tempo antes da próxima cultura sensível, mas não elimina a doença de imediato." />
+        <e k="rcr_advice_plan_next_fallow" v="Pousio previsto para %s: não será cultivada nenhuma cultura principal durante um ano. Isto acrescenta tempo antes da próxima cultura sensível, mas não garante que todas as doenças tenham desaparecido." />
 
         <!-- Advice card, disease pressure list -->
 
@@ -213,19 +213,19 @@
         <e k="rcr_fillType_nematicide" v="Nematicida" />
         <e k="rcr_disease_treatment_none" v="Nenhum tratamento" />
         <e k="rcr_disease_treatment_clubroot" v="Nenhum (apenas rotação)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Forte pressão de phoma: se colza ou mostarda regressarem antes de 4 anos, a pressão mantém-se elevada; o fungicida atrasa o aparecimento e trava o dano nas zonas tratadas, não faz a doença recuar." />
-        <e k="rcr_advice_pressure_high_takeall" v="Forte pressão de mal-do-pé: introduza um corte não hospedeiro (aveia, leguminosa, oleaginosa); nenhum produto protege desta doença, só a rotação faz baixar a pressão." />
-        <e k="rcr_advice_pressure_high_septoria" v="Forte pressão de septoriose: os resíduos dos cereais podem aumentar a pressão; a chuva aumenta o risco imediato e o fungicida limita os danos nas zonas tratadas." />
-        <e k="rcr_advice_pressure_high_rust" v="Forte pressão de ferrugem: o tempo ameno e húmido aumenta o risco imediato e o fungicida limita os danos nas zonas tratadas." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Forte pressão de fusariose: evite trigo depois de milho e encadeie menos cereais; o fungicida atrasa o aparecimento e trava o dano nas zonas tratadas, a chuva acelera a epidemia." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Forte pressão de míldio: o tempo fresco e húmido aumenta o risco imediato e o fungicida limita os danos nas zonas tratadas." />
-        <e k="rcr_advice_pressure_high_clubroot" v="Forte pressão de hérnia: alargue ao máximo o regresso da colza e da mostarda; nenhum produto protege desta doença, só a rotação atua." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Pressão de phoma moderada: alargue o regresso da colza e da mostarda." />
-        <e k="rcr_advice_pressure_moderate_takeall" v="Pressão de mal-do-pé moderada: evite o terceiro cereal seguido." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Pressão de septoriose moderada: os resíduos dos cereais podem aumentar a pressão; a chuva aumenta o risco imediato." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Pressão de ferrugem moderada: o tempo ameno e húmido aumenta o risco imediato." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="Pressão de fusariose moderada: espace cereais e milho." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Pressão de míldio moderada: o tempo fresco e húmido aumenta o risco imediato." />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="Pressão de hérnia moderada: alargue o regresso da colza e da mostarda." />
+        <e k="rcr_advice_pressure_high_phoma" v="Risco elevado de phoma: espere pelo menos 4 anos antes de voltar a cultivar colza ou mostarda; o fungicida limita os danos nas zonas tratadas, mas não elimina a doença do campo." />
+        <e k="rcr_advice_pressure_high_takeall" v="Risco elevado de mal-do-pé: interrompa a sucessão de cereais com aveia, uma leguminosa ou uma oleaginosa; nenhum produto protege contra esta doença, e mais tempo entre os cereais sensíveis reduz o risco futuro." />
+        <e k="rcr_advice_pressure_high_septoria" v="Risco elevado de septoriose: a chuva pode aumentar ainda mais o risco, e o fungicida limita os danos nas zonas tratadas." />
+        <e k="rcr_advice_pressure_high_rust" v="Risco elevado de ferrugem: o tempo ameno e húmido pode aumentar ainda mais o risco, e o fungicida limita os danos nas zonas tratadas." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Risco elevado de fusariose: evite trigo imediatamente depois de milho e cereais consecutivos; o fungicida limita os danos nas zonas tratadas, e a chuva pode acelerar a doença." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Risco elevado de míldio: o tempo fresco e húmido pode aumentar ainda mais o risco, e o fungicida limita os danos nas zonas tratadas." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Risco elevado de hérnia: espere o máximo possível antes de voltar a cultivar colza ou mostarda; nenhum produto protege contra esta doença, que pode permanecer no campo indefinidamente." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Risco moderado de phoma: espere mais tempo antes de voltar a cultivar colza ou mostarda." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Risco moderado de mal-do-pé: evite um terceiro cereal seguido." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Risco moderado de septoriose: a chuva pode aumentar ainda mais o risco." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Risco moderado de ferrugem: o tempo ameno e húmido pode aumentar ainda mais o risco." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Risco moderado de fusariose: deixe mais tempo entre os cereais e o milho." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Risco moderado de míldio: o tempo fresco e húmido pode aumentar ainda mais o risco." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Risco moderado de hérnia: espere mais tempo antes de voltar a cultivar colza ou mostarda." />
     </elements>
 </l10n>

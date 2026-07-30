@@ -8,7 +8,7 @@ Crop rotation planning and disease simulation for Farming Simulator 25.
 ![Languages](https://img.shields.io/badge/languages-27-blue.svg)
 [![License](https://img.shields.io/badge/license-proprietary-red.svg)](LICENSE)
 
-Every field remembers its last 4 crops. Some outbreaks leave inoculum behind on that field, while seasonal diseases arrive from the surrounding region; favourable weather can then turn that background pressure into an infection that eats away part of the crop. Plan a repeating 2-, 3- or 4-year rotation from a dedicated in-game tab, get a grade based on real agronomy, and see the consequences before you sow.
+Every field remembers its last 4 crops. Plan a repeating 2-, 3- or 4-year rotation, watch the disease risk, and protect a sensitive crop before an outbreak destroys part of it.
 
 Singleplayer and multiplayer, with or without Precision Farming.
 
@@ -19,38 +19,34 @@ Singleplayer and multiplayer, with or without Precision Farming.
 - **Rotation grade (0-100)**: family and disease-specific return intervals, winter/spring sowing alternation, the nitrogen a legume hands to the next cereal and planned nitrogen residue all weigh in
 - **Diversity pays**: a 2-crop plan tops out at 75 ("good"), you need 3 crops or more to reach "excellent" (80). A single-family plan is capped at 30 ("poor")
 - **Grade bands**: 0-19 bad, 20-39 poor, 40-59 fair, 60-79 good, 80-100 excellent
-- **Tailored advice**: an active outbreak takes priority, then the planned next crop is checked against family and disease spacing, then generic per-family guidance
+- **Tailored advice**: an active outbreak takes priority, then the planner warns when the next crop returns too soon, before showing general advice for its crop family
 - **Rotation overview**: fields sharing an identical plan are grouped into one card with combined area, grade and residue
 
 ## Diseases
 
-Nine generic disease groups, each tied to specific host crops: sclerotinia, phoma, take-all, septoria, rust, fusarium, late blight, beet cyst nematode, clubroot.
+Nine diseases affect specific crops: sclerotinia, phoma, take-all, septoria, rust, fusarium, late blight, beet cyst nematode and clubroot.
 
-### Field reservoirs and seasonal exposure
+### The rules
 
-| Source | Diseases | Behaviour |
-| --- | --- | --- |
-| **Field reservoir** | phoma, take-all, fusarium; secondarily septoria; persistent beet cyst nematode and clubroot | A completed outbreak can leave inoculum on that field in proportion to its final severity. Recent-residue reservoirs fade over calendar years; cyst nematode and clubroot persist much longer and rotation lowers their pressure without ever erasing it completely. |
-| **Seasonal / regional exposure** | rust and late blight; primarily septoria | A host can be exposed even after a clean rotation. These groups receive no disease-specific spacing penalty in the planner; weather controls the immediate infection risk. |
-| **Mixed** | sclerotinia | Both a field reservoir and regional exposure contribute. |
+- **Only sensitive crops can be affected**: each disease has its own list of crops. A crop that stays healthy adds no new disease to the field.
+- **A first outbreak can happen on a clean field**: favourable weather raises the chance for weather-sensitive diseases. Rust and late blight never remain in the field after the crop.
+- **A real outbreak can affect future crops**: after harvest, sclerotinia, phoma, take-all, septoria, fusarium, beet cyst nematode or clubroot can remain in the field. The more advanced the outbreak, the greater the risk when a sensitive crop returns.
+- **The risk falls with time**: it drops once per calendar year. Beet cyst nematode and clubroot can become very weak, but they may remain in the field indefinitely.
+- **Rotation reduces risk**: spacing sensitive crops gives the disease time to decline. The planner warns when a crop returns too soon. Crop-family diversity remains a separate rule, and cover crops receive no automatic disease bonus.
 
-The planner still applies crop-family spacing independently. A cover crop carries no generic disease-break credit because its sanitary effect would depend on its actual species and the disease concerned.
+### From risk to damage
 
-### How an infection runs
-
-1. **Background pressure**: the pressure map combines the field's stored inoculum with any seasonal or regional exposure while a host is standing. It is a background indicator before the current weather is applied, not the instantaneous probability of infection.
-2. **The roll**: once per period, while the crop is inside its disease growth window, background pressure and the current weather decide whether an infection starts. You get an in-game notification naming the disease and the field.
-3. **Incubation**: a latent period that burns down faster in warm weather and slower in cold, for every disease.
-4. **Spread and destruction**: severity climbs daily and, past a per-disease threshold, destroys the crop in an irregular organic patch with a scattered, speckled edge. Severity only climbs while a living host carries it.
-5. **After the crop**: reservoir-forming diseases leave a deposit based on their final severity. Stored pressure then decays by calendar year according to the disease; a non-host year reduces it but does not guarantee eradication.
-
-Rain and the shared temperature response drive the weather-sensitive groups while each infection remains limited to its configured crop-growth window. Temperature also paces the initial incubation of every infection; soil-driven groups do not all react to rain. Pacing scales automatically with your save's season length.
+1. The Disease Risk map highlights fields where the current crop is more likely to become infected. Current weather can raise that chance further.
+2. Once per period, the mod checks whether an outbreak starts while the crop is at a vulnerable growth stage.
+3. A new outbreak starts after a short delay, then becomes more serious each day and can destroy the crop in an irregular patch. Temperature controls the initial delay; rain and temperature also favour some diseases.
+4. Fungicide can prevent or slow supported diseases and protect sprayed crop, but it never restores destroyed crop or cleans a field that is already affected.
+5. Harvest ends the active outbreak. A crop that stayed healthy adds nothing new to the field; a crop that was affected may increase the risk for future sensitive crops.
 
 ## Treatments
 
 Buyable fungicide (AMISTAR, Syngenta) and nematicide (VELUM PRIME, Bayer), sprayed with any compatible sprayer.
 
-**Coverage matters for both products, and neither restores lost crop.** Fungicide lowers the field-wide chance of a fungal outbreak and slows an established infection in proportion to coverage; sprayed cells are also excluded from destruction. For reservoir-forming diseases, that lower final severity also means a smaller future deposit, but fungicide never erases inoculum already stored in the field. Nematicide protects treated cells from nematode destruction only: it does not reduce field-level severity or the cyst reservoir. Spray before, not after.
+**Coverage matters for both products, and neither restores lost crop.** Fungicide lowers the chance of a supported outbreak and slows an active disease in proportion to coverage; sprayed crop is also protected from destruction. A smaller outbreak leaves less disease behind for future crops, but fungicide never cleans a field that is already affected. Nematicide protects sprayed crop from nematode damage but does not remove nematodes from the field. Spray before, not after.
 
 - **Fungicide**: consumed only on the ground actually harvested or mown, and cleared when the field is replanted or rotated
 - **Nematicide**: three months in the soil per field, surviving harvest; reapplying renews the full duration
@@ -75,10 +71,10 @@ Cover crops (oilseed radish, flowering catch crop) add an estimated flat +25 kg 
 
 - **Crop Rotation tab** in the InGame Menu (ESC), with Agronomy and Planning views
 - **Field monitoring**: current crop, growth stage, required soil work, weeds, active disease with its treatment, nitrogen and pH (Precision Farming's real maps when installed, vanilla fallback otherwise)
-- **Disease map**: 3 toggle-able views on the existing in-game map (infected fields, background disease pressure before weather, treated-ground coverage), all colour-blind safe
+- **Disease map**: 3 toggle-able views on the existing in-game map (infected fields, disease risk, treated-ground coverage), all colour-blind safe
 - **On-foot HUD**: rotation history and active disease under your feet, plus a treatment line when standing on protected ground
 - **Weather forecast card**: the menu header shows the next relevant weather event so you can time your spraying
-- **Full multiplayer sync**: server-authoritative history, plans, active disease and field reservoirs; debounced broadcast, full sync on menu open or join, server-side validation of client plan edits, savegame persistence
+- **Full multiplayer sync**: server-authoritative history, plans, active disease and remaining field risk; debounced broadcast, full sync on menu open or join, server-side validation of client plan edits, savegame persistence
 - **27 languages**
 
 ## Installation
@@ -104,13 +100,11 @@ Search for "Realistic Crop Rotation" on the official [Farming Simulator ModHub](
 
 ### Managing disease risk
 
-1. Open the in-game Map and switch to the **Diseases** view to check infected fields and the pressure forecast
-2. Use the planner's repeating 2-, 3- or 4-year cycle to space diseases that are actually controlled by crop return intervals. The last slot is checked against the first as part of the same cycle
-3. Accept that rust and late blight, and primarily septoria, can still appear on a clean rotation. Their seasonal exposure is not scored as a disease-spacing conflict; watch the weather. Fusarium can also arrive regionally, but infected cereal and maize residue still matters
-4. Spray fungicide early on the crops you want to protect: where you spray, the disease rarely appears, and if it does show up, treating keeps it from spreading further there. It never heals what is already damaged, so spray before an outbreak, not after
-5. The Treatment gauge in the Crop Rotation tab shows how much of the field is sprayed, whether the disease is absent, active or under control, and how long protection lasts
-6. Harvesting ends the outbreak on the field and clears the fungicide; reservoir-forming diseases can leave inoculum based on their final severity, so the next sensitive crop can still be at risk. Nematicide protects sprayed ground for three months and a new spray renews it, without reducing the cyst reservoir
-7. For take-all and clubroot, only non-host time and a suitable rotation lower pressure. Clubroot and cyst nematode reservoirs are never guaranteed to reach zero
+1. Open the **Diseases** map to distinguish active outbreaks from fields where the current crop is at risk
+2. Use the planner's complete repeating cycle to keep sensitive crops apart; its last slot is always checked against its first
+3. Watch the weather because some diseases can still start on a field that has never been affected
+4. Spray early: treatment can prevent or slow damage, but it never repairs destroyed crop or cleans an already affected field
+5. After harvest, wait before bringing a sensitive crop back so any disease left in the field has time to decline
 
 ## Console Commands
 
@@ -118,16 +112,16 @@ Testing and admin tools registered by the mod. They run on the server; typed on 
 
 | Command | Description |
 | --- | --- |
-| `rcrDisease [farmlandId]` | Prints the full disease state: field reservoir, effective load, map pressure, band, active infections and treatment coverage |
-| `rcrDiseaseInfect <farmlandId> <group> [severity]` | Forces an infection |
+| `rcrDisease [farmlandId]` | Prints active disease, remaining field risk and treatment coverage |
+| `rcrDiseaseInfect <farmlandId> <group> [attackLevel]` | Forces an infection |
 | `rcrDiseaseTick [farmlandId]` | Runs one cycle: infection roll, then progression |
-| `rcrDiseaseClear [farmlandId]` | Clears active disease and the stored field reservoir |
+| `rcrDiseaseClear [farmlandId]` | Clears active disease and any remaining field risk |
 
 Valid `<group>` values: `SCLEROTINIA`, `PHOMA`, `TAKEALL`, `SEPTORIA`, `RUST`, `FUSARIUM`, `LATEBLIGHT`, `BCN`, `CLUBROOT`.
 
 ## Configuration
 
-`cropConfig.xml` drives the whole model without any Lua editing. Add a `<crop>` line to register a new crop, or tune a `<diseaseGroup>` to change planner relevance and return interval, reservoir class and persistence, infection window, weather response, regional exposure and destruction curve.
+`cropConfig.xml` drives the whole model without any Lua editing. Add a `<crop>` line to register a new crop, or tune a `<diseaseGroup>` to change when the planner warns, whether a disease can remain in the field, how quickly it declines, when it can attack, how weather affects it and how much crop it can destroy.
 
 ## Changelog
 

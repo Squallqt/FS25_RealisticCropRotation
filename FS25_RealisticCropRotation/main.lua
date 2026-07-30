@@ -61,7 +61,6 @@ local function loadCropConfig()
         diseaseReservoirClasses = {},
         diseaseAnnualRetention = {},
         diseaseWindows = {},
-        diseaseFungal = {},
         diseaseWeatherDriven = {},
         diseaseCurves = {},
         diseaseStates = {},
@@ -127,8 +126,6 @@ local function loadCropConfig()
             if from ~= nil and to ~= nil then
                 config.diseaseWindows[upper] = { from = from, to = to }
             end
-            -- Taxonomic flag retained as metadata; weatherDriven controls runtime weather response.
-            config.diseaseFungal[upper] = getXMLBool(xmlFile, gkey .. "#fungal") == true
             -- Only explicitly weather-driven groups receive rain and temperature modifiers.
             config.diseaseWeatherDriven[upper] =
                 getXMLBool(xmlFile, gkey .. "#weatherDriven") == true
@@ -138,7 +135,7 @@ local function loadCropConfig()
             -- Treatment family used by the field panel and sprayer logic.
             local treatment = getXMLString(xmlFile, gkey .. "#treatment")
             config.diseaseTreatments[upper] = (treatment ~= nil and treatment ~= "") and string.upper(treatment) or "NONE"
-            -- Optional rain multiplier for fungal disease groups.
+            -- Optional rain multiplier for weather-driven disease groups.
             config.diseaseWeatherFactors[upper] = getXMLFloat(xmlFile, gkey .. "#weatherFactor")
             -- Regional background inoculum floor used by the infection roll.
             config.diseaseAmbient[upper] = getXMLFloat(xmlFile, gkey .. "#ambient") or 0

@@ -14,7 +14,7 @@
         <e k="rcr_tab_planning"         v="Lập kế hoạch" />
         <e k="rcr_section_disease_map"     v="Bệnh hại" />
         <e k="rcr_disease_sub_infections" v="Ruộng bị nhiễm bệnh" />
-        <e k="rcr_disease_sub_pressure"   v="Áp lực bệnh hại" />
+        <e k="rcr_disease_sub_pressure"   v="Nguy cơ bệnh hại" />
         <e k="rcr_disease_sub_treatment"  v="Phun thuốc" />
         <e k="rcr_disease_risk_low"       v="Thấp" />
         <e k="rcr_disease_risk_moderate"  v="Trung bình" />
@@ -117,23 +117,23 @@
         <e k="rcr_advice_afterRoot" v="Sau cây lấy củ, chờ bốn năm trước khi cây lấy củ quay lại, tiếp theo là ngũ cốc để tái tạo cấu trúc đất sau thu hoạch muộn." />
         <e k="rcr_advice_afterVegetable" v="Sau rau, chờ ba năm trước khi lặp lại, với ngũ cốc làm khoảng nghỉ sạch." />
         <e k="rcr_advice_afterForage" v="Sau đồng cỏ tạm thời, ngũ cốc tận dụng độ phì và cấu trúc tích lũy dưới lớp cỏ." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Áp lực thối hạch cao: nếu cải dầu, mù tạt, hướng dương, đậu tương, đậu Hà Lan, đậu, khoai tây hoặc cà rốt quay lại trong vòng chưa đầy 3 năm, áp lực vẫn ở mức cao; thuốc trừ nấm làm chậm khởi phát và khóa thiệt hại trên phần đã phun, không đẩy lùi bệnh." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Áp lực tuyến trùng cao: nếu củ cải đường, củ dền, cải dầu, mù tạt hoặc rau chân vịt quay lại trong vòng chưa đầy 3 năm, áp lực vẫn ở mức cao; thuốc trừ tuyến trùng giữ năng suất trên phần đã phun trong 3 tháng." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Áp lực thối hạch trung bình: giãn cách các cây ký chủ, mưa làm tăng rủi ro." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Áp lực tuyến trùng trung bình: giãn cách củ cải và cây họ cải." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Nguy cơ thối hạch cao: giãn cách ít nhất 3 năm giữa cải dầu, mù tạt, hướng dương, đậu tương, đậu Hà Lan, đậu, khoai tây và cà rốt; thuốc trừ nấm hạn chế thiệt hại trên phần đã phun nhưng không loại bỏ bệnh khỏi ruộng." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Nguy cơ tuyến trùng cao: giãn cách ít nhất 3 năm giữa củ cải đường, củ dền, cải dầu, mù tạt và rau chân vịt; thuốc trừ tuyến trùng bảo vệ phần đã xử lý nhưng không loại bỏ tuyến trùng." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Nguy cơ thối hạch trung bình: giãn cách cải dầu, mù tạt, hướng dương, đậu tương, đậu Hà Lan, đậu, khoai tây và cà rốt; mưa làm tăng nguy cơ." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Nguy cơ tuyến trùng trung bình: giãn cách củ cải đường, củ dền, cải dầu, mù tạt và rau chân vịt." />
         <e k="rcr_advice_no_current_crop" v="Không có cây trồng chính hiện tại: tư vấn sẽ có khi phát hiện cây trồng." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Luân canh hợp lý" />
         <e k="rcr_advice_title_warning" v="Xung đột luân canh" />
         <e k="rcr_advice_title_outbreak" v="Dịch bệnh đang hoạt động" />
-        <e k="rcr_advice_outbreak" v="%s đang hoạt động trên cánh đồng này, mức độ nghiêm trọng %d%%. Biện pháp xử lý khuyến nghị: %s." />
+        <e k="rcr_advice_outbreak" v="%s đang phát triển trên cánh đồng này, mức độ gây hại %d%%. Biện pháp xử lý khuyến nghị: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s dự kiến cho %s: xung đột luân canh, cùng họ (%s) với cây trồng hiện tại, còn thiếu %d/%d năm trước khi có thể quay lại an toàn." />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s dự kiến cho %s: xung đột luân canh, chung nguy cơ %s với cây trồng hiện tại, còn thiếu %d/%d năm trước khi có thể quay lại an toàn." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s dự kiến cho %s: xung đột luân canh. Cùng một bệnh (%s) cũng có thể ảnh hưởng đến cây trồng hiện tại; còn thiếu %d năm so với khoảng cách khuyến nghị %d năm." />
         <e k="rcr_advice_plan_next_ok" v="%s dự kiến cho %s: lựa chọn tốt, không phát hiện xung đột luân canh." />
         <e k="rcr_advice_title_fallow" v="Năm nghỉ" />
-        <e k="rcr_advice_fallow_current" v="Đang bỏ hóa: đất được nghỉ và áp lực bệnh hại giảm do không có cây ký chủ." />
-        <e k="rcr_advice_plan_next_fallow" v="Bỏ hóa dự kiến cho %s: một năm nghỉ để đất được nghỉ và chu kỳ bệnh bị cắt đứt trước khi trồng cây tiếp theo." />
+        <e k="rcr_advice_fallow_current" v="Đang bỏ hóa: năm nay không trồng cây chính. Điều này kéo dài thời gian trước cây trồng nhạy cảm tiếp theo nhưng không loại bỏ bệnh ngay lập tức." />
+        <e k="rcr_advice_plan_next_fallow" v="Bỏ hóa dự kiến cho %s: không trồng cây chính trong một năm. Điều này kéo dài thời gian trước cây trồng nhạy cảm tiếp theo nhưng không bảo đảm mọi bệnh đã biến mất." />
 
         <!-- Advice card, disease pressure list -->
 
@@ -213,19 +213,19 @@
         <e k="rcr_fillType_nematicide" v="Thuốc trừ tuyến trùng" />
         <e k="rcr_disease_treatment_none" v="Không phun thuốc" />
         <e k="rcr_disease_treatment_clubroot" v="Không có (chỉ luân canh)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Áp lực Phoma cao: nếu cải dầu hoặc mù tạt quay lại trong vòng chưa đầy 4 năm, áp lực vẫn ở mức cao; thuốc trừ nấm làm chậm khởi phát và khóa thiệt hại trên phần đã phun, không đẩy lùi bệnh." />
-        <e k="rcr_advice_pressure_high_takeall" v="Áp lực thối rễ cao: chèn một vụ cây không phải ký chủ (yến mạch, họ đậu, cây lấy dầu); không thuốc nào bảo vệ được trước bệnh này, chỉ luân canh mới hạ được áp lực." />
-        <e k="rcr_advice_pressure_high_septoria" v="Áp lực Septoria cao: tàn dư ngũ cốc có thể làm tăng áp lực; mưa làm tăng nguy cơ tức thời và thuốc trừ nấm hạn chế thiệt hại trên phần đã phun." />
-        <e k="rcr_advice_pressure_high_rust" v="Áp lực gỉ sắt cao: thời tiết ôn hòa ẩm ướt làm tăng nguy cơ tức thời và thuốc trừ nấm hạn chế thiệt hại trên phần đã phun." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Áp lực Fusarium cao: tránh trồng lúa mì sau ngô và bớt trồng ngũ cốc liên tiếp; thuốc trừ nấm làm chậm khởi phát và khóa thiệt hại trên phần đã phun, còn mưa làm dịch bùng nhanh hơn." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Áp lực mốc sương cao: thời tiết mát ẩm làm tăng nguy cơ tức thời và thuốc trừ nấm hạn chế thiệt hại trên phần đã phun." />
-        <e k="rcr_advice_pressure_high_clubroot" v="Áp lực sưng rễ cao: kéo dài tối đa khoảng cách vụ cải dầu và mù tạt; không thuốc nào bảo vệ được trước bệnh này, chỉ luân canh mới có tác dụng." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Áp lực Phoma trung bình: kéo dài khoảng cách vụ cải dầu và mù tạt." />
-        <e k="rcr_advice_pressure_moderate_takeall" v="Áp lực thối rễ trung bình: tránh vụ ngũ cốc thứ ba liên tiếp." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Áp lực Septoria trung bình: tàn dư ngũ cốc có thể làm tăng áp lực; mưa làm tăng nguy cơ tức thời." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Áp lực gỉ sắt trung bình: thời tiết ôn hòa ẩm ướt làm tăng nguy cơ tức thời." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="Áp lực Fusarium trung bình: giãn cách ngũ cốc và ngô." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Áp lực mốc sương trung bình: thời tiết mát ẩm làm tăng nguy cơ tức thời." />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="Áp lực sưng rễ trung bình: kéo dài khoảng cách vụ cải dầu và mù tạt." />
+        <e k="rcr_advice_pressure_high_phoma" v="Nguy cơ Phoma cao: giãn cách ít nhất 4 năm giữa cải dầu và mù tạt; thuốc trừ nấm hạn chế thiệt hại trên phần đã phun nhưng không loại bỏ bệnh khỏi ruộng." />
+        <e k="rcr_advice_pressure_high_takeall" v="Nguy cơ thối rễ cao: trồng yến mạch, cây họ đậu hoặc cây lấy dầu xen giữa các vụ ngũ cốc; không thuốc nào bảo vệ được trước bệnh này, luân canh dài hơn sẽ giảm nguy cơ." />
+        <e k="rcr_advice_pressure_high_septoria" v="Nguy cơ Septoria cao: mưa làm tăng nguy cơ phát bệnh trước mắt và thuốc trừ nấm hạn chế thiệt hại trên phần đã phun." />
+        <e k="rcr_advice_pressure_high_rust" v="Nguy cơ gỉ sắt cao: thời tiết ôn hòa và ẩm ướt làm tăng nguy cơ phát bệnh trước mắt, còn thuốc trừ nấm hạn chế thiệt hại trên phần đã phun." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Nguy cơ Fusarium cao: tránh trồng lúa mì sau ngô và giảm số vụ ngũ cốc liên tiếp; thuốc trừ nấm hạn chế thiệt hại trên phần đã phun, còn mưa làm tăng nguy cơ." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Nguy cơ mốc sương cao: thời tiết mát và ẩm làm tăng nguy cơ phát bệnh trước mắt, còn thuốc trừ nấm hạn chế thiệt hại trên phần đã phun." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Nguy cơ sưng rễ cao: kéo dài tối đa khoảng cách giữa cải dầu và mù tạt; không thuốc nào bảo vệ được trước bệnh này, luân canh dài hơn sẽ giảm nguy cơ." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Nguy cơ Phoma trung bình: kéo dài khoảng cách giữa cải dầu và mù tạt." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Nguy cơ thối rễ trung bình: tránh vụ ngũ cốc thứ ba liên tiếp." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Nguy cơ Septoria trung bình: mưa làm tăng nguy cơ phát bệnh trước mắt." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Nguy cơ gỉ sắt trung bình: thời tiết ôn hòa và ẩm ướt làm tăng nguy cơ phát bệnh trước mắt." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Nguy cơ Fusarium trung bình: giãn cách ngũ cốc và ngô." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Nguy cơ mốc sương trung bình: thời tiết mát và ẩm làm tăng nguy cơ phát bệnh trước mắt." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Nguy cơ sưng rễ trung bình: kéo dài khoảng cách giữa cải dầu và mù tạt." />
     </elements>
 </l10n>

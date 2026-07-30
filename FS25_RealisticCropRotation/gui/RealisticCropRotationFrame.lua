@@ -1820,16 +1820,6 @@ function RealisticCropRotationFrame:findPlanSlotsForCrop(plan, cropName)
     return PlannerModel.findCropSlots(plan, cropName, 4)
 end
 
----Finds the first plan slot matching a crop name inside the contiguous cycle.
--- @param table plan 4-slot plan
--- @param string cropName
--- @return integer slotIdx, or nil
--- @return integer cycleLength
-function RealisticCropRotationFrame:findPlanSlotForCrop(plan, cropName)
-    local slots, cycleLength = self:findPlanSlotsForCrop(plan, cropName)
-    return slots[1], cycleLength
-end
-
 ---Evaluates a one-year rotation step (cropA now, cropB next) for a conflict, using calcRotationScore's own rules.
 -- @param string cropA Current crop name
 -- @param string cropB Next-planned crop name

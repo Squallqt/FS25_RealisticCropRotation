@@ -14,11 +14,11 @@
         <e k="rcr_tab_planning"         v="Planowanie" />
         <e k="rcr_section_disease_map"     v="Choroby" />
         <e k="rcr_disease_sub_infections" v="Zainfekowane pola" />
-        <e k="rcr_disease_sub_pressure"   v="Presja chorób" />
+        <e k="rcr_disease_sub_pressure"   v="Ryzyko chorób" />
         <e k="rcr_disease_sub_treatment"  v="Zabiegi" />
-        <e k="rcr_disease_risk_low"       v="Niska" />
-        <e k="rcr_disease_risk_moderate"  v="Umiarkowana" />
-        <e k="rcr_disease_risk_high"      v="Wysoka" />
+        <e k="rcr_disease_risk_low"       v="Niskie" />
+        <e k="rcr_disease_risk_moderate"  v="Umiarkowane" />
+        <e k="rcr_disease_risk_high"      v="Wysokie" />
         <e k="rcr_disease_notification" v="Wystąpienie choroby: %s, pole %s" />
         <e k="rcr_disease_hud_label"    v="Choroba" />
         <e k="rcr_disease_header_active" v="Choroba (%s)" />
@@ -117,23 +117,23 @@
         <e k="rcr_advice_afterRoot" v="Po roślinie okopowej odczekaj cztery lata przed powrotem okopowych, a następnie zboże, aby odbudować strukturę po późnym zbiorze." />
         <e k="rcr_advice_afterVegetable" v="Po warzywie odczekaj trzy lata przed jego powtórzeniem, ze zbożem jako czystą przerwą." />
         <e k="rcr_advice_afterForage" v="Po użytku przemiennym z trawą zboże wykorzystuje żyzność i strukturę zgromadzone pod darnią." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Wysoka presja zgnilizny twardzikowej: jeśli rzepak, gorczyca, słonecznik, soja, groch, fasola, ziemniak lub marchew wracają przed upływem 3 lat, presja pozostaje wysoka; fungicyd opóźnia wystąpienie i zamraża szkody na opryskanych fragmentach, ale nie cofa choroby." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Wysoka presja mątwika: jeśli burak cukrowy, burak ćwikłowy, rzepak, gorczyca lub szpinak wracają przed upływem 3 lat, presja pozostaje wysoka; nematocyd ratuje plon na opryskanych fragmentach przez 3 miesiące." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Umiarkowana presja zgnilizny twardzikowej: rozłóż w czasie rośliny żywicielskie, deszcz zwiększa ryzyko." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Umiarkowana presja mątwika: rozłóż w czasie buraki i kapustne." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Wysokie ryzyko zgnilizny twardzikowej: zachowaj co najmniej 3 lata odstępu między rzepakiem, gorczycą, słonecznikiem, soją, grochem, fasolą, ziemniakiem i marchwią; fungicyd ogranicza szkody na opryskanych fragmentach, ale nie usuwa choroby z pola." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Wysokie ryzyko mątwika: zachowaj co najmniej 3 lata odstępu między burakiem cukrowym, burakiem ćwikłowym, rzepakiem, gorczycą i szpinakiem; nematocyd chroni opryskane fragmenty, ale nie usuwa nicieni." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Umiarkowane ryzyko zgnilizny twardzikowej: zwiększ odstęp między rzepakiem, gorczycą, słonecznikiem, soją, grochem, fasolą, ziemniakiem i marchwią; deszcz zwiększa ryzyko." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Umiarkowane ryzyko mątwika: zwiększ odstęp między burakami, rzepakiem, gorczycą i szpinakiem." />
         <e k="rcr_advice_no_current_crop" v="Brak aktualnej uprawy głównej: porada dostępna po wykryciu uprawy." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Płodozmian w porządku" />
         <e k="rcr_advice_title_warning" v="Konflikt płodozmianu" />
         <e k="rcr_advice_title_outbreak" v="Aktywna infekcja" />
-        <e k="rcr_advice_outbreak" v="%s jest aktywna na tym polu, nasilenie %d %%. Zalecane leczenie: %s." />
+        <e k="rcr_advice_outbreak" v="%s jest aktywna na tym polu, poziom porażenia %d %%. Zalecane leczenie: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s zaplanowana na %s: konflikt płodozmianu, ta sama rodzina (%s) co obecna uprawa, brakuje %d roku/lat z %d przed bezpiecznym powrotem." />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s zaplanowana na %s: konflikt płodozmianu, dzieli ryzyko %s z obecną uprawą, brakuje %d roku/lat z %d przed bezpiecznym powrotem." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s zaplanowana na %s: konflikt płodozmianu. Ta sama choroba (%s) może zaatakować także obecną uprawę; brakuje jeszcze %d roku/lat do zalecanego odstępu %d lat." />
         <e k="rcr_advice_plan_next_ok" v="%s zaplanowana na %s: dobry wybór, nie wykryto konfliktu płodozmianu." />
         <e k="rcr_advice_title_fallow" v="Rok przerwy" />
-        <e k="rcr_advice_fallow_current" v="Ugór w trakcie: gleba odpoczywa, a presja chorób maleje z powodu braku rośliny żywicielskiej." />
-        <e k="rcr_advice_plan_next_fallow" v="Ugór zaplanowany na %s: rok przerwy, w którym gleba odpoczywa, a cykl chorób zostaje przerwany przed następną uprawą." />
+        <e k="rcr_advice_fallow_current" v="Ugór w trakcie: w tym roku nie jest uprawiana główna roślina. Wydłuża to czas do następnej wrażliwej uprawy, ale nie usuwa choroby natychmiast." />
+        <e k="rcr_advice_plan_next_fallow" v="Ugór zaplanowany na %s: przez rok nie będzie uprawiana główna roślina. Wydłuża to czas do następnej wrażliwej uprawy, ale nie gwarantuje zniknięcia wszystkich chorób." />
 
         <!-- Advice card, disease pressure list -->
 
@@ -213,19 +213,19 @@
         <e k="rcr_fillType_nematicide" v="Nematocyd" />
         <e k="rcr_disease_treatment_none" v="Brak zabiegu" />
         <e k="rcr_disease_treatment_clubroot" v="Brak (tylko płodozmian)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Wysoka presja suchej zgnilizny: jeśli rzepak lub gorczyca wracają przed upływem 4 lat, presja pozostaje wysoka; fungicyd opóźnia wystąpienie i zamraża szkody na opryskanych fragmentach, ale nie cofa choroby." />
-        <e k="rcr_advice_pressure_high_takeall" v="Wysoka presja zgorzeli podstawy źdźbła: wprowadź przerwę z rośliną niebędącą żywicielem (owies, bobowate, oleiste); żaden preparat nie chroni przed tą chorobą, presję obniża tylko płodozmian." />
-        <e k="rcr_advice_pressure_high_septoria" v="Wysoka presja septoriozy: resztki zbóż mogą zwiększać presję; deszcz podnosi bezpośrednie ryzyko, a fungicyd ogranicza szkody na opryskanych fragmentach." />
-        <e k="rcr_advice_pressure_high_rust" v="Wysoka presja rdzy: łagodna i wilgotna pogoda podnosi bezpośrednie ryzyko, a fungicyd ogranicza szkody na opryskanych fragmentach." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Wysoka presja fuzariozy: nie uprawiaj pszenicy po kukurydzy i ogranicz zboża po sobie; fungicyd opóźnia wystąpienie i zamraża szkody na opryskanych fragmentach, a deszcz przyspiesza epidemię." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Wysoka presja zarazy ziemniaka: chłodna i wilgotna pogoda podnosi bezpośrednie ryzyko, a fungicyd ogranicza szkody na opryskanych fragmentach." />
-        <e k="rcr_advice_pressure_high_clubroot" v="Wysoka presja kiły: maksymalnie wydłuż przerwę w uprawie rzepaku i gorczycy; żaden preparat nie chroni przed tą chorobą, działa tylko płodozmian." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Umiarkowana presja suchej zgnilizny: wydłuż przerwę w uprawie rzepaku i gorczycy." />
-        <e k="rcr_advice_pressure_moderate_takeall" v="Umiarkowana presja zgorzeli podstawy źdźbła: unikaj trzeciego zboża z rzędu." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Umiarkowana presja septoriozy: resztki zbóż mogą zwiększać presję; deszcz podnosi bezpośrednie ryzyko." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Umiarkowana presja rdzy: łagodna i wilgotna pogoda podnosi bezpośrednie ryzyko." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="Umiarkowana presja fuzariozy: rozłóż w czasie zboża i kukurydzę." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Umiarkowana presja zarazy ziemniaka: chłodna i wilgotna pogoda podnosi bezpośrednie ryzyko." />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="Umiarkowana presja kiły: wydłuż przerwę w uprawie rzepaku i gorczycy." />
+        <e k="rcr_advice_pressure_high_phoma" v="Wysokie ryzyko suchej zgnilizny: zachowaj co najmniej 4 lata odstępu między rzepakiem i gorczycą; fungicyd ogranicza szkody na opryskanych fragmentach, ale nie usuwa choroby z pola." />
+        <e k="rcr_advice_pressure_high_takeall" v="Wysokie ryzyko zgorzeli podstawy źdźbła: między zbożami uprawiaj owies, rośliny bobowate lub oleiste; żaden preparat nie chroni przed tą chorobą, dłuższy płodozmian zmniejsza ryzyko." />
+        <e k="rcr_advice_pressure_high_septoria" v="Wysokie ryzyko septoriozy: deszcz zwiększa bezpośrednie ryzyko, a fungicyd ogranicza szkody na opryskanych fragmentach." />
+        <e k="rcr_advice_pressure_high_rust" v="Wysokie ryzyko rdzy: łagodna i wilgotna pogoda zwiększa bezpośrednie ryzyko, a fungicyd ogranicza szkody na opryskanych fragmentach." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Wysokie ryzyko fuzariozy: nie uprawiaj pszenicy po kukurydzy i ogranicz zboża uprawiane po sobie; fungicyd ogranicza szkody na opryskanych fragmentach, a deszcz zwiększa ryzyko." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Wysokie ryzyko zarazy ziemniaka: chłodna i wilgotna pogoda zwiększa bezpośrednie ryzyko, a fungicyd ogranicza szkody na opryskanych fragmentach." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Wysokie ryzyko kiły: maksymalnie wydłuż przerwę w uprawie rzepaku i gorczycy; żaden preparat nie chroni przed tą chorobą, dłuższy płodozmian zmniejsza ryzyko." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Umiarkowane ryzyko suchej zgnilizny: wydłuż przerwę w uprawie rzepaku i gorczycy." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Umiarkowane ryzyko zgorzeli podstawy źdźbła: unikaj trzeciego zboża z rzędu." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Umiarkowane ryzyko septoriozy: deszcz zwiększa bezpośrednie ryzyko." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Umiarkowane ryzyko rdzy: łagodna i wilgotna pogoda zwiększa bezpośrednie ryzyko." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Umiarkowane ryzyko fuzariozy: zwiększ odstęp między zbożami i kukurydzą." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Umiarkowane ryzyko zarazy ziemniaka: chłodna i wilgotna pogoda zwiększa bezpośrednie ryzyko." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Umiarkowane ryzyko kiły: wydłuż przerwę w uprawie rzepaku i gorczycy." />
     </elements>
 </l10n>

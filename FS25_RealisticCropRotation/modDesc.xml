@@ -10,7 +10,7 @@
     <description>
         <en><![CDATA[Make crop rotation matter.
 
-Every field remembers its last 4 crops. Some outbreaks leave inoculum behind on that field, while seasonal diseases arrive from the surrounding region; favourable weather can then trigger an infection that eats away part of the crop in a spreading, organic patch.
+Every field remembers its last 4 crops. Plan which crops return, watch the disease risk, and protect a sensitive crop before an outbreak destroys part of it.
 
 PLANNING
 - A rotation calendar with a real repeating cycle of 2, 3 or 4 crops, including the return from the last slot to the first
@@ -19,20 +19,21 @@ PLANNING
 - Fields sharing a plan are grouped, with combined area, grade and residue
 
 DISEASES
-Nine generic disease groups, each tied to specific host crops: sclerotinia, phoma, take-all, septoria, rust, fusarium, late blight, beet cyst nematode, clubroot.
+Nine diseases affect specific crops: sclerotinia, phoma, take-all, septoria, rust, fusarium, late blight, beet cyst nematode and clubroot.
 
-Two sources can combine:
-- Field reservoirs: phoma, take-all and fusarium; secondarily septoria; persistent beet cyst nematode and clubroot. An outbreak can leave inoculum according to its final severity. It fades over calendar years, but rotation never guarantees that cysts or clubroot are completely gone.
-- Seasonal or regional exposure: rust and late blight, and primarily septoria. They can strike after a clean rotation and receive no disease-specific spacing penalty in the planner. Sclerotinia combines a field reservoir with regional exposure.
+How it works:
+- A first outbreak can happen even if the field has never been affected. Favourable weather raises the chance for weather-sensitive diseases. Rust and late blight never remain in the field after the crop.
+- After a real outbreak, sclerotinia, phoma, take-all, septoria, fusarium, beet cyst nematode or clubroot can remain in the field after harvest. The more advanced the outbreak, the greater the risk for a future sensitive crop. A healthy crop adds no new disease to the field.
+- This remaining risk falls once per calendar year. Beet cyst nematode and clubroot can become very weak, but they may remain in the field indefinitely.
 
-The disease-pressure map shows background inoculum before current weather, not an instantaneous infection probability. Rain and temperature drive the weather-sensitive groups; temperature also paces the initial incubation of every infection, while soil-driven groups do not all react to rain. Cover crops receive no generic disease-break credit.
+Spacing sensitive crops gives the risk time to fall. The planner warns when a crop returns too soon, and still checks crop-family diversity separately. The Disease Risk map highlights fields where the current crop is more likely to become infected; favourable weather can raise the chance further.
 
 TREATMENTS
 Fungicide AMISTAR (Syngenta) and nematicide VELUM PRIME (Bayer), sprayed with any compatible sprayer.
 
-Protection is measured from the share of the field you spray. Fungicide lowers the field-wide outbreak chance, slows an established infection and protects sprayed cells from destruction. Lower final severity leaves less future inoculum for reservoir-forming diseases, but never erases what is already stored. Nematicide protects treated cells from nematode damage only; it changes neither field-level severity nor the cyst reservoir. Neither product restores lost crop, so spray early.
-- Fungicide: used up on the ground you harvest or mow; harvesting ends the outbreak, while any resulting reservoir and the history stay
-- Nematicide: protects the sprayed ground for three months per field, spraying again renews it without reducing the reservoir
+Protection is measured from the share of the field you spray. Fungicide lowers the chance of an outbreak, slows an active disease and protects sprayed crop from destruction. A smaller outbreak leaves less disease behind for future crops, but spraying does not clean a field that is already affected. Nematicide protects sprayed crop from nematode damage but does not remove nematodes from the field. Neither product restores lost crop, so spray early.
+- Fungicide: used up on the ground you harvest or mow; harvesting ends the active outbreak, but disease may remain for future crops
+- Nematicide: protects sprayed ground for three months per field; spraying again renews protection without removing nematodes
 - No product works against take-all or clubroot. Only rotation keeps them down.
 
 NITROGEN RESIDUE
@@ -42,16 +43,16 @@ In kg N/ha, next crop then the one after: alfalfa 80 then 50, vetch-rye 60 then 
 
 IN GAME
 - A dedicated "Crop Rotation" tab in the menu (ESC)
-- Three views on the map: infected fields, disease pressure, treated ground
+- Three views on the map: infected fields, disease risk, treated ground
 - Treatment gauge: the share of the field sprayed, the disease status, and how long protection lasts
 - Field card: current crop, growth stage, required soil work, weeds, active disease and its treatment, nitrogen, pH
 - On-foot HUD and a weather header so you can time your spraying
 
 CONSOLE COMMANDS (host or an admin client)
-- rcrDisease [farmlandId]: prints active disease, field reservoir and effective pressure
-- rcrDiseaseInfect <farmlandId> <group> [severity]: forces an infection
+- rcrDisease [farmlandId]: prints active disease, remaining field risk and treatment
+- rcrDiseaseInfect <farmlandId> <group> [attackLevel]: forces an infection
 - rcrDiseaseTick [farmlandId]: runs one cycle, infection roll then progression
-- rcrDiseaseClear [farmlandId]: clears active disease and the field reservoir
+- rcrDiseaseClear [farmlandId]: clears active disease and any remaining field risk
 
 Valid <group> values: SCLEROTINIA, PHOMA, TAKEALL, SEPTORIA, RUST, FUSARIUM, LATEBLIGHT, BCN, CLUBROOT
 
@@ -62,7 +63,7 @@ Issues & suggestions: https://github.com/Squallqt/FS25_RealisticCropRotation
 Please download this mod only from the official Farming Simulator ModHub and keep the original link. Reuploading, redistribution, modification or copying of this mod or any of its files, in whole or in part, is not permitted without the author's written consent.]]></en>
         <de><![CDATA[Gib deiner Fruchtfolge eine echte Bedeutung.
 
-Jedes Feld merkt sich seine letzten 4 Kulturen. Manche Ausbrüche hinterlassen auf diesem Feld Inokulum, während saisonale Krankheiten aus der Region eintreffen; günstiges Wetter kann daraus eine Infektion auslösen, die einen Teil der Kultur in einem sich ausbreitenden, organischen Fleck zerfrisst.
+Jedes Feld merkt sich seine letzten 4 Kulturen. Plane, welche Kulturen zurückkehren, beobachte das Krankheitsrisiko und schütze eine empfindliche Kultur, bevor ein Ausbruch einen Teil davon zerstört.
 
 PLANUNG
 - Ein Fruchtfolgekalender mit einem echten, sich wiederholenden Zyklus aus 2, 3 oder 4 Kulturen, einschließlich der Rückkehr vom letzten zum ersten Platz
@@ -71,20 +72,21 @@ PLANUNG
 - Felder mit gleichem Plan werden zusammengefasst, mit summierter Fläche, Note und Rückstand
 
 KRANKHEITEN
-Neun allgemeine Krankheitsgruppen, jede an bestimmte Wirtskulturen gebunden: Sklerotinia, Phoma, Schwarzbeinigkeit, Septoria, Rost, Fusariose, Kraut- und Knollenfäule, Rübenzystennematode, Kohlhernie.
+Neun Krankheiten befallen bestimmte Kulturen: Sklerotinia, Phoma, Schwarzbeinigkeit, Septoria, Rost, Fusariose, Kraut- und Knollenfäule, Rübenzystennematode und Kohlhernie.
 
-Zwei Quellen können zusammenwirken:
-- Feldreservoirs: Phoma, Schwarzbeinigkeit und Fusariose; in geringerem Maß Septoria; dauerhaft Rübenzystennematode und Kohlhernie. Ein Ausbruch kann abhängig von seinem endgültigen Schweregrad Inokulum hinterlassen. Es nimmt über Kalenderjahre ab, doch die Fruchtfolge garantiert nie, dass Zysten oder Kohlhernie vollständig verschwinden.
-- Saisonale oder regionale Exposition: Rost und Kraut- und Knollenfäule, vorwiegend Septoria. Sie können auch nach einer sauberen Fruchtfolge auftreten und erhalten im Planer keinen krankheitsspezifischen Abstandsmalus. Sklerotinia verbindet ein Feldreservoir mit regionaler Exposition.
+So funktioniert es:
+- Ein erster Befall kann auch auf einem Feld auftreten, das noch nie betroffen war. Günstiges Wetter erhöht das Risiko für wetterabhängige Krankheiten. Rost und Kraut- und Knollenfäule bleiben nach der Kultur nie im Feld.
+- Nach einem tatsächlichen Befall können Sklerotinia, Phoma, Schwarzbeinigkeit, Septoria, Fusariose, Rübenzystennematode oder Kohlhernie nach der Ernte im Feld bleiben. Je weiter der Befall fortgeschritten war, desto größer ist das Risiko für eine spätere empfindliche Kultur. Eine gesunde Kultur fügt dem Feld keine neue Krankheit hinzu.
+- Dieses verbleibende Risiko sinkt einmal pro Kalenderjahr. Rübenzystennematode und Kohlhernie können sehr schwach werden, aber unbegrenzt im Feld bleiben.
 
-Die Krankheitsdruckkarte zeigt das Hintergrundinokulum vor dem aktuellen Wetter, nicht die momentane Infektionswahrscheinlichkeit. Regen und Temperatur beeinflussen die wetterabhängigen Gruppen; die Temperatur bestimmt außerdem die anfängliche Inkubationsdauer jeder Infektion, während bodenabhängige Gruppen nicht alle auf Regen reagieren. Zwischenfrüchte erhalten keinen pauschalen Gesundheitsbonus.
+Größere Abstände zwischen empfindlichen Kulturen geben dem Risiko Zeit zu sinken. Der Planer warnt, wenn eine Kultur zu früh zurückkehrt, und bewertet die Vielfalt der Kulturfamilien weiterhin getrennt. Die Karte "Krankheitsrisiko" markiert Felder, auf denen die aktuelle Kultur leichter erkranken kann; günstiges Wetter kann die Gefahr weiter erhöhen.
 
 BEHANDLUNG
 Fungizid AMISTAR (Syngenta) und Nematizid VELUM PRIME (Bayer), ausgebracht mit jeder kompatiblen Feldspritze.
 
-Der Schutz richtet sich nach dem besprühten Anteil des Feldes. Fungizid senkt die Ausbruchswahrscheinlichkeit für das ganze Feld, verlangsamt eine bestehende Infektion und schützt behandelte Zellen vor Zerstörung. Ein geringerer endgültiger Schweregrad hinterlässt bei reservoirbildenden Krankheiten weniger künftiges Inokulum, beseitigt aber nie bereits gespeichertes. Nematizid schützt behandelte Zellen nur vor Nematodenschäden; es verändert weder den Schweregrad auf Feldebene noch das Zystenreservoir. Kein Mittel stellt bereits verlorene Pflanzen wieder her, also spritze früh.
-- Fungizid: verbraucht sich auf der geernteten oder gemähten Fläche; die Ernte beendet den Ausbruch, ein entstandenes Reservoir und der Verlauf bleiben
-- Nematizid: schützt die behandelte Fläche drei Monate je Feld, eine erneute Anwendung verlängert die Dauer, ohne das Reservoir zu senken
+Der Schutz richtet sich nach dem besprühten Anteil des Feldes. Fungizid senkt die Gefahr eines Ausbruchs, verlangsamt eine aktive Krankheit und schützt die besprühte Kultur vor Zerstörung. Ein kleinerer Befall hinterlässt weniger Krankheit für spätere Kulturen, doch eine Spritzung reinigt kein bereits betroffenes Feld. Nematizid schützt die besprühten Teile der aktuellen Kultur vor Nematodenschäden, entfernt die Nematoden aber nicht aus dem Feld. Kein Mittel stellt bereits verlorene Pflanzen wieder her, also spritze früh.
+- Fungizid: wird auf der geernteten oder gemähten Fläche verbraucht; die Ernte beendet den aktiven Befall, doch die Krankheit kann für spätere Kulturen bleiben
+- Nematizid: schützt die besprühte Fläche drei Monate je Feld; eine neue Anwendung verlängert den Schutz, ohne Nematoden zu entfernen
 - Gegen Schwarzbeinigkeit und Kohlhernie hilft kein Mittel. Nur die Fruchtfolge drückt sie.
 
 STICKSTOFFRÜCKSTAND
@@ -94,16 +96,16 @@ In kg N/ha, nächste Kultur und danach: Luzerne 80 dann 50, Wicke-Roggen 60 dann
 
 IM SPIEL
 - Ein eigener Reiter "Fruchtfolge" im Menü (ESC)
-- Drei Ansichten auf der Karte: befallene Felder, Krankheitsdruck, behandelte Flächen
+- Drei Ansichten auf der Karte: befallene Felder, Krankheitsrisiko, behandelte Flächen
 - Behandlungsanzeige: der behandelte Flächenanteil, der Krankheitszustand und die verbleibende Schutzdauer
 - Feldkarte: aktuelle Kultur, Wachstumsstadium, nötige Bodenbearbeitung, Unkraut, aktive Krankheit und ihre Behandlung, Stickstoff, pH-Wert
 - Feldanzeige zu Fuß und Wetterleiste, damit du deine Spritzungen timen kannst
 
 KONSOLENBEFEHLE (Host oder Admin-Client)
-- rcrDisease [farmlandId]: zeigt aktive Krankheiten, Feldreservoir und wirksamen Druck
-- rcrDiseaseInfect <farmlandId> <group> [severity]: erzwingt eine Infektion
+- rcrDisease [farmlandId]: zeigt aktive Krankheiten, verbleibendes Feldrisiko und Behandlung
+- rcrDiseaseInfect <farmlandId> <group> [attackLevel]: erzwingt eine Infektion
 - rcrDiseaseTick [farmlandId]: führt einen Zyklus aus, Infektionswurf und Fortschritt
-- rcrDiseaseClear [farmlandId]: löscht aktive Krankheiten und das Feldreservoir
+- rcrDiseaseClear [farmlandId]: löscht aktive Krankheiten und jedes verbleibende Feldrisiko
 
 Gültige <group>-Werte: SCLEROTINIA, PHOMA, TAKEALL, SEPTORIA, RUST, FUSARIUM, LATEBLIGHT, BCN, CLUBROOT
 
@@ -114,7 +116,7 @@ Issues & Vorschläge: https://github.com/Squallqt/FS25_RealisticCropRotation
 Bitte lade diesen Mod ausschließlich aus dem offiziellen Farming Simulator ModHub herunter und behalte den originalen Link bei. Das erneute Hochladen, die Weitergabe, Veränderung oder das Kopieren dieses Mods oder seiner Dateien, ganz oder teilweise, ist ohne die schriftliche Zustimmung des Autors nicht gestattet.]]></de>
         <fr><![CDATA[Donnez un rôle réel à vos rotations.
 
-Chaque parcelle garde la mémoire de ses 4 dernières cultures. Certaines attaques laissent un inoculum sur cette parcelle, tandis que des maladies saisonnières arrivent de la région ; une météo favorable peut alors déclencher une infection qui ronge une partie de la culture en une tache organique qui s'étend.
+Chaque parcelle garde la mémoire de ses 4 dernières cultures. Planifiez leur retour, surveillez le risque de maladie et protégez une culture sensible avant qu'une attaque n'en détruise une partie.
 
 PLANIFICATION
 - Un calendrier avec un vrai cycle répétitif de 2, 3 ou 4 cultures, retour du dernier emplacement au premier compris
@@ -123,20 +125,21 @@ PLANIFICATION
 - Les parcelles au même plan sont regroupées, avec surface, note et reliquat cumulés
 
 MALADIES
-Neuf groupes de maladies génériques, chacun lié à des cultures hôtes précises : sclérotinia, phoma, piétin-échaudage, septoriose, rouille, fusariose, mildiou, nématode à kystes de la betterave, hernie des crucifères.
+Neuf maladies touchent des cultures précises : sclérotinia, phoma, piétin-échaudage, septoriose, rouille, fusariose, mildiou, nématode à kystes de la betterave et hernie des crucifères.
 
-Deux sources peuvent se combiner :
-- Réservoirs de parcelle : phoma, piétin-échaudage et fusariose ; secondairement septoriose ; persistants pour le nématode à kystes et la hernie. Une attaque peut laisser un inoculum proportionnel à sa sévérité finale. Il décroît au fil des années civiles, mais la rotation ne garantit jamais la disparition complète des kystes ni de la hernie.
-- Exposition saisonnière ou régionale : rouille et mildiou, principalement septoriose. Ces maladies peuvent frapper après une rotation propre et ne reçoivent aucune pénalité d'espacement propre à la maladie dans le planificateur. Le sclérotinia combine un réservoir de parcelle et une exposition régionale.
+Le fonctionnement est simple :
+- Une première attaque peut se produire même sur une parcelle qui n'a jamais été touchée. Une météo favorable augmente le risque pour les maladies qui y sont sensibles. La rouille et le mildiou ne restent jamais dans la parcelle après la culture.
+- Après une véritable attaque, le sclérotinia, le phoma, le piétin-échaudage, la septoriose, la fusariose, le nématode à kystes ou la hernie peuvent rester dans la parcelle après la récolte. Plus l'attaque était avancée, plus le risque sera élevé pour une prochaine culture sensible. Une culture restée saine n'ajoute aucune nouvelle maladie à la parcelle.
+- Ce risque diminue une fois par année civile. Le nématode à kystes et la hernie peuvent devenir très faibles, mais rester indéfiniment dans la parcelle.
 
-La carte de pression affiche l'inoculum de fond avant la météo actuelle, pas une probabilité instantanée d'infection. La pluie et la température pilotent les groupes sensibles à la météo ; la température rythme aussi l'incubation initiale de chaque infection, tandis que les groupes liés au sol ne réagissent pas tous à la pluie. Les couverts ne reçoivent aucun crédit sanitaire générique.
+Espacer les cultures sensibles laisse au risque le temps de diminuer. Le planificateur avertit lorsqu'une culture revient trop tôt et continue d'évaluer séparément la diversité des familles. La carte « Risque de maladie » signale les parcelles où la culture actuelle a le plus de chances d'être touchée ; une météo favorable peut encore augmenter ce risque.
 
 TRAITEMENTS
 Fongicide AMISTAR (Syngenta) et nématicide VELUM PRIME (Bayer), à pulvériser avec un pulvérisateur compatible.
 
-La protection dépend de la part de la parcelle pulvérisée. Le fongicide réduit le risque d'attaque à l'échelle de la parcelle, ralentit une infection établie et protège les cellules traitées de la destruction. Une sévérité finale plus faible laisse moins d'inoculum futur pour les maladies à réservoir, sans jamais effacer ce qui est déjà stocké. Le nématicide protège seulement les cellules traitées des dégâts du nématode ; il ne modifie ni la sévérité à l'échelle de la parcelle ni le réservoir de kystes. Aucun produit ne restaure une culture déjà perdue : pulvérisez donc tôt.
-- Fongicide : consommé sur la surface récoltée ou fauchée ; récolter met fin à l'attaque, le réservoir éventuellement créé et l'historique restent
-- Nématicide : protège la zone traitée pendant trois mois par parcelle, une nouvelle pulvérisation renouvelle la durée sans réduire le réservoir
+La protection dépend de la part de la parcelle pulvérisée. Le fongicide réduit le risque d'attaque, ralentit une maladie active et protège la culture pulvérisée de la destruction. Une attaque moins importante laisse moins de maladie pour les cultures futures, mais pulvériser ne nettoie pas une parcelle déjà touchée. Le nématicide protège les zones pulvérisées de la culture actuelle, sans éliminer les nématodes de la parcelle. Aucun produit ne restaure une culture déjà perdue : pulvérisez donc tôt.
+- Fongicide : consommé sur la surface récoltée ou fauchée ; la récolte met fin à l'attaque active, mais la maladie peut rester pour les cultures futures
+- Nématicide : protège la zone pulvérisée pendant trois mois par parcelle ; une nouvelle application renouvelle la protection sans éliminer les nématodes
 - Aucun produit ne marche contre le piétin-échaudage ni la hernie. Seule la rotation les fait baisser.
 
 RELIQUAT D'AZOTE
@@ -146,16 +149,16 @@ En kg N/ha, culture suivante puis la suivante : luzerne 80 puis 50, vesce-seigle
 
 DANS LE JEU
 - Un onglet dédié « Assolement » dans le menu (ÉCHAP)
-- Trois vues sur la carte : parcelles infectées, pression maladie, zones traitées
+- Trois vues sur la carte : parcelles infectées, risque de maladie, zones traitées
 - Jauge de traitement : la part de parcelle pulvérisée, l'état de la maladie et la durée de protection restante
 - Fiche de champ : culture en place, stade, travail du sol requis, mauvaises herbes, maladie active et son traitement, azote, pH
 - HUD à pied et en-tête météo pour choisir le moment de pulvériser
 
 COMMANDES CONSOLE (hôte ou client admin)
-- rcrDisease [farmlandId] : affiche les maladies actives, le réservoir de parcelle et la pression effective
-- rcrDiseaseInfect <farmlandId> <group> [severity] : force une infection
+- rcrDisease [farmlandId] : affiche les maladies actives, le risque restant dans la parcelle et le traitement
+- rcrDiseaseInfect <farmlandId> <group> [attackLevel] : force une infection
 - rcrDiseaseTick [farmlandId] : exécute un cycle, tirage d'infection puis progression
-- rcrDiseaseClear [farmlandId] : efface les maladies actives et le réservoir de parcelle
+- rcrDiseaseClear [farmlandId] : efface les maladies actives et tout risque restant dans la parcelle
 
 Valeurs valides pour <group> : SCLEROTINIA, PHOMA, TAKEALL, SEPTORIA, RUST, FUSARIUM, LATEBLIGHT, BCN, CLUBROOT
 

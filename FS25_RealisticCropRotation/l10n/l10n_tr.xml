@@ -14,7 +14,7 @@
         <e k="rcr_tab_planning"         v="Planlama" />
         <e k="rcr_section_disease_map"     v="Hastalıklar" />
         <e k="rcr_disease_sub_infections" v="Enfekte tarlalar" />
-        <e k="rcr_disease_sub_pressure"   v="Hastalık baskısı" />
+        <e k="rcr_disease_sub_pressure"   v="Hastalık riski" />
         <e k="rcr_disease_sub_treatment"  v="İlaçlama" />
         <e k="rcr_disease_risk_low"       v="Düşük" />
         <e k="rcr_disease_risk_moderate"  v="Orta" />
@@ -117,23 +117,23 @@
         <e k="rcr_advice_afterRoot" v="Bir kök bitkisinden sonra köklerin dönmesinden önce dört yıl bekle, ardından geç hasattan sonra yapıyı yeniden kurmak için bir tahıl." />
         <e k="rcr_advice_afterVegetable" v="Bir sebzeden sonra tekrarlamadan önce üç yıl bekle, temiz bir ara olarak bir tahıl ile." />
         <e k="rcr_advice_afterForage" v="Geçici bir çayırdan sonra tahıl, çim örtüsü altında biriken verimlilik ve yapıyı değerlendirir." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Sklerotinya baskısı yüksek: kanola, hardal, ayçiçeği, soya, bezelye, fasulye, patates veya havuç 3 yıl içinde geri dönerse baskı yüksek kalır; fungisit hastalığın başlangıcını yavaşlatır ve ilaçlanan yerdeki zararı dondurur, hastalığı geriletmez." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Nematod baskısı yüksek: şeker pancarı, kırmızı pancar, kanola, hardal veya ıspanak 3 yıl içinde geri dönerse baskı yüksek kalır; nematisit ilaçlanan yerde ürünü 3 ay boyunca kurtarır." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Sklerotinya baskısı orta: konukçu bitkilerin arasını açın, yağmur riski artırır." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Nematod baskısı orta: pancar ve turpgillerin arasını açın." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Sklerotinya riski yüksek: kanola, hardal, ayçiçeği, soya, bezelye, fasulye, patates ve havuç arasında en az 3 yıl bırakın; fungisit ilaçlanan yerdeki zararı sınırlar, ancak hastalığı tarladan temizlemez." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Nematod riski yüksek: şeker pancarı, kırmızı pancar, kanola, hardal ve ıspanak arasında en az 3 yıl bırakın; nematisit ilaçlanan alanı korur ancak nematodları ortadan kaldırmaz." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Sklerotinya riski orta: kanola, hardal, ayçiçeği, soya, bezelye, fasulye, patates ve havuç arasındaki süreyi uzatın; yağmur riski artırır." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Nematod riski orta: şeker pancarı, kırmızı pancar, kanola, hardal ve ıspanak arasındaki süreyi uzatın." />
         <e k="rcr_advice_no_current_crop" v="Mevcut ana ekin yok: bir ekin algılandığında tavsiye sunulur." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Ekim nöbeti uygun" />
         <e k="rcr_advice_title_warning" v="Ekim nöbeti çakışması" />
         <e k="rcr_advice_title_outbreak" v="Aktif hastalık salgını" />
-        <e k="rcr_advice_outbreak" v="%s bu tarlada aktif, şiddet %%%d. Önerilen tedavi: %s." />
+        <e k="rcr_advice_outbreak" v="%s bu tarlada aktif, saldırı düzeyi %d%%. Önerilen tedavi: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s %s için planlandı: ekim nöbeti çakışması, mevcut ürünle aynı aile (%s), güvenli dönüş için %d yıl daha (toplam %d yıl) gerekiyor." />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s %s için planlandı: ekim nöbeti çakışması, mevcut ürünle %s riskini paylaşıyor, güvenli dönüş için %d yıl daha (toplam %d yıl) gerekiyor." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s %s için planlandı: ekim nöbeti çakışması. Aynı hastalık (%s) mevcut ürünü de etkileyebilir; %d yıl daha gerekiyor (önerilen aralık %d yıl)." />
         <e k="rcr_advice_plan_next_ok" v="%s %s için planlandı: iyi seçim, ekim nöbeti çakışması tespit edilmedi." />
         <e k="rcr_advice_title_fallow" v="Dinlenme yılı" />
-        <e k="rcr_advice_fallow_current" v="Nadas sürüyor: toprak dinlenir ve konukçu bitki olmadığından hastalık baskısı azalır." />
-        <e k="rcr_advice_plan_next_fallow" v="Nadas %s için planlandı: toprağın dinlendiği ve sonraki ekinden önce hastalık döngüsünün kırıldığı bir dinlenme yılı." />
+        <e k="rcr_advice_fallow_current" v="Nadas sürüyor: bu yıl ana ürün yetiştirilmiyor. Sonraki hassas ürüne kadar geçen süre artar, ancak hastalık hemen ortadan kalkmaz." />
+        <e k="rcr_advice_plan_next_fallow" v="Nadas %s için planlandı: bir yıl boyunca ana ürün yetiştirilmeyecek. Sonraki hassas ürüne kadar geçen süre artar, ancak tüm hastalıkların yok olacağı garanti edilmez." />
 
         <!-- Advice card, disease pressure list -->
 
@@ -213,19 +213,19 @@
         <e k="rcr_fillType_nematicide" v="Nematisit" />
         <e k="rcr_disease_treatment_none" v="İlaçlama yok" />
         <e k="rcr_disease_treatment_clubroot" v="Yok (yalnızca münavebe)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Phoma baskısı yüksek: kanola veya hardal 4 yıl içinde geri dönerse baskı yüksek kalır; fungisit hastalığın başlangıcını yavaşlatır ve ilaçlanan yerdeki zararı dondurur, hastalığı geriletmez." />
-        <e k="rcr_advice_pressure_high_takeall" v="Kök çürüklüğü baskısı yüksek: konukçu olmayan bir ara bitki (yulaf, baklagil, yağlı tohum) ekin; bu hastalığa karşı koruyan bir ilaç yoktur, baskıyı yalnızca münavebe düşürür." />
-        <e k="rcr_advice_pressure_high_septoria" v="Septorya baskısı yüksek: tahıl artıkları baskıyı artırabilir; yağmur anlık riski artırır ve fungisit ilaçlanan yerdeki zararı sınırlar." />
-        <e k="rcr_advice_pressure_high_rust" v="Pas baskısı yüksek: ılıman ve nemli hava anlık riski artırır ve fungisit ilaçlanan yerdeki zararı sınırlar." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Fusarium baskısı yüksek: mısırdan sonra buğday ekmeyin ve arka arkaya daha az tahıl koyun; fungisit hastalığın başlangıcını yavaşlatır ve ilaçlanan yerdeki zararı dondurur, yağmur salgını hızlandırır." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Mildiyö baskısı yüksek: serin ve nemli hava anlık riski artırır ve fungisit ilaçlanan yerdeki zararı sınırlar." />
-        <e k="rcr_advice_pressure_high_clubroot" v="Kök uru baskısı yüksek: kanola ve hardal arasını olabildiğince uzatın; bu hastalığa karşı koruyan bir ilaç yoktur, yalnızca münavebe işe yarar." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Phoma baskısı orta: kanola ve hardal arasını uzatın." />
-        <e k="rcr_advice_pressure_moderate_takeall" v="Kök çürüklüğü baskısı orta: üst üste üçüncü tahıldan kaçının." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Septorya baskısı orta: tahıl artıkları baskıyı artırabilir; yağmur anlık riski artırır." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Pas baskısı orta: ılıman ve nemli hava anlık riski artırır." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="Fusarium baskısı orta: tahıl ve mısırın arasını açın." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Mildiyö baskısı orta: serin ve nemli hava anlık riski artırır." />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="Kök uru baskısı orta: kanola ve hardal arasını uzatın." />
+        <e k="rcr_advice_pressure_high_phoma" v="Phoma riski yüksek: kanola ve hardal arasında en az 4 yıl bırakın; fungisit ilaçlanan yerdeki zararı sınırlar, ancak hastalığı tarladan temizlemez." />
+        <e k="rcr_advice_pressure_high_takeall" v="Kök çürüklüğü riski yüksek: tahıllar arasında yulaf, baklagil veya yağlı tohum ekin; bu hastalığa karşı koruyan bir ilaç yoktur, daha uzun ekim nöbeti riski azaltır." />
+        <e k="rcr_advice_pressure_high_septoria" v="Septorya riski yüksek: yağmur yakın dönemdeki hastalık riskini artırır ve fungisit ilaçlanan yerdeki zararı sınırlar." />
+        <e k="rcr_advice_pressure_high_rust" v="Pas riski yüksek: ılıman ve nemli hava yakın dönemdeki hastalık riskini artırır ve fungisit ilaçlanan yerdeki zararı sınırlar." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Fusarium riski yüksek: mısırdan sonra buğday ekmeyin ve arka arkaya tahıl ekimini azaltın; fungisit ilaçlanan yerdeki zararı sınırlar, yağmur ise riski artırır." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Mildiyö riski yüksek: serin ve nemli hava yakın dönemdeki hastalık riskini artırır ve fungisit ilaçlanan yerdeki zararı sınırlar." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Kök uru riski yüksek: kanola ve hardal arasındaki süreyi olabildiğince uzatın; bu hastalığa karşı koruyan bir ilaç yoktur, daha uzun ekim nöbeti riski azaltır." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Phoma riski orta: kanola ve hardal arasındaki süreyi uzatın." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Kök çürüklüğü riski orta: üst üste üçüncü tahıldan kaçının." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Septorya riski orta: yağmur yakın dönemdeki hastalık riskini artırır." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Pas riski orta: ılıman ve nemli hava yakın dönemdeki hastalık riskini artırır." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Fusarium riski orta: tahıl ve mısır arasındaki süreyi uzatın." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Mildiyö riski orta: serin ve nemli hava yakın dönemdeki hastalık riskini artırır." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Kök uru riski orta: kanola ve hardal arasındaki süreyi uzatın." />
     </elements>
 </l10n>

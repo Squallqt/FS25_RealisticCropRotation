@@ -14,7 +14,7 @@
         <e k="rcr_tab_planning"         v="Planering" />
         <e k="rcr_section_disease_map"     v="Sjukdomar" />
         <e k="rcr_disease_sub_infections" v="Infekterade fält" />
-        <e k="rcr_disease_sub_pressure"   v="Sjukdomstryck" />
+        <e k="rcr_disease_sub_pressure"   v="Sjukdomsrisk" />
         <e k="rcr_disease_sub_treatment"  v="Behandling" />
         <e k="rcr_disease_risk_low"       v="Låg" />
         <e k="rcr_disease_risk_moderate"  v="Måttlig" />
@@ -117,23 +117,23 @@
         <e k="rcr_advice_afterRoot" v="Efter en rotfrukt, vänta fyra år innan rotfrukter återkommer, och följ med en spannmål för att bygga upp strukturen efter den sena upptagningen." />
         <e k="rcr_advice_afterVegetable" v="Efter en grönsak, vänta tre år innan du upprepar den, med en spannmål som ren avbrott." />
         <e k="rcr_advice_afterForage" v="Efter en vall utnyttjar en spannmål den bördighet och struktur som byggts upp under grässvålen." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Högt bomullsmögeltryck: kommer raps, senap, solros, sojaböna, ärt, böna, potatis eller morot tillbaka inom 3 år, förblir trycket högt; svampmedlet bromsar utbrottet och fryser skadan på besprutad mark, men pressar inte tillbaka sjukdomen." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Högt nematodtryck: kommer sockerbeta, rödbeta, raps, senap eller spenat tillbaka inom 3 år, förblir trycket högt; nematiciden räddar skörden på besprutad mark i 3 månader." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Måttligt bomullsmögeltryck: sprid ut värdgrödorna, regn ökar risken." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Måttligt nematodtryck: sprid ut betor och korsblommiga." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Hög risk för bomullsmögel: Vänta minst 3 år innan du åter odlar raps, senap, solros, sojaböna, ärt, böna, potatis eller morot; svampmedel begränsar skadan på behandlade områden, men tar inte bort sjukdomen från fältet." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Hög risk för nematoder: Vänta minst 3 år innan du åter odlar sockerbeta, rödbeta, raps, senap eller spenat; nematicid skyddar behandlade områden, men tar inte bort nematoderna." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Måttlig risk för bomullsmögel: Vänta längre innan du åter odlar raps, senap, solros, sojaböna, ärt, böna, potatis eller morot; regn kan öka risken." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Måttlig risk för nematoder: Vänta längre innan du åter odlar betor, raps, senap eller spenat." />
         <e k="rcr_advice_no_current_crop" v="Ingen aktuell huvudgröda: råd tillgängligt när en gröda upptäcks." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Växtföljd i ordning" />
         <e k="rcr_advice_title_warning" v="Växtföljdskonflikt" />
         <e k="rcr_advice_title_outbreak" v="Aktivt sjukdomsutbrott" />
-        <e k="rcr_advice_outbreak" v="%s är aktiv på detta fält, allvarlighetsgrad %d %%. Rekommenderad behandling: %s." />
+        <e k="rcr_advice_outbreak" v="%s är aktiv på detta fält. Angreppsnivå: %d %%. Rekommenderad behandling: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s planerad till %s: växtföljdskonflikt, samma familj (%s) som den aktuella grödan, %d år av %d kvarstår innan en säker återkomst." />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s planerad till %s: växtföljdskonflikt, delar %s-risken med den aktuella grödan, %d år av %d kvarstår innan en säker återkomst." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s planerad till %s: både denna och den aktuella grödan kan angripas av %s. Vänta ytterligare %d år; det rekommenderade intervallet är %d år." />
         <e k="rcr_advice_plan_next_ok" v="%s planerad till %s: bra val, ingen växtföljdskonflikt upptäckt." />
         <e k="rcr_advice_title_fallow" v="Viloår" />
-        <e k="rcr_advice_fallow_current" v="Träda pågår: jorden vilar och sjukdomstrycket minskar utan en värdväxt." />
-        <e k="rcr_advice_plan_next_fallow" v="Träda planerad till %s: ett viloår då jorden vilar och sjukdomscykeln bryts före nästa gröda." />
+        <e k="rcr_advice_fallow_current" v="Träda pågår: Ingen huvudgröda odlas i år. Det ger mer tid före nästa känsliga gröda, men tar inte bort sjukdomen omedelbart." />
+        <e k="rcr_advice_plan_next_fallow" v="Träda planerad till %s: Ingen huvudgröda odlas under ett år. Det ger mer tid före nästa känsliga gröda, men garanterar inte att alla sjukdomar är borta." />
 
         <!-- Advice card, disease pressure list -->
 
@@ -213,19 +213,19 @@
         <e k="rcr_fillType_nematicide" v="Nematicid" />
         <e k="rcr_disease_treatment_none" v="Ingen behandling" />
         <e k="rcr_disease_treatment_clubroot" v="Ingen (endast växtföljd)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Högt torrötetryck: kommer raps eller senap tillbaka inom 4 år, förblir trycket högt; svampmedlet bromsar utbrottet och fryser skadan på besprutad mark, men pressar inte tillbaka sjukdomen." />
-        <e k="rcr_advice_pressure_high_takeall" v="Högt rotdödartryck: lägg in en icke-värdgröda som avbrott (havre, baljväxt, oljeväxt); inget medel skyddar mot denna sjukdom, bara växtföljd sänker trycket." />
-        <e k="rcr_advice_pressure_high_septoria" v="Högt septoriatryck: spannmålsrester kan öka trycket; regn ökar den omedelbara risken och svampmedlet begränsar skadan på besprutad mark." />
-        <e k="rcr_advice_pressure_high_rust" v="Högt rosttryck: milt fuktigt väder ökar den omedelbara risken och svampmedlet begränsar skadan på besprutad mark." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Högt fusariostryck: undvik vete efter majs och lägg färre spannmål i rad; svampmedlet bromsar utbrottet och fryser skadan på besprutad mark, och regn snabbar på epidemin." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Högt bladmögeltryck: svalt fuktigt väder ökar den omedelbara risken och svampmedlet begränsar skadan på besprutad mark." />
-        <e k="rcr_advice_pressure_high_clubroot" v="Högt klumprotstryck: sträck ut uppehållet för raps och senap så långt det går; inget medel skyddar mot denna sjukdom, bara växtföljd hjälper." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Måttligt torrötetryck: förläng uppehållet för raps och senap." />
-        <e k="rcr_advice_pressure_moderate_takeall" v="Måttligt rotdödartryck: undvik en tredje spannmål i rad." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Måttligt septoriatryck: spannmålsrester kan öka trycket; regn ökar den omedelbara risken." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Måttligt rosttryck: milt fuktigt väder ökar den omedelbara risken." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="Måttligt fusariostryck: sprid ut spannmål och majs." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Måttligt bladmögeltryck: svalt fuktigt väder ökar den omedelbara risken." />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="Måttligt klumprotstryck: förläng uppehållet för raps och senap." />
+        <e k="rcr_advice_pressure_high_phoma" v="Hög risk för torröta: Vänta minst 4 år innan du åter odlar raps eller senap; svampmedel begränsar skadan på behandlade områden, men tar inte bort sjukdomen från fältet." />
+        <e k="rcr_advice_pressure_high_takeall" v="Hög risk för rotdödare: Bryt spannmålsföljden med havre, en baljväxt eller en oljeväxt; inget medel skyddar mot denna sjukdom, och mer tid mellan känsliga spannmålsgrödor minskar den framtida risken." />
+        <e k="rcr_advice_pressure_high_septoria" v="Hög risk för septoria: Regn kan öka risken ytterligare, och svampmedel begränsar skadan på behandlade områden." />
+        <e k="rcr_advice_pressure_high_rust" v="Hög risk för rost: Milt och fuktigt väder kan öka risken ytterligare, och svampmedel begränsar skadan på behandlade områden." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Hög risk för fusarium: Undvik vete direkt efter majs och spannmålsgrödor i följd; svampmedel begränsar skadan på behandlade områden, och regn kan påskynda sjukdomen." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Hög risk för bladmögel: Svalt och fuktigt väder kan öka risken ytterligare, och svampmedel begränsar skadan på behandlade områden." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Hög risk för klumprot: Vänta så länge som möjligt innan du åter odlar raps eller senap; inget medel skyddar mot denna sjukdom, som kan finnas kvar i fältet på obestämd tid." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Måttlig risk för torröta: Vänta längre innan du åter odlar raps eller senap." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Måttlig risk för rotdödare: Undvik en tredje spannmålsgröda i rad." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Måttlig risk för septoria: Regn kan öka risken ytterligare." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Måttlig risk för rost: Milt och fuktigt väder kan öka risken ytterligare." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Måttlig risk för fusarium: Låt det gå längre tid mellan spannmål och majs." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Måttlig risk för bladmögel: Svalt och fuktigt väder kan öka risken ytterligare." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Måttlig risk för klumprot: Vänta längre innan du åter odlar raps eller senap." />
     </elements>
 </l10n>

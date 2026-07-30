@@ -14,11 +14,11 @@
         <e k="rcr_tab_planning"         v="Pianificazione" />
         <e k="rcr_section_disease_map"     v="Malattie" />
         <e k="rcr_disease_sub_infections" v="Campi infetti" />
-        <e k="rcr_disease_sub_pressure"   v="Pressione malattie" />
+        <e k="rcr_disease_sub_pressure"   v="Rischio di malattie" />
         <e k="rcr_disease_sub_treatment"  v="Trattamenti" />
-        <e k="rcr_disease_risk_low"       v="Bassa" />
-        <e k="rcr_disease_risk_moderate"  v="Moderata" />
-        <e k="rcr_disease_risk_high"      v="Alta" />
+        <e k="rcr_disease_risk_low"       v="Basso" />
+        <e k="rcr_disease_risk_moderate"  v="Moderato" />
+        <e k="rcr_disease_risk_high"      v="Alto" />
         <e k="rcr_disease_notification" v="Comparsa di %s sul campo %s" />
         <e k="rcr_disease_hud_label"    v="Malattia" />
         <e k="rcr_disease_header_active" v="Malattia (%s)" />
@@ -117,23 +117,23 @@
         <e k="rcr_advice_afterRoot" v="Dopo una coltura da radice, attendi quattro anni prima che le radici tornino, poi un cereale per ricostruire la struttura dopo la raccolta tardiva." />
         <e k="rcr_advice_afterVegetable" v="Dopo un ortaggio, attendi tre anni prima di ripeterlo, con un cereale come rottura netta." />
         <e k="rcr_advice_afterForage" v="Dopo un prato di breve durata, un cereale valorizza la fertilità e la struttura accumulate sotto il cotico." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Forte pressione di sclerotinia: se colza, senape, girasole, soia, pisello, fagiolo, patata o carota tornano entro 3 anni, la pressione resta alta; il fungicida rallenta l'insorgenza e blocca il danno sulle zone trattate, non fa regredire la malattia." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Forte pressione di nematode: se barbabietola da zucchero, barbabietola rossa, colza, senape o spinacio tornano entro 3 anni, la pressione resta alta; il nematocida salva il raccolto sulle zone trattate per 3 mesi." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Pressione di sclerotinia moderata: distanzia le colture ospiti, la pioggia aumenta il rischio." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Pressione di nematode moderata: distanzia barbabietole e brassicacee." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Rischio elevato di sclerotinia: attendi almeno 3 anni prima di coltivare di nuovo colza, senape, girasole, soia, pisello, fagiolo, patata o carota; il fungicida limita i danni nelle zone trattate, ma non elimina la malattia dal campo." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Rischio elevato di nematodi: attendi almeno 3 anni prima di coltivare di nuovo barbabietola da zucchero, barbabietola rossa, colza, senape o spinacio; il nematocida protegge le zone trattate, ma non elimina i nematodi." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Rischio moderato di sclerotinia: attendi più a lungo prima di coltivare di nuovo colza, senape, girasole, soia, pisello, fagiolo, patata o carota; la pioggia può aumentare il rischio." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Rischio moderato di nematodi: attendi più a lungo prima di coltivare di nuovo barbabietole, colza, senape o spinacio." />
         <e k="rcr_advice_no_current_crop" v="Nessuna coltura principale attuale: consiglio disponibile quando viene rilevata una coltura." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Rotazione ottimale" />
         <e k="rcr_advice_title_warning" v="Conflitto di rotazione" />
         <e k="rcr_advice_title_outbreak" v="Infezione attiva" />
-        <e k="rcr_advice_outbreak" v="%s è attiva su questo campo, gravità %d %%. Trattamento consigliato: %s." />
+        <e k="rcr_advice_outbreak" v="%s è attiva in questo campo. Livello di attacco: %d %%. Trattamento consigliato: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s prevista per %s: conflitto di rotazione, stessa famiglia (%s) della coltura attuale, mancano %d anno/i su %d prima di un ritorno sicuro." />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s prevista per %s: conflitto di rotazione, condivide il rischio di %s con la coltura attuale, mancano %d anno/i su %d prima di un ritorno sicuro." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s prevista per %s: sia questa coltura sia quella attuale possono essere colpite da %s. Attendi ancora %d anno/i; l'intervallo consigliato è di %d anno/i." />
         <e k="rcr_advice_plan_next_ok" v="%s prevista per %s: buona scelta, nessun conflitto di rotazione rilevato." />
         <e k="rcr_advice_title_fallow" v="Anno di pausa" />
-        <e k="rcr_advice_fallow_current" v="Maggese in corso: il terreno riposa e la pressione delle malattie diminuisce in assenza di una pianta ospite." />
-        <e k="rcr_advice_plan_next_fallow" v="Maggese previsto per %s: un anno di pausa in cui il terreno riposa e il ciclo delle malattie viene interrotto prima della coltura successiva." />
+        <e k="rcr_advice_fallow_current" v="Maggese in corso: quest'anno non viene coltivata alcuna coltura principale. Questo aggiunge tempo prima della prossima coltura sensibile, ma non elimina subito la malattia." />
+        <e k="rcr_advice_plan_next_fallow" v="Maggese previsto per %s: per un anno non verrà coltivata alcuna coltura principale. Questo aggiunge tempo prima della prossima coltura sensibile, ma non garantisce che tutte le malattie siano scomparse." />
 
         <!-- Advice card, disease pressure list -->
 
@@ -213,19 +213,19 @@
         <e k="rcr_fillType_nematicide" v="Nematocida" />
         <e k="rcr_disease_treatment_none" v="Nessun trattamento" />
         <e k="rcr_disease_treatment_clubroot" v="Nessuno (solo rotazione)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Forte pressione di phoma: se colza o senape tornano entro 4 anni, la pressione resta alta; il fungicida rallenta l'insorgenza e blocca il danno sulle zone trattate, non fa regredire la malattia." />
-        <e k="rcr_advice_pressure_high_takeall" v="Forte pressione di mal del piede: inserisci un'interruzione non ospite (avena, leguminosa, oleaginosa); nessun prodotto protegge da questa malattia, solo la rotazione abbassa la pressione." />
-        <e k="rcr_advice_pressure_high_septoria" v="Forte pressione di septoriosi: i residui dei cereali possono aumentare la pressione; la pioggia aumenta il rischio immediato e il fungicida limita i danni sulle zone trattate." />
-        <e k="rcr_advice_pressure_high_rust" v="Forte pressione di ruggine: il clima mite e umido aumenta il rischio immediato e il fungicida limita i danni sulle zone trattate." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Forte pressione di fusariosi: evita frumento dopo mais e concatena meno cereali; il fungicida rallenta l'insorgenza e blocca il danno sulle zone trattate, la pioggia accelera l'epidemia." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Forte pressione di peronospora: il clima fresco e umido aumenta il rischio immediato e il fungicida limita i danni sulle zone trattate." />
-        <e k="rcr_advice_pressure_high_clubroot" v="Forte pressione di ernia: allunga il più possibile il ritorno di colza e senape; nessun prodotto protegge da questa malattia, solo la rotazione agisce." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Pressione di phoma moderata: allunga il ritorno di colza e senape." />
-        <e k="rcr_advice_pressure_moderate_takeall" v="Pressione di mal del piede moderata: evita il terzo cereale consecutivo." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Pressione di septoriosi moderata: i residui dei cereali possono aumentare la pressione; la pioggia aumenta il rischio immediato." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Pressione di ruggine moderata: il clima mite e umido aumenta il rischio immediato." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="Pressione di fusariosi moderata: distanzia cereali e mais." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Pressione di peronospora moderata: il clima fresco e umido aumenta il rischio immediato." />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="Pressione di ernia moderata: allunga il ritorno di colza e senape." />
+        <e k="rcr_advice_pressure_high_phoma" v="Rischio elevato di phoma: attendi almeno 4 anni prima di coltivare di nuovo colza o senape; il fungicida limita i danni nelle zone trattate, ma non elimina la malattia dal campo." />
+        <e k="rcr_advice_pressure_high_takeall" v="Rischio elevato di mal del piede: interrompi la successione di cereali con avena, una leguminosa o un'oleaginosa; nessun prodotto protegge da questa malattia, e più tempo tra i cereali sensibili riduce il rischio futuro." />
+        <e k="rcr_advice_pressure_high_septoria" v="Rischio elevato di septoriosi: la pioggia può aumentare ulteriormente il rischio, e il fungicida limita i danni nelle zone trattate." />
+        <e k="rcr_advice_pressure_high_rust" v="Rischio elevato di ruggine: il clima mite e umido può aumentare ulteriormente il rischio, e il fungicida limita i danni nelle zone trattate." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Rischio elevato di fusariosi: evita il frumento subito dopo il mais e i cereali consecutivi; il fungicida limita i danni nelle zone trattate, e la pioggia può accelerare la malattia." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Rischio elevato di peronospora: il clima fresco e umido può aumentare ulteriormente il rischio, e il fungicida limita i danni nelle zone trattate." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Rischio elevato di ernia: attendi il più possibile prima di coltivare di nuovo colza o senape; nessun prodotto protegge da questa malattia, che può rimanere nel campo a tempo indeterminato." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Rischio moderato di phoma: attendi più a lungo prima di coltivare di nuovo colza o senape." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Rischio moderato di mal del piede: evita un terzo cereale consecutivo." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Rischio moderato di septoriosi: la pioggia può aumentare ulteriormente il rischio." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Rischio moderato di ruggine: il clima mite e umido può aumentare ulteriormente il rischio." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Rischio moderato di fusariosi: lascia più tempo tra i cereali e il mais." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Rischio moderato di peronospora: il clima fresco e umido può aumentare ulteriormente il rischio." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Rischio moderato di ernia: attendi più a lungo prima di coltivare di nuovo colza o senape." />
     </elements>
 </l10n>

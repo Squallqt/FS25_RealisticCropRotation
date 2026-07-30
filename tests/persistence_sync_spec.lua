@@ -263,7 +263,6 @@ test("save includes a reservoir-only farmland", function()
     disease:saveToXML("reservoirOnly/")
 
     local xmlFile = xmlRegistry["reservoirOnly/realisticCropRotationDisease.xml"]
-    assertEqual(xmlFile.values["realisticCropRotationDisease#reservoirVersion"], 1, "save format")
     assertEqual(xmlFile.values["realisticCropRotationDisease#lastReservoirYear"], 2028, "saved year")
     assertEqual(xmlFile.values["realisticCropRotationDisease.farmland(0)#id"], 17, "farmland id")
     assertNil(xmlFile.values["realisticCropRotationDisease.farmland(0).group(0)#name"],
@@ -335,7 +334,7 @@ test("save order is deterministic for farmlands and disease groups", function()
     assertEqual(firstXML.values["realisticCropRotationDisease.farmland(2)#id"], 20, "third farmland")
 end)
 
-test("version 1 save-load-save roundtrip is identical", function()
+test("current save-load-save roundtrip is identical", function()
     resetXML()
     local source = newDisease(2031)
     source.lastReservoirYear = 2027
@@ -355,12 +354,12 @@ test("version 1 save-load-save roundtrip is identical", function()
     source.reservoir[30] = {
         CLUBROOT = 0.72,
     }
-    source:saveToXML("versionOne/")
+    source:saveToXML("currentFormat/")
     local originalWrites =
-        canonicalWrites(xmlRegistry["versionOne/realisticCropRotationDisease.xml"])
+        canonicalWrites(xmlRegistry["currentFormat/realisticCropRotationDisease.xml"])
 
     local loaded = newDisease(2038)
-    loaded:loadFromXML("versionOne/")
+    loaded:loadFromXML("currentFormat/")
     assertEqual(loaded.lastReservoirYear, 2027, "loaded reservoir year")
     assertEqual(loaded.crop[12], "MAIZE", "loaded crop")
     assertEqual(loaded.growth[12], 6, "loaded growth")
@@ -371,45 +370,11 @@ test("version 1 save-load-save roundtrip is identical", function()
     assertNear(loaded.reservoir[12].FUSARIUM, 0.44, "loaded FUSARIUM")
     assertNear(loaded.reservoir[30].CLUBROOT, 0.72, "loaded CLUBROOT")
 
-    loaded:saveToXML("versionOneRoundtrip/")
+    loaded:saveToXML("currentFormatRoundtrip/")
     assertEqual(
-        canonicalWrites(xmlRegistry["versionOneRoundtrip/realisticCropRotationDisease.xml"]),
+        canonicalWrites(xmlRegistry["currentFormatRoundtrip/realisticCropRotationDisease.xml"]),
         originalWrites,
-        "version 1 roundtrip")
-end)
-
-test("legacy migration preserves active outbreaks and starts a clean reservoir at current year", function()
-    resetXML()
-    local path = "legacy/realisticCropRotationDisease.xml"
-    local xmlFile = createXMLFile("legacyDisease", path, "realisticCropRotationDisease")
-    setXMLInt(xmlFile, "realisticCropRotationDisease#lastReservoirYear", 1998)
-    local base = "realisticCropRotationDisease.farmland(0)"
-    setXMLInt(xmlFile, base .. "#id", 6)
-    setXMLString(xmlFile, base .. "#crop", "BARLEY")
-    setXMLInt(xmlFile, base .. "#growth", 4)
-    setXMLString(xmlFile, base .. ".group(0)#name", "TAKEALL")
-    setXMLFloat(xmlFile, base .. ".group(0)#severity", 0.36)
-    setXMLInt(xmlFile, base .. ".group(0)#seed", 2468)
-    setXMLFloat(xmlFile, base .. ".group(0)#incubation", 0.75)
-    setXMLString(xmlFile, base .. ".reservoir(0)#name", "TAKEALL")
-    setXMLFloat(xmlFile, base .. ".reservoir(0)#load", 0.91)
-
-    local migrated = newDisease(2033)
-    migrated:loadFromXML("legacy/")
-    assertEqual(migrated.lastReservoirYear, 2033, "migration year")
-    assertEqual(migrated.crop[6], "BARLEY", "legacy crop")
-    assertEqual(migrated.growth[6], 4, "legacy growth")
-    assertNear(migrated.state[6].TAKEALL.severity, 0.36, "legacy severity")
-    assertEqual(migrated.state[6].TAKEALL.seed, 2468, "legacy seed")
-    assertNear(migrated.state[6].TAKEALL.incubation, 0.75, "legacy incubation")
-    assertNil(migrated.reservoir[6], "legacy reservoir must not be reconstructed")
-
-    migrated:saveToXML("migrated/")
-    local migratedValues = xmlRegistry["migrated/realisticCropRotationDisease.xml"].values
-    assertEqual(migratedValues["realisticCropRotationDisease#reservoirVersion"], 1,
-        "migrated save version")
-    assertEqual(migratedValues["realisticCropRotationDisease#lastReservoirYear"], 2033,
-        "migrated save year")
+        "current format roundtrip")
 end)
 
 test("getSyncData copies values and applySyncData fully replaces state crop and reservoir", function()

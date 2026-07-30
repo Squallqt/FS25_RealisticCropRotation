@@ -14,7 +14,7 @@
         <e k="rcr_tab_planning"         v="Perencanaan" />
         <e k="rcr_section_disease_map"     v="Penyakit" />
         <e k="rcr_disease_sub_infections" v="Ladang terinfeksi" />
-        <e k="rcr_disease_sub_pressure"   v="Tekanan penyakit" />
+        <e k="rcr_disease_sub_pressure"   v="Risiko penyakit" />
         <e k="rcr_disease_sub_treatment"  v="Penyemprotan" />
         <e k="rcr_disease_risk_low"       v="Rendah" />
         <e k="rcr_disease_risk_moderate"  v="Sedang" />
@@ -117,23 +117,23 @@
         <e k="rcr_advice_afterRoot" v="Setelah tanaman umbi, tunggu empat tahun sebelum umbi kembali, lalu serealia untuk membangun kembali struktur setelah pemanenan akhir." />
         <e k="rcr_advice_afterVegetable" v="Setelah sayuran, tunggu tiga tahun sebelum mengulanginya, dengan serealia sebagai jeda yang bersih." />
         <e k="rcr_advice_afterForage" v="Setelah padang rumput sementara, serealia memanfaatkan kesuburan dan struktur yang terbentuk di bawah rumput." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Tekanan sclerotinia tinggi: jika kanola, sesawi, bunga matahari, kedelai, kacang polong, buncis, kentang, atau wortel kembali dalam 3 tahun, tekanan tetap tinggi; fungisida memperlambat munculnya penyakit dan membekukan kerusakan di bagian yang disemprot, tetapi tidak menyurutkan penyakit." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Tekanan nematoda tinggi: jika bit gula, bit merah, kanola, sesawi, atau bayam kembali dalam 3 tahun, tekanan tetap tinggi; nematisida menyelamatkan hasil di bagian yang disemprot selama 3 bulan." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Tekanan sclerotinia sedang: beri jarak tanaman inang, hujan menaikkan risiko." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Tekanan nematoda sedang: beri jarak bit dan brassica." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Risiko sclerotinia tinggi: beri jarak setidaknya 3 tahun antara kanola, sesawi, bunga matahari, kedelai, kacang polong, buncis, kentang, dan wortel; fungisida membatasi kerusakan di bagian yang disemprot, tetapi tidak menghilangkan penyakit dari ladang." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Risiko nematoda tinggi: beri jarak setidaknya 3 tahun antara bit gula, bit merah, kanola, sesawi, dan bayam; nematisida melindungi bagian yang dirawat tetapi tidak menghilangkan nematoda." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Risiko sclerotinia sedang: beri jarak kanola, sesawi, bunga matahari, kedelai, kacang polong, buncis, kentang, dan wortel; hujan menaikkan risiko." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Risiko nematoda sedang: beri jarak antara bit gula, bit merah, kanola, sesawi, dan bayam." />
         <e k="rcr_advice_no_current_crop" v="Tidak ada tanaman utama saat ini: saran tersedia saat tanaman terdeteksi." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Rotasi optimal" />
         <e k="rcr_advice_title_warning" v="Konflik rotasi tanaman" />
         <e k="rcr_advice_title_outbreak" v="Wabah penyakit aktif" />
-        <e k="rcr_advice_outbreak" v="%s sedang aktif di ladang ini, tingkat keparahan %d%%. Perawatan yang disarankan: %s." />
+        <e k="rcr_advice_outbreak" v="%s sedang menyerang ladang ini, tingkat serangan %d%%. Penanganan yang disarankan: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s direncanakan untuk %s: konflik rotasi tanaman, keluarga yang sama (%s) dengan tanaman saat ini, masih kurang %d dari %d tahun sebelum kembali dengan aman." />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s direncanakan untuk %s: konflik rotasi tanaman, berbagi risiko %s dengan tanaman saat ini, masih kurang %d dari %d tahun sebelum kembali dengan aman." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s direncanakan untuk %s: konflik rotasi. Penyakit yang sama (%s) juga dapat menyerang tanaman saat ini; masih kurang %d tahun dari jarak yang disarankan, yaitu %d tahun." />
         <e k="rcr_advice_plan_next_ok" v="%s direncanakan untuk %s: pilihan bagus, tidak ada konflik rotasi tanaman terdeteksi." />
         <e k="rcr_advice_title_fallow" v="Tahun jeda" />
-        <e k="rcr_advice_fallow_current" v="Bera sedang berlangsung: tanah beristirahat dan tekanan penyakit berkurang karena tidak ada tanaman inang." />
-        <e k="rcr_advice_plan_next_fallow" v="Bera direncanakan untuk %s: tahun jeda saat tanah beristirahat dan siklus penyakit terputus sebelum tanaman berikutnya." />
+        <e k="rcr_advice_fallow_current" v="Bera sedang berlangsung: tidak ada tanaman utama tahun ini. Ini menambah waktu sebelum tanaman rentan berikutnya, tetapi tidak langsung menghilangkan penyakit." />
+        <e k="rcr_advice_plan_next_fallow" v="Bera direncanakan untuk %s: tidak ada tanaman utama selama satu tahun. Ini menambah waktu sebelum tanaman rentan berikutnya, tetapi tidak menjamin semua penyakit telah hilang." />
 
         <!-- Advice card, disease pressure list -->
 
@@ -213,19 +213,19 @@
         <e k="rcr_fillType_nematicide" v="Nematisida" />
         <e k="rcr_disease_treatment_none" v="Tidak ada penyemprotan" />
         <e k="rcr_disease_treatment_clubroot" v="Tidak ada (hanya rotasi)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Tekanan phoma tinggi: jika kanola atau sesawi kembali dalam 4 tahun, tekanan tetap tinggi; fungisida memperlambat munculnya penyakit dan membekukan kerusakan di bagian yang disemprot, tetapi tidak menyurutkan penyakit." />
-        <e k="rcr_advice_pressure_high_takeall" v="Tekanan busuk akar tinggi: sisipkan jeda tanaman bukan inang (oat, legum, tanaman minyak); tidak ada produk yang melindungi dari penyakit ini, hanya rotasi yang menurunkan tekanan." />
-        <e k="rcr_advice_pressure_high_septoria" v="Tekanan septoria tinggi: sisa tanaman serealia dapat menambah tekanan; hujan menaikkan risiko langsung dan fungisida membatasi kerusakan di bagian yang disemprot." />
-        <e k="rcr_advice_pressure_high_rust" v="Tekanan karat tinggi: cuaca hangat lembap menaikkan risiko langsung dan fungisida membatasi kerusakan di bagian yang disemprot." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Tekanan fusarium tinggi: hindari gandum setelah jagung dan kurangi serealia beruntun; fungisida memperlambat munculnya penyakit dan membekukan kerusakan di bagian yang disemprot, dan hujan mempercepat wabah." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Tekanan hawar daun tinggi: cuaca sejuk basah menaikkan risiko langsung dan fungisida membatasi kerusakan di bagian yang disemprot." />
-        <e k="rcr_advice_pressure_high_clubroot" v="Tekanan akar gada tinggi: perpanjang jeda kanola dan sesawi sejauh mungkin; tidak ada produk yang melindungi dari penyakit ini, hanya rotasi yang berhasil." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Tekanan phoma sedang: perpanjang jeda kanola dan sesawi." />
-        <e k="rcr_advice_pressure_moderate_takeall" v="Tekanan busuk akar sedang: hindari serealia ketiga berturut-turut." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Tekanan septoria sedang: sisa tanaman serealia dapat menambah tekanan; hujan menaikkan risiko langsung." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Tekanan karat sedang: cuaca hangat lembap menaikkan risiko langsung." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="Tekanan fusarium sedang: beri jarak serealia dan jagung." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Tekanan hawar daun sedang: cuaca sejuk basah menaikkan risiko langsung." />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="Tekanan akar gada sedang: perpanjang jeda kanola dan sesawi." />
+        <e k="rcr_advice_pressure_high_phoma" v="Risiko phoma tinggi: beri jarak setidaknya 4 tahun antara kanola dan sesawi; fungisida membatasi kerusakan di bagian yang disemprot, tetapi tidak menghilangkan penyakit dari ladang." />
+        <e k="rcr_advice_pressure_high_takeall" v="Risiko busuk akar tinggi: tanam oat, legum, atau tanaman minyak di antara serealia; tidak ada produk yang melindungi dari penyakit ini, rotasi yang lebih panjang mengurangi risiko." />
+        <e k="rcr_advice_pressure_high_septoria" v="Risiko septoria tinggi: hujan menaikkan risiko serangan dalam waktu dekat dan fungisida membatasi kerusakan di bagian yang disemprot." />
+        <e k="rcr_advice_pressure_high_rust" v="Risiko karat tinggi: cuaca hangat dan lembap menaikkan risiko serangan dalam waktu dekat, sedangkan fungisida membatasi kerusakan di bagian yang disemprot." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Risiko fusarium tinggi: hindari gandum setelah jagung dan kurangi serealia beruntun; fungisida membatasi kerusakan di bagian yang disemprot, sedangkan hujan menaikkan risiko." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Risiko hawar daun tinggi: cuaca sejuk dan basah menaikkan risiko serangan dalam waktu dekat, sedangkan fungisida membatasi kerusakan di bagian yang disemprot." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Risiko akar gada tinggi: perpanjang jeda antara kanola dan sesawi sejauh mungkin; tidak ada produk yang melindungi dari penyakit ini, rotasi yang lebih panjang mengurangi risiko." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Risiko phoma sedang: perpanjang jeda antara kanola dan sesawi." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Risiko busuk akar sedang: hindari serealia ketiga berturut-turut." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Risiko septoria sedang: hujan menaikkan risiko serangan dalam waktu dekat." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Risiko karat sedang: cuaca hangat dan lembap menaikkan risiko serangan dalam waktu dekat." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Risiko fusarium sedang: beri jarak antara serealia dan jagung." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Risiko hawar daun sedang: cuaca sejuk dan basah menaikkan risiko serangan dalam waktu dekat." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Risiko akar gada sedang: perpanjang jeda antara kanola dan sesawi." />
     </elements>
 </l10n>

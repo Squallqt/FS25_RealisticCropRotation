@@ -14,11 +14,11 @@
         <e k="rcr_tab_planning"         v="Planification" />
         <e k="rcr_section_disease_map"     v="Maladies" />
         <e k="rcr_disease_sub_infections" v="Parcelles infectées" />
-        <e k="rcr_disease_sub_pressure"   v="Pression maladie" />
+        <e k="rcr_disease_sub_pressure"   v="Risque de maladie" />
         <e k="rcr_disease_sub_treatment"  v="Traitements" />
         <e k="rcr_disease_risk_low"       v="Faible" />
-        <e k="rcr_disease_risk_moderate"  v="Modérée" />
-        <e k="rcr_disease_risk_high"      v="Élevée" />
+        <e k="rcr_disease_risk_moderate"  v="Modéré" />
+        <e k="rcr_disease_risk_high"      v="Élevé" />
         <e k="rcr_disease_notification" v="Apparition de %s sur la parcelle %s" />
         <e k="rcr_disease_hud_label"    v="Maladie" />
         <e k="rcr_disease_header_active" v="Maladie (%s)" />
@@ -117,23 +117,23 @@
         <e k="rcr_advice_afterRoot" v="Après une culture sarclée, attendez quatre ans avant d'y revenir, puis une céréale pour restructurer le sol après l'arrachage tardif." />
         <e k="rcr_advice_afterVegetable" v="Après un légume, attendez trois ans avant de le répéter, avec une céréale comme coupure nette." />
         <e k="rcr_advice_afterForage" v="Après une prairie temporaire, une céréale valorise la fertilité et la structure accumulées sous le couvert." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Forte pression sclérotinia : sous 3 ans d'écart entre cultures hôtes (colza, moutarde, tournesol, soja, pois, haricot, pomme de terre, carotte), la pression reste élevée ; le fongicide freine l'apparition et gèle les dégâts sur les zones traitées, il ne fait pas reculer la maladie." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Forte pression nématode : sous 3 ans d'écart entre cultures hôtes (betterave, betterave rouge, colza, moutarde, épinard), la pression reste élevée ; le nématicide sauve la récolte sur les zones traitées pendant 3 mois." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Pression sclérotinia modérée : espacez les cultures hôtes, la pluie fait monter le risque." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Pression nématode modérée : espacez betteraves et brassicacées." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Risque élevé de sclérotinia : attendez au moins 3 ans avant de remettre du canola, de la moutarde, du tournesol, du soya, des pois, des haricots, des pommes de terre ou des carottes ; le fongicide limite les dommages dans les zones traitées, mais n'élimine pas la maladie du champ." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Risque élevé de nématodes : attendez au moins 3 ans avant de remettre des betteraves, du canola, de la moutarde ou des épinards ; le nématicide protège les zones traitées, mais n'élimine pas les nématodes." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Risque modéré de sclérotinia : attendez plus longtemps avant de remettre du canola, de la moutarde, du tournesol, du soya, des pois, des haricots, des pommes de terre ou des carottes ; la pluie peut augmenter le risque." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Risque modéré de nématodes : attendez plus longtemps avant de remettre des betteraves, du canola, de la moutarde ou des épinards." />
         <e k="rcr_advice_no_current_crop" v="Aucune culture principale actuelle : conseil disponible quand une culture est détectée." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Rotation optimale" />
         <e k="rcr_advice_title_warning" v="Conflit de rotation" />
         <e k="rcr_advice_title_outbreak" v="Infection active" />
-        <e k="rcr_advice_outbreak" v="%s active sur ce champ, sévérité %d %%. Traitement recommandé : %s." />
+        <e k="rcr_advice_outbreak" v="%s active dans ce champ. Niveau d'attaque : %d %%. Traitement recommandé : %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s prévu en %s : conflit de rotation, même famille (%s) que la culture actuelle, il reste %d an(s) sur %d requis avant un retour sûr." />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s prévu en %s : conflit de rotation, risque %s partagé avec la culture actuelle, il reste %d an(s) sur %d requis avant un retour sûr." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s prévu en %s : cette culture et la culture actuelle peuvent toutes deux être touchées par %s. Attendez encore %d an(s) ; l'intervalle recommandé est de %d an(s)." />
         <e k="rcr_advice_plan_next_ok" v="%s prévu en %s : bon choix, aucun conflit de rotation détecté." />
         <e k="rcr_advice_title_fallow" v="Année de coupure" />
-        <e k="rcr_advice_fallow_current" v="Jachère en cours : le sol se repose et la pression des maladies retombe faute d'hôte." />
-        <e k="rcr_advice_plan_next_fallow" v="Jachère prévue en %s : année de coupure, le sol se repose et le cycle des maladies est rompu avant la reprise." />
+        <e k="rcr_advice_fallow_current" v="Jachère en cours : aucune culture principale n'est cultivée cette année. Cela ajoute du temps avant la prochaine culture sensible, mais n'élimine pas immédiatement la maladie." />
+        <e k="rcr_advice_plan_next_fallow" v="Jachère prévue en %s : aucune culture principale ne sera cultivée pendant un an. Cela ajoute du temps avant la prochaine culture sensible, mais ne garantit pas que toutes les maladies auront disparu." />
 
         <!-- Advice card, disease pressure list -->
 
@@ -213,19 +213,19 @@
         <e k="rcr_fillType_nematicide" v="Nématicide" />
         <e k="rcr_disease_treatment_none" v="Aucun traitement" />
         <e k="rcr_disease_treatment_clubroot" v="Aucun (rotation seule)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Forte pression phoma : sous 4 ans d'écart entre deux colza ou moutarde, la pression reste élevée ; le fongicide freine l'apparition et gèle les dégâts sur les zones traitées, il ne fait pas reculer la maladie." />
-        <e k="rcr_advice_pressure_high_takeall" v="Forte pression piétin-échaudage : insérez une coupure non-hôte (avoine, légumineuse, oléagineux) ; aucun produit ne protège cette maladie, seule la rotation fait baisser la pression." />
-        <e k="rcr_advice_pressure_high_septoria" v="Forte pression septoriose : les résidus de céréales peuvent ajouter de la pression ; la pluie augmente le risque immédiat et le fongicide limite les dégâts sur les zones traitées." />
-        <e k="rcr_advice_pressure_high_rust" v="Forte pression rouille : la douceur humide augmente le risque immédiat et le fongicide limite les dégâts sur les zones traitées." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Forte pression fusariose : évitez le blé après maïs et enchaînez moins de céréales ; le fongicide freine l'apparition et gèle les dégâts sur les zones traitées, la pluie accélère l'épidémie." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Forte pression mildiou : le temps frais et humide augmente le risque immédiat et le fongicide limite les dégâts sur les zones traitées." />
-        <e k="rcr_advice_pressure_high_clubroot" v="Forte pression hernie : allongez au maximum le retour du colza et de la moutarde ; aucun produit ne protège cette maladie, seule la rotation agit." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Pression phoma modérée : allongez le retour du colza et de la moutarde." />
-        <e k="rcr_advice_pressure_moderate_takeall" v="Pression piétin modérée : évitez la troisième céréale d'affilée." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Pression septoriose modérée : les résidus de céréales peuvent ajouter de la pression ; la pluie augmente le risque immédiat." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Pression rouille modérée : la douceur humide augmente le risque immédiat." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="Pression fusariose modérée : espacez céréales et maïs." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Pression mildiou modérée : le temps frais et humide augmente le risque immédiat." />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="Pression hernie modérée : allongez le retour du colza et de la moutarde." />
+        <e k="rcr_advice_pressure_high_phoma" v="Risque élevé de phoma : attendez au moins 4 ans avant de remettre du canola ou de la moutarde ; le fongicide limite les dommages dans les zones traitées, mais n'élimine pas la maladie du champ." />
+        <e k="rcr_advice_pressure_high_takeall" v="Risque élevé de piétin-échaudage : interrompez la succession de céréales avec de l'avoine, une légumineuse ou un oléagineux ; aucun produit ne protège contre cette maladie, et plus de temps entre les céréales sensibles réduit le risque futur." />
+        <e k="rcr_advice_pressure_high_septoria" v="Risque élevé de septoriose : la pluie peut encore augmenter le risque, et le fongicide limite les dommages dans les zones traitées." />
+        <e k="rcr_advice_pressure_high_rust" v="Risque élevé de rouille : un temps doux et humide peut encore augmenter le risque, et le fongicide limite les dommages dans les zones traitées." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Risque élevé de fusariose : évitez le blé directement après le maïs et les céréales consécutives ; le fongicide limite les dommages dans les zones traitées, et la pluie peut accélérer la maladie." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Risque élevé de mildiou : un temps frais et humide peut encore augmenter le risque, et le fongicide limite les dommages dans les zones traitées." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Risque élevé de hernie : attendez le plus longtemps possible avant de remettre du canola ou de la moutarde ; aucun produit ne protège contre cette maladie, qui peut rester indéfiniment dans le champ." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Risque modéré de phoma : attendez plus longtemps avant de remettre du canola ou de la moutarde." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Risque modéré de piétin-échaudage : évitez une troisième céréale consécutive." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Risque modéré de septoriose : la pluie peut encore augmenter le risque." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Risque modéré de rouille : un temps doux et humide peut encore augmenter le risque." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Risque modéré de fusariose : espacez davantage les céréales et le maïs." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Risque modéré de mildiou : un temps frais et humide peut encore augmenter le risque." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Risque modéré de hernie : attendez plus longtemps avant de remettre du canola ou de la moutarde." />
     </elements>
 </l10n>

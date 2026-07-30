@@ -14,7 +14,7 @@
         <e k="rcr_tab_planning"         v="Planlægning" />
         <e k="rcr_section_disease_map"     v="Sygdomme" />
         <e k="rcr_disease_sub_infections" v="Inficerede marker" />
-        <e k="rcr_disease_sub_pressure"   v="Sygdomstryk" />
+        <e k="rcr_disease_sub_pressure"   v="Sygdomsrisiko" />
         <e k="rcr_disease_sub_treatment"  v="Behandling" />
         <e k="rcr_disease_risk_low"       v="Lav" />
         <e k="rcr_disease_risk_moderate"  v="Moderat" />
@@ -117,23 +117,23 @@
         <e k="rcr_advice_afterRoot" v="Efter en rodafgrøde vent fire år før rodafgrøder vender tilbage, og følg op med en kornafgrøde for at genopbygge strukturen efter den sene optagning." />
         <e k="rcr_advice_afterVegetable" v="Efter en grøntsag vent tre år før den gentages, med en kornafgrøde som ren afbrydelse." />
         <e k="rcr_advice_afterForage" v="Efter en kløvergræsmark udnytter en kornafgrøde den frugtbarhed og struktur, der er opbygget under græsset." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Højt sclerotinia-tryk: vender raps, sennep, solsikke, sojabønne, ært, bønne, kartoffel eller gulerod tilbage inden for 3 år, forbliver trykket højt; svampemidlet bremser opståen og fastfryser skaden på sprøjtede områder, men trænger ikke sygdommen tilbage." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Højt nematode-tryk: vender sukkerroe, rødbede, raps, sennep eller spinat tilbage inden for 3 år, forbliver trykket højt; nematicidet redder udbyttet på sprøjtede områder i 3 måneder." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderat sclerotinia-tryk: spred værtsafgrøderne, regn øger risikoen." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Moderat nematode-tryk: spred roer og korsblomstrede." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Høj risiko for sclerotinia: Vent mindst 3 år, før du igen dyrker raps, sennep, solsikke, sojabønne, ært, bønne, kartoffel eller gulerod; svampemiddel begrænser skaden på behandlede områder, men fjerner ikke sygdommen fra marken." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Høj risiko for nematoder: Vent mindst 3 år, før du igen dyrker sukkerroe, rødbede, raps, sennep eller spinat; nematicid beskytter behandlede områder, men fjerner ikke nematoderne." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderat risiko for sclerotinia: Vent længere, før du igen dyrker raps, sennep, solsikke, sojabønne, ært, bønne, kartoffel eller gulerod; regn kan øge risikoen." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Moderat risiko for nematoder: Vent længere, før du igen dyrker roer, raps, sennep eller spinat." />
         <e k="rcr_advice_no_current_crop" v="Ingen aktuel hovedafgrøde: råd tilgængeligt, når en afgrøde registreres." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Sædskifte i orden" />
         <e k="rcr_advice_title_warning" v="Sædskiftekonflikt" />
         <e k="rcr_advice_title_outbreak" v="Aktivt sygdomsudbrud" />
-        <e k="rcr_advice_outbreak" v="%s er aktiv på denne mark, sværhedsgrad %d %%. Anbefalet behandling: %s." />
+        <e k="rcr_advice_outbreak" v="%s er aktiv på denne mark. Angrebsniveau: %d %%. Anbefalet behandling: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s planlagt til %s: sædskiftekonflikt, samme familie (%s) som den aktuelle afgrøde, der mangler %d år ud af %d, før det er sikkert at vende tilbage." />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s planlagt til %s: sædskiftekonflikt, deler %s-risikoen med den aktuelle afgrøde, der mangler %d år ud af %d, før det er sikkert at vende tilbage." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s planlagt til %s: både denne og den aktuelle afgrøde kan rammes af %s. Vent yderligere %d år; det anbefalede interval er %d år." />
         <e k="rcr_advice_plan_next_ok" v="%s planlagt til %s: godt valg, ingen sædskiftekonflikt fundet." />
         <e k="rcr_advice_title_fallow" v="Pauseår" />
-        <e k="rcr_advice_fallow_current" v="Braklægning i gang: jorden hviler, og sygdomstrykket aftager uden en værtsplante." />
-        <e k="rcr_advice_plan_next_fallow" v="Brak planlagt til %s: et pauseår, hvor jorden hviler, og sygdomscyklussen brydes før den næste afgrøde." />
+        <e k="rcr_advice_fallow_current" v="Braklægning i gang: Der dyrkes ingen hovedafgrøde i år. Det giver mere tid før den næste følsomme afgrøde, men fjerner ikke sygdommen med det samme." />
+        <e k="rcr_advice_plan_next_fallow" v="Brak planlagt til %s: Der dyrkes ingen hovedafgrøde i et år. Det giver mere tid før den næste følsomme afgrøde, men garanterer ikke, at alle sygdomme er væk." />
 
         <!-- Advice card, disease pressure list -->
 
@@ -213,19 +213,19 @@
         <e k="rcr_fillType_nematicide" v="Nematicid" />
         <e k="rcr_disease_treatment_none" v="Ingen behandling" />
         <e k="rcr_disease_treatment_clubroot" v="Ingen (kun sædskifte)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Højt phoma-tryk: vender raps eller sennep tilbage inden for 4 år, forbliver trykket højt; svampemidlet bremser opståen og fastfryser skaden på sprøjtede områder, men trænger ikke sygdommen tilbage." />
-        <e k="rcr_advice_pressure_high_takeall" v="Højt goldfodsyge-tryk: indsæt en ikke-værtsafgrøde som pause (havre, bælgplante, olieafgrøde); intet middel beskytter mod denne sygdom, kun sædskifte sænker trykket." />
-        <e k="rcr_advice_pressure_high_septoria" v="Højt septoria-tryk: kornrester kan øge trykket; regn øger den umiddelbare risiko, og svampemidlet begrænser skaden på sprøjtede områder." />
-        <e k="rcr_advice_pressure_high_rust" v="Højt rust-tryk: mildt fugtigt vejr øger den umiddelbare risiko, og svampemidlet begrænser skaden på sprøjtede områder." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Højt fusarium-tryk: undgå hvede efter majs og læg færre kornafgrøder i træk; svampemidlet bremser opståen og fastfryser skaden på sprøjtede områder, og regn fremskynder epidemien." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Højt kartoffelskimmel-tryk: køligt fugtigt vejr øger den umiddelbare risiko, og svampemidlet begrænser skaden på sprøjtede områder." />
-        <e k="rcr_advice_pressure_high_clubroot" v="Højt kålbrok-tryk: stræk pausen for raps og sennep så meget som muligt; intet middel beskytter mod denne sygdom, kun sædskifte virker." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Moderat phoma-tryk: forlæng pausen for raps og sennep." />
-        <e k="rcr_advice_pressure_moderate_takeall" v="Moderat goldfodsyge-tryk: undgå et tredje korn i træk." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Moderat septoria-tryk: kornrester kan øge trykket; regn øger den umiddelbare risiko." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Moderat rust-tryk: mildt fugtigt vejr øger den umiddelbare risiko." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="Moderat fusarium-tryk: spred korn og majs." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Moderat kartoffelskimmel-tryk: køligt fugtigt vejr øger den umiddelbare risiko." />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="Moderat kålbrok-tryk: forlæng pausen for raps og sennep." />
+        <e k="rcr_advice_pressure_high_phoma" v="Høj risiko for phoma: Vent mindst 4 år, før du igen dyrker raps eller sennep; svampemiddel begrænser skaden på behandlede områder, men fjerner ikke sygdommen fra marken." />
+        <e k="rcr_advice_pressure_high_takeall" v="Høj risiko for goldfodsyge: Afbryd rækken af kornafgrøder med havre, en bælgplante eller en olieafgrøde; intet middel beskytter mod denne sygdom, og mere tid mellem følsomme kornafgrøder sænker den fremtidige risiko." />
+        <e k="rcr_advice_pressure_high_septoria" v="Høj risiko for septoria: Regn kan øge risikoen yderligere, og svampemiddel begrænser skaden på behandlede områder." />
+        <e k="rcr_advice_pressure_high_rust" v="Høj risiko for rust: Mildt og fugtigt vejr kan øge risikoen yderligere, og svampemiddel begrænser skaden på behandlede områder." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Høj risiko for fusarium: Undgå hvede direkte efter majs og kornafgrøder i træk; svampemiddel begrænser skaden på behandlede områder, og regn kan fremskynde sygdommen." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Høj risiko for kartoffelskimmel: Køligt og fugtigt vejr kan øge risikoen yderligere, og svampemiddel begrænser skaden på behandlede områder." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Høj risiko for kålbrok: Vent så længe som muligt, før du igen dyrker raps eller sennep; intet middel beskytter mod denne sygdom, som kan blive i marken på ubestemt tid." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Moderat risiko for phoma: Vent længere, før du igen dyrker raps eller sennep." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Moderat risiko for goldfodsyge: Undgå en tredje kornafgrøde i træk." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Moderat risiko for septoria: Regn kan øge risikoen yderligere." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Moderat risiko for rust: Mildt og fugtigt vejr kan øge risikoen yderligere." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Moderat risiko for fusarium: Lad der gå længere tid mellem korn og majs." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Moderat risiko for kartoffelskimmel: Køligt og fugtigt vejr kan øge risikoen yderligere." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Moderat risiko for kålbrok: Vent længere, før du igen dyrker raps eller sennep." />
     </elements>
 </l10n>

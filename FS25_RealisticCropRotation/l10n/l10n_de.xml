@@ -14,7 +14,7 @@
         <e k="rcr_tab_planning"         v="Planung" />
         <e k="rcr_section_disease_map"     v="Krankheiten" />
         <e k="rcr_disease_sub_infections" v="Infizierte Felder" />
-        <e k="rcr_disease_sub_pressure"   v="Krankheitsdruck" />
+        <e k="rcr_disease_sub_pressure"   v="Krankheitsrisiko" />
         <e k="rcr_disease_sub_treatment"  v="Behandlung" />
         <e k="rcr_disease_risk_low"       v="Gering" />
         <e k="rcr_disease_risk_moderate"  v="Mittel" />
@@ -117,23 +117,23 @@
         <e k="rcr_advice_afterRoot"      v="Nach einer Hackfrucht vier Jahre bis zur Wiederkehr lassen, dann Getreide, um die Struktur nach der späten Ernte wieder aufzubauen." />
         <e k="rcr_advice_afterVegetable" v="Nach Gemüse drei Jahre bis zur Wiederholung warten, mit Getreide als saubere Anbaupause." />
         <e k="rcr_advice_afterForage"    v="Nach einer Grasphase verwertet Getreide die unter der Grasnarbe aufgebaute Fruchtbarkeit und Struktur." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Hoher Sclerotinia-Druck: Kehren Raps, Senf, Sonnenblume, Soja, Erbse, Bohne, Kartoffel oder Möhre innerhalb von 3 Jahren zurück, bleibt der Druck hoch; Fungizid verzögert den Ausbruch und friert den Schaden auf behandelten Flächen ein, drängt die Krankheit aber nicht zurück." />
-        <e k="rcr_advice_pressure_high_bcn"           v="Hoher Nematoden-Druck: Kehren Zuckerrübe, Rote Bete, Raps, Senf oder Spinat innerhalb von 3 Jahren zurück, bleibt der Druck hoch; Nematizid rettet den Ertrag auf behandelten Flächen für 3 Monate." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Mäßiger Sclerotinia-Druck: Wirtskulturen zeitlich strecken, Regen erhöht das Risiko." />
-        <e k="rcr_advice_pressure_moderate_bcn"         v="Mäßiger Nematoden-Druck: Rüben und Kreuzblütler zeitlich strecken." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Hohes Sclerotinia-Risiko: Mindestens 3 Jahre warten, bevor Raps, Senf, Sonnenblume, Soja, Erbse, Bohne, Kartoffel oder Möhre erneut angebaut werden; Fungizid begrenzt Schäden auf behandelten Flächen, beseitigt die Krankheit aber nicht aus dem Feld." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Hohes Nematodenrisiko: Mindestens 3 Jahre warten, bevor Zuckerrübe, Rote Bete, Raps, Senf oder Spinat erneut angebaut werden; Nematizid schützt behandelte Flächen, beseitigt die Nematoden aber nicht." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Mäßiges Sclerotinia-Risiko: Mehr Zeit lassen, bevor Raps, Senf, Sonnenblume, Soja, Erbse, Bohne, Kartoffel oder Möhre erneut angebaut werden; Regen kann das Risiko erhöhen." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Mäßiges Nematodenrisiko: Mehr Zeit lassen, bevor Rüben, Raps, Senf oder Spinat erneut angebaut werden." />
         <e k="rcr_advice_no_current_crop" v="Keine aktuelle Hauptkultur: Empfehlung verfügbar, sobald eine Kultur erkannt wird." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Fruchtfolge optimal" />
         <e k="rcr_advice_title_warning" v="Fruchtfolgekonflikt" />
         <e k="rcr_advice_title_outbreak" v="Aktive Infektion" />
-        <e k="rcr_advice_outbreak" v="%s ist aktiv auf diesem Feld, Schweregrad %d %%. Empfohlene Behandlung: %s." />
+        <e k="rcr_advice_outbreak" v="%s ist auf diesem Feld aktiv. Befallsstärke: %d %%. Empfohlene Behandlung: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s geplant für %s: Fruchtfolgekonflikt, gleiche Familie (%s) wie die aktuelle Kultur, noch %d Jahr(e) von %d nötig, bevor eine sichere Rückkehr möglich ist." />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s geplant für %s: Fruchtfolgekonflikt, teilt sich das %s-Risiko mit der aktuellen Kultur, noch %d Jahr(e) von %d nötig, bevor eine sichere Rückkehr möglich ist." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s geplant für %s: Diese und die aktuelle Kultur können beide von %s befallen werden. Noch %d Jahr(e) warten; der empfohlene Abstand beträgt %d Jahr(e)." />
         <e k="rcr_advice_plan_next_ok" v="%s geplant für %s: gute Wahl, kein Fruchtfolgekonflikt festgestellt." />
         <e k="rcr_advice_title_fallow" v="Anbaupause" />
-        <e k="rcr_advice_fallow_current" v="Brache im Gange: Der Boden ruht und der Krankheitsdruck nimmt ohne Wirtspflanze ab." />
-        <e k="rcr_advice_plan_next_fallow" v="Brache für %s geplant: eine Anbaupause, in der der Boden ruht und der Krankheitszyklus vor der nächsten Kultur unterbrochen wird." />
+        <e k="rcr_advice_fallow_current" v="Brache im Gange: In diesem Jahr wird keine Hauptkultur angebaut. Dadurch vergeht mehr Zeit bis zur nächsten empfindlichen Kultur, die Krankheit verschwindet aber nicht sofort." />
+        <e k="rcr_advice_plan_next_fallow" v="Brache für %s geplant: Ein Jahr lang wird keine Hauptkultur angebaut. Dadurch vergeht mehr Zeit bis zur nächsten empfindlichen Kultur, es ist aber nicht garantiert, dass alle Krankheiten verschwunden sind." />
 
         <!-- Advice card, disease pressure list -->
 
@@ -213,19 +213,19 @@
         <e k="rcr_fillType_nematicide" v="Nematizid" />
         <e k="rcr_disease_treatment_none" v="Keine Behandlung" />
         <e k="rcr_disease_treatment_clubroot" v="Keine (nur Fruchtfolge)" />
-        <e k="rcr_advice_pressure_high_phoma" v="Hoher Phoma-Druck: Kehren Raps oder Senf innerhalb von 4 Jahren zurück, bleibt der Druck hoch; Fungizid verzögert den Ausbruch und friert den Schaden auf behandelten Flächen ein, drängt die Krankheit aber nicht zurück." />
-        <e k="rcr_advice_pressure_high_takeall" v="Hoher Schwarzbeinigkeits-Druck: eine Nichtwirtspause einlegen (Hafer, Leguminose, Ölfrucht); kein Mittel schützt vor dieser Krankheit, nur die Fruchtfolge senkt den Druck." />
-        <e k="rcr_advice_pressure_high_septoria" v="Hoher Septoria-Druck: Getreiderückstände können den Druck erhöhen; Regen steigert das unmittelbare Risiko und Fungizid begrenzt Schäden auf behandelten Flächen." />
-        <e k="rcr_advice_pressure_high_rust" v="Hoher Rost-Druck: Mildes feuchtwarmes Wetter steigert das unmittelbare Risiko und Fungizid begrenzt Schäden auf behandelten Flächen." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Hoher Fusarium-Druck: Weizen nicht nach Mais anbauen und weniger Getreide hintereinander stellen; Fungizid verzögert den Ausbruch und friert den Schaden auf behandelten Flächen ein, Regen beschleunigt die Epidemie." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Hoher Krautfäule-Druck: Kühles feuchtes Wetter steigert das unmittelbare Risiko und Fungizid begrenzt Schäden auf behandelten Flächen." />
-        <e k="rcr_advice_pressure_high_clubroot" v="Hoher Kohlhernie-Druck: die Anbaupause von Raps und Senf so weit wie möglich strecken; kein Mittel schützt vor dieser Krankheit, nur die Fruchtfolge wirkt." />
-        <e k="rcr_advice_pressure_moderate_phoma" v="Mäßiger Phoma-Druck: die Anbaupause von Raps und Senf verlängern." />
-        <e k="rcr_advice_pressure_moderate_takeall" v="Mäßiger Schwarzbeinigkeits-Druck: eine dritte Getreidefrucht in Folge vermeiden." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Mäßiger Septoria-Druck: Getreiderückstände können den Druck erhöhen; Regen steigert das unmittelbare Risiko." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Mäßiger Rost-Druck: Mildes feuchtwarmes Wetter steigert das unmittelbare Risiko." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="Mäßiger Fusarium-Druck: Getreide und Mais zeitlich strecken." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Mäßiger Krautfäule-Druck: Kühles feuchtes Wetter steigert das unmittelbare Risiko." />
-        <e k="rcr_advice_pressure_moderate_clubroot" v="Mäßiger Kohlhernie-Druck: die Anbaupause von Raps und Senf verlängern." />
+        <e k="rcr_advice_pressure_high_phoma" v="Hohes Phoma-Risiko: Mindestens 4 Jahre warten, bevor Raps oder Senf erneut angebaut werden; Fungizid begrenzt Schäden auf behandelten Flächen, beseitigt die Krankheit aber nicht aus dem Feld." />
+        <e k="rcr_advice_pressure_high_takeall" v="Hohes Schwarzbeinigkeitsrisiko: Die Getreidefolge mit Hafer, einer Leguminose oder einer Ölfrucht unterbrechen; kein Mittel schützt vor dieser Krankheit, und mehr Zeit zwischen empfindlichen Getreidekulturen senkt das zukünftige Risiko." />
+        <e k="rcr_advice_pressure_high_septoria" v="Hohes Septoria-Risiko: Regen kann das Risiko weiter erhöhen, und Fungizid begrenzt Schäden auf behandelten Flächen." />
+        <e k="rcr_advice_pressure_high_rust" v="Hohes Rostrisiko: Mildes, feuchtes Wetter kann das Risiko weiter erhöhen, und Fungizid begrenzt Schäden auf behandelten Flächen." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Hohes Fusarium-Risiko: Weizen direkt nach Mais und mehrere Getreidekulturen in Folge vermeiden; Fungizid begrenzt Schäden auf behandelten Flächen, und Regen kann die Krankheit beschleunigen." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Hohes Krautfäulerisiko: Kühles, feuchtes Wetter kann das Risiko weiter erhöhen, und Fungizid begrenzt Schäden auf behandelten Flächen." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Hohes Kohlhernierisiko: So lange wie möglich warten, bevor Raps oder Senf erneut angebaut werden; kein Mittel schützt vor dieser Krankheit, die dauerhaft im Feld bleiben kann." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Mäßiges Phoma-Risiko: Mehr Zeit lassen, bevor Raps oder Senf erneut angebaut werden." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Mäßiges Schwarzbeinigkeitsrisiko: Eine dritte Getreidekultur in Folge vermeiden." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Mäßiges Septoria-Risiko: Regen kann das Risiko weiter erhöhen." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Mäßiges Rostrisiko: Mildes, feuchtes Wetter kann das Risiko weiter erhöhen." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Mäßiges Fusarium-Risiko: Mehr Zeit zwischen Getreide und Mais lassen." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Mäßiges Krautfäulerisiko: Kühles, feuchtes Wetter kann das Risiko weiter erhöhen." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Mäßiges Kohlhernierisiko: Mehr Zeit lassen, bevor Raps oder Senf erneut angebaut werden." />
     </elements>
 </l10n>
