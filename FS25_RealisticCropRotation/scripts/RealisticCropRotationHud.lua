@@ -246,11 +246,11 @@ function RealisticCropRotationHud.fieldAddField(hudSelf, superFunc, data, fieldB
     if tierText ~= nil and numbers ~= nil
             and hookFieldBox ~= nil and hookFieldBox.addLine ~= nil then
         originalAddLine = hookFieldBox.addLine
-        hookFieldBox.addLine = function(boxSelf, label, value)
+        hookFieldBox.addLine = function(boxSelf, label, value, accentuate, accentuateColor)
             if value == tierText then
                 value = string.format("(%s) · %s", numbers, value)
             end
-            return originalAddLine(boxSelf, label, value)
+            return originalAddLine(boxSelf, label, value, accentuate, accentuateColor)
         end
     end
 
