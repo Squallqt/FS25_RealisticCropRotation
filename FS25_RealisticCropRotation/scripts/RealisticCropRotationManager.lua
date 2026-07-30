@@ -1316,6 +1316,7 @@ end
 -- @return boolean locked
 function RealisticCropRotationManager:isPFSoilLocked(pf, region)
     if type(region.sampleX) ~= "number" or type(region.sampleZ) ~= "number" then return false end
+    if pf.pHMap == nil then return false end
     return pf.pHMap:getLevelAtWorldPos(region.sampleX, region.sampleZ) <= 1
 end
 
