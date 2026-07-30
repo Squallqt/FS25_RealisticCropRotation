@@ -195,9 +195,9 @@
         <e k="rcr_disease_name_sclerotinia" v="菌核病" />
         <e k="rcr_disease_name_phoma" v="根朽病（フォマ茎枯）" />
         <e k="rcr_disease_name_takeall" v="ムギ類立枯病" />
-        <e k="rcr_disease_name_septoria" v="葉枯病（セプトリア）" />
+        <e k="rcr_disease_name_septoria" v="セプトリア病" />
         <e k="rcr_disease_name_rust" v="さび病" />
-        <e k="rcr_disease_name_fusarium" v="赤かび病" />
+        <e k="rcr_disease_name_fusarium" v="フザリウム病" />
         <e k="rcr_disease_name_lateblight" v="疫病" />
         <e k="rcr_disease_name_bcn"   v="シストセンチュウ" />
         <e k="rcr_disease_name_clubroot" v="根こぶ病" />
@@ -215,17 +215,17 @@
         <e k="rcr_disease_treatment_clubroot" v="なし（輪作のみ）" />
         <e k="rcr_advice_pressure_high_phoma" v="根朽病の圧力が高い。ナタネとカラシナが4年以内に戻ると圧力は高いまま。殺菌剤は発病を遅らせ、散布した場所の被害を食い止めるが、病気を後退させはしない。" />
         <e k="rcr_advice_pressure_high_takeall" v="立枯病の圧力が高い。非宿主作物（エンバク、マメ科、油糧作物）を挟む。この病気を防ぐ薬剤はなく、輪作だけが圧力を下げる。" />
-        <e k="rcr_advice_pressure_high_septoria" v="葉枯病の圧力が高い。コムギ、オオムギ、ライ小麦、スペルト小麦の間隔をあける。殺菌剤は発病を遅らせ、散布した場所の被害を食い止め、降雨は流行を早める。" />
-        <e k="rcr_advice_pressure_high_rust" v="さび病の圧力が高い。ムギ類とナタネはどちらも宿主なので間隔をあける。殺菌剤は発病を遅らせ、散布した場所の被害を食い止め、温暖で多湿な時期は流行を早める。" />
-        <e k="rcr_advice_pressure_high_fusarium" v="赤かび病の圧力が高い。トウモロコシの後にコムギを作らず、ムギ類の連作を減らす。殺菌剤は発病を遅らせ、散布した場所の被害を食い止め、降雨は流行を早める。" />
-        <e k="rcr_advice_pressure_high_lateblight" v="疫病の圧力が高い。ジャガイモの間隔をあける。殺菌剤は発病を遅らせ、散布した場所の被害を食い止め、冷涼で多湿な天候は流行を早める。" />
+        <e k="rcr_advice_pressure_high_septoria" v="セプトリア病の圧力が高い。ムギ類の残さは圧力を高めることがある。降雨は直近の感染リスクを高め、殺菌剤は散布した場所の被害を抑える。" />
+        <e k="rcr_advice_pressure_high_rust" v="さび病の圧力が高い。温暖で多湿な天候は直近の感染リスクを高め、殺菌剤は散布した場所の被害を抑える。" />
+        <e k="rcr_advice_pressure_high_fusarium" v="フザリウム病の圧力が高い。トウモロコシの後にコムギを作らず、ムギ類の連作を減らす。殺菌剤は発病を遅らせ、散布した場所の被害を食い止め、降雨は流行を早める。" />
+        <e k="rcr_advice_pressure_high_lateblight" v="疫病の圧力が高い。冷涼で多湿な天候は直近の感染リスクを高め、殺菌剤は散布した場所の被害を抑える。" />
         <e k="rcr_advice_pressure_high_clubroot" v="根こぶ病の圧力が高い。ナタネとカラシナの間隔をできるだけ延ばす。この病気を防ぐ薬剤はなく、輪作だけが効く。" />
         <e k="rcr_advice_pressure_moderate_phoma" v="根朽病の圧力は中程度。ナタネとカラシナの間隔を延ばす。" />
         <e k="rcr_advice_pressure_moderate_takeall" v="立枯病の圧力は中程度。3作連続のムギ類を避ける。" />
-        <e k="rcr_advice_pressure_moderate_septoria" v="葉枯病の圧力は中程度。ムギ類の間隔をあける。降雨はリスクを高める。" />
-        <e k="rcr_advice_pressure_moderate_rust" v="さび病の圧力は中程度。ムギ類とナタネの間隔をあける。温暖で多湿な時期はリスクを高める。" />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="赤かび病の圧力は中程度。ムギ類とトウモロコシの間隔をあける。" />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="疫病の圧力は中程度。ジャガイモの間隔をあける。冷涼で多湿な天候はリスクを高める。" />
+        <e k="rcr_advice_pressure_moderate_septoria" v="セプトリア病の圧力は中程度。ムギ類の残さは圧力を高めることがある。降雨は直近の感染リスクを高める。" />
+        <e k="rcr_advice_pressure_moderate_rust" v="さび病の圧力は中程度。温暖で多湿な天候は直近の感染リスクを高める。" />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="フザリウム病の圧力は中程度。ムギ類とトウモロコシの間隔をあける。" />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="疫病の圧力は中程度。冷涼で多湿な天候は直近の感染リスクを高める。" />
         <e k="rcr_advice_pressure_moderate_clubroot" v="根こぶ病の圧力は中程度。ナタネとカラシナの間隔を延ばす。" />
     </elements>
 </l10n>

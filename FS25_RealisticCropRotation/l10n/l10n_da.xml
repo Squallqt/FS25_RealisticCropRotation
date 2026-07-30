@@ -195,9 +195,9 @@
         <e k="rcr_disease_name_sclerotinia" v="Knoldbægersvamp" />
         <e k="rcr_disease_name_phoma" v="Knæksyge (Phoma)" />
         <e k="rcr_disease_name_takeall" v="Goldfodsyge" />
-        <e k="rcr_disease_name_septoria" v="Hvedens bladplet (Septoria)" />
+        <e k="rcr_disease_name_septoria" v="Septoria" />
         <e k="rcr_disease_name_rust" v="Rust" />
-        <e k="rcr_disease_name_fusarium" v="Aksfusariose (Fusarium)" />
+        <e k="rcr_disease_name_fusarium" v="Fusarium" />
         <e k="rcr_disease_name_lateblight" v="Kartoffelskimmel" />
         <e k="rcr_disease_name_bcn"   v="Cystenematode" />
         <e k="rcr_disease_name_clubroot" v="Kålbrok" />
@@ -215,17 +215,17 @@
         <e k="rcr_disease_treatment_clubroot" v="Ingen (kun sædskifte)" />
         <e k="rcr_advice_pressure_high_phoma" v="Højt phoma-tryk: vender raps eller sennep tilbage inden for 4 år, forbliver trykket højt; svampemidlet bremser opståen og fastfryser skaden på sprøjtede områder, men trænger ikke sygdommen tilbage." />
         <e k="rcr_advice_pressure_high_takeall" v="Højt goldfodsyge-tryk: indsæt en ikke-værtsafgrøde som pause (havre, bælgplante, olieafgrøde); intet middel beskytter mod denne sygdom, kun sædskifte sænker trykket." />
-        <e k="rcr_advice_pressure_high_septoria" v="Højt septoria-tryk: spred hvede, byg, triticale og spelt; svampemidlet bremser opståen og fastfryser skaden på sprøjtede områder, og regn fremskynder epidemien." />
-        <e k="rcr_advice_pressure_high_rust" v="Højt rust-tryk: både korn og raps er værter, spred dem; svampemidlet bremser opståen og fastfryser skaden på sprøjtede områder, og milde fugtige perioder fremskynder epidemien." />
+        <e k="rcr_advice_pressure_high_septoria" v="Højt septoria-tryk: kornrester kan øge trykket; regn øger den umiddelbare risiko, og svampemidlet begrænser skaden på sprøjtede områder." />
+        <e k="rcr_advice_pressure_high_rust" v="Højt rust-tryk: mildt fugtigt vejr øger den umiddelbare risiko, og svampemidlet begrænser skaden på sprøjtede områder." />
         <e k="rcr_advice_pressure_high_fusarium" v="Højt fusarium-tryk: undgå hvede efter majs og læg færre kornafgrøder i træk; svampemidlet bremser opståen og fastfryser skaden på sprøjtede områder, og regn fremskynder epidemien." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Højt kartoffelskimmel-tryk: spred kartoflerne; svampemidlet bremser opståen og fastfryser skaden på sprøjtede områder, og køligt fugtigt vejr fremskynder epidemien." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Højt kartoffelskimmel-tryk: køligt fugtigt vejr øger den umiddelbare risiko, og svampemidlet begrænser skaden på sprøjtede områder." />
         <e k="rcr_advice_pressure_high_clubroot" v="Højt kålbrok-tryk: stræk pausen for raps og sennep så meget som muligt; intet middel beskytter mod denne sygdom, kun sædskifte virker." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Moderat phoma-tryk: forlæng pausen for raps og sennep." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Moderat goldfodsyge-tryk: undgå et tredje korn i træk." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Moderat septoria-tryk: spred kornafgrøderne, regn øger risikoen." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Moderat rust-tryk: spred korn og raps, milde fugtige perioder øger risikoen." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Moderat septoria-tryk: kornrester kan øge trykket; regn øger den umiddelbare risiko." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Moderat rust-tryk: mildt fugtigt vejr øger den umiddelbare risiko." />
         <e k="rcr_advice_pressure_moderate_fusarium" v="Moderat fusarium-tryk: spred korn og majs." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Moderat kartoffelskimmel-tryk: spred kartoflerne, køligt fugtigt vejr øger risikoen." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Moderat kartoffelskimmel-tryk: køligt fugtigt vejr øger den umiddelbare risiko." />
         <e k="rcr_advice_pressure_moderate_clubroot" v="Moderat kålbrok-tryk: forlæng pausen for raps og sennep." />
     </elements>
 </l10n>

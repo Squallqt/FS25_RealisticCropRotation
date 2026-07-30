@@ -3,43 +3,58 @@
 <realisticCropRotationCrops>
 
     <!-- Disease groups: shared-pathogen definitions referenced by each crop's disease attribute -->
-    <!-- ambient = regional background floor on the infection roll -->
+    <!-- ambient = current external exposure floor; a healthy host never creates a local reservoir -->
+    <!-- annualRetention = local reservoir fraction retained after one completed calendar year -->
+    <!-- plannerInterval is advisory and independent from reservoir persistence -->
+    <!-- Retention calibration: 0.56^4, 0.46^3 and 0.32^2 preserve the beta residual target over sourced residue lifetimes;
+         TAKEALL/SEPTORIA retain 0.10 after one year, BCN retains 0.70 after the documented minimum 30% decline,
+         and CLUBROOT uses 0.82 from its documented 3.5-year half-life. -->
+    <!-- The 0.01 external floor uses the existing minimum meaningful load for rare first introductions. -->
     <diseaseGroups>
-        <!-- Sclerotinia: fungal stem/flower rot of oilseeds, legumes and roots -->
-        <diseaseGroup name="SCLEROTINIA" state="1" minInterval="3" infectFrom="0.50" infectTo="0.80"
-                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.0"  ambient="0.03"
+        <!-- Sclerotinia: external exposure plus a local reservoir after a real outbreak -->
+        <diseaseGroup name="SCLEROTINIA" state="1" plannerInterval="3" rotationRelevant="true"
+                      reservoirClass="MIXED" annualRetention="0.56" infectFrom="0.50" infectTo="0.80"
+                      fungal="true" weatherDriven="true" treatment="FUNGICIDE" weatherFactor="2.0" ambient="0.03"
                       dailyGrowth="0.05"  destroySeverity="0.25" deadFractionMax="0.85" />
-        <!-- Phoma/blackleg: fungal stem canker of brassica oilseeds -->
-        <diseaseGroup name="PHOMA"       state="2" minInterval="4" infectFrom="0.20" infectTo="0.70"
-                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="1.8"  ambient="0.02"
+        <!-- Phoma/blackleg: short-lived infected-residue reservoir plus neighbouring exposure -->
+        <diseaseGroup name="PHOMA"       state="2" plannerInterval="4" rotationRelevant="true"
+                      reservoirClass="RECENT" annualRetention="0.46" infectFrom="0.20" infectTo="0.70"
+                      fungal="true" weatherDriven="true" treatment="FUNGICIDE" weatherFactor="1.8" ambient="0.02"
                       dailyGrowth="0.03"  destroySeverity="0.30" deadFractionMax="0.55" />
-        <!-- Take-all: soil-borne cereal root disease, no fungicide (rotation only) -->
-        <diseaseGroup name="TAKEALL"     state="3" minInterval="3" infectFrom="0.30" infectTo="0.80"
-                      fungal="true"  treatment="NONE"       weatherFactor="1.4"  ambient="0.00"
+        <!-- Take-all: recent local root/residue reservoir; one non-host year is the planner break -->
+        <diseaseGroup name="TAKEALL"     state="3" plannerInterval="2" rotationRelevant="true"
+                      reservoirClass="RECENT" annualRetention="0.10" infectFrom="0.30" infectTo="0.80"
+                      fungal="true" weatherDriven="false" treatment="NONE" ambient="0.01"
                       dailyGrowth="0.035" destroySeverity="0.30" deadFractionMax="0.55" />
-        <!-- Septoria leaf blotch: dominant fungal wheat/barley foliar disease -->
-        <diseaseGroup name="SEPTORIA"    state="4" minInterval="2" infectFrom="0.25" infectTo="0.75"
-                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.3"  ambient="0.09"
+        <!-- Septoria group: mainly seasonal, with a secondary recent-residue reservoir -->
+        <diseaseGroup name="SEPTORIA"    state="4" plannerInterval="2" rotationRelevant="false"
+                      reservoirClass="RECENT" annualRetention="0.10" infectFrom="0.25" infectTo="0.75"
+                      fungal="true" weatherDriven="true" treatment="FUNGICIDE" weatherFactor="2.3" ambient="0.09"
                       dailyGrowth="0.045" destroySeverity="0.25" deadFractionMax="0.55" />
-        <!-- Rusts: fungal cereal/oilseed foliar disease, wind-borne -->
-        <diseaseGroup name="RUST"        state="5" minInterval="2" infectFrom="0.30" infectTo="0.85"
-                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.4"  ambient="0.10"
+        <!-- Rust group: seasonal and host-specific; no cross-crop field reservoir -->
+        <diseaseGroup name="RUST"        state="5" plannerInterval="0" rotationRelevant="false"
+                      reservoirClass="NONE" annualRetention="0.00" infectFrom="0.30" infectTo="0.85"
+                      fungal="true" weatherDriven="true" treatment="FUNGICIDE" weatherFactor="2.4" ambient="0.10"
                       dailyGrowth="0.05"  destroySeverity="0.25" deadFractionMax="0.60" />
-        <!-- Fusarium head blight: fungal disease favoured by cereal/maize residue -->
-        <diseaseGroup name="FUSARIUM"    state="6" minInterval="2" infectFrom="0.50" infectTo="0.80"
-                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.0"  ambient="0.05"
+        <!-- Fusarium group: recent infected cereal/maize residue plus regional exposure -->
+        <diseaseGroup name="FUSARIUM"    state="6" plannerInterval="2" rotationRelevant="true"
+                      reservoirClass="RECENT" annualRetention="0.32" infectFrom="0.50" infectTo="0.80"
+                      fungal="true" weatherDriven="true" treatment="FUNGICIDE" weatherFactor="2.0" ambient="0.05"
                       dailyGrowth="0.035" destroySeverity="0.30" deadFractionMax="0.45" />
-        <!-- Late blight: weather-driven potato disease -->
-        <diseaseGroup name="LATEBLIGHT"  state="7" minInterval="2" infectFrom="0.15" infectTo="0.85"
-                      fungal="true"  treatment="FUNGICIDE"  weatherFactor="2.0"  ambient="0.10"
+        <!-- Late blight: seasonal external exposure, not a default field reservoir -->
+        <diseaseGroup name="LATEBLIGHT"  state="7" plannerInterval="0" rotationRelevant="false"
+                      reservoirClass="NONE" annualRetention="0.00" infectFrom="0.15" infectTo="0.85"
+                      fungal="true" weatherDriven="true" treatment="FUNGICIDE" weatherFactor="2.0" ambient="0.10"
                       dailyGrowth="0.05"  destroySeverity="0.28" deadFractionMax="0.70" />
-        <!-- Beet cyst nematode: soil-borne, not rain-driven -->
-        <diseaseGroup name="BCN"         state="8" minInterval="3" infectFrom="0.10" infectTo="0.90"
-                      fungal="false" treatment="NEMATICIDE"                       ambient="0.00"
+        <!-- Beet cyst nematode: rare external introduction, then a persistent field reservoir -->
+        <diseaseGroup name="BCN"         state="8" plannerInterval="3" rotationRelevant="true"
+                      reservoirClass="PERSISTENT" annualRetention="0.70" infectFrom="0.10" infectTo="0.90"
+                      fungal="false" weatherDriven="false" treatment="NEMATICIDE" ambient="0.01"
                       dailyGrowth="0.015" destroySeverity="0.30" deadFractionMax="0.45" />
-        <!-- Clubroot: soil-borne brassica disease, long-lived spores -->
-        <diseaseGroup name="CLUBROOT"    state="9" minInterval="6" infectFrom="0.10" infectTo="0.60"
-                      fungal="false" treatment="NONE"                             ambient="0.00"
+        <!-- Clubroot: rare external introduction, then a slowly declining persistent reservoir -->
+        <diseaseGroup name="CLUBROOT"    state="9" plannerInterval="6" rotationRelevant="true"
+                      reservoirClass="PERSISTENT" annualRetention="0.82" infectFrom="0.10" infectTo="0.60"
+                      fungal="false" weatherDriven="false" treatment="NONE" ambient="0.01"
                       dailyGrowth="0.02"  destroySeverity="0.30" deadFractionMax="0.60" />
     </diseaseGroups>
 

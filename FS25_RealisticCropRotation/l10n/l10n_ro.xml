@@ -195,9 +195,9 @@
         <e k="rcr_disease_name_sclerotinia" v="Putregaiul alb" />
         <e k="rcr_disease_name_phoma" v="Putregaiul uscat / cancerul tulpinii (Phoma)" />
         <e k="rcr_disease_name_takeall" v="Înnegrirea bazei paiului" />
-        <e k="rcr_disease_name_septoria" v="Septorioza frunzelor" />
+        <e k="rcr_disease_name_septoria" v="Septorioza" />
         <e k="rcr_disease_name_rust" v="Rugina" />
-        <e k="rcr_disease_name_fusarium" v="Fuzarioza spicului" />
+        <e k="rcr_disease_name_fusarium" v="Fuzarioza" />
         <e k="rcr_disease_name_lateblight" v="Mana cartofului" />
         <e k="rcr_disease_name_bcn"   v="Nematod cu chisturi" />
         <e k="rcr_disease_name_clubroot" v="Hernia rădăcinilor de crucifere" />
@@ -215,17 +215,17 @@
         <e k="rcr_disease_treatment_clubroot" v="Niciunul (doar rotație)" />
         <e k="rcr_advice_pressure_high_phoma" v="Presiune mare de Phoma: dacă rapița sau muștarul revin în mai puțin de 4 ani, presiunea rămâne ridicată; fungicidul întârzie apariția și îngheață paguba pe zonele tratate, nu face boala să regreseze." />
         <e k="rcr_advice_pressure_high_takeall" v="Presiune mare de înnegrire a bazei paiului: introduceți o pauză cu o cultură negazdă (ovăz, leguminoasă, oleaginoasă); niciun produs nu protejează de această boală, doar rotația scade presiunea." />
-        <e k="rcr_advice_pressure_high_septoria" v="Presiune mare de septorioză: răriți grâul, orzul, triticalul și alacul; fungicidul întârzie apariția și îngheață paguba pe zonele tratate, ploaia accelerează epidemia." />
-        <e k="rcr_advice_pressure_high_rust" v="Presiune mare de rugină: cerealele și rapița sunt ambele gazde, răriți-le; fungicidul întârzie apariția și îngheață paguba pe zonele tratate, vremea blândă și umedă accelerează epidemia." />
+        <e k="rcr_advice_pressure_high_septoria" v="Presiune mare de septorioză: resturile de cereale pot crește presiunea; ploaia mărește riscul imediat, iar fungicidul limitează pagubele pe zonele tratate." />
+        <e k="rcr_advice_pressure_high_rust" v="Presiune mare de rugină: vremea blândă și umedă mărește riscul imediat, iar fungicidul limitează pagubele pe zonele tratate." />
         <e k="rcr_advice_pressure_high_fusarium" v="Presiune mare de fuzarioză: evitați grâul după porumb și înlănțuiți mai puține cereale; fungicidul întârzie apariția și îngheață paguba pe zonele tratate, ploaia accelerează epidemia." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Presiune mare de mană: răriți cartofii; fungicidul întârzie apariția și îngheață paguba pe zonele tratate, vremea răcoroasă și umedă accelerează epidemia." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Presiune mare de mană: vremea răcoroasă și umedă mărește riscul imediat, iar fungicidul limitează pagubele pe zonele tratate." />
         <e k="rcr_advice_pressure_high_clubroot" v="Presiune mare de hernie: prelungiți cât mai mult pauza rapiței și a muștarului; niciun produs nu protejează de această boală, doar rotația ajută." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Presiune moderată de Phoma: prelungiți pauza rapiței și a muștarului." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Presiune moderată de înnegrire a bazei paiului: evitați a treia cereală la rând." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Presiune moderată de septorioză: răriți cerealele, ploaia crește riscul." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Presiune moderată de rugină: răriți cerealele și rapița, vremea blândă și umedă crește riscul." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Presiune moderată de septorioză: resturile de cereale pot crește presiunea; ploaia mărește riscul imediat." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Presiune moderată de rugină: vremea blândă și umedă mărește riscul imediat." />
         <e k="rcr_advice_pressure_moderate_fusarium" v="Presiune moderată de fuzarioză: răriți cerealele și porumbul." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Presiune moderată de mană: răriți cartofii, vremea răcoroasă și umedă crește riscul." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Presiune moderată de mană: vremea răcoroasă și umedă mărește riscul imediat." />
         <e k="rcr_advice_pressure_moderate_clubroot" v="Presiune moderată de hernie: prelungiți pauza rapiței și a muștarului." />
     </elements>
 </l10n>

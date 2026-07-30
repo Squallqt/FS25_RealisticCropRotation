@@ -195,9 +195,9 @@
         <e k="rcr_disease_name_sclerotinia" v="菌核病" />
         <e k="rcr_disease_name_phoma" v="黑胫病（茎溃疡）" />
         <e k="rcr_disease_name_takeall" v="全蚀病" />
-        <e k="rcr_disease_name_septoria" v="壳针孢叶枯病" />
+        <e k="rcr_disease_name_septoria" v="壳针孢病" />
         <e k="rcr_disease_name_rust" v="锈病" />
-        <e k="rcr_disease_name_fusarium" v="赤霉病" />
+        <e k="rcr_disease_name_fusarium" v="镰刀菌病" />
         <e k="rcr_disease_name_lateblight" v="晚疫病" />
         <e k="rcr_disease_name_bcn"   v="孢囊线虫" />
         <e k="rcr_disease_name_clubroot" v="根肿病" />
@@ -215,17 +215,17 @@
         <e k="rcr_disease_treatment_clubroot" v="无（仅靠轮作）" />
         <e k="rcr_advice_pressure_high_phoma" v="黑胫病压力高，若在4年内让油菜或芥菜轮作回归，压力仍然居高不下；杀菌剂能延缓发病并锁定已喷施地块的损失，不会让病害消退。" />
         <e k="rcr_advice_pressure_high_takeall" v="全蚀病压力高，插入一茬非寄主作物（燕麦、豆科、油料作物）；没有任何药剂能防护这种病害，只有轮作才能降低压力。" />
-        <e k="rcr_advice_pressure_high_septoria" v="叶枯病压力高，拉开小麦、大麦、小黑麦和斯佩尔特小麦的间隔；杀菌剂能延缓发病并锁定已喷施地块的损失，降雨会加快流行。" />
-        <e k="rcr_advice_pressure_high_rust" v="锈病压力高，谷物和油菜都是寄主，要拉开间隔；杀菌剂能延缓发病并锁定已喷施地块的损失，温暖潮湿的天气会加快流行。" />
-        <e k="rcr_advice_pressure_high_fusarium" v="赤霉病压力高，避免玉米后种小麦，减少连续种植谷物；杀菌剂能延缓发病并锁定已喷施地块的损失，降雨会加快流行。" />
-        <e k="rcr_advice_pressure_high_lateblight" v="晚疫病压力高，拉开马铃薯的间隔；杀菌剂能延缓发病并锁定已喷施地块的损失，凉爽潮湿的天气会加快流行。" />
+        <e k="rcr_advice_pressure_high_septoria" v="壳针孢病压力高，谷物残留物可能增加压力；降雨会提高即时风险，杀菌剂可限制已喷施地块的损失。" />
+        <e k="rcr_advice_pressure_high_rust" v="锈病压力高，温暖潮湿的天气会提高即时风险，杀菌剂可限制已喷施地块的损失。" />
+        <e k="rcr_advice_pressure_high_fusarium" v="镰刀菌病压力高，避免玉米后种小麦，减少连续种植谷物；杀菌剂能延缓发病并锁定已喷施地块的损失，降雨会加快流行。" />
+        <e k="rcr_advice_pressure_high_lateblight" v="晚疫病压力高，凉爽潮湿的天气会提高即时风险，杀菌剂可限制已喷施地块的损失。" />
         <e k="rcr_advice_pressure_high_clubroot" v="根肿病压力高，尽量拉长油菜和芥菜的间隔；没有任何药剂能防护这种病害，只有轮作才有效。" />
         <e k="rcr_advice_pressure_moderate_phoma" v="黑胫病压力中等，拉长油菜和芥菜的间隔。" />
         <e k="rcr_advice_pressure_moderate_takeall" v="全蚀病压力中等，避免连续第三茬谷物。" />
-        <e k="rcr_advice_pressure_moderate_septoria" v="叶枯病压力中等，拉开谷物的间隔，降雨会抬高风险。" />
-        <e k="rcr_advice_pressure_moderate_rust" v="锈病压力中等，拉开谷物与油菜的间隔，温暖潮湿的天气会抬高风险。" />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="赤霉病压力中等，拉开谷物与玉米的间隔。" />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="晚疫病压力中等，拉开马铃薯的间隔，凉爽潮湿的天气会抬高风险。" />
+        <e k="rcr_advice_pressure_moderate_septoria" v="壳针孢病压力中等，谷物残留物可能增加压力；降雨会提高即时风险。" />
+        <e k="rcr_advice_pressure_moderate_rust" v="锈病压力中等，温暖潮湿的天气会提高即时风险。" />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="镰刀菌病压力中等，拉开谷物与玉米的间隔。" />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="晚疫病压力中等，凉爽潮湿的天气会提高即时风险。" />
         <e k="rcr_advice_pressure_moderate_clubroot" v="根肿病压力中等，拉长油菜和芥菜的间隔。" />
     </elements>
 </l10n>

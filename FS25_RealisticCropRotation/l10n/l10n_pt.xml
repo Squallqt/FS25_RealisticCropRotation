@@ -197,7 +197,7 @@
         <e k="rcr_disease_name_takeall" v="Mal-do-pé" />
         <e k="rcr_disease_name_septoria" v="Septoriose" />
         <e k="rcr_disease_name_rust" v="Ferrugem" />
-        <e k="rcr_disease_name_fusarium" v="Fusariose da espiga" />
+        <e k="rcr_disease_name_fusarium" v="Fusariose" />
         <e k="rcr_disease_name_lateblight" v="Míldio da batata" />
         <e k="rcr_disease_name_bcn"   v="Nemátode de quisto" />
         <e k="rcr_disease_name_clubroot" v="Hérnia das crucíferas" />
@@ -215,17 +215,17 @@
         <e k="rcr_disease_treatment_clubroot" v="Nenhum (apenas rotação)" />
         <e k="rcr_advice_pressure_high_phoma" v="Forte pressão de phoma: se colza ou mostarda regressarem antes de 4 anos, a pressão mantém-se elevada; o fungicida atrasa o aparecimento e trava o dano nas zonas tratadas, não faz a doença recuar." />
         <e k="rcr_advice_pressure_high_takeall" v="Forte pressão de mal-do-pé: introduza um corte não hospedeiro (aveia, leguminosa, oleaginosa); nenhum produto protege desta doença, só a rotação faz baixar a pressão." />
-        <e k="rcr_advice_pressure_high_septoria" v="Forte pressão de septoriose: espace trigo, cevada, triticale e espelta; o fungicida atrasa o aparecimento e trava o dano nas zonas tratadas, a chuva acelera a epidemia." />
-        <e k="rcr_advice_pressure_high_rust" v="Forte pressão de ferrugem: cereais e colza são ambos hospedeiros, espace-os; o fungicida atrasa o aparecimento e trava o dano nas zonas tratadas, o tempo ameno e húmido acelera a epidemia." />
+        <e k="rcr_advice_pressure_high_septoria" v="Forte pressão de septoriose: os resíduos dos cereais podem aumentar a pressão; a chuva aumenta o risco imediato e o fungicida limita os danos nas zonas tratadas." />
+        <e k="rcr_advice_pressure_high_rust" v="Forte pressão de ferrugem: o tempo ameno e húmido aumenta o risco imediato e o fungicida limita os danos nas zonas tratadas." />
         <e k="rcr_advice_pressure_high_fusarium" v="Forte pressão de fusariose: evite trigo depois de milho e encadeie menos cereais; o fungicida atrasa o aparecimento e trava o dano nas zonas tratadas, a chuva acelera a epidemia." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Forte pressão de míldio: espace as batatas; o fungicida atrasa o aparecimento e trava o dano nas zonas tratadas, o tempo fresco e húmido acelera a epidemia." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Forte pressão de míldio: o tempo fresco e húmido aumenta o risco imediato e o fungicida limita os danos nas zonas tratadas." />
         <e k="rcr_advice_pressure_high_clubroot" v="Forte pressão de hérnia: alargue ao máximo o regresso da colza e da mostarda; nenhum produto protege desta doença, só a rotação atua." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Pressão de phoma moderada: alargue o regresso da colza e da mostarda." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Pressão de mal-do-pé moderada: evite o terceiro cereal seguido." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Pressão de septoriose moderada: espace os cereais, a chuva aumenta o risco." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Pressão de ferrugem moderada: espace cereais e colza, o tempo ameno e húmido aumenta o risco." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Pressão de septoriose moderada: os resíduos dos cereais podem aumentar a pressão; a chuva aumenta o risco imediato." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Pressão de ferrugem moderada: o tempo ameno e húmido aumenta o risco imediato." />
         <e k="rcr_advice_pressure_moderate_fusarium" v="Pressão de fusariose moderada: espace cereais e milho." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Pressão de míldio moderada: espace as batatas, o tempo fresco e húmido aumenta o risco." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Pressão de míldio moderada: o tempo fresco e húmido aumenta o risco imediato." />
         <e k="rcr_advice_pressure_moderate_clubroot" v="Pressão de hérnia moderada: alargue o regresso da colza e da mostarda." />
     </elements>
 </l10n>

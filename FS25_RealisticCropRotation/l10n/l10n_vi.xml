@@ -195,9 +195,9 @@
         <e k="rcr_disease_name_sclerotinia" v="Bệnh thối hạch" />
         <e k="rcr_disease_name_phoma" v="Bệnh loét thân (Phoma)" />
         <e k="rcr_disease_name_takeall" v="Bệnh thối rễ ngũ cốc" />
-        <e k="rcr_disease_name_septoria" v="Bệnh đốm lá Septoria" />
+        <e k="rcr_disease_name_septoria" v="Bệnh Septoria" />
         <e k="rcr_disease_name_rust" v="Bệnh gỉ sắt" />
-        <e k="rcr_disease_name_fusarium" v="Bệnh cháy bông Fusarium" />
+        <e k="rcr_disease_name_fusarium" v="Bệnh Fusarium" />
         <e k="rcr_disease_name_lateblight" v="Bệnh mốc sương" />
         <e k="rcr_disease_name_bcn"   v="Tuyến trùng bào nang" />
         <e k="rcr_disease_name_clubroot" v="Bệnh sưng rễ họ cải" />
@@ -215,17 +215,17 @@
         <e k="rcr_disease_treatment_clubroot" v="Không có (chỉ luân canh)" />
         <e k="rcr_advice_pressure_high_phoma" v="Áp lực Phoma cao: nếu cải dầu hoặc mù tạt quay lại trong vòng chưa đầy 4 năm, áp lực vẫn ở mức cao; thuốc trừ nấm làm chậm khởi phát và khóa thiệt hại trên phần đã phun, không đẩy lùi bệnh." />
         <e k="rcr_advice_pressure_high_takeall" v="Áp lực thối rễ cao: chèn một vụ cây không phải ký chủ (yến mạch, họ đậu, cây lấy dầu); không thuốc nào bảo vệ được trước bệnh này, chỉ luân canh mới hạ được áp lực." />
-        <e k="rcr_advice_pressure_high_septoria" v="Áp lực đốm lá cao: giãn cách lúa mì, lúa mạch, triticale và lúa mì spelt; thuốc trừ nấm làm chậm khởi phát và khóa thiệt hại trên phần đã phun, còn mưa làm dịch bùng nhanh hơn." />
-        <e k="rcr_advice_pressure_high_rust" v="Áp lực gỉ sắt cao: ngũ cốc và cải dầu đều là ký chủ, hãy giãn cách chúng; thuốc trừ nấm làm chậm khởi phát và khóa thiệt hại trên phần đã phun, còn thời tiết ôn hòa ẩm ướt làm dịch bùng nhanh hơn." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Áp lực cháy bông cao: tránh trồng lúa mì sau ngô và bớt trồng ngũ cốc liên tiếp; thuốc trừ nấm làm chậm khởi phát và khóa thiệt hại trên phần đã phun, còn mưa làm dịch bùng nhanh hơn." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Áp lực mốc sương cao: giãn cách khoai tây; thuốc trừ nấm làm chậm khởi phát và khóa thiệt hại trên phần đã phun, còn thời tiết mát ẩm làm dịch bùng nhanh hơn." />
+        <e k="rcr_advice_pressure_high_septoria" v="Áp lực Septoria cao: tàn dư ngũ cốc có thể làm tăng áp lực; mưa làm tăng nguy cơ tức thời và thuốc trừ nấm hạn chế thiệt hại trên phần đã phun." />
+        <e k="rcr_advice_pressure_high_rust" v="Áp lực gỉ sắt cao: thời tiết ôn hòa ẩm ướt làm tăng nguy cơ tức thời và thuốc trừ nấm hạn chế thiệt hại trên phần đã phun." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Áp lực Fusarium cao: tránh trồng lúa mì sau ngô và bớt trồng ngũ cốc liên tiếp; thuốc trừ nấm làm chậm khởi phát và khóa thiệt hại trên phần đã phun, còn mưa làm dịch bùng nhanh hơn." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Áp lực mốc sương cao: thời tiết mát ẩm làm tăng nguy cơ tức thời và thuốc trừ nấm hạn chế thiệt hại trên phần đã phun." />
         <e k="rcr_advice_pressure_high_clubroot" v="Áp lực sưng rễ cao: kéo dài tối đa khoảng cách vụ cải dầu và mù tạt; không thuốc nào bảo vệ được trước bệnh này, chỉ luân canh mới có tác dụng." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Áp lực Phoma trung bình: kéo dài khoảng cách vụ cải dầu và mù tạt." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Áp lực thối rễ trung bình: tránh vụ ngũ cốc thứ ba liên tiếp." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Áp lực đốm lá trung bình: giãn cách ngũ cốc, mưa làm tăng rủi ro." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Áp lực gỉ sắt trung bình: giãn cách ngũ cốc và cải dầu, thời tiết ôn hòa ẩm ướt làm tăng rủi ro." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="Áp lực cháy bông trung bình: giãn cách ngũ cốc và ngô." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Áp lực mốc sương trung bình: giãn cách khoai tây, thời tiết mát ẩm làm tăng rủi ro." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Áp lực Septoria trung bình: tàn dư ngũ cốc có thể làm tăng áp lực; mưa làm tăng nguy cơ tức thời." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Áp lực gỉ sắt trung bình: thời tiết ôn hòa ẩm ướt làm tăng nguy cơ tức thời." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Áp lực Fusarium trung bình: giãn cách ngũ cốc và ngô." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Áp lực mốc sương trung bình: thời tiết mát ẩm làm tăng nguy cơ tức thời." />
         <e k="rcr_advice_pressure_moderate_clubroot" v="Áp lực sưng rễ trung bình: kéo dài khoảng cách vụ cải dầu và mù tạt." />
     </elements>
 </l10n>

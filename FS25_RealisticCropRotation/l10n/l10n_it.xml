@@ -197,7 +197,7 @@
         <e k="rcr_disease_name_takeall" v="Mal del piede" />
         <e k="rcr_disease_name_septoria" v="Septoriosi" />
         <e k="rcr_disease_name_rust" v="Ruggine" />
-        <e k="rcr_disease_name_fusarium" v="Fusariosi della spiga" />
+        <e k="rcr_disease_name_fusarium" v="Fusariosi" />
         <e k="rcr_disease_name_lateblight" v="Peronospora della patata" />
         <e k="rcr_disease_name_bcn"   v="Nematode a cisti" />
         <e k="rcr_disease_name_clubroot" v="Ernia delle crucifere" />
@@ -215,17 +215,17 @@
         <e k="rcr_disease_treatment_clubroot" v="Nessuno (solo rotazione)" />
         <e k="rcr_advice_pressure_high_phoma" v="Forte pressione di phoma: se colza o senape tornano entro 4 anni, la pressione resta alta; il fungicida rallenta l'insorgenza e blocca il danno sulle zone trattate, non fa regredire la malattia." />
         <e k="rcr_advice_pressure_high_takeall" v="Forte pressione di mal del piede: inserisci un'interruzione non ospite (avena, leguminosa, oleaginosa); nessun prodotto protegge da questa malattia, solo la rotazione abbassa la pressione." />
-        <e k="rcr_advice_pressure_high_septoria" v="Forte pressione di septoriosi: distanzia frumento, orzo, triticale e farro; il fungicida rallenta l'insorgenza e blocca il danno sulle zone trattate, la pioggia accelera l'epidemia." />
-        <e k="rcr_advice_pressure_high_rust" v="Forte pressione di ruggine: cereali e colza sono entrambi ospiti, distanziali; il fungicida rallenta l'insorgenza e blocca il danno sulle zone trattate, il clima mite e umido accelera l'epidemia." />
+        <e k="rcr_advice_pressure_high_septoria" v="Forte pressione di septoriosi: i residui dei cereali possono aumentare la pressione; la pioggia aumenta il rischio immediato e il fungicida limita i danni sulle zone trattate." />
+        <e k="rcr_advice_pressure_high_rust" v="Forte pressione di ruggine: il clima mite e umido aumenta il rischio immediato e il fungicida limita i danni sulle zone trattate." />
         <e k="rcr_advice_pressure_high_fusarium" v="Forte pressione di fusariosi: evita frumento dopo mais e concatena meno cereali; il fungicida rallenta l'insorgenza e blocca il danno sulle zone trattate, la pioggia accelera l'epidemia." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Forte pressione di peronospora: distanzia le patate; il fungicida rallenta l'insorgenza e blocca il danno sulle zone trattate, il clima fresco e umido accelera l'epidemia." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Forte pressione di peronospora: il clima fresco e umido aumenta il rischio immediato e il fungicida limita i danni sulle zone trattate." />
         <e k="rcr_advice_pressure_high_clubroot" v="Forte pressione di ernia: allunga il più possibile il ritorno di colza e senape; nessun prodotto protegge da questa malattia, solo la rotazione agisce." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Pressione di phoma moderata: allunga il ritorno di colza e senape." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Pressione di mal del piede moderata: evita il terzo cereale consecutivo." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Pressione di septoriosi moderata: distanzia i cereali, la pioggia aumenta il rischio." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Pressione di ruggine moderata: distanzia cereali e colza, il clima mite e umido aumenta il rischio." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Pressione di septoriosi moderata: i residui dei cereali possono aumentare la pressione; la pioggia aumenta il rischio immediato." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Pressione di ruggine moderata: il clima mite e umido aumenta il rischio immediato." />
         <e k="rcr_advice_pressure_moderate_fusarium" v="Pressione di fusariosi moderata: distanzia cereali e mais." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Pressione di peronospora moderata: distanzia le patate, il clima fresco e umido aumenta il rischio." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Pressione di peronospora moderata: il clima fresco e umido aumenta il rischio immediato." />
         <e k="rcr_advice_pressure_moderate_clubroot" v="Pressione di ernia moderata: allunga il ritorno di colza e senape." />
     </elements>
 </l10n>

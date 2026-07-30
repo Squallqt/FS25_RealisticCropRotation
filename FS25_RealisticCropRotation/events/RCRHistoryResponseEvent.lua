@@ -1,5 +1,5 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
--- Server->client full rotation snapshot (history + plans + last-known crop/growth).
+-- Server->client full rotation snapshot (history, plans, crop tracking, disease, treatment and local reservoirs).
 RCRHistoryResponseEvent = {}
 local RCRHistoryResponseEvent_mt = Class(RCRHistoryResponseEvent, Event)
 
@@ -129,6 +129,23 @@ function RCRHistoryResponseEvent:readStream(streamId, connection)
         if farmlandId > 0 and remaining > 0 then receivedNematicideCountdown[farmlandId] = remaining end
     end
 
+    local reservoirFarmlandCount = streamReadInt16(streamId)
+    local receivedDiseaseReservoir = {}
+    for _ = 1, reservoirFarmlandCount do
+        local farmlandId = streamReadInt32(streamId)
+        local groupCount = streamReadUInt8(streamId)
+        if farmlandId > 0 then
+            receivedDiseaseReservoir[farmlandId] = {}
+        end
+        for _ = 1, groupCount do
+            local groupName = streamReadString(streamId)
+            local load = streamReadFloat32(streamId)
+            if farmlandId > 0 and groupName ~= nil and groupName ~= "" and load ~= nil and load > 0 then
+                receivedDiseaseReservoir[farmlandId][string.upper(tostring(groupName))] = load
+            end
+        end
+    end
+
     -- A server replicating its own event back to itself: discard.
     if g_currentMission ~= nil and g_currentMission.getIsServer ~= nil and g_currentMission:getIsServer() then
         return
@@ -145,6 +162,7 @@ function RCRHistoryResponseEvent:readStream(streamId, connection)
                 lastKnownGrowthState = receivedLastKnownGrowthState,
                 diseaseState = receivedDiseaseState,
                 diseaseCrop = receivedDiseaseCrop,
+                diseaseReservoir = receivedDiseaseReservoir,
                 nematicideCountdown = receivedNematicideCountdown,
             }
         end
@@ -157,7 +175,10 @@ function RCRHistoryResponseEvent:readStream(streamId, connection)
         manager.service:applySyncData(received, receivedPlans, receivedCoverPlans, receivedLastKnownActiveCrop, receivedLastKnownGrowthState)
     end
     if RealisticCropRotation ~= nil and RealisticCropRotation.disease ~= nil then
-        RealisticCropRotation.disease:applySyncData(receivedDiseaseState, receivedDiseaseCrop)
+        RealisticCropRotation.disease:applySyncData(
+            receivedDiseaseState,
+            receivedDiseaseCrop,
+            receivedDiseaseReservoir)
     end
     RealisticCropRotationTreatmentLifecycle.applySyncData(receivedNematicideCountdown)
 
@@ -166,14 +187,14 @@ function RCRHistoryResponseEvent:readStream(streamId, connection)
     end
 end
 
----Writes the full rotation snapshot: history, plans, cover plans, active crops, growth states, disease state.
+---Writes the full rotation snapshot, including active disease and local reservoirs.
 -- @param integer streamId Network stream identifier
 -- @param Connection _connection Network connection (unused)
 function RCRHistoryResponseEvent:writeStream(streamId, _connection)
     local manager = g_currentMission ~= nil and g_currentMission.realisticCropRotationManager or nil
     if manager == nil or manager.service == nil then
-        -- Empty snapshot: write one zero count per section readStream expects (7), or the client read pointer desyncs.
-        for _ = 1, 7 do
+        -- Empty snapshot: write one zero count per section readStream expects (8), or the client read pointer desyncs.
+        for _ = 1, 8 do
             streamWriteInt16(streamId, 0)
         end
         return
@@ -277,9 +298,10 @@ function RCRHistoryResponseEvent:writeStream(streamId, _connection)
         streamWriteInt16(streamId, math.max(0, math.floor(growthState + 0.5)))
     end
 
-    local diseaseState, diseaseCrop = {}, {}
+    local diseaseState, diseaseCrop, diseaseReservoir = {}, {}, {}
     if RealisticCropRotation ~= nil and RealisticCropRotation.disease ~= nil then
-        diseaseState, diseaseCrop = RealisticCropRotation.disease:getSyncData()
+        diseaseState, diseaseCrop, diseaseReservoir =
+            RealisticCropRotation.disease:getSyncData()
     end
 
     local diseaseFarmlandIds = {}
@@ -326,6 +348,32 @@ function RCRHistoryResponseEvent:writeStream(streamId, _connection)
     for _, farmlandId in ipairs(treatmentFarmlandIds) do
         streamWriteInt32(streamId, farmlandId)
         streamWriteInt8(streamId, math.floor(tonumber(nematicideCountdown[farmlandId]) or 0))
+    end
+
+    local reservoirFarmlandIds = {}
+    for farmlandId, groups in pairs(diseaseReservoir or {}) do
+        local n = tonumber(farmlandId)
+        if n ~= nil and n > 0 and groups ~= nil and next(groups) ~= nil then
+            reservoirFarmlandIds[#reservoirFarmlandIds + 1] = n
+        end
+    end
+    table.sort(reservoirFarmlandIds)
+    streamWriteInt16(streamId, #reservoirFarmlandIds)
+    for _, farmlandId in ipairs(reservoirFarmlandIds) do
+        local groups = diseaseReservoir[farmlandId]
+            or diseaseReservoir[tostring(farmlandId)]
+            or {}
+        local groupNames = {}
+        for group in pairs(groups) do groupNames[#groupNames + 1] = tostring(group) end
+        table.sort(groupNames)
+
+        streamWriteInt32(streamId, farmlandId)
+        streamWriteUInt8(streamId, math.min(#groupNames, 255))
+        for index, groupName in ipairs(groupNames) do
+            if index > 255 then break end
+            streamWriteString(streamId, groupName)
+            streamWriteFloat32(streamId, tonumber(groups[groupName]) or 0)
+        end
     end
 
 end

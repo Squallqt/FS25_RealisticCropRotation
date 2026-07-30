@@ -195,9 +195,9 @@
         <e k="rcr_disease_name_sclerotinia" v="Sclerotinia" />
         <e k="rcr_disease_name_phoma" v="Phoma (Wurzelhalsfäule)" />
         <e k="rcr_disease_name_takeall" v="Schwarzbeinigkeit" />
-        <e k="rcr_disease_name_septoria" v="Septoria-Blattdürre" />
+        <e k="rcr_disease_name_septoria" v="Septoria" />
         <e k="rcr_disease_name_rust" v="Rost" />
-        <e k="rcr_disease_name_fusarium" v="Ährenfusariose" />
+        <e k="rcr_disease_name_fusarium" v="Fusariose" />
         <e k="rcr_disease_name_lateblight" v="Kraut- und Knollenfäule" />
         <e k="rcr_disease_name_bcn"   v="Zystennematode" />
         <e k="rcr_disease_name_clubroot" v="Kohlhernie" />
@@ -215,17 +215,17 @@
         <e k="rcr_disease_treatment_clubroot" v="Keine (nur Fruchtfolge)" />
         <e k="rcr_advice_pressure_high_phoma" v="Hoher Phoma-Druck: Kehren Raps oder Senf innerhalb von 4 Jahren zurück, bleibt der Druck hoch; Fungizid verzögert den Ausbruch und friert den Schaden auf behandelten Flächen ein, drängt die Krankheit aber nicht zurück." />
         <e k="rcr_advice_pressure_high_takeall" v="Hoher Schwarzbeinigkeits-Druck: eine Nichtwirtspause einlegen (Hafer, Leguminose, Ölfrucht); kein Mittel schützt vor dieser Krankheit, nur die Fruchtfolge senkt den Druck." />
-        <e k="rcr_advice_pressure_high_septoria" v="Hoher Septoria-Druck: Weizen, Gerste, Triticale und Dinkel zeitlich strecken; Fungizid verzögert den Ausbruch und friert den Schaden auf behandelten Flächen ein, Regen beschleunigt die Epidemie." />
-        <e k="rcr_advice_pressure_high_rust" v="Hoher Rost-Druck: Getreide und Raps sind beide Wirte, zeitlich strecken; Fungizid verzögert den Ausbruch und friert den Schaden auf behandelten Flächen ein, milde feuchte Phasen beschleunigen die Epidemie." />
+        <e k="rcr_advice_pressure_high_septoria" v="Hoher Septoria-Druck: Getreiderückstände können den Druck erhöhen; Regen steigert das unmittelbare Risiko und Fungizid begrenzt Schäden auf behandelten Flächen." />
+        <e k="rcr_advice_pressure_high_rust" v="Hoher Rost-Druck: Mildes feuchtwarmes Wetter steigert das unmittelbare Risiko und Fungizid begrenzt Schäden auf behandelten Flächen." />
         <e k="rcr_advice_pressure_high_fusarium" v="Hoher Fusarium-Druck: Weizen nicht nach Mais anbauen und weniger Getreide hintereinander stellen; Fungizid verzögert den Ausbruch und friert den Schaden auf behandelten Flächen ein, Regen beschleunigt die Epidemie." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Hoher Krautfäule-Druck: Kartoffeln zeitlich strecken; Fungizid verzögert den Ausbruch und friert den Schaden auf behandelten Flächen ein, kühles feuchtes Wetter beschleunigt die Epidemie." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Hoher Krautfäule-Druck: Kühles feuchtes Wetter steigert das unmittelbare Risiko und Fungizid begrenzt Schäden auf behandelten Flächen." />
         <e k="rcr_advice_pressure_high_clubroot" v="Hoher Kohlhernie-Druck: die Anbaupause von Raps und Senf so weit wie möglich strecken; kein Mittel schützt vor dieser Krankheit, nur die Fruchtfolge wirkt." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Mäßiger Phoma-Druck: die Anbaupause von Raps und Senf verlängern." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Mäßiger Schwarzbeinigkeits-Druck: eine dritte Getreidefrucht in Folge vermeiden." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Mäßiger Septoria-Druck: Getreide zeitlich strecken, Regen erhöht das Risiko." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Mäßiger Rost-Druck: Getreide und Raps zeitlich strecken, milde feuchte Phasen erhöhen das Risiko." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Mäßiger Septoria-Druck: Getreiderückstände können den Druck erhöhen; Regen steigert das unmittelbare Risiko." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Mäßiger Rost-Druck: Mildes feuchtwarmes Wetter steigert das unmittelbare Risiko." />
         <e k="rcr_advice_pressure_moderate_fusarium" v="Mäßiger Fusarium-Druck: Getreide und Mais zeitlich strecken." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Mäßiger Krautfäule-Druck: Kartoffeln zeitlich strecken, kühles feuchtes Wetter erhöht das Risiko." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Mäßiger Krautfäule-Druck: Kühles feuchtes Wetter steigert das unmittelbare Risiko." />
         <e k="rcr_advice_pressure_moderate_clubroot" v="Mäßiger Kohlhernie-Druck: die Anbaupause von Raps und Senf verlängern." />
     </elements>
 </l10n>

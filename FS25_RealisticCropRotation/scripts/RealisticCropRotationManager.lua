@@ -1044,8 +1044,9 @@ end
 ---Reconciles stored history with the live active crop (server only).
 -- @param integer farmlandId
 -- @return boolean changed
+-- @return table completedCrops Exact entries accepted into history
 function RealisticCropRotationManager:reconcileActiveCropForFarmland(farmlandId)
-    if isPureClient() then return false end
+    if isPureClient() then return false, {} end
 
     local currentCropName, currentFruitTypeIndex, currentGrowthState, belowFloor =
         self:getActiveCropInfo(farmlandId)
@@ -1069,8 +1070,12 @@ function RealisticCropRotationManager:reconcileActiveCropForFarmland(farmlandId)
         cacheEntry.belowFloor = false
     end
 
-    local changed = self.service:reconcileActiveCrop(farmlandId, currentCropName, currentFruitTypeIndex, currentGrowthState, groundWorked)
-    return changed
+    return self.service:reconcileActiveCrop(
+        farmlandId,
+        currentCropName,
+        currentFruitTypeIndex,
+        currentGrowthState,
+        groundWorked)
 end
 
 ---Ground + soil state of a field, both resolved from a single field-ground read.

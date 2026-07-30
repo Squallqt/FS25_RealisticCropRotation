@@ -2,6 +2,7 @@
 -- In-game menu page: rotation history, planning calendar, agronomy/disease panels and the fields overview.
 RealisticCropRotationFrame = {}
 local RealisticCropRotationFrame_mt = Class(RealisticCropRotationFrame, TabbedMenuFrameElement)
+local PlannerModel = RealisticCropRotationPlannerModel
 
 RealisticCropRotationFrame.TAB = { HISTORY = 1, PLANNING = 2 }
 RealisticCropRotationFrame.DETAIL_REFRESH_INTERVAL_MS = 5000
@@ -398,8 +399,10 @@ end
 -- @return number residueKgHa, or nil when none
 function RealisticCropRotationFrame:getPlanNitrogenResidueKgHa(plan, coverPlan)
     local service = self:getManager().service
+    local cycleLength, hasInternalGap = PlannerModel.getCycleInfo(plan, 4)
+    if hasInternalGap then return nil end
     local totalStateChange = 0
-    for i = 1, 4 do
+    for i = 1, cycleLength do
         local cropName = plan ~= nil and plan[i] or nil
         if cropName ~= nil and cropName ~= "" and not isFallowCrop(cropName) then
             local entry = service:getResidueEntry(string.upper(tostring(cropName)))
@@ -421,7 +424,11 @@ function RealisticCropRotationFrame:getPlanNitrogenResidueKgHa(plan, coverPlan)
         end
     end
 
-    local ok, coverResidueKgHa = pcall(service.getCoverResidueKgHa, service, coverPlan)
+    local ok, coverResidueKgHa = pcall(
+        service.getCoverResidueKgHa,
+        service,
+        coverPlan,
+        cycleLength)
     if ok and type(coverResidueKgHa) == "number" and coverResidueKgHa > 0 then
         residueKgHa = residueKgHa + coverResidueKgHa
     end
@@ -1245,8 +1252,14 @@ function RealisticCropRotationFrame:isPlannedFallowGap(farmlandId, currentCrop)
     end
     if isFallowCrop(currentCrop) then return false end
     local plan = self:getPlanForFarmland(farmlandId)
-    local slot = self:findPlanSlotForCrop(plan, currentCrop)
-    return slot ~= nil and isFallowCrop(plan[(slot % 4) + 1])
+    local slots, cycleLength, hasInternalGap =
+        self:findPlanSlotsForCrop(plan, currentCrop)
+    if hasInternalGap or #slots == 0 then return false end
+    for _, slot in ipairs(slots) do
+        local nextSlot = PlannerModel.getNextIndex(slot, cycleLength)
+        if nextSlot == nil or not isFallowCrop(plan[nextSlot]) then return false end
+    end
+    return true
 end
 
 ---Resolves a field's current display state, shared by the sidebar and the detail card.
@@ -1797,17 +1810,24 @@ function RealisticCropRotationFrame:updateAdvice(currentFamily, farmlandId, curr
     self:updateAdviceStatusCard(currentFamily, farmlandId, currentCropName)
 end
 
----Finds the plan slot matching a crop name (first match wins, no disambiguation when a crop repeats).
+---Finds every plan slot matching a crop name inside the contiguous cycle.
+-- @param table plan 4-slot plan
+-- @param string cropName
+-- @return table slotIndices
+-- @return integer cycleLength
+-- @return boolean hasInternalGap
+function RealisticCropRotationFrame:findPlanSlotsForCrop(plan, cropName)
+    return PlannerModel.findCropSlots(plan, cropName, 4)
+end
+
+---Finds the first plan slot matching a crop name inside the contiguous cycle.
 -- @param table plan 4-slot plan
 -- @param string cropName
 -- @return integer slotIdx, or nil
+-- @return integer cycleLength
 function RealisticCropRotationFrame:findPlanSlotForCrop(plan, cropName)
-    if plan == nil or cropName == nil or cropName == "" then return nil end
-    local normalized = string.upper(tostring(cropName))
-    for i = 1, 4 do
-        if plan[i] == normalized then return i end
-    end
-    return nil
+    local slots, cycleLength = self:findPlanSlotsForCrop(plan, cropName)
+    return slots[1], cycleLength
 end
 
 ---Evaluates a one-year rotation step (cropA now, cropB next) for a conflict, using calcRotationScore's own rules.
@@ -1818,43 +1838,35 @@ function RealisticCropRotationFrame:evaluateRotationStep(cropA, cropB)
     if cropA == nil or cropA == "" or cropB == nil or cropB == "" then return nil end
     if isFallowCrop(cropA) or isFallowCrop(cropB) then return nil end
 
-    local famA = self:getCropFamily(cropA)
-    local famB = self:getCropFamily(cropB)
-    local familyMinInterval = (famA == famB and famA ~= "UNKNOWN")
-        and RealisticCropRotationFrame.FAMILY_MIN_INTERVAL[famA] or nil
-    -- A same-family pair's own interval floors the comparison, so the conflict reports only the interval left beyond the family rule.
-    local diseaseBaseline = familyMinInterval ~= nil and math.max(1, familyMinInterval) or 1
+    local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or {}
+    local conflict = PlannerModel.evaluateImmediateConflict(
+        { family = self:getCropFamily(cropA), diseases = self:getCropDiseases(cropA) },
+        { family = self:getCropFamily(cropB), diseases = self:getCropDiseases(cropB) },
+        RealisticCropRotationFrame.FAMILY_MIN_INTERVAL,
+        config.diseasePlannerIntervals or {},
+        config.diseaseRotationRelevant or {},
+        RealisticCropRotationFrame.SCORE_FAMILY_PENALTY_PER_YEAR,
+        RealisticCropRotationFrame.SCORE_DISEASE_PENALTY_PER_YEAR)
 
-    local diseasesA = self:getCropDiseases(cropA)
-    local diseasesB = self:getCropDiseases(cropB)
-    local diseaseIntervals = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig
-        and RealisticCropRotation.cropConfig.diseaseIntervals or {}
-    local worstGroup, worstMinInterval = nil, 0
-    for group in pairs(diseasesA) do
-        if diseasesB[group] then
-            local minInterval = tonumber(diseaseIntervals[group])
-            if minInterval ~= nil and diseaseBaseline < minInterval and minInterval > worstMinInterval then
-                worstGroup, worstMinInterval = group, minInterval
-            end
-        end
-    end
-
-    if worstGroup ~= nil then
+    if conflict ~= nil and conflict.kind == "disease" then
         local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
-        local label = disease ~= nil and disease:getDisplayName(worstGroup) or tostring(worstGroup)
-        return { kind = "disease", label = label, yearsRemaining = worstMinInterval - 1, minInterval = worstMinInterval }
+        conflict.label = disease ~= nil and disease:getDisplayName(conflict.group) or tostring(conflict.group)
+    elseif conflict ~= nil and conflict.kind == "family" then
+        conflict.label = self.i18n:getText(getFamilyTextKey(conflict.family))
     end
+    return conflict
+end
 
-    if familyMinInterval ~= nil and familyMinInterval > 1 then
-        return {
-            kind = "family",
-            label = self.i18n:getText(getFamilyTextKey(famA)),
-            yearsRemaining = familyMinInterval - 1,
-            minInterval = familyMinInterval,
-        }
-    end
-
-    return nil
+---Returns the worst immediate next step among every matching occurrence of the current crop.
+-- @param table plan 4-slot plan
+-- @param string currentCropName
+-- @return table candidate { slotIndex, nextSlotIndex, nextCrop, conflict }, or nil
+function RealisticCropRotationFrame:getWorstPlannedNextStep(plan, currentCropName)
+    return PlannerModel.getWorstNextCandidate(plan, currentCropName, 4,
+        function(_, nextCrop)
+            return isFallowCrop(nextCrop) and nil
+                or self:evaluateRotationStep(currentCropName, nextCrop)
+        end)
 end
 
 ---Returns the pressure tip for the crop's single worst hosted disease (high beats moderate, ties by soil load), or nil.
@@ -1944,13 +1956,12 @@ function RealisticCropRotationFrame:updateAdviceStatusCard(currentFamily, farmla
     else
         -- 3) Planned-rotation-step evaluation, only for a real (known) current crop.
         local plan = self:getPlanForFarmland(farmlandId)
-        local slotIdx = (currentFamily ~= "UNKNOWN")
-            and self:findPlanSlotForCrop(plan, currentCropName) or nil
-        local nextCrop = slotIdx ~= nil and plan[(slotIdx % 4) + 1] or nil
-        nextCrop = (nextCrop ~= nil and nextCrop ~= "") and nextCrop or nil
+        local candidate = (currentFamily ~= "UNKNOWN")
+            and self:getWorstPlannedNextStep(plan, currentCropName) or nil
+        local nextCrop = candidate ~= nil and candidate.nextCrop or nil
 
         if nextCrop ~= nil then
-            local nextSlotIdx = (slotIdx % 4) + 1
+            local nextSlotIdx = candidate.nextSlotIndex
             local yearLabel = self.i18n:getText("rcr_plan_year" .. nextSlotIdx)
             if isFallowCrop(nextCrop) then
                 -- Fallow planned next: an intentional break before the following crop.
@@ -1960,7 +1971,7 @@ function RealisticCropRotationFrame:updateAdviceStatusCard(currentFamily, farmla
                 text = string.format(self.i18n:getText("rcr_advice_plan_next_fallow"), yearLabel)
             else
                 local nextCropLabel = self:getCropDisplayName(nextCrop)
-                local conflict = self:evaluateRotationStep(currentCropName, nextCrop)
+                local conflict = candidate.conflict
 
                 if conflict == nil then
                     visualState = "Ready"
@@ -2694,39 +2705,40 @@ end
 -- @param table coverPlan
 -- @return integer score
 function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
-    -- Occupied cycle in plan order: real crops carry a family, a fallow year is a spacing-only slot.
+    local cycleLength, hasInternalGap = PlannerModel.getCycleInfo(plan, 4)
+    if hasInternalGap then return 0 end
+
+    -- The contiguous plan prefix is the cycle. Fallow occupies a full spacing year.
     local slots = {}
-    for i = 1, 4 do
+    for i = 1, cycleLength do
         local crop = plan[i] or ""
-        if crop ~= "" then
-            local fam = self:getCropFamily(crop)
-            if fam == "FALLOW" then
-                slots[#slots + 1] = { fam = "FALLOW" }
-            elseif fam ~= "UNKNOWN" then
-                local coverCrop = coverPlan ~= nil and coverPlan[i] or ""
-                slots[#slots + 1] = {
-                    fam      = fam,
-                    diseases = self:getCropDiseases(crop),
-                    hasCover = coverCrop ~= nil and coverCrop ~= "",
-                    sowing   = self:getCropSowingSeason(crop),
-                }
-            end
+        local family = self:getCropFamily(crop)
+        if family == "FALLOW" then
+            slots[#slots + 1] = { family = "FALLOW" }
+        else
+            slots[#slots + 1] = {
+                family = family,
+                diseases = self:getCropDiseases(crop),
+                sowing = self:getCropSowingSeason(crop),
+            }
         end
     end
 
-    local m = #slots  -- cycle length, fallow years counted as spacing
+    local m = #slots
 
     -- Real crops only (fallow is a break, not a crop): drives the rotation gate.
     local realIdx = {}
     for i = 1, m do
-        if slots[i].fam ~= "FALLOW" then realIdx[#realIdx + 1] = i end
+        if slots[i].family ~= "FALLOW" and slots[i].family ~= "UNKNOWN" then
+            realIdx[#realIdx + 1] = i
+        end
     end
     local n = #realIdx
     if n < 2 then return 0 end
 
     -- Distinct families among the real crops.
     local seen = {}
-    for _, i in ipairs(realIdx) do seen[slots[i].fam] = true end
+    for _, i in ipairs(realIdx) do seen[slots[i].family] = true end
     local uniqueCount = 0
     for _ in pairs(seen) do uniqueCount = uniqueCount + 1 end
 
@@ -2734,57 +2746,24 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
     local score = (n >= 3) and RealisticCropRotationFrame.SCORE_BASE_FULL
                             or  RealisticCropRotationFrame.SCORE_BASE_PARTIAL
 
-    -- Penalize same-family crops closer than their min return interval, on the cyclic ring (a fallow between them counts as spacing).
-    for ia = 1, n - 1 do
-        for ib = ia + 1, n do
-            local pa, pb = realIdx[ia], realIdx[ib]
-            local fam = slots[pa].fam
-            if fam == slots[pb].fam then
-                local minInterval = RealisticCropRotationFrame.FAMILY_MIN_INTERVAL[fam]
-                if minInterval ~= nil then
-                    local forward  = pb - pa
-                    local interval = math.min(forward, m - forward)
-                    if interval < minInterval then
-                        local penalty = (minInterval - interval) * RealisticCropRotationFrame.SCORE_FAMILY_PENALTY_PER_YEAR
-                        -- a cover sown in the shorter gap halves the penalty
-                        local gapStart = (forward <= m - forward) and pa or pb
-                        if slots[gapStart].hasCover then penalty = penalty / 2 end
-                        score = score - penalty
-                    end
-                end
-            end
-        end
-    end
-
-    -- Shared-pathogen pressure: same-family pairs already pay the family penalty above, so this adds only the extra disease interval beyond it.
-    local diseaseIntervals = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig
-        and RealisticCropRotation.cropConfig.diseaseIntervals or {}
-    for ia = 1, n - 1 do
-        for ib = ia + 1, n do
-            local pa, pb = realIdx[ia], realIdx[ib]
-            local forward  = pb - pa
-            local interval = math.min(forward, m - forward)
-            local familyMinInterval = slots[pa].fam == slots[pb].fam and RealisticCropRotationFrame.FAMILY_MIN_INTERVAL[slots[pa].fam] or nil
-            local diseaseBaseline = familyMinInterval ~= nil and math.max(interval, familyMinInterval) or interval
-            local worst = 0
-            for group in pairs(slots[pa].diseases or {}) do
-                if (slots[pb].diseases or {})[group] then
-                    local minInterval = diseaseIntervals[group]
-                    if minInterval ~= nil and diseaseBaseline < minInterval then
-                        local pen = (minInterval - diseaseBaseline) * RealisticCropRotationFrame.SCORE_DISEASE_PENALTY_PER_YEAR
-                        if pen > worst then worst = pen end
-                    end
-                end
-            end
-            score = score - worst
-        end
-    end
+    local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or {}
+    local familyPenalty = PlannerModel.calculateFamilyPenalty(
+        slots,
+        RealisticCropRotationFrame.FAMILY_MIN_INTERVAL,
+        RealisticCropRotationFrame.SCORE_FAMILY_PENALTY_PER_YEAR)
+    local diseasePenalty = PlannerModel.calculateDiseasePenalty(
+        slots,
+        RealisticCropRotationFrame.FAMILY_MIN_INTERVAL,
+        config.diseasePlannerIntervals or {},
+        config.diseaseRotationRelevant or {},
+        RealisticCropRotationFrame.SCORE_DISEASE_PENALTY_PER_YEAR)
+    score = score - familyPenalty - diseasePenalty
 
     if n >= 3 then
         -- Legume directly followed by a cereal (cyclic): the returned nitrogen is put to use; a fallow between them breaks the direct hand-off.
         for k = 1, m do
             local nextK = (k % m) + 1
-            if slots[k].fam == "LEGUME" and slots[nextK].fam == "CEREAL" then
+            if slots[k].family == "LEGUME" and slots[nextK].family == "CEREAL" then
                 score = score + RealisticCropRotationFrame.SCORE_LEGUME_CEREAL_BONUS
             end
         end
@@ -2818,16 +2797,18 @@ end
 -- @param table plan
 -- @return string i18nKey
 function RealisticCropRotationFrame:getScoreTextKey(score, plan)
-    local anyFilled, cropCount = false, 0
-    for i = 1, 4 do
+    local cycleLength, hasInternalGap = PlannerModel.getCycleInfo(plan, 4)
+    if cycleLength == 0 and not hasInternalGap then return "rcr_plan_none" end
+    if hasInternalGap then return "rcr_score_incomplete" end
+
+    local cropCount = 0
+    for i = 1, cycleLength do
         local crop = plan[i] or ""
         if crop ~= "" then
-            anyFilled = true
             local fam = self:getCropFamily(crop)
             if fam ~= "UNKNOWN" and fam ~= "FALLOW" then cropCount = cropCount + 1 end
         end
     end
-    if not anyFilled then return "rcr_plan_none" end
     if cropCount < 2 then return "rcr_score_incomplete" end
     if score >= 80   then return "rcr_score_excellent" end
     if score >= 60   then return "rcr_score_good" end

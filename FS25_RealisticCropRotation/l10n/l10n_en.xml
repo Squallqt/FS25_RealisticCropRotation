@@ -195,9 +195,9 @@
         <e k="rcr_disease_name_sclerotinia" v="Sclerotinia" />
         <e k="rcr_disease_name_phoma" v="Phoma (blackleg)" />
         <e k="rcr_disease_name_takeall" v="Take-all" />
-        <e k="rcr_disease_name_septoria" v="Septoria leaf blotch" />
+        <e k="rcr_disease_name_septoria" v="Septoria" />
         <e k="rcr_disease_name_rust" v="Rust" />
-        <e k="rcr_disease_name_fusarium" v="Fusarium head blight" />
+        <e k="rcr_disease_name_fusarium" v="Fusarium" />
         <e k="rcr_disease_name_lateblight" v="Late blight" />
         <e k="rcr_disease_name_bcn"   v="Cyst nematode" />
         <e k="rcr_disease_name_clubroot" v="Clubroot" />
@@ -215,17 +215,17 @@
         <e k="rcr_disease_treatment_clubroot" v="None (rotation only)" />
         <e k="rcr_advice_pressure_high_phoma" v="High phoma pressure: bring canola or mustard back within 4 years and the pressure stays high; fungicide slows the onset and freezes the damage on sprayed ground, it does not push the disease back." />
         <e k="rcr_advice_pressure_high_takeall" v="High take-all pressure: insert a non-host break (oat, legume, oilseed); no product shields this disease, only rotation brings the pressure down." />
-        <e k="rcr_advice_pressure_high_septoria" v="High septoria pressure: space out wheat, barley, triticale and spelt; fungicide slows the onset and freezes the damage on sprayed ground, and rain speeds the epidemic up." />
-        <e k="rcr_advice_pressure_high_rust" v="High rust pressure: cereals and canola are both hosts, space them apart; fungicide slows the onset and freezes the damage on sprayed ground, and mild damp spells speed the epidemic up." />
+        <e k="rcr_advice_pressure_high_septoria" v="High septoria pressure: cereal residue can add pressure; rain raises the immediate risk, and fungicide limits damage on sprayed ground." />
+        <e k="rcr_advice_pressure_high_rust" v="High rust pressure: mild damp weather raises the immediate risk, and fungicide limits damage on sprayed ground." />
         <e k="rcr_advice_pressure_high_fusarium" v="High fusarium pressure: avoid wheat after maize and chain fewer cereals; fungicide slows the onset and freezes the damage on sprayed ground, and rain speeds the epidemic up." />
-        <e k="rcr_advice_pressure_high_lateblight" v="High late blight pressure: space out potatoes; fungicide slows the onset and freezes the damage on sprayed ground, and cool damp weather speeds the epidemic up." />
+        <e k="rcr_advice_pressure_high_lateblight" v="High late blight pressure: cool damp weather raises the immediate risk, and fungicide limits damage on sprayed ground." />
         <e k="rcr_advice_pressure_high_clubroot" v="High clubroot pressure: stretch the canola and mustard return as far as you can; no product shields this disease, only rotation works." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Moderate phoma pressure: stretch the canola and mustard return." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Moderate take-all pressure: avoid a third cereal in a row." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Moderate septoria pressure: space out cereals, rain raises the risk." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Moderate rust pressure: space out cereals and canola, mild damp spells raise the risk." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Moderate septoria pressure: cereal residue can add pressure; rain raises the immediate risk." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Moderate rust pressure: mild damp weather raises the immediate risk." />
         <e k="rcr_advice_pressure_moderate_fusarium" v="Moderate fusarium pressure: space out cereals and maize." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Moderate late blight pressure: space out potatoes, cool damp weather raises the risk." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Moderate late blight pressure: cool damp weather raises the immediate risk." />
         <e k="rcr_advice_pressure_moderate_clubroot" v="Moderate clubroot pressure: stretch the canola and mustard return." />
     </elements>
 </l10n>

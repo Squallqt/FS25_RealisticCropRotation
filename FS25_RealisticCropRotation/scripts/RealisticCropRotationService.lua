@@ -98,15 +98,17 @@ function RealisticCropRotationService:getResidueStatesForTermination(farmlandId,
     return math.floor(states)
 end
 
----Sums the cover-crop nitrogen residue (kg/ha) over a 4-slot cover plan.
+---Sums the cover-crop nitrogen residue (kg/ha) over the active cycle slots.
 -- @param table coverPlan 4-slot cover plan
+-- @param integer slotCount Active cycle length, defaults to 4
 -- @return number totalKgHa
-function RealisticCropRotationService:getCoverResidueKgHa(coverPlan)
+function RealisticCropRotationService:getCoverResidueKgHa(coverPlan, slotCount)
     local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
     if config == nil or config.coverCrops == nil or coverPlan == nil then return 0 end
 
     local total = 0
-    for i = 1, 4 do
+    local count = math.max(0, math.min(4, math.floor(tonumber(slotCount) or 4)))
+    for i = 1, count do
         local cropName = self:normalizeCropName(coverPlan[i])
         if cropName ~= nil and config.coverCrops[cropName] then
             total = total + RealisticCropRotationService.COVER_CROP_RESIDUE_KG_HA
@@ -286,25 +288,31 @@ end
 -- @param number currentGrowthState Current growth state
 -- @param boolean groundWorked True when the bare field has been tilled since harvest (ignored while a crop is present)
 -- @return boolean changed
+-- @return table completedCrops Exact entries accepted into history during this reconciliation
 function RealisticCropRotationService:reconcileActiveCrop(farmlandId, currentCropName, currentFruitTypeIndex, currentGrowthState, groundWorked)
     local numericFarmlandId = tonumber(farmlandId)
-    if numericFarmlandId == nil or numericFarmlandId <= 0 then return false end
+    if numericFarmlandId == nil or numericFarmlandId <= 0 then return false, {} end
 
     local normalizedCurrentCrop = self:normalizeCropName(currentCropName)
     local normalizedCurrentGrowthState = self:normalizeGrowthState(currentGrowthState)
     local lastKnownCrop = self.repository:getLastKnownActiveCrop(numericFarmlandId)
     local lastKnownGrowthState = self.repository:getLastKnownGrowthState(numericFarmlandId)
+    local completedCrops = {}
 
     if lastKnownCrop == normalizedCurrentCrop then
         if normalizedCurrentCrop == nil then
             -- Fallow gap closes only once the ground is worked, not merely because it's bare.
             if groundWorked then
-                return self:pushFallowIfPlanned(numericFarmlandId)
+                local pushed = self:pushFallowIfPlanned(numericFarmlandId)
+                if pushed then
+                    completedCrops[#completedCrops + 1] = RealisticCropRotation.SPECIAL_CROP_FALLOW
+                end
+                return pushed, completedCrops
             end
-            return false
+            return false, completedCrops
         end
         if normalizedCurrentGrowthState == nil then
-            return false
+            return false, completedCrops
         end
 
         local fruitType = self:getFruitTypeForCrop(normalizedCurrentCrop, currentFruitTypeIndex)
@@ -312,23 +320,32 @@ function RealisticCropRotationService:reconcileActiveCrop(farmlandId, currentCro
         if fruitType ~= nil and fruitType.regrows ~= true
             and self:isFreshReplantingGrowthDrop(fruitType, lastKnownGrowthState, normalizedCurrentGrowthState) then
             pushed = self:pushHistoryCrop(numericFarmlandId, normalizedCurrentCrop, true)
+            if pushed then
+                completedCrops[#completedCrops + 1] = normalizedCurrentCrop
+            end
         end
 
         self.repository:setLastKnownGrowthState(numericFarmlandId, normalizedCurrentGrowthState)
-        return pushed
+        return pushed, completedCrops
     end
 
     -- Old crop ended (or this is the first-ever read, when lastKnownCrop is nil and this no-ops).
     local pushed = self:pushHistoryCrop(numericFarmlandId, lastKnownCrop, true)
+    if pushed then
+        completedCrops[#completedCrops + 1] = lastKnownCrop
+    end
     local fallowPushed = false
     if normalizedCurrentCrop ~= nil then
         fallowPushed = self:pushFallowIfPlanned(numericFarmlandId)
+        if fallowPushed then
+            completedCrops[#completedCrops + 1] = RealisticCropRotation.SPECIAL_CROP_FALLOW
+        end
     end
     local activeChanged = self.repository:setLastKnownActiveCrop(numericFarmlandId, normalizedCurrentCrop)
     if normalizedCurrentCrop ~= nil then
         self.repository:setLastKnownGrowthState(numericFarmlandId, normalizedCurrentGrowthState)
     end
-    return pushed or fallowPushed or activeChanged
+    return pushed or fallowPushed or activeChanged, completedCrops
 end
 
 ---True when the plan slot right after the most recently harvested crop is set to fallow.
@@ -340,12 +357,16 @@ function RealisticCropRotationService:isCurrentGapFallow(farmlandId)
     if lastCrop == nil or RealisticCropRotation.isFallowCrop(lastCrop) then return false end
 
     local plan = self.repository:getPlan(farmlandId)
-    for i = 1, 4 do
-        if plan[i] == lastCrop then
-            return RealisticCropRotation.isFallowCrop(plan[(i % 4) + 1])
+    local slots, cycleLength, hasInternalGap =
+        RealisticCropRotationPlannerModel.findCropSlots(plan, lastCrop, 4)
+    if hasInternalGap or #slots == 0 then return false end
+    for _, slot in ipairs(slots) do
+        local nextSlot = RealisticCropRotationPlannerModel.getNextIndex(slot, cycleLength)
+        if nextSlot == nil or not RealisticCropRotation.isFallowCrop(plan[nextSlot]) then
+            return false
         end
     end
-    return false
+    return true
 end
 
 ---Pushes a fallow entry when isCurrentGapFallow says so (pushHistoryCrop dedupes).

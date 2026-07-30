@@ -1,14 +1,11 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
--- Server-authoritative disease layer: soil inoculum from rotation history drives infection and progressive crop destruction.
+-- Server-authoritative disease layer: local reservoirs and external exposure drive infection and progressive crop destruction.
 RealisticCropRotationDisease = {}
 local RealisticCropRotationDisease_mt = Class(RealisticCropRotationDisease)
 
 RealisticCropRotationDisease.INFECTION_SCALE = 0.6  -- infection probability = load * this * weatherMod
 RealisticCropRotationDisease.RAIN_BONUS = 1.6       -- fungal diseases (SCLEROTINIA) are amplified by rain
-RealisticCropRotationDisease.INOCULUM_SEED = 0.12   -- inoculum a first host establishes on clean soil
-RealisticCropRotationDisease.INOCULUM_GROWTH = 2.2  -- multiplier a new host applies to the surviving inoculum
-RealisticCropRotationDisease.INOCULUM_RESIDUAL = 0.1 -- fraction left after `interval` host-free years
-RealisticCropRotationDisease.INOCULUM_FLOOR = 0.01  -- inoculum below this is dropped
+RealisticCropRotationDisease.INOCULUM_FLOOR = RealisticCropRotationDiseaseModel.INOCULUM_FLOOR
 RealisticCropRotationDisease.INITIAL_SEVERITY = 0.10
 -- Per-pathogen rates come from cropConfig; these are fallbacks, calibrated at REFERENCE_DAYS_PER_PERIOD and rescaled by periodScale.
 RealisticCropRotationDisease.REFERENCE_DAYS_PER_PERIOD = 9 -- calibration baseline for the day-based constants below
@@ -59,8 +56,11 @@ function RealisticCropRotationDisease.new(manager, grid)
     self.manager = manager
     self.grid = grid
     self.state = {}          -- farmlandId -> group -> { severity, seed } (seed fixes the destruction scatter)
+    self.reservoir = {}      -- farmlandId -> group -> persistent local load
     self.crop = {}           -- farmlandId -> crop name the state belongs to
     self.growth = {}         -- farmlandId -> growth stage last seen, detects a replant of the same crop
+    local env = g_currentMission ~= nil and g_currentMission.environment or nil
+    self.lastReservoirYear = env ~= nil and tonumber(env.currentYear) or nil
     self.lastRiskBand = {}   -- farmlandId -> band last painted into the risk display map
     self.dayQueue = {}       -- FIFO of farmlandIds awaiting their daily disease step (load spreading)
     self.dayQueued = {}      -- farmlandId -> true, dedupes the queue
@@ -128,15 +128,17 @@ local function periodScale()
     return actual / RealisticCropRotationDisease.REFERENCE_DAYS_PER_PERIOD
 end
 
----Weather modifier for a pathogen group: rain and temperature both modulate fungal groups only.
+---Weather modifier for a pathogen group: rain and temperature modulate explicitly weather-driven groups.
 -- @param boolean raining
 -- @param number temperature Celsius
 -- @param string group Pathogen group name
 -- @return number modifier
 local function weatherModifier(raining, temperature, group)
     local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
-    local fungal = config ~= nil and config.diseaseFungal ~= nil and config.diseaseFungal[group] == true
-    if not fungal then return 1 end
+    local weatherDriven = config ~= nil
+        and config.diseaseWeatherDriven ~= nil
+        and config.diseaseWeatherDriven[group] == true
+    if not weatherDriven then return 1 end
     local rain = 1
     if raining then
         local factor = config ~= nil and config.diseaseWeatherFactors ~= nil and config.diseaseWeatherFactors[group] or nil
@@ -281,83 +283,163 @@ function RealisticCropRotationDisease:getTreatmentName(group)
     return key
 end
 
----Folds one rotation step into the running per-group load.
--- @param table out group -> load, updated in place
--- @param table intervals group -> host-free years clearing the pathogen
--- @param string cropName Crop grown that step
-local function foldInoculumStep(out, intervals, cropName)
-    local D = RealisticCropRotationDisease
-    local groups = cropDiseaseGroups(cropName)
-    for group, rawInterval in pairs(intervals) do
-        local interval = tonumber(rawInterval) or 0
-        if interval > 0 then
-            local cur = out[group] or 0
-            if groups ~= nil and groups[group] then
-                -- Host: seeds its own inoculum and multiplies the surviving load.
-                cur = math.min(1, cur * D.INOCULUM_GROWTH + D.INOCULUM_SEED)
-            else
-                cur = cur * D.INOCULUM_RESIDUAL ^ (1 / interval)
-            end
-            out[group] = cur
-        end
-    end
-end
-
----Per-pathogen inoculum from a field's rotation, walked oldest -> newest.
--- @param table mgr
+---Effective pathogen load for a specific standing crop, without mutating the reservoir.
 -- @param integer farmlandId
--- @param boolean includeStanding Append the crop still in the ground as a final step
+-- @param string cropName
 -- @return table load group -> [0,1]
-local function accumulateLoad(mgr, farmlandId, includeStanding)
-    local out = {}
+local function effectiveLoadForCrop(self, farmlandId, cropName)
     local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
-    if config == nil or config.diseaseIntervals == nil then return out end
-
-    local intervals = config.diseaseIntervals
-    local history = mgr:getHistory(farmlandId) or {}
-    for step = #history, 1, -1 do
-        foldInoculumStep(out, intervals, history[step] ~= nil and history[step].crop or nil)
-    end
-
-    local standing = mgr:getPendingHistoryCrop(farmlandId)
-    -- Standing crop: the step history has not received yet.
-    if includeStanding and standing ~= nil then
-        foldInoculumStep(out, intervals, standing)
-    end
-
-    -- Regional background floor, on the groups the standing crop hosts only.
-    local standingGroups = cropDiseaseGroups(standing)
-    if standingGroups ~= nil then
-        for group, rawAmbient in pairs(config.diseaseAmbient or {}) do
-            local ambient = tonumber(rawAmbient) or 0
-            if standingGroups[group] and ambient > 0 and (out[group] or 0) < ambient then
-                out[group] = ambient
-            end
-        end
-    end
-
-    -- Below the floor: no meaningful inoculum.
-    local floor = RealisticCropRotationDisease.INOCULUM_FLOOR
-    for group, value in pairs(out) do
-        if value < floor then
-            out[group] = nil
-        end
-    end
-    return out
+    if config == nil then return {} end
+    return RealisticCropRotationDiseaseModel.buildHostLoad(
+        self.reservoir[tonumber(farmlandId) or farmlandId],
+        config.diseaseAmbient,
+        cropDiseaseGroups(cropName),
+        RealisticCropRotationDisease.INOCULUM_FLOOR)
 end
 
----Inoculum that can infect a crop sown here: past carryover, floored by wind-borne arrivals.
+---Inoculum that can infect the standing crop: local reservoir plus current external exposure.
 -- @param integer farmlandId
 -- @return table load group -> [0,1]
 function RealisticCropRotationDisease:getLoad(farmlandId)
-    return accumulateLoad(self.manager, farmlandId, false)
+    return effectiveLoadForCrop(self, farmlandId, self.manager:getPendingHistoryCrop(farmlandId))
 end
 
----getLoad advanced by the standing crop's own rotation step.
+---Predictive pressure for the standing crop, using the same non-mutating sources as the infection roll.
 -- @param integer farmlandId
 -- @return table pressure group -> [0,1]
 function RealisticCropRotationDisease:getPressure(farmlandId)
-    return accumulateLoad(self.manager, farmlandId, true)
+    return effectiveLoadForCrop(self, farmlandId, self.manager:getPendingHistoryCrop(farmlandId))
+end
+
+---Local field reservoir for diagnostics and synchronization.
+-- @param integer farmlandId
+-- @return table reservoir group -> [0,1], or nil
+function RealisticCropRotationDisease:getReservoir(farmlandId)
+    return self.reservoir[tonumber(farmlandId) or farmlandId]
+end
+
+---Ends the tracked crop cycle and deposits its real outbreaks into the local reservoir.
+-- The active outbreak and foliar protection are then cleared exactly once.
+-- @param integer farmlandId
+-- @param string completedCropName Crop whose cycle ended
+-- @return boolean changed
+function RealisticCropRotationDisease:finishCropCycle(farmlandId, completedCropName)
+    if g_server == nil then return false end
+    local id = tonumber(farmlandId)
+    if id == nil or id <= 0 then return false end
+
+    local trackedCrop = self.crop[id]
+    local completedCrop = completedCropName
+    if completedCrop ~= nil and completedCrop ~= "" then
+        completedCrop = string.upper(tostring(completedCrop))
+    else
+        completedCrop = trackedCrop
+    end
+    if trackedCrop ~= nil and completedCrop ~= nil
+        and string.upper(tostring(trackedCrop)) ~= completedCrop then
+        return false
+    end
+
+    local activeGroups = self.state[id]
+    local hostGroups = cropDiseaseGroups(completedCrop)
+    local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
+    local reservoirClasses = config ~= nil and config.diseaseReservoirClasses or {}
+    local reservoirChanged = false
+
+    if activeGroups ~= nil and hostGroups ~= nil then
+        local fieldReservoir = self.reservoir[id] or {}
+        for group, data in pairs(activeGroups) do
+            if hostGroups[group] then
+                local previous = fieldReservoir[group] or 0
+                local updated = RealisticCropRotationDiseaseModel.depositOutbreak(
+                    previous,
+                    data ~= nil and data.severity or 0,
+                    reservoirClasses[group],
+                    RealisticCropRotationDisease.INOCULUM_FLOOR)
+                if updated ~= previous then
+                    reservoirChanged = true
+                    if updated > 0 then
+                        fieldReservoir[group] = updated
+                    else
+                        fieldReservoir[group] = nil
+                    end
+                end
+            end
+        end
+        if next(fieldReservoir) ~= nil then
+            self.reservoir[id] = fieldReservoir
+        else
+            self.reservoir[id] = nil
+        end
+    end
+
+    local activeChanged = activeGroups ~= nil
+    self.state[id] = nil
+    self.crop[id] = nil
+    self.growth[id] = nil
+    local region = self.manager:getFieldRegion(id)
+    if region ~= nil then
+        self.grid:clearField(region, id)
+    end
+    return reservoirChanged or activeChanged
+end
+
+---Applies the exact completed-crop steps accepted into rotation history.
+-- @param integer farmlandId
+-- @param table completedCrops Array of crop names
+-- @return boolean changed
+function RealisticCropRotationDisease:applyCompletedCrops(farmlandId, completedCrops)
+    local changed = false
+    for _, cropName in ipairs(completedCrops or {}) do
+        if not RealisticCropRotation.isFallowCrop(cropName)
+            and self:finishCropCycle(farmlandId, cropName) then
+            changed = true
+        end
+    end
+    return changed
+end
+
+---Ages every local reservoir by completed calendar years.
+-- @param integer currentYear Current mission year
+-- @return boolean reservoirChanged
+function RealisticCropRotationDisease:advanceCalendar(currentYear)
+    if g_server == nil then return false end
+    local year = tonumber(currentYear)
+    if year == nil then return false end
+    year = math.floor(year)
+
+    if self.lastReservoirYear == nil then
+        self.lastReservoirYear = year
+        return false
+    end
+
+    local elapsedYears = year - math.floor(tonumber(self.lastReservoirYear) or year)
+    if elapsedYears <= 0 then return false end
+
+    local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
+    local annualRetention = config ~= nil and config.diseaseAnnualRetention or {}
+    local reservoirClasses = config ~= nil and config.diseaseReservoirClasses or {}
+    local changed = false
+    local agedReservoir = {}
+    for farmlandId, groups in pairs(self.reservoir) do
+        local agedGroups = {}
+        for group, value in pairs(groups) do
+            local aged = RealisticCropRotationDiseaseModel.ageReservoirValue(
+                value,
+                annualRetention[group],
+                elapsedYears,
+                RealisticCropRotationDisease.INOCULUM_FLOOR,
+                reservoirClasses[group])
+            if aged ~= value then
+                changed = true
+            end
+            if aged > 0 then agedGroups[group] = aged end
+        end
+        if next(agedGroups) ~= nil then agedReservoir[farmlandId] = agedGroups end
+    end
+    self.reservoir = agedReservoir
+    self.lastReservoirYear = year
+    return changed
 end
 
 ---True when the same crop dropped from a mature stage back to an early one.
@@ -391,17 +473,13 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId)
     local cropName, fruitTypeIndex, growthState = mgr:getActiveCropInfo(farmlandId)
     local region = mgr:getFieldRegion(farmlandId)
 
-    -- New planting: drops the previous cycle's infection and foliar protection.
+    -- New planting: closes the previous cycle before tracking the new crop.
     local previousCrop = self.crop[farmlandId]
     local previousGrowth = self.growth[farmlandId]
     if cropName ~= nil then
         local rotated = previousCrop ~= nil and previousCrop ~= cropName
         if rotated or self:isReplant(cropName, fruitTypeIndex, previousGrowth, growthState, rotated) then
-            self.state[farmlandId] = nil
-            -- Clears the presence overlay; soil nematicide keeps its own countdown.
-            if region ~= nil then
-                self.grid:clearField(region, farmlandId)
-            end
+            self:finishCropCycle(farmlandId, previousCrop)
         end
         self.crop[farmlandId] = cropName
         self.growth[farmlandId] = growthState
@@ -410,10 +488,7 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId)
         -- No host left: the infection ends with the crop.
         local standing = mgr:getPendingHistoryCrop(farmlandId)
         if standing == nil and self.state[farmlandId] ~= nil then
-            self.state[farmlandId] = nil
-            if region ~= nil then
-                self.grid:clearField(region, farmlandId)
-            end
+            self:finishCropCycle(farmlandId, previousCrop)
         end
         return
     end
@@ -429,7 +504,7 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId)
     local temperature = currentTemperature()
     -- Fungicide-treated ground share, resolved once, lazily (only fungal-fungicide groups read it).
     local fungicideCoverage = nil
-    for group, load in pairs(self:getLoad(farmlandId)) do
+    for group, load in pairs(effectiveLoadForCrop(self, farmlandId, cropName)) do
         if hostGroups[group] then
             local state = self.state[farmlandId]
             local alreadyInfected = state ~= nil and state[group] ~= nil
@@ -695,17 +770,20 @@ function RealisticCropRotationDisease:propagate(farmlandId)
         activeDesc = g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex)
     end
 
-    -- Fungal foliar host gone (harvested/rotated): end active fungal infections now; soil-borne (BCN, clubroot) and rotation pressure are kept.
+    -- A foyer ends with its crop; its final severity is deposited before active state is cleared.
     if hostCropName == nil then
         local standing = mgr:getPendingHistoryCrop(farmlandId)
-        if standing == nil and self:purgeFungalActive(farmlandId, region) then
-            groups = self.state[farmlandId]
-            if groups == nil then return end
+        if standing == nil then
+            self:finishCropCycle(farmlandId, self.crop[farmlandId])
+            return
         end
+    elseif hostCropName ~= self.crop[farmlandId] then
+        self:finishCropCycle(farmlandId, self.crop[farmlandId])
+        return
     end
     local raining = isRaining()
     local temperature = currentTemperature()
-    local loads = self:getLoad(farmlandId)
+    local loads = effectiveLoadForCrop(self, farmlandId, hostCropName)
     -- dailyGrowth is calibrated at REFERENCE_DAYS_PER_PERIOD; dividing by periodScale keeps it constant across season-length configs.
     local scale = periodScale()
     local destructionAttempted = false
@@ -849,9 +927,11 @@ end
 ---Copies active disease state into a network-safe table.
 -- @return table state
 -- @return table crop
+-- @return table reservoir
 function RealisticCropRotationDisease:getSyncData()
     local outState = {}
     local outCrop = {}
+    local outReservoir = {}
 
     for farmlandId, groups in pairs(self.state or {}) do
         local n = tonumber(farmlandId)
@@ -874,15 +954,32 @@ function RealisticCropRotationDisease:getSyncData()
         end
     end
 
-    return outState, outCrop
+    for farmlandId, groups in pairs(self.reservoir or {}) do
+        local n = tonumber(farmlandId)
+        if n ~= nil and n > 0 and groups ~= nil then
+            for group, value in pairs(groups) do
+                local normalized = RealisticCropRotationDiseaseModel.normalizeLoad(
+                    value,
+                    RealisticCropRotationDisease.INOCULUM_FLOOR)
+                if normalized > 0 then
+                    outReservoir[n] = outReservoir[n] or {}
+                    outReservoir[n][string.upper(tostring(group))] = normalized
+                end
+            end
+        end
+    end
+
+    return outState, outCrop, outReservoir
 end
 
 ---Applies active disease state received from the server.
 -- @param table state
 -- @param table crop
-function RealisticCropRotationDisease:applySyncData(state, crop)
+-- @param table reservoir
+function RealisticCropRotationDisease:applySyncData(state, crop, reservoir)
     self.state = {}
     self.crop = {}
+    self.reservoir = {}
 
     for farmlandId, groups in pairs(state or {}) do
         local n = tonumber(farmlandId)
@@ -902,6 +999,21 @@ function RealisticCropRotationDisease:applySyncData(state, crop)
         local n = tonumber(farmlandId)
         if n ~= nil and n > 0 and cropName ~= nil and cropName ~= "" then
             self.crop[n] = tostring(cropName)
+        end
+    end
+
+    for farmlandId, groups in pairs(reservoir or {}) do
+        local n = tonumber(farmlandId)
+        if n ~= nil and n > 0 and groups ~= nil then
+            for group, value in pairs(groups) do
+                local normalized = RealisticCropRotationDiseaseModel.normalizeLoad(
+                    value,
+                    RealisticCropRotationDisease.INOCULUM_FLOOR)
+                if normalized > 0 then
+                    self.reservoir[n] = self.reservoir[n] or {}
+                    self.reservoir[n][string.upper(tostring(group))] = normalized
+                end
+            end
         end
     end
 
@@ -987,59 +1099,64 @@ function RealisticCropRotationDisease:rebuildGridFromState()
     end
 end
 
----Server: drops active fungal infections on a parcel whose host crop is gone, keeping soil-borne groups (BCN, clubroot) and rotation pressure.
--- @param integer farmlandId
--- @param table region Read region, or nil
--- @return boolean removedAny
-function RealisticCropRotationDisease:purgeFungalActive(farmlandId, region)
-    local groups = self.state[farmlandId]
-    if groups == nil then return false end
-    local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
-    local fungalSet = config ~= nil and config.diseaseFungal or nil
-    if fungalSet == nil then return false end
-
-    local removedAny = false
-    for group in pairs(groups) do
-        if fungalSet[group] == true then
-            groups[group] = nil
-            removedAny = true
-        end
+local function sortedDiseaseFarmlandIds(state, reservoir)
+    local seen = {}
+    for farmlandId in pairs(state or {}) do
+        local id = tonumber(farmlandId)
+        if id ~= nil and id > 0 then seen[id] = true end
     end
-    if not removedAny then return false end
-    if next(groups) == nil then self.state[farmlandId] = nil end
-
-    -- Overlay + foliar protection end with the crop; any soil-borne infection left keeps its own colour.
-    if region ~= nil then
-        self.grid:clearField(region, farmlandId)
-        repaintFieldOverlay(self.grid, region, self.state[farmlandId])
+    for farmlandId in pairs(reservoir or {}) do
+        local id = tonumber(farmlandId)
+        if id ~= nil and id > 0 then seen[id] = true end
     end
-    return true
+    local ids = {}
+    for id in pairs(seen) do ids[#ids + 1] = id end
+    table.sort(ids)
+    return ids
 end
 
----Persists the infection state to the savegame folder.
+local function sortedDiseaseGroupNames(groups)
+    local names = {}
+    for group in pairs(groups or {}) do names[#names + 1] = tostring(group) end
+    table.sort(names)
+    return names
+end
+
+---Persists active outbreaks and local reservoirs to the savegame folder.
 -- @param string savegamePath Savegame folder path (trailing slash)
 function RealisticCropRotationDisease:saveToXML(savegamePath)
     if savegamePath == nil or savegamePath == "" then return end
     local xmlFile = createXMLFile("rcrDisease", savegamePath .. "realisticCropRotationDisease.xml", "realisticCropRotationDisease")
     if xmlFile == nil or xmlFile == 0 then return end
 
-    local fi = 0
-    for farmlandId, groups in pairs(self.state) do
-        local fKey = string.format("realisticCropRotationDisease.farmland(%d)", fi)
+    setXMLInt(xmlFile, "realisticCropRotationDisease#reservoirVersion", 1)
+    if self.lastReservoirYear ~= nil then
+        setXMLInt(xmlFile, "realisticCropRotationDisease#lastReservoirYear",
+            math.floor(tonumber(self.lastReservoirYear) or 0))
+    end
+
+    for fi, farmlandId in ipairs(sortedDiseaseFarmlandIds(self.state, self.reservoir)) do
+        local groups = self.state[farmlandId] or {}
+        local fKey = string.format("realisticCropRotationDisease.farmland(%d)", fi - 1)
         setXMLInt(xmlFile, fKey .. "#id", farmlandId)
         if self.crop[farmlandId] ~= nil then setXMLString(xmlFile, fKey .. "#crop", tostring(self.crop[farmlandId])) end
         if self.growth[farmlandId] ~= nil then setXMLInt(xmlFile, fKey .. "#growth", math.floor(self.growth[farmlandId])) end
-        local gi = 0
-        for group, s in pairs(groups) do
-            local gKey = string.format("%s.group(%d)", fKey, gi)
+        for gi, group in ipairs(sortedDiseaseGroupNames(groups)) do
+            local s = groups[group]
+            local gKey = string.format("%s.group(%d)", fKey, gi - 1)
             setXMLString(xmlFile, gKey .. "#name", group)
             setXMLFloat(xmlFile, gKey .. "#severity", s.severity or 0)
             setXMLInt(xmlFile, gKey .. "#seed", math.floor(tonumber(s.seed) or 0))
             -- Latent period, kept across reloads.
             if s.incubation ~= nil then setXMLFloat(xmlFile, gKey .. "#incubation", s.incubation) end
-            gi = gi + 1
         end
-        fi = fi + 1
+
+        local fieldReservoir = self.reservoir[farmlandId] or {}
+        for ri, group in ipairs(sortedDiseaseGroupNames(fieldReservoir)) do
+            local rKey = string.format("%s.reservoir(%d)", fKey, ri - 1)
+            setXMLString(xmlFile, rKey .. "#name", group)
+            setXMLFloat(xmlFile, rKey .. "#load", fieldReservoir[group])
+        end
     end
 
     saveXMLFile(xmlFile)
@@ -1055,7 +1172,19 @@ function RealisticCropRotationDisease:loadFromXML(savegamePath)
     local xmlFile = loadXMLFile("rcrDisease", filePath)
     if xmlFile == nil or xmlFile == 0 then return end
 
-    self.state, self.crop, self.growth = {}, {}, {}
+    self.state, self.crop, self.growth, self.reservoir = {}, {}, {}, {}
+    local environment = g_currentMission ~= nil and g_currentMission.environment or nil
+    local currentYear = environment ~= nil and tonumber(environment.currentYear) or nil
+    local reservoirVersion =
+        getXMLInt(xmlFile, "realisticCropRotationDisease#reservoirVersion") or 0
+    if reservoirVersion >= 1 then
+        self.lastReservoirYear =
+            getXMLInt(xmlFile, "realisticCropRotationDisease#lastReservoirYear") or currentYear
+    else
+        -- Beta 4 migration: preserve active outbreaks, start local reservoirs clean.
+        self.lastReservoirYear = currentYear
+    end
+
     local fi = 0
     while true do
         local fKey = string.format("realisticCropRotationDisease.farmland(%d)", fi)
@@ -1079,6 +1208,23 @@ function RealisticCropRotationDisease:loadFromXML(savegamePath)
                 end
                 gi = gi + 1
             end
+
+            if reservoirVersion >= 1 then
+                local ri = 0
+                while true do
+                    local rKey = string.format("%s.reservoir(%d)", fKey, ri)
+                    if not hasXMLProperty(xmlFile, rKey) then break end
+                    local name = getXMLString(xmlFile, rKey .. "#name")
+                    local load = RealisticCropRotationDiseaseModel.normalizeLoad(
+                        getXMLFloat(xmlFile, rKey .. "#load"),
+                        RealisticCropRotationDisease.INOCULUM_FLOOR)
+                    if name ~= nil and name ~= "" and load > 0 then
+                        self.reservoir[id] = self.reservoir[id] or {}
+                        self.reservoir[id][string.upper(tostring(name))] = load
+                    end
+                    ri = ri + 1
+                end
+            end
         end
         fi = fi + 1
     end
@@ -1092,7 +1238,7 @@ function RealisticCropRotationDisease:registerConsoleCommands()
     addConsoleCommand("rcrDisease", "Print Realistic Crop Rotation disease state", "consoleDump", self, "[farmlandId]")
     addConsoleCommand("rcrDiseaseInfect", "Force a disease infection: rcrDiseaseInfect <farmlandId> <group> [severity]", "consoleInfect", self, "farmlandId; group; [severity]")
     addConsoleCommand("rcrDiseaseTick", "Run one disease update tick: rcrDiseaseTick [farmlandId]", "consoleTick", self, "[farmlandId]")
-    addConsoleCommand("rcrDiseaseClear", "Clear disease state: rcrDiseaseClear [farmlandId]", "consoleClear", self, "[farmlandId]")
+    addConsoleCommand("rcrDiseaseClear", "Clear active disease and reservoir: rcrDiseaseClear [farmlandId]", "consoleClear", self, "[farmlandId]")
 
     self.consoleCommandsRegistered = true
 end
@@ -1178,12 +1324,13 @@ function RealisticCropRotationDisease:consoleDump(farmlandId)
             protStr = string.format("FUNGICIDE=%.0f%%,NEMATICIDE=%.0f%%", fungCov * 100, nemaCov * 100)
         end
 
-        -- load feeds the infection roll, pressure feeds the map.
+        -- Load feeds the infection roll, pressure feeds the map, reservoir is the saved local source.
         Logging.info(
-            "[RealisticCropRotation] disease farmland=%d crop=%s growth=%s load={%s} pressure={%s} band=%d state={%s} protect={%s}",
+            "[RealisticCropRotation] disease farmland=%d crop=%s growth=%s reservoir={%s} load={%s} pressure={%s} band=%d state={%s} protect={%s}",
             id,
             tostring(cropName),
             tostring(growthState),
+            formatDiseaseLoads(self:getReservoir(id)),
             formatDiseaseLoads(self:getLoad(id)),
             formatDiseaseLoads(self:getPressure(id)),
             self:getRiskBand(id),
@@ -1209,10 +1356,12 @@ function RealisticCropRotationDisease:consoleInfect(farmlandId, groupName, sever
 
     local group = groupName ~= nil and string.upper(tostring(groupName)) or nil
     local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
-    if group == nil or group == "" or config == nil or config.diseaseIntervals == nil or config.diseaseIntervals[group] == nil then
+    if group == nil or group == "" or config == nil
+        or config.diseasePlannerIntervals == nil
+        or config.diseasePlannerIntervals[group] == nil then
         local known = {}
-        if config ~= nil and config.diseaseIntervals ~= nil then
-            for g in pairs(config.diseaseIntervals) do known[#known + 1] = g end
+        if config ~= nil and config.diseasePlannerIntervals ~= nil then
+            for g in pairs(config.diseasePlannerIntervals) do known[#known + 1] = g end
             table.sort(known)
         end
         return "Unknown disease group. Known groups: " .. (#known > 0 and table.concat(known, ", ") or "(none loaded)")
@@ -1277,6 +1426,7 @@ function RealisticCropRotationDisease:consoleClear(farmlandId)
     local id = tonumber(farmlandId)
     if id ~= nil and id > 0 then
         self.state[id] = nil
+        self.reservoir[id] = nil
         self.crop[id] = nil
         self.growth[id] = nil
         local region = self.manager:getFieldRegion(id)
@@ -1284,15 +1434,18 @@ function RealisticCropRotationDisease:consoleClear(farmlandId)
             self.grid:clearFieldDisease(region, id)
         end
         requestDiseaseConsoleBroadcast()
-        return string.format("Cleared disease state for farmland %d", id)
+        return string.format("Cleared active disease and reservoir for farmland %d", id)
     end
 
     self.state = {}
+    self.reservoir = {}
     self.crop = {}
     self.growth = {}
+    local environment = g_currentMission ~= nil and g_currentMission.environment or nil
+    self.lastReservoirYear = environment ~= nil and tonumber(environment.currentYear) or nil
     self.dayQueue = {}
     self.dayQueued = {}
     self.grid:clearAll()
     requestDiseaseConsoleBroadcast()
-    return "Cleared all disease state"
+    return "Cleared all active disease and reservoirs"
 end

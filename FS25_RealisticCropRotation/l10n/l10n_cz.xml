@@ -195,9 +195,9 @@
         <e k="rcr_disease_name_sclerotinia" v="Sklerotiniová hniloba" />
         <e k="rcr_disease_name_phoma" v="Fomová hniloba (černání stonku řepky)" />
         <e k="rcr_disease_name_takeall" v="Černání pat stébel" />
-        <e k="rcr_disease_name_septoria" v="Braničnatka pšeničná (listová skvrnitost)" />
+        <e k="rcr_disease_name_septoria" v="Septorióza" />
         <e k="rcr_disease_name_rust" v="Rez" />
-        <e k="rcr_disease_name_fusarium" v="Fuzarióza klasů" />
+        <e k="rcr_disease_name_fusarium" v="Fuzarióza" />
         <e k="rcr_disease_name_lateblight" v="Plíseň bramboru" />
         <e k="rcr_disease_name_bcn"   v="Háďátko řepné" />
         <e k="rcr_disease_name_clubroot" v="Nádorovitost brukvovitých" />
@@ -215,17 +215,17 @@
         <e k="rcr_disease_treatment_clubroot" v="Žádné (pouze osevní postup)" />
         <e k="rcr_advice_pressure_high_phoma" v="Vysoký tlak fomové hniloby: pokud se řepka nebo hořčice vrátí do 4 let, tlak zůstává vysoký; fungicid zpomaluje nástup a zmrazuje škody na ošetřených plochách, chorobu ale nezatlačí." />
         <e k="rcr_advice_pressure_high_takeall" v="Vysoký tlak černání pat stébel: zařaďte nehostitelskou přerušovací plodinu (oves, luskovina, olejnina); žádný přípravek proti této chorobě nechrání, tlak snižuje jen osevní postup." />
-        <e k="rcr_advice_pressure_high_septoria" v="Vysoký tlak braničnatky: proložte pšenici, ječmen, tritikale a špaldu; fungicid zpomaluje nástup a zmrazuje škody na ošetřených plochách, déšť epidemii urychluje." />
-        <e k="rcr_advice_pressure_high_rust" v="Vysoký tlak rzi: obilniny i řepka jsou hostitelé, proložte je; fungicid zpomaluje nástup a zmrazuje škody na ošetřených plochách, mírné vlhko epidemii urychluje." />
+        <e k="rcr_advice_pressure_high_septoria" v="Vysoký tlak septoriózy: posklizňové zbytky obilnin mohou tlak zvýšit; déšť zvyšuje bezprostřední riziko a fungicid omezuje škody na ošetřených plochách." />
+        <e k="rcr_advice_pressure_high_rust" v="Vysoký tlak rzi: mírné vlhké počasí zvyšuje bezprostřední riziko a fungicid omezuje škody na ošetřených plochách." />
         <e k="rcr_advice_pressure_high_fusarium" v="Vysoký tlak fuzariózy: nepěstujte pšenici po kukuřici a zařaďte méně obilnin za sebou; fungicid zpomaluje nástup a zmrazuje škody na ošetřených plochách, déšť epidemii urychluje." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Vysoký tlak plísně bramboru: proložte brambory; fungicid zpomaluje nástup a zmrazuje škody na ošetřených plochách, chladné vlhké počasí epidemii urychluje." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Vysoký tlak plísně bramboru: chladné vlhké počasí zvyšuje bezprostřední riziko a fungicid omezuje škody na ošetřených plochách." />
         <e k="rcr_advice_pressure_high_clubroot" v="Vysoký tlak nádorovitosti: prodlužte odstup řepky a hořčice na maximum; žádný přípravek proti této chorobě nechrání, účinkuje jen osevní postup." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Střední tlak fomové hniloby: prodlužte odstup řepky a hořčice." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Střední tlak černání pat stébel: vyhněte se třetí obilnině v řadě." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Střední tlak braničnatky: proložte obilniny, déšť zvyšuje riziko." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Střední tlak rzi: proložte obilniny a řepku, mírné vlhko zvyšuje riziko." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Střední tlak septoriózy: posklizňové zbytky obilnin mohou tlak zvýšit; déšť zvyšuje bezprostřední riziko." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Střední tlak rzi: mírné vlhké počasí zvyšuje bezprostřední riziko." />
         <e k="rcr_advice_pressure_moderate_fusarium" v="Střední tlak fuzariózy: proložte obilniny a kukuřici." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Střední tlak plísně bramboru: proložte brambory, chladné vlhké počasí zvyšuje riziko." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Střední tlak plísně bramboru: chladné vlhké počasí zvyšuje bezprostřední riziko." />
         <e k="rcr_advice_pressure_moderate_clubroot" v="Střední tlak nádorovitosti: prodlužte odstup řepky a hořčice." />
     </elements>
 </l10n>

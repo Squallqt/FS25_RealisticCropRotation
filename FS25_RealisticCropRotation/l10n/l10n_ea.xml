@@ -197,7 +197,7 @@
         <e k="rcr_disease_name_takeall" v="Mal del pie" />
         <e k="rcr_disease_name_septoria" v="Septoriosis" />
         <e k="rcr_disease_name_rust" v="Roya" />
-        <e k="rcr_disease_name_fusarium" v="Fusariosis de la espiga" />
+        <e k="rcr_disease_name_fusarium" v="Fusariosis" />
         <e k="rcr_disease_name_lateblight" v="Tizón tardío de la papa" />
         <e k="rcr_disease_name_bcn"   v="Nematodo del quiste" />
         <e k="rcr_disease_name_clubroot" v="Hernia de las crucíferas" />
@@ -215,17 +215,17 @@
         <e k="rcr_disease_treatment_clubroot" v="Ninguno (solo rotación)" />
         <e k="rcr_advice_pressure_high_phoma" v="Alta presión de phoma: si canola o mostaza vuelven antes de 4 años, la presión se mantiene alta; el fungicida retrasa la aparición y congela el daño en las zonas tratadas, no hace retroceder la enfermedad." />
         <e k="rcr_advice_pressure_high_takeall" v="Alta presión de mal del pie: intercala un corte no hospedante (avena, leguminosa, oleaginosa); ningún producto protege de esta enfermedad, solo la rotación baja la presión." />
-        <e k="rcr_advice_pressure_high_septoria" v="Alta presión de septoriosis: espacia trigo, cebada, triticale y espelta; el fungicida retrasa la aparición y congela el daño en las zonas tratadas, la lluvia acelera la epidemia." />
-        <e k="rcr_advice_pressure_high_rust" v="Alta presión de roya: cereales y canola son ambos hospedantes, espácialos; el fungicida retrasa la aparición y congela el daño en las zonas tratadas, el clima templado y húmedo acelera la epidemia." />
+        <e k="rcr_advice_pressure_high_septoria" v="Alta presión de septoriosis: los residuos de cereales pueden añadir presión; la lluvia eleva el riesgo inmediato y el fungicida limita el daño en las zonas tratadas." />
+        <e k="rcr_advice_pressure_high_rust" v="Alta presión de roya: el clima templado y húmedo eleva el riesgo inmediato y el fungicida limita el daño en las zonas tratadas." />
         <e k="rcr_advice_pressure_high_fusarium" v="Alta presión de fusariosis: evita trigo después de maíz y encadena menos cereales; el fungicida retrasa la aparición y congela el daño en las zonas tratadas, la lluvia acelera la epidemia." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Alta presión de tizón tardío: espacia las papas; el fungicida retrasa la aparición y congela el daño en las zonas tratadas, el clima fresco y húmedo acelera la epidemia." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Alta presión de tizón tardío: el clima fresco y húmedo eleva el riesgo inmediato y el fungicida limita el daño en las zonas tratadas." />
         <e k="rcr_advice_pressure_high_clubroot" v="Alta presión de hernia: alarga al máximo el retorno de la canola y la mostaza; ningún producto protege de esta enfermedad, solo la rotación actúa." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Presión de phoma moderada: alarga el retorno de la canola y la mostaza." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Presión de mal del pie moderada: evita el tercer cereal seguido." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Presión de septoriosis moderada: espacia los cereales, la lluvia aumenta el riesgo." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Presión de roya moderada: espacia cereales y canola, el clima templado y húmedo aumenta el riesgo." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Presión de septoriosis moderada: los residuos de cereales pueden añadir presión; la lluvia eleva el riesgo inmediato." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Presión de roya moderada: el clima templado y húmedo eleva el riesgo inmediato." />
         <e k="rcr_advice_pressure_moderate_fusarium" v="Presión de fusariosis moderada: espacia cereales y maíz." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Presión de tizón tardío moderada: espacia las papas, el clima fresco y húmedo aumenta el riesgo." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Presión de tizón tardío moderada: el clima fresco y húmedo eleva el riesgo inmediato." />
         <e k="rcr_advice_pressure_moderate_clubroot" v="Presión de hernia moderada: alarga el retorno de la canola y la mostaza." />
     </elements>
 </l10n>

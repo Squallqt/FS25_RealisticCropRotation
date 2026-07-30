@@ -195,9 +195,9 @@
         <e k="rcr_disease_name_sclerotinia" v="Fehérpenészes rothadás" />
         <e k="rcr_disease_name_phoma" v="Fómás szárrothadás (Phoma)" />
         <e k="rcr_disease_name_takeall" v="Gyökér- és szártőfeketedés" />
-        <e k="rcr_disease_name_septoria" v="Szeptóriás levélfoltosság" />
+        <e k="rcr_disease_name_septoria" v="Szeptóriózis" />
         <e k="rcr_disease_name_rust" v="Rozsda" />
-        <e k="rcr_disease_name_fusarium" v="Kalászfuzáriózis" />
+        <e k="rcr_disease_name_fusarium" v="Fuzáriózis" />
         <e k="rcr_disease_name_lateblight" v="Burgonyavész" />
         <e k="rcr_disease_name_bcn"   v="Cisztaféreg" />
         <e k="rcr_disease_name_clubroot" v="Káposztafélék gyökérgolyvája" />
@@ -215,17 +215,17 @@
         <e k="rcr_disease_treatment_clubroot" v="Nincs (csak vetésforgó)" />
         <e k="rcr_advice_pressure_high_phoma" v="Erős fómás nyomás: ha a repce vagy mustár 4 éven belül visszatér, a nyomás magas marad; a gombaölő szer lassítja a fellépést és befagyasztja a kárt a permetezett részeken, de a betegséget nem szorítja vissza." />
         <e k="rcr_advice_pressure_high_takeall" v="Erős szártőfeketedés-nyomás: iktasson be nem gazdanövény kihagyást (zab, hüvelyes, olajnövény); egyetlen szer sem véd e betegség ellen, a nyomást csak a vetésforgó csökkenti." />
-        <e k="rcr_advice_pressure_high_septoria" v="Erős szeptória-nyomás: ritkítsa a vetésforgóban a búzát, árpát, tritikálét és tönkölyt; a gombaölő szer lassítja a fellépést és befagyasztja a kárt a permetezett részeken, az eső pedig gyorsítja a járványt." />
-        <e k="rcr_advice_pressure_high_rust" v="Erős rozsdanyomás: a gabonafélék és a repce egyaránt gazdanövények, válassza szét őket; a gombaölő szer lassítja a fellépést és befagyasztja a kárt a permetezett részeken, az enyhe, nedves idő pedig gyorsítja a járványt." />
+        <e k="rcr_advice_pressure_high_septoria" v="Erős szeptórianyomás: a gabonamaradványok növelhetik a nyomást; az eső növeli a közvetlen kockázatot, a gombaölő szer pedig korlátozza a kárt a permetezett részeken." />
+        <e k="rcr_advice_pressure_high_rust" v="Erős rozsdanyomás: az enyhe, nedves idő növeli a közvetlen kockázatot, a gombaölő szer pedig korlátozza a kárt a permetezett részeken." />
         <e k="rcr_advice_pressure_high_fusarium" v="Erős fuzáriózis-nyomás: ne termesszen búzát kukorica után, és vessen kevesebb gabonát egymás után; a gombaölő szer lassítja a fellépést és befagyasztja a kárt a permetezett részeken, az eső pedig gyorsítja a járványt." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Erős burgonyavész-nyomás: ritkítsa a vetésforgóban a burgonyát; a gombaölő szer lassítja a fellépést és befagyasztja a kárt a permetezett részeken, a hűvös, nedves idő pedig gyorsítja a járványt." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Erős burgonyavész-nyomás: a hűvös, nedves idő növeli a közvetlen kockázatot, a gombaölő szer pedig korlátozza a kárt a permetezett részeken." />
         <e k="rcr_advice_pressure_high_clubroot" v="Erős gyökérgolyva-nyomás: nyújtsa a lehető leghosszabbra a repce és a mustár visszatérését; egyetlen szer sem véd e betegség ellen, csak a vetésforgó segít." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Mérsékelt fómás nyomás: nyújtsa meg a repce és a mustár visszatérését." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Mérsékelt szártőfeketedés-nyomás: kerülje a sorban harmadik gabonát." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Mérsékelt szeptória-nyomás: ritkítsa a gabonaféléket, az eső növeli a kockázatot." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Mérsékelt rozsdanyomás: ritkítsa a gabonaféléket és a repcét, az enyhe, nedves idő növeli a kockázatot." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Mérsékelt szeptórianyomás: a gabonamaradványok növelhetik a nyomást; az eső növeli a közvetlen kockázatot." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Mérsékelt rozsdanyomás: az enyhe, nedves idő növeli a közvetlen kockázatot." />
         <e k="rcr_advice_pressure_moderate_fusarium" v="Mérsékelt fuzáriózis-nyomás: ritkítsa a gabonaféléket és a kukoricát." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Mérsékelt burgonyavész-nyomás: ritkítsa a burgonyát, a hűvös, nedves idő növeli a kockázatot." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Mérsékelt burgonyavész-nyomás: a hűvös, nedves idő növeli a közvetlen kockázatot." />
         <e k="rcr_advice_pressure_moderate_clubroot" v="Mérsékelt gyökérgolyva-nyomás: nyújtsa meg a repce és a mustár visszatérését." />
     </elements>
 </l10n>

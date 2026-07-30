@@ -3,10 +3,12 @@
 local modDirectory = g_currentModDirectory
 
 source(modDirectory .. "scripts/RealisticCropRotationRepository.lua")
+source(modDirectory .. "scripts/RealisticCropRotationPlannerModel.lua")
 source(modDirectory .. "scripts/RealisticCropRotationService.lua")
 source(modDirectory .. "scripts/RealisticCropRotationManager.lua")
 source(modDirectory .. "scripts/RealisticCropRotationNitrogen.lua")
 source(modDirectory .. "scripts/RealisticCropRotationSoilUptake.lua")
+source(modDirectory .. "scripts/RealisticCropRotationDiseaseModel.lua")
 source(modDirectory .. "scripts/RealisticCropRotationDisease.lua")
 source(modDirectory .. "scripts/RealisticCropRotationDiseaseGrid.lua")
 source(modDirectory .. "scripts/RealisticCropRotationTreatmentLifecycle.lua")
@@ -48,7 +50,25 @@ local function loadCropConfig()
         return nil
     end
 
-    local config = { families = {}, nitrogen = {}, coverCrops = {}, coverCropNames = {}, diseases = {}, diseaseIntervals = {}, diseaseWindows = {}, diseaseFungal = {}, diseaseCurves = {}, diseaseStates = {}, diseaseTreatments = {}, diseaseWeatherFactors = {}, diseaseAmbient = {} }
+    local config = {
+        families = {},
+        nitrogen = {},
+        coverCrops = {},
+        coverCropNames = {},
+        diseases = {},
+        diseasePlannerIntervals = {},
+        diseaseRotationRelevant = {},
+        diseaseReservoirClasses = {},
+        diseaseAnnualRetention = {},
+        diseaseWindows = {},
+        diseaseFungal = {},
+        diseaseWeatherDriven = {},
+        diseaseCurves = {},
+        diseaseStates = {},
+        diseaseTreatments = {},
+        diseaseWeatherFactors = {},
+        diseaseAmbient = {},
+    }
     local i = 0
     while true do
         local key = string.format("realisticCropRotationCrops.crop(%d)", i)
@@ -91,18 +111,27 @@ local function loadCropConfig()
         local gkey = string.format("realisticCropRotationCrops.diseaseGroups.diseaseGroup(%d)", j)
         if not hasXMLProperty(xmlFile, gkey) then break end
         local gname = getXMLString(xmlFile, gkey .. "#name")
-        local gint  = getXMLInt(xmlFile, gkey .. "#minInterval")
+        local gint  = getXMLInt(xmlFile, gkey .. "#plannerInterval")
         if gname ~= nil and gname ~= "" and gint ~= nil then
             local upper = string.upper(gname)
             autoState = autoState + 1
-            config.diseaseIntervals[upper] = gint
+            config.diseasePlannerIntervals[upper] = gint
+            config.diseaseRotationRelevant[upper] =
+                getXMLBool(xmlFile, gkey .. "#rotationRelevant") == true
+            config.diseaseReservoirClasses[upper] =
+                string.upper(tostring(getXMLString(xmlFile, gkey .. "#reservoirClass") or "NONE"))
+            config.diseaseAnnualRetention[upper] =
+                getXMLFloat(xmlFile, gkey .. "#annualRetention") or 0
             local from = getXMLFloat(xmlFile, gkey .. "#infectFrom")
             local to   = getXMLFloat(xmlFile, gkey .. "#infectTo")
             if from ~= nil and to ~= nil then
                 config.diseaseWindows[upper] = { from = from, to = to }
             end
-            -- Fungal pathogens receive the rain bonus; soil animals and protists do not.
+            -- Taxonomic flag retained as metadata; weatherDriven controls runtime weather response.
             config.diseaseFungal[upper] = getXMLBool(xmlFile, gkey .. "#fungal") == true
+            -- Only explicitly weather-driven groups receive rain and temperature modifiers.
+            config.diseaseWeatherDriven[upper] =
+                getXMLBool(xmlFile, gkey .. "#weatherDriven") == true
             -- Stable per-disease overlay id, with parse order as the fallback.
             local state = getXMLInt(xmlFile, gkey .. "#state")
             config.diseaseStates[upper] = (state ~= nil and state > 0) and state or autoState
@@ -229,8 +258,16 @@ local function processMenuReconcileQueue()
     queue.index = queue.index + 1
 
     manager:invalidateActiveCropCache(farmlandId)
-    if manager:reconcileActiveCropForFarmland(farmlandId) then
+    local rotationChanged, completedCrops =
+        manager:reconcileActiveCropForFarmland(farmlandId)
+    local diseaseChanged = RealisticCropRotation.disease ~= nil
+        and RealisticCropRotation.disease:applyCompletedCrops(farmlandId, completedCrops)
+        or false
+    if rotationChanged or diseaseChanged then
         queue.changed = true
+    end
+    if diseaseChanged then
+        queue.diseaseChanged = true
     end
 
     local frame = RealisticCropRotation.frame
@@ -240,6 +277,9 @@ local function processMenuReconcileQueue()
 
     if queue.index > #queue.farmlandIds then
         RealisticCropRotation.menuReconcileQueue = nil
+        if queue.diseaseChanged and RealisticCropRotation.disease ~= nil then
+            RealisticCropRotation.disease:refreshRiskMap(false)
+        end
         if frame ~= nil then
             frame:onMenuReconcileComplete(queue.changed)
         end
@@ -279,11 +319,20 @@ end
 local function onPeriodChanged()
     if g_currentMission == nil or not g_currentMission:getIsServer() then return end
 
-    local changed = RealisticCropRotationTreatmentLifecycle.onPeriodChanged()
+    local environment = g_currentMission.environment
+    local changed = RealisticCropRotation.disease:advanceCalendar(
+        environment ~= nil and environment.currentYear or nil)
+    if RealisticCropRotationTreatmentLifecycle.onPeriodChanged() then
+        changed = true
+    end
     local diseaseUpdated = false
     for _, farmlandId in ipairs(RealisticCropRotation.manager:getOwnedRotationFarmlandIds()) do
-        local rotationChanged = RealisticCropRotation.manager:reconcileActiveCropForFarmland(farmlandId)
+        local rotationChanged, completedCrops =
+            RealisticCropRotation.manager:reconcileActiveCropForFarmland(farmlandId)
         if rotationChanged then
+            changed = true
+        end
+        if RealisticCropRotation.disease:applyCompletedCrops(farmlandId, completedCrops) then
             changed = true
         end
         -- Infection rolls run per period; severity and destruction progress daily.
@@ -454,6 +503,9 @@ local function loadedMission()
     if g_currentMission:getIsServer() then
         RealisticCropRotation.manager:loadFromXML(savegameFolderPath)
         RealisticCropRotation.disease:loadFromXML(savegameFolderPath)
+        local environment = g_currentMission.environment
+        RealisticCropRotation.disease:advanceCalendar(
+            environment ~= nil and environment.currentYear or nil)
         -- Paint the initial risk map during loading, never on menu open.
         RealisticCropRotation.disease:refreshRiskMap(true)
         RealisticCropRotationTreatmentLifecycle.loadFromXML(savegameFolderPath)
@@ -527,11 +579,15 @@ local function loadedMission()
                 pending.coverPlans or {},
                 pending.lastKnownActiveCrop or {},
                 pending.lastKnownGrowthState or {})
-            RealisticCropRotation.disease:applySyncData(pending.diseaseState or {}, pending.diseaseCrop or {})
+            RealisticCropRotation.disease:applySyncData(
+                pending.diseaseState or {},
+                pending.diseaseCrop or {},
+                pending.diseaseReservoir or {})
             RealisticCropRotationTreatmentLifecycle.applySyncData(pending.nematicideCountdown or {})
             RealisticCropRotation.pendingSyncData = nil
         end
-        RealisticCropRotation.requestServerSync()
+        -- The server already pushes the initial snapshot through FSBaseMission.sendInitialClientState.
+        -- The menu requests later refreshes, after event ids are ready.
     end
 
     if g_currentMission:getIsClient()

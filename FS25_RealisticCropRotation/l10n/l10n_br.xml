@@ -197,7 +197,7 @@
         <e k="rcr_disease_name_takeall" v="Mal-do-pé" />
         <e k="rcr_disease_name_septoria" v="Septoriose" />
         <e k="rcr_disease_name_rust" v="Ferrugem" />
-        <e k="rcr_disease_name_fusarium" v="Giberela (fusariose da espiga)" />
+        <e k="rcr_disease_name_fusarium" v="Fusariose" />
         <e k="rcr_disease_name_lateblight" v="Requeima (míldio da batata)" />
         <e k="rcr_disease_name_bcn"   v="Nematoide de cisto" />
         <e k="rcr_disease_name_clubroot" v="Hérnia das crucíferas" />
@@ -215,17 +215,17 @@
         <e k="rcr_disease_treatment_clubroot" v="Nenhum (apenas rotação)" />
         <e k="rcr_advice_pressure_high_phoma" v="Forte pressão de phoma: traga canola ou mostarda de volta em até 4 anos e a pressão continua alta; o fungicida retarda o início e trava o dano nas áreas pulverizadas, não faz a doença regredir." />
         <e k="rcr_advice_pressure_high_takeall" v="Forte pressão de mal-do-pé: insira um corte não hospedeiro (aveia, leguminosa, oleaginosa); nenhum produto protege contra esta doença, só a rotação reduz a pressão." />
-        <e k="rcr_advice_pressure_high_septoria" v="Forte pressão de septoriose: espace trigo, cevada, triticale e espelta; o fungicida retarda o início e trava o dano nas áreas pulverizadas, a chuva acelera a epidemia." />
-        <e k="rcr_advice_pressure_high_rust" v="Forte pressão de ferrugem: cereais e canola são ambos hospedeiros, espace-os; o fungicida retarda o início e trava o dano nas áreas pulverizadas, o tempo ameno e úmido acelera a epidemia." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Forte pressão de giberela: evite trigo depois de milho e encadeie menos cereais; o fungicida retarda o início e trava o dano nas áreas pulverizadas, a chuva acelera a epidemia." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Forte pressão de requeima: espace as batatas; o fungicida retarda o início e trava o dano nas áreas pulverizadas, o tempo fresco e úmido acelera a epidemia." />
+        <e k="rcr_advice_pressure_high_septoria" v="Forte pressão de septoriose: resíduos de cereais podem aumentar a pressão; a chuva eleva o risco imediato e o fungicida limita os danos nas áreas pulverizadas." />
+        <e k="rcr_advice_pressure_high_rust" v="Forte pressão de ferrugem: o tempo ameno e úmido eleva o risco imediato e o fungicida limita os danos nas áreas pulverizadas." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Forte pressão de fusariose: evite trigo depois de milho e encadeie menos cereais; o fungicida retarda o início e trava o dano nas áreas pulverizadas, a chuva acelera a epidemia." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Forte pressão de requeima: o tempo fresco e úmido eleva o risco imediato e o fungicida limita os danos nas áreas pulverizadas." />
         <e k="rcr_advice_pressure_high_clubroot" v="Forte pressão de hérnia: amplie ao máximo o retorno da canola e da mostarda; nenhum produto protege contra esta doença, só a rotação age." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Pressão de phoma moderada: amplie o retorno da canola e da mostarda." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Pressão de mal-do-pé moderada: evite o terceiro cereal seguido." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Pressão de septoriose moderada: espace os cereais, a chuva aumenta o risco." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Pressão de ferrugem moderada: espace cereais e canola, o tempo ameno e úmido aumenta o risco." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="Pressão de giberela moderada: espace cereais e milho." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Pressão de requeima moderada: espace as batatas, o tempo fresco e úmido aumenta o risco." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Pressão de septoriose moderada: resíduos de cereais podem aumentar a pressão; a chuva eleva o risco imediato." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Pressão de ferrugem moderada: o tempo ameno e úmido eleva o risco imediato." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Pressão de fusariose moderada: espace cereais e milho." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Pressão de requeima moderada: o tempo fresco e úmido eleva o risco imediato." />
         <e k="rcr_advice_pressure_moderate_clubroot" v="Pressão de hérnia moderada: amplie o retorno da canola e da mostarda." />
     </elements>
 </l10n>

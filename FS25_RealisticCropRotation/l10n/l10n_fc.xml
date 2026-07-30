@@ -197,7 +197,7 @@
         <e k="rcr_disease_name_takeall" v="Piétin-échaudage" />
         <e k="rcr_disease_name_septoria" v="Septoriose" />
         <e k="rcr_disease_name_rust" v="Rouille" />
-        <e k="rcr_disease_name_fusarium" v="Fusariose de l'épi" />
+        <e k="rcr_disease_name_fusarium" v="Fusariose" />
         <e k="rcr_disease_name_lateblight" v="Mildiou" />
         <e k="rcr_disease_name_bcn"   v="Nématode à kystes" />
         <e k="rcr_disease_name_clubroot" v="Hernie des crucifères" />
@@ -215,17 +215,17 @@
         <e k="rcr_disease_treatment_clubroot" v="Aucun (rotation seule)" />
         <e k="rcr_advice_pressure_high_phoma" v="Forte pression phoma : sous 4 ans d'écart entre deux colza ou moutarde, la pression reste élevée ; le fongicide freine l'apparition et gèle les dégâts sur les zones traitées, il ne fait pas reculer la maladie." />
         <e k="rcr_advice_pressure_high_takeall" v="Forte pression piétin-échaudage : insérez une coupure non-hôte (avoine, légumineuse, oléagineux) ; aucun produit ne protège cette maladie, seule la rotation fait baisser la pression." />
-        <e k="rcr_advice_pressure_high_septoria" v="Forte pression septoriose : espacez blé, orge, triticale et épeautre ; le fongicide freine l'apparition et gèle les dégâts sur les zones traitées, la pluie accélère l'épidémie." />
-        <e k="rcr_advice_pressure_high_rust" v="Forte pression rouille : céréales et colza sont tous deux hôtes, espacez-les ; le fongicide freine l'apparition et gèle les dégâts sur les zones traitées, la douceur humide accélère l'épidémie." />
+        <e k="rcr_advice_pressure_high_septoria" v="Forte pression septoriose : les résidus de céréales peuvent ajouter de la pression ; la pluie augmente le risque immédiat et le fongicide limite les dégâts sur les zones traitées." />
+        <e k="rcr_advice_pressure_high_rust" v="Forte pression rouille : la douceur humide augmente le risque immédiat et le fongicide limite les dégâts sur les zones traitées." />
         <e k="rcr_advice_pressure_high_fusarium" v="Forte pression fusariose : évitez le blé après maïs et enchaînez moins de céréales ; le fongicide freine l'apparition et gèle les dégâts sur les zones traitées, la pluie accélère l'épidémie." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Forte pression mildiou : espacez les pommes de terre ; le fongicide freine l'apparition et gèle les dégâts sur les zones traitées, le temps frais et humide accélère l'épidémie." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Forte pression mildiou : le temps frais et humide augmente le risque immédiat et le fongicide limite les dégâts sur les zones traitées." />
         <e k="rcr_advice_pressure_high_clubroot" v="Forte pression hernie : allongez au maximum le retour du colza et de la moutarde ; aucun produit ne protège cette maladie, seule la rotation agit." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Pression phoma modérée : allongez le retour du colza et de la moutarde." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Pression piétin modérée : évitez la troisième céréale d'affilée." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Pression septoriose modérée : espacez les céréales, la pluie fait monter le risque." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Pression rouille modérée : espacez céréales et colza, la douceur humide fait monter le risque." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Pression septoriose modérée : les résidus de céréales peuvent ajouter de la pression ; la pluie augmente le risque immédiat." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Pression rouille modérée : la douceur humide augmente le risque immédiat." />
         <e k="rcr_advice_pressure_moderate_fusarium" v="Pression fusariose modérée : espacez céréales et maïs." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Pression mildiou modérée : espacez les pommes de terre, le temps frais et humide fait monter le risque." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Pression mildiou modérée : le temps frais et humide augmente le risque immédiat." />
         <e k="rcr_advice_pressure_moderate_clubroot" v="Pression hernie modérée : allongez le retour du colza et de la moutarde." />
     </elements>
 </l10n>

@@ -195,9 +195,9 @@
         <e k="rcr_disease_name_sclerotinia" v="Pahkahome" />
         <e k="rcr_disease_name_phoma" v="Phoma-varsitauti" />
         <e k="rcr_disease_name_takeall" v="Tyvi- ja juuristomätä" />
-        <e k="rcr_disease_name_septoria" v="Vehnänruskolaikku (Septoria)" />
+        <e k="rcr_disease_name_septoria" v="Septoria" />
         <e k="rcr_disease_name_rust" v="Ruoste" />
-        <e k="rcr_disease_name_fusarium" v="Tähkän punahome (Fusarium)" />
+        <e k="rcr_disease_name_fusarium" v="Fusarium" />
         <e k="rcr_disease_name_lateblight" v="Perunarutto" />
         <e k="rcr_disease_name_bcn"   v="Kystaankeroinen" />
         <e k="rcr_disease_name_clubroot" v="Möhöjuuri" />
@@ -215,17 +215,17 @@
         <e k="rcr_disease_treatment_clubroot" v="Ei mitään (vain viljelykierto)" />
         <e k="rcr_advice_pressure_high_phoma" v="Korkea Phoman paine: jos rapsi tai sinappi palaa alle 4 vuodessa, paine pysyy korkeana; sienitorjunta-aine hidastaa puhkeamista ja jäädyttää vahingon ruiskutetuilla alueilla, mutta ei käännä tautia laskuun." />
         <e k="rcr_advice_pressure_high_takeall" v="Korkea tyvimädän paine: lisää kiertoon isäntäkasviksi kelpaamaton katkokasvi (kaura, palkokasvi, öljykasvi); mikään aine ei suojaa tältä taudilta, vain viljelykierto laskee painetta." />
-        <e k="rcr_advice_pressure_high_septoria" v="Korkea Septorian paine: harvenna vehnän, ohran, ruisvehnän ja speltin viljelyä; sienitorjunta-aine hidastaa puhkeamista ja jäädyttää vahingon ruiskutetuilla alueilla, ja sade nopeuttaa epidemiaa." />
-        <e k="rcr_advice_pressure_high_rust" v="Korkea ruosteen paine: sekä viljat että rapsi ovat isäntiä, harvenna niiden viljelyä; sienitorjunta-aine hidastaa puhkeamista ja jäädyttää vahingon ruiskutetuilla alueilla, ja leuto kostea sää nopeuttaa epidemiaa." />
-        <e k="rcr_advice_pressure_high_fusarium" v="Korkea punahomeen paine: älä viljele vehnää maissin jälkeen ja vähennä peräkkäisiä viljavuosia; sienitorjunta-aine hidastaa puhkeamista ja jäädyttää vahingon ruiskutetuilla alueilla, ja sade nopeuttaa epidemiaa." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Korkea perunaruton paine: harvenna perunan viljelyä; sienitorjunta-aine hidastaa puhkeamista ja jäädyttää vahingon ruiskutetuilla alueilla, ja viileä kostea sää nopeuttaa epidemiaa." />
+        <e k="rcr_advice_pressure_high_septoria" v="Korkea Septorian paine: viljajäämät voivat lisätä painetta; sade nostaa välitöntä riskiä ja sienitorjunta-aine rajoittaa vahinkoa ruiskutetuilla alueilla." />
+        <e k="rcr_advice_pressure_high_rust" v="Korkea ruosteen paine: leuto kostea sää nostaa välitöntä riskiä ja sienitorjunta-aine rajoittaa vahinkoa ruiskutetuilla alueilla." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Korkea Fusariumin paine: älä viljele vehnää maissin jälkeen ja vähennä peräkkäisiä viljavuosia; sienitorjunta-aine hidastaa puhkeamista ja jäädyttää vahingon ruiskutetuilla alueilla, ja sade nopeuttaa epidemiaa." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Korkea perunaruton paine: viileä kostea sää nostaa välitöntä riskiä ja sienitorjunta-aine rajoittaa vahinkoa ruiskutetuilla alueilla." />
         <e k="rcr_advice_pressure_high_clubroot" v="Korkea möhöjuuren paine: pidennä rapsin ja sinapin viljelytauko niin pitkäksi kuin mahdollista; mikään aine ei suojaa tältä taudilta, vain viljelykierto auttaa." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Kohtalainen Phoman paine: pidennä rapsin ja sinapin viljelytaukoa." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Kohtalainen tyvimädän paine: vältä kolmatta viljaa peräkkäin." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Kohtalainen Septorian paine: harvenna viljojen viljelyä, sade nostaa riskiä." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Kohtalainen ruosteen paine: harvenna viljojen ja rapsin viljelyä, leuto kostea sää nostaa riskiä." />
-        <e k="rcr_advice_pressure_moderate_fusarium" v="Kohtalainen punahomeen paine: harvenna viljan ja maissin viljelyä." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Kohtalainen perunaruton paine: harvenna perunan viljelyä, viileä kostea sää nostaa riskiä." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Kohtalainen Septorian paine: viljajäämät voivat lisätä painetta; sade nostaa välitöntä riskiä." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Kohtalainen ruosteen paine: leuto kostea sää nostaa välitöntä riskiä." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Kohtalainen Fusariumin paine: harvenna viljan ja maissin viljelyä." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Kohtalainen perunaruton paine: viileä kostea sää nostaa välitöntä riskiä." />
         <e k="rcr_advice_pressure_moderate_clubroot" v="Kohtalainen möhöjuuren paine: pidennä rapsin ja sinapin viljelytaukoa." />
     </elements>
 </l10n>

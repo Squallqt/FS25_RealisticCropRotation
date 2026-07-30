@@ -195,9 +195,9 @@
         <e k="rcr_disease_name_sclerotinia" v="Sclerotinia" />
         <e k="rcr_disease_name_phoma" v="Phoma (stengelkanker)" />
         <e k="rcr_disease_name_takeall" v="Tarwehalmdoder" />
-        <e k="rcr_disease_name_septoria" v="Septoria-bladvlekkenziekte" />
+        <e k="rcr_disease_name_septoria" v="Septoria" />
         <e k="rcr_disease_name_rust" v="Roest" />
-        <e k="rcr_disease_name_fusarium" v="Aarfusarium" />
+        <e k="rcr_disease_name_fusarium" v="Fusarium" />
         <e k="rcr_disease_name_lateblight" v="Aardappelziekte (Phytophthora)" />
         <e k="rcr_disease_name_bcn"   v="Cystenaaltje" />
         <e k="rcr_disease_name_clubroot" v="Knolvoet" />
@@ -215,17 +215,17 @@
         <e k="rcr_disease_treatment_clubroot" v="Geen (alleen vruchtwisseling)" />
         <e k="rcr_advice_pressure_high_phoma" v="Hoge phoma-druk: keren koolzaad of mosterd binnen 4 jaar terug, dan blijft de druk hoog; fungicide vertraagt het uitbreken en bevriest de schade op bespoten grond, maar dringt de ziekte niet terug." />
         <e k="rcr_advice_pressure_high_takeall" v="Hoge tarwehalmdoder-druk: voeg een niet-waardgewas in (haver, vlinderbloemige, oliehoudend gewas); geen enkel middel beschermt tegen deze ziekte, alleen vruchtwisseling verlaagt de druk." />
-        <e k="rcr_advice_pressure_high_septoria" v="Hoge septoria-druk: spreid tarwe, gerst, triticale en spelt; fungicide vertraagt het uitbreken en bevriest de schade op bespoten grond, regen versnelt de epidemie." />
-        <e k="rcr_advice_pressure_high_rust" v="Hoge roest-druk: granen en koolzaad zijn allebei waardplanten, spreid ze; fungicide vertraagt het uitbreken en bevriest de schade op bespoten grond, zachte vochtige perioden versnellen de epidemie." />
+        <e k="rcr_advice_pressure_high_septoria" v="Hoge septoria-druk: graanresten kunnen de druk verhogen; regen verhoogt het onmiddellijke risico en fungicide beperkt de schade op bespoten grond." />
+        <e k="rcr_advice_pressure_high_rust" v="Hoge roest-druk: zacht vochtig weer verhoogt het onmiddellijke risico en fungicide beperkt de schade op bespoten grond." />
         <e k="rcr_advice_pressure_high_fusarium" v="Hoge fusarium-druk: teel geen tarwe na maïs en zet minder granen achter elkaar; fungicide vertraagt het uitbreken en bevriest de schade op bespoten grond, regen versnelt de epidemie." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Hoge phytophthora-druk: spreid de aardappelen; fungicide vertraagt het uitbreken en bevriest de schade op bespoten grond, koel en nat weer versnelt de epidemie." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Hoge phytophthora-druk: koel en nat weer verhoogt het onmiddellijke risico en fungicide beperkt de schade op bespoten grond." />
         <e k="rcr_advice_pressure_high_clubroot" v="Hoge knolvoet-druk: rek de teeltpauze van koolzaad en mosterd zo ver mogelijk op; geen enkel middel beschermt tegen deze ziekte, alleen vruchtwisseling werkt." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Matige phoma-druk: verleng de teeltpauze van koolzaad en mosterd." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Matige tarwehalmdoder-druk: vermijd een derde graangewas op rij." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Matige septoria-druk: spreid de granen, regen verhoogt het risico." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Matige roest-druk: spreid granen en koolzaad, zachte vochtige perioden verhogen het risico." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Matige septoria-druk: graanresten kunnen de druk verhogen; regen verhoogt het onmiddellijke risico." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Matige roest-druk: zacht vochtig weer verhoogt het onmiddellijke risico." />
         <e k="rcr_advice_pressure_moderate_fusarium" v="Matige fusarium-druk: spreid granen en maïs." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Matige phytophthora-druk: spreid de aardappelen, koel en nat weer verhoogt het risico." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Matige phytophthora-druk: koel en nat weer verhoogt het onmiddellijke risico." />
         <e k="rcr_advice_pressure_moderate_clubroot" v="Matige knolvoet-druk: verleng de teeltpauze van koolzaad en mosterd." />
     </elements>
 </l10n>

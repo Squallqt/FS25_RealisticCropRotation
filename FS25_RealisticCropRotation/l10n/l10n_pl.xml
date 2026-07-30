@@ -195,9 +195,9 @@
         <e k="rcr_disease_name_sclerotinia" v="Zgnilizna twardzikowa" />
         <e k="rcr_disease_name_phoma" v="Sucha zgnilizna kapustnych (Phoma)" />
         <e k="rcr_disease_name_takeall" v="Zgorzel podstawy źdźbła" />
-        <e k="rcr_disease_name_septoria" v="Septorioza liści (paskowana)" />
+        <e k="rcr_disease_name_septoria" v="Septorioza" />
         <e k="rcr_disease_name_rust" v="Rdza" />
-        <e k="rcr_disease_name_fusarium" v="Fuzarioza kłosów" />
+        <e k="rcr_disease_name_fusarium" v="Fuzarioza" />
         <e k="rcr_disease_name_lateblight" v="Zaraza ziemniaka" />
         <e k="rcr_disease_name_bcn"   v="Mątwik" />
         <e k="rcr_disease_name_clubroot" v="Kiła kapusty" />
@@ -215,17 +215,17 @@
         <e k="rcr_disease_treatment_clubroot" v="Brak (tylko płodozmian)" />
         <e k="rcr_advice_pressure_high_phoma" v="Wysoka presja suchej zgnilizny: jeśli rzepak lub gorczyca wracają przed upływem 4 lat, presja pozostaje wysoka; fungicyd opóźnia wystąpienie i zamraża szkody na opryskanych fragmentach, ale nie cofa choroby." />
         <e k="rcr_advice_pressure_high_takeall" v="Wysoka presja zgorzeli podstawy źdźbła: wprowadź przerwę z rośliną niebędącą żywicielem (owies, bobowate, oleiste); żaden preparat nie chroni przed tą chorobą, presję obniża tylko płodozmian." />
-        <e k="rcr_advice_pressure_high_septoria" v="Wysoka presja septoriozy: rozłóż w czasie pszenicę, jęczmień, pszenżyto i orkisz; fungicyd opóźnia wystąpienie i zamraża szkody na opryskanych fragmentach, a deszcz przyspiesza epidemię." />
-        <e k="rcr_advice_pressure_high_rust" v="Wysoka presja rdzy: zboża i rzepak są żywicielami, rozdziel je w czasie; fungicyd opóźnia wystąpienie i zamraża szkody na opryskanych fragmentach, a łagodna wilgoć przyspiesza epidemię." />
+        <e k="rcr_advice_pressure_high_septoria" v="Wysoka presja septoriozy: resztki zbóż mogą zwiększać presję; deszcz podnosi bezpośrednie ryzyko, a fungicyd ogranicza szkody na opryskanych fragmentach." />
+        <e k="rcr_advice_pressure_high_rust" v="Wysoka presja rdzy: łagodna i wilgotna pogoda podnosi bezpośrednie ryzyko, a fungicyd ogranicza szkody na opryskanych fragmentach." />
         <e k="rcr_advice_pressure_high_fusarium" v="Wysoka presja fuzariozy: nie uprawiaj pszenicy po kukurydzy i ogranicz zboża po sobie; fungicyd opóźnia wystąpienie i zamraża szkody na opryskanych fragmentach, a deszcz przyspiesza epidemię." />
-        <e k="rcr_advice_pressure_high_lateblight" v="Wysoka presja zarazy ziemniaka: rozłóż w czasie ziemniaki; fungicyd opóźnia wystąpienie i zamraża szkody na opryskanych fragmentach, a chłodna wilgotna pogoda przyspiesza epidemię." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Wysoka presja zarazy ziemniaka: chłodna i wilgotna pogoda podnosi bezpośrednie ryzyko, a fungicyd ogranicza szkody na opryskanych fragmentach." />
         <e k="rcr_advice_pressure_high_clubroot" v="Wysoka presja kiły: maksymalnie wydłuż przerwę w uprawie rzepaku i gorczycy; żaden preparat nie chroni przed tą chorobą, działa tylko płodozmian." />
         <e k="rcr_advice_pressure_moderate_phoma" v="Umiarkowana presja suchej zgnilizny: wydłuż przerwę w uprawie rzepaku i gorczycy." />
         <e k="rcr_advice_pressure_moderate_takeall" v="Umiarkowana presja zgorzeli podstawy źdźbła: unikaj trzeciego zboża z rzędu." />
-        <e k="rcr_advice_pressure_moderate_septoria" v="Umiarkowana presja septoriozy: rozłóż w czasie zboża, deszcz zwiększa ryzyko." />
-        <e k="rcr_advice_pressure_moderate_rust" v="Umiarkowana presja rdzy: rozłóż w czasie zboża i rzepak, łagodna wilgoć zwiększa ryzyko." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Umiarkowana presja septoriozy: resztki zbóż mogą zwiększać presję; deszcz podnosi bezpośrednie ryzyko." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Umiarkowana presja rdzy: łagodna i wilgotna pogoda podnosi bezpośrednie ryzyko." />
         <e k="rcr_advice_pressure_moderate_fusarium" v="Umiarkowana presja fuzariozy: rozłóż w czasie zboża i kukurydzę." />
-        <e k="rcr_advice_pressure_moderate_lateblight" v="Umiarkowana presja zarazy ziemniaka: rozłóż w czasie ziemniaki, chłodna wilgotna pogoda zwiększa ryzyko." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Umiarkowana presja zarazy ziemniaka: chłodna i wilgotna pogoda podnosi bezpośrednie ryzyko." />
         <e k="rcr_advice_pressure_moderate_clubroot" v="Umiarkowana presja kiły: wydłuż przerwę w uprawie rzepaku i gorczycy." />
     </elements>
 </l10n>
