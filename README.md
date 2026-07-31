@@ -17,11 +17,10 @@ Singleplayer and multiplayer, with or without Precision Farming.
 - **Rotation history**: the last 4 rotation entries of every field, crops or fallow years, recorded automatically
 - **2- to 4-year rotation calendar**: fill 2, 3 or 4 yearly slots with crops or fallow, plus an optional cover crop per year; the selected slots form the real repeating cycle, including the return from its last slot to its first
 - **Planned fallow**: a fallow slot adds a full year of spacing before the next sensitive crop; it does not instantly clear the field or guarantee that every disease has disappeared
-- **Rotation grade (0-100)**: family and disease-specific return intervals, winter/spring sowing alternation, the nitrogen a legume hands to the next cereal and planned nitrogen residue all weigh in
-- **Diversity pays**: a 2-crop plan tops out at 75 ("good"), you need 3 crops or more to reach "excellent" (80). A single-family plan is capped at 30 ("poor")
-- **Grade bands**: 0-19 bad, 20-39 poor, 40-59 fair, 60-79 good, 80-100 excellent
+- **Rotation quality**: the planner gives a clear rating based on crop spacing, disease risk, sowing seasons and nitrogen benefits
+- **Diversity pays**: a 2-crop plan can be rated good, but reaching excellent requires at least 3 crops. A plan using only one crop family remains poor
 - **Tailored advice**: a detected outbreak takes priority, then the planner warns when the next crop returns too soon, before showing general advice for its crop family
-- **Rotation overview**: fields sharing an identical plan are grouped into one card with combined area, grade and residue
+- **Rotation overview**: fields sharing an identical plan are grouped into one card with combined area, rotation quality and residue
 
 ## Diseases
 
@@ -95,7 +94,7 @@ Search for "Realistic Crop Rotation" on the official [Farming Simulator ModHub](
 ### Planning a rotation
 
 1. InGame Menu (ESC) > **Crop Rotation** tab > **Planning**
-2. Select a field in the sidebar to see its plan and rotation grade
+2. Select a field in the sidebar to see its plan and rotation quality
 3. Pick a year slot and assign a crop or fallow year, and optionally a cover crop, from the calendar
 4. Follow the per-field advice to avoid family and disease return-interval penalties
 

@@ -15,9 +15,9 @@ Every field remembers its last 4 rotation entries, whether crops or fallow years
 PLANNING
 - A rotation calendar with a real repeating cycle of 2, 3 or 4 yearly slots, filled with crops or fallow, including the return from the last slot to the first
 - A planned fallow slot adds one full year of spacing before the next sensitive crop; it does not instantly clear the field or guarantee that every disease has disappeared
-- An instant 0-100 grade, tailored advice, and conflicts flagged before you sow
+- A clear rotation quality rating, tailored advice, and conflicts flagged before you sow
 - Diversity pays: rotate more crops, avoid repeating the same family, and alternate winter and spring sowings
-- Fields sharing a plan are grouped, with combined area, grade and residue
+- Fields sharing a plan are grouped, with combined area, rotation quality and residue
 
 DISEASES
 Nine diseases affect specific crops: sclerotinia, phoma, take-all, septoria, rust, fusarium, late blight, beet cyst nematode and clubroot.
@@ -71,9 +71,9 @@ Jedes Feld speichert die letzten 4 Einträge seiner Fruchtfolge, also Kulturen o
 PLANUNG
 - Ein Fruchtfolgekalender mit einem echten, sich wiederholenden Zyklus aus 2, 3 oder 4 Planungsjahren, die mit Kulturen oder Brache belegt werden, einschließlich der Rückkehr vom letzten zum ersten Platz
 - Ein geplantes Brachejahr schafft ein volles Jahr Abstand vor der nächsten empfindlichen Kultur; es bereinigt das Feld nicht sofort und garantiert nicht, dass jede Krankheit verschwunden ist
-- Sofortige Note von 0 bis 100, passende Empfehlung und Konflikte, die vor der Aussaat gemeldet werden
+- Eine klare Bewertung der Fruchtfolge, passende Empfehlungen und Konflikte, die vor der Aussaat gemeldet werden
 - Vielfalt zahlt sich aus: mehr Kulturen im Wechsel, dieselbe Familie nicht wiederholen, Winter- und Sommeraussaat abwechseln
-- Felder mit gleichem Plan werden zusammengefasst, mit summierter Fläche, Note und Rückstand
+- Felder mit gleichem Plan werden zusammengefasst, mit summierter Fläche, Fruchtfolgequalität und Rückstand
 
 KRANKHEITEN
 Neun Krankheiten befallen bestimmte Kulturen: Sklerotinia, Phoma, Schwarzbeinigkeit, Septoria, Rost, Fusariose, Kraut- und Knollenfäule, Rübenzystennematode und Kohlhernie.
@@ -127,9 +127,9 @@ Chaque parcelle garde la mémoire de ses 4 dernières entrées de rotation, cult
 PLANIFICATION
 - Un calendrier avec un vrai cycle répétitif de 2, 3 ou 4 emplacements annuels, occupés par des cultures ou une jachère, retour du dernier emplacement au premier compris
 - Une jachère planifiée ajoute une année complète d'espacement avant la prochaine culture sensible ; elle ne nettoie pas immédiatement la parcelle et ne garantit pas la disparition de toutes les maladies
-- Une note instantanée de 0 à 100, un conseil adapté et les conflits signalés avant de semer
+- Une appréciation claire de la qualité de la rotation, un conseil adapté et les conflits signalés avant de semer
 - La diversité paie : variez les cultures, évitez de répéter la même famille, alternez semis d'hiver et de printemps
-- Les parcelles au même plan sont regroupées, avec surface, note et reliquat cumulés
+- Les parcelles au même plan sont regroupées, avec surface, qualité de rotation et reliquat cumulés
 
 MALADIES
 Neuf maladies touchent des cultures précises : sclérotinia, phoma, piétin-échaudage, septoriose, rouille, fusariose, mildiou, nématode à kystes de la betterave et hernie des crucifères.
