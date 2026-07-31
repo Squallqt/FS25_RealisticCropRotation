@@ -23,7 +23,7 @@
     <Profile name="frSidebarItemArea" extends="fs25_subCategoryListItemName" with="anchorTopRight">
         <width value="84px"/>
         <position value="-46px -18px"/>
-        <textSize value="15px"/>
+        <textSize value="16px"/>
         <textBold value="true"/>
         <textAlignment value="right"/>
         <textColor value="$preset_fs25_colorMainHighlight"/>
@@ -34,7 +34,7 @@
     <Profile name="frSidebarItemCropLine" extends="fs25_subCategoryListItemName">
         <width value="238px"/>
         <position value="94px -46px"/>
-        <textSize value="12px"/>
+        <textSize value="13px"/>
         <textBold value="false"/>
         <textUpperCase value="false"/>
         <textColor value="$preset_colorWhite_50"/>
@@ -1026,7 +1026,7 @@
     <!-- Crop name text inside global overview badge; positioned in Lua -->
     <Profile name="frGroupBadgeLabel" extends="fs25_textDefault" with="anchorTopLeft">
         <size value="300px 30px"/>
-        <textSize value="11px"/>
+        <textSize value="12px"/>
         <textBold value="true"/>
         <textUpperCase value="true"/>
         <textColor value="$preset_fs25_colorMainLight"/>
