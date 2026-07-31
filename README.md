@@ -46,7 +46,7 @@ Nine diseases affect specific crops: sclerotinia, phoma, take-all, septoria, rus
 
 Buyable fungicide (AMISTAR, Syngenta) and nematicide (VELUM PRIME, Bayer), sprayed with any compatible sprayer.
 
-**Coverage matters for both products, and neither restores lost crop.** Fungicide lowers the chance of a supported outbreak and slows an active disease in proportion to coverage; sprayed crop is also protected from destruction. A smaller outbreak leaves less disease behind for future crops, but fungicide never cleans a field that is already affected. Nematicide protects sprayed crop from nematode damage but does not remove nematodes from the field. Spray before, not after.
+**Coverage matters for both products, and neither restores lost crop.** Fungicide lowers the chance of a supported outbreak and slows an active disease in proportion to coverage; sprayed crop is also protected from destruction. A smaller outbreak leaves less disease behind for future crops, but fungicide never cleans a field that is already affected. Nematicide protects sprayed crop from nematode damage but does not remove nematodes from the field. Spray early whenever possible. If a disease that uses fungicide is already active, fungicide can still slow it and protect the sprayed crop.
 
 - **Fungicide**: consumed only on the ground actually harvested or mown, and cleared when the field is replanted or rotated
 - **Nematicide**: three months in the soil per field, surviving harvest; reapplying renews the full duration
