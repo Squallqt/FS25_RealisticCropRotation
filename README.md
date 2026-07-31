@@ -71,7 +71,7 @@ Cover crops (oilseed radish, flowering catch crop) add an estimated flat +25 kg 
 
 - **Crop Rotation tab** in the InGame Menu (ESC), with Agronomy and Planning views
 - **Field monitoring**: current crop, growth stage, required soil work, weeds, detected disease with its treatment, nitrogen and pH (Precision Farming's real maps when installed, vanilla fallback otherwise)
-- **Disease map**: 3 toggle-able views on the existing in-game map (infected fields, disease risk, treated-ground coverage), all colour-blind safe
+- **Disease map**: 3 toggle-able views on the existing in-game map (infected fields, disease risk, treated-ground coverage). The infected-fields view follows the game's colour-blind setting
 - **On-foot HUD**: rotation history and detected disease under your feet, plus a treatment line when standing on protected ground
 - **Weather forecast card**: the menu header shows the next relevant weather event so you can time your spraying
 - **Full multiplayer sync**: server-authoritative history, plans, detected disease and remaining field risk; debounced broadcast, full sync on menu open or join, server-side validation of client plan edits, savegame persistence
@@ -118,10 +118,6 @@ Testing and admin tools registered by the mod. They run on the server; typed on 
 | `rcrDiseaseClear [farmlandId]` | Clears active disease and any remaining field risk |
 
 Valid `<group>` values: `SCLEROTINIA`, `PHOMA`, `TAKEALL`, `SEPTORIA`, `RUST`, `FUSARIUM`, `LATEBLIGHT`, `BCN`, `CLUBROOT`.
-
-## Configuration
-
-`cropConfig.xml` drives the whole model without any Lua editing. Add a `<crop>` line to register a new crop, or tune a `<diseaseGroup>` to change when the planner warns, whether a disease can remain in the field, how quickly it declines, when it can attack, how weather affects it and how much crop it can destroy.
 
 ## Changelog
 
