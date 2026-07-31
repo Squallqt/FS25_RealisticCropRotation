@@ -934,7 +934,7 @@ function RealisticCropRotationManager:getFieldByFarmlandId(farmlandId)
     return g_fieldManager.farmlandIdFieldMapping[n]
 end
 
----Ground area a farmland's native reads run over, resolved once per farmland.
+---Ground area a farmland's native reads run over, cached after successful resolution.
 -- @param integer farmlandId
 -- @return table region, or nil when the farmland has neither a field polygon nor a parcel mask
 function RealisticCropRotationManager:getFieldRegion(farmlandId)
@@ -942,10 +942,10 @@ function RealisticCropRotationManager:getFieldRegion(farmlandId)
     if n == nil or n <= 0 then return nil end
 
     local cached = self.fieldRegions[n]
-    if cached ~= nil then return cached or nil end
+    if cached ~= nil then return cached end
 
     local region = buildFieldRegion(n, self:getFieldByFarmlandId(n))
-    self.fieldRegions[n] = region or false
+    if region ~= nil then self.fieldRegions[n] = region end
     return region
 end
 
@@ -1047,6 +1047,7 @@ end
 -- @return table completedCrops Exact entries accepted into history
 function RealisticCropRotationManager:reconcileActiveCropForFarmland(farmlandId)
     if isPureClient() then return false, {} end
+    if self:getFieldRegion(farmlandId) == nil then return false, {} end
 
     local currentCropName, currentFruitTypeIndex, currentGrowthState, belowFloor =
         self:getActiveCropInfo(farmlandId)
