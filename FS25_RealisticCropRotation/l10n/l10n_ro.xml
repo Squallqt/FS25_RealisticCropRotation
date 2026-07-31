@@ -38,10 +38,10 @@
         <e k="rcr_treatment_months"        v="%d luni" />
 
         <!-- Status labels -->
-        <e k="rcr_status_current_residue" v="Reziduu așteptat +%d (N+1) / +%d (N+2) kg/ha" />
-        <e k="rcr_status_planned_residue" v="Reziduu total al rotației +%d kg/ha" />
-        <e k="rcr_status_current_no_residue" v="Niciun reziduu viitor" />
-        <e k="rcr_status_planned_no_residue" v="Reziduu total al rotației 0 kg/ha" />
+        <e k="rcr_status_current_residue" v="Aport estimat de azot +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Aport de azot din rotație +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Niciun aport de azot estimat" />
+        <e k="rcr_status_planned_no_residue" v="Niciun aport de azot" />
         <e k="rcr_weather_sun" v="Cer senin" />
         <e k="rcr_weather_partially_cloudy" v="Parțial înnorat" />
         <e k="rcr_weather_cloudy" v="Înnorat" />

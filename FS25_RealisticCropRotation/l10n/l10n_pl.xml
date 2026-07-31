@@ -38,10 +38,10 @@
         <e k="rcr_treatment_months"        v="%d miesięcy" />
 
         <!-- Status labels -->
-        <e k="rcr_status_current_residue" v="Spodziewana pozostałość +%d (N+1) / +%d (N+2) kg/ha" />
-        <e k="rcr_status_planned_residue" v="Łączna pozostałość płodozmianu +%d kg/ha" />
-        <e k="rcr_status_current_no_residue" v="Brak nadchodzącej pozostałości" />
-        <e k="rcr_status_planned_no_residue" v="Łączna pozostałość płodozmianu 0 kg/ha" />
+        <e k="rcr_status_current_residue" v="Przewidywany zwrot azotu +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Zwrot azotu z płodozmianu +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Brak przewidywanego zwrotu azotu" />
+        <e k="rcr_status_planned_no_residue" v="Brak zwrotu azotu" />
         <e k="rcr_weather_sun" v="Bezchmurnie" />
         <e k="rcr_weather_partially_cloudy" v="Przejaśnienia" />
         <e k="rcr_weather_cloudy" v="Zachmurzenie" />

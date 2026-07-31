@@ -38,10 +38,10 @@
         <e k="rcr_treatment_months"        v="%d měsíců" />
 
         <!-- Status labels -->
-        <e k="rcr_status_current_residue" v="Očekávaný zbytek +%d (N+1) / +%d (N+2) kg/ha" />
-        <e k="rcr_status_planned_residue" v="Celkový zbytek osevního postupu +%d kg/ha" />
-        <e k="rcr_status_current_no_residue" v="Žádný nadcházející zbytek" />
-        <e k="rcr_status_planned_no_residue" v="Celkový zbytek osevního postupu 0 kg/ha" />
+        <e k="rcr_status_current_residue" v="Očekávaný návrat dusíku +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Návrat dusíku z osevního postupu +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Žádný očekávaný návrat dusíku" />
+        <e k="rcr_status_planned_no_residue" v="Žádný návrat dusíku" />
         <e k="rcr_weather_sun" v="Jasno" />
         <e k="rcr_weather_partially_cloudy" v="Polojasno" />
         <e k="rcr_weather_cloudy" v="Zataženo" />

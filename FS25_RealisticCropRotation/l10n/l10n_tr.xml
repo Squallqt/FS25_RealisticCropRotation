@@ -38,10 +38,10 @@
         <e k="rcr_treatment_months"        v="%d ay" />
 
         <!-- Status labels -->
-        <e k="rcr_status_current_residue" v="Beklenen kalıntı +%d (N+1) / +%d (N+2) kg/ha" />
-        <e k="rcr_status_planned_residue" v="Toplam rotasyon kalıntısı +%d kg/ha" />
-        <e k="rcr_status_current_no_residue" v="Gelecek kalıntı yok" />
-        <e k="rcr_status_planned_no_residue" v="Toplam rotasyon kalıntısı 0 kg/ha" />
+        <e k="rcr_status_current_residue" v="Beklenen azot geri dönüşü +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Rotasyondan azot geri dönüşü +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Beklenen azot geri dönüşü yok" />
+        <e k="rcr_status_planned_no_residue" v="Azot geri dönüşü yok" />
         <e k="rcr_weather_sun" v="Açık gökyüzü" />
         <e k="rcr_weather_partially_cloudy" v="Parçalı güneşli" />
         <e k="rcr_weather_cloudy" v="Bulutlu" />

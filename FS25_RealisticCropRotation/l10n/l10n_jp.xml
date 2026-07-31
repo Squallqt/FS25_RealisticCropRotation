@@ -38,10 +38,10 @@
         <e k="rcr_treatment_months"        v="%dヶ月" />
 
         <!-- Status labels -->
-        <e k="rcr_status_current_residue" v="予想残留 +%d (N+1) / +%d (N+2) kg/ha" />
-        <e k="rcr_status_planned_residue" v="輪作の合計残留 +%d kg/ha" />
-        <e k="rcr_status_current_no_residue" v="今後の残留なし" />
-        <e k="rcr_status_planned_no_residue" v="輪作の合計残留 0 kg/ha" />
+        <e k="rcr_status_current_residue" v="予想窒素供給量 +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="輪作による窒素供給量 +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="窒素供給の予定なし" />
+        <e k="rcr_status_planned_no_residue" v="窒素供給なし" />
         <e k="rcr_weather_sun" v="快晴" />
         <e k="rcr_weather_partially_cloudy" v="晴れ時々曇り" />
         <e k="rcr_weather_cloudy" v="曇り" />

@@ -38,10 +38,10 @@
         <e k="rcr_treatment_months"        v="%d tháng" />
 
         <!-- Status labels -->
-        <e k="rcr_status_current_residue" v="Tồn dư dự kiến +%d (N+1) / +%d (N+2) kg/ha" />
-        <e k="rcr_status_planned_residue" v="Tổng tồn dư luân canh +%d kg/ha" />
-        <e k="rcr_status_current_no_residue" v="Không có tồn dư sắp tới" />
-        <e k="rcr_status_planned_no_residue" v="Tổng tồn dư luân canh 0 kg/ha" />
+        <e k="rcr_status_current_residue" v="Lượng đạm dự kiến hoàn trả +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Lượng đạm hoàn trả từ luân canh +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Không có lượng đạm hoàn trả dự kiến" />
+        <e k="rcr_status_planned_no_residue" v="Không có lượng đạm hoàn trả" />
         <e k="rcr_weather_sun" v="Trời quang" />
         <e k="rcr_weather_partially_cloudy" v="Hửng nắng" />
         <e k="rcr_weather_cloudy" v="Nhiều mây" />

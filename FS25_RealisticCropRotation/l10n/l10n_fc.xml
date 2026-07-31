@@ -38,10 +38,10 @@
         <e k="rcr_treatment_months"        v="%d mois" />
 
         <!-- Status labels -->
-        <e k="rcr_status_current_residue" v="Reliquat à venir +%d (N+1) / +%d (N+2) kg/ha" />
-        <e k="rcr_status_planned_residue" v="Reliquat total rotation +%d kg/ha" />
-        <e k="rcr_status_current_no_residue" v="Pas de reliquat à venir" />
-        <e k="rcr_status_planned_no_residue" v="Reliquat total rotation 0 kg/ha" />
+        <e k="rcr_status_current_residue" v="Azote restitué +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Azote restitué par la rotation +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Aucun azote à restituer" />
+        <e k="rcr_status_planned_no_residue" v="Aucun azote restitué" />
         <e k="rcr_weather_sun" v="Temps clair" />
         <e k="rcr_weather_partially_cloudy" v="Éclaircies" />
         <e k="rcr_weather_cloudy" v="Ciel couvert" />

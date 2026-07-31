@@ -38,10 +38,10 @@
         <e k="rcr_treatment_months"        v="%d個月" />
 
         <!-- Status labels -->
-        <e k="rcr_status_current_residue" v="預期殘留 +%d (N+1) / +%d (N+2) kg/ha" />
-        <e k="rcr_status_planned_residue" v="輪作殘留總計 +%d kg/ha" />
-        <e k="rcr_status_current_no_residue" v="無即將到來的殘留" />
-        <e k="rcr_status_planned_no_residue" v="輪作殘留總計 0 kg/ha" />
+        <e k="rcr_status_current_residue" v="預計返還氮素 +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="輪作返還氮素 +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="預計無氮素返還" />
+        <e k="rcr_status_planned_no_residue" v="無氮素返還" />
         <e k="rcr_weather_sun" v="晴朗" />
         <e k="rcr_weather_partially_cloudy" v="多雲時晴" />
         <e k="rcr_weather_cloudy" v="陰天" />

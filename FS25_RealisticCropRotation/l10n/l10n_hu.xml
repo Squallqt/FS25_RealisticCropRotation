@@ -38,10 +38,10 @@
         <e k="rcr_treatment_months"        v="%d hónap" />
 
         <!-- Status labels -->
-        <e k="rcr_status_current_residue" v="Várható maradvány +%d (N+1) / +%d (N+2) kg/ha" />
-        <e k="rcr_status_planned_residue" v="Teljes vetésforgó-maradvány +%d kg/ha" />
-        <e k="rcr_status_current_no_residue" v="Nincs várható maradvány" />
-        <e k="rcr_status_planned_no_residue" v="Teljes vetésforgó-maradvány 0 kg/ha" />
+        <e k="rcr_status_current_residue" v="Várható nitrogén-visszajuttatás +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Vetésforgó nitrogén-visszajuttatása +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Nem várható nitrogén-visszajuttatás" />
+        <e k="rcr_status_planned_no_residue" v="Nincs nitrogén-visszajuttatás" />
         <e k="rcr_weather_sun" v="Tiszta ég" />
         <e k="rcr_weather_partially_cloudy" v="Időnként napos" />
         <e k="rcr_weather_cloudy" v="Borult" />

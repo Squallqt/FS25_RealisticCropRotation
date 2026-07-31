@@ -38,10 +38,10 @@
         <e k="rcr_treatment_months"        v="%d kuukautta" />
 
         <!-- Status labels -->
-        <e k="rcr_status_current_residue" v="Odotettu jäännös +%d (N+1) / +%d (N+2) kg/ha" />
-        <e k="rcr_status_planned_residue" v="Viljelykierron kokonaisjäännös +%d kg/ha" />
-        <e k="rcr_status_current_no_residue" v="Ei tulevaa jäännöstä" />
-        <e k="rcr_status_planned_no_residue" v="Viljelykierron kokonaisjäännös 0 kg/ha" />
+        <e k="rcr_status_current_residue" v="Odotettu typen palautus +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Viljelykierron typen palautus +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Typen palautusta ei odoteta" />
+        <e k="rcr_status_planned_no_residue" v="Ei typen palautusta" />
         <e k="rcr_weather_sun" v="Selkeää" />
         <e k="rcr_weather_partially_cloudy" v="Ajoittain aurinkoista" />
         <e k="rcr_weather_cloudy" v="Pilvistä" />

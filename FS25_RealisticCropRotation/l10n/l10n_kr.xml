@@ -38,10 +38,10 @@
         <e k="rcr_treatment_months"        v="%d개월" />
 
         <!-- Status labels -->
-        <e k="rcr_status_current_residue" v="예상 잔류량 +%d (N+1) / +%d (N+2) kg/ha" />
-        <e k="rcr_status_planned_residue" v="총 윤작 잔류량 +%d kg/ha" />
-        <e k="rcr_status_current_no_residue" v="예정된 잔류량 없음" />
-        <e k="rcr_status_planned_no_residue" v="총 윤작 잔류량 0 kg/ha" />
+        <e k="rcr_status_current_residue" v="예상 질소 공급량 +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="윤작 질소 공급량 +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="예정된 질소 공급량 없음" />
+        <e k="rcr_status_planned_no_residue" v="질소 공급량 없음" />
         <e k="rcr_weather_sun" v="맑음" />
         <e k="rcr_weather_partially_cloudy" v="가끔 맑음" />
         <e k="rcr_weather_cloudy" v="흐림" />

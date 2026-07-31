@@ -38,10 +38,10 @@
         <e k="rcr_treatment_months"        v="%d bulan" />
 
         <!-- Status labels -->
-        <e k="rcr_status_current_residue" v="Residu diharapkan +%d (N+1) / +%d (N+2) kg/ha" />
-        <e k="rcr_status_planned_residue" v="Total residu rotasi +%d kg/ha" />
-        <e k="rcr_status_current_no_residue" v="Tidak ada residu mendatang" />
-        <e k="rcr_status_planned_no_residue" v="Total residu rotasi 0 kg/ha" />
+        <e k="rcr_status_current_residue" v="Pengembalian nitrogen yang diharapkan +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Pengembalian nitrogen dari rotasi +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Tidak ada pengembalian nitrogen yang diharapkan" />
+        <e k="rcr_status_planned_no_residue" v="Tidak ada pengembalian nitrogen" />
         <e k="rcr_weather_sun" v="Langit cerah" />
         <e k="rcr_weather_partially_cloudy" v="Cerah berawan" />
         <e k="rcr_weather_cloudy" v="Berawan" />

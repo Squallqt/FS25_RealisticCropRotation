@@ -38,10 +38,10 @@
         <e k="rcr_treatment_months"        v="%d månader" />
 
         <!-- Status labels -->
-        <e k="rcr_status_current_residue" v="Förväntad rest +%d (N+1) / +%d (N+2) kg/ha" />
-        <e k="rcr_status_planned_residue" v="Total växtföljdsrest +%d kg/ha" />
-        <e k="rcr_status_current_no_residue" v="Ingen rest att vänta" />
-        <e k="rcr_status_planned_no_residue" v="Total växtföljdsrest 0 kg/ha" />
+        <e k="rcr_status_current_residue" v="Förväntad kväveåterföring +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Kväveåterföring från växtföljden +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Ingen kväveåterföring väntas" />
+        <e k="rcr_status_planned_no_residue" v="Ingen kväveåterföring" />
         <e k="rcr_weather_sun" v="Klar himmel" />
         <e k="rcr_weather_partially_cloudy" v="Tidvis sol" />
         <e k="rcr_weather_cloudy" v="Mulet" />

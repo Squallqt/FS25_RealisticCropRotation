@@ -38,10 +38,10 @@
         <e k="rcr_treatment_months"        v="%d Monate" />
 
         <!-- Status labels -->
-        <e k="rcr_status_current_residue" v="Erwarteter Rückstand +%d (N+1) / +%d (N+2) kg/ha" />
-        <e k="rcr_status_planned_residue" v="Rückstand Rotation gesamt +%d kg/ha" />
-        <e k="rcr_status_current_no_residue" v="Kein Rückstand zu erwarten" />
-        <e k="rcr_status_planned_no_residue" v="Rückstand Rotation gesamt 0 kg/ha" />
+        <e k="rcr_status_current_residue" v="Stickstoffrückgabe +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Stickstoffrückgabe der Fruchtfolge +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Keine Stickstoffrückgabe zu erwarten" />
+        <e k="rcr_status_planned_no_residue" v="Keine Stickstoffrückgabe" />
         <e k="rcr_weather_sun" v="Klarer Himmel" />
         <e k="rcr_weather_partially_cloudy" v="Aufheiterungen" />
         <e k="rcr_weather_cloudy" v="Bedeckt" />

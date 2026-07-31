@@ -38,10 +38,10 @@
         <e k="rcr_treatment_months"        v="%d месяцев" />
 
         <!-- Status labels -->
-        <e k="rcr_status_current_residue" v="Ожидаемый остаток +%d (N+1) / +%d (N+2) кг/га" />
-        <e k="rcr_status_planned_residue" v="Общий остаток севооборота +%d кг/га" />
-        <e k="rcr_status_current_no_residue" v="Остатка не ожидается" />
-        <e k="rcr_status_planned_no_residue" v="Общий остаток севооборота 0 кг/га" />
+        <e k="rcr_status_current_residue" v="Ожидаемое поступление азота +%d (N+1) / +%d (N+2) кг/га" />
+        <e k="rcr_status_planned_residue" v="Поступление азота от севооборота +%d кг/га" />
+        <e k="rcr_status_current_no_residue" v="Поступление азота не ожидается" />
+        <e k="rcr_status_planned_no_residue" v="Нет поступления азота" />
         <e k="rcr_weather_sun" v="Ясно" />
         <e k="rcr_weather_partially_cloudy" v="Прояснения" />
         <e k="rcr_weather_cloudy" v="Пасмурно" />

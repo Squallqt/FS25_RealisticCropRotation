@@ -38,10 +38,10 @@
         <e k="rcr_treatment_months"        v="%d maanden" />
 
         <!-- Status labels -->
-        <e k="rcr_status_current_residue" v="Verwacht residu +%d (N+1) / +%d (N+2) kg/ha" />
-        <e k="rcr_status_planned_residue" v="Totaal rotatieresidu +%d kg/ha" />
-        <e k="rcr_status_current_no_residue" v="Geen residu op komst" />
-        <e k="rcr_status_planned_no_residue" v="Totaal rotatieresidu 0 kg/ha" />
+        <e k="rcr_status_current_residue" v="Verwachte stikstofteruggave +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Stikstofteruggave uit rotatie +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Geen stikstofteruggave verwacht" />
+        <e k="rcr_status_planned_no_residue" v="Geen stikstofteruggave" />
         <e k="rcr_weather_sun" v="Heldere hemel" />
         <e k="rcr_weather_partially_cloudy" v="Opklaringen" />
         <e k="rcr_weather_cloudy" v="Bewolkt" />

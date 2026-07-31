@@ -38,10 +38,10 @@
         <e k="rcr_treatment_months"        v="%d måneder" />
 
         <!-- Status labels -->
-        <e k="rcr_status_current_residue" v="Forventet rest +%d (N+1) / +%d (N+2) kg/ha" />
-        <e k="rcr_status_planned_residue" v="Total vekstskifterest +%d kg/ha" />
-        <e k="rcr_status_current_no_residue" v="Ingen rest i vente" />
-        <e k="rcr_status_planned_no_residue" v="Total vekstskifterest 0 kg/ha" />
+        <e k="rcr_status_current_residue" v="Forventet nitrogentilførsel +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Nitrogentilførsel fra vekstskifte +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Ingen forventet nitrogentilførsel" />
+        <e k="rcr_status_planned_no_residue" v="Ingen nitrogentilførsel" />
         <e k="rcr_weather_sun" v="Klar himmel" />
         <e k="rcr_weather_partially_cloudy" v="Lette skyer" />
         <e k="rcr_weather_cloudy" v="Overskyet" />

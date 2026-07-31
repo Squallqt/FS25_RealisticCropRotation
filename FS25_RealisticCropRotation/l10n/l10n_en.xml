@@ -38,10 +38,10 @@
         <e k="rcr_treatment_months"        v="%d months" />
 
         <!-- Status labels -->
-        <e k="rcr_status_current_residue" v="Expected residue +%d (N+1) / +%d (N+2) kg/ha" />
-        <e k="rcr_status_planned_residue" v="Total rotation residue +%d kg/ha" />
-        <e k="rcr_status_current_no_residue" v="No residue to come" />
-        <e k="rcr_status_planned_no_residue" v="Total rotation residue 0 kg/ha" />
+        <e k="rcr_status_current_residue" v="Nitrogen return +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Rotation nitrogen return +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="No nitrogen return expected" />
+        <e k="rcr_status_planned_no_residue" v="No nitrogen return" />
         <e k="rcr_weather_sun" v="Clear sky" />
         <e k="rcr_weather_partially_cloudy" v="Sunny spells" />
         <e k="rcr_weather_cloudy" v="Overcast" />
