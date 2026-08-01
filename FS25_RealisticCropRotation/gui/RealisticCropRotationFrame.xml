@@ -8,7 +8,6 @@
 
     <GuiElement profile="fs25_subCategoryContainer">
 
-            <!-- View tab selector: cycles HISTORY <-> PLANNING -->
             <MultiTextOption profile="fs25_subCategorySelector" id="viewSelector" onClick="onViewChanged"/>
 
             <BoxLayout profile="fs25_subCategorySelectorBox" id="viewSelectorDotBox">
@@ -54,7 +53,6 @@
             <Text profile="fs25_menuHeaderTitle" id="menuHeaderTitle" text="$l10n_realisticCropRotation_menu_title"/>
         </GuiElement>
 
-        <!-- Reference row, 1280px wide to match the hero card below -->
         <GuiElement profile="frHeaderRow">
             <!-- Persistent weather station: independent of tab/field -->
             <GuiElement profile="frHeaderWeather" id="headerWeatherPill" visible="false">
@@ -74,7 +72,6 @@
         <!-- Detail container: hero + history + advice + unified soil/treatment + field sections, 864px total -->
         <GuiElement profile="frDetailContainer" id="detailsContainer">
 
-            <!-- HERO CARD (y=0..56) -->
             <GuiElement profile="frHeroCard" position="0px 0px">
                 <RoundCorner     profile="frHeroCardShadow"/>
                 <RoundCorner     profile="frHeroCardBg"/>
@@ -95,7 +92,6 @@
             <!-- TIMELINE STRIP (y=-102..296): rail (season labels) + 5 slot cards. Centred at runtime; empty tail slots are hidden. -->
             <GuiElement profile="frTimeline" position="20px -102px" id="historyTimeline">
 
-                <!-- Rail -->
                 <GuiElement profile="frRailCell" position="8px 0px" id="slot1Rail">
                     <Text profile="frRailSeasonLabelCurrent" text="$l10n_rcr_slot_current"/>
                 </GuiElement>
@@ -112,7 +108,6 @@
                     <Text profile="frSlotSeasonLabel" text="$l10n_rcr_slot_n4"/>
                 </GuiElement>
 
-                <!-- Slot 1: Current -->
                 <GuiElement profile="frSlotCard" position="8px -38px">
                     <RoundCorner profile="frSlotCardBgCurrent" id="slot1CardBg"/>
                     <GuiElement profile="emptyPanel" id="slot1Frame">
@@ -128,12 +123,10 @@
                     <Text        profile="frSlotFamilyBadgeText" id="slot1BadgeText"   text="" visible="false"/>
                 </GuiElement>
 
-                <!-- Connector 1 -->
                 <GuiElement profile="frHistoryTimelineConnector" position="232px -38px" id="slot1Connector">
                     <Bitmap profile="frTimelineArrowIcon"/>
                 </GuiElement>
 
-                <!-- Slot 2: N-1 -->
                 <GuiElement profile="frSlotCard" position="257px -38px">
                     <RoundCorner profile="frSlotCardBgN1" id="slot2CardBg"/>
                     <GuiElement profile="emptyPanel" id="slot2Frame">
@@ -149,12 +142,10 @@
                     <Text        profile="frSlotFamilyBadgeText" id="slot2BadgeText"   text="" visible="false"/>
                 </GuiElement>
 
-                <!-- Connector 2 -->
                 <GuiElement profile="frHistoryTimelineConnector" position="481px -38px" id="slot2Connector">
                     <Bitmap profile="frTimelineArrowIcon"/>
                 </GuiElement>
 
-                <!-- Slot 3: N-2 -->
                 <GuiElement profile="frSlotCard" position="506px -38px">
                     <RoundCorner profile="frSlotCardBgN2" id="slot3CardBg"/>
                     <GuiElement profile="emptyPanel" id="slot3Frame">
@@ -170,12 +161,10 @@
                     <Text        profile="frSlotFamilyBadgeText" id="slot3BadgeText"   text="" visible="false"/>
                 </GuiElement>
 
-                <!-- Connector 3 -->
                 <GuiElement profile="frHistoryTimelineConnector" position="730px -38px" id="slot3Connector">
                     <Bitmap profile="frTimelineArrowIcon"/>
                 </GuiElement>
 
-                <!-- Slot 4: N-3 -->
                 <GuiElement profile="frSlotCard" position="755px -38px">
                     <RoundCorner profile="frSlotCardBgN3" id="slot4CardBg"/>
                     <GuiElement profile="emptyPanel" id="slot4Frame">
@@ -191,12 +180,10 @@
                     <Text        profile="frSlotFamilyBadgeText" id="slot4BadgeText"   text="" visible="false"/>
                 </GuiElement>
 
-                <!-- Connector 4 -->
                 <GuiElement profile="frHistoryTimelineConnector" position="979px -38px" id="slot4Connector">
                     <Bitmap profile="frTimelineArrowIcon"/>
                 </GuiElement>
 
-                <!-- Slot 5: N-4 -->
                 <GuiElement profile="frSlotCard" position="1004px -38px">
                     <RoundCorner profile="frSlotCardBgN4" id="slot5CardBg"/>
                     <GuiElement profile="emptyPanel" id="slot5Frame">
@@ -221,7 +208,6 @@
                 <RoundCorner profile="frSectionLine" id="adviceSectionLine"/>
             </GuiElement>
 
-            <!-- ADVICE CARD (y=-346..456) -->
             <GuiElement profile="frAdviceCard" position="20px -346px">
                 <RoundCorner profile="frAdviceCardBgNeutral" id="adviceCardBg"/>
                 <RoundCorner profile="frAdviceStatusBadgeBgNeutral" id="adviceStatusBadgeBg"/>
@@ -238,7 +224,6 @@
                 <RoundCorner profile="frSectionLine" id="soilSectionLine"/>
             </GuiElement>
 
-            <!-- UNIFIED SOIL CARD (y=-504..702): nitrogen / pH / treatment -->
             <GuiElement profile="frSoilIndicatorsCard" position="20px -504px">
                 <RoundCorner profile="frSoilIndicatorsCardBg"/>
 
@@ -272,7 +257,6 @@
                 <RoundCorner profile="frSectionLine" id="fieldSectionLine"/>
             </GuiElement>
 
-            <!-- FIELD CARD (y=-752..834) -->
             <GuiElement profile="frFieldCard" position="20px -752px">
                 <RoundCorner     profile="frFieldCardBg"/>
 
@@ -308,7 +292,6 @@
         <!-- Planning container: hero + plan/score/overview sections, 832px total -->
         <GuiElement profile="frPlanContainer" id="planningContainer" visible="false">
 
-            <!-- HERO CARD (y=0..56) -->
             <GuiElement profile="frHeroCard" position="0px 0px">
                 <RoundCorner     profile="frHeroCardShadow"/>
                 <RoundCorner     profile="frHeroCardBg"/>
@@ -357,7 +340,6 @@
                 <Text profile="frCalendarMonthLabel" id="calendarMonthLabel[11]" text="$l10n_rcr_calendar_month_11"/>
                 <Text profile="frCalendarMonthLabel" id="calendarMonthLabel[12]" text="$l10n_rcr_calendar_month_12"/>
 
-                <!-- N+1 -->
                 <GuiElement profile="frCalendarRow" position="0px -54px">
                     <RoundCorner profile="frCalendarRowBg" id="calendarRowBg[1]"/>
                     <Text profile="frCalendarStepLabel" text="$l10n_rcr_plan_year1"/>
@@ -372,7 +354,6 @@
                     <Button profile="frCalendarRowButton" id="calendarRowButton[1]" onClick="onCalendarRowClicked"/>
                 </GuiElement>
 
-                <!-- N+2 -->
                 <GuiElement profile="frCalendarRow" position="0px -97px">
                     <RoundCorner profile="frCalendarRowBg" id="calendarRowBg[2]"/>
                     <Text profile="frCalendarStepLabel" text="$l10n_rcr_plan_year2"/>
@@ -387,7 +368,6 @@
                     <Button profile="frCalendarRowButton" id="calendarRowButton[2]" onClick="onCalendarRowClicked"/>
                 </GuiElement>
 
-                <!-- N+3 -->
                 <GuiElement profile="frCalendarRow" position="0px -140px">
                     <RoundCorner profile="frCalendarRowBg" id="calendarRowBg[3]"/>
                     <Text profile="frCalendarStepLabel" text="$l10n_rcr_plan_year3"/>
@@ -402,7 +382,6 @@
                     <Button profile="frCalendarRowButton" id="calendarRowButton[3]" onClick="onCalendarRowClicked"/>
                 </GuiElement>
 
-                <!-- N+4 -->
                 <GuiElement profile="frCalendarRow" position="0px -183px">
                     <RoundCorner profile="frCalendarRowBg" id="calendarRowBg[4]"/>
                     <Text profile="frCalendarStepLabel" text="$l10n_rcr_plan_year4"/>
@@ -457,7 +436,6 @@
                 <RoundCorner profile="frSectionLine" id="scoreSectionLine"/>
             </GuiElement>
 
-            <!-- SCORE CARD (y=-410..466) -->
             <GuiElement profile="frScoreCard" position="20px -410px">
                 <RoundCorner profile="frScoreCardBg"/>
                 <Text        profile="frScoreText"        id="scoreText"       text=""/>
@@ -493,53 +471,41 @@
 
                     <!-- groupRow: one compact row = one unique rotation pattern -->
                     <ListItem profile="frOverviewListItem" name="groupRow">
-                        <!-- Card visuals -->
                         <RoundCorner profile="frGroupCardBg"      name="gCardBg"/>
                         <RoundCorner profile="frGroupCountLane"   name="gCountLane"/>
 
-                        <!-- Field count -->
                         <Text profile="frGroupCount" name="gCount" position="9px -10px" text=""/>
                         <Text profile="frGroupArea"  name="gArea"  position="9px -45px" text=""/>
 
-                        <!-- Empty-group summary -->
                         <Text profile="frGroupPlanSummary" name="gPlanSummary" position="132px -16.5px" text="" visible="false"/>
 
-                        <!-- Year labels (y=3.5) — visible only when badge is visible -->
                         <Text profile="frGroupYearLabel" name="gYearLabel1" position="132px -3.5px"  text="$l10n_rcr_plan_year1" visible="false"/>
                         <Text profile="frGroupYearLabel" name="gYearLabel2" position="334px -3.5px"  text="$l10n_rcr_plan_year2" visible="false"/>
                         <Text profile="frGroupYearLabel" name="gYearLabel3" position="536px -3.5px"  text="$l10n_rcr_plan_year3" visible="false"/>
                         <Text profile="frGroupYearLabel" name="gYearLabel4" position="738px -3.5px"  text="$l10n_rcr_plan_year4" visible="false"/>
 
-                        <!-- Zone 1 (y=16.5) -->
                         <RoundCorner profile="frGroupBadge"      name="gBadge1" position="132px -16.5px" visible="false"/>
                         <Bitmap      profile="frGroupCropIconCard" name="gCropIcon1" position="132px -21.5px" visible="false"/>
                         <Text        profile="frGroupBadgeLabel" name="gLabel1" position="157px -16.5px" size="170px 30px" text="" visible="false"/>
 
-                        <!-- Arrow 1 -->
                         <Bitmap profile="frGroupArrow" name="gArrow1" position="310px -21.5px" visible="false"/>
 
-                        <!-- Zone 2 -->
                         <RoundCorner profile="frGroupBadge"      name="gBadge2" position="334px -16.5px" visible="false"/>
                         <Bitmap      profile="frGroupCropIconCard" name="gCropIcon2" position="334px -21.5px" visible="false"/>
                         <Text        profile="frGroupBadgeLabel" name="gLabel2" position="359px -16.5px" size="170px 30px" text="" visible="false"/>
 
-                        <!-- Arrow 2 -->
                         <Bitmap profile="frGroupArrow" name="gArrow2" position="512px -21.5px" visible="false"/>
 
-                        <!-- Zone 3 -->
                         <RoundCorner profile="frGroupBadge"      name="gBadge3" position="536px -16.5px" visible="false"/>
                         <Bitmap      profile="frGroupCropIconCard" name="gCropIcon3" position="536px -21.5px" visible="false"/>
                         <Text        profile="frGroupBadgeLabel" name="gLabel3" position="561px -16.5px" size="170px 30px" text="" visible="false"/>
 
-                        <!-- Arrow 3 -->
                         <Bitmap profile="frGroupArrow" name="gArrow3" position="714px -21.5px" visible="false"/>
 
-                        <!-- Zone 4 -->
                         <RoundCorner profile="frGroupBadge"      name="gBadge4" position="738px -16.5px" visible="false"/>
                         <Bitmap      profile="frGroupCropIconCard" name="gCropIcon4" position="738px -21.5px" visible="false"/>
                         <Text        profile="frGroupBadgeLabel" name="gLabel4" position="763px -16.5px" size="170px 30px" text="" visible="false"/>
 
-                        <!-- Right column: total rotation nitrogen residue above score -->
                         <BoxLayout profile="frOverviewMetaColumn" name="gMetaColumn">
                             <GuiElement profile="frOverviewResidueCard" name="gResidueCard" visible="false">
                                 <RoundCorner profile="frStatusPillBgBonus" name="gResidueBg" position="0px 0px" size="228px 22px"/>
@@ -548,10 +514,8 @@
                             <Text profile="frOverviewScore" name="gScore" text=""/>
                         </BoxLayout>
 
-                        <!-- Cover crop recap (between badge row and field names) -->
                         <Text profile="frGroupCoverRecap" name="gCoverRecap" text="" visible="false"/>
 
-                        <!-- Field names (bottom strip) -->
                         <Text profile="frGroupFieldNames" name="gFieldNames" text=""/>
                     </ListItem>
 
@@ -566,7 +530,6 @@
 
         </GuiElement>
 
-        <!-- Shown when no fields are owned -->
         <Text profile="frEmptyText" id="emptyText" text="$l10n_rcr_empty_no_fields"/>
 
     </GuiElement>

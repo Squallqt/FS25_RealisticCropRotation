@@ -103,7 +103,7 @@ local function loadCropConfig()
         i = i + 1
     end
 
-    -- Shared-pathogen groups: `autoState` gives a deterministic overlay id (parse order) when a group omits #state.
+    -- Missing overlay states follow XML order.
     local j = 0
     local autoState = 0
     while true do
@@ -126,20 +126,14 @@ local function loadCropConfig()
             if from ~= nil and to ~= nil then
                 config.diseaseWindows[upper] = { from = from, to = to }
             end
-            -- Only explicitly weather-driven groups receive rain and temperature modifiers.
             config.diseaseWeatherDriven[upper] =
                 getXMLBool(xmlFile, gkey .. "#weatherDriven") == true
-            -- Stable per-disease overlay id, with parse order as the fallback.
             local state = getXMLInt(xmlFile, gkey .. "#state")
             config.diseaseStates[upper] = (state ~= nil and state > 0) and state or autoState
-            -- Treatment family used by the field panel and sprayer logic.
             local treatment = getXMLString(xmlFile, gkey .. "#treatment")
             config.diseaseTreatments[upper] = (treatment ~= nil and treatment ~= "") and string.upper(treatment) or "NONE"
-            -- Optional rain multiplier for weather-driven disease groups.
             config.diseaseWeatherFactors[upper] = getXMLFloat(xmlFile, gkey .. "#weatherFactor")
-            -- Regional background inoculum floor used by the infection roll.
             config.diseaseAmbient[upper] = getXMLFloat(xmlFile, gkey .. "#ambient") or 0
-            -- Optional daily growth, destruction threshold and maximum destroyed share.
             config.diseaseCurves[upper] = {
                 dailyGrowth     = getXMLFloat(xmlFile, gkey .. "#dailyGrowth"),
                 destroySeverity = getXMLFloat(xmlFile, gkey .. "#destroySeverity"),
@@ -173,66 +167,114 @@ function RealisticCropRotation.requestBroadcast()
     RealisticCropRotation.broadcastTimerMs = RealisticCropRotation.BROADCAST_DEBOUNCE_MS
 end
 
----Asks the server for a full rotation snapshot (client).
--- @param integer selectedFarmlandId Farmland to reconcile first, or nil
-function RealisticCropRotation.requestServerSync(selectedFarmlandId)
+---Requests a full snapshot or selected-field reconciliation from the server.
+-- @param integer? selectedFarmlandId Farmland to reconcile first
+-- @param boolean? selectedOnly True to reconcile only the selected farmland
+function RealisticCropRotation.requestServerSync(selectedFarmlandId, selectedOnly)
     if g_client == nil then return end
     if type(g_client.getServerConnection) ~= "function" then return end
     local connection = g_client:getServerConnection()
     if connection ~= nil then
-        connection:sendEvent(RCRHistoryRequestEvent.new(selectedFarmlandId))
+        connection:sendEvent(RCRHistoryRequestEvent.new(selectedFarmlandId, selectedOnly))
     end
 end
 
 ---Moves the selected farmland to the next unprocessed position in a reconcile queue.
 -- @param table queue Active menu reconcile queue
 -- @param integer selectedFarmlandId Farmland to prioritize, or nil
+-- @return boolean prioritized True when the farmland was found in the queue
 local function prioritizeMenuReconcile(queue, selectedFarmlandId)
     local selected = tonumber(selectedFarmlandId)
-    if queue == nil or selected == nil or selected <= 0 then return end
+    if queue == nil or selected == nil or selected <= 0 then return false end
 
     local nextIndex = math.max(1, math.floor(tonumber(queue.index) or 1))
     for index = nextIndex, #(queue.farmlandIds or {}) do
         if tonumber(queue.farmlandIds[index]) == selected then
             queue.farmlandIds[nextIndex], queue.farmlandIds[index] =
                 queue.farmlandIds[index], queue.farmlandIds[nextIndex]
-            return
+            return true
         end
     end
+    return false
 end
 
 ---Schedules authoritative crop reconciliation without blocking menu opening.
--- @param integer selectedFarmlandId Farmland to reconcile first, or nil
+-- @param integer? selectedFarmlandId Farmland to reconcile first
+-- @param boolean? selectedOnly True to reconcile only the selected farmland
 -- @return boolean scheduled True when a queue is active or newly scheduled
-function RealisticCropRotation.requestMenuReconcile(selectedFarmlandId)
-    if g_currentMission == nil or not g_currentMission:getIsServer() then return false end
+function RealisticCropRotation.requestMenuReconcile(selectedFarmlandId, selectedOnly)
+    if g_currentMission == nil then return false end
+    if not g_currentMission:getIsServer() then
+        RealisticCropRotation.requestServerSync(selectedFarmlandId, selectedOnly)
+        return true
+    end
     local manager = RealisticCropRotation.manager
     if manager == nil then return false end
 
     local queue = RealisticCropRotation.menuReconcileQueue
     if queue ~= nil then
-        prioritizeMenuReconcile(queue, selectedFarmlandId)
+        if not selectedOnly then
+            if not queue.broadcastAlways then
+                local pending = {}
+                for index = queue.index, #(queue.farmlandIds or {}) do
+                    pending[tostring(queue.farmlandIds[index])] = true
+                end
+                for _, farmlandId in ipairs(manager:getOwnedRotationFarmlandIds() or {}) do
+                    local farmlandKey = tostring(farmlandId)
+                    if not pending[farmlandKey] then
+                        queue.farmlandIds[#queue.farmlandIds + 1] = farmlandId
+                        pending[farmlandKey] = true
+                    end
+                end
+            end
+            queue.broadcastAlways = true
+            prioritizeMenuReconcile(queue, selectedFarmlandId)
+        elseif not prioritizeMenuReconcile(queue, selectedFarmlandId) then
+            local selected = tonumber(selectedFarmlandId)
+            for _, farmlandId in ipairs(manager:getOwnedRotationFarmlandIds() or {}) do
+                if tonumber(farmlandId) == selected then
+                    table.insert(queue.farmlandIds, queue.index, farmlandId)
+                    break
+                end
+            end
+        end
         return true
     end
 
-    local nowMs = tonumber(g_time) or 0
-    local lastMs = tonumber(RealisticCropRotation.lastMenuReconcileMs)
-    if lastMs ~= nil and nowMs >= lastMs
-        and nowMs - lastMs < RealisticCropRotation.MENU_RECONCILE_COOLDOWN_MS then
-        return false
+    if not selectedOnly then
+        local nowMs = tonumber(g_time) or 0
+        local lastMs = tonumber(RealisticCropRotation.lastMenuReconcileMs)
+        if lastMs ~= nil and nowMs >= lastMs
+            and nowMs - lastMs < RealisticCropRotation.MENU_RECONCILE_COOLDOWN_MS then
+            return false
+        end
     end
 
     local farmlandIds = manager:getOwnedRotationFarmlandIds() or {}
+    if selectedOnly then
+        local selected = tonumber(selectedFarmlandId)
+        local selectedFarmlandIds = {}
+        for _, farmlandId in ipairs(farmlandIds) do
+            if tonumber(farmlandId) == selected then
+                selectedFarmlandIds[1] = farmlandId
+                break
+            end
+        end
+        farmlandIds = selectedFarmlandIds
+    end
     if #farmlandIds == 0 then return false end
+    if not selectedOnly then
+        RealisticCropRotation.lastMenuReconcileMs = tonumber(g_time) or 0
+    end
 
     queue = {
         farmlandIds = farmlandIds,
         index = 1,
         changed = false,
+        broadcastAlways = not selectedOnly,
     }
     prioritizeMenuReconcile(queue, selectedFarmlandId)
     RealisticCropRotation.menuReconcileQueue = queue
-    RealisticCropRotation.lastMenuReconcileMs = nowMs
     return true
 end
 
@@ -278,9 +320,11 @@ local function processMenuReconcileQueue()
             RealisticCropRotation.disease:refreshRiskMap(false)
         end
         if frame ~= nil then
-            frame:onMenuReconcileComplete(queue.changed)
+            frame:onMenuReconcileComplete(queue.changed, queue.broadcastAlways)
         end
-        RealisticCropRotation.requestBroadcast()
+        if queue.broadcastAlways or queue.changed then
+            RealisticCropRotation.requestBroadcast()
+        end
     end
 end
 
@@ -466,6 +510,7 @@ local function loadGuiAssets()
 end
 
 ---Creates and registers treatment maps while the mission density-map synchronizer accepts maps.
+-- @param table mission Current mission
 local function initDiseaseTerrain(mission)
     if mission == nil or RealisticCropRotation.grid ~= nil then return end
 

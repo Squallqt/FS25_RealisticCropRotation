@@ -20,7 +20,9 @@ end
 
 ---Creates an admin command event.
 -- @param string command Console command name
--- @param string arg1, arg2, arg3 Console arguments
+-- @param string? arg1 First console argument
+-- @param string? arg2 Second console argument
+-- @param string? arg3 Third console argument
 -- @return RCRAdminCommandEvent instance
 function RCRAdminCommandEvent.new(command, arg1, arg2, arg3)
     local self = RCRAdminCommandEvent.emptyNew()
@@ -98,7 +100,9 @@ end
 
 ---Sends a console command to the server from a client.
 -- @param string command Console command name
--- @param string arg1, arg2, arg3 Console arguments
+-- @param string? arg1 First console argument
+-- @param string? arg2 Second console argument
+-- @param string? arg3 Third console argument
 -- @return string message Console feedback
 function RCRAdminCommandEvent.request(command, arg1, arg2, arg3)
     if HANDLERS[command] == nil then return "Unknown admin command" end

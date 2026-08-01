@@ -318,7 +318,6 @@ local function aggregateRegionLayer(region, mapId, firstChannel, numChannels, fi
     if modifier == nil then return nil end
     if not applyRegionToModifier(region, modifier) then return nil end
 
-    -- Filters compacted into the leading slots.
     local f1, f2, f3 = filterA, filterB, region.filter
     if f1 == nil then f1, f2, f3 = f2, f3, nil end
     if f2 == nil then f2, f3 = f3, nil end
@@ -465,7 +464,6 @@ local function getRegionFruitTypeIndex(region, hintFruitTypeIndex, capacity, hin
     end
     if bestDesc == nil or bestPixels <= 0 then return nil end
 
-    -- Highest foliage state index the fruit declares.
     local maxState = 0
     for state in pairs(bestDesc.growthStateToName or {}) do
         state = tonumber(state)
@@ -477,7 +475,6 @@ local function getRegionFruitTypeIndex(region, hintFruitTypeIndex, capacity, hin
         if value ~= nil and value > maxState then maxState = value end
     end
 
-    -- Dominant stage of the winning fruit type, over the same region.
     local bestState, bestStatePixels = nil, 0
     local stateMajority = bestPixels / 2
 
@@ -606,7 +603,6 @@ local function getNativeGroundStateIndex(region, groundPixels)
     local threshold = groundPixels * FIELD_STATE_COVERAGE
     for _, group in ipairs(groups) do
         if group.index ~= nil then
-            -- First group above the threshold wins.
             local pixels = 0
             for _, groundType in ipairs(group.types) do
                 if groundType ~= nil then
@@ -997,7 +993,6 @@ function RealisticCropRotationManager:getActiveCropInfo(farmlandId)
     local hint = entry ~= nil and entry.fruitTypeIndex or nil
     if hint == nil and g_fruitTypeManager ~= nil
         and type(g_fruitTypeManager.getFruitTypeByName) == "function" then
-        -- Cold cache
         local lastCrop = self.repository:getLastKnownActiveCrop(numericFarmlandId)
         local fruitType = lastCrop ~= nil and lastCrop ~= ""
             and g_fruitTypeManager:getFruitTypeByName(lastCrop) or nil
@@ -1008,7 +1003,6 @@ function RealisticCropRotationManager:getActiveCropInfo(farmlandId)
         getActiveCropNameFromRegion(region, hint, capacity,
             entry ~= nil and entry.growthState or self.repository:getLastKnownGrowthState(numericFarmlandId))
 
-    -- True when the crop covers less than the floor.
     local belowFloor = false
     if resolved ~= nil and cropPixels ~= nil then
         capacity = capacity or self:getFieldPixelCapacity(numericFarmlandId, region, fruitTypeIndex)
@@ -1052,7 +1046,6 @@ function RealisticCropRotationManager:reconcileActiveCropForFarmland(farmlandId)
     local currentCropName, currentFruitTypeIndex, currentGrowthState, belowFloor =
         self:getActiveCropInfo(farmlandId)
 
-    -- Ground state, sampled on a bare field or under a remnant.
     local groundWorked = (currentCropName == nil or belowFloor) and self:isFieldGroundWorked(farmlandId)
 
     -- A remnant on worked ground ends the cycle.
@@ -1086,7 +1079,6 @@ function RealisticCropRotationManager:getFieldStateIndices(farmlandId)
     local n = tonumber(farmlandId)
     if n == nil then return nil end
 
-    -- Same-frame memo.
     local nowMs = tonumber(g_time) or 0
     if self.fieldStateMemo == nil or self.fieldStateMemo.tMs ~= nowMs then
         self.fieldStateMemo = { tMs = nowMs }
@@ -1408,7 +1400,6 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId, activeFruitTypeI
         return false
     end
 
-    -- Capabilities, resolved once.
     local nCanLevel  = nMap ~= nil and type(nMap.getNitrogenValueFromInternalValue) == "function"
     local phCanLevel = phMap ~= nil and type(phMap.getPhValueFromInternalValue) == "function"
     local phCanOptimal = phMap ~= nil and type(phMap.getOptimalPHValueForSoilTypeIndex) == "function"

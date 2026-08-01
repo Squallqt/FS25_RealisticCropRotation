@@ -7,9 +7,7 @@
 
     <Profile name="frSidebarList" extends="emptyPanel"/>
 
-    <!-- Sidebar cell -->
 
-    <!-- Field name — line 1 (width fits "prefix + number" up to the right-aligned area text) -->
     <Profile name="frSidebarItemName" extends="fs25_subCategoryListItemName">
         <width value="150px"/>
         <position value="94px -18px"/>
@@ -19,7 +17,6 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Area in ha — line 1, right-aligned (x offset from right matches the existing list-item profiles) -->
     <Profile name="frSidebarItemArea" extends="fs25_subCategoryListItemName" with="anchorTopRight">
         <width value="84px"/>
         <position value="-46px -18px"/>
@@ -30,7 +27,6 @@
         <textSelectedColor value="$preset_fs25_colorMainDark"/>
     </Profile>
 
-    <!-- Crop · Family — line 2 -->
     <Profile name="frSidebarItemCropLine" extends="fs25_subCategoryListItemName">
         <width value="238px"/>
         <position value="94px -46px"/>
@@ -48,7 +44,6 @@
         <position value="0px -28px"/>
     </Profile>
 
-    <!-- Hero card (1280 x 56 px) -->
 
     <Profile name="frHeroCard" extends="emptyPanel" with="anchorTopLeft">
         <size value="1280px 56px"/>
@@ -74,7 +69,6 @@
 
     <Profile name="frHeroAccentBottom" extends="frHeroAccent" with="anchorBottomLeft"/>
 
-    <!-- Left-aligned title, vertically centered in the card -->
     <Profile name="frHeroTitle" extends="fs25_textDefault" with="anchorMiddleLeft">
         <position value="50px 0px"/>
         <size value="750px 28px"/>
@@ -87,7 +81,6 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Reference row for the header weather station: 1280px, matches frDetailContainer's own right edge -->
     <Profile name="frHeaderRow" extends="baseReference" with="anchorTopLeft">
         <width value="1280px"/>
         <position value="0px 74px"/>
@@ -112,7 +105,6 @@
         <cornerSize value="0.28"/>
     </Profile>
 
-    <!-- Thin event-colour signal: informative without turning the whole card into a badge. -->
     <Profile name="frHeaderWeatherAccent" extends="fs25_lineSeparatorTopHighlighted" with="anchorTopLeft">
         <size value="300px 3dp"/>
         <position value="0px 0px"/>
@@ -120,7 +112,6 @@
 
     <Profile name="frHeaderWeatherAccentBottom" extends="frHeaderWeatherAccent" with="anchorBottomLeft"/>
 
-    <!-- Dedicated icon tile, visually independent from the text hierarchy. -->
     <Profile name="frHeaderWeatherIconBg" extends="baseReference" with="anchorMiddleLeft">
         <position value="12px 0px"/>
         <size value="48px 44px"/>
@@ -135,7 +126,6 @@
         <imageColor value="$preset_fs25_colorMainLight"/>
     </Profile>
 
-    <!-- The weather phenomenon is vertically centred as the card's primary subject. -->
     <Profile name="frHeaderWeatherText" extends="fs25_textDefault" with="anchorMiddleLeft">
         <position value="76px 0px"/>
         <size value="110px 24px"/>
@@ -148,7 +138,6 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Thin vertical divider, matching the existing KPI separators. -->
     <Profile name="frHeaderWeatherDivider" extends="baseReference" with="anchorMiddleLeft">
         <position value="200px 0px"/>
         <size value="1px 34px"/>
@@ -156,7 +145,6 @@
         <cornerSize value="0"/>
     </Profile>
 
-    <!-- Temporal hierarchy: actionable state first, exact schedule second. -->
     <Profile name="frHeaderWeatherWindow" extends="fs25_textDefault" with="anchorMiddleRight">
         <position value="-12px -10px"/>
         <size value="88px 15px"/>
@@ -181,7 +169,6 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Status pill — vertically centered on the right, increased size -->
     <Profile name="frStatusPillBg" extends="baseReference" with="anchorMiddleRight">
         <position value="-50px 0px"/>
         <size value="196px 28px"/>
@@ -205,13 +192,11 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Section bar (1280 x 32 px) -->
 
     <Profile name="frSectionBar" extends="emptyPanel" with="anchorTopLeft">
         <size value="1280px 32px"/>
     </Profile>
 
-    <!-- Trailing line after the section title, sized in Lua to the rendered text -->
     <Profile name="frSectionLine" extends="baseReference" with="anchorMiddleLeft">
         <position value="0px 0px"/>
         <size value="0px 1px"/>
@@ -219,7 +204,6 @@
         <cornerSize value="0"/>
     </Profile>
 
-    <!-- Vertical accent bar (3 x 22 px) -->
     <Profile name="frSectionAccent" extends="baseReference" with="anchorMiddleLeft">
         <position value="0px 0px"/>
         <size value="3px 22px"/>
@@ -277,12 +261,10 @@
         <size value="1240px 194px"/>
     </Profile>
 
-    <!-- Rail cell -->
     <Profile name="frRailCell" extends="emptyPanel" with="anchorTopLeft">
         <size value="224px 24px"/>
     </Profile>
 
-    <!-- Season label -->
     <Profile name="frSlotSeasonLabel" extends="fs25_textDefault" with="anchorTopLeft">
         <position value="7px -4px"/>
         <size value="210px 18px"/>
@@ -299,12 +281,10 @@
         <textColor value="$preset_fs25_colorGreen"/>
     </Profile>
 
-    <!-- Slot card container (224 x 156 px) -->
     <Profile name="frSlotCard" extends="emptyPanel" with="anchorTopLeft">
         <size value="224px 156px"/>
     </Profile>
 
-    <!-- Connector arrow between cards -->
     <Profile name="frTimelineArrowIcon" extends="baseReference" with="anchorMiddleCenter">
         <position value="0px 0px"/>
         <size value="25px 18px"/>
@@ -312,12 +292,10 @@
         <imageColor value="$preset_fs25_colorMainHighlight"/>
     </Profile>
 
-    <!-- Connector container -->
     <Profile name="frHistoryTimelineConnector" extends="emptyPanel" with="anchorTopLeft">
         <size value="25px 156px"/>
     </Profile>
 
-    <!-- Card frame -->
     <Profile name="frSlotFrameH" extends="baseReference" with="anchorTopLeft">
         <size value="224px 1px"/>
         <color value="$preset_fs25_colorGreyLight"/>
@@ -338,39 +316,32 @@
         <color value="$preset_fs25_colorGreen"/>
     </Profile>
 
-    <!-- Base shape shared by all slot backgrounds -->
     <Profile name="frSlotCardBg" extends="baseReference" with="anchorTopLeft">
         <size value="224px 156px"/>
         <color value="0 0 0 0.44"/>
         <cornerSize value="0"/>
     </Profile>
 
-    <!-- N-4 -->
     <Profile name="frSlotCardBgN4" extends="frSlotCardBg">
         <color value="0 0 0 0.22"/>
     </Profile>
 
-    <!-- N-3 -->
     <Profile name="frSlotCardBgN3" extends="frSlotCardBg">
         <color value="0 0 0 0.32"/>
     </Profile>
 
-    <!-- N-2 -->
     <Profile name="frSlotCardBgN2" extends="frSlotCardBg">
         <color value="0 0 0 0.44"/>
     </Profile>
 
-    <!-- N-1 -->
     <Profile name="frSlotCardBgN1" extends="frSlotCardBg">
         <color value="0 0 0 0.50"/>
     </Profile>
 
-    <!-- Current -->
     <Profile name="frSlotCardBgCurrent" extends="frSlotCardBg">
         <color value="0 0 0 0.58"/>
     </Profile>
 
-    <!-- Avatar background -->
     <Profile name="frSlotAvatarBg" extends="baseReference" with="anchorTopLeft">
         <position value="82px -18px"/>
         <size value="60px 60px"/>
@@ -378,13 +349,11 @@
         <cornerSize value="1"/>
     </Profile>
 
-    <!-- Crop icon -->
     <Profile name="frSlotIcon" extends="baseReference" with="anchorTopLeft">
         <position value="92px -28px"/>
         <size value="40px 40px"/>
     </Profile>
 
-    <!-- Crop name -->
     <Profile name="frSlotCropName" extends="fs25_textDefault" with="anchorTopCenter">
         <position value="0px -88px"/>
         <size value="210px 20px"/>
@@ -397,7 +366,6 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Status text, centered (no crop) -->
     <Profile name="frSlotCropNameCentered" extends="fs25_textDefault" with="anchorTopCenter">
         <position value="0px -68px"/>
         <size value="210px 20px"/>
@@ -410,7 +378,6 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Family badge background -->
     <Profile name="frSlotFamilyBadgeBg" extends="baseReference" with="anchorBottomCenter">
         <position value="0px 18px"/>
         <size value="96px 24px"/>
@@ -418,7 +385,6 @@
         <cornerSize value="0.20"/>
     </Profile>
 
-    <!-- Family badge text overlay -->
     <Profile name="frSlotFamilyBadgeText" extends="fs25_textDefault" with="anchorBottomCenter">
         <position value="0px 18px"/>
         <size value="96px 24px"/>
@@ -431,7 +397,6 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Shared background for the full-width detail cards: same tint + corner, height set per card. -->
     <Profile name="frDetailCardBg" extends="baseReference" with="anchorTopLeft">
         <color value="0 0 0 0.50"/>
         <cornerSize value="0.35"/>
@@ -447,7 +412,6 @@
         <size value="1240px 198px"/>
     </Profile>
 
-    <!-- Centered on the first two 66px zones -->
     <Profile name="frSoilRowTitleTop" extends="fs25_textDefault" with="anchorTopLeft">
         <position value="24px -24px"/>
         <size value="220px 20px"/>
@@ -529,7 +493,6 @@
         <cornerSize value="0"/>
     </Profile>
 
-    <!-- Third row (treatment coverage): third 66px zone, same layout as nitrogen/pH -->
     <Profile name="frSoilRowTitleTreatment" extends="frSoilRowTitleTop">
         <position value="24px -158px"/>
     </Profile>
@@ -572,7 +535,6 @@
         <color value="0.10 0.20 0.03 0.76"/>
     </Profile>
 
-    <!-- Anchored top-left (not centered on the card) -->
     <Profile name="frAdviceStatusBadgeBgNeutral" extends="baseReference" with="anchorTopLeft">
         <position value="18px -51px"/>
         <size value="40px 40px"/>
@@ -592,7 +554,6 @@
         <position value="18px -35px"/>
     </Profile>
 
-    <!-- Active-outbreak state -->
     <Profile name="frAdviceCardBgDanger" extends="frAdviceCardBgNeutral">
         <color value="0.30 0.06 0.05 0.85"/>
     </Profile>
@@ -617,7 +578,6 @@
         <position value="18px -35px"/>
     </Profile>
 
-    <!-- Full-width header banner, centered, above the badge/body row -->
     <Profile name="frAdviceTitleNeutral" extends="fs25_textDefault" with="anchorTopLeft">
         <position value="0px -6px"/>
         <size value="1240px 22px"/>
@@ -640,7 +600,6 @@
         <textColor value="0.86 0.17 0.14 1"/>
     </Profile>
 
-    <!-- Thin rule separating the title banner from the badge/body row -->
     <Profile name="frAdviceTitleDivider" extends="baseReference" with="anchorTopLeft">
         <position value="24px -32px"/>
         <size value="1192px 1px"/>
@@ -675,12 +634,10 @@
         <size value="1240px 82px"/>
     </Profile>
 
-    <!-- Quarter-width KPI container (4 columns across the 1240px card) -->
     <Profile name="frFieldKpi" extends="emptyPanel" with="anchorTopLeft">
         <size value="310px 82px"/>
     </Profile>
 
-    <!-- Label at top, closer to value -->
     <Profile name="frFieldKpiLabel" extends="fs25_textDefault" with="anchorTopCenter">
         <position value="0px -10px"/>
         <size value="290px 18px"/>
@@ -693,7 +650,6 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Value pulled up toward label -->
     <Profile name="frFieldKpiValue" extends="fs25_textDefault" with="anchorBottomCenter">
         <position value="0px 12px"/>
         <size value="290px 38px"/>
@@ -710,17 +666,14 @@
         <textColor value="$preset_colorWhite_50"/>
     </Profile>
 
-    <!-- Compact value for KPIs with composed text; smaller size avoids clipping in the narrower 290px column -->
     <Profile name="frFieldKpiValueSmall" extends="frFieldKpiValue">
         <textSize value="15px"/>
     </Profile>
 
-    <!-- Same compact size as frFieldKpiValueSmall, greyed out for non-priority fallback text -->
     <Profile name="frFieldKpiValueSmallNA" extends="frFieldKpiValueSmall">
         <textColor value="$preset_colorWhite_50"/>
     </Profile>
 
-    <!-- Thin vertical divider between adjacent KPIs -->
     <Profile name="frFieldDivider" extends="baseReference" with="anchorTopCenter">
         <position value="0px -18px"/>
         <size value="1px 46px"/>
@@ -730,7 +683,6 @@
 
     <!-- Planning tab -->
 
-    <!-- Same size/anchor as frDetailContainer — shown in planning tab -->
     <Profile name="frPlanContainer" extends="frDetailContainer"/>
 
     <!-- Annual calendar strip: top editor + 1130px month axis -->
@@ -806,7 +758,6 @@
         <size value="1240px 43px"/>
     </Profile>
 
-    <!-- color set in Lua for the active row; switched via applyProfile for odd/even striping -->
     <Profile name="frCalendarRowBg" extends="baseReference" with="anchorTopLeft">
         <position value="0px 0px"/>
         <size value="1240px 43px"/>
@@ -854,16 +805,13 @@
         <cornerSize value="0.17"/>
     </Profile>
 
-    <!-- color set in Lua -->
     <Profile name="frCalendarCoverMarker" extends="frCalendarCropBar"/>
 
-    <!-- Legend: anchored to timeline right edge; children positioned in Lua -->
     <Profile name="frCalendarLegend" extends="emptyPanel" with="anchorTopRight">
         <position value="-10px -7px"/>
         <size value="460px 24px"/>
     </Profile>
 
-    <!-- position/size set in Lua -->
     <Profile name="frCalendarLegendSwatch" extends="baseReference" with="anchorTopLeft">
         <size value="14px 14px"/>
         <cornerSize value="0.17"/>
@@ -877,10 +825,8 @@
         <color value="$preset_fs25_colorOrangeDark"/>
     </Profile>
 
-    <!-- color set in Lua to FAMILY_RGBA.COVER -->
     <Profile name="frCalendarLegendSwatchCover" extends="frCalendarLegendSwatchSow"/>
 
-    <!-- position/size set in Lua; bold to match frCalendarMonthLabel -->
     <Profile name="frCalendarLegendLabel" extends="fs25_textDefault" with="anchorTopLeft">
         <size value="200px 24px"/>
         <textSize value="12px"/>
@@ -900,7 +846,6 @@
         <size value="1240px 56px"/>
     </Profile>
 
-    <!-- Score verdict text — left side, shifted up to align with track -->
     <Profile name="frScoreText" extends="fs25_textDefault" with="anchorMiddleLeft">
         <position value="24px 0px"/>
         <size value="640px 30px"/>
@@ -926,14 +871,12 @@
         <size value="14px 14px"/>
     </Profile>
 
-    <!-- Cursor dot: circle, anchored to right of positioner, color set in Lua -->
     <Profile name="frScoreCursor" extends="baseReference" with="anchorMiddleRight">
         <size value="14px 14px"/>
         <color value="$preset_fs25_colorGreen"/>
         <cornerSize value="0.5"/>
     </Profile>
 
-    <!-- Track labels: scale endpoints, aligned to gauge edges (keep in sync with trackW=400) -->
     <Profile name="frScoreLabelLeft" extends="fs25_textDefault" with="anchorMiddleLeft">
         <position value="816px -14px"/>
         <size value="180px 14px"/>
@@ -970,7 +913,6 @@
         <cornerSize value="0.35"/>
     </Profile>
 
-    <!-- Inner stretching container — list + slider positioned inside the background -->
     <Profile name="frOverviewInner" extends="emptyPanel" with="anchorStretchingYStretchingX"/>
 
     <Profile name="frOverviewList" extends="emptyPanel" with="anchorTopLeft">
@@ -990,7 +932,6 @@
 
     <!-- Rotation group rows (1 row = 1 unique rotation pattern, 80 px tall) -->
 
-    <!-- Row = transparent — the card bg child provides the visual -->
     <Profile name="frOverviewListItem" extends="baseReference" with="anchorTopStretchingX">
         <height value="80px"/>
         <imageColor value="$preset_colorTransparent"/>
@@ -1011,19 +952,16 @@
         <cornerSize value="0.35"/>
     </Profile>
 
-    <!-- Crop-zone pill: the unplanned slot keeps this grey; family slots override the colour in Lua -->
     <Profile name="frGroupBadge" extends="baseReference" with="anchorTopLeft">
         <size value="300px 30px"/>
         <color value="$preset_fs25_colorGrey"/>
         <cornerSize value="0.20"/>
     </Profile>
 
-    <!-- Crop icon inside zone — size only; position per element in XML -->
     <Profile name="frGroupCropIconCard" extends="baseReference" with="anchorTopLeft">
         <size value="20px 20px"/>
     </Profile>
 
-    <!-- Crop name text inside global overview badge; positioned in Lua -->
     <Profile name="frGroupBadgeLabel" extends="fs25_textDefault" with="anchorTopLeft">
         <size value="300px 30px"/>
         <textSize value="12px"/>
@@ -1036,7 +974,6 @@
         <textLayoutMode value="resize"/>
     </Profile>
 
-    <!-- Year position label (N+1..N+4) above each crop badge -->
     <Profile name="frGroupYearLabel" extends="fs25_textDefault" with="anchorTopLeft">
         <size value="300px 12px"/>
         <textSize value="10px"/>
@@ -1048,14 +985,12 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Arrow between zones -->
     <Profile name="frGroupArrow" extends="baseReference" with="anchorTopLeft">
         <size value="25px 18px"/>
         <imageSliceId value="realisticCropRotation.timelineArrowRight"/>
         <imageColor value="$preset_fs25_colorMainHighlight"/>
     </Profile>
 
-    <!-- Field count "× N" -->
     <Profile name="frGroupCount" extends="fs25_textDefault" with="anchorTopLeft">
         <size value="86px 32px"/>
         <textSize value="18px"/>
@@ -1077,7 +1012,6 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Right column: 22 + 6 + 22 = 50px. -->
     <Profile name="frOverviewMetaColumn" extends="emptyPanel" with="anchorTopRight">
         <position value="-26px 0px"/>
         <size value="228px 80px"/>
@@ -1089,7 +1023,6 @@
         <autoValidateLayout value="true"/>
     </Profile>
 
-    <!-- Score label; position assigned by frOverviewMetaColumn, color set in Lua -->
     <Profile name="frOverviewScore" extends="fs25_textDefault">
         <size value="228px 22px"/>
         <textSize value="14px"/>
@@ -1100,7 +1033,6 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Layout-only container; its children reuse the existing native-green status-pill profiles. -->
     <Profile name="frOverviewResidueCard" extends="baseReference">
         <size value="228px 22px"/>
     </Profile>
@@ -1116,7 +1048,6 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Cover crop recap — leaves the right lane free for the residue card. -->
     <Profile name="frGroupCoverRecap" extends="fs25_textDefault" with="anchorTopLeft">
         <position value="132px -47.5px"/>
         <size value="806px 14px"/>
@@ -1131,7 +1062,6 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <!-- Field names — bottom strip -->
     <Profile name="frGroupFieldNames" extends="fs25_textDefault" with="anchorTopLeft">
         <position value="132px -62.5px"/>
         <size value="1046px 14px"/>

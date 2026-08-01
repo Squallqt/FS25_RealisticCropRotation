@@ -39,8 +39,6 @@ RealisticCropRotationDiseaseMap.RISK_COLOR_HIGH     = {0.86, 0.17, 0.14, 1}
 RealisticCropRotationDiseaseMap.TREATMENT_COLOR_FUNGICIDE  = {0.00, 0.31, 0.25, 1}
 RealisticCropRotationDiseaseMap.TREATMENT_COLOR_NEMATICIDE = {0.00, 0.25, 0.50, 1}
 
--- Local helpers — ALL declared before any method that references them.
-
 local function getText(key, fallback)
     if g_i18n ~= nil and type(g_i18n.hasText) == "function" and g_i18n:hasText(key) then
         return g_i18n:getText(key)
@@ -320,7 +318,7 @@ function RealisticCropRotationDiseaseMap:delete()
     self.lastBuildKey = nil
 end
 
--- Build key — decides when the overlay must be regenerated.
+-- Overlay cache key.
 
 function RealisticCropRotationDiseaseMap:buildKey()
     local parts = {}
@@ -417,7 +415,6 @@ function RealisticCropRotationDiseaseMap:renderRiskOverlay()
         return false
     end
 
-    -- Regenerate into the slot NOT currently displayed (double-buffered) -- see renderInfectionOverlay.
     local slot, overlayId = getInactiveOverlay(self, self.riskOverlayIds, "riskActiveSlot")
     if overlayId == nil then return false end
 
@@ -444,7 +441,6 @@ function RealisticCropRotationDiseaseMap:renderTreatmentOverlay()
     if grid == nil or self.treatmentOverlayIds == nil then return false end
     if grid.fungicideProtectionMapId == nil and grid.nematicideProtectionMapId == nil then return false end
 
-    -- Regenerate into the slot NOT currently displayed (double-buffered) -- see renderInfectionOverlay.
     local slot, overlayId = getInactiveOverlay(self, self.treatmentOverlayIds, "treatmentActiveSlot")
     if overlayId == nil then return false end
 
@@ -476,7 +472,7 @@ function RealisticCropRotationDiseaseMap:updateOverlay(force)
 
     self:createRuntimeObjects()
 
-    -- Safety belt (pressure view only): incremental per-field Lua comparison, native passes only for what actually moved.
+    -- Repaint only fields whose pressure band changed.
     if self:isPressurePage() then
         disease:refreshRiskMap(false)
     end
@@ -727,7 +723,6 @@ function RealisticCropRotationDiseaseMap:ensureMapPage(frame)
     frame.filterStates[pageIndex] = self.filter
     frame.numSelectedFilters[pageIndex] = countSelected(self.filter, diseaseN)
 
-    -- Add a dot to the main category dot box for our new top-level page.
     if frame.subCategoryDotBox ~= nil and frame.subCategoryDotBox.elements ~= nil and #frame.subCategoryDotBox.elements > 0 then
         frame.subCategoryDotBox.elements[1]:clone(frame.subCategoryDotBox)
         for index, dot in ipairs(frame.subCategoryDotBox.elements) do
@@ -743,7 +738,6 @@ function RealisticCropRotationDiseaseMap:ensureMapPage(frame)
 
     self.activeSubPage = self.SUB_PAGE_INFECTIONS
 
-    -- Capture the default filter-list layout so we can restore it later.
     self.filterListContainerBaseY = frame.filterListContainer.position[2]
     self.filterListContainerBaseH = frame.filterListContainer.size[2]
     self.filterListBaseH = frame.filterList.size[2]
@@ -753,7 +747,6 @@ function RealisticCropRotationDiseaseMap:ensureMapPage(frame)
     local _, btnOffset = getNormalizedScreenValues(0, 16)
     self.buttonDeselectAllAdjustedY = frame.buttonDeselectAllContainer.position[2] + btnOffset
 
-    -- Clone the map-overview selector to build the three-way sub-selector.
     if frame.filterBox ~= nil and frame.mapOverviewSelector ~= nil then
         self.subSelector = frame.mapOverviewSelector:clone(frame.filterBox)
         self.subSelector:setTexts({
@@ -770,7 +763,6 @@ function RealisticCropRotationDiseaseMap:ensureMapPage(frame)
         end
         self.subSelector:setVisible(false)
 
-        -- Clone the dot box for the sub-page indicator.
         if frame.subCategoryDotBox ~= nil then
             self.subDotBox = frame.subCategoryDotBox:clone(frame.filterBox)
             self.subDotBoxBaseY = self.subDotBox.position[2]
@@ -798,8 +790,6 @@ function RealisticCropRotationDiseaseMap:ensureMapPage(frame)
     self:syncFilterData(frame)
     ensureSelectorCallback(frame)
 end
-
--- Install — wires the InGameMenuMapFrame overwrites.
 
 function RealisticCropRotationDiseaseMap:install()
     if RealisticCropRotationDiseaseMap._overwrites_installed or InGameMenuMapFrame == nil or Utils == nil then return end

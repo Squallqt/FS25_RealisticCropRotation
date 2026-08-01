@@ -1,5 +1,5 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
--- Client->server request for a full history snapshot. Server replies with RCRHistoryResponseEvent.
+-- Client->server request for a full history snapshot or a selected-field reconciliation.
 RCRHistoryRequestEvent = {}
 local RCRHistoryRequestEvent_mt = Class(RCRHistoryRequestEvent, Event)
 
@@ -13,19 +13,22 @@ function RCRHistoryRequestEvent.emptyNew()
 end
 
 ---Creates initialized request event.
--- @param integer selectedFarmlandId Farmland to reconcile first, or nil
+-- @param integer? selectedFarmlandId Farmland to reconcile first
+-- @param boolean? selectedOnly True to reconcile only the selected farmland
 -- @return RCRHistoryRequestEvent instance The new event instance
-function RCRHistoryRequestEvent.new(selectedFarmlandId)
+function RCRHistoryRequestEvent.new(selectedFarmlandId, selectedOnly)
     local self = RCRHistoryRequestEvent.emptyNew()
     self.selectedFarmlandId = math.floor(tonumber(selectedFarmlandId) or 0)
+    self.selectedOnly = selectedOnly == true
     return self
 end
 
----Reads the request; the server replies immediately, then schedules reconciliation.
+---Reads the request and schedules server reconciliation.
 -- @param integer streamId Network stream identifier
 -- @param Connection connection Network connection
 function RCRHistoryRequestEvent:readStream(streamId, connection)
     self.selectedFarmlandId = streamReadInt32(streamId)
+    self.selectedOnly = streamReadBool(streamId)
     if g_server == nil then return end
 
     if connection == nil then
@@ -35,13 +38,15 @@ function RCRHistoryRequestEvent:readStream(streamId, connection)
 
     local manager = g_currentMission ~= nil and g_currentMission.realisticCropRotationManager or nil
     if manager == nil then
-        Logging.warning("[RealisticCropRotation] RCRHistoryRequestEvent: manager not available, replying without reconcile")
+        Logging.warning("[RealisticCropRotation] RCRHistoryRequestEvent: manager not available")
     end
 
-    connection:sendEvent(RCRHistoryResponseEvent.new())
+    if not self.selectedOnly then
+        connection:sendEvent(RCRHistoryResponseEvent.new())
+    end
 
     if manager ~= nil then
-        RealisticCropRotation.requestMenuReconcile(self.selectedFarmlandId)
+        RealisticCropRotation.requestMenuReconcile(self.selectedFarmlandId, self.selectedOnly)
     end
 end
 
@@ -50,4 +55,5 @@ end
 -- @param Connection connection Network connection
 function RCRHistoryRequestEvent:writeStream(streamId, connection)
     streamWriteInt32(streamId, math.floor(tonumber(self.selectedFarmlandId) or 0))
+    streamWriteBool(streamId, self.selectedOnly == true)
 end

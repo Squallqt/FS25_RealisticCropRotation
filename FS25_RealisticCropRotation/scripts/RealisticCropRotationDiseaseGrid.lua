@@ -93,11 +93,9 @@ function RealisticCropRotationDiseaseGrid:loadMap(savegamePath, densityMapSyncer
         Logging.warning("[RealisticCropRotation] Density-map synchronizer unavailable; treatment coverage cannot synchronize")
     end
 
-    -- Runtime-only risk display map (never saved: risk is derived from the synced history).
     self.riskMapId = createBitVectorMap("rcrRiskMap")
     loadBitVectorMapNew(self.riskMapId, self.riskMapSize, self.riskMapSize, self.riskNumChannels, false)
 
-    -- Runtime-only scratch mask (never saved: recomputed by every destruction pass).
     local destructionMaskSize = tonumber(g_currentMission.fruitMapSize) or resolvedSize
     self.destructionMaskMapId = createBitVectorMap("rcrDestructionMask")
     loadBitVectorMapNew(self.destructionMaskMapId, destructionMaskSize, destructionMaskSize,

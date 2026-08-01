@@ -539,7 +539,6 @@ local function installSprayerHook()
             return superFunc(self, workArea, dt)
         end
 
-        -- Vanilla activation guards.
         if params.sprayFillLevel <= 0 then
             return 0, 0
         end
@@ -548,7 +547,6 @@ local function installSprayerHook()
             return 0, 0
         end
 
-        -- No spraying while stopped.
         if self:getLastSpeed() <= MIN_WORK_SPEED then
             return 0, 0
         end
@@ -559,12 +557,10 @@ local function installSprayerHook()
         end
         local targetFarmlandId = params.rcrTargetFarmlandId
 
-        -- Mark active and refresh the effect timer.
         params.isActive = true
         params.lastSprayTime = g_time
         spec.isWorking = true
 
-        -- Tank usage from the work area width.
         if (params.usage or 0) <= 0 then
             local lps = productLitersPerSecondByFillType[sprayFillType]
                 or RealisticCropRotationSprayerProducts.litersPerSecond

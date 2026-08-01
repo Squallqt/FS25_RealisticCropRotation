@@ -213,7 +213,6 @@ local function paintInfectionPresence(grid, region, group, seed)
             math.floor(D.DESTROY_PERLIN_MAX * (1 - D.PRESENCE_PATCH_FRACTION)))
     end
 
-    -- Painted on worked ground only.
     local groundFilter = RealisticCropRotationManager.makeFieldGroundFilter()
     if region.filter ~= nil then
         local patchFilter = stageParcelPatch(grid, region, perlin, groundFilter)
@@ -283,6 +282,7 @@ function RealisticCropRotationDisease:getTreatmentName(group)
 end
 
 ---Effective pathogen load for a specific standing crop, without mutating the reservoir.
+-- @param RealisticCropRotationDisease self Disease runtime
 -- @param integer farmlandId
 -- @param string cropName
 -- @return table load group -> [0,1]
@@ -484,7 +484,6 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId)
         self.growth[farmlandId] = growthState
     end
     if cropName == nil then
-        -- No host left: the infection ends with the crop.
         local standing = mgr:getPendingHistoryCrop(farmlandId)
         if standing == nil and self.state[farmlandId] ~= nil then
             self:finishCropCycle(farmlandId, previousCrop)
@@ -501,7 +500,6 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId)
     local windows = (RealisticCropRotation.cropConfig and RealisticCropRotation.cropConfig.diseaseWindows) or {}
     local raining = isRaining()
     local temperature = currentTemperature()
-    -- Fungicide-treated ground share, resolved once and only when a FUNGICIDE group needs it.
     local fungicideCoverage = nil
     for group, load in pairs(effectiveLoadForCrop(self, farmlandId, cropName)) do
         if hostGroups[group] then
@@ -509,7 +507,7 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId)
             local alreadyInfected = state ~= nil and state[group] ~= nil
             if not alreadyInfected then
                 local w = windows[group]
-                -- Susceptible inside the growth window only; an unreadable stage never blocks.
+                -- An unreadable growth stage does not block infection.
                 if w == nil or frac == nil or (frac >= w.from and frac <= (w.to or 1)) then
                     local chance = load * RealisticCropRotationDisease.INFECTION_SCALE * weatherModifier(raining, temperature, group)
                     -- Preventive fungicide lowers the outbreak chance in proportion to the treated area; other families are unaffected.
@@ -521,7 +519,7 @@ function RealisticCropRotationDisease:evaluateInfection(farmlandId)
                         self.state[farmlandId] = self.state[farmlandId] or {}
                         self.state[farmlandId][group] = {
                             severity = RealisticCropRotationDisease.INITIAL_SEVERITY,
-                            -- seeds the Perlin destruction pattern; synced + saved so every client regenerates the identical dead area
+                            -- Saved and synced so every client rebuilds the same damage pattern.
                             seed = math.random(1, 1000000),
                         }
                     end
@@ -672,7 +670,6 @@ local function applyDestructionPass(desc, region, seed, threshold, protectionMap
         maskModifier:executeSet(1, shapePerlin)
     end
 
-    -- Parcel mask folded into the scratch mask.
     local outsideFilter = RealisticCropRotationManager.makeOutsideRegionFilter(region)
     if outsideFilter ~= nil then
         maskModifier:executeSet(0, outsideFilter)
@@ -791,15 +788,12 @@ function RealisticCropRotationDisease:propagate(farmlandId)
     -- dailyGrowth is calibrated at REFERENCE_DAYS_PER_PERIOD; dividing by periodScale keeps it constant across season-length configs.
     local scale = periodScale()
     local destructionAttempted = false
-    -- Fungicide-treated ground share, resolved once and only when a FUNGICIDE group needs it.
     local fungicideCoverage = nil
 
     for group, s in pairs(groups) do
         if activeDesc ~= nil then
-            -- Severity climbs only under a living host.
             local curve = self:getCurve(group)
             local wasVisible = self:isOutbreakVisible(group, s)
-            -- Weather drives sensitive groups; stronger effective pressure accelerates the epidemic.
             local loadSpeed = 1 + RealisticCropRotationDisease.LOAD_SPEED_GAIN * math.min(1, loads[group] or 0)
             local growth = (curve.dailyGrowth / scale) * weatherModifier(raining, temperature, group) * loadSpeed
             -- Curative fungicide freezes the climb in proportion to the treated area; other families are unaffected.
@@ -1311,7 +1305,6 @@ function RealisticCropRotationDisease:consoleDump(farmlandId)
     if #ids == 0 then return "No Realistic Crop Rotation farmland found" end
 
     local temperature = currentTemperature()
-    -- Temperature formatted as a string, nil-safe.
     Logging.info(
         "[RealisticCropRotation] weather temperature=%s factor=%.2f raining=%s periodScale=%.2f",
         temperature ~= nil and string.format("%.1fC", temperature) or "n/a",
@@ -1329,7 +1322,6 @@ function RealisticCropRotationDisease:consoleDump(farmlandId)
             protStr = string.format("FUNGICIDE=%.0f%%,NEMATICIDE=%.0f%%", fungCov * 100, nemaCov * 100)
         end
 
-        -- Load feeds the infection roll, pressure feeds the map, reservoir is the saved local source.
         Logging.info(
             "[RealisticCropRotation] disease farmland=%d crop=%s growth=%s fieldRisk={%s} effectiveRisk={%s} mapRisk={%s} riskBand=%d active={%s} protection={%s}",
             id,
@@ -1347,7 +1339,6 @@ function RealisticCropRotationDisease:consoleDump(farmlandId)
 end
 
 function RealisticCropRotationDisease:consoleInfect(farmlandId, groupName, severity)
-    -- Relayed to the server when typed on a client, master users only.
     if g_server == nil then
         return RCRAdminCommandEvent ~= nil
             and RCRAdminCommandEvent.request("rcrDiseaseInfect", farmlandId, groupName, severity)
@@ -1414,7 +1405,6 @@ function RealisticCropRotationDisease:consoleInfect(farmlandId, groupName, sever
 end
 
 function RealisticCropRotationDisease:consoleTick(farmlandId)
-    -- Relayed to the server when typed on a client, master users only.
     if g_server == nil then
         return RCRAdminCommandEvent ~= nil
             and RCRAdminCommandEvent.request("rcrDiseaseTick", farmlandId)
@@ -1433,7 +1423,6 @@ function RealisticCropRotationDisease:consoleTick(farmlandId)
 end
 
 function RealisticCropRotationDisease:consoleClear(farmlandId)
-    -- Relayed to the server when typed on a client, master users only.
     if g_server == nil then
         return RCRAdminCommandEvent ~= nil
             and RCRAdminCommandEvent.request("rcrDiseaseClear", farmlandId)

@@ -123,7 +123,6 @@ function RealisticCropRotationFrame.new(i18n, messageCenter)
     self.weatherCard = nil
     self.refreshTimerMs = 0
     self.isMenuOpen = false
-    self.useSnapshotActiveCrop = false
     return self
 end
 
@@ -138,7 +137,6 @@ function RealisticCropRotationFrame:copyAttributes(src)
     self.weatherCard = nil
     self.refreshTimerMs = 0
     self.isMenuOpen = false
-    self.useSnapshotActiveCrop = false
 end
 
 function RealisticCropRotationFrame:delete()
@@ -152,7 +150,6 @@ function RealisticCropRotationFrame:delete()
     self.selectedId = nil
     self.weatherCard = nil
     self.isMenuOpen = false
-    self.useSnapshotActiveCrop = false
     RealisticCropRotationFrame:superClass().delete(self)
 end
 
@@ -198,7 +195,6 @@ end
 function RealisticCropRotationFrame:initialize()
     RealisticCropRotationFrame:superClass().initialize(self)
 
-    -- Sidebar always lists fields, whichever sub-tab is active; the page title carries the mode.
     self.viewSelector:setTexts({
         self.i18n:getText("rcr_sidebar_fields"),
         self.i18n:getText("rcr_sidebar_fields"),
@@ -222,13 +218,9 @@ function RealisticCropRotationFrame:onFrameOpen()
     self.isMenuOpen = true
     self.refreshTimerMs = 0
     self:subscribeFarmlandChanges()
-    self:populateSidebar(true)
+    self:populateSidebar()
     self:setMenuButtonInfoDirty()
-    if g_currentMission:getIsServer() then
-        RealisticCropRotation.requestMenuReconcile(self.selectedId)
-    else
-        RealisticCropRotation.requestServerSync(self.selectedId)
-    end
+    RealisticCropRotation.requestMenuReconcile(self.selectedId)
     if FocusManager ~= nil and self.listFields:getItemCount() > 0 then
         FocusManager:setFocus(self.listFields)
     end
@@ -245,6 +237,11 @@ end
 function RealisticCropRotationFrame:onMenuReconcileFarmland(farmlandId)
     if not self.isMenuOpen or tonumber(farmlandId) ~= tonumber(self.selectedId) then return end
     if self:isHistoryTab() then
+        local selectedIndex = self.listFields:getSelectedIndexInSection()
+        local selectedCell = self.listFields:getElementAtSectionIndex(1, selectedIndex)
+        if selectedCell ~= nil then
+            self:populateCellForItemInSection(self.listFields, 1, selectedIndex, selectedCell)
+        end
         self:updateDetailPanel(self.selectedId)
     else
         self:updatePlanningPanel(self.selectedId)
@@ -253,8 +250,9 @@ end
 
 ---Reloads stored sidebar rows after a reconcile batch changed repository state.
 -- @param boolean changed True when at least one farmland changed
-function RealisticCropRotationFrame:onMenuReconcileComplete(changed)
-    if not self.isMenuOpen or not changed then return end
+-- @param boolean fullBatch True when the full farmland batch completed
+function RealisticCropRotationFrame:onMenuReconcileComplete(changed, fullBatch)
+    if not self.isMenuOpen or not changed or not fullBatch then return end
     self.listFields:reloadData()
 end
 
@@ -274,6 +272,7 @@ function RealisticCropRotationFrame:update(dt)
         self.weatherCard:refresh(false)
     end
     if self.selectedId ~= nil and self:isHistoryTab() then
+        RealisticCropRotation.requestMenuReconcile(self.selectedId, true)
         self:updateDetailPanel(self.selectedId)
     end
 end
@@ -331,41 +330,34 @@ function RealisticCropRotationFrame:getManager()
     return g_currentMission.realisticCropRotationManager
 end
 
----Returns the stored active crop during fast opening, otherwise the live field reading.
+---Returns the authoritative active crop stored by the repository.
 -- @param integer farmlandId
--- @param boolean useSnapshot True to avoid a density-map scan
 -- @return string cropName, or nil
 -- @return integer fruitTypeIndex, or nil
-function RealisticCropRotationFrame:getActiveCropInfoForDisplay(farmlandId, useSnapshot)
+function RealisticCropRotationFrame:getActiveCropInfoForDisplay(farmlandId)
     local mgr = self:getManager()
-
-    if useSnapshot then
-        local cropName = mgr.repository:getLastKnownActiveCrop(farmlandId)
-        local fruitType = cropName ~= nil and cropName ~= ""
-            and g_fruitTypeManager ~= nil
-            and type(g_fruitTypeManager.getFruitTypeByName) == "function"
-            and g_fruitTypeManager:getFruitTypeByName(tostring(cropName)) or nil
-        if fruitType ~= nil and fruitType.shownOnMap == false then
-            return nil, nil
-        end
-        return cropName, fruitType ~= nil and fruitType.index or nil
+    local cropName = mgr.repository:getLastKnownActiveCrop(farmlandId)
+    local fruitType = cropName ~= nil and cropName ~= ""
+        and g_fruitTypeManager ~= nil
+        and type(g_fruitTypeManager.getFruitTypeByName) == "function"
+        and g_fruitTypeManager:getFruitTypeByName(tostring(cropName)) or nil
+    if fruitType ~= nil and fruitType.shownOnMap == false then
+        return nil, nil
     end
-
-    return mgr:getActiveCropInfo(farmlandId)
+    return cropName, fruitType ~= nil and fruitType.index or nil
 end
 
 ---Updates the detail-tab residue pill: crop residue (n1/n2) or catch-crop cover residue, in kg/ha.
 -- @param table pillBg
 -- @param table pillText
 -- @param integer farmlandId
--- @param boolean useSnapshot True to use the repository's active crop
 -- @return number width Resized pill width
-function RealisticCropRotationFrame:updateResiduePill(pillBg, pillText, farmlandId, useSnapshot)
+function RealisticCropRotationFrame:updateResiduePill(pillBg, pillText, farmlandId)
     local text = self.i18n:getText("rcr_status_current_no_residue")
     local hasBonus = false
 
     local service = self:getManager().service
-    local activeCropName, activeFruitTypeIndex = self:getActiveCropInfoForDisplay(farmlandId, useSnapshot)
+    local activeCropName, activeFruitTypeIndex = self:getActiveCropInfoForDisplay(farmlandId)
     if activeCropName ~= nil and activeCropName ~= "" and not isFallowCrop(activeCropName) then
         local normalizedCropName = string.upper(tostring(activeCropName))
         local entry = service:getResidueEntry(normalizedCropName)
@@ -876,7 +868,6 @@ function RealisticCropRotationFrame:layoutCalendarLegend()
 
     self.calendarLegendSwatchCover.color = RealisticCropRotationFrame.FAMILY_RGBA.COVER
 
-    -- Fixed pixel constants -> normalized units (computed once).
     local SWATCH_PX = 14
     local TEXT_SWATCH_GAP_PX = 4
     local ITEM_GAP_PX = 16
@@ -893,14 +884,13 @@ function RealisticCropRotationFrame:layoutCalendarLegend()
     local itemGap = itemGapNorm[1]
     local swatchY = swatchYNorm[2]
 
-    -- Right-to-left placement order (reverse of visible reading order).
     local items = {
         {label = self.calendarLegendLabelCover,   swatch = self.calendarLegendSwatchCover,   key = "rcr_calendar_legend_cover"},
         {label = self.calendarLegendLabelHarvest, swatch = self.calendarLegendSwatchHarvest, key = "rcr_calendar_legend_harvest"},
         {label = self.calendarLegendLabelSow,     swatch = self.calendarLegendSwatchSow,     key = "rcr_calendar_legend_sowing"},
     }
 
-    -- cursorX = right edge of the next (leftward) item, normalized, measured from the container's own left edge (anchorTopLeft).
+    -- Place legend items from right to left.
     local cursorX = containerSize[1]
     for _, item in ipairs(items) do
         local text = self.i18n:getText(item.key)
@@ -910,7 +900,6 @@ function RealisticCropRotationFrame:layoutCalendarLegend()
         local labelSize = self:getElementOriginalSize(item.label)
         local labelH = labelSize ~= nil and labelSize[2] or swatchH
 
-        -- Layout (left to right within the item): label, gap, swatch.
         local swatchX = cursorX - swatchW
         local textX   = swatchX - gapW - textWidth
 
@@ -988,7 +977,6 @@ function RealisticCropRotationFrame:buildPlanCropList()
         table.insert(self.planCropList, RealisticCropRotation.SPECIAL_CROP_FALLOW)
     end
 
-    -- Only offer configured cover crops whose fruitType is registered on this map.
     local config = RealisticCropRotation ~= nil and RealisticCropRotation.cropConfig or nil
     local coverCropNames = config ~= nil and config.coverCropNames or {}
     for _, cropName in ipairs(coverCropNames) do
@@ -999,7 +987,6 @@ function RealisticCropRotationFrame:buildPlanCropList()
         end
     end
 
-    -- Only configured harvestable crops available on the current map.
     if g_fruitTypeManager ~= nil then
         local fruitsTable = g_fruitTypeManager.fruitTypes
         if fruitsTable == nil and g_fruitTypeManager.getFruitTypes ~= nil then
@@ -1053,9 +1040,7 @@ function RealisticCropRotationFrame:buildPlanCropList()
 end
 
 ---Rebuilds the field list + overview, restoring the prior selection, and refreshes panels.
--- @param boolean useSnapshot True to avoid active-crop scans during initial opening
-function RealisticCropRotationFrame:populateSidebar(useSnapshot)
-    self.useSnapshotActiveCrop = useSnapshot == true
+function RealisticCropRotationFrame:populateSidebar()
     local previousSelectedId = self.selectedId
     self.farmlandList = self:buildFarmlandList()
     self.totalAreaHa = self:calculateTotalAreaHa(self.farmlandList)
@@ -1083,11 +1068,10 @@ function RealisticCropRotationFrame:populateSidebar(useSnapshot)
     end
     self:updateContainerVisibility()
     if self:isHistoryTab() then
-        self:updateDetailPanel(self.selectedId, self.useSnapshotActiveCrop)
+        self:updateDetailPanel(self.selectedId)
     else
         self:updatePlanningPanel(self.selectedId)
     end
-    self.useSnapshotActiveCrop = false
 end
 
 ---SmoothList data source: number of sections.
@@ -1148,14 +1132,13 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
     local entry = (self.farmlandList or {})[index]
     if entry == nil then return end
 
-    -- Line 1: field name + area
     local nameEl = cell:getAttribute("fieldName")
     local areaEl = cell:getAttribute("fieldArea")
     if nameEl ~= nil then nameEl:setText(string.upper(tostring(entry.name or ""))) end
     if areaEl ~= nil then areaEl:setText(self:formatAreaHa(entry.areaHa)) end
 
     -- Open immediately from the authoritative snapshot; live reconciliation runs across frames.
-    local state = self:resolveCurrentFieldState(entry.farmlandId, true, false)
+    local state = self:resolveCurrentFieldState(entry.farmlandId, false)
 
     local iconFruitType = nil
     if state.kind == "CROP" and state.cropName ~= nil and g_fruitTypeManager ~= nil
@@ -1186,7 +1169,6 @@ function RealisticCropRotationFrame:populateCellForItemInSection(list, _section,
         if not loaded then iconEl:setVisible(false) end
     end
 
-    -- Icon background: crop map colour, else the field-status colour.
     local iconBgColor = nil
     if iconFruitType ~= nil then
         iconBgColor = self:getFruitTypeMapColor(iconFruitType)
@@ -1222,7 +1204,10 @@ function RealisticCropRotationFrame:onListSelectionChanged(_list, _section, inde
         if self.isRestoringSidebarSelection or self.selectedId == entry.farmlandId then return end
         self.selectedId = entry.farmlandId
         if self:isHistoryTab() then
-            self:updateDetailPanel(entry.farmlandId, self.useSnapshotActiveCrop)
+            if self.isMenuOpen then
+                RealisticCropRotation.requestMenuReconcile(self.selectedId, true)
+            end
+            self:updateDetailPanel(entry.farmlandId)
         else
             self:updatePlanningPanel(entry.farmlandId)
         end
@@ -1233,6 +1218,9 @@ function RealisticCropRotationFrame:onViewChanged()
     self:updateContainerVisibility()
     self:setMenuButtonInfoDirty()
     if self:isHistoryTab() then
+        if self.isMenuOpen and self.selectedId ~= nil then
+            RealisticCropRotation.requestMenuReconcile(self.selectedId, true)
+        end
         self:updateDetailPanel(self.selectedId)
     else
         self:buildRotationGroups()
@@ -1264,15 +1252,16 @@ end
 
 ---Resolves a field's current display state, shared by the sidebar and the detail card.
 -- @param integer farmlandId
--- @param boolean useSnapshot Read the authoritative snapshot instead of a live field scan
 -- @param boolean inferFallow Show a planned fallow over a harvested or bare field (detail card only)
 -- @return table state { kind = "CROP"|"FALLOW"|"STATUS"|"NONE", cropName, family, label, statusKind, statusIndex }
-function RealisticCropRotationFrame:resolveCurrentFieldState(farmlandId, useSnapshot, inferFallow)
-    local cropName, belowFloor
-    if useSnapshot then
-        cropName = self:getActiveCropInfoForDisplay(farmlandId, true)
-    else
-        cropName, _, _, belowFloor = self:getManager():getActiveCropInfo(farmlandId)
+function RealisticCropRotationFrame:resolveCurrentFieldState(farmlandId, inferFallow)
+    local cropName = self:getActiveCropInfoForDisplay(farmlandId)
+    local belowFloor = false
+    if inferFallow and cropName ~= nil then
+        local liveCropName, _, _, liveBelowFloor = self:getManager():getActiveCropInfo(farmlandId)
+        if liveBelowFloor and string.upper(tostring(liveCropName or "")) == string.upper(tostring(cropName)) then
+            belowFloor = true
+        end
     end
     local hasCrop = cropName ~= nil and cropName ~= ""
 
@@ -1298,13 +1287,12 @@ end
 
 ---Resolves the current timeline slot from the shared field state (planned fallow included).
 -- @param integer farmlandId
--- @param boolean useSnapshot True to use the repository's active crop
 -- @return string cropName, or nil
 -- @return string family
 -- @return string fallbackText Status/empty text when there is no crop, or nil
 -- @return table avatarColor RGBA for a field-status avatar, or nil
-function RealisticCropRotationFrame:getCurrentSlotData(farmlandId, useSnapshot)
-    local state = self:resolveCurrentFieldState(farmlandId, useSnapshot, true)
+function RealisticCropRotationFrame:getCurrentSlotData(farmlandId)
+    local state = self:resolveCurrentFieldState(farmlandId, true)
 
     if state.kind == "CROP" or state.kind == "FALLOW" then
         return state.cropName, state.family, nil, nil
@@ -1323,8 +1311,7 @@ end
 
 ---Refreshes the whole history detail panel for a farmland (title, pills, timeline, gauges).
 -- @param integer farmlandId
--- @param boolean useSnapshot True to avoid an active-crop density-map scan
-function RealisticCropRotationFrame:updateDetailPanel(farmlandId, useSnapshot)
+function RealisticCropRotationFrame:updateDetailPanel(farmlandId)
     local farmlandList = self.farmlandList or {}
     if #farmlandList == 0 then return end
 
@@ -1341,17 +1328,15 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId, useSnapshot)
     )
 
     local mgr = self:getManager()
-    self:updateResiduePill(self.statusPillBg, self.statusPillText, farmlandId, useSnapshot)
+    self:updateResiduePill(self.statusPillBg, self.statusPillText, farmlandId)
     self:layoutHeroPills(self.detailTitle, self.statusPillBg)
 
     local history = mgr:getHistory(farmlandId) or {}
 
-    -- Single field-status read for the field card.
     local statusLabel, statusKind, statusIndex = mgr:getCurrentFieldStatus(farmlandId)
 
-    -- Slot 1 = current crop, slots 2..5 = history N-1..N-4.
     local currentCropName, currentFamily, currentFallbackText, currentAvatarColor =
-        self:getCurrentSlotData(farmlandId, useSnapshot)
+        self:getCurrentSlotData(farmlandId)
     local currentBadgeKey = currentFamily == "COVER" and "rcr_cover_crop" or nil
 
     -- The timeline never reaches further back than the player plans ahead: a 3-year plan stops at N-3. An unplanned field keeps the full 4-year depth.
@@ -1373,7 +1358,7 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId, useSnapshot)
     end
     self:layoutHistoryTimeline(1 + historyCount)
 
-    -- All three gauges start at the same x (the widest of the row titles) so no track looks shorter just because its own label is narrower.
+    -- Align all gauge tracks to the widest row title.
     local nitrogenTitleWidth = self:getTextRenderWidth(self.nitrogenRowTitle, self.i18n:getText("rcr_section_nitrogen"))
     local limeTitleWidth = self:getTextRenderWidth(self.limeRowTitle, self.i18n:getText("rcr_section_lime"))
     local treatmentTitleWidth = self:getTextRenderWidth(self.treatmentRowTitle, self.i18n:getText("rcr_treatment_hud_label"))
@@ -1382,8 +1367,8 @@ function RealisticCropRotationFrame:updateDetailPanel(farmlandId, useSnapshot)
         sharedRowTitleWidth = math.max(sharedRowTitleWidth or 0, w)
     end
 
-    local _, snapshotFruitTypeIndex = self:getActiveCropInfoForDisplay(farmlandId, useSnapshot)
-    self:updateNitrogenGauge(farmlandId, sharedRowTitleWidth, snapshotFruitTypeIndex, useSnapshot)
+    local _, activeFruitTypeIndex = self:getActiveCropInfoForDisplay(farmlandId)
+    self:updateNitrogenGauge(farmlandId, sharedRowTitleWidth, activeFruitTypeIndex, true)
     self:updateSoilPHGauge(farmlandId, sharedRowTitleWidth)
     self:updateTreatmentGauge(farmlandId, sharedRowTitleWidth)
     self:updateAdvice(currentFamily, farmlandId, currentCropName)
@@ -1456,7 +1441,6 @@ function RealisticCropRotationFrame:layoutHistoryTimeline(visibleCount)
     local slotCount = RealisticCropRotationFrame.TIMELINE_SLOT_COUNT
     visibleCount = math.max(1, math.min(slotCount, math.floor(tonumber(visibleCount) or 1)))
 
-    -- Rail label i sits above card i; connector i bridges cards i and i+1.
     for i = 1, slotCount do
         local rail = self["slot" .. i .. "Rail"]
         rail:setVisible(i <= visibleCount)
@@ -1466,7 +1450,7 @@ function RealisticCropRotationFrame:layoutHistoryTimeline(visibleCount)
         connector:setVisible(i < visibleCount)
     end
 
-    -- Centre the run inside the band a full row occupies, so a full row keeps its native position (offset 0).
+    -- Centre partial history rows without moving a full row.
     local strip = self.historyTimeline
     local originalPos = self:getElementOriginalPosition(strip)
     if originalPos == nil then return end
@@ -1537,22 +1521,18 @@ function RealisticCropRotationFrame:updateNitrogenGauge(farmlandId, sharedRowTit
         labelKey = "rcr_n_average_pf"
         stateText = string.format(self.i18n:getText("rcr_n_average_value"), actualN)
         if targetN ~= nil and targetN > 0 then
-            -- Crop planted: fills against the requirement.
             ratio = math.min(actualN / targetN, 1)
             valueText = string.format(self.i18n:getText("rcr_n_crop_need"), targetN)
         else
-            -- No crop planted: empty gauge, just the soil's real average N.
             ratio = 0
         end
     end
 
-    -- Vanilla fallback: fertilisation level (SPRAY_LEVEL).
     if stateText == nil then
         local nLevel, maxLevel, fillRatio = mgr:getCurrentNitrogenLevel(farmlandId)
 
         nLevel = tonumber(nLevel) or 0
         maxLevel = math.max(1, tonumber(maxLevel) or 1)
-        -- Bar follows real coverage, the label states the level the field actually reached.
         ratio = tonumber(fillRatio) or (nLevel / maxLevel)
         valueText = string.format("%d / %d", nLevel, maxLevel)
 
@@ -1597,7 +1577,6 @@ function RealisticCropRotationFrame:updateSoilPHGauge(farmlandId, sharedRowTitle
         maxPH = tonumber(maxPH) or 0
         labelKey = "rcr_lime_average_pf"
         if targetPH ~= nil then
-            -- Fills against the soil's optimal pH.
             ratio = targetPH > 0 and math.min(actualPH / targetPH, 1) or 0
             stateText = string.format(self.i18n:getText("rcr_lime_average_value"), actualPH)
             valueText = string.format(self.i18n:getText("rcr_lime_target"), targetPH)
@@ -1612,7 +1591,6 @@ function RealisticCropRotationFrame:updateSoilPHGauge(farmlandId, sharedRowTitle
 
         limeLevel = tonumber(limeLevel) or 0
         maxLevel = math.max(1, tonumber(maxLevel) or 1)
-        -- Bar follows real coverage, the label states the level the field actually reached.
         ratio = tonumber(fillRatio) or (limeLevel / maxLevel)
         valueText = string.format("%d / %d", limeLevel, maxLevel)
 
@@ -1652,7 +1630,7 @@ function RealisticCropRotationFrame:updateTreatmentGauge(farmlandId, sharedRowTi
             and grid:getProtectionCoverage(region, fam) or 0
     end
 
-    -- Among visible outbreaks, point at the treatment family least able to cope (lowest coverage), so the gauge always shows the next action; ties go to the more severe disease.
+    -- Show the least protected active disease; severity breaks ties.
     local state = disease ~= nil and disease:getState(farmlandId) or nil
     local anyActive = false
     local hasRotationOnlyActive = false
@@ -1674,23 +1652,19 @@ function RealisticCropRotationFrame:updateTreatmentGauge(farmlandId, sharedRowTi
             end
         end
     end
-    -- No outbreak: report whichever family was actually sprayed (preventive coverage); nothing sprayed stays generic.
     if not anyActive then
         local fung, nema = coverageOf("FUNGICIDE"), coverageOf("NEMATICIDE")
         if fung > 0 or nema > 0 then
             if nema > fung then family, coverage = "NEMATICIDE", nema else family, coverage = "FUNGICIDE", fung end
         end
     end
-    -- (Active but only rotation-only diseases: family stays nil, coverage 0, no product shields them.)
 
     local complete = RealisticCropRotationFrame.TREATMENT_COMPLETE_THRESHOLD
 
-    -- Subject names the product in play so a switch between families stays legible; a rotation-only outbreak keeps the generic label.
     local subject = (family == "FUNGICIDE" and self.i18n:getText("rcr_fillType_fungicide"))
         or (family == "NEMATICIDE" and self.i18n:getText("rcr_fillType_nematicide"))
         or self.i18n:getText("rcr_treatment_hud_label")
 
-    -- Treatment level, with the treated percentage surfaced on the partial state.
     local levelText
     if coverage <= 0.005 then
         levelText = string.format("%s %s", subject, self.i18n:getText("rcr_treatment_absent"))
@@ -1714,7 +1688,6 @@ function RealisticCropRotationFrame:updateTreatmentGauge(farmlandId, sharedRowTi
     end
     local stateText = string.format("%s · %s", levelText, self.i18n:getText(diseaseKey))
 
-    -- Remaining protection: fungicide lasts to harvest, nematicide counts down in months.
     local valueText = nil
     if coverage > 0.005 then
         if family == "FUNGICIDE" then
@@ -1729,7 +1702,6 @@ function RealisticCropRotationFrame:updateTreatmentGauge(farmlandId, sharedRowTi
 
     local trackWidth = self:layoutSoilGaugeTrack(self.treatmentRowTitle, self.i18n:getText("rcr_treatment_hud_label"),
         self.treatmentTrack, self.treatmentBarFill, self.treatmentStateLabel, sharedRowTitleWidth)
-    -- Bar saturates to full once the coverage counts as complete, like the nitrogen/pH gauges reaching their target.
     self:setStatusBarFill(self.treatmentBarFill, coverage >= complete and 1 or coverage, trackWidth)
 
     self.treatmentStateLabel:setText(stateText)
@@ -1763,7 +1735,6 @@ function RealisticCropRotationFrame:updateFieldCard(farmlandId, actionLabel, sta
     self.requiredActionValue:applyProfile(actionProfile)
     self.requiredActionValue:setText(actionText)
 
-    -- Weed KPI reuses the on-foot HUD line: header = game stage label, value = tool.
     local headerText = (hasWeed and info.weedHeader ~= nil)
         and info.weedHeader
         or self.i18n:getText("rcr_weed_header")
@@ -1778,7 +1749,6 @@ function RealisticCropRotationFrame:updateFieldCard(farmlandId, actionLabel, sta
     self.growthValue:applyProfile(growthProfile)
     self.growthValue:setText(stageText)
 
-    -- Disease KPI reuses the weed layout: header = disease name in context, value = short treatment.
     local worstDiseaseGroup = self:getWorstActiveDisease(farmlandId)
     local diseaseHeaderText = self.i18n:getText("rcr_section_disease_map")
     local diseaseText = "-"
@@ -1789,7 +1759,6 @@ function RealisticCropRotationFrame:updateFieldCard(farmlandId, actionLabel, sta
             RealisticCropRotation.disease:getDisplayName(worstDiseaseGroup)
         )
 
-        -- Treatment enum mapped to the sprayer tanks' short fillType labels.
         local treatment = RealisticCropRotation.disease:getTreatment(worstDiseaseGroup)
         local treatmentKey = (treatment == "FUNGICIDE" and "rcr_fillType_fungicide")
             or (treatment == "NEMATICIDE" and "rcr_fillType_nematicide")
@@ -1872,7 +1841,6 @@ function RealisticCropRotationFrame:getWorstPressureAdviceText(farmlandId, curre
     local D = RealisticCropRotationDisease
     if D == nil then return nil end
 
-    -- Same figure the pressure map paints.
     local load = disease:getPressure(farmlandId)
     local bestBand, bestGroup, bestPressure = nil, nil, 0
     for group in pairs(cropDiseases) do
@@ -1908,7 +1876,6 @@ end
 function RealisticCropRotationFrame:getWorstActiveDisease(farmlandId)
     local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
     if disease == nil then return nil, 0 end
-    -- Same rule the disease map paints with.
     return disease:getWorstGroup(farmlandId)
 end
 
@@ -1922,7 +1889,7 @@ function RealisticCropRotationFrame:updateAdviceStatusCard(currentFamily, farmla
     local title = ""
     local text
 
-    -- 1) Active outbreak: the worst infection actually happening on this field right now.
+    -- Active outbreak.
     local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
     local worstGroup, worstSeverity = self:getWorstActiveDisease(farmlandId)
 
@@ -1938,13 +1905,13 @@ function RealisticCropRotationFrame:updateAdviceStatusCard(currentFamily, farmla
             text = text .. " " .. self.i18n:getText("rcr_advice_nematicide_duration")
         end
     elseif currentFamily == "FALLOW" then
-        -- 2) Fallow year in progress: a rest and sanitary break, not a crop.
+        -- Fallow year in progress.
         visualState = "Ready"
         badgeSymbol = "OK"
         title = self.i18n:getText("rcr_advice_title_fallow")
         text = self.i18n:getText("rcr_advice_fallow_current")
     else
-        -- 3) Planned-rotation-step evaluation, only for a real (known) current crop.
+        -- Planned next crop.
         local plan = self:getPlanForFarmland(farmlandId)
         local candidate = (currentFamily ~= "UNKNOWN")
             and self:getWorstPlannedNextStep(plan, currentCropName) or nil
@@ -1954,7 +1921,6 @@ function RealisticCropRotationFrame:updateAdviceStatusCard(currentFamily, farmla
             local nextSlotIdx = candidate.nextSlotIndex
             local yearLabel = self.i18n:getText("rcr_plan_year" .. nextSlotIdx)
             if isFallowCrop(nextCrop) then
-                -- Fallow planned next: an intentional break before the following crop.
                 visualState = "Ready"
                 badgeSymbol = "OK"
                 title = self.i18n:getText("rcr_advice_title_fallow")
@@ -1980,7 +1946,7 @@ function RealisticCropRotationFrame:updateAdviceStatusCard(currentFamily, farmla
                 end
             end
         else
-            -- 4) No confirmed next step: today's generic per-family advice, unchanged wording.
+            -- Generic current-crop advice.
             local key = RealisticCropRotationFrame.ADVICE_KEY[currentFamily]
             text = key ~= nil and self.i18n:getText(key) or self.i18n:getText("rcr_advice_no_current_crop")
         end
@@ -2241,7 +2207,6 @@ function RealisticCropRotationFrame:updateCalendarAxis()
         end
     end
 
-    -- 13th grid line marks the right edge of the grid, after the last visible month
     local lastGridEl = self.calendarMonthGridLine[13]
     local lineW = self:getCalendarGridLineWidth(13)
     self:setElementPixelPosition(
@@ -2340,12 +2305,11 @@ function RealisticCropRotationFrame:applyCalendarRow(slotIdx, cropName, coverCro
         placeBar(continuationBar, runs[2], y, visible)
     end
 
-    -- main crop: planting (green, top) + harvest (orange, bottom)
     local plantFlags, harvestFlags = self:getCropPeriodFlags(cropName, periodCount, firstPeriod)
     placeRuns(cropBar, cropBarContinuation, plantFlags, SOW_Y, hasCrop)
     placeRuns(harvestBar, harvestBarContinuation, harvestFlags, HARVEST_Y, hasCrop)
 
-    -- cover crop: planting only (never harvested), middle lane, tinted to its planner-card colour to read as a cover, not a main crop.
+    -- Cover crops use the middle lane and are never harvested.
     local coverFlags = nil
     if hasCover then
         coverFlags = self:getCropPeriodFlags(coverCropName, periodCount, firstPeriod)
@@ -2471,7 +2435,7 @@ function RealisticCropRotationFrame:onServerSyncReceived()
     self.isApplyingServerSync = true
 
     if self:isHistoryTab() then
-        self:populateSidebar(true)
+        self:populateSidebar()
     else
         self:buildRotationGroups()
         self.listPlanOverview:reloadData()
@@ -2612,7 +2576,6 @@ function RealisticCropRotationFrame:handleCalendarPlanChange(slotIdx, isCover)
 
     self:renderCalendarFromLocalPlans()
 
-    -- Refresh the overview from the repository (may lag one MP snapshot, never optimistic data).
     self:buildRotationGroups()
     self.listPlanOverview:reloadData()
 end
@@ -2677,7 +2640,6 @@ function RealisticCropRotationFrame:updateScoreCard(plan, coverPlan)
     local scoreKey = self:getScoreTextKey(score, plan)
     self.scoreText:setText(self.i18n:getText(scoreKey))
 
-    -- Cursor x = (score/100)*(400-14)+14 px along the 400px track (14px cursor).
     local trackW = 400
     local cursorW = 14
     local posW = math.floor((score / 100) * (trackW - cursorW) + cursorW)
@@ -2685,7 +2647,6 @@ function RealisticCropRotationFrame:updateScoreCard(plan, coverPlan)
         and GuiUtils.getNormalizedScreenValues(string.format("%dpx 14px", posW)) or nil
     if posSize ~= nil then self.scoreCursorPos:setSize(posSize[1], posSize[2]) end
 
-    -- Cursor color matches the same score zone used by overview badges.
     local _, r, g, b = self:getScoreLabel(score)
     self.scoreCursor.color = {r, g, b, 1.0}
 end
@@ -2726,13 +2687,11 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
     local n = #realIdx
     if n < 2 then return 0 end
 
-    -- Distinct families among the real crops.
     local seen = {}
     for _, i in ipairs(realIdx) do seen[slots[i].family] = true end
     local uniqueCount = 0
     for _ in pairs(seen) do uniqueCount = uniqueCount + 1 end
 
-    -- Starting score, before the agronomic penalties and bonuses.
     local score = (n >= 3) and RealisticCropRotationFrame.SCORE_BASE_FULL
                             or  RealisticCropRotationFrame.SCORE_BASE_PARTIAL
 
@@ -2769,7 +2728,6 @@ function RealisticCropRotationFrame:calcRotationScore(plan, coverPlan)
         score = score + RealisticCropRotationFrame.SCORE_SOWING_ALTERNATION_BONUS
     end
 
-    -- Nitrogen restored by a legume or a cover crop.
     if self:getPlanNitrogenResidueKgHa(plan, coverPlan) ~= nil then
         score = score + RealisticCropRotationFrame.SCORE_RESIDUE_BONUS
     end
@@ -2829,7 +2787,6 @@ function RealisticCropRotationFrame:buildRotationGroups()
     for _, entry in ipairs(self.farmlandList or {}) do
         local plan = self:getPlanForFarmland(entry.farmlandId)
         local coverPlan = self:getCoverPlanForFarmland(entry.farmlandId)
-        -- Key by exact main crop and cover crop sequence
         local key = (plan[1] or "") .. "|" .. (plan[2] or "")
                  .. "|" .. (plan[3] or "") .. "|" .. (plan[4] or "")
                  .. "||" .. (coverPlan[1] or "") .. "|" .. (coverPlan[2] or "")
@@ -3129,7 +3086,6 @@ function RealisticCropRotationFrame:populateGroupCell(index, cell)
         end
     end
 
-    -- 4 crop zones: main crop badges.
     local firstFilled, lastFilled = self:getPlanBounds(group.plan)
     for i = 1, 4 do
         local show, hasCrop, displayName, cropName = self:getGroupSlotDisplay(group, i, firstFilled, lastFilled)
@@ -3171,7 +3127,6 @@ function RealisticCropRotationFrame:populateGroupCell(index, cell)
 
     self:layoutGroupRow(cell, group)
 
-    -- Count
     local countEl = cell:getAttribute("gCount")
     if countEl ~= nil then
         countEl:setText("x " .. #group.fieldNames)
@@ -3195,7 +3150,6 @@ function RealisticCropRotationFrame:populateGroupCell(index, cell)
         scoreEl.textColor = {r, g, b, 1.0}
     end
 
-    -- Total rotation residue — text and calculation come from the shared planning helper.
     local residueCardEl = cell:getAttribute("gResidueCard")
     local residueBgEl = cell:getAttribute("gResidueBg")
     local residueTextEl = cell:getAttribute("gResidueText")
@@ -3215,13 +3169,11 @@ function RealisticCropRotationFrame:populateGroupCell(index, cell)
         metaColumnEl:invalidateLayout()
     end
 
-    -- Field names — bottom strip, uses TextElement scrolling for long lists.
     local namesEl = cell:getAttribute("gFieldNames")
     if namesEl ~= nil then
         namesEl:setText(self:getCompactGroupFieldNames(group.fieldNames))
     end
 
-    -- Cover crop recap — own line between the badge row and field names.
     local coverRecapEl = cell:getAttribute("gCoverRecap")
     if coverRecapEl ~= nil then
         local coverRecap = self:getGroupCoverRecapText(group)
