@@ -1452,19 +1452,7 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId, activeFruitTypeI
     if nCanLevel then
         local mapId, firstChannel, numChannels = getValueMapLayer(nMap)
         if mapId ~= nil then
-            -- Tramline pixels dropped via PF's tramline map.
-            local tramlineFilter = nil
-            local tMapId, tFirstChannel, tNumChannels = getValueMapLayer(pf.tramlineMap, 1)
-            if tMapId ~= nil then
-                tramlineFilter = makeDensityFilter(tMapId, tFirstChannel, tNumChannels,
-                    DensityValueCompareType.EQUAL, 0)
-            end
-
-            local sum, pixels = aggregateRegionLayer(region, mapId, firstChannel, numChannels, nitrogenMask, tramlineFilter)
-            -- Field entirely under tramlines: falls back to the whole cropped area.
-            if sum == nil or pixels == 0 then
-                sum, pixels = aggregateRegionLayer(region, mapId, firstChannel, numChannels, nitrogenMask)
-            end
+            local sum, pixels = aggregateRegionLayer(region, mapId, firstChannel, numChannels, nitrogenMask)
             -- Crop mask matching nothing: falls back to the read region.
             if (sum == nil or pixels == 0) and nitrogenMask ~= parcelGroundMask then
                 sum, pixels = aggregateRegionLayer(region, mapId, firstChannel, numChannels, parcelGroundMask)
