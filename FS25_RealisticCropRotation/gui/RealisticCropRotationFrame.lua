@@ -68,8 +68,8 @@ RealisticCropRotationFrame.GROUP_BADGE_H          = 30
 RealisticCropRotationFrame.GROUP_ICON_W           = 20
 RealisticCropRotationFrame.GROUP_ICON_H           = 20
 RealisticCropRotationFrame.GROUP_ICON_TEXT_GAP    = 5
-RealisticCropRotationFrame.GROUP_BADGE_PADDING_X  = 20
-RealisticCropRotationFrame.GROUP_BADGE_TEXT_SAFETY_PX = 20
+RealisticCropRotationFrame.GROUP_BADGE_PADDING_X  = 10
+RealisticCropRotationFrame.GROUP_BADGE_TEXT_SAFETY_PX = 10
 
 -- History timeline geometry (pixels; converted at runtime). 5 slot cards of 224px joined by 25px connectors.
 RealisticCropRotationFrame.TIMELINE_SLOT_COUNT     = 5
