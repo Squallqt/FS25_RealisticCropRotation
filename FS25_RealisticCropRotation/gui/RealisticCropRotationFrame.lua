@@ -64,12 +64,12 @@ RealisticCropRotationFrame.SOIL_ROW_TITLE_GAP_PX = 16
 
 -- Global overview crop badge layout, in pixels, converted at runtime.
 RealisticCropRotationFrame.GROUP_BADGE_Y          = 16.5
-RealisticCropRotationFrame.GROUP_BADGE_H          = 30
+RealisticCropRotationFrame.GROUP_BADGE_H          = 26
 RealisticCropRotationFrame.GROUP_ICON_W           = 20
 RealisticCropRotationFrame.GROUP_ICON_H           = 20
 RealisticCropRotationFrame.GROUP_ICON_TEXT_GAP    = 5
-RealisticCropRotationFrame.GROUP_BADGE_PADDING_X  = 20
-RealisticCropRotationFrame.GROUP_BADGE_TEXT_SAFETY_PX = 20
+RealisticCropRotationFrame.GROUP_BADGE_PADDING_X  = 10
+RealisticCropRotationFrame.GROUP_BADGE_TEXT_SAFETY_PX = 10
 
 -- History timeline geometry (pixels; converted at runtime). 5 slot cards of 224px joined by 25px connectors.
 RealisticCropRotationFrame.TIMELINE_SLOT_COUNT     = 5
@@ -189,7 +189,7 @@ function RealisticCropRotationFrame:setupSectionLines()
     self:layoutSectionLine(self.fieldSectionLine, self.fieldSectionTitle)
     self:layoutSectionLine(self.planSectionLine, self.planSectionTitle)
     self:layoutSectionLine(self.scoreSectionLine, self.scoreSectionTitle)
-    self:layoutSectionLine(self.overviewSectionLine, self.overviewSectionTitle, self.overviewTotalArea)
+    self:layoutOverviewSectionHeader()
 end
 
 function RealisticCropRotationFrame:initialize()
@@ -218,6 +218,7 @@ function RealisticCropRotationFrame:onFrameOpen()
     self.isMenuOpen = true
     self.refreshTimerMs = 0
     self:subscribeFarmlandChanges()
+    self:setupOverviewCoverLegend()
     self:populateSidebar()
     self:setMenuButtonInfoDirty()
     RealisticCropRotation.requestMenuReconcile(self.selectedId)
@@ -649,7 +650,7 @@ end
 function RealisticCropRotationFrame:updateOverviewTotalArea()
     local label = self.i18n:getText("rcr_overview_total_area")
     self.overviewTotalArea:setText(string.format(label, self.totalAreaHa or 0))
-    self:layoutSectionLine(self.overviewSectionLine, self.overviewSectionTitle, self.overviewTotalArea)
+    self:layoutOverviewSectionHeader()
 end
 
 ---Returns an element's first-seen size, caching it for later restores.
@@ -835,6 +836,80 @@ function RealisticCropRotationFrame:layoutSectionLine(lineEl, titleEl, rightBoun
 
     lineEl:setPosition(lineXAbs - parentAbsX, lineEl.position[2])
     lineEl:setSize(lineWidth, lineEl.size[2])
+end
+
+---Lays out the overview header with a centred cover-crop legend between two divider segments.
+function RealisticCropRotationFrame:layoutOverviewSectionHeader()
+    local leftLine = self.overviewSectionLine
+    local rightLine = self.overviewSectionLineRight
+    local titleEl = self.overviewSectionTitle
+    local totalAreaEl = self.overviewTotalArea
+    local legendBgEl = self.overviewCoverLegendIconBg
+    local legendIconEl = self.overviewCoverLegendIcon
+    local legendTextEl = self.overviewCoverLegendText
+    if leftLine == nil or rightLine == nil or titleEl == nil or totalAreaEl == nil
+        or legendBgEl == nil or legendIconEl == nil or legendTextEl == nil then
+        return
+    end
+
+    local titleWidth = self:getTextRenderWidth(titleEl, titleEl.text)
+    local legendTextWidth = self:getTextRenderWidth(legendTextEl, legendTextEl.text)
+    if titleWidth == nil or legendTextWidth == nil then return end
+
+    local parentAbsX = leftLine.parent.absPosition[1]
+    local lineGap = self:getNormalizedPixelWidth(12)
+    local legendGap = self:getNormalizedPixelWidth(6)
+    local rightInset = self:getNormalizedPixelWidth(26)
+    local lineStartAbs = titleEl.absPosition[1] + titleWidth + lineGap
+    local maxRightAbs = parentAbsX + leftLine.parent.absSize[1] - rightInset
+    local totalAreaTextWidth = self:getTextRenderWidth(totalAreaEl, totalAreaEl.text) or 0
+    local totalAreaRightEdge = totalAreaEl.absPosition[1] + totalAreaEl.absSize[1]
+    maxRightAbs = math.min(maxRightAbs, totalAreaRightEdge - totalAreaTextWidth - lineGap)
+
+    local legendBgSize = self:getElementOriginalSize(legendBgEl)
+    local legendBgPos = self:getElementOriginalPosition(legendBgEl)
+    local legendIconPos = self:getElementOriginalPosition(legendIconEl)
+    local legendTextPos = self:getElementOriginalPosition(legendTextEl)
+    if legendBgSize == nil or legendBgPos == nil or legendIconPos == nil or legendTextPos == nil then return end
+
+    local legendWidth = legendBgSize[1] + legendGap + legendTextWidth
+    local availableWidth = math.max(0, maxRightAbs - lineStartAbs)
+    local legendXAbs = lineStartAbs + math.max(0, (availableWidth - legendWidth) * 0.5)
+    local leftLineWidth = math.max(0, legendXAbs - lineGap - lineStartAbs)
+    local rightLineXAbs = legendXAbs + legendWidth + lineGap
+    local rightLineWidth = math.max(0, maxRightAbs - rightLineXAbs)
+
+    leftLine:setPosition(lineStartAbs - parentAbsX, leftLine.position[2])
+    leftLine:setSize(leftLineWidth, leftLine.size[2])
+    rightLine:setPosition(rightLineXAbs - parentAbsX, rightLine.position[2])
+    rightLine:setSize(rightLineWidth, rightLine.size[2])
+
+    local legendX = legendXAbs - parentAbsX
+    legendBgEl:setPosition(legendX, legendBgPos[2])
+    legendIconEl:setPosition(legendX, legendIconPos[2])
+    legendTextEl:setPosition(legendX + legendBgSize[1] + legendGap, legendTextPos[2])
+    legendTextEl:setSize(legendTextWidth, legendTextEl.size[2])
+end
+
+---Loads the first available configured cover crop as the overview legend sample.
+function RealisticCropRotationFrame:setupOverviewCoverLegend()
+    local iconBgEl = self.overviewCoverLegendIconBg
+    local iconEl = self.overviewCoverLegendIcon
+    if iconBgEl == nil or iconEl == nil then return end
+
+    local coverName = self.coverCropList ~= nil and self.coverCropList[2] or nil
+    local loaded = self:applySlotCropIcon(iconEl, coverName)
+    iconBgEl:setVisible(false)
+    if loaded and g_fruitTypeManager ~= nil
+        and type(g_fruitTypeManager.getFruitTypeByName) == "function" then
+        local fruitType = g_fruitTypeManager:getFruitTypeByName(string.upper(coverName))
+        local nativeColor = self:getFruitTypeMapColor(fruitType)
+        if nativeColor ~= nil then
+            self:applyIconBackgroundColor(iconBgEl, nativeColor)
+        end
+    end
+
+    self:layoutOverviewSectionHeader()
 end
 
 ---Shrinks the hero title so it never runs under the status pill.
@@ -2450,15 +2525,16 @@ end
 ---Sets a crop icon element to the crop's HUD overlay, or hides it.
 -- @param table iconEl
 -- @param string cropName
+-- @return boolean loaded
 function RealisticCropRotationFrame:applySlotCropIcon(iconEl, cropName)
-    if iconEl == nil then return end
+    if iconEl == nil then return false end
     if cropName == nil or cropName == "" then
         iconEl:setVisible(false)
-        return
+        return false
     end
     if isFallowCrop(cropName) then
         iconEl:setVisible(false)
-        return
+        return false
     end
 
     local hudOverlayFilename = nil
@@ -2485,6 +2561,7 @@ function RealisticCropRotationFrame:applySlotCropIcon(iconEl, cropName)
         loaded = true
     end
     if not loaded then iconEl:setVisible(false) end
+    return loaded
 end
 
 function RealisticCropRotationFrame:onChangeCalendarEditStep()
@@ -2835,29 +2912,6 @@ function RealisticCropRotationFrame:getCompactGroupFieldNames(fieldNames)
     return table.concat(parts, "  |  ")
 end
 
----Cover recap line: each slot's cover crop name.
--- @param table group
--- @return string text
-function RealisticCropRotationFrame:getGroupCoverRecapText(group)
-    if group == nil or group.coverPlan == nil then return "" end
-
-    local yearKeys = { "rcr_plan_year1", "rcr_plan_year2", "rcr_plan_year3", "rcr_plan_year4" }
-
-    local parts = {}
-    for i = 1, 4 do
-        local coverName = group.coverPlan[i] or ""
-        if coverName ~= "" then
-            table.insert(parts, string.format(
-                self.i18n:getText("rcr_overview_cover_entry"),
-                self.i18n:getText(yearKeys[i]),
-                self:getCropDisplayName(coverName)
-            ))
-        end
-    end
-
-    return table.concat(parts, "   ·   ")
-end
-
 ---Returns the first and last filled slot indices of a plan.
 -- @param table plan
 -- @return integer firstFilled, or nil
@@ -2911,6 +2965,8 @@ function RealisticCropRotationFrame:layoutGroupBadgeContent(cell, slotIndex, dis
     if showIcon == nil then showIcon = true end
 
     local iconEl  = cell:getAttribute("gCropIcon" .. slotIndex)
+    local coverIconBgEl = cell:getAttribute("gCoverIconBg" .. slotIndex)
+    local coverIconEl = cell:getAttribute("gCoverIcon" .. slotIndex)
     local labelEl = cell:getAttribute("gLabel" .. slotIndex)
     local badgeEl = cell:getAttribute("gBadge" .. slotIndex)
     local yearLabelEl = cell:getAttribute("gYearLabel" .. slotIndex)
@@ -2979,6 +3035,16 @@ function RealisticCropRotationFrame:layoutGroupBadgeContent(cell, slotIndex, dis
     end
     if labelEl.setText ~= nil then
         labelEl:setText(displayText or "")
+    end
+    local coverCenterX = badgePos[1] + badgeWidth * 0.5
+    for _, coverEl in pairs({coverIconBgEl, coverIconEl}) do
+        if coverEl.setPosition ~= nil then
+            local coverSize = self:getElementOriginalSize(coverEl)
+            local coverPos = self:getElementOriginalPosition(coverEl)
+            if coverSize ~= nil and coverPos ~= nil then
+                coverEl:setPosition(coverCenterX - coverSize[1] * 0.5, coverPos[2])
+            end
+        end
     end
 
     return badgeWidth
@@ -3069,7 +3135,7 @@ function RealisticCropRotationFrame:layoutGroupRow(cell, group)
     end
 end
 
----Fills an overview group cell: badges, count, area, score, residue, field names, cover recap.
+---Fills an overview group cell: crop badges, cover icons, count, area, score, residue and field names.
 -- @param integer index Group index
 -- @param table cell
 function RealisticCropRotationFrame:populateGroupCell(index, cell)
@@ -3123,6 +3189,29 @@ function RealisticCropRotationFrame:populateGroupCell(index, cell)
 
         local yearLabelEl = cell:getAttribute("gYearLabel" .. i)
         if yearLabelEl ~= nil then yearLabelEl:setVisible(show and not isEmptyGroup) end
+
+        local coverIconBgEl = cell:getAttribute("gCoverIconBg" .. i)
+        local coverIconEl = cell:getAttribute("gCoverIcon" .. i)
+        if coverIconEl ~= nil then
+            local coverName = group.coverPlan ~= nil and (group.coverPlan[i] or "") or ""
+            local coverLoaded = false
+            if show and coverName ~= "" then
+                coverLoaded = self:applySlotCropIcon(coverIconEl, coverName)
+            else
+                coverIconEl:setVisible(false)
+            end
+            if coverIconBgEl ~= nil then
+                coverIconBgEl:setVisible(false)
+                if coverLoaded and g_fruitTypeManager ~= nil
+                    and type(g_fruitTypeManager.getFruitTypeByName) == "function" then
+                    local coverFruitType = g_fruitTypeManager:getFruitTypeByName(string.upper(coverName))
+                    local nativeColor = self:getFruitTypeMapColor(coverFruitType)
+                    if nativeColor ~= nil then
+                        self:applyIconBackgroundColor(coverIconBgEl, nativeColor)
+                    end
+                end
+            end
+        end
     end
 
     self:layoutGroupRow(cell, group)
@@ -3174,12 +3263,4 @@ function RealisticCropRotationFrame:populateGroupCell(index, cell)
         namesEl:setText(self:getCompactGroupFieldNames(group.fieldNames))
     end
 
-    local coverRecapEl = cell:getAttribute("gCoverRecap")
-    if coverRecapEl ~= nil then
-        local coverRecap = self:getGroupCoverRecapText(group)
-        coverRecapEl:setVisible(coverRecap ~= "")
-        if coverRecap ~= "" then
-            coverRecapEl:setText(coverRecap)
-        end
-    end
 end

@@ -151,9 +151,6 @@
         <e k="rcr_plan_year4"           v="N+4" />
         <e k="rcr_plan_none"            v="Not Planned" />
 
-        <!-- Global overview — cover crop recap (own line) -->
-        <e k="rcr_overview_cover_entry" v="Cover %s: %s" />
-
         <!-- Planning tab — annual calendar -->
         <e k="rcr_calendar_month_1"     v="Mar" />
         <e k="rcr_calendar_month_2"     v="Apr" />

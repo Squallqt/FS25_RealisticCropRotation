@@ -452,6 +452,10 @@
                 <RoundCorner profile="frSectionAccent" position="14px 0px"/>
                 <Text profile="frSectionTitle" id="overviewSectionTitle" text="$l10n_rcr_section_overview"/>
                 <RoundCorner profile="frSectionLine" id="overviewSectionLine"/>
+                <RoundCorner profile="frSectionLine" id="overviewSectionLineRight"/>
+                <RoundCorner profile="frOverviewCoverLegendIconBg" id="overviewCoverLegendIconBg" visible="false"/>
+                <Bitmap profile="frOverviewCoverLegendIcon" id="overviewCoverLegendIcon" visible="false"/>
+                <Text profile="frOverviewCoverLegendText" id="overviewCoverLegendText" text="$l10n_rcr_cover_crop"/>
                 <Text profile="frOverviewTotalArea" id="overviewTotalArea" text=""/>
             </GuiElement>
 
@@ -485,26 +489,26 @@
                         <Text profile="frGroupYearLabel" name="gYearLabel4" position="738px -3.5px"  text="$l10n_rcr_plan_year4" visible="false"/>
 
                         <RoundCorner profile="frGroupBadge"      name="gBadge1" position="132px -16.5px" visible="false"/>
-                        <Bitmap      profile="frGroupCropIconCard" name="gCropIcon1" position="132px -21.5px" visible="false"/>
-                        <Text        profile="frGroupBadgeLabel" name="gLabel1" position="157px -16.5px" size="170px 30px" text="" visible="false"/>
+                        <Bitmap      profile="frGroupCropIconCard" name="gCropIcon1" position="132px -19.5px" visible="false"/>
+                        <Text        profile="frGroupBadgeLabel" name="gLabel1" position="157px -16.5px" size="170px 26px" text="" visible="false"/>
 
-                        <Bitmap profile="frGroupArrow" name="gArrow1" position="310px -21.5px" visible="false"/>
+                        <Bitmap profile="frGroupArrow" name="gArrow1" position="310px -20.5px" visible="false"/>
 
                         <RoundCorner profile="frGroupBadge"      name="gBadge2" position="334px -16.5px" visible="false"/>
-                        <Bitmap      profile="frGroupCropIconCard" name="gCropIcon2" position="334px -21.5px" visible="false"/>
-                        <Text        profile="frGroupBadgeLabel" name="gLabel2" position="359px -16.5px" size="170px 30px" text="" visible="false"/>
+                        <Bitmap      profile="frGroupCropIconCard" name="gCropIcon2" position="334px -19.5px" visible="false"/>
+                        <Text        profile="frGroupBadgeLabel" name="gLabel2" position="359px -16.5px" size="170px 26px" text="" visible="false"/>
 
-                        <Bitmap profile="frGroupArrow" name="gArrow2" position="512px -21.5px" visible="false"/>
+                        <Bitmap profile="frGroupArrow" name="gArrow2" position="512px -20.5px" visible="false"/>
 
                         <RoundCorner profile="frGroupBadge"      name="gBadge3" position="536px -16.5px" visible="false"/>
-                        <Bitmap      profile="frGroupCropIconCard" name="gCropIcon3" position="536px -21.5px" visible="false"/>
-                        <Text        profile="frGroupBadgeLabel" name="gLabel3" position="561px -16.5px" size="170px 30px" text="" visible="false"/>
+                        <Bitmap      profile="frGroupCropIconCard" name="gCropIcon3" position="536px -19.5px" visible="false"/>
+                        <Text        profile="frGroupBadgeLabel" name="gLabel3" position="561px -16.5px" size="170px 26px" text="" visible="false"/>
 
-                        <Bitmap profile="frGroupArrow" name="gArrow3" position="714px -21.5px" visible="false"/>
+                        <Bitmap profile="frGroupArrow" name="gArrow3" position="714px -20.5px" visible="false"/>
 
                         <RoundCorner profile="frGroupBadge"      name="gBadge4" position="738px -16.5px" visible="false"/>
-                        <Bitmap      profile="frGroupCropIconCard" name="gCropIcon4" position="738px -21.5px" visible="false"/>
-                        <Text        profile="frGroupBadgeLabel" name="gLabel4" position="763px -16.5px" size="170px 30px" text="" visible="false"/>
+                        <Bitmap      profile="frGroupCropIconCard" name="gCropIcon4" position="738px -19.5px" visible="false"/>
+                        <Text        profile="frGroupBadgeLabel" name="gLabel4" position="763px -16.5px" size="170px 26px" text="" visible="false"/>
 
                         <BoxLayout profile="frOverviewMetaColumn" name="gMetaColumn">
                             <GuiElement profile="frOverviewResidueCard" name="gResidueCard" visible="false">
@@ -514,7 +518,17 @@
                             <Text profile="frOverviewScore" name="gScore" text=""/>
                         </BoxLayout>
 
-                        <Text profile="frGroupCoverRecap" name="gCoverRecap" text="" visible="false"/>
+                        <RoundCorner profile="frGroupCoverIconBg" name="gCoverIconBg1" position="132px -43.5px" visible="false"/>
+                        <Bitmap profile="frGroupCropIconCard" name="gCoverIcon1" position="132px -43.5px" size="18px 18px" visible="false"/>
+
+                        <RoundCorner profile="frGroupCoverIconBg" name="gCoverIconBg2" position="334px -43.5px" visible="false"/>
+                        <Bitmap profile="frGroupCropIconCard" name="gCoverIcon2" position="334px -43.5px" size="18px 18px" visible="false"/>
+
+                        <RoundCorner profile="frGroupCoverIconBg" name="gCoverIconBg3" position="536px -43.5px" visible="false"/>
+                        <Bitmap profile="frGroupCropIconCard" name="gCoverIcon3" position="536px -43.5px" size="18px 18px" visible="false"/>
+
+                        <RoundCorner profile="frGroupCoverIconBg" name="gCoverIconBg4" position="738px -43.5px" visible="false"/>
+                        <Bitmap profile="frGroupCropIconCard" name="gCoverIcon4" position="738px -43.5px" size="18px 18px" visible="false"/>
 
                         <Text profile="frGroupFieldNames" name="gFieldNames" text=""/>
                     </ListItem>
