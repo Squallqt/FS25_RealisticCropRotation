@@ -452,10 +452,6 @@
                 <RoundCorner profile="frSectionAccent" position="14px 0px"/>
                 <Text profile="frSectionTitle" id="overviewSectionTitle" text="$l10n_rcr_section_overview"/>
                 <RoundCorner profile="frSectionLine" id="overviewSectionLine"/>
-                <RoundCorner profile="frSectionLine" id="overviewSectionLineRight"/>
-                <RoundCorner profile="frOverviewCoverLegendIconBg" id="overviewCoverLegendIconBg" visible="false"/>
-                <Bitmap profile="frOverviewCoverLegendIcon" id="overviewCoverLegendIcon" visible="false"/>
-                <Text profile="frOverviewCoverLegendText" id="overviewCoverLegendText" text="$l10n_rcr_cover_crop"/>
                 <Text profile="frOverviewTotalArea" id="overviewTotalArea" text=""/>
             </GuiElement>
 

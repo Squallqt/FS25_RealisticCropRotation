@@ -189,7 +189,7 @@ function RealisticCropRotationFrame:setupSectionLines()
     self:layoutSectionLine(self.fieldSectionLine, self.fieldSectionTitle)
     self:layoutSectionLine(self.planSectionLine, self.planSectionTitle)
     self:layoutSectionLine(self.scoreSectionLine, self.scoreSectionTitle)
-    self:layoutOverviewSectionHeader()
+    self:layoutSectionLine(self.overviewSectionLine, self.overviewSectionTitle, self.overviewTotalArea)
 end
 
 function RealisticCropRotationFrame:initialize()
@@ -218,10 +218,10 @@ function RealisticCropRotationFrame:onFrameOpen()
     self.isMenuOpen = true
     self.refreshTimerMs = 0
     self:subscribeFarmlandChanges()
-    self:setupOverviewCoverLegend()
     self:populateSidebar()
     self:setMenuButtonInfoDirty()
-    RealisticCropRotation.requestMenuReconcile(self.selectedId)
+    RealisticCropRotation.requestMenuReconcile(
+        self.selectedId, false, self:getSidebarFarmlandIds())
     if FocusManager ~= nil and self.listFields:getItemCount() > 0 then
         FocusManager:setFocus(self.listFields)
     end
@@ -519,6 +519,17 @@ function RealisticCropRotationFrame:buildFarmlandList()
     return self:getManager():getOwnedFarmlands() or {}
 end
 
+---Returns the exact farmland ids currently represented by the sidebar.
+-- @return table farmlandIds
+function RealisticCropRotationFrame:getSidebarFarmlandIds()
+    local result = {}
+    for _, entry in ipairs(self.farmlandList or {}) do
+        local farmlandId = tonumber(entry.farmlandId)
+        if farmlandId ~= nil and farmlandId > 0 then result[#result + 1] = farmlandId end
+    end
+    return result
+end
+
 ---Formats a hectare value as "X.XX ha".
 -- @param number areaHa
 -- @return string text
@@ -650,7 +661,7 @@ end
 function RealisticCropRotationFrame:updateOverviewTotalArea()
     local label = self.i18n:getText("rcr_overview_total_area")
     self.overviewTotalArea:setText(string.format(label, self.totalAreaHa or 0))
-    self:layoutOverviewSectionHeader()
+    self:layoutSectionLine(self.overviewSectionLine, self.overviewSectionTitle, self.overviewTotalArea)
 end
 
 ---Returns an element's first-seen size, caching it for later restores.
@@ -836,80 +847,6 @@ function RealisticCropRotationFrame:layoutSectionLine(lineEl, titleEl, rightBoun
 
     lineEl:setPosition(lineXAbs - parentAbsX, lineEl.position[2])
     lineEl:setSize(lineWidth, lineEl.size[2])
-end
-
----Lays out the overview header with a centred cover-crop legend between two divider segments.
-function RealisticCropRotationFrame:layoutOverviewSectionHeader()
-    local leftLine = self.overviewSectionLine
-    local rightLine = self.overviewSectionLineRight
-    local titleEl = self.overviewSectionTitle
-    local totalAreaEl = self.overviewTotalArea
-    local legendBgEl = self.overviewCoverLegendIconBg
-    local legendIconEl = self.overviewCoverLegendIcon
-    local legendTextEl = self.overviewCoverLegendText
-    if leftLine == nil or rightLine == nil or titleEl == nil or totalAreaEl == nil
-        or legendBgEl == nil or legendIconEl == nil or legendTextEl == nil then
-        return
-    end
-
-    local titleWidth = self:getTextRenderWidth(titleEl, titleEl.text)
-    local legendTextWidth = self:getTextRenderWidth(legendTextEl, legendTextEl.text)
-    if titleWidth == nil or legendTextWidth == nil then return end
-
-    local parentAbsX = leftLine.parent.absPosition[1]
-    local lineGap = self:getNormalizedPixelWidth(12)
-    local legendGap = self:getNormalizedPixelWidth(6)
-    local rightInset = self:getNormalizedPixelWidth(26)
-    local lineStartAbs = titleEl.absPosition[1] + titleWidth + lineGap
-    local maxRightAbs = parentAbsX + leftLine.parent.absSize[1] - rightInset
-    local totalAreaTextWidth = self:getTextRenderWidth(totalAreaEl, totalAreaEl.text) or 0
-    local totalAreaRightEdge = totalAreaEl.absPosition[1] + totalAreaEl.absSize[1]
-    maxRightAbs = math.min(maxRightAbs, totalAreaRightEdge - totalAreaTextWidth - lineGap)
-
-    local legendBgSize = self:getElementOriginalSize(legendBgEl)
-    local legendBgPos = self:getElementOriginalPosition(legendBgEl)
-    local legendIconPos = self:getElementOriginalPosition(legendIconEl)
-    local legendTextPos = self:getElementOriginalPosition(legendTextEl)
-    if legendBgSize == nil or legendBgPos == nil or legendIconPos == nil or legendTextPos == nil then return end
-
-    local legendWidth = legendBgSize[1] + legendGap + legendTextWidth
-    local availableWidth = math.max(0, maxRightAbs - lineStartAbs)
-    local legendXAbs = lineStartAbs + math.max(0, (availableWidth - legendWidth) * 0.5)
-    local leftLineWidth = math.max(0, legendXAbs - lineGap - lineStartAbs)
-    local rightLineXAbs = legendXAbs + legendWidth + lineGap
-    local rightLineWidth = math.max(0, maxRightAbs - rightLineXAbs)
-
-    leftLine:setPosition(lineStartAbs - parentAbsX, leftLine.position[2])
-    leftLine:setSize(leftLineWidth, leftLine.size[2])
-    rightLine:setPosition(rightLineXAbs - parentAbsX, rightLine.position[2])
-    rightLine:setSize(rightLineWidth, rightLine.size[2])
-
-    local legendX = legendXAbs - parentAbsX
-    legendBgEl:setPosition(legendX, legendBgPos[2])
-    legendIconEl:setPosition(legendX, legendIconPos[2])
-    legendTextEl:setPosition(legendX + legendBgSize[1] + legendGap, legendTextPos[2])
-    legendTextEl:setSize(legendTextWidth, legendTextEl.size[2])
-end
-
----Loads the first available configured cover crop as the overview legend sample.
-function RealisticCropRotationFrame:setupOverviewCoverLegend()
-    local iconBgEl = self.overviewCoverLegendIconBg
-    local iconEl = self.overviewCoverLegendIcon
-    if iconBgEl == nil or iconEl == nil then return end
-
-    local coverName = self.coverCropList ~= nil and self.coverCropList[2] or nil
-    local loaded = self:applySlotCropIcon(iconEl, coverName)
-    iconBgEl:setVisible(false)
-    if loaded and g_fruitTypeManager ~= nil
-        and type(g_fruitTypeManager.getFruitTypeByName) == "function" then
-        local fruitType = g_fruitTypeManager:getFruitTypeByName(string.upper(coverName))
-        local nativeColor = self:getFruitTypeMapColor(fruitType)
-        if nativeColor ~= nil then
-            self:applyIconBackgroundColor(iconBgEl, nativeColor)
-        end
-    end
-
-    self:layoutOverviewSectionHeader()
 end
 
 ---Shrinks the hero title so it never runs under the status pill.
@@ -2503,7 +2440,7 @@ function RealisticCropRotationFrame:getPlanFromSelector(isCover)
 end
 
 function RealisticCropRotationFrame:onServerSyncReceived()
-    if self.isApplyingServerSync then
+    if not self.isMenuOpen or self.isApplyingServerSync then
         return
     end
 
@@ -2520,6 +2457,27 @@ function RealisticCropRotationFrame:onServerSyncReceived()
     end
 
     self.isApplyingServerSync = false
+end
+
+---Refreshes only planning widgets affected by an authoritative plan delta.
+-- @param integer farmlandId Updated farmland
+function RealisticCropRotationFrame:onPlanUpdateReceived(farmlandId)
+    if not self.isMenuOpen or self:isHistoryTab() then return end
+    local numericFarmlandId = tonumber(farmlandId)
+    local isVisible = false
+    for _, entry in ipairs(self.farmlandList or {}) do
+        if tonumber(entry.farmlandId) == numericFarmlandId then
+            isVisible = true
+            break
+        end
+    end
+    if not isVisible then return end
+
+    if numericFarmlandId == tonumber(self.selectedId) then
+        self:updateCalendar(self.selectedId)
+    end
+    self:buildRotationGroups()
+    self.listPlanOverview:reloadData()
 end
 
 ---Sets a crop icon element to the crop's HUD overlay, or hides it.
@@ -2646,15 +2604,17 @@ function RealisticCropRotationFrame:handleCalendarPlanChange(slotIdx, isCover)
         else
             changed = mgr:setRotationPlanYear(self.selectedId, slotIdx, cropName)
         end
-        if changed and RealisticCropRotation ~= nil and RealisticCropRotation.requestBroadcast ~= nil then
-            RealisticCropRotation.requestBroadcast()
+        if changed and g_server ~= nil then
+            g_server:broadcastEvent(
+                RCRPlanUpdateEvent.new(self.selectedId, slotIdx, cropName, isCover), false)
         end
     end
 
     self:renderCalendarFromLocalPlans()
-
-    self:buildRotationGroups()
-    self.listPlanOverview:reloadData()
+    if not isClientOnly then
+        self:buildRotationGroups()
+        self.listPlanOverview:reloadData()
+    end
 end
 
 function RealisticCropRotationFrame:onClickClearPlan()
@@ -2685,14 +2645,11 @@ function RealisticCropRotationFrame:clearPlanForFarmland(farmlandId)
             end
             return
         end
-        for slotIdx = 1, 4 do
-            connection:sendEvent(RCRPlanUpdateEvent.new(farmlandId, slotIdx, "", false))
-            connection:sendEvent(RCRPlanUpdateEvent.new(farmlandId, slotIdx, "", true))
-        end
+        connection:sendEvent(RCRPlanUpdateEvent.newClear(farmlandId))
     else
         local changed = self:getManager():clearRotationPlan(farmlandId)
-        if changed and RealisticCropRotation ~= nil and RealisticCropRotation.requestBroadcast ~= nil then
-            RealisticCropRotation.requestBroadcast()
+        if changed and g_server ~= nil then
+            g_server:broadcastEvent(RCRPlanUpdateEvent.newClear(farmlandId), false)
         end
     end
 
@@ -2702,8 +2659,10 @@ function RealisticCropRotationFrame:clearPlanForFarmland(farmlandId)
         self:renderCalendarFromLocalPlans()
     end
 
-    self:buildRotationGroups()
-    self.listPlanOverview:reloadData()
+    if not isClientOnly then
+        self:buildRotationGroups()
+        self.listPlanOverview:reloadData()
+    end
 end
 
 ---Updates the rotation score card (number + label) from a plan.

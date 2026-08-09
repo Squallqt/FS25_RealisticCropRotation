@@ -897,6 +897,22 @@ function RealisticCropRotationDisease:getRiskBand(farmlandId)
     return 0
 end
 
+---Repaints one farmland when its predictive risk band changed.
+-- @param integer farmlandId
+-- @return boolean painted True when the map was updated
+function RealisticCropRotationDisease:refreshFarmlandRiskMap(farmlandId)
+    local id = tonumber(farmlandId)
+    if id == nil or id <= 0 or self.grid.riskMapId == nil then return false end
+
+    local band = self:getRiskBand(id)
+    if band == self.lastRiskBand[id] then return false end
+    local region = self.manager:getFieldRegion(id)
+    if region == nil or not self.grid:paintFarmlandRisk(region, id, band) then return false end
+
+    self.lastRiskBand[id] = band
+    return true
+end
+
 ---Repaints the runtime risk display map off the UI path; incremental by default, `force` repaints every owned field.
 -- @param boolean force
 function RealisticCropRotationDisease:refreshRiskMap(force)
@@ -910,16 +926,7 @@ function RealisticCropRotationDisease:refreshRiskMap(force)
     end
 
     for _, farmlandId in ipairs(mgr:getOwnedRotationFarmlandIds() or {}) do
-        local id = tonumber(farmlandId)
-        if id ~= nil and id > 0 then
-            local band = self:getRiskBand(id)
-            if band ~= self.lastRiskBand[id] then
-                local region = mgr:getFieldRegion(id)
-                if region ~= nil and grid:paintFarmlandRisk(region, id, band) then
-                    self.lastRiskBand[id] = band
-                end
-            end
-        end
+        self:refreshFarmlandRiskMap(farmlandId)
     end
 end
 

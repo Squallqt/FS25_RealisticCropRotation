@@ -1,5 +1,5 @@
 -- Copyright © 2026 Squallqt. All rights reserved.
--- Client->server rotation plan update. Server remains authoritative for saved plans.
+-- Bidirectional rotation-plan delta. Server validates requests and remains authoritative.
 RCRPlanUpdateEvent = {}
 local RCRPlanUpdateEvent_mt = Class(RCRPlanUpdateEvent, Event)
 
@@ -31,10 +31,20 @@ function RCRPlanUpdateEvent.new(farmlandId, yearIdx, cropName, isCover)
     self.yearIdx = tonumber(yearIdx) or 0
     self.cropName = tostring(cropName or "")
     self.isCover = isCover == true
+    self.clearAll = false
     return self
 end
 
----Reads the plan update from the stream and applies it server-side.
+---Creates a whole-plan clear event.
+-- @param integer farmlandId Target farmland
+-- @return RCRPlanUpdateEvent instance The new event instance
+function RCRPlanUpdateEvent.newClear(farmlandId)
+    local self = RCRPlanUpdateEvent.new(farmlandId, 0, "", false)
+    self.clearAll = true
+    return self
+end
+
+---Reads the plan delta and applies it on the receiving side.
 -- @param integer streamId Network stream identifier
 -- @param Connection connection Network connection
 function RCRPlanUpdateEvent:readStream(streamId, connection)
@@ -42,6 +52,7 @@ function RCRPlanUpdateEvent:readStream(streamId, connection)
     self.yearIdx = streamReadInt8(streamId)
     self.cropName = streamReadString(streamId)
     self.isCover = streamReadInt8(streamId) == 1
+    self.clearAll = streamReadBool(streamId)
 
     self:run(connection)
 end
@@ -54,20 +65,40 @@ function RCRPlanUpdateEvent:writeStream(streamId, connection)
     streamWriteInt8(streamId, tonumber(self.yearIdx) or 0)
     streamWriteString(streamId, tostring(self.cropName or ""))
     streamWriteInt8(streamId, self.isCover and 1 or 0)
+    streamWriteBool(streamId, self.clearAll == true)
 end
 
----Validates ownership + crop, then applies the plan update (server-authoritative).
+---Applies a server delta locally, or validates and rebroadcasts a client request.
 -- @param Connection connection Requesting client connection
 function RCRPlanUpdateEvent:run(connection)
-    if g_currentMission == nil or not g_currentMission:getIsServer() then
+    if g_currentMission == nil then return end
+
+    local manager = g_currentMission.realisticCropRotationManager
+    if connection ~= nil and connection:getIsServer() then
+        if manager == nil then return end
+        local changed, valid
+        if self.clearAll then
+            changed, valid = manager:clearRotationPlan(self.farmlandId), true
+        elseif self.isCover then
+            changed, valid = manager:setRotationCoverPlanYear(
+                self.farmlandId, self.yearIdx, string.upper(tostring(self.cropName or "")))
+        else
+            changed, valid = manager:setRotationPlanYear(
+                self.farmlandId, self.yearIdx, string.upper(tostring(self.cropName or "")))
+        end
+        if changed and valid and RealisticCropRotation ~= nil and RealisticCropRotation.frame ~= nil then
+            RealisticCropRotation.frame:onPlanUpdateReceived(self.farmlandId)
+        end
         return
     end
 
-    local manager = g_currentMission.realisticCropRotationManager
+    if not g_currentMission:getIsServer() then return end
+
     local isCoverUpdate = self.isCover == true
     if manager == nil
-        or (not isCoverUpdate and manager.setRotationPlanYear == nil)
-        or (isCoverUpdate and manager.setRotationCoverPlanYear == nil) then
+        or (self.clearAll and manager.clearRotationPlan == nil)
+        or (not self.clearAll and not isCoverUpdate and manager.setRotationPlanYear == nil)
+        or (not self.clearAll and isCoverUpdate and manager.setRotationCoverPlanYear == nil) then
         Logging.warning("[RealisticCropRotation][MP] Plan update ignored: manager unavailable")
         return
     end
@@ -99,7 +130,7 @@ function RCRPlanUpdateEvent:run(connection)
     end
 
     -- cropName must be empty, fallow, or a registered fruit with a configured rotation family.
-    if self.cropName ~= "" then
+    if not self.clearAll and self.cropName ~= "" then
         local isFallowCrop = RealisticCropRotation.isFallowCrop(self.cropName)
 
         if isFallowCrop then
@@ -141,7 +172,9 @@ function RCRPlanUpdateEvent:run(connection)
     end
 
     local changed, valid
-    if isCoverUpdate then
+    if self.clearAll then
+        changed, valid = manager:clearRotationPlan(self.farmlandId), true
+    elseif isCoverUpdate then
         changed, valid = manager:setRotationCoverPlanYear(self.farmlandId, self.yearIdx, self.cropName)
     else
         changed, valid = manager:setRotationPlanYear(self.farmlandId, self.yearIdx, self.cropName)
@@ -152,7 +185,7 @@ function RCRPlanUpdateEvent:run(connection)
             tostring(self.farmlandId), tostring(self.yearIdx), tostring(self.cropName), tostring(isCoverUpdate))
     end
 
-    if changed and RealisticCropRotation ~= nil and RealisticCropRotation.requestBroadcast ~= nil then
-        RealisticCropRotation.requestBroadcast()
+    if changed and g_server ~= nil then
+        g_server:broadcastEvent(self, false)
     end
 end

@@ -255,30 +255,6 @@
         <textMaxNumLines value="1"/>
     </Profile>
 
-    <Profile name="frOverviewCoverLegendIconBg" extends="baseReference" with="anchorMiddleLeft">
-        <position value="0px 0px"/>
-        <size value="18px 18px"/>
-        <color value="$preset_fs25_colorGrey"/>
-        <cornerSize value="0.20"/>
-    </Profile>
-
-    <Profile name="frOverviewCoverLegendIcon" extends="baseReference" with="anchorMiddleLeft">
-        <position value="0px 0px"/>
-        <size value="18px 18px"/>
-    </Profile>
-
-    <Profile name="frOverviewCoverLegendText" extends="fs25_textDefault" with="anchorMiddleLeft">
-        <position value="0px 0px"/>
-        <size value="240px 18px"/>
-        <textSize value="11px"/>
-        <textBold value="true"/>
-        <textUpperCase value="true"/>
-        <textColor value="$preset_colorWhite_50"/>
-        <textAlignment value="left"/>
-        <textVerticalAlignment value="middle"/>
-        <textMaxNumLines value="1"/>
-    </Profile>
-
     <!-- Timeline strip -->
 
     <Profile name="frTimeline" extends="emptyPanel" with="anchorTopLeft">
