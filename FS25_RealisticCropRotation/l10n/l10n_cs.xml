@@ -121,7 +121,18 @@
         <e k="rcr_advice_pressure_high_bcn"           v="线虫风险高：甜菜、红甜菜、油菜、芥菜和菠菜至少间隔3年；杀线虫剂可保护已喷施区域，但不会清除线虫。" />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病风险中等：拉开油菜、芥菜、向日葵、大豆、豌豆、菜豆、马铃薯和胡萝卜的种植间隔；降雨会提高风险。" />
         <e k="rcr_advice_pressure_moderate_bcn"         v="线虫风险中等：拉开甜菜、红甜菜、油菜、芥菜和菠菜的种植间隔。" />
-        <e k="rcr_advice_no_current_crop" v="当前无主要作物: 检测到作物后将提供建议。" />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="种植%s后，您的计划将%s安排为下一种作物。" />
+        <e k="rcr_advice_memo_next_fallow" v="种植%s后，您的计划安排休耕一年。" />
+        <e k="rcr_advice_memo_no_plan" v="轮作计划中未定义下一种作物。" />
+        <e k="rcr_advice_memo_incomplete_short" v="计划不完整：请至少连续填写两个步骤。" />
+        <e k="rcr_advice_memo_incomplete_gap" v="计划不完整：一个“未规划”栏位将两个已填写步骤隔开。" />
+        <e k="rcr_advice_memo_no_history" v="未记录前茬作物：无法确定循环的下一步。" />
+        <e k="rcr_advice_memo_not_aligned" v="历史记录中的最新条目（%s）不在计划循环中。无法确定下一步。" />
+        <e k="rcr_advice_memo_ambiguous" v="%s在循环中出现多次，且后续步骤不同。无法确定下一步。" />
+        <e k="rcr_advice_memo_conflict_family" v="种植%s后，您的计划安排种植%s，但这两种作物属于同一科（%s）。安全轮作前还需等待%d年（要求间隔%d年）。" />
+        <e k="rcr_advice_memo_conflict_disease" v="种植%s后，您的计划安排种植%s，但这两种作物都可能感染%s。还需等待%d年；建议间隔%d年。" />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="轮作良好" />

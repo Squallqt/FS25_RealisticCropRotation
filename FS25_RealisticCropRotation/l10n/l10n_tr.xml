@@ -121,7 +121,18 @@
         <e k="rcr_advice_pressure_high_bcn"           v="Nematod riski yüksek: şeker pancarı, kırmızı pancar, kanola, hardal ve ıspanak arasında en az 3 yıl bırakın; nematisit ilaçlanan alanı korur ancak nematodları ortadan kaldırmaz." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Sklerotinya riski orta: kanola, hardal, ayçiçeği, soya, bezelye, fasulye, patates ve havuç arasındaki süreyi uzatın; yağmur riski artırır." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Nematod riski orta: şeker pancarı, kırmızı pancar, kanola, hardal ve ıspanak arasındaki süreyi uzatın." />
-        <e k="rcr_advice_no_current_crop" v="Mevcut ana ekin yok: bir ekin algılandığında tavsiye sunulur." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="%s sonrasında planınız bir sonraki ürün olarak %s öngörüyor." />
+        <e k="rcr_advice_memo_next_fallow" v="%s sonrasında planınız bir yıllık nadas öngörüyor." />
+        <e k="rcr_advice_memo_no_plan" v="Rotasyon planında bir sonraki ürün tanımlanmamış." />
+        <e k="rcr_advice_memo_incomplete_short" v="Plan eksik: en az iki ardışık adım girin." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Plan eksik: “Planlanmadı” yuvası doldurulmuş iki adımı ayırıyor." />
+        <e k="rcr_advice_memo_no_history" v="Önceki ürün kaydedilmemiş: döngünün bir sonraki adımı belirlenemiyor." />
+        <e k="rcr_advice_memo_not_aligned" v="Geçmişteki en son kayıt (%s) planlanan döngüde yer almıyor. Bir sonraki adım belirlenemiyor." />
+        <e k="rcr_advice_memo_ambiguous" v="%s döngüde birden fazla kez ve farklı sonraki adımlarla yer alıyor. Bir sonraki adım belirlenemiyor." />
+        <e k="rcr_advice_memo_conflict_family" v="%s sonrasında planınız %s öngörüyor, ancak iki ürün de aynı aileye (%s) ait. Güvenli dönüş için %d yıl daha gerekiyor; gerekli aralık %d yıldır." />
+        <e k="rcr_advice_memo_conflict_disease" v="%s sonrasında planınız %s öngörüyor, ancak iki ürün de %s hastalığından etkilenebilir. %d yıl daha bekleyin; önerilen aralık %d yıldır." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Ekim nöbeti uygun" />

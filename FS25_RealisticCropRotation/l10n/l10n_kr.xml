@@ -121,7 +121,18 @@
         <e k="rcr_advice_pressure_high_bcn"           v="선충 위험 높음: 사탕무, 비트, 유채, 겨자, 시금치의 재배 간격을 3년 이상 둡니다. 살선충제는 처리한 구역을 보호하지만 선충을 없애지는 못합니다." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="균핵병 위험 보통: 유채, 겨자, 해바라기, 대두, 완두, 강낭콩, 감자, 당근의 재배 간격을 늘립니다. 비가 오면 위험이 높아집니다." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="선충 위험 보통: 사탕무, 비트, 유채, 겨자, 시금치의 재배 간격을 늘립니다." />
-        <e k="rcr_advice_no_current_crop" v="현재 주요 작물 없음: 작물이 감지되면 조언이 제공됩니다." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="%s 다음에 계획상 다음 작물은 %s입니다." />
+        <e k="rcr_advice_memo_next_fallow" v="%s 다음에 계획상 1년간 휴경합니다." />
+        <e k="rcr_advice_memo_no_plan" v="윤작 계획에 다음 작물이 지정되지 않았습니다." />
+        <e k="rcr_advice_memo_incomplete_short" v="계획이 불완전합니다. 연속된 단계를 두 개 이상 입력하세요." />
+        <e k="rcr_advice_memo_incomplete_gap" v="계획이 불완전합니다. “계획 없음” 칸이 입력된 두 단계를 나누고 있습니다." />
+        <e k="rcr_advice_memo_no_history" v="이전 작물이 기록되지 않아 윤작의 다음 단계를 결정할 수 없습니다." />
+        <e k="rcr_advice_memo_not_aligned" v="가장 최근 기록(%s)이 계획된 윤작에 없습니다. 다음 단계를 결정할 수 없습니다." />
+        <e k="rcr_advice_memo_ambiguous" v="%s이(가) 윤작에 여러 번 나타나며 다음 단계가 서로 다릅니다. 다음 단계를 결정할 수 없습니다." />
+        <e k="rcr_advice_memo_conflict_family" v="%s 다음에 %s이(가) 계획되어 있지만 두 작물은 같은 과(%s)에 속합니다. 안전하게 다시 재배하려면 %d년이 더 필요하며, 필수 간격은 %d년입니다." />
+        <e k="rcr_advice_memo_conflict_disease" v="%s 다음에 %s이(가) 계획되어 있지만 두 작물 모두 %s의 영향을 받을 수 있습니다. %d년 더 기다리세요. 권장 간격은 %d년입니다." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="윤작 양호" />

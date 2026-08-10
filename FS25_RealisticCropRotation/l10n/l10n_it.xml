@@ -121,7 +121,18 @@
         <e k="rcr_advice_pressure_high_bcn"           v="Rischio elevato di nematodi: attendi almeno 3 anni prima di coltivare di nuovo barbabietola da zucchero, barbabietola rossa, colza, senape o spinacio; il nematocida protegge le zone trattate, ma non elimina i nematodi." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Rischio moderato di sclerotinia: attendi più a lungo prima di coltivare di nuovo colza, senape, girasole, soia, pisello, fagiolo, patata o carota; la pioggia può aumentare il rischio." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Rischio moderato di nematodi: attendi più a lungo prima di coltivare di nuovo barbabietole, colza, senape o spinacio." />
-        <e k="rcr_advice_no_current_crop" v="Nessuna coltura principale attuale: consiglio disponibile quando viene rilevata una coltura." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="Dopo %s, il tuo piano prevede %s come coltura successiva." />
+        <e k="rcr_advice_memo_next_fallow" v="Dopo %s, il tuo piano prevede un anno di maggese." />
+        <e k="rcr_advice_memo_no_plan" v="Nel piano di rotazione non è definita alcuna coltura successiva." />
+        <e k="rcr_advice_memo_incomplete_short" v="Il piano è incompleto: inserisci almeno due fasi consecutive." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Il piano è incompleto: una casella «Non pianificato» separa due fasi compilate." />
+        <e k="rcr_advice_memo_no_history" v="Non è registrata alcuna coltura precedente: non è possibile determinare la fase successiva del ciclo." />
+        <e k="rcr_advice_memo_not_aligned" v="La voce più recente della cronologia (%s) non fa parte del ciclo pianificato. Non è possibile determinare la fase successiva." />
+        <e k="rcr_advice_memo_ambiguous" v="%s compare più volte nel ciclo con fasi successive diverse. Non è possibile determinare la fase successiva." />
+        <e k="rcr_advice_memo_conflict_family" v="Dopo %s, il tuo piano prevede %s, ma entrambe le colture appartengono alla stessa famiglia (%s). Mancano ancora %d anno/i dei %d richiesti prima di un ritorno sicuro." />
+        <e k="rcr_advice_memo_conflict_disease" v="Dopo %s, il tuo piano prevede %s, ma entrambe le colture possono essere colpite da %s. Attendi ancora %d anno/i; l’intervallo consigliato è di %d anno/i." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Rotazione ottimale" />

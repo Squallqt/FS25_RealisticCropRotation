@@ -121,7 +121,18 @@
         <e k="rcr_advice_pressure_high_bcn"           v="センチュウのリスクが高い。テンサイ、ビート、ナタネ、カラシナ、ホウレンソウの栽培間隔を3年以上あける。殺線虫剤は処理した場所を守るが、センチュウを取り除くことはできない。" />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病のリスクは中程度。ナタネ、カラシナ、ヒマワリ、ダイズ、エンドウ、インゲン、ジャガイモ、ニンジンの栽培間隔をあける。降雨はリスクを高める。" />
         <e k="rcr_advice_pressure_moderate_bcn"         v="センチュウのリスクは中程度。テンサイ、ビート、ナタネ、カラシナ、ホウレンソウの栽培間隔をあける。" />
-        <e k="rcr_advice_no_current_crop" v="現在の主要作物なし: 作物が検出されるとアドバイスが表示されます。" />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="%sの後、計画では次の作物として%sが予定されています。" />
+        <e k="rcr_advice_memo_next_fallow" v="%sの後、計画では1年間の休閑が予定されています。" />
+        <e k="rcr_advice_memo_no_plan" v="輪作計画に次の作物が設定されていません。" />
+        <e k="rcr_advice_memo_incomplete_short" v="計画が不完全です：少なくとも2つの連続する工程を入力してください。" />
+        <e k="rcr_advice_memo_incomplete_gap" v="計画が不完全です：「未計画」の枠が入力済みの2つの工程を分断しています。" />
+        <e k="rcr_advice_memo_no_history" v="前作が記録されていないため、輪作の次の工程を特定できません。" />
+        <e k="rcr_advice_memo_not_aligned" v="履歴の最新項目（%s）は計画した輪作に含まれていません。次の工程を特定できません。" />
+        <e k="rcr_advice_memo_ambiguous" v="%sが輪作内に複数回あり、その後の工程が異なります。次の工程を特定できません。" />
+        <e k="rcr_advice_memo_conflict_family" v="%sの後に%sが計画されていますが、両方の作物は同じ科（%s）に属します。安全に戻すにはあと%d年必要です（必要間隔%d年）。" />
+        <e k="rcr_advice_memo_conflict_disease" v="%sの後に%sが計画されていますが、両方の作物が%sの影響を受ける可能性があります。あと%d年待ってください。推奨間隔は%d年です。" />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="輪作良好" />

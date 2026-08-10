@@ -121,7 +121,18 @@
         <e k="rcr_advice_pressure_high_bcn"           v="Hög risk för nematoder: Vänta minst 3 år innan du åter odlar sockerbeta, rödbeta, raps, senap eller spenat; nematicid skyddar behandlade områden, men tar inte bort nematoderna." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Måttlig risk för bomullsmögel: Vänta längre innan du åter odlar raps, senap, solros, sojaböna, ärt, böna, potatis eller morot; regn kan öka risken." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Måttlig risk för nematoder: Vänta längre innan du åter odlar betor, raps, senap eller spenat." />
-        <e k="rcr_advice_no_current_crop" v="Ingen aktuell huvudgröda: råd tillgängligt när en gröda upptäcks." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="Efter %s anger din plan %s som nästa gröda." />
+        <e k="rcr_advice_memo_next_fallow" v="Efter %s anger din plan ett års träda." />
+        <e k="rcr_advice_memo_no_plan" v="Ingen nästa gröda har angetts i växtföljdsplanen." />
+        <e k="rcr_advice_memo_incomplete_short" v="Planen är ofullständig: Fyll i minst två steg i följd." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Planen är ofullständig: En ruta med ”Ej planerad” skiljer två ifyllda steg åt." />
+        <e k="rcr_advice_memo_no_history" v="Ingen tidigare gröda har registrerats: Nästa steg i cykeln kan inte fastställas." />
+        <e k="rcr_advice_memo_not_aligned" v="Den senaste historikposten (%s) ingår inte i den planerade cykeln. Nästa steg kan inte fastställas." />
+        <e k="rcr_advice_memo_ambiguous" v="%s förekommer flera gånger i cykeln med olika efterföljande steg. Nästa steg kan inte fastställas." />
+        <e k="rcr_advice_memo_conflict_family" v="Efter %s anger din plan %s, men båda grödorna tillhör samma familj (%s). Ytterligare %d av de %d krävda åren behövs före en säker återkomst." />
+        <e k="rcr_advice_memo_conflict_disease" v="Efter %s anger din plan %s, men båda grödorna kan angripas av %s. Vänta ytterligare %d år; det rekommenderade intervallet är %d år." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Växtföljd i ordning" />

@@ -1874,7 +1874,7 @@ function RealisticCropRotationFrame:getWorstActiveDisease(farmlandId)
     return disease:getWorstGroup(farmlandId)
 end
 
----Refreshes the advice card: visible outbreak > fallow year > planned-step evaluation > per-family fallback, plus a soil-analysis note.
+---Refreshes the advice card: visible outbreak > fallow year > history-based memo or planned-step evaluation, plus a soil-analysis note.
 -- @param string currentFamily
 -- @param integer farmlandId
 -- @param string currentCropName
@@ -1906,50 +1906,105 @@ function RealisticCropRotationFrame:updateAdviceStatusCard(currentFamily, farmla
         title = self.i18n:getText("rcr_advice_title_fallow")
         text = self.i18n:getText("rcr_advice_fallow_current")
     else
-        -- Planned next crop.
         local plan = self:getPlanForFarmland(farmlandId)
-        local candidate = (currentFamily ~= "UNKNOWN")
-            and self:getWorstPlannedNextStep(plan, currentCropName) or nil
-        local nextCrop = candidate ~= nil and candidate.nextCrop or nil
+        local hasCurrentMainCrop = RealisticCropRotationFrame.ADVICE_KEY[currentFamily] ~= nil
 
-        if nextCrop ~= nil then
-            local nextSlotIdx = candidate.nextSlotIndex
-            local yearLabel = self.i18n:getText("rcr_plan_year" .. nextSlotIdx)
-            if isFallowCrop(nextCrop) then
-                visualState = "Ready"
-                badgeSymbol = "OK"
-                title = self.i18n:getText("rcr_advice_title_fallow")
-                text = string.format(self.i18n:getText("rcr_advice_plan_next_fallow"), yearLabel)
-            else
-                local nextCropLabel = self:getCropDisplayName(nextCrop)
-                local conflict = candidate.conflict
+        if not hasCurrentMainCrop then
+            -- A bare field or cover crop uses the recorded main-crop history to locate the cycle.
+            local memo = PlannerModel.resolveNextStepFromHistory(
+                plan, self:getManager():getHistory(farmlandId), 4)
+            local memoStatus = PlannerModel.NEXT_STEP_STATUS
 
-                if conflict == nil then
-                    visualState = "Ready"
-                    badgeSymbol = "OK"
-                    title = self.i18n:getText("rcr_advice_title_ready")
-                    text = string.format(self.i18n:getText("rcr_advice_plan_next_ok"), nextCropLabel, yearLabel)
+            if memo.status == memoStatus.OK then
+                local previousCropLabel = self:getCropDisplayName(memo.previousCrop)
+                if isFallowCrop(memo.nextCrop) then
+                    text = string.format(self.i18n:getText("rcr_advice_memo_next_fallow"),
+                        previousCropLabel)
                 else
-                    visualState = "Warning"
-                    badgeSymbol = "!"
-                    title = self.i18n:getText("rcr_advice_title_warning")
-                    local key = conflict.kind == "disease"
-                        and "rcr_advice_plan_next_conflict_disease"
-                        or "rcr_advice_plan_next_conflict_family"
-                    text = string.format(self.i18n:getText(key),
-                        nextCropLabel, yearLabel, conflict.label, conflict.yearsRemaining, conflict.minInterval)
+                    local nextCropLabel = self:getCropDisplayName(memo.nextCrop)
+                    local conflict = self:evaluateRotationStep(memo.previousCrop, memo.nextCrop)
+                    if conflict == nil then
+                        text = string.format(self.i18n:getText("rcr_advice_memo_next_crop"),
+                            previousCropLabel, nextCropLabel)
+                    else
+                        visualState = "Warning"
+                        badgeSymbol = "!"
+                        title = self.i18n:getText("rcr_advice_title_warning")
+                        local key = conflict.kind == "disease"
+                            and "rcr_advice_memo_conflict_disease"
+                            or "rcr_advice_memo_conflict_family"
+                        text = string.format(self.i18n:getText(key), previousCropLabel, nextCropLabel,
+                            conflict.label, conflict.yearsRemaining, conflict.minInterval)
+                    end
+                end
+            elseif memo.status == memoStatus.NO_PLAN then
+                text = self.i18n:getText("rcr_advice_memo_no_plan")
+            elseif memo.status == memoStatus.NO_HISTORY then
+                text = self.i18n:getText("rcr_advice_memo_no_history")
+            else
+                visualState = "Warning"
+                badgeSymbol = "!"
+                if memo.status == memoStatus.INCOMPLETE_GAP then
+                    title = self.i18n:getText("rcr_score_incomplete")
+                    text = self.i18n:getText("rcr_advice_memo_incomplete_gap")
+                elseif memo.status == memoStatus.INCOMPLETE_SHORT then
+                    title = self.i18n:getText("rcr_score_incomplete")
+                    text = self.i18n:getText("rcr_advice_memo_incomplete_short")
+                elseif memo.status == memoStatus.NOT_ALIGNED then
+                    title = self.i18n:getText("rcr_section_plan")
+                    text = string.format(self.i18n:getText("rcr_advice_memo_not_aligned"),
+                        self:getCropDisplayName(memo.previousCrop))
+                else
+                    title = self.i18n:getText("rcr_section_plan")
+                    text = string.format(self.i18n:getText("rcr_advice_memo_ambiguous"),
+                        self:getCropDisplayName(memo.previousCrop))
                 end
             end
         else
-            -- Generic current-crop advice.
-            local key = RealisticCropRotationFrame.ADVICE_KEY[currentFamily]
-            text = key ~= nil and self.i18n:getText(key) or self.i18n:getText("rcr_advice_no_current_crop")
-        end
+            -- Planned next crop.
+            local candidate = (currentFamily ~= "UNKNOWN")
+                and self:getWorstPlannedNextStep(plan, currentCropName) or nil
+            local nextCrop = candidate ~= nil and candidate.nextCrop or nil
 
-        -- Worst current disease-pressure tip only, so the card doesn't grow with the crop's disease count.
-        local pressureText = self:getWorstPressureAdviceText(farmlandId, currentCropName)
-        if pressureText ~= nil then
-            text = text .. " " .. pressureText
+            if nextCrop ~= nil then
+                local nextSlotIdx = candidate.nextSlotIndex
+                local yearLabel = self.i18n:getText("rcr_plan_year" .. nextSlotIdx)
+                if isFallowCrop(nextCrop) then
+                    visualState = "Ready"
+                    badgeSymbol = "OK"
+                    title = self.i18n:getText("rcr_advice_title_fallow")
+                    text = string.format(self.i18n:getText("rcr_advice_plan_next_fallow"), yearLabel)
+                else
+                    local nextCropLabel = self:getCropDisplayName(nextCrop)
+                    local conflict = candidate.conflict
+
+                    if conflict == nil then
+                        visualState = "Ready"
+                        badgeSymbol = "OK"
+                        title = self.i18n:getText("rcr_advice_title_ready")
+                        text = string.format(self.i18n:getText("rcr_advice_plan_next_ok"), nextCropLabel, yearLabel)
+                    else
+                        visualState = "Warning"
+                        badgeSymbol = "!"
+                        title = self.i18n:getText("rcr_advice_title_warning")
+                        local key = conflict.kind == "disease"
+                            and "rcr_advice_plan_next_conflict_disease"
+                            or "rcr_advice_plan_next_conflict_family"
+                        text = string.format(self.i18n:getText(key),
+                            nextCropLabel, yearLabel, conflict.label, conflict.yearsRemaining, conflict.minInterval)
+                    end
+                end
+            else
+                -- Generic current-crop advice.
+                local key = RealisticCropRotationFrame.ADVICE_KEY[currentFamily]
+                text = self.i18n:getText(key)
+            end
+
+            -- Worst current disease-pressure tip only, so the card doesn't grow with the crop's disease count.
+            local pressureText = self:getWorstPressureAdviceText(farmlandId, currentCropName)
+            if pressureText ~= nil then
+                text = text .. " " .. pressureText
+            end
         end
     end
 

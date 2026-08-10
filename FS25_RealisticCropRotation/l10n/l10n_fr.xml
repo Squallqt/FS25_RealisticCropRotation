@@ -121,7 +121,18 @@
         <e k="rcr_advice_pressure_high_bcn"           v="Risque élevé de nématodes : attendez au moins 3 ans avant de remettre des betteraves, du colza, de la moutarde ou des épinards ; le nématicide protège les zones traitées, mais ne supprime pas les nématodes." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Risque modéré de sclérotinia : attendez plus longtemps avant de remettre du colza, de la moutarde, du tournesol, du soja, des pois, des haricots, des pommes de terre ou des carottes ; la pluie peut augmenter le risque." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Risque modéré de nématodes : attendez plus longtemps avant de remettre des betteraves, du colza, de la moutarde ou des épinards." />
-        <e k="rcr_advice_no_current_crop" v="Aucune culture principale actuelle : conseil disponible quand une culture est détectée." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="Après %s, votre plan prévoit %s comme prochaine culture." />
+        <e k="rcr_advice_memo_next_fallow" v="Après %s, votre plan prévoit une jachère d’un an." />
+        <e k="rcr_advice_memo_no_plan" v="Aucune prochaine culture n’est définie dans le plan de rotation." />
+        <e k="rcr_advice_memo_incomplete_short" v="Le plan est incomplet : renseignez au moins deux étapes consécutives." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Le plan est incomplet : une case « Non planifié » sépare deux étapes renseignées." />
+        <e k="rcr_advice_memo_no_history" v="Aucune culture précédente n’est enregistrée : la prochaine étape du cycle ne peut pas être déterminée." />
+        <e k="rcr_advice_memo_not_aligned" v="La dernière entrée de l’historique (%s) ne figure pas dans le cycle planifié. La prochaine étape ne peut pas être déterminée." />
+        <e k="rcr_advice_memo_ambiguous" v="%s apparaît plusieurs fois dans le cycle avec des étapes suivantes différentes. La prochaine étape ne peut pas être déterminée." />
+        <e k="rcr_advice_memo_conflict_family" v="Après %s, votre plan prévoit %s, mais ces deux cultures appartiennent à la même famille (%s). Il manque %d an(s) sur les %d requis avant un retour sûr." />
+        <e k="rcr_advice_memo_conflict_disease" v="Après %s, votre plan prévoit %s, mais ces deux cultures peuvent être touchées par %s. Attendez encore %d an(s) ; l’intervalle recommandé est de %d an(s)." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Rotation optimale" />

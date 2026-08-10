@@ -121,7 +121,18 @@
         <e k="rcr_advice_pressure_high_bcn"           v="Nguy cơ tuyến trùng cao: giãn cách ít nhất 3 năm giữa củ cải đường, củ dền, cải dầu, mù tạt và rau chân vịt; thuốc trừ tuyến trùng bảo vệ phần đã xử lý nhưng không loại bỏ tuyến trùng." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Nguy cơ thối hạch trung bình: giãn cách cải dầu, mù tạt, hướng dương, đậu tương, đậu Hà Lan, đậu, khoai tây và cà rốt; mưa làm tăng nguy cơ." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Nguy cơ tuyến trùng trung bình: giãn cách củ cải đường, củ dền, cải dầu, mù tạt và rau chân vịt." />
-        <e k="rcr_advice_no_current_crop" v="Không có cây trồng chính hiện tại: tư vấn sẽ có khi phát hiện cây trồng." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="Sau %s, kế hoạch của bạn chọn %s làm cây trồng tiếp theo." />
+        <e k="rcr_advice_memo_next_fallow" v="Sau %s, kế hoạch của bạn bố trí một năm bỏ hóa." />
+        <e k="rcr_advice_memo_no_plan" v="Không có cây trồng tiếp theo nào được xác định trong kế hoạch luân canh." />
+        <e k="rcr_advice_memo_incomplete_short" v="Kế hoạch chưa đầy đủ: hãy nhập ít nhất hai bước liên tiếp." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Kế hoạch chưa đầy đủ: một ô “Chưa lên kế hoạch” ngăn cách hai bước đã điền." />
+        <e k="rcr_advice_memo_no_history" v="Không có cây trồng trước đó được ghi lại: không thể xác định bước tiếp theo của chu kỳ." />
+        <e k="rcr_advice_memo_not_aligned" v="Mục mới nhất trong lịch sử (%s) không nằm trong chu kỳ đã lên kế hoạch. Không thể xác định bước tiếp theo." />
+        <e k="rcr_advice_memo_ambiguous" v="%s xuất hiện nhiều lần trong chu kỳ với các bước tiếp theo khác nhau. Không thể xác định bước tiếp theo." />
+        <e k="rcr_advice_memo_conflict_family" v="Sau %s, kế hoạch của bạn chọn %s, nhưng cả hai cây trồng thuộc cùng một họ (%s). Cần thêm %d trong tổng số %d năm bắt buộc trước khi có thể quay lại an toàn." />
+        <e k="rcr_advice_memo_conflict_disease" v="Sau %s, kế hoạch của bạn chọn %s, nhưng cả hai cây trồng đều có thể bị ảnh hưởng bởi %s. Hãy chờ thêm %d năm; khoảng cách khuyến nghị là %d năm." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Luân canh hợp lý" />

@@ -121,7 +121,18 @@
         <e k="rcr_advice_pressure_high_bcn"           v="線蟲風險高：甜菜、紅甜菜、油菜、芥菜和菠菜至少間隔3年；殺線蟲劑可保護已噴施區域，但不會清除線蟲。" />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病風險中等：拉開油菜、芥菜、向日葵、大豆、豌豆、菜豆、馬鈴薯和胡蘿蔔的種植間隔；降雨會提高風險。" />
         <e k="rcr_advice_pressure_moderate_bcn"         v="線蟲風險中等：拉開甜菜、紅甜菜、油菜、芥菜和菠菜的種植間隔。" />
-        <e k="rcr_advice_no_current_crop" v="目前無主要作物: 偵測到作物後將提供建議。" />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="種植%s後，您的計畫將%s安排為下一種作物。" />
+        <e k="rcr_advice_memo_next_fallow" v="種植%s後，您的計畫安排休耕一年。" />
+        <e k="rcr_advice_memo_no_plan" v="輪作計畫中未定義下一種作物。" />
+        <e k="rcr_advice_memo_incomplete_short" v="計畫不完整：請至少連續填寫兩個步驟。" />
+        <e k="rcr_advice_memo_incomplete_gap" v="計畫不完整：一個「未規劃」欄位將兩個已填寫步驟隔開。" />
+        <e k="rcr_advice_memo_no_history" v="未記錄前茬作物：無法確定循環的下一步。" />
+        <e k="rcr_advice_memo_not_aligned" v="歷史記錄中的最新項目（%s）不在規劃循環中。無法確定下一步。" />
+        <e k="rcr_advice_memo_ambiguous" v="%s在循環中出現多次，且後續步驟不同。無法確定下一步。" />
+        <e k="rcr_advice_memo_conflict_family" v="種植%s後，您的計畫安排種植%s，但這兩種作物屬於同一科（%s）。安全輪作前還需等待%d年（要求間隔%d年）。" />
+        <e k="rcr_advice_memo_conflict_disease" v="種植%s後，您的計畫安排種植%s，但這兩種作物都可能感染%s。還需等待%d年；建議間隔%d年。" />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="輪作良好" />

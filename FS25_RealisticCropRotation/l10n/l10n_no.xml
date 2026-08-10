@@ -121,7 +121,18 @@
         <e k="rcr_advice_pressure_high_bcn"           v="Høy risiko for nematoder: Vent minst 3 år før du igjen dyrker sukkerbete, rødbete, raps, sennep eller spinat; nematicid beskytter behandlede områder, men fjerner ikke nematodene." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderat risiko for sclerotinia: Vent lenger før du igjen dyrker raps, sennep, solsikke, soyabønne, ert, bønne, potet eller gulrot; regn kan øke risikoen." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Moderat risiko for nematoder: Vent lenger før du igjen dyrker beter, raps, sennep eller spinat." />
-        <e k="rcr_advice_no_current_crop" v="Ingen aktuell hovedvekst: råd tilgjengelig når en vekst oppdages." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="Etter %s angir planen din %s som neste vekst." />
+        <e k="rcr_advice_memo_next_fallow" v="Etter %s angir planen din ett år med brakk." />
+        <e k="rcr_advice_memo_no_plan" v="Ingen neste vekst er angitt i vekstskifteplanen." />
+        <e k="rcr_advice_memo_incomplete_short" v="Planen er ufullstendig: Fyll ut minst to trinn etter hverandre." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Planen er ufullstendig: Et felt med «Ikke planlagt» skiller to utfylte trinn." />
+        <e k="rcr_advice_memo_no_history" v="Ingen tidligere vekst er registrert: Det neste trinnet i syklusen kan ikke fastslås." />
+        <e k="rcr_advice_memo_not_aligned" v="Den nyeste historikkoppføringen (%s) finnes ikke i den planlagte syklusen. Det neste trinnet kan ikke fastslås." />
+        <e k="rcr_advice_memo_ambiguous" v="%s forekommer flere ganger i syklusen med ulike påfølgende trinn. Det neste trinnet kan ikke fastslås." />
+        <e k="rcr_advice_memo_conflict_family" v="Etter %s angir planen din %s, men begge vekstene tilhører samme familie (%s). Det mangler ytterligere %d av de påkrevde %d årene før en trygg retur." />
+        <e k="rcr_advice_memo_conflict_disease" v="Etter %s angir planen din %s, men begge vekstene kan rammes av %s. Vent ytterligere %d år; det anbefalte intervallet er %d år." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Vekstskifte i orden" />

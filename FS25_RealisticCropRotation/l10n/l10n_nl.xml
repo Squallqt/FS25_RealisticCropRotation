@@ -121,7 +121,18 @@
         <e k="rcr_advice_pressure_high_bcn"           v="Hoog risico op aaltjes: wacht minstens 3 jaar voordat je opnieuw suikerbiet, rode biet, koolzaad, mosterd of spinazie teelt; nematicide beschermt behandelde delen, maar verwijdert de aaltjes niet." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Matig risico op sclerotinia: wacht langer voordat je opnieuw koolzaad, mosterd, zonnebloem, soja, erwt, boon, aardappel of wortel teelt; regen kan het risico verhogen." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Matig risico op aaltjes: wacht langer voordat je opnieuw bieten, koolzaad, mosterd of spinazie teelt." />
-        <e k="rcr_advice_no_current_crop" v="Geen huidig hoofdgewas: advies beschikbaar zodra een gewas wordt gedetecteerd." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="Na %s voorziet je plan %s als het volgende gewas." />
+        <e k="rcr_advice_memo_next_fallow" v="Na %s voorziet je plan één jaar braak." />
+        <e k="rcr_advice_memo_no_plan" v="In het rotatieplan is geen volgend gewas vastgelegd." />
+        <e k="rcr_advice_memo_incomplete_short" v="Het plan is onvolledig: vul minstens twee opeenvolgende stappen in." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Het plan is onvolledig: een vak ‘Niet gepland’ scheidt twee ingevulde stappen." />
+        <e k="rcr_advice_memo_no_history" v="Er is geen vorig gewas geregistreerd: de volgende stap van de cyclus kan niet worden bepaald." />
+        <e k="rcr_advice_memo_not_aligned" v="De meest recente geschiedenisvermelding (%s) staat niet in de geplande cyclus. De volgende stap kan niet worden bepaald." />
+        <e k="rcr_advice_memo_ambiguous" v="%s komt meerdere keren in de cyclus voor met verschillende vervolgstappen. De volgende stap kan niet worden bepaald." />
+        <e k="rcr_advice_memo_conflict_family" v="Na %s voorziet je plan %s, maar beide gewassen behoren tot dezelfde familie (%s). Voor een veilige terugkeer zijn nog %d van de vereiste %d jaar nodig." />
+        <e k="rcr_advice_memo_conflict_disease" v="Na %s voorziet je plan %s, maar beide gewassen kunnen door %s worden aangetast. Wacht nog %d jaar; het aanbevolen interval is %d jaar." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Vruchtwisseling in orde" />

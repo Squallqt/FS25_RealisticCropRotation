@@ -121,7 +121,18 @@
         <e k="rcr_advice_pressure_high_bcn"           v="Hohes Nematodenrisiko: Mindestens 3 Jahre warten, bevor Zuckerrübe, Rote Bete, Raps, Senf oder Spinat erneut angebaut werden; Nematizid schützt behandelte Flächen, beseitigt die Nematoden aber nicht." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Mäßiges Sclerotinia-Risiko: Mehr Zeit lassen, bevor Raps, Senf, Sonnenblume, Soja, Erbse, Bohne, Kartoffel oder Möhre erneut angebaut werden; Regen kann das Risiko erhöhen." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Mäßiges Nematodenrisiko: Mehr Zeit lassen, bevor Rüben, Raps, Senf oder Spinat erneut angebaut werden." />
-        <e k="rcr_advice_no_current_crop" v="Keine aktuelle Hauptkultur: Empfehlung verfügbar, sobald eine Kultur erkannt wird." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="Nach %s sieht dein Plan %s als nächste Kultur vor." />
+        <e k="rcr_advice_memo_next_fallow" v="Nach %s sieht dein Plan ein Jahr Brache vor." />
+        <e k="rcr_advice_memo_no_plan" v="Im Rotationsplan ist keine nächste Kultur festgelegt." />
+        <e k="rcr_advice_memo_incomplete_short" v="Der Plan ist unvollständig: Trage mindestens zwei aufeinanderfolgende Schritte ein." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Der Plan ist unvollständig: Ein Feld „Nicht geplant“ trennt zwei ausgefüllte Schritte." />
+        <e k="rcr_advice_memo_no_history" v="Es ist keine vorherige Kultur gespeichert: Der nächste Schritt des Zyklus kann nicht bestimmt werden." />
+        <e k="rcr_advice_memo_not_aligned" v="Der neueste Verlaufseintrag (%s) kommt im geplanten Zyklus nicht vor. Der nächste Schritt kann nicht bestimmt werden." />
+        <e k="rcr_advice_memo_ambiguous" v="%s kommt im Zyklus mehrfach mit unterschiedlichen Folgeschritten vor. Der nächste Schritt kann nicht bestimmt werden." />
+        <e k="rcr_advice_memo_conflict_family" v="Nach %s sieht dein Plan %s vor, aber beide Kulturen gehören zur selben Familie (%s). Vor einer sicheren Rückkehr fehlen noch %d der erforderlichen %d Jahr(e)." />
+        <e k="rcr_advice_memo_conflict_disease" v="Nach %s sieht dein Plan %s vor, aber beide Kulturen können von %s befallen werden. Warte noch %d Jahr(e); der empfohlene Abstand beträgt %d Jahr(e)." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Fruchtfolge optimal" />

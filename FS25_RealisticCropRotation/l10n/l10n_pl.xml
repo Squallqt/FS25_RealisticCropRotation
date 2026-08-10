@@ -121,7 +121,18 @@
         <e k="rcr_advice_pressure_high_bcn"           v="Wysokie ryzyko mątwika: zachowaj co najmniej 3 lata odstępu między burakiem cukrowym, burakiem ćwikłowym, rzepakiem, gorczycą i szpinakiem; nematocyd chroni opryskane fragmenty, ale nie usuwa nicieni." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Umiarkowane ryzyko zgnilizny twardzikowej: zwiększ odstęp między rzepakiem, gorczycą, słonecznikiem, soją, grochem, fasolą, ziemniakiem i marchwią; deszcz zwiększa ryzyko." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Umiarkowane ryzyko mątwika: zwiększ odstęp między burakami, rzepakiem, gorczycą i szpinakiem." />
-        <e k="rcr_advice_no_current_crop" v="Brak aktualnej uprawy głównej: porada dostępna po wykryciu uprawy." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="Po %s twój plan przewiduje %s jako następną uprawę." />
+        <e k="rcr_advice_memo_next_fallow" v="Po %s twój plan przewiduje roczny ugór." />
+        <e k="rcr_advice_memo_no_plan" v="W planie płodozmianu nie określono następnej uprawy." />
+        <e k="rcr_advice_memo_incomplete_short" v="Plan jest niekompletny: wprowadź co najmniej dwa kolejne etapy." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Plan jest niekompletny: pole „Niezaplanowane” oddziela dwa wypełnione etapy." />
+        <e k="rcr_advice_memo_no_history" v="Nie zarejestrowano poprzedniej uprawy: nie można określić następnego etapu cyklu." />
+        <e k="rcr_advice_memo_not_aligned" v="Najnowszy wpis historii (%s) nie występuje w zaplanowanym cyklu. Nie można określić następnego etapu." />
+        <e k="rcr_advice_memo_ambiguous" v="%s występuje w cyklu kilka razy, a po nim następują różne etapy. Nie można określić następnego etapu." />
+        <e k="rcr_advice_memo_conflict_family" v="Po %s twój plan przewiduje %s, ale obie uprawy należą do tej samej rodziny (%s). Do bezpiecznego powrotu brakuje jeszcze %d roku/lat z wymaganych %d." />
+        <e k="rcr_advice_memo_conflict_disease" v="Po %s twój plan przewiduje %s, ale obie uprawy mogą zostać zaatakowane przez %s. Odczekaj jeszcze %d roku/lat; zalecany odstęp wynosi %d lat." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Płodozmian w porządku" />

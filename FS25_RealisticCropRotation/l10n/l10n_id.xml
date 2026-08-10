@@ -121,7 +121,18 @@
         <e k="rcr_advice_pressure_high_bcn"           v="Risiko nematoda tinggi: beri jarak setidaknya 3 tahun antara bit gula, bit merah, kanola, sesawi, dan bayam; nematisida melindungi bagian yang dirawat tetapi tidak menghilangkan nematoda." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Risiko sclerotinia sedang: beri jarak kanola, sesawi, bunga matahari, kedelai, kacang polong, buncis, kentang, dan wortel; hujan menaikkan risiko." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Risiko nematoda sedang: beri jarak antara bit gula, bit merah, kanola, sesawi, dan bayam." />
-        <e k="rcr_advice_no_current_crop" v="Tidak ada tanaman utama saat ini: saran tersedia saat tanaman terdeteksi." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="Setelah %s, rencana Anda menetapkan %s sebagai tanaman berikutnya." />
+        <e k="rcr_advice_memo_next_fallow" v="Setelah %s, rencana Anda menetapkan satu tahun bera." />
+        <e k="rcr_advice_memo_no_plan" v="Tidak ada tanaman berikutnya yang ditetapkan dalam rencana rotasi." />
+        <e k="rcr_advice_memo_incomplete_short" v="Rencana belum lengkap: isi setidaknya dua langkah berturut-turut." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Rencana belum lengkap: satu slot “Belum direncanakan” memisahkan dua langkah yang telah diisi." />
+        <e k="rcr_advice_memo_no_history" v="Tidak ada tanaman sebelumnya yang tercatat: langkah siklus berikutnya tidak dapat ditentukan." />
+        <e k="rcr_advice_memo_not_aligned" v="Entri riwayat terbaru (%s) tidak terdapat dalam siklus yang direncanakan. Langkah berikutnya tidak dapat ditentukan." />
+        <e k="rcr_advice_memo_ambiguous" v="%s muncul lebih dari sekali dalam siklus dengan langkah lanjutan yang berbeda. Langkah berikutnya tidak dapat ditentukan." />
+        <e k="rcr_advice_memo_conflict_family" v="Setelah %s, rencana Anda menetapkan %s, tetapi kedua tanaman termasuk dalam keluarga yang sama (%s). Masih diperlukan %d dari %d tahun yang diwajibkan sebelum dapat kembali dengan aman." />
+        <e k="rcr_advice_memo_conflict_disease" v="Setelah %s, rencana Anda menetapkan %s, tetapi kedua tanaman dapat terserang %s. Tunggu %d tahun lagi; jarak yang disarankan adalah %d tahun." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Rotasi optimal" />

@@ -121,7 +121,18 @@
         <e k="rcr_advice_pressure_high_bcn"           v="Risc mare de nematozi: păstrați cel puțin 3 ani între sfecla de zahăr, sfecla roșie, rapiță, muștar și spanac; nematicidul protejează zonele tratate, dar nu elimină nematozii." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Risc moderat de putregai alb: măriți intervalul dintre rapiță, muștar, floarea-soarelui, soia, mazăre, fasole, cartof și morcov; ploaia crește riscul." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Risc moderat de nematozi: măriți intervalul dintre sfeclă, rapiță, muștar și spanac." />
-        <e k="rcr_advice_no_current_crop" v="Nicio cultură principală actuală: sfat disponibil când este detectată o cultură." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="După %s, planul tău prevede %s drept următoarea cultură." />
+        <e k="rcr_advice_memo_next_fallow" v="După %s, planul tău prevede un an de pârloagă." />
+        <e k="rcr_advice_memo_no_plan" v="În planul de rotație nu este definită nicio cultură următoare." />
+        <e k="rcr_advice_memo_incomplete_short" v="Planul este incomplet: introdu cel puțin două etape consecutive." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Planul este incomplet: o căsuță „Neplanificat” separă două etape completate." />
+        <e k="rcr_advice_memo_no_history" v="Nu este înregistrată nicio cultură anterioară: următoarea etapă a ciclului nu poate fi determinată." />
+        <e k="rcr_advice_memo_not_aligned" v="Cea mai recentă intrare din istoric (%s) nu apare în ciclul planificat. Următoarea etapă nu poate fi determinată." />
+        <e k="rcr_advice_memo_ambiguous" v="%s apare de mai multe ori în ciclu, cu etape următoare diferite. Următoarea etapă nu poate fi determinată." />
+        <e k="rcr_advice_memo_conflict_family" v="După %s, planul tău prevede %s, dar ambele culturi aparțin aceleiași familii (%s). Mai sunt necesari %d din cei %d ani impuși înainte de o revenire sigură." />
+        <e k="rcr_advice_memo_conflict_disease" v="După %s, planul tău prevede %s, dar ambele culturi pot fi afectate de %s. Mai așteaptă %d ani; intervalul recomandat este de %d ani." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Rotație optimă" />

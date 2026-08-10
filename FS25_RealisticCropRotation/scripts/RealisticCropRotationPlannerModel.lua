@@ -4,6 +4,16 @@ RealisticCropRotationPlannerModel = {}
 
 local PlannerModel = RealisticCropRotationPlannerModel
 
+PlannerModel.NEXT_STEP_STATUS = {
+    OK = "OK",
+    NO_PLAN = "NO_PLAN",
+    INCOMPLETE_GAP = "INCOMPLETE_GAP",
+    INCOMPLETE_SHORT = "INCOMPLETE_SHORT",
+    NO_HISTORY = "NO_HISTORY",
+    NOT_ALIGNED = "NOT_ALIGNED",
+    AMBIGUOUS = "AMBIGUOUS",
+}
+
 local function isOccupied(value)
     return value ~= nil and tostring(value) ~= ""
 end
@@ -120,6 +130,101 @@ function PlannerModel.getWorstNextCandidate(plan, cropName, maxSlots, evaluator)
     end
 
     return worstCandidate or firstCandidate
+end
+
+---Resolves the next cycle step from newest-first history without treating trailing empty slots as cycle entries.
+-- Older history entries disambiguate repeated crops. If several matching positions remain, a result is
+-- returned only when every position leads to the same next crop.
+-- @param table plan
+-- @param table history Newest-first crop entries ({ crop = name }) or crop-name strings
+-- @param integer maxSlots
+-- @return table result { status, cycleLength, previousCrop, anchorSlotIndex, nextSlotIndex, nextCrop }
+function PlannerModel.resolveNextStepFromHistory(plan, history, maxSlots)
+    local status = PlannerModel.NEXT_STEP_STATUS
+    local cycleLength, hasInternalGap = PlannerModel.getCycleInfo(plan, maxSlots)
+
+    if hasInternalGap then
+        return { status = status.INCOMPLETE_GAP, cycleLength = cycleLength }
+    end
+    if cycleLength == 0 then
+        return { status = status.NO_PLAN, cycleLength = cycleLength }
+    end
+    if cycleLength < 2 then
+        return { status = status.INCOMPLETE_SHORT, cycleLength = cycleLength }
+    end
+
+    local historyNames = {}
+    for _, entry in ipairs(history or {}) do
+        local value = type(entry) == "table" and entry.crop or entry
+        local name = normalizeName(value)
+        if name ~= nil then
+            historyNames[#historyNames + 1] = name
+        end
+    end
+    if #historyNames == 0 then
+        return { status = status.NO_HISTORY, cycleLength = cycleLength }
+    end
+
+    local previousCrop = historyNames[1]
+    local matchingSlots = PlannerModel.findCropSlots(plan, previousCrop, maxSlots)
+    if #matchingSlots == 0 then
+        return {
+            status = status.NOT_ALIGNED,
+            cycleLength = cycleLength,
+            previousCrop = previousCrop,
+        }
+    end
+
+    local candidates = matchingSlots
+    for historyIndex = 2, #historyNames do
+        if #candidates <= 1 then break end
+
+        local offset = historyIndex - 1
+        local olderCrop = historyNames[historyIndex]
+        local filtered = {}
+        for _, slotIndex in ipairs(candidates) do
+            local previousSlotIndex = ((slotIndex - offset - 1) % cycleLength) + 1
+            if normalizeName(plan[previousSlotIndex]) == olderCrop then
+                filtered[#filtered + 1] = slotIndex
+            end
+        end
+
+        -- Older history may predate the current plan or contain a deliberate deviation.
+        if #filtered == 0 then break end
+        candidates = filtered
+    end
+
+    local firstByNextCrop = {}
+    local nextCropCount = 0
+    for _, slotIndex in ipairs(candidates) do
+        local nextSlotIndex = PlannerModel.getNextIndex(slotIndex, cycleLength)
+        local nextCrop = nextSlotIndex ~= nil and normalizeName(plan[nextSlotIndex]) or nil
+        if nextCrop ~= nil and firstByNextCrop[nextCrop] == nil then
+            firstByNextCrop[nextCrop] = {
+                anchorSlotIndex = slotIndex,
+                nextSlotIndex = nextSlotIndex,
+            }
+            nextCropCount = nextCropCount + 1
+        end
+    end
+
+    if nextCropCount ~= 1 then
+        return {
+            status = status.AMBIGUOUS,
+            cycleLength = cycleLength,
+            previousCrop = previousCrop,
+        }
+    end
+
+    local nextCrop, indices = next(firstByNextCrop)
+    return {
+        status = status.OK,
+        cycleLength = cycleLength,
+        previousCrop = previousCrop,
+        anchorSlotIndex = indices.anchorSlotIndex,
+        nextSlotIndex = indices.nextSlotIndex,
+        nextCrop = nextCrop,
+    }
 end
 
 ---Returns every consecutive circular gap between sorted host positions.

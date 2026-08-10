@@ -121,7 +121,18 @@
         <e k="rcr_advice_pressure_high_bcn"           v="Suuri ankeroisriski: Odota vähintään 3 vuotta ennen kuin viljelet uudelleen sokerijuurikasta, punajuurta, rapsia, sinappia tai pinaattia; ankeroistorjunta-aine suojaa käsiteltyjä alueita, mutta ei poista ankeroisia." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Kohtalainen pahkahomeen riski: Odota pidempään ennen kuin viljelet uudelleen rapsia, sinappia, auringonkukkaa, soijapapua, hernettä, papua, perunaa tai porkkanaa; sade voi lisätä riskiä." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Kohtalainen ankeroisriski: Odota pidempään ennen kuin viljelet uudelleen juurikkaita, rapsia, sinappia tai pinaattia." />
-        <e k="rcr_advice_no_current_crop" v="Ei nykyistä pääkasvia: neuvo saatavilla, kun kasvi havaitaan." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="Kasvin %s jälkeen suunnitelmassasi seuraava kasvi on %s." />
+        <e k="rcr_advice_memo_next_fallow" v="Kasvin %s jälkeen suunnitelmassasi on yhden vuoden kesanto." />
+        <e k="rcr_advice_memo_no_plan" v="Viljelykiertosuunnitelmassa ei ole määritetty seuraavaa kasvia." />
+        <e k="rcr_advice_memo_incomplete_short" v="Suunnitelma on epätäydellinen: täytä vähintään kaksi peräkkäistä vaihetta." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Suunnitelma on epätäydellinen: “Ei suunniteltu” -paikka erottaa kaksi täytettyä vaihetta." />
+        <e k="rcr_advice_memo_no_history" v="Aiemmasta kasvista ei ole merkintää: kierron seuraavaa vaihetta ei voida määrittää." />
+        <e k="rcr_advice_memo_not_aligned" v="Historian uusin merkintä (%s) ei kuulu suunniteltuun kiertoon. Seuraavaa vaihetta ei voida määrittää." />
+        <e k="rcr_advice_memo_ambiguous" v="%s esiintyy kierrossa useita kertoja, ja sitä seuraavat eri vaiheet. Seuraavaa vaihetta ei voida määrittää." />
+        <e k="rcr_advice_memo_conflict_family" v="Kasvin %s jälkeen suunnitelmassasi on %s, mutta molemmat kasvit kuuluvat samaan heimoon (%s). Turvalliseen paluuseen tarvitaan vielä %d vuotta vaaditusta %d vuodesta." />
+        <e k="rcr_advice_memo_conflict_disease" v="Kasvin %s jälkeen suunnitelmassasi on %s, mutta tauti %s voi vaikuttaa molempiin kasveihin. Odota vielä %d vuotta; suositeltu väli on %d vuotta." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Viljelykierto kunnossa" />

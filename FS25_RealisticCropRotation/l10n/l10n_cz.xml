@@ -121,7 +121,18 @@
         <e k="rcr_advice_pressure_high_bcn"           v="Vysoké riziko háďátka: mezi cukrovkou, červenou řepou, řepkou, hořčicí a špenátem dodržte odstup alespoň 3 let; nematicid chrání ošetřené plochy, ale háďátka neodstraní." />
         <e k="rcr_advice_pressure_moderate_sclerotinia" v="Střední riziko sklerotinie: prodlužte odstup řepky, hořčice, slunečnice, sóji, hrachu, fazolu, brambor a mrkve; déšť riziko zvyšuje." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Střední riziko háďátka: prodlužte odstup cukrovky, červené řepy, řepky, hořčice a špenátu." />
-        <e k="rcr_advice_no_current_crop" v="Žádná aktuální hlavní plodina: rada dostupná po detekci plodiny." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="Po %s váš plán počítá s %s jako další plodinou." />
+        <e k="rcr_advice_memo_next_fallow" v="Po %s váš plán počítá s jednoletým úhorem." />
+        <e k="rcr_advice_memo_no_plan" v="V plánu osevního postupu není definována žádná další plodina." />
+        <e k="rcr_advice_memo_incomplete_short" v="Plán je neúplný: zadejte alespoň dva po sobě jdoucí kroky." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Plán je neúplný: položka „Neplánováno“ odděluje dva vyplněné kroky." />
+        <e k="rcr_advice_memo_no_history" v="Není zaznamenána žádná předchozí plodina: nelze určit další krok cyklu." />
+        <e k="rcr_advice_memo_not_aligned" v="Nejnovější záznam historie (%s) není součástí plánovaného cyklu. Další krok nelze určit." />
+        <e k="rcr_advice_memo_ambiguous" v="%s se v cyklu vyskytuje vícekrát a následují po ní různé kroky. Další krok nelze určit." />
+        <e k="rcr_advice_memo_conflict_family" v="Po %s váš plán počítá s %s, ale obě plodiny patří do stejné čeledi (%s). Před bezpečným návratem chybí ještě %d rok(y) z požadovaných %d." />
+        <e k="rcr_advice_memo_conflict_disease" v="Po %s váš plán počítá s %s, ale obě plodiny může napadnout %s. Počkejte ještě %d rok(y); doporučený odstup je %d let." />
 
         <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
         <e k="rcr_advice_title_ready" v="Osevní postup v pořádku" />
