@@ -331,21 +331,12 @@ function RealisticCropRotationFrame:getManager()
     return g_currentMission.realisticCropRotationManager
 end
 
----Returns the authoritative active crop stored by the repository.
+---Returns the live crop classified for current-field display.
 -- @param integer farmlandId
 -- @return string cropName, or nil
 -- @return integer fruitTypeIndex, or nil
 function RealisticCropRotationFrame:getActiveCropInfoForDisplay(farmlandId)
-    local mgr = self:getManager()
-    local cropName = mgr.repository:getLastKnownActiveCrop(farmlandId)
-    local fruitType = cropName ~= nil and cropName ~= ""
-        and g_fruitTypeManager ~= nil
-        and type(g_fruitTypeManager.getFruitTypeByName) == "function"
-        and g_fruitTypeManager:getFruitTypeByName(tostring(cropName)) or nil
-    if fruitType ~= nil and fruitType.shownOnMap == false then
-        return nil, nil
-    end
-    return cropName, fruitType ~= nil and fruitType.index or nil
+    return self:getManager():getDisplayCropInfo(farmlandId)
 end
 
 ---Updates the detail-tab residue pill: crop residue (n1/n2) or catch-crop cover residue, in kg/ha.
@@ -1268,18 +1259,10 @@ end
 -- @return table state { kind = "CROP"|"FALLOW"|"STATUS"|"NONE", cropName, family, label, statusKind, statusIndex }
 function RealisticCropRotationFrame:resolveCurrentFieldState(farmlandId, inferFallow)
     local cropName = self:getActiveCropInfoForDisplay(farmlandId)
-    local belowFloor = false
-    if inferFallow and cropName ~= nil then
-        local liveCropName, _, _, liveBelowFloor = self:getManager():getActiveCropInfo(farmlandId)
-        if liveBelowFloor and string.upper(tostring(liveCropName or "")) == string.upper(tostring(cropName)) then
-            belowFloor = true
-        end
-    end
     local hasCrop = cropName ~= nil and cropName ~= ""
 
-    -- A planned fallow overrides a harvested (stubble) or bare field; a growing crop always wins.
-    if inferFallow and (not hasCrop or belowFloor)
-        and self:isPlannedFallowGap(farmlandId, hasCrop and cropName or nil) then
+    -- A planned fallow overrides a field without an established crop.
+    if inferFallow and not hasCrop and self:isPlannedFallowGap(farmlandId, nil) then
         local fallow = RealisticCropRotation.SPECIAL_CROP_FALLOW
         return { kind = "FALLOW", cropName = fallow, family = "FALLOW", label = self:getCropDisplayName(fallow) }
     end

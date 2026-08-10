@@ -309,7 +309,7 @@ local applyRegionToModifier = RealisticCropRotationManager.applyRegionToModifier
 -- @param integer numChannels
 -- @param table filterA Optional density filter
 -- @param table filterB Optional second density filter
--- @return number sum, number pixels, or nil when the region cannot be bound
+-- @return number sum, number pixels, number totalPixels, or nil when the region cannot be bound
 local function aggregateRegionLayer(region, mapId, firstChannel, numChannels, filterA, filterB)
     if region == nil or mapId == nil or firstChannel == nil or numChannels == nil then return nil end
     if DensityMapModifier == nil or g_terrainNode == nil then return nil end
@@ -322,9 +322,9 @@ local function aggregateRegionLayer(region, mapId, firstChannel, numChannels, fi
     if f1 == nil then f1, f2, f3 = f2, f3, nil end
     if f2 == nil then f2, f3 = f3, nil end
 
-    local ok, sum, pixels = pcall(modifier.executeGet, modifier, f1, f2, f3)
+    local ok, sum, pixels, totalPixels = pcall(modifier.executeGet, modifier, f1, f2, f3)
     if not ok then return nil end
-    return tonumber(sum) or 0, tonumber(pixels) or 0
+    return tonumber(sum) or 0, tonumber(pixels) or 0, tonumber(totalPixels) or 0
 end
 
 ---Resolves a vanilla field density layer's map handle.
@@ -967,10 +967,19 @@ function RealisticCropRotationManager:getFieldPixelCapacity(farmlandId, region, 
         and g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex) or nil
     if desc == nil or desc.terrainDataPlaneId == nil then return nil end
 
-    local _, pixels = aggregateRegionLayer(region, desc.terrainDataPlaneId,
+    local _, pixels, totalPixels = aggregateRegionLayer(region, desc.terrainDataPlaneId,
         desc.startStateChannel, desc.numStateChannels)
-    self.fieldPixelCapacity[farmlandId] = tonumber(pixels) or 0
-    return (tonumber(pixels) or 0) > 0 and tonumber(pixels) or nil
+
+    local capacity = totalPixels
+    if region ~= nil and region.filter ~= nil then
+        capacity = pixels
+    end
+    if capacity == nil or capacity <= 0 then
+        capacity = pixels
+    end
+
+    self.fieldPixelCapacity[farmlandId] = tonumber(capacity) or 0
+    return (tonumber(capacity) or 0) > 0 and tonumber(capacity) or nil
 end
 
 ---Returns the currently active crop on a farmland (cached), cross-checked against the last confirmed crop.
@@ -1017,6 +1026,21 @@ function RealisticCropRotationManager:getActiveCropInfo(farmlandId)
         tMs = nowMs,
     }
     return resolved, fruitTypeIndex, growthState, belowFloor
+end
+
+---Returns the live crop only when it reaches the display coverage floor.
+-- Raw crop detection remains available through getActiveCropInfo for gameplay logic.
+-- @param integer farmlandId
+-- @return string cropName, or nil
+-- @return integer fruitTypeIndex, or nil
+-- @return integer growthState, or nil
+function RealisticCropRotationManager:getDisplayCropInfo(farmlandId)
+    local cropName, fruitTypeIndex, growthState, belowFloor = self:getActiveCropInfo(farmlandId)
+    if cropName == nil or cropName == "" or belowFloor then
+        return nil, nil, nil
+    end
+
+    return cropName, fruitTypeIndex, growthState
 end
 
 ---Returns just the active crop name on a farmland.
@@ -1483,7 +1507,7 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId, activeFruitTypeI
             end
         end
 
-        if nCanLevel and nCanTargetAtPos and rec.nActual ~= nil then
+        if activeFruitTypeIndex ~= nil and nCanLevel and nCanTargetAtPos and rec.nActual ~= nil then
             -- Nitrogen target weighted over the same area the average was read on.
             local cropWeights = getRegionSoilTypeWeights(region, soilMap, nitrogenMask)
             if next(cropWeights) == nil then cropWeights = soilWeights end
@@ -1652,7 +1676,7 @@ function RealisticCropRotationManager:getFieldCropInfo(farmlandId)
     -- Reads the cached native crop.
     local growthStageText, growthIsAction
     if g_fruitTypeManager ~= nil then
-        local _, fruitTypeIndex, growthState = self:getActiveCropInfo(numericFarmlandId)
+        local _, fruitTypeIndex, growthState = self:getDisplayCropInfo(numericFarmlandId)
         fruitTypeIndex = normalizeFruitTypeIndex(fruitTypeIndex)
         local fruitType = fruitTypeIndex ~= nil and g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex) or nil
         if fruitType ~= nil then
