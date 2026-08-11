@@ -4,6 +4,21 @@
         <!-- General -->
         <e k="realisticCropRotation_menu_title" v="Rotazione Colturale" />
 
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Prodotti per il trattamento" />
+        <e k="rcr_help_title_spraying" v="Irrora per tempo" />
+        <e k="rcr_help_title_treatment_map" v="Aree trattate" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation memorizza per ogni campo posseduto le quattro voci precedenti, colture o maggese. Usa Agronomia per esaminare un campo, Pianificazione per preparare un ciclo ripetuto e la mappa Malattie per controllare rischio, focolai e copertura dei trattamenti." />
+        <e k="rcr_help_text_02" v="Seleziona un campo posseduto per vedere la coltura attuale, fino a quattro voci precedenti, i consigli agronomici, l’azoto, il pH, la copertura del trattamento e lo stato attuale del campo. L’intestazione meteo aiuta a scegliere quando irrorare." />
+        <e k="rcr_help_text_03" v="Seleziona una posizione da N+1 a N+4, quindi scegli la coltura principale e una coltura di copertura facoltativa. Compila posizioni consecutive: la parte compilata diventa un ciclo ripetuto di due, tre o quattro anni, incluso il ritorno dall’ultima posizione alla prima." />
+        <e k="rcr_help_text_04" v="La qualità della rotazione premia la diversità di colture e famiglie, l’alternanza tra semine invernali e primaverili, le colture produttrici di azoto o di copertura e una leguminosa seguita da un cereale. Il ritorno troppo ravvicinato della stessa famiglia o di colture con malattie comuni riduce il punteggio." />
+        <e k="rcr_help_text_05" v="Una leguminosa configurata restituisce azoto solo quando viene distrutta dalla lavorazione del terreno, non quando viene semplicemente raccolta. Il residuo è diviso tra le due colture successive; con Precision Farming viene scritto sulla mappa dell’azoto, altrimenti viene aggiunto un livello di fertilizzazione." />
+        <e k="rcr_help_text_06" v="La mappa Rischio malattie mostra come bassa, moderata o alta la maggiore pressione attuale dei patogeni sulla coltura di ogni campo posseduto. Il meteo può modificare ulteriormente la probabilità d’infezione, quindi usa questa mappa insieme all’intestazione meteo di Agronomia." />
+        <e k="rcr_help_text_07" v="Un’infezione inizia nascosta e compare qui solo quando comincia a distruggere la coltura. La mappa identifica il focolaio tra le nove malattie configurate; anche la scheda del campo, l’HUD a piedi e la notifica lo mostrano da quel momento." />
+        <e k="rcr_help_text_09" v="Irrora per tempo. Il fungicida riduce la probabilità di focolaio e rallenta una malattia attiva in proporzione alla copertura del campo. Fungicida e nematocida proteggono le celle irrorate dalla distruzione, ma non ripristinano la coltura perduta e non eliminano la malattia dal campo." />
+        <e k="rcr_help_text_10" v="La mappa Trattamenti mostra il terreno protetto da fungicida o nematocida. La protezione fungicida termina sul terreno raccolto o falciato. La protezione nematocida dura tre mesi per campo e una nuova applicazione ne rinnova la durata." />
+        <e k="rcr_help_text_11" v="Quando ti trovi in un campo, l’HUD aggiunge le due colture precedenti, le malattie visibili e i trattamenti attivi. Mostra anche l’avanzamento numerato della crescita; Precision Farming mantiene le proprie informazioni su terreno, pH, azoto e resa." />
+
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Campo" />
         <e k="rcr_sidebar_no_active_crop"  v="Nessuna coltura attiva" />

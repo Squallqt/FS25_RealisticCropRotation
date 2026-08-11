@@ -4,6 +4,21 @@
         <!-- General -->
         <e k="realisticCropRotation_menu_title" v="Viljelykierto" />
 
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Käsittelyaineet" />
+        <e k="rcr_help_title_spraying" v="Ruiskuta ajoissa" />
+        <e k="rcr_help_title_treatment_map" v="Käsitellyt alueet" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation tallentaa jokaiselta omistetulta pellolta neljä edellistä kasvi- tai kesantotietoa. Tarkastele peltoa Agronomia-näkymässä, valmistele toistuva kierto Suunnittelu-näkymässä ja seuraa riskiä, tautitapauksia ja käsittelyn kattavuutta Taudit-kartalla." />
+        <e k="rcr_help_text_02" v="Valitse omistettu pelto nähdäksesi nykyisen kasvin, enintään neljä aiempaa tietoa, agronomiset neuvot, typen, pH:n, käsittelyn kattavuuden ja pellon nykyisen tilan. Sääotsikko auttaa valitsemaan ruiskutusajan." />
+        <e k="rcr_help_text_03" v="Valitse paikka väliltä N+1–N+4 ja sen jälkeen pääkasvi sekä valinnainen kerääjäkasvi. Täytä peräkkäiset paikat: täytetystä alkuosasta muodostuu toistuva kahden, kolmen tai neljän vuoden kierto, jossa viimeisestä paikasta palataan ensimmäiseen." />
+        <e k="rcr_help_text_04" v="Viljelykierron laatu palkitsee kasvien ja kasviheimojen monipuolisuudesta, syys- ja kevätkylvön vuorottelusta, typpeä tuottavista kasveista tai kerääjäkasveista sekä palkokasvin ja viljan peräkkäisyydestä. Saman heimon tai yhteisiä tauteja kantavien kasvien liian nopea paluu laskee pisteitä." />
+        <e k="rcr_help_text_05" v="Määritetty palkokasvi palauttaa typpeä vain, kun se tuhotaan maanmuokkauksella, ei pelkän sadonkorjuun yhteydessä. Typpi jaetaan kahdelle seuraavalle kasville; Precision Farming tallentaa sen typpikartalle, muulloin lisätään yksi lannoitustaso." />
+        <e k="rcr_help_text_06" v="Tautiriski-kartta näyttää omistettujen peltojen nykyiselle kasville suurimman tämänhetkisen taudinaiheuttajapaineen pienenä, kohtalaisena tai suurena. Sää voi muuttaa tartunnan todennäköisyyttä lisää, joten käytä karttaa yhdessä Agronomia-näkymän sääotsikon kanssa." />
+        <e k="rcr_help_text_07" v="Tartunta alkaa piilossa ja näkyy täällä vasta, kun se alkaa tuhota kasvustoa. Kartta tunnistaa taudin yhdeksän määritetyn taudin joukosta; sen jälkeen myös peltokortti, kävely-HUD ja ilmoitus näyttävät sen." />
+        <e k="rcr_help_text_09" v="Ruiskuta ajoissa. Fungisidi pienentää taudin puhkeamisen todennäköisyyttä ja hidastaa aktiivista tautia pellon käsittelyasteen mukaan. Fungisidi ja nematisidi suojaavat ruiskutettuja soluja tuholta, mutta eivät palauta menetettyä kasvustoa eivätkä poista tautia pellosta." />
+        <e k="rcr_help_text_10" v="Käsittelyt-kartta näyttää fungisidilla tai nematisidilla suojatun maan. Fungisidisuoja päättyy korjatulla tai niitetyllä maalla. Nematisidisuoja kestää kolme kuukautta peltoa kohden, ja uusi käsittely uusii keston." />
+        <e k="rcr_help_text_11" v="Kun seisot pellolla, HUD lisää kaksi edellistä kasvia, näkyvät taudit ja aktiiviset käsittelyt. Se näyttää myös kasvun numeroidun etenemisen; Precision Farming säilyttää omat maaperä-, pH-, typpi- ja satotietonsa." />
+
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Pelto" />
         <e k="rcr_sidebar_no_active_crop"  v="Ei aktiivista kasvia" />

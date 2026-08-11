@@ -4,6 +4,21 @@
         <!-- General -->
         <e k="realisticCropRotation_menu_title" v="Vetésforgó" />
 
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Kezelőszerek" />
+        <e k="rcr_help_title_spraying" v="Permetezz időben" />
+        <e k="rcr_help_title_treatment_map" v="Kezelt területek" />
+        <e k="rcr_help_text_01" v="A Realistic Crop Rotation minden saját táblán eltárolja az előző négy növény- vagy ugarbejegyzést. Az Agronómia nézetben vizsgáld meg a táblát, a Tervezés nézetben készíts ismétlődő ciklust, a Betegségek térképen pedig figyeld a kockázatot, a fertőzéseket és a kezelési lefedettséget." />
+        <e k="rcr_help_text_02" v="Válassz ki egy saját táblát az aktuális növény, legfeljebb négy korábbi bejegyzés, az agronómiai tanács, a nitrogén, a pH, a kezelési lefedettség és a tábla jelenlegi állapotának megtekintéséhez. Az időjárási fejléc segít kiválasztani a permetezés idejét." />
+        <e k="rcr_help_text_03" v="Válassz egy helyet N+1 és N+4 között, majd a főnövényt és egy opcionális takarónövényt. Egymást követő helyeket tölts ki: a kitöltött kezdet két-, három- vagy négyéves ismétlődő ciklussá válik, beleértve az utolsó helyről az elsőre való visszatérést." />
+        <e k="rcr_help_text_04" v="A vetésforgó minősége jutalmazza a növények és családok változatosságát, az őszi és tavaszi vetés váltását, a nitrogént termelő növényeket vagy takarónövényeket, valamint a hüvelyest követő gabonát. Ugyanazon család vagy közös betegségekkel rendelkező növények túl korai visszatérése csökkenti a pontszámot." />
+        <e k="rcr_help_text_05" v="Egy beállított hüvelyes csak akkor ad vissza nitrogént, ha talajműveléssel semmisítik meg, puszta betakarításkor nem. A visszatérő nitrogén a következő két növény között oszlik meg; Precision Farming mellett a nitrogéntérképre kerül, nélküle egy trágyázási szint adódik hozzá." />
+        <e k="rcr_help_text_06" v="A Betegségkockázat térkép minden saját táblán alacsony, közepes vagy magas értékkel mutatja az aktuális növényt érő legnagyobb kórokozónyomást. Az időjárás tovább módosíthatja a fertőzés esélyét, ezért a térképet az Agronómia időjárási fejlécével együtt használd." />
+        <e k="rcr_help_text_07" v="A fertőzés rejtve indul, és csak akkor jelenik meg itt, amikor pusztítani kezdi a növényt. A térkép a kilenc beállított betegség közül azonosítja a kitörést; ezután a táblakártya, a gyalogos HUD és az értesítés is megjeleníti." />
+        <e k="rcr_help_text_09" v="Permetezz időben. A gombaölő szer a tábla lefedettségével arányosan csökkenti a kitörés esélyét és lassítja az aktív betegséget. A gombaölő és a nematicid megvédi a permetezett cellákat a pusztulástól, de nem állítja helyre az elveszett növényt, és nem távolítja el a betegséget a tábláról." />
+        <e k="rcr_help_text_10" v="A Kezelések térkép a gombaölővel vagy nematiciddel védett talajt mutatja. A gombaölő védelem a betakarított vagy lekaszált területen megszűnik. A nematicid védelem táblánként három hónapig tart, és egy új kezelés megújítja az időtartamot." />
+        <e k="rcr_help_text_11" v="Amikor egy táblán állsz, a HUD hozzáadja az előző két növényt, a látható betegségeket és az aktív kezeléseket. A növekedés számozott előrehaladását is mutatja; a Precision Farming megtartja a saját talaj-, pH-, nitrogén- és termésadatait." />
+
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Tábla" />
         <e k="rcr_sidebar_no_active_crop"  v="Nincs aktív növény" />

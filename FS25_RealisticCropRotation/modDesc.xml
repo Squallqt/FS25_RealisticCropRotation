@@ -198,4 +198,109 @@ Merci de télécharger ce mod uniquement depuis le ModHub officiel de Farming Si
         <sourceFile filename="main.lua" />
     </extraSourceFiles>
     <l10n filenamePrefix="l10n/l10n" />
+
+    <helpLines>
+        <category title="$l10n_realisticCropRotation_menu_title">
+            <page title="$l10n_realisticCropRotation_menu_title" iconSliceId="realisticCropRotationHelplineSmall.general">
+                <paragraph>
+                    <text text="$l10n_rcr_help_text_01" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages06.png" uvs="57px 512px 910px 512px" aspectRatio="0.562637" />
+                </paragraph>
+            </page>
+            <page title="$l10n_rcr_tab_history" iconSliceId="realisticCropRotationHelplineSmall.agronomy">
+                <paragraph>
+                    <text text="$l10n_rcr_help_text_02" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages01.png" uvs="0px 0px 1024px 252px" aspectRatio="0.246094" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages01.png" uvs="0px 252px 1024px 441px" aspectRatio="0.430664" />
+                </paragraph>
+            </page>
+            <page title="$l10n_rcr_tab_planning" iconSliceId="realisticCropRotationHelplineSmall.planning">
+                <paragraph>
+                    <text text="$l10n_rcr_help_text_03" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages01.png" uvs="0px 693px 1024px 239px" aspectRatio="0.233398" />
+                </paragraph>
+            </page>
+            <page title="$l10n_rcr_section_score" iconSliceId="realisticCropRotationHelplineSmall.rotationQuality">
+                <paragraph>
+                    <text text="$l10n_rcr_help_text_04" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages02.png" uvs="0px 0px 1024px 390px" aspectRatio="0.380859" />
+                </paragraph>
+            </page>
+            <page title="$l10n_rcr_section_nitrogen" iconSliceId="realisticCropRotationHelplineSmall.nitrogenResidue">
+                <paragraph>
+                    <text text="$l10n_rcr_help_text_05" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages02.png" uvs="0px 390px 1024px 289px" aspectRatio="0.282227" />
+                </paragraph>
+            </page>
+            <page title="$l10n_rcr_disease_sub_pressure" iconSliceId="realisticCropRotationHelplineSmall.diseaseRisk">
+                <paragraph>
+                    <text text="$l10n_rcr_help_text_06" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages03.png" uvs="57px 0px 910px 512px" aspectRatio="0.562637" />
+                </paragraph>
+            </page>
+            <page title="$l10n_rcr_disease_sub_infections" iconSliceId="realisticCropRotationHelplineSmall.infectedFields">
+                <paragraph>
+                    <text text="$l10n_rcr_help_text_07" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages03.png" uvs="57px 512px 910px 512px" aspectRatio="0.562637" />
+                </paragraph>
+            </page>
+            <page title="$l10n_rcr_help_title_products" iconSliceId="realisticCropRotationHelplineSmall.products">
+                <paragraph>
+                    <text text="$l10n_rcr_function_fungicideTank" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages04.png" uvs="57px 0px 910px 512px" aspectRatio="0.562637" />
+                </paragraph>
+                <paragraph>
+                    <text text="$l10n_rcr_function_nematicideTank" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages04.png" uvs="57px 512px 910px 512px" aspectRatio="0.562637" />
+                </paragraph>
+            </page>
+            <page title="$l10n_rcr_help_title_spraying" iconSliceId="realisticCropRotationHelplineSmall.spraying">
+                <paragraph>
+                    <text text="$l10n_rcr_help_text_09" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages05.png" uvs="57px 0px 910px 512px" aspectRatio="0.562637" />
+                </paragraph>
+            </page>
+            <page title="$l10n_rcr_help_title_treatment_map" iconSliceId="realisticCropRotationHelplineSmall.treatmentMap">
+                <paragraph>
+                    <text text="$l10n_rcr_help_text_10" />
+                </paragraph>
+                <paragraph>
+                    <text text="$l10n_rcr_advice_nematicide_duration" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages05.png" uvs="57px 512px 910px 512px" aspectRatio="0.562637" />
+                </paragraph>
+            </page>
+            <page title="$l10n_rcr_section_field" iconSliceId="realisticCropRotationHelplineSmall.fieldHud">
+                <paragraph>
+                    <text text="$l10n_rcr_help_text_11" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages06.png" uvs="57px 0px 910px 512px" aspectRatio="0.562637" />
+                </paragraph>
+            </page>
+        </category>
+    </helpLines>
 </modDesc>

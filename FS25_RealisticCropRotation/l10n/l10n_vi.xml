@@ -4,6 +4,21 @@
         <!-- General -->
         <e k="realisticCropRotation_menu_title" v="Luân canh cây trồng" />
 
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Sản phẩm xử lý" />
+        <e k="rcr_help_title_spraying" v="Phun sớm" />
+        <e k="rcr_help_title_treatment_map" v="Khu vực đã xử lý" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation lưu bốn mục cây trồng hoặc đất bỏ hóa trước đó cho mỗi thửa ruộng thuộc sở hữu. Dùng Nông học để xem xét ruộng, Lập kế hoạch để chuẩn bị chu kỳ lặp lại và bản đồ Bệnh hại để theo dõi nguy cơ, đợt bùng phát cùng độ phủ xử lý." />
+        <e k="rcr_help_text_02" v="Chọn một thửa ruộng thuộc sở hữu để xem cây trồng hiện tại, tối đa bốn mục trước đó, tư vấn nông học, đạm, pH, độ phủ xử lý và trạng thái hiện tại của ruộng. Tiêu đề thời tiết giúp bạn chọn thời điểm phun." />
+        <e k="rcr_help_text_03" v="Chọn một ô từ N+1 đến N+4, sau đó chọn cây trồng chính và cây che phủ tùy chọn. Điền các ô liên tiếp: phần đầu đã điền sẽ trở thành chu kỳ lặp lại hai, ba hoặc bốn năm, bao gồm cả việc quay từ ô cuối về ô đầu." />
+        <e k="rcr_help_text_04" v="Chất lượng luân canh thưởng cho sự đa dạng cây trồng và họ cây, việc xen kẽ gieo mùa đông và mùa xuân, cây tạo đạm hoặc cây che phủ, cùng với cây họ đậu trước cây ngũ cốc. Việc cùng một họ hoặc các cây có chung bệnh quay lại quá sớm sẽ làm giảm điểm." />
+        <e k="rcr_help_text_05" v="Cây họ đậu đã cấu hình chỉ hoàn trả đạm khi bị phá hủy bằng canh tác đất, không phải khi chỉ được thu hoạch. Lượng đạm được chia cho hai vụ tiếp theo; với Precision Farming, nó được ghi lên bản đồ đạm, nếu không thì thêm một mức bón phân." />
+        <e k="rcr_help_text_06" v="Bản đồ Nguy cơ bệnh hại hiển thị áp lực mầm bệnh cao nhất hiện tại đối với cây trồng trên mỗi ruộng thuộc sở hữu ở mức thấp, trung bình hoặc cao. Thời tiết có thể tiếp tục thay đổi khả năng nhiễm bệnh, vì vậy hãy dùng bản đồ này cùng tiêu đề thời tiết trong Nông học." />
+        <e k="rcr_help_text_07" v="Nhiễm bệnh bắt đầu ở trạng thái ẩn và chỉ xuất hiện tại đây khi nó bắt đầu phá hủy cây trồng. Bản đồ xác định đợt bùng phát trong số chín bệnh đã cấu hình; sau đó thẻ thông tin ruộng, HUD khi đi bộ và thông báo cũng hiển thị bệnh." />
+        <e k="rcr_help_text_09" v="Hãy phun sớm. Thuốc trừ nấm làm giảm khả năng bùng phát và làm chậm bệnh đang hoạt động theo độ phủ của ruộng. Thuốc trừ nấm và thuốc trừ tuyến trùng bảo vệ các ô đã phun khỏi bị phá hủy, nhưng không thể phục hồi cây đã mất hoặc loại bỏ bệnh khỏi ruộng." />
+        <e k="rcr_help_text_10" v="Bản đồ Phun thuốc hiển thị mặt đất được thuốc trừ nấm hoặc thuốc trừ tuyến trùng bảo vệ. Bảo vệ bằng thuốc trừ nấm kết thúc trên mặt đất đã thu hoạch hoặc cắt. Bảo vệ bằng thuốc trừ tuyến trùng kéo dài ba tháng cho mỗi ruộng và lần phun mới sẽ gia hạn thời gian." />
+        <e k="rcr_help_text_11" v="Khi bạn đứng trong ruộng, HUD bổ sung hai cây trồng trước đó, bệnh nhìn thấy được và các xử lý đang hoạt động. HUD cũng hiển thị tiến độ sinh trưởng bằng số; Precision Farming giữ nguyên thông tin riêng về đất, pH, đạm và sản lượng." />
+
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Ruộng" />
         <e k="rcr_sidebar_no_active_crop"  v="Không có cây trồng hoạt động" />

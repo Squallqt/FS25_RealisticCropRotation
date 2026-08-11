@@ -4,6 +4,21 @@
         <!-- General -->
         <e k="realisticCropRotation_menu_title" v="Osevní postup" />
 
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Přípravky k ošetření" />
+        <e k="rcr_help_title_spraying" v="Postřikujte včas" />
+        <e k="rcr_help_title_treatment_map" v="Ošetřené plochy" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation ukládá pro každé vlastněné pole čtyři předchozí záznamy o plodině nebo úhoru. Pomocí Agronomie zkontrolujte pole, v Plánování připravte opakující se cyklus a na mapě Choroby sledujte riziko, výskyty a pokrytí ošetřením." />
+        <e k="rcr_help_text_02" v="Vyberte vlastněné pole a zobrazte aktuální plodinu, až čtyři předchozí záznamy, agronomické doporučení, dusík, pH, pokrytí ošetřením a současný stav pole. Záhlaví počasí pomáhá zvolit dobu postřiku." />
+        <e k="rcr_help_text_03" v="Vyberte pozici od N+1 do N+4 a potom hlavní plodinu a volitelnou meziplodinu. Vyplňte sousední pozice: vyplněný začátek se stane opakujícím se dvou-, tří- nebo čtyřletým cyklem včetně návratu z poslední pozice na první." />
+        <e k="rcr_help_text_04" v="Kvalita střídání odměňuje rozmanitost plodin a čeledí, střídání ozimů a jařin, plodiny dodávající dusík nebo meziplodiny a luskovinu následovanou obilninou. Příliš brzký návrat stejné čeledi nebo plodin se společnými chorobami snižuje skóre." />
+        <e k="rcr_help_text_05" v="Nastavená luskovina vrátí dusík jen tehdy, když je zničena zpracováním půdy, nikoli pouhou sklizní. Přínos se rozdělí mezi následující dvě plodiny; s Precision Farming se zapíše do mapy dusíku, jinak se přidá jedna úroveň hnojení." />
+        <e k="rcr_help_text_06" v="Mapa Riziko chorob zobrazuje nejvyšší aktuální tlak patogenů na plodinu rostoucí na každém vlastněném poli jako nízký, střední nebo vysoký. Počasí může pravděpodobnost infekce dále změnit, proto používejte tuto mapu společně se záhlavím počasí v Agronomii." />
+        <e k="rcr_help_text_07" v="Infekce začíná skrytě a objeví se zde, až když začne ničit plodinu. Mapa určí výskyt mezi devíti nastavenými chorobami; poté jej ukáže také karta pole, HUD při chůzi a oznámení." />
+        <e k="rcr_help_text_09" v="Postřikujte včas. Fungicid snižuje pravděpodobnost výskytu a zpomaluje aktivní chorobu podle pokrytí pole. Fungicid i nematicid chrání postříkané buňky před zničením, ale neobnoví ztracenou plodinu ani neodstraní chorobu z pole." />
+        <e k="rcr_help_text_10" v="Mapa Ošetření zobrazuje půdu chráněnou fungicidem nebo nematicidem. Fungicidní ochrana končí na sklizené nebo posečené půdě. Nematicidní ochrana trvá tři měsíce na každém poli a další aplikace tuto dobu obnoví." />
+        <e k="rcr_help_text_11" v="Když stojíte na poli, HUD doplní dvě předchozí plodiny, viditelné choroby a aktivní ošetření. Zobrazuje také číslovaný průběh růstu; Precision Farming si ponechává vlastní údaje o půdě, pH, dusíku a výnosu." />
+
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Pole" />
         <e k="rcr_sidebar_no_active_crop"  v="Žádná aktivní plodina" />

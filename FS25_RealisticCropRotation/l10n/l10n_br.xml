@@ -4,6 +4,21 @@
         <!-- General -->
         <e k="realisticCropRotation_menu_title" v="Rotação de Culturas" />
 
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Produtos de tratamento" />
+        <e k="rcr_help_title_spraying" v="Pulverize cedo" />
+        <e k="rcr_help_title_treatment_map" v="Áreas tratadas" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation armazena as quatro entradas anteriores, sejam culturas ou pousio, de cada campo próprio. Use Agronomia para examinar um campo, Planejamento para preparar um ciclo repetitivo e o mapa Doenças para acompanhar riscos, surtos e cobertura dos tratamentos." />
+        <e k="rcr_help_text_02" v="Selecione um campo próprio para consultar a cultura atual, até quatro registros anteriores, a orientação agronômica, o nitrogênio, o pH, a cobertura do tratamento e o estado atual do campo. O cabeçalho do clima ajuda a escolher quando pulverizar." />
+        <e k="rcr_help_text_03" v="Selecione um espaço de N+1 a N+4 e depois escolha a cultura principal e uma cultura de cobertura opcional. Preencha espaços consecutivos: a sequência preenchida torna-se um ciclo repetitivo de dois, três ou quatro anos, incluindo o retorno do último espaço ao primeiro." />
+        <e k="rcr_help_text_04" v="A qualidade da rotação recompensa a diversidade de culturas e famílias, a alternância entre inverno e primavera, culturas produtoras de nitrogênio ou de cobertura e uma leguminosa seguida por cereal. Famílias repetidas ou doenças compartilhadas que retornam cedo demais reduzem a pontuação." />
+        <e k="rcr_help_text_05" v="Uma leguminosa configurada devolve nitrogênio somente quando é destruída pelo preparo do solo, não quando é apenas colhida. O retorno é dividido entre as duas culturas seguintes; com o Precision Farming, ele é gravado no mapa de nitrogênio, caso contrário é adicionado um nível de fertilizante." />
+        <e k="rcr_help_text_06" v="O mapa Risco de doenças mostra a maior pressão atual de patógenos para a cultura de cada campo próprio como baixa, moderada ou alta. O clima pode alterar ainda mais a chance de infecção; por isso, use este mapa junto com o cabeçalho do clima em Agronomia." />
+        <e k="rcr_help_text_07" v="Uma infecção começa oculta e só aparece aqui quando começa a destruir a cultura. O mapa identifica o surto entre as nove doenças configuradas; o cartão do campo, o HUD a pé e a notificação também passam a mostrá-lo." />
+        <e k="rcr_help_text_09" v="Pulverize cedo. O fungicida reduz a chance de surto e retarda uma doença ativa conforme a cobertura do campo. Fungicida e nematicida protegem as células pulverizadas da destruição, mas não recuperam a cultura perdida nem removem a doença do campo." />
+        <e k="rcr_help_text_10" v="O mapa Tratamentos mostra o solo protegido por fungicida ou nematicida. A proteção fungicida termina no solo colhido ou ceifado. A proteção nematicida dura três meses por campo e uma nova aplicação renova esse período." />
+        <e k="rcr_help_text_11" v="Enquanto você está em um campo, o HUD acrescenta as duas culturas anteriores, as doenças visíveis e os tratamentos ativos. Ele também mostra o progresso numerado do crescimento; o Precision Farming mantém suas próprias informações de solo, pH, nitrogênio e rendimento." />
+
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Campo" />
         <e k="rcr_sidebar_no_active_crop"  v="Sem cultura ativa" />

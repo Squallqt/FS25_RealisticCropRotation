@@ -4,6 +4,21 @@
         <!-- General -->
         <e k="realisticCropRotation_menu_title" v="Sædskifte" />
 
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Behandlingsmidler" />
+        <e k="rcr_help_title_spraying" v="Sprøjt tidligt" />
+        <e k="rcr_help_title_treatment_map" v="Behandlede områder" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation gemmer de fire foregående poster med afgrøde eller brak for hver ejet mark. Brug Agronomi til at undersøge en mark, Planlægning til at forberede en gentaget cyklus og kortet Sygdomme til at overvåge risiko, udbrud og behandlingsdækning." />
+        <e k="rcr_help_text_02" v="Vælg en ejet mark for at se den aktuelle afgrøde, op til fire tidligere poster, agronomiske råd, kvælstof, pH, behandlingsdækning og markens aktuelle tilstand. Vejroverskriften hjælper dig med at vælge sprøjtetidspunkt." />
+        <e k="rcr_help_text_03" v="Vælg en plads fra N+1 til N+4, og vælg derefter hovedafgrøden og en valgfri efterafgrøde. Udfyld sammenhængende pladser: den udfyldte begyndelse bliver en gentaget cyklus på to, tre eller fire år, inklusive overgangen fra sidste plads tilbage til den første." />
+        <e k="rcr_help_text_04" v="Sædskiftets kvalitet belønner variation i afgrøder og familier, skifte mellem vinter- og forårssåning, kvælstofgivende afgrøder eller efterafgrøder samt en bælgplante efterfulgt af korn. For hurtig gentagelse af samme familie eller afgrøder med fælles sygdomme sænker pointtallet." />
+        <e k="rcr_help_text_05" v="En konfigureret bælgplante tilbagefører kun kvælstof, når den ødelægges ved jordbearbejdning, ikke når den blot høstes. Tilbageførslen deles mellem de næste to afgrøder; med Precision Farming skrives den til kvælstofkortet, ellers tilføjes ét gødningsniveau." />
+        <e k="rcr_help_text_06" v="Kortet Sygdomsrisiko viser det højeste aktuelle smittetryk for afgrøden på hver ejet mark som lavt, moderat eller højt. Vejret kan ændre smitterisikoen yderligere, så brug kortet sammen med vejroverskriften under Agronomi." />
+        <e k="rcr_help_text_07" v="En infektion starter skjult og vises først her, når den begynder at ødelægge afgrøden. Kortet identificerer udbruddet blandt de ni konfigurerede sygdomme; derefter vises det også på markkortet, i HUD'en til fods og i meddelelsen." />
+        <e k="rcr_help_text_09" v="Sprøjt tidligt. Fungicid sænker risikoen for udbrud og bremser en aktiv sygdom i forhold til markdækningen. Fungicid og nematicid beskytter sprøjtede celler mod ødelæggelse, men kan ikke genskabe tabte afgrøder eller fjerne sygdom fra marken." />
+        <e k="rcr_help_text_10" v="Kortet Behandlinger viser jord, der er beskyttet af fungicid eller nematicid. Fungicidbeskyttelsen slutter på høstet eller slået jord. Nematicidbeskyttelsen varer tre måneder pr. mark, og en ny behandling fornyer perioden." />
+        <e k="rcr_help_text_11" v="Når du står på en mark, tilføjer HUD'en de to foregående afgrøder, synlige sygdomme og aktive behandlinger. Den viser også nummereret vækstfremgang; Precision Farming beholder sine egne oplysninger om jord, pH, kvælstof og udbytte." />
+
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Mark" />
         <e k="rcr_sidebar_no_active_crop"  v="Ingen aktiv afgrøde" />

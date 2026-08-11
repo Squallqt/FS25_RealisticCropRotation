@@ -4,6 +4,21 @@
         <!-- General -->
         <e k="realisticCropRotation_menu_title" v="Crop Rotation" />
 
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Treatment products" />
+        <e k="rcr_help_title_spraying" v="Spray early" />
+        <e k="rcr_help_title_treatment_map" v="Treated areas" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation stores the four previous crop or fallow entries for each owned field. Use Agronomy to inspect a field, Planning to prepare a repeating cycle, and the Diseases map to monitor risk, outbreaks and treatment coverage." />
+        <e k="rcr_help_text_02" v="Select an owned field to review the current crop, up to four previous entries, agronomic advice, nitrogen, pH, treatment coverage and current field status. The weather header helps you choose when to spray." />
+        <e k="rcr_help_text_03" v="Select a slot from N+1 to N+4, then choose the main crop and an optional cover crop. Fill consecutive slots: the completed prefix becomes a repeating two-, three- or four-year cycle, including the return from its last slot to its first." />
+        <e k="rcr_help_text_04" v="Rotation quality rewards crop and family diversity, winter and spring alternation, nitrogen-producing crops or cover crops, and a legume followed by a cereal. Repeated families or shared diseases returning too soon lower the score." />
+        <e k="rcr_help_text_05" v="A configured legume returns nitrogen only when it is destroyed by tillage, not when it is merely harvested. The return is split between the next two crops; with Precision Farming it is written to the nitrogen map, otherwise one fertilizer level is added." />
+        <e k="rcr_help_text_06" v="Disease Risk shows the highest current pathogen pressure for the crop growing on each owned field as low, moderate or high. Weather can further change the infection chance, so use this map and the Agronomy weather header together." />
+        <e k="rcr_help_text_07" v="An infection starts hidden and appears here only once it begins destroying crop. The map identifies the outbreak among the nine configured diseases; the field card, on-foot HUD and notification then show it too." />
+        <e k="rcr_help_text_09" v="Spray early. Fungicide lowers outbreak chance and slows an active disease in proportion to field coverage. Fungicide and nematicide protect sprayed cells from destruction, but cannot restore lost crop or remove disease from the field." />
+        <e k="rcr_help_text_10" v="The Treatments map shows ground protected by fungicide or nematicide. Fungicide protection ends on harvested or mown ground. Nematicide protection lasts three months per field and another application renews that duration." />
+        <e k="rcr_help_text_11" v="While standing in a field, the HUD adds the two previous crops, visible diseases and active treatments. It also displays numbered growth progress; Precision Farming keeps its own soil, pH, nitrogen and yield information." />
+
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Field" />
         <e k="rcr_sidebar_no_active_crop"  v="No active crop" />

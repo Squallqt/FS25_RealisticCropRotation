@@ -4,6 +4,21 @@
         <!-- General -->
         <e k="realisticCropRotation_menu_title" v="Växtföljd" />
 
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Behandlingsmedel" />
+        <e k="rcr_help_title_spraying" v="Spruta tidigt" />
+        <e k="rcr_help_title_treatment_map" v="Behandlade områden" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation sparar de fyra föregående posterna med gröda eller träda för varje ägd åker. Använd Agronomi för att granska en åker, Planering för att skapa en upprepad cykel och kartan Sjukdomar för att följa risk, utbrott och behandlingsgrad." />
+        <e k="rcr_help_text_02" v="Välj en ägd åker för att se aktuell gröda, upp till fyra tidigare poster, agronomiska råd, kväve, pH, behandlingsgrad och åkerns aktuella status. Väderhuvudet hjälper dig att välja tidpunkt för sprutning." />
+        <e k="rcr_help_text_03" v="Välj en plats från N+1 till N+4 och sedan huvudgröda samt en valfri mellangröda. Fyll platser i följd: den ifyllda början blir en upprepad cykel på två, tre eller fyra år, inklusive övergången från den sista platsen tillbaka till den första." />
+        <e k="rcr_help_text_04" v="Växtföljdens kvalitet belönar variation av grödor och familjer, växling mellan höst- och vårsådd, kvävegivande grödor eller mellangrödor samt en baljväxt följd av spannmål. För snabb återkomst av samma familj eller grödor med gemensamma sjukdomar sänker poängen." />
+        <e k="rcr_help_text_05" v="En konfigurerad baljväxt återför bara kväve när den förstörs genom jordbearbetning, inte när den enbart skördas. Återföringen delas mellan de två följande grödorna; med Precision Farming skrivs den till kvävekartan, annars läggs en gödslingsnivå till." />
+        <e k="rcr_help_text_06" v="Kartan Sjukdomsrisk visar det högsta aktuella smittotrycket för grödan på varje ägd åker som lågt, måttligt eller högt. Vädret kan ändra infektionsrisken ytterligare, så använd kartan tillsammans med väderhuvudet under Agronomi." />
+        <e k="rcr_help_text_07" v="En infektion börjar dold och visas först här när den börjar förstöra grödan. Kartan identifierar utbrottet bland de nio konfigurerade sjukdomarna; därefter visas det även på åkerkortet, i HUD:en till fots och i meddelandet." />
+        <e k="rcr_help_text_09" v="Spruta tidigt. Fungicid minskar risken för utbrott och bromsar en aktiv sjukdom i förhållande till åkerns täckning. Fungicid och nematicid skyddar sprutade celler från förstörelse, men kan inte återställa förlorad gröda eller ta bort sjukdom från åkern." />
+        <e k="rcr_help_text_10" v="Kartan Behandlingar visar mark som skyddas av fungicid eller nematicid. Fungicidskyddet upphör på skördad eller slagen mark. Nematicidskyddet varar tre månader per åker och en ny behandling förnyar perioden." />
+        <e k="rcr_help_text_11" v="När du står på en åker lägger HUD:en till de två föregående grödorna, synliga sjukdomar och aktiva behandlingar. Den visar också numrerade odlingsframsteg; Precision Farming behåller sin egen information om jord, pH, kväve och avkastning." />
+
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Fält" />
         <e k="rcr_sidebar_no_active_crop"  v="Ingen aktiv gröda" />

@@ -4,6 +4,21 @@
         <!-- General -->
         <e k="realisticCropRotation_menu_title" v="Ekim Nöbeti" />
 
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="İlaçlama ürünleri" />
+        <e k="rcr_help_title_spraying" v="Erken ilaçla" />
+        <e k="rcr_help_title_treatment_map" v="İşlem görmüş alanlar" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation, sahip olunan her tarlanın önceki dört ürün veya nadas kaydını saklar. Bir tarlayı incelemek için Agronomi'yi, tekrarlanan bir döngü hazırlamak için Planlama'yı ve risk, salgın ile ilaçlama kapsamını izlemek için Hastalıklar haritasını kullanın." />
+        <e k="rcr_help_text_02" v="Mevcut ürünü, en fazla dört önceki kaydı, agronomik tavsiyeyi, azotu, pH değerini, ilaçlama kapsamını ve tarlanın mevcut durumunu görmek için sahip olduğunuz bir tarlayı seçin. Hava durumu başlığı ilaçlama zamanını seçmenize yardımcı olur." />
+        <e k="rcr_help_text_03" v="N+1 ile N+4 arasında bir yuva seçin, ardından ana ürünü ve isteğe bağlı bir örtü bitkisini belirleyin. Ardışık yuvaları doldurun: doldurulan başlangıç bölümü, son yuvadan ilk yuvaya dönüş dahil olmak üzere iki, üç veya dört yıllık tekrarlanan bir döngüye dönüşür." />
+        <e k="rcr_help_text_04" v="Rotasyon kalitesi ürün ve aile çeşitliliğini, kışlık ve yazlık ekim dönüşümünü, azot sağlayan ürünleri veya örtü bitkilerini ve baklagilden sonra tahıl ekilmesini ödüllendirir. Aynı ailenin veya ortak hastalıklara sahip ürünlerin çok erken geri dönmesi puanı düşürür." />
+        <e k="rcr_help_text_05" v="Ayarlanmış bir baklagil, yalnızca toprak işlemesiyle yok edildiğinde azot geri kazandırır; sadece hasat edilmesi yeterli değildir. Azot sonraki iki ürün arasında paylaşılır; Precision Farming ile azot haritasına yazılır, aksi halde bir gübreleme seviyesi eklenir." />
+        <e k="rcr_help_text_06" v="Hastalık riski haritası, sahip olunan her tarladaki mevcut ürün için en yüksek patojen baskısını düşük, orta veya yüksek olarak gösterir. Hava koşulları enfeksiyon olasılığını daha da değiştirebilir; bu yüzden haritayı Agronomi'deki hava durumu başlığıyla birlikte kullanın." />
+        <e k="rcr_help_text_07" v="Enfeksiyon gizli başlar ve yalnızca ürünü yok etmeye başladığında burada görünür. Harita, ayarlanmış dokuz hastalık arasından salgını belirler; ardından tarla kartı, yaya HUD'u ve bildirim de bunu gösterir." />
+        <e k="rcr_help_text_09" v="Erken ilaçlayın. Fungisit, tarla kapsamına göre salgın olasılığını azaltır ve aktif hastalığı yavaşlatır. Fungisit ve nematisit püskürtülen hücreleri yok olmaktan korur, ancak kaybedilen ürünü geri getiremez veya hastalığı tarladan çıkaramaz." />
+        <e k="rcr_help_text_10" v="İlaçlamalar haritası, fungisit veya nematisit ile korunan zemini gösterir. Fungisit koruması hasat edilmiş veya biçilmiş zeminde sona erer. Nematisit koruması tarla başına üç ay sürer ve yeni bir uygulama süreyi yeniler." />
+        <e k="rcr_help_text_11" v="Bir tarlada dururken HUD önceki iki ürünü, görünen hastalıkları ve etkin ilaçlamaları ekler. Ayrıca numaralı büyüme ilerlemesini gösterir; Precision Farming kendi toprak, pH, azot ve verim bilgilerini korur." />
+
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Tarla" />
         <e k="rcr_sidebar_no_active_crop"  v="Aktif ekin yok" />

@@ -4,6 +4,21 @@
         <!-- General -->
         <e k="realisticCropRotation_menu_title" v="Fruchtfolge" />
 
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Behandlungsprodukte" />
+        <e k="rcr_help_title_spraying" v="Früh spritzen" />
+        <e k="rcr_help_title_treatment_map" v="Behandelte Flächen" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation speichert für jedes eigene Feld die vier vorherigen Einträge, also Kulturen oder Brache. Unter Agronomie prüfst du ein Feld, unter Planung erstellst du einen wiederholten Zyklus und auf der Karte Krankheiten überwachst du Risiko, Befall und Behandlungsabdeckung." />
+        <e k="rcr_help_text_02" v="Wähle ein eigenes Feld, um die aktuelle Kultur, bis zu vier vorherige Einträge, agronomische Empfehlungen, Stickstoff, pH-Wert, Behandlungsabdeckung und den aktuellen Feldzustand zu sehen. Die Wetterleiste hilft dir, den Spritzzeitpunkt zu wählen." />
+        <e k="rcr_help_text_03" v="Wähle einen Platz von N+1 bis N+4 und danach die Hauptkultur sowie optional eine Zwischenfrucht. Fülle aufeinanderfolgende Plätze: Der ausgefüllte Anfang wird zu einem wiederholten zwei-, drei- oder vierjährigen Zyklus, einschließlich der Rückkehr vom letzten zum ersten Platz." />
+        <e k="rcr_help_text_04" v="Die Fruchtfolgequalität belohnt Kultur- und Familienvielfalt, den Wechsel zwischen Winter- und Sommeraussaat, stickstoffliefernde Kulturen oder Zwischenfrüchte sowie eine Leguminose vor Getreide. Eine zu frühe Rückkehr derselben Familie oder von Kulturen mit gemeinsamen Krankheiten senkt die Bewertung." />
+        <e k="rcr_help_text_05" v="Eine konfigurierte Leguminose gibt Stickstoff nur zurück, wenn sie durch Bodenbearbeitung zerstört und nicht bloß geerntet wird. Der Rückstand wird auf die nächsten zwei Kulturen verteilt; mit Precision Farming wird er in die Stickstoffkarte geschrieben, sonst wird eine Düngestufe hinzugefügt." />
+        <e k="rcr_help_text_06" v="Die Karte Krankheitsrisiko zeigt den höchsten aktuellen Erregerdruck für die Kultur auf jedem eigenen Feld als niedrig, mittel oder hoch. Das Wetter kann die Infektionsgefahr weiter verändern; nutze diese Karte deshalb zusammen mit der Wetterleiste unter Agronomie." />
+        <e k="rcr_help_text_07" v="Eine Infektion beginnt verborgen und erscheint hier erst, wenn sie die Kultur zu zerstören beginnt. Die Karte ordnet den Befall einer der neun konfigurierten Krankheiten zu; danach zeigen ihn auch die Feldkarte, die Feldanzeige zu Fuß und die Meldung." />
+        <e k="rcr_help_text_09" v="Spritze früh. Fungizid senkt die Ausbruchsgefahr und verlangsamt eine aktive Krankheit entsprechend der Feldabdeckung. Fungizid und Nematizid schützen besprühte Zellen vor Zerstörung, stellen aber keine verlorene Kultur wieder her und entfernen keine Krankheit aus dem Feld." />
+        <e k="rcr_help_text_10" v="Die Karte Behandlungen zeigt mit Fungizid oder Nematizid geschützte Flächen. Der Fungizidschutz endet auf geerntetem oder gemähtem Boden. Der Nematizidschutz hält je Feld drei Monate; eine weitere Anwendung erneuert die Dauer." />
+        <e k="rcr_help_text_11" v="Wenn du auf einem Feld stehst, ergänzt die Feldanzeige die zwei vorherigen Kulturen, sichtbare Krankheiten und aktive Behandlungen. Sie zeigt außerdem den nummerierten Wachstumsfortschritt; Precision Farming behält seine eigenen Angaben zu Boden, pH-Wert, Stickstoff und Ertrag." />
+
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Feld" />
         <e k="rcr_sidebar_no_active_crop"  v="Keine aktive Kultur" />

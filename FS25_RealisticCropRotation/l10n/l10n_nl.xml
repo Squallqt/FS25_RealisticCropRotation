@@ -4,6 +4,21 @@
         <!-- General -->
         <e k="realisticCropRotation_menu_title" v="Vruchtwisseling" />
 
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Behandelingsmiddelen" />
+        <e k="rcr_help_title_spraying" v="Spuit vroeg" />
+        <e k="rcr_help_title_treatment_map" v="Behandelde gebieden" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation bewaart voor elk eigen veld de vier vorige vermeldingen van gewassen of braak. Gebruik Agronomie om een veld te bekijken, Planning om een herhalende cyclus op te stellen en de kaart Ziekten om risico, uitbraken en behandelingsdekking te volgen." />
+        <e k="rcr_help_text_02" v="Selecteer een eigen veld om het huidige gewas, maximaal vier vorige vermeldingen, agronomisch advies, stikstof, pH, behandelingsdekking en de huidige veldstatus te bekijken. De weerbalk helpt je het spuitmoment te kiezen." />
+        <e k="rcr_help_text_03" v="Selecteer een positie van N+1 tot N+4 en kies daarna het hoofdgewas en optioneel een groenbemester. Vul opeenvolgende posities in: het ingevulde begin wordt een herhalende cyclus van twee, drie of vier jaar, inclusief de overgang van de laatste naar de eerste positie." />
+        <e k="rcr_help_text_04" v="De kwaliteit van de vruchtwisseling beloont variatie in gewassen en families, afwisseling tussen winter- en voorjaarszaai, stikstofleverende gewassen of groenbemesters en een vlinderbloemige gevolgd door graan. Een te snelle terugkeer van dezelfde familie of van gewassen met gedeelde ziekten verlaagt de score." />
+        <e k="rcr_help_text_05" v="Een ingestelde vlinderbloemige geeft alleen stikstof terug wanneer deze door grondbewerking wordt vernietigd, niet wanneer hij alleen wordt geoogst. De teruggave wordt over de volgende twee gewassen verdeeld; met Precision Farming wordt ze op de stikstofkaart geschreven, anders wordt één bemestingsniveau toegevoegd." />
+        <e k="rcr_help_text_06" v="De kaart Ziekterisico toont de hoogste huidige ziekteverwekkerdruk voor het gewas op elk eigen veld als laag, gemiddeld of hoog. Het weer kan de infectiekans verder veranderen, dus gebruik deze kaart samen met de weerbalk onder Agronomie." />
+        <e k="rcr_help_text_07" v="Een infectie begint verborgen en verschijnt hier pas wanneer ze het gewas begint te vernietigen. De kaart herkent de uitbraak als een van de negen ingestelde ziekten; daarna tonen ook de veldkaart, de HUD te voet en de melding deze." />
+        <e k="rcr_help_text_09" v="Spuit vroeg. Fungicide verlaagt de kans op een uitbraak en vertraagt een actieve ziekte naar verhouding van de velddekking. Fungicide en nematicide beschermen bespoten cellen tegen vernietiging, maar herstellen geen verloren gewas en verwijderen geen ziekte uit het veld." />
+        <e k="rcr_help_text_10" v="De kaart Behandelingen toont grond die door fungicide of nematicide wordt beschermd. Fungicidebescherming eindigt op geoogste of gemaaide grond. Nematicidebescherming duurt drie maanden per veld en een nieuwe toepassing vernieuwt die periode." />
+        <e k="rcr_help_text_11" v="Wanneer je in een veld staat, voegt de HUD de twee vorige gewassen, zichtbare ziekten en actieve behandelingen toe. Hij toont ook de genummerde groeivoortgang; Precision Farming behoudt zijn eigen informatie over bodem, pH, stikstof en opbrengst." />
+
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Veld" />
         <e k="rcr_sidebar_no_active_crop"  v="Geen actief gewas" />

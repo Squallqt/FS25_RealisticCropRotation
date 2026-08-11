@@ -4,6 +4,21 @@
         <!-- General -->
         <e k="realisticCropRotation_menu_title" v="Vekstskifte" />
 
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Behandlingsmidler" />
+        <e k="rcr_help_title_spraying" v="Sprøyt tidlig" />
+        <e k="rcr_help_title_treatment_map" v="Behandlede områder" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation lagrer de fire forrige oppføringene med vekst eller brakk for hvert eid jorde. Bruk Agronomi til å undersøke et jorde, Planlegging til å lage en gjentakende syklus og kartet Sykdommer til å følge risiko, utbrudd og behandlingsdekning." />
+        <e k="rcr_help_text_02" v="Velg et eid jorde for å se gjeldende vekst, opptil fire tidligere oppføringer, agronomiske råd, nitrogen, pH, behandlingsdekning og jordets nåværende tilstand. Væroverskriften hjelper deg å velge tidspunkt for sprøyting." />
+        <e k="rcr_help_text_03" v="Velg en plass fra N+1 til N+4, og velg deretter hovedvekst og en valgfri fangvekst. Fyll sammenhengende plasser: den utfylte starten blir en gjentakende syklus på to, tre eller fire år, inkludert overgangen fra siste plass tilbake til den første." />
+        <e k="rcr_help_text_04" v="Vekstskiftekvaliteten belønner variasjon i vekster og familier, veksling mellom vinter- og vårsåing, nitrogenproduserende vekster eller fangvekster og en belgvekst fulgt av korn. For rask tilbakekomst av samme familie eller vekster med felles sykdommer senker poengsummen." />
+        <e k="rcr_help_text_05" v="En konfigurert belgvekst tilbakefører bare nitrogen når den ødelegges ved jordarbeiding, ikke når den bare høstes. Tilbakeføringen deles mellom de neste to vekstene; med Precision Farming skrives den til nitrogenkartet, ellers legges ett gjødslingsnivå til." />
+        <e k="rcr_help_text_06" v="Kartet Sykdomsrisiko viser det høyeste nåværende smittetrykket for veksten på hvert eid jorde som lavt, moderat eller høyt. Været kan endre smittefaren ytterligere, så bruk kartet sammen med væroverskriften under Agronomi." />
+        <e k="rcr_help_text_07" v="En infeksjon starter skjult og vises først her når den begynner å ødelegge veksten. Kartet identifiserer utbruddet blant de ni konfigurerte sykdommene; deretter vises det også på jordekortet, i HUD-en til fots og i varslingen." />
+        <e k="rcr_help_text_09" v="Sprøyt tidlig. Soppmiddel senker faren for utbrudd og bremser en aktiv sykdom i forhold til jordedekningen. Soppmiddel og nematicid beskytter sprøytede celler mot ødeleggelse, men kan ikke gjenopprette tapt vekst eller fjerne sykdom fra jordet." />
+        <e k="rcr_help_text_10" v="Kartet Behandlinger viser jord som er beskyttet av soppmiddel eller nematicid. Soppmiddelbeskyttelsen slutter på høstet eller slått jord. Nematicidbeskyttelsen varer tre måneder per jorde, og en ny behandling fornyer perioden." />
+        <e k="rcr_help_text_11" v="Når du står på et jorde, legger HUD-en til de to forrige vekstene, synlige sykdommer og aktive behandlinger. Den viser også nummerert vekstframgang; Precision Farming beholder sin egen informasjon om jord, pH, nitrogen og avling." />
+
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Jorde" />
         <e k="rcr_sidebar_no_active_crop"  v="Ingen aktiv vekst" />

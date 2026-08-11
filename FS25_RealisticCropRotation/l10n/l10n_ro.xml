@@ -4,6 +4,21 @@
         <!-- General -->
         <e k="realisticCropRotation_menu_title" v="Rotația Culturilor" />
 
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Produse de tratament" />
+        <e k="rcr_help_title_spraying" v="Pulverizează devreme" />
+        <e k="rcr_help_title_treatment_map" v="Zone tratate" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation păstrează pentru fiecare parcelă deținută cele patru înregistrări anterioare de cultură sau pârloagă. Folosește Agronomie pentru a examina parcela, Planificare pentru a pregăti un ciclu repetitiv și harta Boli pentru a urmări riscul, focarele și acoperirea tratamentului." />
+        <e k="rcr_help_text_02" v="Selectează o parcelă deținută pentru a vedea cultura actuală, până la patru înregistrări anterioare, sfatul agronomic, azotul, pH-ul, acoperirea tratamentului și starea actuală a parcelei. Antetul meteo te ajută să alegi momentul pulverizării." />
+        <e k="rcr_help_text_03" v="Selectează o poziție de la N+1 la N+4, apoi cultura principală și o cultură de acoperire opțională. Completează poziții consecutive: începutul completat devine un ciclu repetitiv de doi, trei sau patru ani, inclusiv revenirea de la ultima poziție la prima." />
+        <e k="rcr_help_text_04" v="Calitatea rotației recompensează diversitatea culturilor și a familiilor, alternarea semănatului de iarnă și de primăvară, culturile care produc azot sau culturile de acoperire și o leguminoasă urmată de o cereală. Revenirea prea rapidă a aceleiași familii sau a culturilor cu boli comune reduce scorul." />
+        <e k="rcr_help_text_05" v="O leguminoasă configurată restituie azot numai când este distrusă prin lucrarea solului, nu când este doar recoltată. Restituirea se împarte între următoarele două culturi; cu Precision Farming este scrisă pe harta azotului, iar fără acesta se adaugă un nivel de fertilizare." />
+        <e k="rcr_help_text_06" v="Harta Risc de boli arată cea mai mare presiune actuală a agenților patogeni asupra culturii de pe fiecare parcelă deținută ca scăzută, moderată sau ridicată. Vremea poate modifica suplimentar șansa de infectare, deci folosește harta împreună cu antetul meteo din Agronomie." />
+        <e k="rcr_help_text_07" v="O infecție începe ascunsă și apare aici numai când începe să distrugă cultura. Harta identifică focarul dintre cele nouă boli configurate; apoi îl afișează și fișa parcelei, HUD-ul la mers și notificarea." />
+        <e k="rcr_help_text_09" v="Pulverizează devreme. Fungicidul scade șansa unui focar și încetinește o boală activă proporțional cu acoperirea parcelei. Fungicidul și nematicidul protejează celulele pulverizate de distrugere, dar nu refac cultura pierdută și nu elimină boala din parcelă." />
+        <e k="rcr_help_text_10" v="Harta Tratamente arată terenul protejat de fungicid sau nematicid. Protecția fungicidă se încheie pe terenul recoltat sau cosit. Protecția nematicidă durează trei luni pentru fiecare parcelă, iar o nouă aplicare reînnoiește durata." />
+        <e k="rcr_help_text_11" v="Când te afli pe o parcelă, HUD-ul adaugă cele două culturi anterioare, bolile vizibile și tratamentele active. Afișează și progresul numerotat al creșterii; Precision Farming își păstrează propriile informații despre sol, pH, azot și producție." />
+
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Parcelă" />
         <e k="rcr_sidebar_no_active_crop"  v="Nicio cultură activă" />

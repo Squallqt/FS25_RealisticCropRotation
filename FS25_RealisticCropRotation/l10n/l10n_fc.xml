@@ -4,6 +4,21 @@
         <!-- General -->
         <e k="realisticCropRotation_menu_title" v="Rotation des cultures" />
 
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Produits de traitement" />
+        <e k="rcr_help_title_spraying" v="Pulvérisez tôt" />
+        <e k="rcr_help_title_treatment_map" v="Zones traitées" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation mémorise les quatre entrées précédentes, cultures ou jachères, de chaque champ possédé. Utilisez Agronomie pour examiner un champ, Planification pour préparer un cycle répétitif et la carte Maladies pour surveiller les risques, les attaques et la couverture des traitements." />
+        <e k="rcr_help_text_02" v="Sélectionnez un champ possédé pour consulter la culture actuelle, jusqu’à quatre entrées précédentes, le conseil agronomique, l’azote, le pH, la couverture du traitement et l’état actuel du champ. L’en-tête météo aide à choisir le moment de pulvériser." />
+        <e k="rcr_help_text_03" v="Sélectionnez un emplacement de N+1 à N+4, puis choisissez la culture principale et un couvert facultatif. Remplissez des emplacements consécutifs : la partie remplie devient un cycle répétitif de deux, trois ou quatre ans, retour du dernier emplacement au premier compris." />
+        <e k="rcr_help_text_04" v="La qualité de rotation récompense la diversité des cultures et des familles, l’alternance hiver-printemps, les cultures productrices d’azote ou les couverts, ainsi qu’une légumineuse suivie d’une céréale. Le retour trop rapide d’une même famille ou de cultures partageant une maladie réduit la note." />
+        <e k="rcr_help_text_05" v="Une légumineuse configurée ne restitue de l’azote que lorsqu’elle est détruite par le travail du sol, pas lorsqu’elle est simplement récoltée. Le reliquat est réparti entre les deux cultures suivantes ; avec Precision Farming il est inscrit sur la carte d’azote, sinon un niveau d’engrais est ajouté." />
+        <e k="rcr_help_text_06" v="La carte Risque de maladie affiche la pression actuelle la plus élevée parmi les agents pathogènes de la culture présente sur chaque champ possédé : faible, modérée ou élevée. La météo peut encore modifier la probabilité d’infection ; utilisez donc cette carte avec l’en-tête météo d’Agronomie." />
+        <e k="rcr_help_text_07" v="Une infection commence cachée et n’apparaît ici que lorsqu’elle commence à détruire la culture. La carte identifie l’attaque parmi les neuf maladies configurées ; la fiche de champ, le HUD à pied et la notification l’affichent alors également." />
+        <e k="rcr_help_text_09" v="Pulvérisez tôt. Le fongicide réduit le risque d’attaque et ralentit une maladie active selon la couverture du champ. Fongicide et nématicide protègent les cellules pulvérisées de la destruction, mais ne restaurent pas la culture perdue et n’éliminent pas la maladie du champ." />
+        <e k="rcr_help_text_10" v="La carte Traitements affiche les zones protégées par un fongicide ou un nématicide. La protection fongicide prend fin sur les zones récoltées ou fauchées. La protection nématicide dure trois mois par champ et une nouvelle application renouvelle cette durée." />
+        <e k="rcr_help_text_11" v="Lorsque vous vous trouvez dans un champ, le HUD ajoute les deux cultures précédentes, les maladies visibles et les traitements actifs. Il affiche aussi la progression numérotée de la croissance ; Precision Farming conserve ses propres informations de sol, pH, azote et rendement." />
+
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Parcelle" />
         <e k="rcr_sidebar_no_active_crop"  v="Aucune culture" />

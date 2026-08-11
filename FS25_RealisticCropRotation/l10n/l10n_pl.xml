@@ -4,6 +4,21 @@
         <!-- General -->
         <e k="realisticCropRotation_menu_title" v="Płodozmian" />
 
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Środki ochrony" />
+        <e k="rcr_help_title_spraying" v="Opryskuj wcześnie" />
+        <e k="rcr_help_title_treatment_map" v="Obszary po zabiegu" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation zapisuje dla każdego posiadanego pola cztery poprzednie wpisy dotyczące uprawy lub ugoru. W widoku Agronomia sprawdzisz pole, w Planowaniu przygotujesz powtarzalny cykl, a na mapie Choroby będziesz śledzić ryzyko, ogniska i pokrycie zabiegiem." />
+        <e k="rcr_help_text_02" v="Wybierz posiadane pole, aby zobaczyć bieżącą uprawę, maksymalnie cztery poprzednie wpisy, poradę agronomiczną, azot, pH, pokrycie zabiegiem i aktualny stan pola. Nagłówek pogody pomaga wybrać czas oprysku." />
+        <e k="rcr_help_text_03" v="Wybierz pozycję od N+1 do N+4, a następnie uprawę główną i opcjonalną międzyplonową. Wypełnij kolejne pozycje: uzupełniony początek stanie się powtarzalnym cyklem dwu-, trzy- lub czteroletnim, wraz z przejściem z ostatniej pozycji do pierwszej." />
+        <e k="rcr_help_text_04" v="Jakość zmianowania premiuje różnorodność upraw i rodzin, naprzemienne siewy ozime i jare, rośliny dostarczające azot lub międzyplony oraz roślinę strączkową przed zbożem. Zbyt szybki powrót tej samej rodziny albo upraw ze wspólnymi chorobami obniża wynik." />
+        <e k="rcr_help_text_05" v="Skonfigurowana roślina strączkowa oddaje azot tylko wtedy, gdy zostanie zniszczona podczas uprawy gleby, a nie jedynie zebrana. Azot jest dzielony między dwie następne uprawy; z Precision Farming trafia na mapę azotu, a bez niego dodawany jest jeden poziom nawożenia." />
+        <e k="rcr_help_text_06" v="Mapa Ryzyko chorób pokazuje największą bieżącą presję patogenów na uprawę rosnącą na każdym posiadanym polu jako niską, umiarkowaną lub wysoką. Pogoda może dodatkowo zmienić szansę infekcji, dlatego korzystaj z mapy razem z nagłówkiem pogody w Agronomii." />
+        <e k="rcr_help_text_07" v="Infekcja zaczyna się w ukryciu i pojawia się tutaj dopiero, gdy zaczyna niszczyć uprawę. Mapa wskazuje ognisko jednej z dziewięciu skonfigurowanych chorób; wtedy pokazują je także karta pola, HUD podczas chodzenia i powiadomienie." />
+        <e k="rcr_help_text_09" v="Opryskuj wcześnie. Fungicyd obniża szansę wybuchu choroby i spowalnia aktywną chorobę proporcjonalnie do pokrycia pola. Fungicyd i nematocyd chronią opryskane komórki przed zniszczeniem, ale nie odtwarzają utraconej uprawy ani nie usuwają choroby z pola." />
+        <e k="rcr_help_text_10" v="Mapa Zabiegi pokazuje glebę chronioną fungicydem lub nematocydem. Ochrona fungicydowa kończy się na zebranej lub skoszonej powierzchni. Ochrona nematocydowa trwa trzy miesiące na każdym polu, a kolejna aplikacja odnawia ten okres." />
+        <e k="rcr_help_text_11" v="Gdy stoisz na polu, HUD dodaje dwie poprzednie uprawy, widoczne choroby i aktywne zabiegi. Pokazuje też numerowany postęp wzrostu; Precision Farming zachowuje własne informacje o glebie, pH, azocie i plonie." />
+
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Pole" />
         <e k="rcr_sidebar_no_active_crop"  v="Brak aktywnej uprawy" />

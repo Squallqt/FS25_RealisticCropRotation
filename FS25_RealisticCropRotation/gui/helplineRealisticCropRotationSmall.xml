@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<texture>
+    <meta>
+        <filename>helplineRealisticCropRotationSmall.png</filename>
+        <size width="1024" height="512" />
+    </meta>
+    <slices>
+        <slice id="general" uvs="0px 0px 75px 75px" />
+        <slice id="agronomy" uvs="80px 0px 75px 75px" />
+        <slice id="planning" uvs="160px 0px 75px 75px" />
+        <slice id="rotationQuality" uvs="240px 0px 75px 75px" />
+        <slice id="nitrogenResidue" uvs="320px 0px 75px 75px" />
+        <slice id="diseaseRisk" uvs="400px 0px 75px 75px" />
+        <slice id="infectedFields" uvs="480px 0px 75px 75px" />
+        <slice id="products" uvs="560px 0px 75px 75px" />
+        <slice id="spraying" uvs="640px 0px 75px 75px" />
+        <slice id="treatmentMap" uvs="720px 0px 75px 75px" />
+        <slice id="fieldHud" uvs="800px 0px 75px 75px" />
+    </slices>
+</texture>

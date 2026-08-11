@@ -531,7 +531,7 @@ local function resolveSavegameFolderPath()
     return path
 end
 
----Loads GUI profiles and the menu icon texture configuration once.
+---Loads GUI profiles and texture configurations once.
 local function loadGuiAssets()
     if g_gui == nil or type(g_gui.loadProfiles) ~= "function" then return end
 
@@ -546,6 +546,14 @@ local function loadGuiAssets()
         g_overlayManager:addTextureConfigFile(
             RealisticCropRotation.modDirectory .. "images/gui.xml",
             "realisticCropRotation")
+    end
+
+    if g_overlayManager ~= nil
+        and (g_overlayManager.textureConfigs == nil
+            or g_overlayManager.textureConfigs.realisticCropRotationHelplineSmall == nil) then
+        g_overlayManager:addTextureConfigFile(
+            RealisticCropRotation.modDirectory .. "gui/helplineRealisticCropRotationSmall.xml",
+            "realisticCropRotationHelplineSmall")
     end
 end
 

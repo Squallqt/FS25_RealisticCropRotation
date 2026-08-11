@@ -4,6 +4,21 @@
         <!-- General -->
         <e k="realisticCropRotation_menu_title" v="Rotación de Cultivos" />
 
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Productos de tratamiento" />
+        <e k="rcr_help_title_spraying" v="Pulveriza pronto" />
+        <e k="rcr_help_title_treatment_map" v="Zonas tratadas" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation guarda las cuatro entradas anteriores, cultivos o barbecho, de cada parcela propia. Usa Agronomía para revisar una parcela, Planificación para preparar un ciclo repetitivo y el mapa Enfermedades para vigilar riesgos, brotes y cobertura de los tratamientos." />
+        <e k="rcr_help_text_02" v="Selecciona una parcela propia para consultar el cultivo actual, hasta cuatro entradas anteriores, el consejo agronómico, el nitrógeno, el pH, la cobertura del tratamiento y el estado actual de la parcela. El encabezado meteorológico ayuda a elegir cuándo pulverizar." />
+        <e k="rcr_help_text_03" v="Selecciona una posición de N+1 a N+4 y después el cultivo principal y un cultivo de cobertura opcional. Completa posiciones consecutivas: la parte completada se convierte en un ciclo repetitivo de dos, tres o cuatro años, incluido el regreso de la última posición a la primera." />
+        <e k="rcr_help_text_04" v="La calidad de la rotación premia la diversidad de cultivos y familias, la alternancia entre invierno y primavera, los cultivos que aportan nitrógeno o de cobertura y una leguminosa seguida de un cereal. Repetir demasiado pronto una familia o cultivos con enfermedades comunes reduce la puntuación." />
+        <e k="rcr_help_text_05" v="Una leguminosa configurada solo devuelve nitrógeno cuando se destruye mediante laboreo, no cuando simplemente se cosecha. El aporte se divide entre los dos cultivos siguientes; con Precision Farming se escribe en el mapa de nitrógeno y, sin él, se añade un nivel de fertilización." />
+        <e k="rcr_help_text_06" v="El mapa Riesgo de enfermedades muestra la mayor presión actual de patógenos sobre el cultivo de cada parcela propia como baja, moderada o alta. El tiempo puede cambiar aún más la probabilidad de infección, así que usa este mapa junto con el encabezado meteorológico de Agronomía." />
+        <e k="rcr_help_text_07" v="Una infección comienza oculta y solo aparece aquí cuando empieza a destruir el cultivo. El mapa identifica el brote entre las nueve enfermedades configuradas; entonces también lo muestran la ficha de campo, el HUD a pie y la notificación." />
+        <e k="rcr_help_text_09" v="Pulveriza pronto. El fungicida reduce la probabilidad de brote y frena una enfermedad activa según la cobertura de la parcela. El fungicida y el nematicida protegen las celdas pulverizadas de la destrucción, pero no recuperan el cultivo perdido ni eliminan la enfermedad de la parcela." />
+        <e k="rcr_help_text_10" v="El mapa Tratamientos muestra el terreno protegido con fungicida o nematicida. La protección fungicida termina en el terreno cosechado o segado. La protección nematicida dura tres meses por parcela y otra aplicación renueva ese periodo." />
+        <e k="rcr_help_text_11" v="Mientras estás en una parcela, el HUD añade los dos cultivos anteriores, las enfermedades visibles y los tratamientos activos. También muestra el progreso numerado del crecimiento; Precision Farming mantiene su propia información de suelo, pH, nitrógeno y rendimiento." />
+
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Parcela" />
         <e k="rcr_sidebar_no_active_crop"  v="Sin cultivo activo" />

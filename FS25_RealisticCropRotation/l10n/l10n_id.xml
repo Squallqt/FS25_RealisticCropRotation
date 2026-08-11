@@ -4,6 +4,21 @@
         <!-- General -->
         <e k="realisticCropRotation_menu_title" v="Rotasi Tanaman" />
 
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Produk perawatan" />
+        <e k="rcr_help_title_spraying" v="Semprot lebih awal" />
+        <e k="rcr_help_title_treatment_map" v="Area yang dirawat" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation menyimpan empat entri tanaman atau lahan bera sebelumnya untuk setiap lahan milikmu. Gunakan Agronomi untuk memeriksa lahan, Perencanaan untuk menyiapkan siklus berulang, dan peta Penyakit untuk memantau risiko, wabah, serta cakupan perawatan." />
+        <e k="rcr_help_text_02" v="Pilih lahan milikmu untuk melihat tanaman saat ini, hingga empat entri sebelumnya, saran agronomi, nitrogen, pH, cakupan perawatan, dan kondisi lahan saat ini. Tajuk cuaca membantu menentukan waktu penyemprotan." />
+        <e k="rcr_help_text_03" v="Pilih slot dari N+1 hingga N+4, lalu pilih tanaman utama dan tanaman penutup opsional. Isi slot secara berurutan: bagian awal yang terisi menjadi siklus dua, tiga, atau empat tahun yang berulang, termasuk kembalinya slot terakhir ke slot pertama." />
+        <e k="rcr_help_text_04" v="Kualitas rotasi memberi nilai pada keragaman tanaman dan keluarga, pergantian tanam musim dingin dan musim semi, tanaman penghasil nitrogen atau tanaman penutup, serta tanaman legum yang diikuti serealia. Keluarga yang sama atau tanaman dengan penyakit bersama yang kembali terlalu cepat akan menurunkan skor." />
+        <e k="rcr_help_text_05" v="Tanaman legum yang dikonfigurasi hanya mengembalikan nitrogen saat dihancurkan melalui pengolahan tanah, bukan saat sekadar dipanen. Pengembalian dibagi untuk dua tanaman berikutnya; dengan Precision Farming nilainya ditulis ke peta nitrogen, jika tidak satu tingkat pemupukan ditambahkan." />
+        <e k="rcr_help_text_06" v="Peta Risiko penyakit menampilkan tekanan patogen tertinggi saat ini pada tanaman di setiap lahan milikmu sebagai rendah, sedang, atau tinggi. Cuaca dapat mengubah peluang infeksi lebih lanjut, jadi gunakan peta ini bersama tajuk cuaca di Agronomi." />
+        <e k="rcr_help_text_07" v="Infeksi dimulai secara tersembunyi dan baru muncul di sini saat mulai merusak tanaman. Peta mengenali wabah dari sembilan penyakit yang dikonfigurasi; kartu lahan, HUD saat berjalan kaki, dan notifikasi kemudian juga menampilkannya." />
+        <e k="rcr_help_text_09" v="Semprot lebih awal. Fungisida menurunkan peluang wabah dan memperlambat penyakit aktif sesuai cakupan lahan. Fungisida dan nematisida melindungi sel yang disemprot dari kerusakan, tetapi tidak dapat memulihkan tanaman yang hilang atau menghapus penyakit dari lahan." />
+        <e k="rcr_help_text_10" v="Peta Perawatan menampilkan tanah yang dilindungi fungisida atau nematisida. Perlindungan fungisida berakhir pada tanah yang sudah dipanen atau dipotong. Perlindungan nematisida berlangsung tiga bulan per lahan dan aplikasi berikutnya memperbarui durasinya." />
+        <e k="rcr_help_text_11" v="Saat berdiri di lahan, HUD menambahkan dua tanaman sebelumnya, penyakit yang terlihat, dan perawatan aktif. HUD juga menampilkan kemajuan pertumbuhan bernomor; Precision Farming mempertahankan informasi tanah, pH, nitrogen, dan hasil panennya sendiri." />
+
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Lahan" />
         <e k="rcr_sidebar_no_active_crop"  v="Tidak ada tanaman aktif" />
