@@ -757,6 +757,7 @@ function RealisticCropRotationManager.new()
     self.repository = RealisticCropRotationRepository.new()
     self.service = RealisticCropRotationService.new(self.repository)
     self.activeCropNameCache = {}
+    self.rotationAreaHaCache = {}
     self.fieldRegions = {}
     self.isInitialized = false
     return self
@@ -768,6 +769,7 @@ function RealisticCropRotationManager:initialize()
     self.service:reset()
     self.activeCropNameCache = {}
     self.fieldStateMemo = nil
+    self.rotationAreaHaCache = {}
     self.fieldRegions = {}
     self.isInitialized = true
 end
@@ -778,6 +780,7 @@ function RealisticCropRotationManager:cleanup()
     self.activeCropNameCache = {}
     self.fieldStateMemo = nil
     self.soilScanMemo = nil
+    self.rotationAreaHaCache = nil
     self.fieldRegions = {}
     self.isInitialized = false
 end
@@ -949,8 +952,19 @@ end
 -- @param integer farmlandId
 -- @return number areaHa
 function RealisticCropRotationManager:getRotationAreaHa(farmlandId)
-    local areaHa = measureRegionFieldAreaHa(buildFarmlandRegion(farmlandId))
-    return areaHa > MIN_ROTATION_AREA_HA and areaHa or 0
+    local n = tonumber(farmlandId)
+    if n == nil or n <= 0 then return 0 end
+
+    self.rotationAreaHaCache = self.rotationAreaHaCache or {}
+    local cached = self.rotationAreaHaCache[n]
+    if cached ~= nil then return cached end
+
+    local areaHa = measureRegionFieldAreaHa(buildFarmlandRegion(n))
+    if areaHa > MIN_ROTATION_AREA_HA then
+        self.rotationAreaHaCache[n] = areaHa
+        return areaHa
+    end
+    return 0
 end
 
 ---Cells a region holds on the fruit map, measured once per farmland.
@@ -1394,6 +1408,70 @@ local function locateSoilTypePositions(region, soilMap, expectedCount)
     return positions
 end
 
+---Reads nitrogen and soil weights on PF's tramline-map resolution, excluding every non-zero tramline state.
+-- @param table region
+-- @param table nMap
+-- @param table soilMap
+-- @param table tramlineMap PF tramline map
+-- @return number internalMean, table soilWeights, or nil when the native maps cannot be aligned
+local function getTramlineAlignedNitrogen(region, nMap, soilMap, tramlineMap)
+    if region == nil or region.field == nil or region.filter ~= nil
+        or nMap == nil or soilMap == nil or tramlineMap == nil
+        or DensityMapModifier == nil or g_terrainNode == nil then return nil end
+
+    local nMapId, nFirstChannel, nNumChannels = getValueMapLayer(nMap)
+    local soilMapId = tonumber(soilMap.bitVectorMap)
+    local soilFirstChannel = tonumber(soilMap.typeFirstChannel)
+    local soilNumChannels = math.floor(tonumber(soilMap.typeNumChannels) or 0)
+    local tramlineMapId = tramlineMap ~= nil and tonumber(tramlineMap.bitVectorMap) or nil
+    local tramlineChannels = tramlineMap ~= nil
+        and math.floor(tonumber(tramlineMap.numChannels) or 0) or 0
+    if nMapId == nil or nFirstChannel == nil or nNumChannels <= 0
+        or soilMapId == nil or soilFirstChannel == nil or soilNumChannels <= 0
+        or tramlineMapId == nil or tramlineChannels <= 0 then return nil end
+
+    local modifier = DensityMapModifier.new(
+        tramlineMapId, 0, tramlineChannels, g_terrainNode)
+    if modifier == nil or not applyRegionToModifier(region, modifier) then return nil end
+
+    local clearFilter = makeDensityFilter(
+        tramlineMapId, 0, tramlineChannels,
+        DensityValueCompareType.EQUAL, 0)
+    if clearFilter == nil then return nil end
+
+    local okTotal, _, clearPixels = pcall(
+        modifier.executeGet, modifier, clearFilter)
+    if not okTotal or type(clearPixels) ~= "number" or clearPixels <= 0 then return nil end
+
+    local reconstructedSum = 0
+    for bitIndex = 0, nNumChannels - 1 do
+        local bitFilter = makeDensityFilter(
+            nMapId, nFirstChannel + bitIndex, 1,
+            DensityValueCompareType.EQUAL, 1)
+        if bitFilter == nil then return nil end
+
+        local okBit, _, bitPixels = pcall(
+            modifier.executeGet, modifier, clearFilter, bitFilter)
+        if not okBit or type(bitPixels) ~= "number" then return nil end
+        reconstructedSum = reconstructedSum + bitPixels * (2 ^ bitIndex)
+    end
+
+    local soilWeights = {}
+    for soilValue = 0, (2 ^ soilNumChannels) - 1 do
+        local soilFilter = makeDensityFilter(
+            soilMapId, soilFirstChannel, soilNumChannels,
+            DensityValueCompareType.EQUAL, soilValue)
+        if soilFilter == nil then return nil end
+
+        local okSoil, _, soilPixels = pcall(
+            modifier.executeGet, modifier, clearFilter, soilFilter)
+        if not okSoil or type(soilPixels) ~= "number" then return nil end
+        if soilPixels > 0 then soilWeights[soilValue + 1] = soilPixels end
+    end
+
+    return reconstructedSum / clearPixels, soilWeights
+end
+
 ---Live PF soil read: field-average N and pH, with targets weighted by the field's soil-type mix.
 -- @param integer farmlandId
 -- @param integer activeFruitTypeIndex Known active fruit type, or nil
@@ -1462,6 +1540,18 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId, activeFruitTypeI
     local parcelGroundMask = region.field == nil and groundFilter or nil
     local nitrogenMask = cropFilter or parcelGroundMask
 
+    -- PF stores tramlines at a higher resolution than nitrogen. Reconstructing
+    -- nitrogen on that native grid avoids mixed low-resolution edge cells.
+    local alignedNitrogenMean, alignedSoilWeights = nil, nil
+    local tramlineMap = pf.tramlineMap
+    local tramlineState = tramlineMap ~= nil
+        and type(tramlineMap.farmlandTramlineStates) == "table"
+        and tramlineMap.farmlandTramlineStates[n] or nil
+    if activeFruitTypeIndex ~= nil and nCanLevel and tramlineState ~= nil then
+        alignedNitrogenMean, alignedSoilWeights =
+            getTramlineAlignedNitrogen(region, nMap, soilMap, tramlineMap)
+    end
+
     if phCanLevel then
         local mapId, firstChannel, numChannels = getValueMapLayer(phMap)
         if mapId ~= nil then
@@ -1474,16 +1564,23 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId, activeFruitTypeI
     end
 
     if nCanLevel then
-        local mapId, firstChannel, numChannels = getValueMapLayer(nMap)
-        if mapId ~= nil then
-            local sum, pixels = aggregateRegionLayer(region, mapId, firstChannel, numChannels, nitrogenMask)
-            -- Crop mask matching nothing: falls back to the read region.
-            if (sum == nil or pixels == 0) and nitrogenMask ~= parcelGroundMask then
-                sum, pixels = aggregateRegionLayer(region, mapId, firstChannel, numChannels, parcelGroundMask)
-            end
+        if alignedNitrogenMean ~= nil then
+            rec.nActual = snapToDisplayStep(
+                nConv(alignedNitrogenMean), PF_N_DISPLAY_STEP)
+        else
+            local mapId, firstChannel, numChannels = getValueMapLayer(nMap)
+            if mapId ~= nil then
+                local sum, pixels = aggregateRegionLayer(
+                    region, mapId, firstChannel, numChannels, nitrogenMask)
+                -- Crop mask matching nothing: falls back to the read region.
+                if (sum == nil or pixels == 0) and nitrogenMask ~= parcelGroundMask then
+                    sum, pixels = aggregateRegionLayer(
+                        region, mapId, firstChannel, numChannels, parcelGroundMask)
+                end
 
-            if sum ~= nil and pixels > 0 then
-                rec.nActual = snapToDisplayStep(nConv(sum / pixels), PF_N_DISPLAY_STEP)
+                if sum ~= nil and pixels > 0 then
+                    rec.nActual = snapToDisplayStep(nConv(sum / pixels), PF_N_DISPLAY_STEP)
+                end
             end
         end
     end
@@ -1509,7 +1606,10 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId, activeFruitTypeI
 
         if activeFruitTypeIndex ~= nil and nCanLevel and nCanTargetAtPos and rec.nActual ~= nil then
             -- Nitrogen target weighted over the same area the average was read on.
-            local cropWeights = getRegionSoilTypeWeights(region, soilMap, nitrogenMask)
+            local cropWeights = alignedSoilWeights
+            if cropWeights == nil or next(cropWeights) == nil then
+                cropWeights = getRegionSoilTypeWeights(region, soilMap, nitrogenMask)
+            end
             if next(cropWeights) == nil then cropWeights = soilWeights end
 
             local expectedCount = 0

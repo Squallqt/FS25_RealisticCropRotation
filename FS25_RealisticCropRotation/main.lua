@@ -354,7 +354,7 @@ local function processMenuReconcileQueue()
     if rotationChanged or diseaseChanged then
         job.changed = true
     end
-    if diseaseChanged and RealisticCropRotation.disease ~= nil then
+    if (rotationChanged or diseaseChanged) and RealisticCropRotation.disease ~= nil then
         RealisticCropRotation.disease:refreshFarmlandRiskMap(farmlandId)
     end
 

@@ -466,16 +466,10 @@ end
 -- Overlay update / draw
 
 function RealisticCropRotationDiseaseMap:updateOverlay(force)
-    local disease = getDisease()
     local grid = getGrid()
-    if disease == nil or grid == nil then return end
+    if grid == nil then return end
 
     self:createRuntimeObjects()
-
-    -- Repaint only fields whose pressure band changed.
-    if self:isPressurePage() then
-        disease:refreshRiskMap(false)
-    end
 
     local buildKey = self:buildKey()
     local revision
@@ -688,6 +682,10 @@ end
 function RealisticCropRotationDiseaseMap:onSubSelectorChanged(frame, state)
     self.activeSubPage = state
     self.lastBuildKey = nil
+    if self:isPressurePage() then
+        local disease = getDisease()
+        if disease ~= nil then disease:refreshRiskMap(false) end
+    end
     self:syncFilterData(frame)
     if frame.filterList ~= nil then frame.filterList:reloadData() end
     self:updateOverlay(true)
