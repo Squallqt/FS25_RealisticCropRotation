@@ -35,6 +35,7 @@
         <e k="rcr_disease_risk_moderate"  v="Moderat" />
         <e k="rcr_disease_risk_high"      v="Ridicat" />
         <e k="rcr_disease_notification" v="Focar de %s pe parcela %s" />
+        <e k="rcr_disease_reminder" v="Boală încă activă: %s, parcela %s" />
         <e k="rcr_disease_hud_label"    v="Boală" />
         <e k="rcr_disease_header_active" v="Boală (%s)" />
         <e k="rcr_treatment_hud_label"  v="Tratament" />

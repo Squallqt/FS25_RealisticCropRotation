@@ -35,6 +35,7 @@
         <e k="rcr_disease_risk_moderate"  v="中" />
         <e k="rcr_disease_risk_high"      v="高" />
         <e k="rcr_disease_notification" v="%s が畑 %s で発生しました" />
+        <e k="rcr_disease_reminder" v="病害が引き続き発生中です：%s、畑 %s" />
         <e k="rcr_disease_hud_label"    v="病害" />
         <e k="rcr_disease_header_active" v="病害（%s）" />
         <e k="rcr_treatment_hud_label"  v="防除" />

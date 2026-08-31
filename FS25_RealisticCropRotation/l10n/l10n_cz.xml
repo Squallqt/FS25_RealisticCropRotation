@@ -35,6 +35,7 @@
         <e k="rcr_disease_risk_moderate"  v="Střední" />
         <e k="rcr_disease_risk_high"      v="Vysoké" />
         <e k="rcr_disease_notification" v="Výskyt choroby: %s, pole %s" />
+        <e k="rcr_disease_reminder" v="Choroba je stále aktivní: %s, pole %s" />
         <e k="rcr_disease_hud_label"    v="Choroba" />
         <e k="rcr_disease_header_active" v="Choroba (%s)" />
         <e k="rcr_treatment_hud_label"  v="Ošetření" />

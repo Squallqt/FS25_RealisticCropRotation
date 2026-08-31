@@ -35,6 +35,7 @@
         <e k="rcr_disease_risk_moderate"  v="Mérsékelt" />
         <e k="rcr_disease_risk_high"      v="Magas" />
         <e k="rcr_disease_notification" v="%s észlelve a(z) %s. táblán" />
+        <e k="rcr_disease_reminder" v="A betegség továbbra is aktív: %s, %s. tábla" />
         <e k="rcr_disease_hud_label"    v="Betegség" />
         <e k="rcr_disease_header_active" v="Betegség (%s)" />
         <e k="rcr_treatment_hud_label"  v="Kezelés" />
