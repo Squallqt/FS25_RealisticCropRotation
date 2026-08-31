@@ -35,6 +35,7 @@
         <e k="rcr_disease_risk_moderate"  v="Sedang" />
         <e k="rcr_disease_risk_high"      v="Tinggi" />
         <e k="rcr_disease_notification" v="%s terdeteksi di Lahan %s" />
+        <e k="rcr_disease_reminder" v="Penyakit masih aktif: %s, Lahan %s" />
         <e k="rcr_disease_hud_label"    v="Penyakit" />
         <e k="rcr_disease_header_active" v="Penyakit (%s)" />
         <e k="rcr_treatment_hud_label"  v="Penyemprotan" />

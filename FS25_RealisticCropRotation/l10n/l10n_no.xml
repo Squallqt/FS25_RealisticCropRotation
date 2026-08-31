@@ -35,6 +35,7 @@
         <e k="rcr_disease_risk_moderate"  v="Moderat" />
         <e k="rcr_disease_risk_high"      v="Høy" />
         <e k="rcr_disease_notification" v="%s oppdaget på jorde %s" />
+        <e k="rcr_disease_reminder" v="Sykdom fortsatt aktiv: %s, jorde %s" />
         <e k="rcr_disease_hud_label"    v="Sykdom" />
         <e k="rcr_disease_header_active" v="Sykdom (%s)" />
         <e k="rcr_treatment_hud_label"  v="Behandling" />

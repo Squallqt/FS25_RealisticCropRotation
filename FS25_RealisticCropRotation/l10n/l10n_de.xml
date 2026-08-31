@@ -35,6 +35,7 @@
         <e k="rcr_disease_risk_moderate"  v="Mittel" />
         <e k="rcr_disease_risk_high"      v="Hoch" />
         <e k="rcr_disease_notification" v="%s auf Feld %s entdeckt" />
+        <e k="rcr_disease_reminder" v="Krankheit weiterhin aktiv: %s, Feld %s" />
         <e k="rcr_disease_hud_label"    v="Krankheit" />
         <e k="rcr_disease_header_active" v="Krankheit (%s)" />
         <e k="rcr_treatment_hud_label"  v="Behandlung" />

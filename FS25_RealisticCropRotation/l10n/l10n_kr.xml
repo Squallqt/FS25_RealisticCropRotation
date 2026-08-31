@@ -35,6 +35,7 @@
         <e k="rcr_disease_risk_moderate"  v="보통" />
         <e k="rcr_disease_risk_high"      v="높음" />
         <e k="rcr_disease_notification" v="병해 발생: %s, 밭 %s" />
+        <e k="rcr_disease_reminder" v="병해가 여전히 진행 중입니다: %s, 밭 %s" />
         <e k="rcr_disease_hud_label"    v="병해" />
         <e k="rcr_disease_header_active" v="병해(%s)" />
         <e k="rcr_treatment_hud_label"  v="방제" />

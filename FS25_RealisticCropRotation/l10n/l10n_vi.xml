@@ -35,6 +35,7 @@
         <e k="rcr_disease_risk_moderate"  v="Trung bình" />
         <e k="rcr_disease_risk_high"      v="Cao" />
         <e k="rcr_disease_notification" v="%s xuất hiện trên Ruộng %s" />
+        <e k="rcr_disease_reminder" v="Bệnh vẫn đang hoạt động: %s, Ruộng %s" />
         <e k="rcr_disease_hud_label"    v="Dịch bệnh" />
         <e k="rcr_disease_header_active" v="Dịch bệnh (%s)" />
         <e k="rcr_treatment_hud_label"  v="Phun thuốc" />

@@ -35,6 +35,7 @@
         <e k="rcr_disease_risk_moderate"  v="Умеренный" />
         <e k="rcr_disease_risk_high"      v="Высокий" />
         <e k="rcr_disease_notification" v="Появление болезни: %s, поле %s" />
+        <e k="rcr_disease_reminder" v="Болезнь всё ещё активна: %s, поле %s" />
         <e k="rcr_disease_hud_label"    v="Болезнь" />
         <e k="rcr_disease_header_active" v="Болезнь (%s)" />
         <e k="rcr_treatment_hud_label"  v="Обработка" />

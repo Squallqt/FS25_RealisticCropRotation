@@ -35,6 +35,7 @@
         <e k="rcr_disease_risk_moderate"  v="Matig" />
         <e k="rcr_disease_risk_high"      v="Hoog" />
         <e k="rcr_disease_notification" v="%s gedetecteerd op veld %s" />
+        <e k="rcr_disease_reminder" v="Ziekte nog steeds actief: %s, veld %s" />
         <e k="rcr_disease_hud_label"    v="Gewasziekte" />
         <e k="rcr_disease_header_active" v="Gewasziekte (%s)" />
         <e k="rcr_treatment_hud_label"  v="Behandeling" />

@@ -35,6 +35,7 @@
         <e k="rcr_disease_risk_moderate"  v="Måttlig" />
         <e k="rcr_disease_risk_high"      v="Hög" />
         <e k="rcr_disease_notification" v="%s upptäckt på fält %s" />
+        <e k="rcr_disease_reminder" v="Sjukdom fortfarande aktiv: %s, fält %s" />
         <e k="rcr_disease_hud_label"    v="Växtsjukdom" />
         <e k="rcr_disease_header_active" v="Växtsjukdom (%s)" />
         <e k="rcr_treatment_hud_label"  v="Behandling" />
