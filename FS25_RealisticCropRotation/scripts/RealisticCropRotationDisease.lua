@@ -2,7 +2,6 @@
 -- Server-authoritative disease layer: local reservoirs and external exposure drive infection and progressive crop destruction.
 RealisticCropRotationDisease = {}
 local RealisticCropRotationDisease_mt = Class(RealisticCropRotationDisease)
-local KEEP_DENSITY_TYPE_INDEX_MODE = 1 -- GIANTS density-map mode: keep the existing foliage type index
 
 RealisticCropRotationDisease.INFECTION_SCALE = 0.6  -- infection probability = load * this * weatherMod
 RealisticCropRotationDisease.RAIN_BONUS = 1.6       -- weather-driven diseases are amplified by rain
@@ -660,21 +659,26 @@ local function getInfectionPerlinFilter(diseaseState, key, mapId, octaves, frequ
     return filter
 end
 
----Paints the crop's native mature ground type below the exact cells cleared by disease.
+---Applies the crop's declared ground transition to the exact cells destroyed by disease.
 -- @param table desc Fruit type descriptor
 -- @param table region Field region
 -- @param table destroyedFilter Scratch-map filter selecting newly destroyed cells
-local function paintDestroyedCropGround(desc, region, destroyedFilter)
-    if desc == nil or desc.groundTypeChangeType == nil or region == nil
-        or destroyedFilter == nil or g_currentMission == nil
-        or g_currentMission.fieldGroundSystem == nil or FieldDensityMap == nil
-        or FieldGroundType == nil or DensityMapModifier == nil or DensityMapFilter == nil
+-- @return table targetGroundFilter, or nil when the crop declares no usable transition
+local function applyDestroyedCropGroundTransition(desc, region, destroyedFilter)
+    local fieldGroundSystem = g_currentMission ~= nil and g_currentMission.fieldGroundSystem or nil
+    if fieldGroundSystem == nil or desc == nil or desc.groundTypeChangeType == nil
+        or region == nil or destroyedFilter == nil
+        or type(fieldGroundSystem.getDensityMapData) ~= "function"
+        or FieldDensityMap == nil or FieldDensityMap.GROUND_TYPE == nil
+        or FieldGroundType == nil
+        or type(FieldGroundType.getValueByType) ~= "function"
+        or DensityMapModifier == nil or DensityMapFilter == nil
         or DensityValueCompareType == nil or g_terrainNode == nil then
         return
     end
 
     local mapId, firstChannel, numChannels =
-        g_currentMission.fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE)
+        fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE)
     local groundValue = FieldGroundType.getValueByType(desc.groundTypeChangeType)
     if mapId == nil or firstChannel == nil or numChannels == nil or groundValue == nil then return end
 
@@ -686,17 +690,20 @@ local function paintDestroyedCropGround(desc, region, destroyedFilter)
     local maskTypes = desc.groundTypeChangeMaskTypes or {}
     if #maskTypes == 0 then
         modifier:executeSet(groundValue, destroyedFilter)
-        return
-    end
-
-    for _, maskType in ipairs(maskTypes) do
-        local maskValue = FieldGroundType.getValueByType(maskType)
-        if maskValue ~= nil then
-            local groundFilter = DensityMapFilter.new(mapId, firstChannel, numChannels)
-            groundFilter:setValueCompareParams(DensityValueCompareType.EQUAL, maskValue)
-            modifier:executeSet(groundValue, destroyedFilter, groundFilter)
+    else
+        for _, maskType in ipairs(maskTypes) do
+            local maskValue = FieldGroundType.getValueByType(maskType)
+            if maskValue ~= nil then
+                local groundFilter = DensityMapFilter.new(mapId, firstChannel, numChannels)
+                groundFilter:setValueCompareParams(DensityValueCompareType.EQUAL, maskValue)
+                modifier:executeSet(groundValue, destroyedFilter, groundFilter)
+            end
         end
     end
+
+    local targetGroundFilter = DensityMapFilter.new(mapId, firstChannel, numChannels)
+    targetGroundFilter:setValueCompareParams(DensityValueCompareType.EQUAL, groundValue)
+    return targetGroundFilter
 end
 
 ---Stages and destroys one core or scattered-band pass with the shared Perlin context.
@@ -714,6 +721,7 @@ local function applyDestructionPass(desc, region, context, shapePerlin, threshol
     if context == nil or shapePerlin == nil
         or grid == nil or grid.destructionMaskMapId == nil or region == nil or desc == nil
         or desc.terrainDataPlaneId == nil or DensityMapModifier == nil or DensityMapFilter == nil
+        or DensityIndexCompareMode == nil or DensityIndexCompareMode.ZERO == nil
         or g_terrainNode == nil or DensityValueCompareType == nil or DensityCoordType == nil then
         return
     end
@@ -764,8 +772,7 @@ local function applyDestructionPass(desc, region, context, shapePerlin, threshol
         maskModifier:executeSet(0, eligibleFilter, terminalFilter)
     end
 
-    -- Keep only cells that still contain this crop. The same mask is then safe for
-    -- both foliage clearing and the matching ground-type update.
+    -- Keep only cells that still contain this crop.
     local emptyFilter = DensityMapFilter.new(
         desc.terrainDataPlaneId, firstChannel, numChannels)
     emptyFilter:setValueCompareParams(DensityValueCompareType.EQUAL, 0)
@@ -774,11 +781,11 @@ local function applyDestructionPass(desc, region, context, shapePerlin, threshol
     local writeModifier = DensityMapModifier.new(
         desc.terrainDataPlaneId, firstChannel, numChannels, g_terrainNode)
     if not RealisticCropRotationManager.applyRegionToModifier(region, writeModifier) then return end
-    -- Clear only the foliage state channels. Keeping the existing type index preserves
-    -- the crop identity on the map; the matching ground update uses the same mask below.
-    writeModifier:setNewTypeIndexMode(KEEP_DENSITY_TYPE_INDEX_MODE)
-    writeModifier:executeSet(0, eligibleFilter)
-    paintDestroyedCropGround(desc, region, eligibleFilter)
+    -- Apply the fruit descriptor's declared ground transition before removing the destroyed foliage.
+    local targetGroundFilter = applyDestroyedCropGroundTransition(desc, region, eligibleFilter)
+    if targetGroundFilter == nil then return end
+    writeModifier:setNewTypeIndexMode(DensityIndexCompareMode.ZERO)
+    writeModifier:executeSet(0, eligibleFilter, targetGroundFilter)
 end
 
 local function destroyCropField(region, desc, farmlandId, seed, severity,

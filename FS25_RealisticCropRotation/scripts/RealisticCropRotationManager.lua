@@ -628,18 +628,18 @@ local function getSoilStateDefinitions()
     local missionInfo = g_currentMission ~= nil and g_currentMission.missionInfo or nil
     local states = {}
 
-    if indices.WATERED ~= nil then
-        table.insert(states, { index = indices.WATERED, layer = FieldDensityMap.WATER_LEVEL, value = 1 })
-    end
-    if indices.MULCHED ~= nil and gameplay ~= nil and gameplay.useStubbleShred == true then
-        table.insert(states, { index = indices.MULCHED, layer = FieldDensityMap.STUBBLE_SHRED_LEVEL, value = 1 })
+    if indices.NEEDS_PLOWING ~= nil and gameplay ~= nil and gameplay.usePlowCounter == true
+        and missionInfo ~= nil and missionInfo.plowingRequiredEnabled == true then
+        table.insert(states, { index = indices.NEEDS_PLOWING, layer = FieldDensityMap.PLOW_LEVEL, value = 0 })
     end
     if indices.NEEDS_ROLLING ~= nil and gameplay ~= nil and gameplay.useRolling == true then
         table.insert(states, { index = indices.NEEDS_ROLLING, layer = FieldDensityMap.ROLLER_LEVEL, value = 1 })
     end
-    if indices.NEEDS_PLOWING ~= nil and gameplay ~= nil and gameplay.usePlowCounter == true
-        and missionInfo ~= nil and missionInfo.plowingRequiredEnabled == true then
-        table.insert(states, { index = indices.NEEDS_PLOWING, layer = FieldDensityMap.PLOW_LEVEL, value = 0 })
+    if indices.MULCHED ~= nil and gameplay ~= nil and gameplay.useStubbleShred == true then
+        table.insert(states, { index = indices.MULCHED, layer = FieldDensityMap.STUBBLE_SHRED_LEVEL, value = 1 })
+    end
+    if indices.WATERED ~= nil then
+        table.insert(states, { index = indices.WATERED, layer = FieldDensityMap.WATER_LEVEL, value = 1 })
     end
 
     return states

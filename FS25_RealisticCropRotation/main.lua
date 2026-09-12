@@ -557,6 +557,32 @@ local function loadGuiAssets()
     end
 end
 
+---Registers PF's tramline raster alongside the soil maps used by the nitrogen gauge.
+-- @param table tramlineMap PF tramline map after terrain initialization
+-- @param table mission Current mission
+local function syncPFTramlineMap(tramlineMap, mission)
+    local syncer = mission ~= nil and mission.densityMapSyncer or nil
+    if syncer == nil or tramlineMap.bitVectorMap == nil then return end
+
+    -- Do not register twice if PF already synchronizes this map.
+    for _, entry in ipairs(tramlineMap.bitVectorMapsToSync or {}) do
+        if entry.bitVectorMap == tramlineMap.bitVectorMap then return end
+    end
+    syncer:addDensityMap(tramlineMap.bitVectorMap)
+end
+
+---Installs before either mod's terrain callback, regardless of mod load order.
+local function installPFTramlineSync()
+    local pf = RealisticCropRotationManager:getPrecisionFarming()
+    local tramlineMap = pf ~= nil and pf.tramlineMap or nil
+    if tramlineMap == nil or type(tramlineMap.initTerrain) ~= "function"
+        or tramlineMap.rcrNitrogenSyncInstalled then return end
+
+    -- PF sends tramline settings on join, but its raster is otherwise server-only.
+    tramlineMap.initTerrain = Utils.appendedFunction(tramlineMap.initTerrain, syncPFTramlineMap)
+    tramlineMap.rcrNitrogenSyncInstalled = true
+end
+
 ---Creates and registers treatment maps while the mission density-map synchronizer accepts maps.
 -- @param table mission Current mission
 local function initDiseaseTerrain(mission)
@@ -761,6 +787,7 @@ local function initRealisticCropRotation()
     RealisticCropRotationSprayerProducts.registerMaterialHolder(modDirectory)
 
     Mission00.loadMission00Finished = Utils.appendedFunction(Mission00.loadMission00Finished, loadedMission)
+    FSBaseMission.initTerrain = Utils.prependedFunction(FSBaseMission.initTerrain, installPFTramlineSync)
     FSBaseMission.initTerrain = Utils.appendedFunction(FSBaseMission.initTerrain, initDiseaseTerrain)
 
     InGameMenu.onLoadMapFinished = Utils.appendedFunction(InGameMenu.onLoadMapFinished, function(_inGameMenu)
