@@ -37,9 +37,6 @@ RealisticCropRotationDisease.PRESENCE_PATCH_FRACTION = 0.55 -- field share one i
 RealisticCropRotationDisease.REMINDER_SEVERITY = 0.60       -- one discreet reminder once a visible outbreak reaches this level
 RealisticCropRotationDisease.DAILY_BUDGET_PER_FRAME = 1   -- fields whose daily disease step runs per frame (load spreading)
 
-local soilUptakePrepareWarningShown = false
-local soilUptakeConsumeWarningShown = false
-
 -- Predictive-risk band thresholds: the worst pathogen load (getRisk) maps to a band 1..3 shown by the in-game map's pressure view.
 RealisticCropRotationDisease.RISK_BAND_LOW_THRESHOLD = 0.05
 RealisticCropRotationDisease.RISK_BAND_MODERATE_THRESHOLD = 0.25
@@ -50,8 +47,6 @@ RealisticCropRotationDisease.RISK_BAND_HIGH_THRESHOLD = 0.50
 -- @param table grid
 -- @return RealisticCropRotationDisease instance
 function RealisticCropRotationDisease.new(manager, grid)
-    soilUptakePrepareWarningShown = false
-    soilUptakeConsumeWarningShown = false
     local self = setmetatable({}, RealisticCropRotationDisease_mt)
     self.manager = manager
     self.grid = grid
@@ -819,19 +814,7 @@ local function destroyCropField(region, desc, farmlandId, seed, severity,
     end
 
     -- Each distinct target resolution gets a shared scratch mask.
-    local uptakeSession = nil
-    local ok, result = pcall(
-        RealisticCropRotationSoilUptake.prepare, manager, region, desc, farmlandId)
-    if ok then
-        uptakeSession = result
-    elseif not soilUptakePrepareWarningShown then
-        soilUptakePrepareWarningShown = true
-        if Logging ~= nil and type(Logging.warning) == "function" then
-            Logging.warning(
-                "[RealisticCropRotation] Disease soil snapshot failed; crop destruction continues without soil draw: %s",
-                tostring(result))
-        end
-    end
+    local uptakeSession = RealisticCropRotationSoilUptake.prepare(manager, region, desc, farmlandId)
 
     applyDestructionPass(
         desc, region, context, shapePerlin, bandThreshold,
@@ -843,15 +826,7 @@ local function destroyCropField(region, desc, farmlandId, seed, severity,
 
     -- Only cells that were standing before and empty afterwards consume soil inputs.
     if uptakeSession ~= nil then
-        local ok, errorMessage = pcall(RealisticCropRotationSoilUptake.consume, uptakeSession)
-        if not ok and not soilUptakeConsumeWarningShown then
-            soilUptakeConsumeWarningShown = true
-            if Logging ~= nil and type(Logging.warning) == "function" then
-                Logging.warning(
-                    "[RealisticCropRotation] Disease soil draw failed after crop destruction: %s",
-                    tostring(errorMessage))
-            end
-        end
+        RealisticCropRotationSoilUptake.consume(uptakeSession)
     end
 end
 

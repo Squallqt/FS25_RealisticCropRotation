@@ -404,16 +404,6 @@ local function process(context, active, farmlandId, sx, sz, wx, wz, hx, hz)
     end
 end
 
-local function resetContext(context)
-    if context == nil then return end
-    for _, group in ipairs(context.maskGroups) do
-        group.modifier:executeSet(0)
-    end
-    if context.unionModifier ~= nil then
-        context.unionModifier:executeSet(0)
-    end
-end
-
 local function prepare(sx, sz, wx, wz, hx, hz)
     local farmlandId = getFarmlandId(sx, sz, wx, wz, hx, hz)
     if farmlandId == nil then return nil end
@@ -456,24 +446,12 @@ function RealisticCropRotationNitrogen.install(rcrManager)
             local context, active, farmlandId
             if type(sx) == "number" and type(sz) == "number" and type(wx) == "number"
                 and type(wz) == "number" and type(hx) == "number" and type(hz) == "number" then
-                local ok, preparedContext, preparedActive, preparedFarmlandId =
-                    pcall(prepare, sx, sz, wx, wz, hx, hz)
-                if ok then
-                    context, active, farmlandId = preparedContext, preparedActive, preparedFarmlandId
-                else
-                    Logging.error(
-                        "[RealisticCropRotation] residue mask capture failed: %s",
-                        tostring(preparedContext))
-                end
+                context, active, farmlandId = prepare(sx, sz, wx, wz, hx, hz)
             end
 
             local changedArea, totalArea = superFunc(sx, sz, wx, wz, hx, hz, ...)
             if context ~= nil and active ~= nil and #active > 0 then
-                local ok, err = pcall(process, context, active, farmlandId, sx, sz, wx, wz, hx, hz)
-                if not ok then
-                    pcall(resetContext, context)
-                    Logging.error("[RealisticCropRotation] residue deposit failed: %s", tostring(err))
-                end
+                process(context, active, farmlandId, sx, sz, wx, wz, hx, hz)
             end
             return changedArea, totalArea
         end

@@ -71,8 +71,8 @@ local function getFieldPolygonVertices(field)
     local vertices = {}
     for _, node in ipairs(points) do
         if node ~= nil then
-            local ok, x, _, z = pcall(getWorldTranslation, node)
-            if ok and type(x) == "number" and type(z) == "number" then
+            local x, _, z = getWorldTranslation(node)
+            if type(x) == "number" and type(z) == "number" then
                 table.insert(vertices, { x = x, z = z })
             end
         end
@@ -322,8 +322,7 @@ local function aggregateRegionLayer(region, mapId, firstChannel, numChannels, fi
     if f1 == nil then f1, f2, f3 = f2, f3, nil end
     if f2 == nil then f2, f3 = f3, nil end
 
-    local ok, sum, pixels, totalPixels = pcall(modifier.executeGet, modifier, f1, f2, f3)
-    if not ok then return nil end
+    local sum, pixels, totalPixels = modifier:executeGet(f1, f2, f3)
     return tonumber(sum) or 0, tonumber(pixels) or 0, tonumber(totalPixels) or 0
 end
 
@@ -606,8 +605,8 @@ local function getNativeGroundStateIndex(region, groundPixels)
             local pixels = 0
             for _, groundType in ipairs(group.types) do
                 if groundType ~= nil then
-                    local ok, value = pcall(FieldGroundType.getValueByType, groundType)
-                    if ok then pixels = pixels + countRegionLayerValue(region, layer, tonumber(value), nil) end
+                    local value = FieldGroundType.getValueByType(groundType)
+                    pixels = pixels + countRegionLayerValue(region, layer, tonumber(value), nil)
                 end
             end
             if pixels > threshold then return group.index end
@@ -1282,9 +1281,7 @@ local function getFieldLayerMaxLevel(managerField, layer)
     end
     if maxLevel == nil and g_currentMission ~= nil and g_currentMission.fieldGroundSystem ~= nil
         and layer ~= nil and type(g_currentMission.fieldGroundSystem.getMaxValue) == "function" then
-        local ok, value = pcall(g_currentMission.fieldGroundSystem.getMaxValue,
-            g_currentMission.fieldGroundSystem, layer)
-        if ok then maxLevel = tonumber(value) end
+        maxLevel = tonumber(g_currentMission.fieldGroundSystem:getMaxValue(layer))
     end
     return math.max(1, math.floor((tonumber(maxLevel) or 1) + 0.5))
 end
@@ -1439,9 +1436,8 @@ local function getTramlineAlignedNitrogen(region, nMap, soilMap, tramlineMap)
         DensityValueCompareType.EQUAL, 0)
     if clearFilter == nil then return nil end
 
-    local okTotal, _, clearPixels = pcall(
-        modifier.executeGet, modifier, clearFilter)
-    if not okTotal or type(clearPixels) ~= "number" or clearPixels <= 0 then return nil end
+    local _, clearPixels = modifier:executeGet(clearFilter)
+    if type(clearPixels) ~= "number" or clearPixels <= 0 then return nil end
 
     local reconstructedSum = 0
     for bitIndex = 0, nNumChannels - 1 do
@@ -1450,9 +1446,8 @@ local function getTramlineAlignedNitrogen(region, nMap, soilMap, tramlineMap)
             DensityValueCompareType.EQUAL, 1)
         if bitFilter == nil then return nil end
 
-        local okBit, _, bitPixels = pcall(
-            modifier.executeGet, modifier, clearFilter, bitFilter)
-        if not okBit or type(bitPixels) ~= "number" then return nil end
+        local _, bitPixels = modifier:executeGet(clearFilter, bitFilter)
+        if type(bitPixels) ~= "number" then return nil end
         reconstructedSum = reconstructedSum + bitPixels * (2 ^ bitIndex)
     end
 
@@ -1463,9 +1458,8 @@ local function getTramlineAlignedNitrogen(region, nMap, soilMap, tramlineMap)
             DensityValueCompareType.EQUAL, soilValue)
         if soilFilter == nil then return nil end
 
-        local okSoil, _, soilPixels = pcall(
-            modifier.executeGet, modifier, clearFilter, soilFilter)
-        if not okSoil or type(soilPixels) ~= "number" then return nil end
+        local _, soilPixels = modifier:executeGet(clearFilter, soilFilter)
+        if type(soilPixels) ~= "number" then return nil end
         if soilPixels > 0 then soilWeights[soilValue + 1] = soilPixels end
     end
 
@@ -1591,8 +1585,8 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId, activeFruitTypeI
         if phCanLevel and phCanOptimal then
             local sum, total = 0, 0
             for index, pixels in pairs(soilWeights) do
-                local ok, optimal = pcall(phMap.getOptimalPHValueForSoilTypeIndex, phMap, index)
-                if ok and type(optimal) == "number" and optimal > 0 then
+                local optimal = phMap:getOptimalPHValueForSoilTypeIndex(index)
+                if type(optimal) == "number" and optimal > 0 then
                     if optimal > 9 then optimal = phConv(optimal) end
                     if type(optimal) == "number" then
                         sum, total = sum + optimal * pixels, total + pixels
@@ -1620,8 +1614,8 @@ function RealisticCropRotationManager:scanFieldSoil(farmlandId, activeFruitTypeI
             for index, pixels in pairs(cropWeights) do
                 local position = positions[index]
                 if position ~= nil then
-                    local ok, target = pcall(nMap.getTargetLevelAtWorldPos, nMap, position.x, position.z)
-                    if ok and type(target) == "number" then
+                    local target = nMap:getTargetLevelAtWorldPos(position.x, position.z)
+                    if type(target) == "number" then
                         sum, total = sum + target * pixels, total + pixels
                     end
                 end

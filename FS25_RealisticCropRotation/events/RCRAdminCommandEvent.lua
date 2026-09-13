@@ -88,14 +88,11 @@ function RCRAdminCommandEvent:run(connection)
         return
     end
 
-    local ok, result = pcall(handler, disease,
+    local result = handler(disease,
         self.arg1 ~= "" and self.arg1 or nil,
         self.arg2 ~= "" and self.arg2 or nil,
         self.arg3 ~= "" and self.arg3 or nil)
     Logging.info("[RealisticCropRotation][MP] Admin command %s: %s", tostring(self.command), tostring(result))
-    if not ok then
-        Logging.warning("[RealisticCropRotation][MP] Admin command failed: %s", tostring(result))
-    end
 end
 
 ---Sends a console command to the server from a client.

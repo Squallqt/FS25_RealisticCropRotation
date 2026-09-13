@@ -310,10 +310,7 @@ function RealisticCropRotationHud.getWeedLineFromGame(data)
         end,
     }, { __index = function() return function() end end })
 
-    local ok = pcall(PlayerHUDUpdater.fieldAddWeed, hudUpdater, data, captureBox)
-    if not ok then
-        return nil
-    end
+    PlayerHUDUpdater.fieldAddWeed(hudUpdater, data, captureBox)
 
     return capturedLabel, capturedValue
 end

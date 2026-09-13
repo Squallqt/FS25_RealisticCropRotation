@@ -109,8 +109,8 @@ function RealisticCropRotationWeatherCard:getForecastWeatherType(weather, item)
     if weather == nil or item == nil or type(weather.getWeatherObjectByIndex) ~= "function" then return nil end
     if item.season == nil or item.objectIndex == nil then return nil end
 
-    local ok, weatherObject = pcall(weather.getWeatherObjectByIndex, weather, item.season, item.objectIndex)
-    if not ok or weatherObject == nil then return nil end
+    local weatherObject = weather:getWeatherObjectByIndex(item.season, item.objectIndex)
+    if weatherObject == nil then return nil end
     return weatherObject.weatherType
 end
 

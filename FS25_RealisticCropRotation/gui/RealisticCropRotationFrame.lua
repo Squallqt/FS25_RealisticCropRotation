@@ -398,22 +398,14 @@ function RealisticCropRotationFrame:getPlanNitrogenResidueKgHa(plan, coverPlan)
 
     local residueKgHa = 0
     if totalStateChange > 0 then
-        local ok, fromState = pcall(
-            service.getNitrogenKgPerHaFromStateChange,
-            service,
-            totalStateChange
-        )
-        if ok and type(fromState) == "number" and fromState > 0 then
+        local fromState = service:getNitrogenKgPerHaFromStateChange(totalStateChange)
+        if type(fromState) == "number" and fromState > 0 then
             residueKgHa = residueKgHa + fromState
         end
     end
 
-    local ok, coverResidueKgHa = pcall(
-        service.getCoverResidueKgHa,
-        service,
-        coverPlan,
-        cycleLength)
-    if ok and type(coverResidueKgHa) == "number" and coverResidueKgHa > 0 then
+    local coverResidueKgHa = service:getCoverResidueKgHa(coverPlan, cycleLength)
+    if type(coverResidueKgHa) == "number" and coverResidueKgHa > 0 then
         residueKgHa = residueKgHa + coverResidueKgHa
     end
 

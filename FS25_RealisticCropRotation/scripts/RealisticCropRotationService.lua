@@ -227,8 +227,7 @@ function RealisticCropRotationService:isTerminalGrowthState(fruitType, growthSta
     if fruitType == nil or numericGrowthState == nil then return false end
 
     if type(fruitType.getIsCut) == "function" then
-        local ok, isCut = pcall(fruitType.getIsCut, fruitType, numericGrowthState)
-        if ok and isCut then return true end
+        if fruitType:getIsCut(numericGrowthState) then return true end
     elseif type(fruitType.cutStates) == "table" and fruitType.cutStates[numericGrowthState] then
         return true
     elseif fruitType.cutState ~= nil and numericGrowthState == tonumber(fruitType.cutState) then
@@ -236,8 +235,7 @@ function RealisticCropRotationService:isTerminalGrowthState(fruitType, growthSta
     end
 
     if type(fruitType.getIsWithered) == "function" then
-        local ok, isWithered = pcall(fruitType.getIsWithered, fruitType, numericGrowthState)
-        if ok and isWithered then return true end
+        if fruitType:getIsWithered(numericGrowthState) then return true end
     elseif fruitType.witheredState ~= nil and numericGrowthState == tonumber(fruitType.witheredState) then
         return true
     end

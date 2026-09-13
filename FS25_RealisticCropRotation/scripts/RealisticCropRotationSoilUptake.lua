@@ -215,8 +215,8 @@ local function joinPath(baseDirectory, filename)
     if baseDirectory == nil or filename == nil then return nil end
     filename = tostring(filename)
     if Utils ~= nil and type(Utils.getFilename) == "function" then
-        local ok, resolved = pcall(Utils.getFilename, filename, baseDirectory)
-        if ok and resolved ~= nil and resolved ~= "" then return resolved end
+        local resolved = Utils.getFilename(filename, baseDirectory)
+        if resolved ~= nil and resolved ~= "" then return resolved end
     end
     if filename:sub(1, 1) == "$" or filename:match("^%a:[/\\]")
         or filename:sub(1, 1) == "/" then
@@ -409,8 +409,7 @@ local function getStateStep(valueMap, methodName, propertyName)
     if valueMap == nil then return nil end
     local method = valueMap[methodName]
     if type(method) == "function" then
-        local ok, value = pcall(method, valueMap, 1)
-        value = ok and tonumber(value) or nil
+        local value = tonumber(method(valueMap, 1))
         if value ~= nil and value > 0 then return value end
     end
     local value = tonumber(valueMap[propertyName])
@@ -438,8 +437,7 @@ local function internalPHState(pHMap, maxState, realValue, findUpper)
     end
     local selected = nil
     for state = 0, maxState do
-        local ok, value = pcall(pHMap.getPhValueFromInternalValue, pHMap, state)
-        value = ok and tonumber(value) or nil
+        local value = tonumber(pHMap:getPhValueFromInternalValue(state))
         if value ~= nil then
             if findUpper then
                 if value <= realValue + 0.0001 then selected = state end
