@@ -778,9 +778,32 @@ local function applyDestructionPass(desc, region, context, shapePerlin, threshol
     if not RealisticCropRotationManager.applyRegionToModifier(region, writeModifier) then return end
     -- Apply the fruit descriptor's declared ground transition before removing the destroyed foliage.
     local targetGroundFilter = applyDestroyedCropGroundTransition(desc, region, eligibleFilter)
-    if targetGroundFilter == nil then return end
-    writeModifier:setNewTypeIndexMode(DensityIndexCompareMode.ZERO)
-    writeModifier:executeSet(0, eligibleFilter, targetGroundFilter)
+    if targetGroundFilter ~= nil then
+        writeModifier:setNewTypeIndexMode(DensityIndexCompareMode.ZERO)
+        writeModifier:executeSet(0, eligibleFilter, targetGroundFilter)
+        return
+    end
+
+    -- Fruits without a ground transition use their declared GIANTS disaster state.
+    local minState = tonumber(desc.minDisasterDestructionState)
+    local maxState = tonumber(desc.maxDisasterDestructionState)
+    local targetState = tonumber(desc.disasterDestructionState)
+    local maxDensityState = (2 ^ numChannels) - 1
+    if minState == nil or maxState == nil or targetState == nil then return end
+    minState = math.floor(minState)
+    maxState = math.floor(maxState)
+    targetState = math.floor(targetState)
+    if minState < 0 or minState > maxState or maxState > maxDensityState
+        or targetState < 0 or targetState > maxDensityState then return end
+
+    local disasterFilter = DensityMapFilter.new(
+        desc.terrainDataPlaneId, firstChannel, numChannels)
+    disasterFilter:setValueCompareParams(
+        DensityValueCompareType.BETWEEN, minState, maxState)
+    if targetState == 0 then
+        writeModifier:setNewTypeIndexMode(DensityIndexCompareMode.ZERO)
+    end
+    writeModifier:executeSet(targetState, eligibleFilter, disasterFilter)
 end
 
 local function destroyCropField(region, desc, farmlandId, seed, severity,

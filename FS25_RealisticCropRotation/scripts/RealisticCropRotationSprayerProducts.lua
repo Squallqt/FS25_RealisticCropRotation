@@ -34,12 +34,10 @@ local hookInstalled = false
 local MIN_WORK_SPEED = 0.5
 
 local PF_MOD_NAME = "FS25_precisionFarming"
-local PF_PATCH_REFRESH_INTERVAL = 1000
+local SPRAYER_SPECIALIZATION_NAME = "sprayer"
+local PF_EFFECTS_SPECIALIZATION_NAME = PF_MOD_NAME .. ".extendedSprayerEffects"
+local RCR_PF_SPECIALIZATION_NAME = g_currentModName .. ".rcrPrecisionFarmingSprayer"
 local pfExtendedSprayer = nil
-local pfExtendedSprayerEffects = nil
-local pfPatchedFunctionSet = {}
-local pfPatchRecords = {}
-local pfPatchTimer = 0
 local pfUpdateRegistered = false
 local pfTreatmentValueMap = nil
 
@@ -107,6 +105,22 @@ local function getSprayerFillSource(vehicle)
     end
 
     return vehicle, fillUnitIndex
+end
+
+function RealisticCropRotationSprayerProducts.getVehicleSprayFillType(vehicle, useLastValidFillType)
+    local sourceVehicle, fillUnitIndex = getSprayerFillSource(vehicle)
+    if sourceVehicle == nil or fillUnitIndex == nil
+        or type(sourceVehicle.getFillUnitFillType) ~= "function" then
+        return FillType.UNKNOWN
+    end
+
+    local fillType = sourceVehicle:getFillUnitFillType(fillUnitIndex)
+    if useLastValidFillType and fillType == FillType.UNKNOWN
+        and type(sourceVehicle.getFillUnitLastValidFillType) == "function" then
+        fillType = sourceVehicle:getFillUnitLastValidFillType(fillUnitIndex)
+    end
+
+    return fillType
 end
 
 function RealisticCropRotationSprayerProducts.getVehicleProductTreatment(vehicle)
@@ -211,129 +225,40 @@ local function updatePrecisionFarmingTreatmentMap()
     end
 end
 
-local function runPrecisionFarmingVanillaEffectState(originalFunction, vehicle, force, ...)
-    local isRcrProduct = RealisticCropRotationSprayerProducts.getVehicleProductTreatment(vehicle) ~= nil
-    local effectsSpec = pfExtendedSprayerEffects ~= nil
-        and vehicle[pfExtendedSprayerEffects.SPEC_TABLE_NAME] or nil
+local function registerPrecisionFarmingSprayerSpecialization(typeManager)
+    if typeManager == nil or typeManager.typeName ~= "vehicle"
+        or g_specializationManager == nil then return end
 
-    if effectsSpec ~= nil then
-        effectsSpec.rcrUseVanillaSprayerEffects = isRcrProduct
-    end
+    local sprayerSpecialization = g_specializationManager:getSpecializationObjectByName(
+        SPRAYER_SPECIALIZATION_NAME)
+    local pfEffectsSpecialization = g_specializationManager:getSpecializationObjectByName(
+        PF_EFFECTS_SPECIALIZATION_NAME)
+    local rcrSpecialization = g_specializationManager:getSpecializationObjectByName(
+        RCR_PF_SPECIALIZATION_NAME)
+    if sprayerSpecialization == nil or pfEffectsSpecialization == nil
+        or rcrSpecialization == nil then return end
 
-    if not isRcrProduct or effectsSpec == nil or effectsSpec.hasCustomEffects ~= true then
-        return originalFunction(vehicle, force, ...)
-    end
+    rcrSpecialization.SPEC_NAME = RCR_PF_SPECIALIZATION_NAME
+    rcrSpecialization.SPEC_TABLE_NAME = "spec_" .. RCR_PF_SPECIALIZATION_NAME
+    rcrSpecialization.PF_EFFECTS_SPECIALIZATION = pfEffectsSpecialization
 
-    effectsSpec.hasCustomEffects = false
-    originalFunction(vehicle, force, ...)
-    effectsSpec.hasCustomEffects = true
-end
-
-local function createPatchedUpdateSprayerEffectState(originalFunction)
-    return function(vehicle, force, ...)
-        return runPrecisionFarmingVanillaEffectState(originalFunction, vehicle, force, ...)
-    end
-end
-
-local function useVanillaSprayerEffects(vehicle)
-    local effectsSpec = pfExtendedSprayerEffects ~= nil
-        and vehicle[pfExtendedSprayerEffects.SPEC_TABLE_NAME] or nil
-    return effectsSpec ~= nil and effectsSpec.rcrUseVanillaSprayerEffects == true
-end
-
-local function createPatchedNozzleEffectState(originalFunction)
-    return function(vehicle, ...)
-        if useVanillaSprayerEffects(vehicle) then
-            return false, 1
-        end
-        return originalFunction(vehicle, ...)
-    end
-end
-
-local function patchPrecisionFarmingTarget(functionName, target, createPatchedFunction)
-    if target == nil or target[functionName] == nil then
-        return
-    end
-
-    local originalFunction = target[functionName]
-    if pfPatchedFunctionSet[originalFunction] == true then
-        return
-    end
-
-    local patchedFunction = createPatchedFunction(originalFunction)
-    local functionRecords = pfPatchRecords[functionName]
-    if functionRecords == nil then
-        functionRecords = {}
-        pfPatchRecords[functionName] = functionRecords
-    end
-
-    functionRecords[target] = { original = originalFunction, patched = patchedFunction }
-    pfPatchedFunctionSet[patchedFunction] = true
-    target[functionName] = patchedFunction
-end
-
-local function patchPrecisionFarmingFunctionCopies(functionName, createPatchedFunction)
-    patchPrecisionFarmingTarget(functionName, pfExtendedSprayer, createPatchedFunction)
-
-    if g_vehicleTypeManager ~= nil and g_vehicleTypeManager.types ~= nil then
-        for _, vehicleType in pairs(g_vehicleTypeManager.types) do
-            if vehicleType.functions ~= nil
-                and vehicleType.specializations ~= nil
-                and SpecializationUtil ~= nil
-                and SpecializationUtil.hasSpecialization(pfExtendedSprayer, vehicleType.specializations) then
-                patchPrecisionFarmingTarget(functionName, vehicleType.functions, createPatchedFunction)
-            end
-        end
-    end
-
-    local vehicles = g_currentMission ~= nil and g_currentMission.vehicleSystem ~= nil
-        and g_currentMission.vehicleSystem.vehicles or nil
-    if vehicles ~= nil then
-        for _, vehicle in pairs(vehicles) do
-            if vehicle.specializations ~= nil
-                and SpecializationUtil ~= nil
-                and SpecializationUtil.hasSpecialization(pfExtendedSprayer, vehicle.specializations) then
-                patchPrecisionFarmingTarget(functionName, vehicle, createPatchedFunction)
-            end
+    for typeName, vehicleType in pairs(typeManager.types) do
+        local specializations = vehicleType.specializations
+        if SpecializationUtil.hasSpecialization(sprayerSpecialization, specializations)
+            and SpecializationUtil.hasSpecialization(pfEffectsSpecialization, specializations)
+            and not SpecializationUtil.hasSpecialization(rcrSpecialization, specializations) then
+            typeManager:addSpecialization(typeName, RCR_PF_SPECIALIZATION_NAME)
         end
     end
 end
 
-local function patchPrecisionFarmingEffects()
-    if pfExtendedSprayer == nil or pfExtendedSprayerEffects == nil then
-        return
-    end
-
-    patchPrecisionFarmingTarget(
-        "updateSprayerEffectState", pfExtendedSprayer, createPatchedUpdateSprayerEffectState)
-    patchPrecisionFarmingFunctionCopies(
-        "updateExtendedSprayerNozzleEffectState",
-        createPatchedNozzleEffectState)
+local function installPrecisionFarmingSprayerSpecialization()
+    TypeManager.finalizeTypes = Utils.appendedFunction(
+        TypeManager.finalizeTypes, registerPrecisionFarmingSprayerSpecialization)
 end
 
-local function restorePrecisionFarmingEffects()
-    for functionName, functionRecords in pairs(pfPatchRecords) do
-        for target, record in pairs(functionRecords) do
-            if target[functionName] == record.patched then
-                target[functionName] = record.original
-            end
-        end
-    end
-
-    pfExtendedSprayer = nil
-    pfExtendedSprayerEffects = nil
-    pfPatchedFunctionSet = {}
-    pfPatchRecords = {}
-    pfPatchTimer = 0
-end
-
-function RealisticCropRotationSprayerProducts:update(dt)
+function RealisticCropRotationSprayerProducts:update(_)
     updatePrecisionFarmingTreatmentMap()
-    pfPatchTimer = pfPatchTimer + dt
-    if pfPatchTimer >= PF_PATCH_REFRESH_INTERVAL then
-        pfPatchTimer = pfPatchTimer - PF_PATCH_REFRESH_INTERVAL
-        patchPrecisionFarmingEffects()
-    end
 end
 
 function RealisticCropRotationSprayerProducts.registerMaterialHolder(modDirectory)
@@ -561,12 +486,6 @@ local function installSprayerHook()
         params.lastSprayTime = g_time
         spec.isWorking = true
 
-        if (params.usage or 0) <= 0 then
-            local lps = productLitersPerSecondByFillType[sprayFillType]
-                or RealisticCropRotationSprayerProducts.litersPerSecond
-            params.usage = lps * self:getLastSpeed() * (workArea.workWidth or 0) * dt * 0.001
-        end
-
         -- The server owns the ground state; nearby clients mirror protection for immediate map feedback.
         if self.isServer then
             paintTreatmentGround(self, workArea, targetFarmlandId)
@@ -599,11 +518,9 @@ function RealisticCropRotationSprayerProducts.onMissionLoaded()
 
     local pfEnvironment = getPrecisionFarmingEnvironment()
     pfExtendedSprayer = pfEnvironment ~= nil and pfEnvironment.ExtendedSprayer or nil
-    pfExtendedSprayerEffects = pfEnvironment ~= nil and pfEnvironment.ExtendedSprayerEffects or nil
     if g_currentMission ~= nil and g_currentMission:getIsClient()
-        and pfExtendedSprayer ~= nil and pfExtendedSprayerEffects ~= nil then
+        and pfExtendedSprayer ~= nil then
         registerPrecisionFarmingTreatmentMap(pfEnvironment)
-        patchPrecisionFarmingEffects()
         g_currentMission:addUpdateable(RealisticCropRotationSprayerProducts)
         pfUpdateRegistered = true
     end
@@ -615,7 +532,7 @@ function RealisticCropRotationSprayerProducts.onMissionDeleted()
     end
     pfUpdateRegistered = false
     pfTreatmentValueMap = nil
-    restorePrecisionFarmingEffects()
+    pfExtendedSprayer = nil
     productFillTypeSet = {}
     productTreatmentByFillType = {}
     productLitersPerSecondByFillType = {}
@@ -623,3 +540,5 @@ end
 
 -- Source-time installation is the only moment the overwritten processSprayerArea reaches every sprayer vehicleType.
 installSprayerHook()
+-- Precision Farming adds its vehicle specializations during type finalization; attach RCR after that native step.
+installPrecisionFarmingSprayerSpecialization()

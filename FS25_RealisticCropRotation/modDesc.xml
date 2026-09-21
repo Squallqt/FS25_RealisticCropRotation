@@ -194,6 +194,11 @@ Merci de télécharger ce mod uniquement depuis le ModHub officiel de Farming Si
     <extraSourceFiles>
         <sourceFile filename="main.lua" />
     </extraSourceFiles>
+
+    <specializations>
+        <specialization name="rcrPrecisionFarmingSprayer" className="RealisticCropRotationPFSprayer" filename="scripts/RealisticCropRotationPFSprayer.lua" />
+    </specializations>
+
     <l10n filenamePrefix="l10n/l10n" />
 
     <helpLines>
