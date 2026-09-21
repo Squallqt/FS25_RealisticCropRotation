@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Viljelykierto" />
+
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Käsittelyaineet" />
+        <e k="rcr_help_title_spraying" v="Ruiskuta ajoissa" />
+        <e k="rcr_help_title_treatment_map" v="Käsitellyt alueet" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation tallentaa jokaiselta omistetulta pellolta neljä edellistä kasvi- tai kesantotietoa. Tarkastele peltoa Agronomia-näkymässä, valmistele toistuva kierto Suunnittelu-näkymässä ja seuraa riskiä, tautitapauksia ja käsittelyn kattavuutta Taudit-kartalla." />
+        <e k="rcr_help_text_02" v="Valitse omistettu pelto nähdäksesi nykyisen kasvin, enintään neljä aiempaa tietoa, agronomiset neuvot, typen, pH:n, käsittelyn kattavuuden ja pellon nykyisen tilan. Sääotsikko auttaa valitsemaan ruiskutusajan." />
+        <e k="rcr_help_text_03" v="Valitse paikka väliltä N+1–N+4 ja sen jälkeen pääkasvi sekä valinnainen kerääjäkasvi. Täytä peräkkäiset paikat: täytetystä alkuosasta muodostuu toistuva kahden, kolmen tai neljän vuoden kierto, jossa viimeisestä paikasta palataan ensimmäiseen." />
+        <e k="rcr_help_text_04" v="Viljelykierron laatu palkitsee kasvien ja kasviheimojen monipuolisuudesta, syys- ja kevätkylvön vuorottelusta, typpeä tuottavista kasveista tai kerääjäkasveista sekä palkokasvin ja viljan peräkkäisyydestä. Saman heimon tai yhteisiä tauteja kantavien kasvien liian nopea paluu laskee pisteitä." />
+        <e k="rcr_help_text_05" v="Määritetty palkokasvi palauttaa typpeä vain, kun se tuhotaan maanmuokkauksella, ei pelkän sadonkorjuun yhteydessä. Typpi jaetaan kahdelle seuraavalle kasville; Precision Farming tallentaa sen typpikartalle, muulloin lisätään yksi lannoitustaso." />
+        <e k="rcr_help_text_06" v="Tautiriski-kartta näyttää omistettujen peltojen nykyiselle kasville suurimman tämänhetkisen taudinaiheuttajapaineen pienenä, kohtalaisena tai suurena. Sää voi muuttaa tartunnan todennäköisyyttä lisää, joten käytä karttaa yhdessä Agronomia-näkymän sääotsikon kanssa." />
+        <e k="rcr_help_text_07" v="Tartunta alkaa piilossa ja näkyy täällä vasta, kun se alkaa tuhota kasvustoa. Kartta tunnistaa taudin yhdeksän määritetyn taudin joukosta; sen jälkeen myös peltokortti, kävely-HUD ja ilmoitus näyttävät sen." />
+        <e k="rcr_help_text_09" v="Ruiskuta ajoissa. Fungisidi pienentää taudin puhkeamisen todennäköisyyttä ja hidastaa aktiivista tautia pellon käsittelyasteen mukaan. Fungisidi ja nematisidi suojaavat ruiskutettuja soluja tuholta, mutta eivät palauta menetettyä kasvustoa eivätkä poista tautia pellosta." />
+        <e k="rcr_help_text_10" v="Käsittelyt-kartta näyttää fungisidilla tai nematisidilla suojatun maan. Fungisidisuoja päättyy korjatulla tai niitetyllä maalla. Nematisidisuoja kestää kolme kuukautta peltoa kohden, ja uusi käsittely uusii keston." />
+        <e k="rcr_help_text_11" v="Kun seisot pellolla, HUD lisää kaksi edellistä kasvia, näkyvät taudit ja aktiiviset käsittelyt. Se näyttää myös kasvun numeroidun etenemisen; Precision Farming säilyttää omat maaperä-, pH-, typpi- ja satotietonsa." />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Pelto" />
+        <e k="rcr_sidebar_no_active_crop"  v="Ei aktiivista kasvia" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Agronomia" />
+        <e k="rcr_sidebar_fields"       v="Pellot" />
+        <e k="rcr_tab_planning"         v="Suunnittelu" />
+        <e k="rcr_section_disease_map"     v="Taudit" />
+        <e k="rcr_disease_sub_infections" v="Tartunnan saaneet pellot" />
+        <e k="rcr_disease_sub_pressure"   v="Tautiriski" />
+        <e k="rcr_disease_sub_treatment"  v="Torjunta" />
+        <e k="rcr_disease_risk_low"       v="Matala" />
+        <e k="rcr_disease_risk_moderate"  v="Kohtalainen" />
+        <e k="rcr_disease_risk_high"      v="Korkea" />
+        <e k="rcr_disease_notification" v="%s havaittu pellolla %s" />
+        <e k="rcr_disease_reminder" v="Tauti on yhä aktiivinen: %s, pelto %s" />
+        <e k="rcr_disease_hud_label"    v="Kasvitauti" />
+        <e k="rcr_disease_header_active" v="Kasvitauti (%s)" />
+        <e k="rcr_treatment_hud_label"  v="Torjunta" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d kuukautta jäljellä)" />
+        <e k="rcr_advice_nematicide_duration" v="Maaperän suoja kestää 3 kuukautta lohkoa kohti; uusi käsittely uusii keston." />
+
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="ei mitään" />
+        <e k="rcr_treatment_partial"  v="osittainen (%d %%)" />
+        <e k="rcr_treatment_complete" v="täysi" />
+        <e k="rcr_treatment_disease_absent"     v="Ei tautia" />
+        <e k="rcr_treatment_disease_active"     v="Tauti aktiivinen" />
+        <e k="rcr_treatment_disease_controlled" v="Tauti hallinnassa" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Tauti osittain hallinnassa" />
+        <e k="rcr_treatment_until_harvest" v="Sadonkorjuuseen asti" />
+        <e k="rcr_treatment_months"        v="%d kuukautta" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Odotettu typen palautus +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Viljelykierron typen palautus +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Typen palautusta ei odoteta" />
+        <e k="rcr_status_planned_no_residue" v="Ei typen palautusta" />
+        <e k="rcr_weather_sun" v="Selkeää" />
+        <e k="rcr_weather_partially_cloudy" v="Ajoittain aurinkoista" />
+        <e k="rcr_weather_cloudy" v="Pilvistä" />
+        <e k="rcr_weather_rain" v="Sade" />
+        <e k="rcr_weather_snow" v="Lumi" />
+        <e k="rcr_weather_hail" v="Rae" />
+        <e k="rcr_weather_twister" v="Tornado" />
+        <e k="rcr_weather_thunder" v="Ukkonen" />
+        <e k="rcr_weather_current_operational" v="%s käynnissä · päättyy %s" />
+        <e k="rcr_weather_current_calm" v="%s · %s asti" />
+        <e k="rcr_weather_soon" v="%s %s-%s · %s kuluttua" />
+        <e k="rcr_weather_tomorrow" v="%s huomenna %s-%s" />
+        <e k="rcr_weather_later" v="%s P+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d min" />
+        <e k="rcr_time_hours" v="%d t" />
+        <e k="rcr_time_hours_minutes" v="%d t %02d min" />
+        <e k="rcr_hud_previous_n1"      v="Edellinen kasvi (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Aiempi kasvi (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Kasvihistoria" />
+        <e k="rcr_section_nitrogen"     v="Typpitila" />
+        <e k="rcr_section_advice"       v="Agronominen neuvo" />
+        <e k="rcr_section_soil_indicators" v="Maaperä ja torjunta" />
+        <e k="rcr_section_field"        v="Pellon nykytila" />
+        <e k="rcr_section_lime"         v="Kalkki-/pH-tila" />
+        <e k="rcr_section_plan"         v="Viljelykiertosuunnitelma" />
+        <e k="rcr_clear_plan_button"    v="Tyhjennä suunnitelma" />
+        <e k="rcr_clear_plan_confirm"   v="Tyhjennetäänkö kohteen %s viljelykiertosuunnitelma?" />
+        <e k="rcr_section_score"        v="Viljelykierron laatu" />
+        <e k="rcr_section_overview"     v="Yleiskatsaus" />
+        <e k="rcr_overview_total_area"  v="Käsitelty pinta-ala: %.1f ha" />
+
+        <!-- Timeline slot labels -->
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Nykyinen" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Vilja" />
+        <e k="rcr_family_legume"        v="Palkokasvi" />
+        <e k="rcr_family_oilseed"       v="Öljykasvi" />
+        <e k="rcr_family_root"          v="Juurikasvi" />
+        <e k="rcr_family_vegetable"     v="Vihannes" />
+        <e k="rcr_family_forage"        v="Rehu" />
+        <e k="rcr_cover_crop"           v="Välikasvi" />
+        <e k="rcr_fallow"              v="Kesanto" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Ei lannoitettu" />
+        <e k="rcr_n_partial"            v="Osittain" />
+        <e k="rcr_n_full"               v="Täysi" />
+        <e k="rcr_n_average_value"      v="Keskimääräinen typpi: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Kasvin tarve: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Typpi / kasvin tarve" />
+        <e k="rcr_lime_none"            v="Ei kalkkia" />
+        <e k="rcr_lime_partial"         v="Osittainen kalkki" />
+        <e k="rcr_lime_full"            v="Kalkki kunnossa" />
+        <e k="rcr_lime_average_pf"      v="Keskimääräinen pH" />
+        <e k="rcr_lime_average_value"   v="Keskimääräinen pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="Tavoite: %.3f pH" />
+        <e k="rcr_soil_value_unmeasured" v="Arvoa ei mitattu" />
+        <e k="rcr_n_crop_need_unavailable" v="Kasvin tarve: --" />
+        <e k="rcr_lime_status_unavailable" v="Kalkki: --" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Typpi- ja pH-arvot eivät ole saatavilla. Analysoi maaperä saadaksesi tarkat viljelyneuvot." />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal" v="Viljan jälkeen kylvä palkokasvi typen palauttamiseksi tai katkaisukasvi tyvitauteja vastaan, ja pidä kaksi vuotta viljojen välissä." />
+        <e k="rcr_advice_afterLegume" v="Palkokasvin jälkeen vilja hyödyntää jätetyn typen parhaiten, ja seuraavan palkokasvin tulisi odottaa kolme vuotta." />
+        <e k="rcr_advice_afterOilseed" v="Öljykasvin jälkeen jätä kolme vuotta ennen minkään öljykasvin paluuta, vilja ja sitten palkokasvi ihanteellisena järjestyksenä." />
+        <e k="rcr_advice_afterRoot" v="Juurikasvin jälkeen odota neljä vuotta ennen juurikasvien paluuta, ja jatka viljalla rakenteen palauttamiseksi myöhäisen noston jälkeen." />
+        <e k="rcr_advice_afterVegetable" v="Vihanneksen jälkeen odota kolme vuotta ennen sen toistamista, vilja puhtaana katkona." />
+        <e k="rcr_advice_afterForage" v="Lyhytaikaisen nurmen jälkeen vilja hyödyntää turpeen alle kertyneen viljavuuden ja rakenteen." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Suuri pahkahomeen riski: Odota vähintään 3 vuotta ennen kuin viljelet uudelleen rapsia, sinappia, auringonkukkaa, soijapapua, hernettä, papua, perunaa tai porkkanaa; sienitorjunta-aine rajoittaa vahinkoa käsitellyillä alueilla, mutta ei poista tautia lohkolta." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Suuri ankeroisriski: Odota vähintään 3 vuotta ennen kuin viljelet uudelleen sokerijuurikasta, punajuurta, rapsia, sinappia tai pinaattia; ankeroistorjunta-aine suojaa käsiteltyjä alueita, mutta ei poista ankeroisia." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Kohtalainen pahkahomeen riski: Odota pidempään ennen kuin viljelet uudelleen rapsia, sinappia, auringonkukkaa, soijapapua, hernettä, papua, perunaa tai porkkanaa; sade voi lisätä riskiä." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Kohtalainen ankeroisriski: Odota pidempään ennen kuin viljelet uudelleen juurikkaita, rapsia, sinappia tai pinaattia." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="Kasvin %s jälkeen suunnitelmassasi seuraava kasvi on %s." />
+        <e k="rcr_advice_memo_next_fallow" v="Kasvin %s jälkeen suunnitelmassasi on yhden vuoden kesanto." />
+        <e k="rcr_advice_memo_no_plan" v="Viljelykiertosuunnitelmassa ei ole määritetty seuraavaa kasvia." />
+        <e k="rcr_advice_memo_incomplete_short" v="Suunnitelma on epätäydellinen: täytä vähintään kaksi peräkkäistä vaihetta." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Suunnitelma on epätäydellinen: “Ei suunniteltu” -paikka erottaa kaksi täytettyä vaihetta." />
+        <e k="rcr_advice_memo_no_history" v="Aiemmasta kasvista ei ole merkintää: kierron seuraavaa vaihetta ei voida määrittää." />
+        <e k="rcr_advice_memo_not_aligned" v="Historian uusin merkintä (%s) ei kuulu suunniteltuun kiertoon. Seuraavaa vaihetta ei voida määrittää." />
+        <e k="rcr_advice_memo_ambiguous" v="%s esiintyy kierrossa useita kertoja, ja sitä seuraavat eri vaiheet. Seuraavaa vaihetta ei voida määrittää." />
+        <e k="rcr_advice_memo_conflict_family" v="Kasvin %s jälkeen suunnitelmassasi on %s, mutta molemmat kasvit kuuluvat samaan heimoon (%s). Turvalliseen paluuseen tarvitaan vielä %d vuotta vaaditusta %d vuodesta." />
+        <e k="rcr_advice_memo_conflict_disease" v="Kasvin %s jälkeen suunnitelmassasi on %s, mutta tauti %s voi vaikuttaa molempiin kasveihin. Odota vielä %d vuotta; suositeltu väli on %d vuotta." />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_ready" v="Viljelykierto kunnossa" />
+        <e k="rcr_advice_title_warning" v="Viljelykiertoristiriita" />
+        <e k="rcr_advice_title_outbreak" v="Aktiivinen tautipesäke" />
+        <e k="rcr_advice_outbreak" v="%s on aktiivinen tällä lohkolla. Taudin voimakkuus: %d %%. Suositeltu käsittely: %s." />
+        <e k="rcr_advice_plan_next_conflict_family" v="%s suunniteltu vuodelle %s: viljelykiertoristiriita, sama heimo (%s) kuin nykyisellä kasvilla, %d vuotta %d:stä puuttuu ennen turvallista paluuta." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s suunniteltu vuodelle %s: tauti %s voi vaikuttaa sekä tähän että nykyiseen kasviin. Odota vielä %d vuotta; suositeltu väli on %d vuotta." />
+        <e k="rcr_advice_plan_next_ok" v="%s suunniteltu vuodelle %s: hyvä valinta, viljelykiertoristiriitaa ei havaittu." />
+        <e k="rcr_advice_title_fallow" v="Välivuosi" />
+        <e k="rcr_advice_fallow_current" v="Kesanto käynnissä: Tänä vuonna ei viljellä pääkasvia. Tämä lisää aikaa ennen seuraavaa herkkää kasvia, mutta ei poista tautia heti." />
+        <e k="rcr_advice_plan_next_fallow" v="Kesanto suunniteltu vuodelle %s: Pääkasvia ei viljellä yhteen vuoteen. Tämä lisää aikaa ennen seuraavaa herkkää kasvia, mutta ei takaa kaikkien tautien häviämistä." />
+
+        <!-- Advice card, disease pressure list -->
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Maan tila" />
+        <e k="rcr_field_growth"          v="Kasvu" />
+
+        <!-- Field card — weed column header (singular) -->
+        <e k="rcr_weed_header"          v="Rikkakasvit" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Ei suunniteltu" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Maa" />
+        <e k="rcr_calendar_month_2"     v="Huh" />
+        <e k="rcr_calendar_month_3"     v="Tou" />
+        <e k="rcr_calendar_month_4"     v="Kes" />
+        <e k="rcr_calendar_month_5"     v="Hei" />
+        <e k="rcr_calendar_month_6"     v="Elo" />
+        <e k="rcr_calendar_month_7"     v="Syy" />
+        <e k="rcr_calendar_month_8"     v="Lok" />
+        <e k="rcr_calendar_month_9"     v="Mar" />
+        <e k="rcr_calendar_month_10"    v="Jou" />
+        <e k="rcr_calendar_month_11"    v="Tam" />
+        <e k="rcr_calendar_month_12"    v="Hel" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Kylvö" />
+        <e k="rcr_calendar_legend_harvest" v="Korjuu" />
+        <e k="rcr_calendar_legend_cover"   v="Katteen kylvö" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Epätäydellinen suunnitelma" />
+        <e k="rcr_score_excellent"      v="Erinomainen viljelykierto: hyvä agronominen tasapaino" />
+        <e k="rcr_score_good"           v="Hyvä viljelykierto: muutama asia parannettavissa" />
+        <e k="rcr_score_fair"           v="Kohtalainen viljelykierto: jotkut kasvit palaavat liian pian" />
+        <e k="rcr_score_poor"           v="Huono viljelykierto: kasvit liian lähellä toisiaan" />
+        <e k="rcr_score_bad"            v="Erittäin huono viljelykierto: samat kasvit toistuvat peräkkäin" />
+        <e k="rcr_score_label_low"      v="Huono pistemäärä" />
+        <e k="rcr_score_label_optimal"  v="Optimaalinen pistemäärä" />
+        <e k="rcr_score_short_optimal"  v="OPTIMAALINEN" />
+        <e k="rcr_score_short_good"     v="HYVÄ" />
+        <e k="rcr_score_short_fair"     v="KOHTALAINEN" />
+        <e k="rcr_score_short_poor"     v="MATALA" />
+        <e k="rcr_score_short_bad"      v="HUONO" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Ei omia peltoja näytettäväksi." />
+        <e k="rcr_function_fungicideTank" v="Käytä AMISTARia ruiskuissa fungisidikäsittelyyn riskialttiilla kasveilla." />
+        <e k="rcr_function_nematicideTank" v="Käytä VELUM PRIMEa ruiskuissa nematisidikäsittelyyn sukkulamadoille altistuneilla kasveilla." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Pahkahome" />
+        <e k="rcr_disease_name_phoma" v="Phoma-varsitauti" />
+        <e k="rcr_disease_name_takeall" v="Tyvi- ja juuristomätä" />
+        <e k="rcr_disease_name_septoria" v="Septoria" />
+        <e k="rcr_disease_name_rust" v="Ruoste" />
+        <e k="rcr_disease_name_fusarium" v="Fusarium" />
+        <e k="rcr_disease_name_lateblight" v="Perunarutto" />
+        <e k="rcr_disease_name_bcn"   v="Kystaankeroinen" />
+        <e k="rcr_disease_name_clubroot" v="Möhöjuuri" />
+        <e k="rcr_disease_treatment_sclerotinia" v="Sienitorjunta-aine" />
+        <e k="rcr_disease_treatment_phoma" v="Sienitorjunta-aine" />
+        <e k="rcr_disease_treatment_takeall" v="Ei mitään (vain viljelykierto)" />
+        <e k="rcr_disease_treatment_septoria" v="Sienitorjunta-aine" />
+        <e k="rcr_disease_treatment_rust" v="Sienitorjunta-aine" />
+        <e k="rcr_disease_treatment_fusarium" v="Sienitorjunta-aine" />
+        <e k="rcr_disease_treatment_lateblight" v="Sienitorjunta-aine" />
+        <e k="rcr_disease_treatment_bcn" v="Ankeroistorjunta-aine" />
+        <e k="rcr_fillType_fungicide" v="Sienitorjunta-aine" />
+        <e k="rcr_fillType_nematicide" v="Ankeroistorjunta-aine" />
+        <e k="rcr_disease_treatment_none" v="Ei torjuntaa" />
+        <e k="rcr_disease_treatment_clubroot" v="Ei mitään (vain viljelykierto)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Suuri Phoma-riski: Odota vähintään 4 vuotta ennen kuin viljelet uudelleen rapsia tai sinappia; sienitorjunta-aine rajoittaa vahinkoa käsitellyillä alueilla, mutta ei poista tautia lohkolta." />
+        <e k="rcr_advice_pressure_high_takeall" v="Suuri tyvimädän riski: Katkaise viljojen sarja kauralla, palkokasvilla tai öljykasvilla; mikään aine ei suojaa tältä taudilta, ja pidempi aika herkkien viljojen välillä pienentää tulevaa riskiä." />
+        <e k="rcr_advice_pressure_high_septoria" v="Suuri Septoria-riski: Sade voi lisätä riskiä entisestään, ja sienitorjunta-aine rajoittaa vahinkoa käsitellyillä alueilla." />
+        <e k="rcr_advice_pressure_high_rust" v="Suuri ruosteriski: Leuto ja kostea sää voi lisätä riskiä entisestään, ja sienitorjunta-aine rajoittaa vahinkoa käsitellyillä alueilla." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Suuri Fusarium-riski: Vältä vehnää heti maissin jälkeen ja peräkkäisiä viljoja; sienitorjunta-aine rajoittaa vahinkoa käsitellyillä alueilla, ja sade voi nopeuttaa tautia." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Suuri perunaruton riski: Viileä ja kostea sää voi lisätä riskiä entisestään, ja sienitorjunta-aine rajoittaa vahinkoa käsitellyillä alueilla." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Suuri möhöjuuren riski: Odota mahdollisimman pitkään ennen kuin viljelet uudelleen rapsia tai sinappia; mikään aine ei suojaa tältä taudilta, joka voi säilyä lohkolla määräämättömän ajan." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Kohtalainen Phoma-riski: Odota pidempään ennen kuin viljelet uudelleen rapsia tai sinappia." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Kohtalainen tyvimädän riski: Vältä kolmatta viljaa peräkkäin." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Kohtalainen Septoria-riski: Sade voi lisätä riskiä entisestään." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Kohtalainen ruosteriski: Leuto ja kostea sää voi lisätä riskiä entisestään." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Kohtalainen Fusarium-riski: Jätä enemmän aikaa viljojen ja maissin väliin." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Kohtalainen perunaruton riski: Viileä ja kostea sää voi lisätä riskiä entisestään." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Kohtalainen möhöjuuren riski: Odota pidempään ennen kuin viljelet uudelleen rapsia tai sinappia." />
+    </elements>
+</l10n>

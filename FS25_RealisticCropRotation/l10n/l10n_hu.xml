@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Vetésforgó" />
+
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Kezelőszerek" />
+        <e k="rcr_help_title_spraying" v="Permetezz időben" />
+        <e k="rcr_help_title_treatment_map" v="Kezelt területek" />
+        <e k="rcr_help_text_01" v="A Realistic Crop Rotation minden saját táblán eltárolja az előző négy növény- vagy ugarbejegyzést. Az Agronómia nézetben vizsgáld meg a táblát, a Tervezés nézetben készíts ismétlődő ciklust, a Betegségek térképen pedig figyeld a kockázatot, a fertőzéseket és a kezelési lefedettséget." />
+        <e k="rcr_help_text_02" v="Válassz ki egy saját táblát az aktuális növény, legfeljebb négy korábbi bejegyzés, az agronómiai tanács, a nitrogén, a pH, a kezelési lefedettség és a tábla jelenlegi állapotának megtekintéséhez. Az időjárási fejléc segít kiválasztani a permetezés idejét." />
+        <e k="rcr_help_text_03" v="Válassz egy helyet N+1 és N+4 között, majd a főnövényt és egy opcionális takarónövényt. Egymást követő helyeket tölts ki: a kitöltött kezdet két-, három- vagy négyéves ismétlődő ciklussá válik, beleértve az utolsó helyről az elsőre való visszatérést." />
+        <e k="rcr_help_text_04" v="A vetésforgó minősége jutalmazza a növények és családok változatosságát, az őszi és tavaszi vetés váltását, a nitrogént termelő növényeket vagy takarónövényeket, valamint a hüvelyest követő gabonát. Ugyanazon család vagy közös betegségekkel rendelkező növények túl korai visszatérése csökkenti a pontszámot." />
+        <e k="rcr_help_text_05" v="Egy beállított hüvelyes csak akkor ad vissza nitrogént, ha talajműveléssel semmisítik meg, puszta betakarításkor nem. A visszatérő nitrogén a következő két növény között oszlik meg; Precision Farming mellett a nitrogéntérképre kerül, nélküle egy trágyázási szint adódik hozzá." />
+        <e k="rcr_help_text_06" v="A Betegségkockázat térkép minden saját táblán alacsony, közepes vagy magas értékkel mutatja az aktuális növényt érő legnagyobb kórokozónyomást. Az időjárás tovább módosíthatja a fertőzés esélyét, ezért a térképet az Agronómia időjárási fejlécével együtt használd." />
+        <e k="rcr_help_text_07" v="A fertőzés rejtve indul, és csak akkor jelenik meg itt, amikor pusztítani kezdi a növényt. A térkép a kilenc beállított betegség közül azonosítja a kitörést; ezután a táblakártya, a gyalogos HUD és az értesítés is megjeleníti." />
+        <e k="rcr_help_text_09" v="Permetezz időben. A gombaölő szer a tábla lefedettségével arányosan csökkenti a kitörés esélyét és lassítja az aktív betegséget. A gombaölő és a nematicid megvédi a permetezett cellákat a pusztulástól, de nem állítja helyre az elveszett növényt, és nem távolítja el a betegséget a tábláról." />
+        <e k="rcr_help_text_10" v="A Kezelések térkép a gombaölővel vagy nematiciddel védett talajt mutatja. A gombaölő védelem a betakarított vagy lekaszált területen megszűnik. A nematicid védelem táblánként három hónapig tart, és egy új kezelés megújítja az időtartamot." />
+        <e k="rcr_help_text_11" v="Amikor egy táblán állsz, a HUD hozzáadja az előző két növényt, a látható betegségeket és az aktív kezeléseket. A növekedés számozott előrehaladását is mutatja; a Precision Farming megtartja a saját talaj-, pH-, nitrogén- és termésadatait." />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Tábla" />
+        <e k="rcr_sidebar_no_active_crop"  v="Nincs aktív növény" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Agronómia" />
+        <e k="rcr_sidebar_fields"       v="Táblák" />
+        <e k="rcr_tab_planning"         v="Tervezés" />
+        <e k="rcr_section_disease_map"     v="Betegségek" />
+        <e k="rcr_disease_sub_infections" v="Fertőzött táblák" />
+        <e k="rcr_disease_sub_pressure"   v="Betegségkockázat" />
+        <e k="rcr_disease_sub_treatment"  v="Kezelések" />
+        <e k="rcr_disease_risk_low"       v="Alacsony" />
+        <e k="rcr_disease_risk_moderate"  v="Mérsékelt" />
+        <e k="rcr_disease_risk_high"      v="Magas" />
+        <e k="rcr_disease_notification" v="%s észlelve a(z) %s. táblán" />
+        <e k="rcr_disease_reminder" v="A betegség továbbra is aktív: %s, %s. tábla" />
+        <e k="rcr_disease_hud_label"    v="Betegség" />
+        <e k="rcr_disease_header_active" v="Betegség (%s)" />
+        <e k="rcr_treatment_hud_label"  v="Kezelés" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d hónap van hátra)" />
+        <e k="rcr_advice_nematicide_duration" v="A talajvédelem táblánként 3 hónapig tart; az új kezelés megújítja az időtartamot." />
+
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="nincs" />
+        <e k="rcr_treatment_partial"  v="részleges (%d %%)" />
+        <e k="rcr_treatment_complete" v="teljes" />
+        <e k="rcr_treatment_disease_absent"     v="Nincs betegség" />
+        <e k="rcr_treatment_disease_active"     v="Betegség aktív" />
+        <e k="rcr_treatment_disease_controlled" v="Betegség kordában" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Betegség részben kordában tartva" />
+        <e k="rcr_treatment_until_harvest" v="Betakarításig" />
+        <e k="rcr_treatment_months"        v="%d hónap" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Várható nitrogén-visszajuttatás +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Vetésforgó nitrogén-visszajuttatása +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Nem várható nitrogén-visszajuttatás" />
+        <e k="rcr_status_planned_no_residue" v="Nincs nitrogén-visszajuttatás" />
+        <e k="rcr_weather_sun" v="Tiszta ég" />
+        <e k="rcr_weather_partially_cloudy" v="Időnként napos" />
+        <e k="rcr_weather_cloudy" v="Borult" />
+        <e k="rcr_weather_rain" v="Eső" />
+        <e k="rcr_weather_snow" v="Hó" />
+        <e k="rcr_weather_hail" v="Jégeső" />
+        <e k="rcr_weather_twister" v="Tornádó" />
+        <e k="rcr_weather_thunder" v="Zivatar" />
+        <e k="rcr_weather_current_operational" v="%s folyamatban · vége %s" />
+        <e k="rcr_weather_current_calm" v="%s · %s-ig" />
+        <e k="rcr_weather_soon" v="%s %s-%s · %s múlva" />
+        <e k="rcr_weather_tomorrow" v="%s holnap %s-%s" />
+        <e k="rcr_weather_later" v="%s N+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d perc" />
+        <e k="rcr_time_hours" v="%d ó" />
+        <e k="rcr_time_hours_minutes" v="%d ó %02d perc" />
+        <e k="rcr_hud_previous_n1"      v="Előző növény (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Korábbi növény (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Növénytörténet" />
+        <e k="rcr_section_nitrogen"     v="Nitrogénállapot" />
+        <e k="rcr_section_advice"       v="Agronómiai tanács" />
+        <e k="rcr_section_soil_indicators" v="Talaj és kezelés" />
+        <e k="rcr_section_field"        v="Tábla aktuális állapota" />
+        <e k="rcr_section_lime"         v="Mész-/pH-állapot" />
+        <e k="rcr_section_plan"         v="Vetésforgó-terv" />
+        <e k="rcr_clear_plan_button"    v="Terv törlése" />
+        <e k="rcr_clear_plan_confirm"   v="Törli a(z) %s vetésforgó-tervét?" />
+        <e k="rcr_section_score"        v="Vetésforgó minősége" />
+        <e k="rcr_section_overview"     v="Általános áttekintés" />
+        <e k="rcr_overview_total_area"  v="Megművelt terület: %.1f ha" />
+
+        <!-- Timeline slot labels -->
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Jelenlegi" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Gabona" />
+        <e k="rcr_family_legume"        v="Hüvelyes" />
+        <e k="rcr_family_oilseed"       v="Olajnövény" />
+        <e k="rcr_family_root"          v="Gyökérnövény" />
+        <e k="rcr_family_vegetable"     v="Zöldség" />
+        <e k="rcr_family_forage"        v="Takarmány" />
+        <e k="rcr_cover_crop"           v="Köztes növény" />
+        <e k="rcr_fallow"              v="Ugar" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Nem trágyázott" />
+        <e k="rcr_n_partial"            v="Részleges" />
+        <e k="rcr_n_full"               v="Teljes" />
+        <e k="rcr_n_average_value"      v="Átlagos nitrogén: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Növény igénye: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Nitrogén / növény igénye" />
+        <e k="rcr_lime_none"            v="Nincs mész" />
+        <e k="rcr_lime_partial"         v="Részleges mész" />
+        <e k="rcr_lime_full"            v="Mész megfelelő" />
+        <e k="rcr_lime_average_pf"      v="Átlagos pH" />
+        <e k="rcr_lime_average_value"   v="Átlagos pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="Cél: %.3f pH" />
+        <e k="rcr_soil_value_unmeasured" v="Nincs mért érték" />
+        <e k="rcr_n_crop_need_unavailable" v="Növény igénye: --" />
+        <e k="rcr_lime_status_unavailable" v="Mész: --" />
+        <e k="rcr_advice_soil_analysis_required_body" v="A nitrogén- és pH-értékek nem érhetők el. A pontos agronómiai tanácsokhoz vizsgáld meg a talajt." />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal" v="Gabona után vess pillangóst a nitrogén visszapótlására vagy megszakító növényt a lábbetegségek ellen, és hagyj két évet a gabonák között." />
+        <e k="rcr_advice_afterLegume" v="Pillangós után a gabona használja ki legjobban a visszahagyott nitrogént, és újabb pillangósnak három évet kell várnia." />
+        <e k="rcr_advice_afterOilseed" v="Olajnövény után hagyj három évet bármely olajnövény visszatérése előtt, gabonával, majd pillangóssal mint ideális sorrend." />
+        <e k="rcr_advice_afterRoot" v="Kapásnövény után várj négy évet a kapások visszatéréséig, majd gabonát a szerkezet helyreállítására a késői betakarítás után." />
+        <e k="rcr_advice_afterVegetable" v="Zöldség után várj három évet az ismétlése előtt, gabonával mint tiszta megszakítás." />
+        <e k="rcr_advice_afterForage" v="Ideiglenes gyep után a gabona hasznosítja a gyep alatt felhalmozott termékenységet és szerkezetet." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Magas fehérpenész-kockázat: a repce, mustár, napraforgó, szója, borsó, bab, burgonya és sárgarépa között tartson legalább 3 év szünetet; a gombaölő szer mérsékli a kárt a permetezett részeken, de nem távolítja el a betegséget a tábláról." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Magas fonálféreg-kockázat: a cukorrépa, cékla, repce, mustár és spenót között tartson legalább 3 év szünetet; a fonálféregölő szer védi a kezelt területet, de nem távolítja el a fonálférgeket." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Mérsékelt fehérpenész-kockázat: ritkítsa a repcét, mustárt, napraforgót, szóját, borsót, babot, burgonyát és sárgarépát; az eső növeli a kockázatot." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Mérsékelt fonálféreg-kockázat: ritkítsa a cukorrépát, céklát, repcét, mustárt és spenótot." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="%s után a terved szerint %s következik." />
+        <e k="rcr_advice_memo_next_fallow" v="%s után a terved szerint egy év ugar következik." />
+        <e k="rcr_advice_memo_no_plan" v="A vetésforgó-tervben nincs meghatározva következő növény." />
+        <e k="rcr_advice_memo_incomplete_short" v="A terv hiányos: adj meg legalább két egymást követő lépést." />
+        <e k="rcr_advice_memo_incomplete_gap" v="A terv hiányos: egy „Nincs tervezve” hely két kitöltött lépést választ el." />
+        <e k="rcr_advice_memo_no_history" v="Nincs rögzítve korábbi növény: a ciklus következő lépése nem határozható meg." />
+        <e k="rcr_advice_memo_not_aligned" v="Az előzmények legutóbbi bejegyzése (%s) nem szerepel a tervezett ciklusban. A következő lépés nem határozható meg." />
+        <e k="rcr_advice_memo_ambiguous" v="%s többször szerepel a ciklusban, eltérő következő lépésekkel. A következő lépés nem határozható meg." />
+        <e k="rcr_advice_memo_conflict_family" v="%s után a terved szerint %s következik, de mindkét növény ugyanabba a családba tartozik (%s). A biztonságos visszatéréshez még %d év hiányzik a szükséges %d évből." />
+        <e k="rcr_advice_memo_conflict_disease" v="%s után a terved szerint %s következik, de mindkét növényt érintheti a(z) %s. Várj még %d évet; az ajánlott időköz %d év." />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_ready" v="Vetésforgó rendben" />
+        <e k="rcr_advice_title_warning" v="Vetésforgó-ütközés" />
+        <e k="rcr_advice_title_outbreak" v="Aktív fertőzés" />
+        <e k="rcr_advice_outbreak" v="%s aktív ezen a táblán, a fertőzés mértéke %d %%. Javasolt kezelés: %s." />
+        <e k="rcr_advice_plan_next_conflict_family" v="%s tervezve ide: %s, vetésforgó-ütközés: ugyanaz a család (%s), mint a jelenlegi növény; még %d év hiányzik a szükséges %d évből a biztonságos visszatéréshez." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s tervezve ide: %s, vetésforgó-ütközés. Ugyanaz a betegség (%s) a jelenlegi növényt is érintheti; még %d év hiányzik az ajánlott %d éves időközből." />
+        <e k="rcr_advice_plan_next_ok" v="%s tervezve ide: %s, jó választás, nincs vetésforgó-ütközés." />
+        <e k="rcr_advice_title_fallow" v="Pihentető év" />
+        <e k="rcr_advice_fallow_current" v="Ugar folyamatban: idén nincs főnövény. Ez több időt hagy a következő érzékeny növény előtt, de nem távolítja el azonnal a betegséget." />
+        <e k="rcr_advice_plan_next_fallow" v="Ugar tervezve erre: %s: egy évig nem lesz főnövény. Ez több időt hagy a következő érzékeny növény előtt, de nem garantálja, hogy minden betegség eltűnik." />
+
+        <!-- Advice card, disease pressure list -->
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Talajállapot" />
+        <e k="rcr_field_growth"          v="Növekedés" />
+
+        <!-- Field card — weed column header (singular) -->
+        <e k="rcr_weed_header"          v="Gyom" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Nincs tervezve" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Márc" />
+        <e k="rcr_calendar_month_2"     v="Ápr" />
+        <e k="rcr_calendar_month_3"     v="Máj" />
+        <e k="rcr_calendar_month_4"     v="Jún" />
+        <e k="rcr_calendar_month_5"     v="Júl" />
+        <e k="rcr_calendar_month_6"     v="Aug" />
+        <e k="rcr_calendar_month_7"     v="Szept" />
+        <e k="rcr_calendar_month_8"     v="Okt" />
+        <e k="rcr_calendar_month_9"     v="Nov" />
+        <e k="rcr_calendar_month_10"    v="Dec" />
+        <e k="rcr_calendar_month_11"    v="Jan" />
+        <e k="rcr_calendar_month_12"    v="Feb" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Vetés" />
+        <e k="rcr_calendar_legend_harvest" v="Betakarítás" />
+        <e k="rcr_calendar_legend_cover"   v="Takarónövény vetése" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Hiányos terv" />
+        <e k="rcr_score_excellent"      v="Kiváló vetésforgó: jó agronómiai egyensúly" />
+        <e k="rcr_score_good"           v="Jó vetésforgó: néhány ponton javítható" />
+        <e k="rcr_score_fair"           v="Megfelelő vetésforgó: egyes növények túl hamar térnek vissza" />
+        <e k="rcr_score_poor"           v="Javítandó vetésforgó: a növények túl közel vannak egymáshoz" />
+        <e k="rcr_score_bad"            v="Rossz vetésforgó: ugyanazok a növények követik egymást" />
+        <e k="rcr_score_label_low"      v="Rossz pontszám" />
+        <e k="rcr_score_label_optimal"  v="Optimális pontszám" />
+        <e k="rcr_score_short_optimal"  v="OPTIMÁLIS" />
+        <e k="rcr_score_short_good"     v="JÓ" />
+        <e k="rcr_score_short_fair"     v="MEGFELELŐ" />
+        <e k="rcr_score_short_poor"     v="ALACSONY" />
+        <e k="rcr_score_short_bad"      v="ROSSZ" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Nincs megjeleníthető saját tábla." />
+        <e k="rcr_function_fungicideTank" v="Használd az AMISTAR-t permetezőkben a veszélyeztetett kultúrák gombaölő kezeléséhez." />
+        <e k="rcr_function_nematicideTank" v="Használd a VELUM PRIME-ot permetezőkben a fonálférgeknek kitett kultúrák nematicid kezeléséhez." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Fehérpenészes rothadás" />
+        <e k="rcr_disease_name_phoma" v="Fómás szárrothadás (Phoma)" />
+        <e k="rcr_disease_name_takeall" v="Gyökér- és szártőfeketedés" />
+        <e k="rcr_disease_name_septoria" v="Szeptóriózis" />
+        <e k="rcr_disease_name_rust" v="Rozsda" />
+        <e k="rcr_disease_name_fusarium" v="Fuzáriózis" />
+        <e k="rcr_disease_name_lateblight" v="Burgonyavész" />
+        <e k="rcr_disease_name_bcn"   v="Cisztaféreg" />
+        <e k="rcr_disease_name_clubroot" v="Káposztafélék gyökérgolyvája" />
+        <e k="rcr_disease_treatment_sclerotinia" v="Gombaölő szer" />
+        <e k="rcr_disease_treatment_phoma" v="Gombaölő szer" />
+        <e k="rcr_disease_treatment_takeall" v="Nincs (csak vetésforgó)" />
+        <e k="rcr_disease_treatment_septoria" v="Gombaölő szer" />
+        <e k="rcr_disease_treatment_rust" v="Gombaölő szer" />
+        <e k="rcr_disease_treatment_fusarium" v="Gombaölő szer" />
+        <e k="rcr_disease_treatment_lateblight" v="Gombaölő szer" />
+        <e k="rcr_disease_treatment_bcn" v="Fonálféregölő szer" />
+        <e k="rcr_fillType_fungicide" v="Gombaölő szer" />
+        <e k="rcr_fillType_nematicide" v="Fonálféregölő szer" />
+        <e k="rcr_disease_treatment_none" v="Nincs kezelés" />
+        <e k="rcr_disease_treatment_clubroot" v="Nincs (csak vetésforgó)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Magas fómás betegségkockázat: a repce és mustár között tartson legalább 4 év szünetet; a gombaölő szer mérsékli a kárt a permetezett részeken, de nem távolítja el a betegséget a tábláról." />
+        <e k="rcr_advice_pressure_high_takeall" v="Magas szártőfeketedés-kockázat: a gabonák közé iktasson zabot, hüvelyest vagy olajnövényt; e betegség ellen nincs védő készítmény, a hosszabb vetésforgó csökkenti a kockázatot." />
+        <e k="rcr_advice_pressure_high_septoria" v="Magas szeptóriakockázat: az eső növeli a közvetlen kockázatot, a gombaölő szer pedig mérsékli a kárt a permetezett részeken." />
+        <e k="rcr_advice_pressure_high_rust" v="Magas rozsdakockázat: az enyhe, nedves idő növeli a közvetlen kockázatot, a gombaölő szer pedig mérsékli a kárt a permetezett részeken." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Magas fuzárióziskockázat: ne termesszen búzát kukorica után, és ritkítsa az egymást követő gabonákat; a gombaölő szer mérsékli a kárt a permetezett részeken, az eső pedig növeli a kockázatot." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Magas burgonyavész-kockázat: a hűvös, nedves idő növeli a közvetlen kockázatot, a gombaölő szer pedig mérsékli a kárt a permetezett részeken." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Magas gyökérgolyva-kockázat: nyújtsa a lehető leghosszabbra a repce és a mustár közötti szünetet; e betegség ellen nincs védő készítmény, a hosszabb vetésforgó csökkenti a kockázatot." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Mérsékelt fómás betegségkockázat: nyújtsa meg a repce és a mustár közötti szünetet." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Mérsékelt szártőfeketedés-kockázat: kerülje a sorban harmadik gabonát." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Mérsékelt szeptóriakockázat: az eső növeli a közvetlen kockázatot." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Mérsékelt rozsdakockázat: az enyhe, nedves idő növeli a közvetlen kockázatot." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Mérsékelt fuzárióziskockázat: ritkítsa a gabonaféléket és a kukoricát." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Mérsékelt burgonyavész-kockázat: a hűvös, nedves idő növeli a közvetlen kockázatot." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Mérsékelt gyökérgolyva-kockázat: nyújtsa meg a repce és a mustár közötti szünetet." />
+    </elements>
+</l10n>

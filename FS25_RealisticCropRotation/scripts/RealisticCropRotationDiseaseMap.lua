@@ -1,0 +1,898 @@
+-- Copyright © 2026 Squallqt. All rights reserved.
+-- Native in-game map disease overlay: infections / risk / treatment sub-pages, coloured off the UI path from existing BitVectorMaps.
+
+-- Must survive source() reloads: closures below reference this GLOBAL name, never a captured self.
+RealisticCropRotationDiseaseMap = RealisticCropRotationDiseaseMap or {}
+
+RealisticCropRotationDiseaseMap.PAGE_FIELD = "rcrDiseaseMapPageIndex"
+RealisticCropRotationDiseaseMap.UPDATE_INTERVAL_MS = 1000
+RealisticCropRotationDiseaseMap.HUD_UPDATE_INTERVAL_MS = 250
+
+-- Per-disease overlay colours by stable state id (cropConfig <diseaseGroup state=>): [false] default palette, [true] colour-blind-safe.
+RealisticCropRotationDiseaseMap.STATE_COLORS = {
+    [1] = { [false] = {0.93, 0.93, 0.90, 1}, [true] = {0.95, 0.95, 0.95, 1} },
+    [2] = { [false] = {0.60, 0.40, 0.18, 1}, [true] = {0.80, 0.40, 0.00, 1} },
+    [3] = { [false] = {0.58, 0.32, 0.80, 1}, [true] = {0.80, 0.60, 0.70, 1} },
+    [4] = { [false] = {0.15, 0.50, 0.90, 1}, [true] = {0.00, 0.45, 0.70, 1} },
+    [5] = { [false] = {0.95, 0.55, 0.05, 1}, [true] = {0.90, 0.60, 0.00, 1} },
+    [6] = { [false] = {0.95, 0.85, 0.22, 1}, [true] = {0.95, 0.90, 0.25, 1} },
+    [7] = { [false] = {0.87, 0.15, 0.72, 1}, [true] = {0.35, 0.70, 0.90, 1} },
+    [8] = { [false] = {0.10, 0.68, 0.62, 1}, [true] = {0.00, 0.60, 0.50, 1} },
+    [9] = { [false] = {0.78, 0.13, 0.13, 1}, [true] = {0.60, 0.10, 0.10, 1} },
+}
+-- Last-resort colour for a state id beyond the palette (a 10th+ disease added without a colour).
+RealisticCropRotationDiseaseMap.STATE_COLOR_FALLBACK = { [false] = {0.86, 0.17, 0.14, 1}, [true] = {0.80, 0.40, 0.00, 1} }
+
+-- Fallback overlay texture resolution, used only when MapOverlayGenerator.OVERLAY_RESOLUTION is unavailable.
+RealisticCropRotationDiseaseMap.OVERLAY_BASE_RESOLUTION = 512
+
+RealisticCropRotationDiseaseMap.SUB_PAGE_INFECTIONS = 1
+RealisticCropRotationDiseaseMap.SUB_PAGE_PRESSURE = 2
+RealisticCropRotationDiseaseMap.SUB_PAGE_TREATMENT = 3
+RealisticCropRotationDiseaseMap.activeSubPage = RealisticCropRotationDiseaseMap.activeSubPage or 1
+
+RealisticCropRotationDiseaseMap.RISK_COLOR_LOW      = {0.13, 0.68, 0.36, 1}
+RealisticCropRotationDiseaseMap.RISK_COLOR_MODERATE = {0.94, 0.62, 0.08, 1}
+RealisticCropRotationDiseaseMap.RISK_COLOR_HIGH     = {0.86, 0.17, 0.14, 1}
+
+-- Treatment-coverage colours: sampled from the sprayer products' own HUD fill icons, so the map matches the icon the player knows.
+RealisticCropRotationDiseaseMap.TREATMENT_COLOR_FUNGICIDE  = {0.00, 0.31, 0.25, 1}
+RealisticCropRotationDiseaseMap.TREATMENT_COLOR_NEMATICIDE = {0.00, 0.25, 0.50, 1}
+
+local function getText(key, fallback)
+    if g_i18n ~= nil and type(g_i18n.hasText) == "function" and g_i18n:hasText(key) then
+        return g_i18n:getText(key)
+    end
+    if g_i18n ~= nil and type(g_i18n.getText) == "function" then
+        local text = g_i18n:getText(key)
+        if text ~= nil and text ~= key then return text end
+    end
+    return fallback or key
+end
+
+---Pathogen groups ordered by their stable overlay state id (delegates to the shared source on RealisticCropRotationDisease).
+-- @return table list array of { group, state } sorted by state id
+local function orderedDiseaseGroups()
+    return RealisticCropRotationDisease.getOrderedGroups()
+end
+
+local function diseaseCount()
+    return #orderedDiseaseGroups()
+end
+
+local function getDisease()
+    return RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
+end
+
+local function getGrid()
+    return RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
+end
+
+local function isVisualizationOverlayReady(overlayId)
+    if overlayId == nil or overlayId == 0 then return false end
+    if getIsDensityMapVisualizationOverlayReady ~= nil
+        and not getIsDensityMapVisualizationOverlayReady(overlayId) then return false end
+    return true
+end
+
+function RealisticCropRotationDiseaseMap:configureTreatmentOverlay(overlayId, treatmentFamily)
+    local grid = getGrid()
+    if overlayId == nil or grid == nil then return false end
+
+    local mapId, color
+    if treatmentFamily == "FUNGICIDE" then
+        mapId = grid.fungicideProtectionMapId
+        color = self.TREATMENT_COLOR_FUNGICIDE
+    elseif treatmentFamily == "NEMATICIDE" then
+        mapId = grid.nematicideProtectionMapId
+        color = self.TREATMENT_COLOR_NEMATICIDE
+    end
+    if mapId == nil or color == nil then return false end
+
+    resetDensityMapVisualizationOverlay(overlayId)
+    setOverlayColor(overlayId, 1, 1, 1, 1)
+    setDensityMapVisualizationOverlayStateColor(
+        overlayId, mapId, 0, 0, 0,
+        RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS,
+        1, color[1], color[2], color[3])
+    return true
+end
+
+local function infectionStateColor(state, colorBlind)
+    local entry = RealisticCropRotationDiseaseMap.STATE_COLORS[state]
+        or RealisticCropRotationDiseaseMap.STATE_COLOR_FALLBACK
+    return entry[colorBlind == true] or entry[false] or {1, 1, 1, 1}
+end
+
+local function getInfectionDisplayItems(colorBlind)
+    local disease = getDisease()
+    local items = {}
+    for _, entry in ipairs(orderedDiseaseGroups()) do
+        local color = infectionStateColor(entry.state, colorBlind)
+        local name = disease ~= nil and disease:getDisplayName(entry.group) or tostring(entry.group)
+        items[#items + 1] = {
+            colors = { [false] = {color}, [true] = {color} },
+            description = name,
+            isActive = true,
+        }
+    end
+    return items
+end
+
+local function getRiskDisplayItems()
+    local low = RealisticCropRotationDiseaseMap.RISK_COLOR_LOW
+    local mod = RealisticCropRotationDiseaseMap.RISK_COLOR_MODERATE
+    local high = RealisticCropRotationDiseaseMap.RISK_COLOR_HIGH
+    return {
+        { colors = { [false] = {low},  [true] = {low} },  description = getText("rcr_disease_risk_low"),      isActive = true },
+        { colors = { [false] = {mod},  [true] = {mod} },  description = getText("rcr_disease_risk_moderate"), isActive = true },
+        { colors = { [false] = {high}, [true] = {high} }, description = getText("rcr_disease_risk_high"),     isActive = true },
+    }
+end
+
+local function getTreatmentDisplayItems()
+    local fung = RealisticCropRotationDiseaseMap.TREATMENT_COLOR_FUNGICIDE
+    local nema = RealisticCropRotationDiseaseMap.TREATMENT_COLOR_NEMATICIDE
+    return {
+        { colors = { [false] = {fung}, [true] = {fung} }, description = getText("rcr_fillType_fungicide"),  isActive = true },
+        { colors = { [false] = {nema}, [true] = {nema} }, description = getText("rcr_fillType_nematicide"), isActive = true },
+    }
+end
+
+local function countSelected(filter, n)
+    local count = 0
+    for i = 1, (n or 2) do
+        if filter[i] then count = count + 1 end
+    end
+    return count
+end
+
+local function ensureSelectorCallback(frame)
+    if frame == nil or frame.mapOverviewSelector == nil then return end
+    if frame.rcrDiseaseMapSelectorCallbackSet then return end
+    function frame.mapOverviewSelector.onClickCallback(_, state)
+        frame:onClickMapOverviewSelector(state)
+    end
+    frame.rcrDiseaseMapSelectorCallbackSet = true
+end
+
+-- Page / state queries
+
+function RealisticCropRotationDiseaseMap:getPageIndex(frame)
+    return frame ~= nil and frame[self.PAGE_FIELD] or nil
+end
+
+function RealisticCropRotationDiseaseMap:isPageActive(frame)
+    local pageIndex = self:getPageIndex(frame)
+    return pageIndex ~= nil
+        and frame.mapOverviewSelector ~= nil
+        and frame.mapOverviewSelector:getState() == pageIndex
+end
+
+function RealisticCropRotationDiseaseMap:isPressurePage()
+    return self.activeSubPage == self.SUB_PAGE_PRESSURE
+end
+
+function RealisticCropRotationDiseaseMap:isTreatmentPage()
+    return self.activeSubPage == self.SUB_PAGE_TREATMENT
+end
+
+-- Filter data sync
+
+---Ensures self.filter is exactly n entries (new diseases default shown), keeping rows index-aligned.
+-- @param integer n
+-- @return table filter
+function RealisticCropRotationDiseaseMap:ensureInfectionFilter(n)
+    local filter = self.filter or {}
+    for i = 1, n do
+        if filter[i] == nil then filter[i] = true end
+    end
+    for i = #filter, n + 1, -1 do
+        filter[i] = nil
+    end
+    self.filter = filter
+    return filter
+end
+
+function RealisticCropRotationDiseaseMap:syncFilterData(frame)
+    local pageIndex = self:getPageIndex(frame)
+    if frame == nil or pageIndex == nil then return end
+    if frame.dataTables == nil or frame.filterStates == nil or frame.numSelectedFilters == nil then return end
+
+    self.activeSubPage = self.activeSubPage or self.SUB_PAGE_INFECTIONS
+
+    if self:isPressurePage() then
+        self.riskFilter = self.riskFilter or { true, true, true }
+        frame.dataTables[pageIndex] = getRiskDisplayItems()
+        frame.filterStates[pageIndex] = self.riskFilter
+        frame.numSelectedFilters[pageIndex] = countSelected(self.riskFilter, 3)
+    elseif self:isTreatmentPage() then
+        self.treatmentFilter = self.treatmentFilter or { true, true }
+        frame.dataTables[pageIndex] = getTreatmentDisplayItems()
+        frame.filterStates[pageIndex] = self.treatmentFilter
+        frame.numSelectedFilters[pageIndex] = countSelected(self.treatmentFilter, 2)
+    else
+        local items = getInfectionDisplayItems(self.isColorBlindMode == true)
+        local n = #items
+        local filter = self:ensureInfectionFilter(n)
+        frame.dataTables[pageIndex] = items
+        frame.filterStates[pageIndex] = filter
+        frame.numSelectedFilters[pageIndex] = countSelected(filter, n)
+    end
+
+    if frame.buttonDeselectAllText ~= nil and InGameMenuMapFrame ~= nil and InGameMenuMapFrame.L10N_SYMBOL ~= nil then
+        local symbol = frame.numSelectedFilters[pageIndex] == 0
+            and InGameMenuMapFrame.L10N_SYMBOL.SELECT_ALL
+            or InGameMenuMapFrame.L10N_SYMBOL.DESELECT_ALL
+        frame.buttonDeselectAllText:setText(g_i18n:getText(symbol))
+    end
+end
+
+-- Runtime objects
+
+---Overlay texture size, scaled from OVERLAY_BASE_RESOLUTION by the performance profile (independent of source map resolution).
+-- @return integer size
+local function adjustedOverlaySize()
+    local base = RealisticCropRotationDiseaseMap.OVERLAY_BASE_RESOLUTION
+    if MapOverlayGenerator ~= nil and MapOverlayGenerator.OVERLAY_RESOLUTION ~= nil
+        and MapOverlayGenerator.OVERLAY_RESOLUTION.FIELDS ~= nil
+        and type(MapOverlayGenerator.OVERLAY_RESOLUTION.FIELDS[1]) == "number" then
+        base = MapOverlayGenerator.OVERLAY_RESOLUTION.FIELDS[1]
+    end
+    if Utils == nil or type(Utils.getPerformanceClassId) ~= "function"
+        or GS_PROFILE_LOW == nil or GS_PROFILE_HIGH == nil then
+        return base
+    end
+    local profileClass = Utils.getPerformanceClassId()
+    if profileClass <= GS_PROFILE_LOW then
+        return base
+    elseif profileClass >= GS_PROFILE_HIGH and not Platform.isMobile
+        and not (g_currentMission ~= nil and g_currentMission.missionDynamicInfo ~= nil
+            and g_currentMission.missionDynamicInfo.isMultiplayer and g_currentMission:getIsServer()) then
+        return base * 4
+    else
+        return base * 2
+    end
+end
+
+function RealisticCropRotationDiseaseMap:createRuntimeObjects()
+    if createDensityMapVisualizationOverlay == nil then return end
+    local grid = getGrid()
+    if grid == nil then return end
+    local size = adjustedOverlaySize()
+
+    if self.infectionOverlayIds == nil and grid.mapId ~= nil then
+        self.infectionOverlayIds = {
+            createDensityMapVisualizationOverlay("rcrInfectionOverlayA", size, size),
+            createDensityMapVisualizationOverlay("rcrInfectionOverlayB", size, size),
+        }
+        self.infectionActiveSlot = nil  -- nothing generated yet: draw() shows nothing until slot 1 is ready
+        self.infectionPendingSlot = nil
+    end
+
+    if self.riskOverlayIds == nil and grid.riskMapId ~= nil then
+        self.riskOverlayIds = {
+            createDensityMapVisualizationOverlay("rcrRiskOverlayA", size, size),
+            createDensityMapVisualizationOverlay("rcrRiskOverlayB", size, size),
+        }
+        self.riskActiveSlot = nil
+        self.riskPendingSlot = nil
+    end
+
+    if self.treatmentOverlayIds == nil and grid.fungicideProtectionMapId ~= nil then
+        self.treatmentOverlayIds = {
+            createDensityMapVisualizationOverlay("rcrTreatmentOverlayA", size, size),
+            createDensityMapVisualizationOverlay("rcrTreatmentOverlayB", size, size),
+        }
+        self.treatmentActiveSlot = nil
+        self.treatmentPendingSlot = nil
+    end
+end
+
+function RealisticCropRotationDiseaseMap:delete()
+    if self.infectionOverlayIds ~= nil then
+        for _, id in ipairs(self.infectionOverlayIds) do delete(id) end
+        self.infectionOverlayIds = nil
+    end
+    if self.riskOverlayIds ~= nil then
+        for _, id in ipairs(self.riskOverlayIds) do delete(id) end
+        self.riskOverlayIds = nil
+    end
+    if self.treatmentOverlayIds ~= nil then
+        for _, id in ipairs(self.treatmentOverlayIds) do delete(id) end
+        self.treatmentOverlayIds = nil
+    end
+    if self.hudTreatmentOverlayIds ~= nil then
+        for _, id in ipairs(self.hudTreatmentOverlayIds) do delete(id) end
+        self.hudTreatmentOverlayIds = nil
+    end
+    self.infectionActiveSlot, self.infectionPendingSlot = nil, nil
+    self.riskActiveSlot, self.riskPendingSlot = nil, nil
+    self.treatmentActiveSlot, self.treatmentPendingSlot = nil, nil
+    self.hudTreatmentActiveSlot, self.hudTreatmentPendingSlot = nil, nil
+    self.hudTreatmentActiveFamily, self.hudTreatmentPendingFamily = nil, nil
+    self.hudTreatmentActiveRevision, self.hudTreatmentPendingRevision = nil, nil
+    self.hudTreatmentLastBuildTime = nil
+    self.hudIngameMap = nil
+    self.hudInstanceHooked = false
+    self.lastBuildKey = nil
+end
+
+-- Overlay cache key.
+
+function RealisticCropRotationDiseaseMap:buildKey()
+    local parts = {}
+    local subPage = self.activeSubPage or self.SUB_PAGE_INFECTIONS
+    parts[#parts + 1] = string.format("P%d", subPage)
+    parts[#parts + 1] = self.isColorBlindMode == true and "CB1" or "CB0"
+
+    -- Only the display controls we own: each view's CONTENT lives in the display maps, whose revisions are tracked in updateOverlay.
+    if subPage == self.SUB_PAGE_PRESSURE then
+        local rf = self.riskFilter or {}
+        parts[#parts + 1] = string.format("%s%s%s",
+            rf[1] and "1" or "0", rf[2] and "1" or "0", rf[3] and "1" or "0")
+    elseif subPage == self.SUB_PAGE_TREATMENT then
+        local tf = self.treatmentFilter or {}
+        parts[#parts + 1] = string.format("%s%s", tf[1] and "1" or "0", tf[2] and "1" or "0")
+    else
+        local f = self.filter or {}
+        local n = diseaseCount()
+        local bits = {}
+        for i = 1, n do bits[i] = f[i] and "1" or "0" end
+        parts[#parts + 1] = table.concat(bits)
+    end
+
+    return table.concat(parts, "|")
+end
+
+---Returns the hidden overlay slot used for the next double-buffered build.
+-- @param table owner Disease-map instance
+-- @param table overlayIds Pair of overlay IDs
+-- @param string activeSlotField Instance field containing the active slot
+-- @return integer slot, or nil
+-- @return integer overlayId, or nil
+local function getInactiveOverlay(owner, overlayIds, activeSlotField)
+    if overlayIds == nil then return nil end
+    local slot = owner[activeSlotField] == 1 and 2 or 1
+    local overlayId = overlayIds[slot]
+    if overlayId == nil or overlayId == 0 then return nil end
+    return slot, overlayId
+end
+
+---Resets an overlay before assigning its state colours.
+-- @param integer overlayId
+local function resetOverlayBuild(overlayId)
+    resetDensityMapVisualizationOverlay(overlayId)
+    setOverlayColor(overlayId, 1, 1, 1, 1)
+end
+
+---Starts generation and publishes the hidden slot as pending.
+-- @param table owner Disease-map instance
+-- @param integer overlayId
+-- @param integer slot
+-- @param string pendingSlotField Instance field receiving the pending slot
+-- @return boolean success
+local function publishOverlayBuild(owner, overlayId, slot, pendingSlotField)
+    generateDensityMapVisualizationOverlay(overlayId)
+    owner[pendingSlotField] = slot
+    return true
+end
+
+-- Infection view — render straight from the persistent grid (no iteration).
+
+function RealisticCropRotationDiseaseMap:renderInfectionOverlay()
+    local grid = getGrid()
+    if grid == nil or grid.mapId == nil or self.infectionOverlayIds == nil then
+        return false
+    end
+
+    -- Regenerate into the slot NOT currently displayed (double-buffered), so the map keeps showing the last-good result meanwhile.
+    local slot, overlayId = getInactiveOverlay(self, self.infectionOverlayIds, "infectionActiveSlot")
+    if overlayId == nil then return false end
+
+    local filter = self.filter or {}
+    local colorBlind = self.isColorBlindMode == true
+
+    resetOverlayBuild(overlayId)
+
+    -- One native paint per enabled disease, straight from the destruction grid; row order matches orderedDiseaseGroups, so filter[i] gates disease i.
+    for i, entry in ipairs(orderedDiseaseGroups()) do
+        if filter[i] ~= false then
+            local c = infectionStateColor(entry.state, colorBlind)
+            setDensityMapVisualizationOverlayStateColor(
+                overlayId, grid.mapId, 0, 0, 0, grid.numChannels, entry.state, c[1], c[2], c[3])
+        end
+    end
+
+    return publishOverlayBuild(self, overlayId, slot, "infectionPendingSlot")
+end
+
+-- Risk view — render straight from the runtime risk-band map (no iteration).
+
+function RealisticCropRotationDiseaseMap:renderRiskOverlay()
+    local grid = getGrid()
+    if grid == nil or grid.riskMapId == nil or self.riskOverlayIds == nil then
+        return false
+    end
+
+    local slot, overlayId = getInactiveOverlay(self, self.riskOverlayIds, "riskActiveSlot")
+    if overlayId == nil then return false end
+
+    local riskFilter = self.riskFilter or { true, true, true }
+
+    resetOverlayBuild(overlayId)
+
+    local colors = { self.RISK_COLOR_LOW, self.RISK_COLOR_MODERATE, self.RISK_COLOR_HIGH }
+    for band = 1, 3 do
+        if riskFilter[band] then
+            local c = colors[band]
+            setDensityMapVisualizationOverlayStateColor(
+                overlayId, grid.riskMapId, 0, 0, 0, grid.riskNumChannels, band, c[1], c[2], c[3])
+        end
+    end
+
+    return publishOverlayBuild(self, overlayId, slot, "riskPendingSlot")
+end
+
+-- Treatment-coverage view — render straight from the two per-cell protection maps.
+
+function RealisticCropRotationDiseaseMap:renderTreatmentOverlay()
+    local grid = getGrid()
+    if grid == nil or self.treatmentOverlayIds == nil then return false end
+    if grid.fungicideProtectionMapId == nil and grid.nematicideProtectionMapId == nil then return false end
+
+    local slot, overlayId = getInactiveOverlay(self, self.treatmentOverlayIds, "treatmentActiveSlot")
+    if overlayId == nil then return false end
+
+    local filter = self.treatmentFilter or { true, true }
+    local protectionChannels = RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS
+
+    resetOverlayBuild(overlayId)
+
+    if filter[1] ~= false and grid.fungicideProtectionMapId ~= nil then
+        local c = RealisticCropRotationDiseaseMap.TREATMENT_COLOR_FUNGICIDE
+        setDensityMapVisualizationOverlayStateColor(
+            overlayId, grid.fungicideProtectionMapId, 0, 0, 0, protectionChannels, 1, c[1], c[2], c[3])
+    end
+    if filter[2] ~= false and grid.nematicideProtectionMapId ~= nil then
+        local c = RealisticCropRotationDiseaseMap.TREATMENT_COLOR_NEMATICIDE
+        setDensityMapVisualizationOverlayStateColor(
+            overlayId, grid.nematicideProtectionMapId, 0, 0, 0, protectionChannels, 1, c[1], c[2], c[3])
+    end
+
+    return publishOverlayBuild(self, overlayId, slot, "treatmentPendingSlot")
+end
+
+-- Overlay update / draw
+
+function RealisticCropRotationDiseaseMap:updateOverlay(force)
+    local grid = getGrid()
+    if grid == nil then return end
+
+    self:createRuntimeObjects()
+
+    local buildKey = self:buildKey()
+    local revision
+    if self:isPressurePage() then
+        revision = grid.riskRevision or 0
+    elseif self:isTreatmentPage() then
+        revision = grid.protectionRevision or 0
+    else
+        revision = grid.changeRevision or 0
+    end
+    if not force and self.lastBuildKey == buildKey and revision == (self.lastRevision or -1) then return end
+
+    local ok
+    if self:isPressurePage() then
+        ok = self:renderRiskOverlay()
+    elseif self:isTreatmentPage() then
+        ok = self:renderTreatmentOverlay()
+    else
+        ok = self:renderInfectionOverlay()
+    end
+
+    if ok then
+        self.lastBuildKey = buildKey
+        self.lastRevision = revision
+    end
+end
+
+function RealisticCropRotationDiseaseMap:draw(x, y, width, height)
+    local overlayIds, pendingSlotField, activeSlotField
+    if self:isPressurePage() then
+        overlayIds, pendingSlotField, activeSlotField = self.riskOverlayIds, "riskPendingSlot", "riskActiveSlot"
+    elseif self:isTreatmentPage() then
+        overlayIds, pendingSlotField, activeSlotField = self.treatmentOverlayIds, "treatmentPendingSlot", "treatmentActiveSlot"
+    else
+        overlayIds, pendingSlotField, activeSlotField = self.infectionOverlayIds, "infectionPendingSlot", "infectionActiveSlot"
+    end
+    if overlayIds == nil then return end
+
+    local pendingSlot = self[pendingSlotField]
+    if pendingSlot ~= nil and getIsDensityMapVisualizationOverlayReady(overlayIds[pendingSlot]) then
+        self[activeSlotField] = pendingSlot
+        self[pendingSlotField] = nil
+    end
+
+    local activeSlot = self[activeSlotField]
+    if activeSlot == nil then return end -- nothing has finished generating yet
+
+    local overlayId = overlayIds[activeSlot]
+    if overlayId ~= nil and overlayId ~= 0 then
+        setOverlayUVs(overlayId, 0, 0, 0, 1, 1, 0, 1, 1)
+        renderOverlay(overlayId, x, y, width, height)
+    end
+end
+
+function RealisticCropRotationDiseaseMap:getHudIngameMap()
+    local mission = g_currentMission
+    if mission == nil or mission.hud == nil then return nil end
+    return mission.hud.ingameMap
+end
+
+function RealisticCropRotationDiseaseMap:tryHookHudInstance()
+    if self.hudInstanceHooked then return true end
+    if Utils == nil or Utils.appendedFunction == nil then return false end
+
+    local map = self:getHudIngameMap()
+    if map == nil or map.drawFields == nil then return false end
+
+    map.drawFields = Utils.appendedFunction(map.drawFields, function(mapSelf)
+        RealisticCropRotationDiseaseMap:drawHudTreatmentOverlay(mapSelf)
+    end)
+    self.hudIngameMap = map
+    self.hudInstanceHooked = true
+    return true
+end
+
+function RealisticCropRotationDiseaseMap:updateHudTreatmentOverlay(treatmentFamily)
+    local grid = getGrid()
+    if grid == nil or createDensityMapVisualizationOverlay == nil then return end
+
+    if self.hudTreatmentOverlayIds == nil then
+        local size = adjustedOverlaySize()
+        self.hudTreatmentOverlayIds = {
+            createDensityMapVisualizationOverlay("rcrHudTreatmentOverlayA", size, size),
+            createDensityMapVisualizationOverlay("rcrHudTreatmentOverlayB", size, size),
+        }
+    end
+
+    local pendingSlot = self.hudTreatmentPendingSlot
+    if pendingSlot ~= nil and isVisualizationOverlayReady(self.hudTreatmentOverlayIds[pendingSlot]) then
+        self.hudTreatmentActiveSlot = pendingSlot
+        self.hudTreatmentActiveFamily = self.hudTreatmentPendingFamily
+        self.hudTreatmentActiveRevision = self.hudTreatmentPendingRevision
+        self.hudTreatmentPendingSlot = nil
+        self.hudTreatmentPendingFamily = nil
+        self.hudTreatmentPendingRevision = nil
+        pendingSlot = nil
+    end
+    if pendingSlot ~= nil then return end
+
+    local revision = grid.protectionRevision or 0
+    local familyChanged = self.hudTreatmentActiveFamily ~= treatmentFamily
+    if not familyChanged and self.hudTreatmentActiveRevision == revision then return end
+
+    local now = g_time or 0
+    if not familyChanged and self.hudTreatmentLastBuildTime ~= nil
+        and now - self.hudTreatmentLastBuildTime < self.HUD_UPDATE_INTERVAL_MS then return end
+
+    local slot = self.hudTreatmentActiveSlot == 1 and 2 or 1
+    local overlayId = self.hudTreatmentOverlayIds[slot]
+    if not self:configureTreatmentOverlay(overlayId, treatmentFamily) then return end
+    generateDensityMapVisualizationOverlay(overlayId)
+    self.hudTreatmentPendingSlot = slot
+    self.hudTreatmentPendingFamily = treatmentFamily
+    self.hudTreatmentPendingRevision = revision
+    self.hudTreatmentLastBuildTime = now
+end
+
+function RealisticCropRotationDiseaseMap:renderHudMapOverlay(mapSelf, overlayId)
+    if overlayId == nil or overlayId == 0 or mapSelf == nil or mapSelf.layout == nil then return end
+
+    local width, height = mapSelf.layout:getMapSize()
+    local x, y = mapSelf.layout:getMapPosition()
+    local pivotX, pivotY = mapSelf.layout:getMapPivot()
+    local mx = x + width * mapSelf.mapExtensionOffsetX
+    local my = y + height * mapSelf.mapExtensionOffsetZ
+    local sizeX = width * mapSelf.mapExtensionScaleFactor
+    local sizeY = height * mapSelf.mapExtensionScaleFactor
+    local rotationPivotX = (pivotX + x) - mx
+    local rotationPivotY = (pivotY + y) - my
+
+    if mapSelf.clipX1 ~= nil then
+        local u1, v1, u2, v2, u3, v3, u4, v4
+        mx, my, sizeX, sizeY, u1, v1, u2, v2, u3, v3, u4, v4 = Overlay.getClippingUVs(
+            Overlay.DEFAULT_UVS, mx, my, sizeX, sizeY,
+            mapSelf.clipX1, mapSelf.clipY1, mapSelf.clipX2, mapSelf.clipY2)
+        if u1 == nil then return end
+        setOverlayUVs(overlayId, u1, v1, u2, v2, u3, v3, u4, v4)
+    end
+
+    setOverlayRotation(overlayId, mapSelf.layout:getMapRotation(), rotationPivotX, rotationPivotY)
+    setOverlayColor(overlayId, 1, 1, 1, math.sqrt(mapSelf.layout:getMapAlpha() or 1))
+    renderOverlay(overlayId, mx, my, sizeX, sizeY)
+
+    if mapSelf.clipX1 ~= nil then
+        setOverlayUVs(overlayId, unpack(Overlay.DEFAULT_UVS))
+    end
+end
+
+function RealisticCropRotationDiseaseMap:drawHudTreatmentOverlay(mapSelf)
+    if mapSelf ~= self.hudIngameMap or mapSelf.isFullscreen == true then return end
+    if RealisticCropRotationSprayerProducts ~= nil
+        and RealisticCropRotationSprayerProducts.getIsPrecisionFarmingMinimapActive ~= nil
+        and RealisticCropRotationSprayerProducts.getIsPrecisionFarmingMinimapActive() then return end
+    if mapSelf.isVisible ~= nil and mapSelf.isVisible ~= true then return end
+    if g_gui ~= nil and g_gui.getIsGuiVisible ~= nil
+        and g_gui:getIsGuiVisible() and not g_gui:getIsOverlayGuiVisible() then return end
+
+    local treatmentFamily = RealisticCropRotationSprayerProducts ~= nil
+        and RealisticCropRotationSprayerProducts.getControlledProductTreatment ~= nil
+        and RealisticCropRotationSprayerProducts.getControlledProductTreatment() or nil
+    if treatmentFamily == nil then return end
+
+    self:updateHudTreatmentOverlay(treatmentFamily)
+    if self.hudTreatmentActiveFamily ~= treatmentFamily then return end
+    local activeSlot = self.hudTreatmentActiveSlot
+    local overlayId = activeSlot ~= nil and self.hudTreatmentOverlayIds[activeSlot] or nil
+    if overlayId ~= nil then self:renderHudMapOverlay(mapSelf, overlayId) end
+end
+
+-- Sub-selector layout
+
+function RealisticCropRotationDiseaseMap:getLayoutOffsets()
+    local _, selectorOffset = getNormalizedScreenValues(0, 80)
+    local _, dotOffset = getNormalizedScreenValues(0, 75)
+    local _, filterOffset = getNormalizedScreenValues(0, 60)
+    return selectorOffset, dotOffset, filterOffset
+end
+
+function RealisticCropRotationDiseaseMap:applySubPageLayout(frame)
+    if frame == nil or self.subSelector == nil or self.subDotBox == nil then return end
+
+    local selectorOffset, dotOffset, filterOffset = self:getLayoutOffsets()
+
+    if self.subSelectorBaseY ~= nil then
+        self.subSelector:setPosition(nil, self.subSelectorBaseY - selectorOffset)
+    end
+    if self.subDotBoxBaseY ~= nil then
+        self.subDotBox:setPosition(nil, self.subDotBoxBaseY - dotOffset)
+    end
+
+    frame.filterListContainer:setPosition(nil, self.filterListContainerBaseY - filterOffset)
+    frame.filterListContainer:setSize(nil, self.filterListContainerBaseH - filterOffset, true)
+    frame.filterList:setSize(nil, self.filterListBaseH - filterOffset, true)
+    frame.filterListSlider:setSize(nil, self.filterListSliderBaseH - filterOffset, true)
+    frame.filterListSlider.elements[1]:setSize(nil, self.filterListSliderElementBaseH - filterOffset, true)
+    frame.buttonDeselectAllContainer:setPosition(nil, self.buttonDeselectAllAdjustedY)
+end
+
+function RealisticCropRotationDiseaseMap:restoreDefaultLayout(frame)
+    if frame == nil or self.filterListContainerBaseY == nil then return end
+
+    frame.filterListContainer:setPosition(nil, self.filterListContainerBaseY)
+    frame.filterListContainer:setSize(nil, self.filterListContainerBaseH, true)
+    frame.filterList:setSize(nil, self.filterListBaseH, true)
+    frame.filterListSlider:setSize(nil, self.filterListSliderBaseH, true)
+    frame.filterListSlider.elements[1]:setSize(nil, self.filterListSliderElementBaseH, true)
+    frame.buttonDeselectAllContainer:setPosition(nil, self.buttonDeselectAllDefaultY)
+end
+
+function RealisticCropRotationDiseaseMap:onSubSelectorChanged(frame, state)
+    self.activeSubPage = state
+    self.lastBuildKey = nil
+    if self:isPressurePage() then
+        local disease = getDisease()
+        if disease ~= nil then disease:refreshRiskMap(false) end
+    end
+    self:syncFilterData(frame)
+    if frame.filterList ~= nil then frame.filterList:reloadData() end
+    self:updateOverlay(true)
+end
+
+function RealisticCropRotationDiseaseMap:showSubSelector(frame, visible)
+    if self.subSelector ~= nil then self.subSelector:setVisible(visible) end
+    if self.subDotBox ~= nil then self.subDotBox:setVisible(visible) end
+    if visible then
+        self:applySubPageLayout(frame)
+    else
+        self:restoreDefaultLayout(frame)
+    end
+end
+
+-- Page creation
+
+function RealisticCropRotationDiseaseMap:ensureMapPage(frame)
+    if frame == nil or frame[self.PAGE_FIELD] ~= nil then return end
+    if frame.mapSelectorTexts == nil or frame.mapOverviewSelector == nil then return end
+    if frame.dataTables == nil or frame.filterStates == nil or frame.numSelectedFilters == nil then return end
+
+    table.insert(frame.mapSelectorTexts, getText("rcr_section_disease_map"))
+    local pageIndex = #frame.mapSelectorTexts
+    frame[self.PAGE_FIELD] = pageIndex
+    frame.mapOverviewSelector:setTexts(frame.mapSelectorTexts)
+
+    local diseaseN = diseaseCount()
+    self.filter = self:ensureInfectionFilter(diseaseN)
+    self.riskFilter = self.riskFilter or { true, true, true }
+
+    frame.dataTables[pageIndex] = {}
+    frame.filterStates[pageIndex] = self.filter
+    frame.numSelectedFilters[pageIndex] = countSelected(self.filter, diseaseN)
+
+    if frame.subCategoryDotBox ~= nil and frame.subCategoryDotBox.elements ~= nil and #frame.subCategoryDotBox.elements > 0 then
+        frame.subCategoryDotBox.elements[1]:clone(frame.subCategoryDotBox)
+        for index, dot in ipairs(frame.subCategoryDotBox.elements) do
+            local currentIndex = index
+            function dot.getIsSelected()
+                return frame.mapOverviewSelector:getState() == currentIndex
+            end
+        end
+        if type(frame.subCategoryDotBox.invalidateLayout) == "function" then
+            frame.subCategoryDotBox:invalidateLayout()
+        end
+    end
+
+    self.activeSubPage = self.SUB_PAGE_INFECTIONS
+
+    self.filterListContainerBaseY = frame.filterListContainer.position[2]
+    self.filterListContainerBaseH = frame.filterListContainer.size[2]
+    self.filterListBaseH = frame.filterList.size[2]
+    self.filterListSliderBaseH = frame.filterListSlider.size[2]
+    self.filterListSliderElementBaseH = frame.filterListSlider.elements[1].size[2]
+    self.buttonDeselectAllDefaultY = frame.buttonDeselectAllContainer.position[2]
+    local _, btnOffset = getNormalizedScreenValues(0, 16)
+    self.buttonDeselectAllAdjustedY = frame.buttonDeselectAllContainer.position[2] + btnOffset
+
+    if frame.filterBox ~= nil and frame.mapOverviewSelector ~= nil then
+        self.subSelector = frame.mapOverviewSelector:clone(frame.filterBox)
+        self.subSelector:setTexts({
+            getText("rcr_disease_sub_infections"),
+            getText("rcr_disease_sub_pressure"),
+            getText("rcr_disease_sub_treatment"),
+        })
+        self.subSelectorBaseY = self.subSelector.position[2]
+        function self.subSelector.onClickCallback(_, subState)
+            RealisticCropRotationDiseaseMap:onSubSelectorChanged(frame, subState)
+        end
+        if type(self.subSelector.addDefaultElements) == "function" then
+            self.subSelector:addDefaultElements()
+        end
+        self.subSelector:setVisible(false)
+
+        if frame.subCategoryDotBox ~= nil then
+            self.subDotBox = frame.subCategoryDotBox:clone(frame.filterBox)
+            self.subDotBoxBaseY = self.subDotBox.position[2]
+            local numSubPages = 3
+            while #self.subDotBox.elements > numSubPages do
+                self.subDotBox.elements[#self.subDotBox.elements]:delete()
+            end
+            while #self.subDotBox.elements < numSubPages do
+                self.subDotBox.elements[1]:clone(self.subDotBox)
+            end
+            for index, dot in ipairs(self.subDotBox.elements) do
+                local ci = index
+                function dot.getIsSelected()
+                    return RealisticCropRotationDiseaseMap.subSelector ~= nil
+                        and RealisticCropRotationDiseaseMap.subSelector:getState() == ci
+                end
+            end
+            if type(self.subDotBox.invalidateLayout) == "function" then
+                self.subDotBox:invalidateLayout()
+            end
+            self.subDotBox:setVisible(false)
+        end
+    end
+
+    self:syncFilterData(frame)
+    ensureSelectorCallback(frame)
+end
+
+function RealisticCropRotationDiseaseMap:install()
+    if RealisticCropRotationDiseaseMap._overwrites_installed or InGameMenuMapFrame == nil or Utils == nil then return end
+
+    -- Sized to the disease count lazily (ensureInfectionFilter) once the config/page exist.
+    RealisticCropRotationDiseaseMap.filter = RealisticCropRotationDiseaseMap.filter or {}
+    RealisticCropRotationDiseaseMap.riskFilter = RealisticCropRotationDiseaseMap.riskFilter or { true, true, true }
+    RealisticCropRotationDiseaseMap.isColorBlindMode = false
+    if g_gameSettings ~= nil and GameSettings ~= nil and GameSettings.SETTING ~= nil then
+        RealisticCropRotationDiseaseMap.isColorBlindMode =
+            g_gameSettings:getValue(GameSettings.SETTING.USE_COLORBLIND_MODE) == true
+    end
+
+    InGameMenuMapFrame.onLoadMapFinished = Utils.overwrittenFunction(InGameMenuMapFrame.onLoadMapFinished, function(frame, superFunc, ...)
+        superFunc(frame, ...)
+        ensureSelectorCallback(frame)
+        if frame.ingameMap ~= nil then
+            frame.ingameMap.onDrawPostIngameMapCallback = InGameMenuMapFrame.onDrawPostIngameMap
+            frame.ingameMap.onDrawPostIngameMapHotspotsCallback = InGameMenuMapFrame.onDrawPostIngameMapHotspots
+            frame.ingameMap.onClickMapCallback = InGameMenuMapFrame.onClickMap
+        end
+    end)
+
+    InGameMenuMapFrame.setupMapOverview = Utils.overwrittenFunction(InGameMenuMapFrame.setupMapOverview, function(frame, superFunc, ...)
+        superFunc(frame, ...)
+        RealisticCropRotationDiseaseMap:ensureMapPage(frame)
+        if RealisticCropRotationDiseaseMap:isPageActive(frame) and frame.filterList ~= nil then
+            frame.filterList:reloadData()
+        end
+    end)
+
+    InGameMenuMapFrame.onClickMapOverviewSelector = Utils.overwrittenFunction(InGameMenuMapFrame.onClickMapOverviewSelector, function(frame, superFunc, state, ...)
+        superFunc(frame, state, ...)
+        if state == RealisticCropRotationDiseaseMap:getPageIndex(frame) then
+            RealisticCropRotationDiseaseMap:showSubSelector(frame, true)
+            RealisticCropRotationDiseaseMap:syncFilterData(frame)
+            if frame.filterListContainer ~= nil then frame.filterListContainer:setVisible(true) end
+            if frame.buttonDeselectAllContainer ~= nil then frame.buttonDeselectAllContainer:setVisible(true) end
+            if frame.filterList ~= nil then frame.filterList:reloadData() end
+            local subState = RealisticCropRotationDiseaseMap.subSelector ~= nil
+                and RealisticCropRotationDiseaseMap.subSelector:getState()
+                or RealisticCropRotationDiseaseMap.SUB_PAGE_INFECTIONS
+            RealisticCropRotationDiseaseMap:onSubSelectorChanged(frame, subState)
+        else
+            RealisticCropRotationDiseaseMap:showSubSelector(frame, false)
+        end
+    end)
+
+    InGameMenuMapFrame.getHasChangeableFilterList = Utils.overwrittenFunction(InGameMenuMapFrame.getHasChangeableFilterList, function(frame, superFunc, ...)
+        return superFunc(frame, ...) or RealisticCropRotationDiseaseMap:isPageActive(frame)
+    end)
+
+    InGameMenuMapFrame.generateOverviewOverlay = Utils.overwrittenFunction(InGameMenuMapFrame.generateOverviewOverlay, function(frame, superFunc, ...)
+        superFunc(frame, ...)
+        if RealisticCropRotationDiseaseMap:isPageActive(frame) then
+            RealisticCropRotationDiseaseMap:syncFilterData(frame)
+            RealisticCropRotationDiseaseMap:updateOverlay(true)
+        end
+    end)
+
+    InGameMenuMapFrame.onDrawPostIngameMap = Utils.overwrittenFunction(InGameMenuMapFrame.onDrawPostIngameMap, function(frame, superFunc, element, ingameMap, ...)
+        if RealisticCropRotationDiseaseMap:isPageActive(frame) then
+            local previousHideOverlay = frame.hideContentOverlay
+            frame.hideContentOverlay = true
+            superFunc(frame, element, ingameMap, ...)
+            frame.hideContentOverlay = previousHideOverlay
+
+            local layout = frame.ingameMapBase ~= nil and frame.ingameMapBase.fullScreenLayout or nil
+            if layout ~= nil and type(layout.getMapSize) == "function" and type(layout.getMapPosition) == "function" then
+                local width, height = layout:getMapSize()
+                local x, y = layout:getMapPosition()
+                RealisticCropRotationDiseaseMap:draw(x + width * 0.25, y + height * 0.25, width * 0.5, height * 0.5)
+            end
+            if frame.dynamicMapImageLoadingBg ~= nil then frame.dynamicMapImageLoadingBg:setVisible(false) end
+            return
+        end
+        superFunc(frame, element, ingameMap, ...)
+    end)
+
+    InGameMenuMapFrame.update = Utils.overwrittenFunction(InGameMenuMapFrame.update, function(frame, superFunc, dt, ...)
+        superFunc(frame, dt, ...)
+
+        if not RealisticCropRotationDiseaseMap:isPageActive(frame) then
+            RealisticCropRotationDiseaseMap.updateTimerMs = 0
+            return
+        end
+
+        RealisticCropRotationDiseaseMap:applySubPageLayout(frame)
+        RealisticCropRotationDiseaseMap:syncFilterData(frame)
+        RealisticCropRotationDiseaseMap.updateTimerMs =
+            (RealisticCropRotationDiseaseMap.updateTimerMs or 0) + (dt or 0)
+        if RealisticCropRotationDiseaseMap.updateTimerMs >= RealisticCropRotationDiseaseMap.UPDATE_INTERVAL_MS then
+            RealisticCropRotationDiseaseMap.updateTimerMs = 0
+            RealisticCropRotationDiseaseMap:updateOverlay(false)
+        end
+    end)
+
+    InGameMenuMapFrame.setColorBlindMode = Utils.overwrittenFunction(InGameMenuMapFrame.setColorBlindMode, function(frame, superFunc, isColorBlindMode, ...)
+        superFunc(frame, isColorBlindMode, ...)
+        RealisticCropRotationDiseaseMap.isColorBlindMode = isColorBlindMode == true
+        if RealisticCropRotationDiseaseMap:isPageActive(frame) then
+            RealisticCropRotationDiseaseMap:syncFilterData(frame)
+            RealisticCropRotationDiseaseMap:updateOverlay(true)
+        end
+    end)
+
+    RealisticCropRotationDiseaseMap._overwrites_installed = true
+end

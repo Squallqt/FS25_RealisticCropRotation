@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Rotasi Tanaman" />
+
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Produk perawatan" />
+        <e k="rcr_help_title_spraying" v="Semprot lebih awal" />
+        <e k="rcr_help_title_treatment_map" v="Area yang dirawat" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation menyimpan empat entri tanaman atau lahan bera sebelumnya untuk setiap lahan milikmu. Gunakan Agronomi untuk memeriksa lahan, Perencanaan untuk menyiapkan siklus berulang, dan peta Penyakit untuk memantau risiko, wabah, serta cakupan perawatan." />
+        <e k="rcr_help_text_02" v="Pilih lahan milikmu untuk melihat tanaman saat ini, hingga empat entri sebelumnya, saran agronomi, nitrogen, pH, cakupan perawatan, dan kondisi lahan saat ini. Tajuk cuaca membantu menentukan waktu penyemprotan." />
+        <e k="rcr_help_text_03" v="Pilih slot dari N+1 hingga N+4, lalu pilih tanaman utama dan tanaman penutup opsional. Isi slot secara berurutan: bagian awal yang terisi menjadi siklus dua, tiga, atau empat tahun yang berulang, termasuk kembalinya slot terakhir ke slot pertama." />
+        <e k="rcr_help_text_04" v="Kualitas rotasi memberi nilai pada keragaman tanaman dan keluarga, pergantian tanam musim dingin dan musim semi, tanaman penghasil nitrogen atau tanaman penutup, serta tanaman legum yang diikuti serealia. Keluarga yang sama atau tanaman dengan penyakit bersama yang kembali terlalu cepat akan menurunkan skor." />
+        <e k="rcr_help_text_05" v="Tanaman legum yang dikonfigurasi hanya mengembalikan nitrogen saat dihancurkan melalui pengolahan tanah, bukan saat sekadar dipanen. Pengembalian dibagi untuk dua tanaman berikutnya; dengan Precision Farming nilainya ditulis ke peta nitrogen, jika tidak satu tingkat pemupukan ditambahkan." />
+        <e k="rcr_help_text_06" v="Peta Risiko penyakit menampilkan tekanan patogen tertinggi saat ini pada tanaman di setiap lahan milikmu sebagai rendah, sedang, atau tinggi. Cuaca dapat mengubah peluang infeksi lebih lanjut, jadi gunakan peta ini bersama tajuk cuaca di Agronomi." />
+        <e k="rcr_help_text_07" v="Infeksi dimulai secara tersembunyi dan baru muncul di sini saat mulai merusak tanaman. Peta mengenali wabah dari sembilan penyakit yang dikonfigurasi; kartu lahan, HUD saat berjalan kaki, dan notifikasi kemudian juga menampilkannya." />
+        <e k="rcr_help_text_09" v="Semprot lebih awal. Fungisida menurunkan peluang wabah dan memperlambat penyakit aktif sesuai cakupan lahan. Fungisida dan nematisida melindungi sel yang disemprot dari kerusakan, tetapi tidak dapat memulihkan tanaman yang hilang atau menghapus penyakit dari lahan." />
+        <e k="rcr_help_text_10" v="Peta Perawatan menampilkan tanah yang dilindungi fungisida atau nematisida. Perlindungan fungisida berakhir pada tanah yang sudah dipanen atau dipotong. Perlindungan nematisida berlangsung tiga bulan per lahan dan aplikasi berikutnya memperbarui durasinya." />
+        <e k="rcr_help_text_11" v="Saat berdiri di lahan, HUD menambahkan dua tanaman sebelumnya, penyakit yang terlihat, dan perawatan aktif. HUD juga menampilkan kemajuan pertumbuhan bernomor; Precision Farming mempertahankan informasi tanah, pH, nitrogen, dan hasil panennya sendiri." />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Lahan" />
+        <e k="rcr_sidebar_no_active_crop"  v="Tidak ada tanaman aktif" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Agronomi" />
+        <e k="rcr_sidebar_fields"       v="Lahan" />
+        <e k="rcr_tab_planning"         v="Perencanaan" />
+        <e k="rcr_section_disease_map"     v="Penyakit" />
+        <e k="rcr_disease_sub_infections" v="Ladang terinfeksi" />
+        <e k="rcr_disease_sub_pressure"   v="Risiko penyakit" />
+        <e k="rcr_disease_sub_treatment"  v="Penyemprotan" />
+        <e k="rcr_disease_risk_low"       v="Rendah" />
+        <e k="rcr_disease_risk_moderate"  v="Sedang" />
+        <e k="rcr_disease_risk_high"      v="Tinggi" />
+        <e k="rcr_disease_notification" v="%s terdeteksi di Lahan %s" />
+        <e k="rcr_disease_reminder" v="Penyakit masih aktif: %s, Lahan %s" />
+        <e k="rcr_disease_hud_label"    v="Penyakit" />
+        <e k="rcr_disease_header_active" v="Penyakit (%s)" />
+        <e k="rcr_treatment_hud_label"  v="Penyemprotan" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d bulan tersisa)" />
+        <e k="rcr_advice_nematicide_duration" v="Perlindungan tanah berlangsung 3 bulan per ladang; aplikasi ulang memperbarui durasinya." />
+
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="tidak ada" />
+        <e k="rcr_treatment_partial"  v="sebagian (%d%%)" />
+        <e k="rcr_treatment_complete" v="penuh" />
+        <e k="rcr_treatment_disease_absent"     v="Tidak ada penyakit" />
+        <e k="rcr_treatment_disease_active"     v="Penyakit aktif" />
+        <e k="rcr_treatment_disease_controlled" v="Penyakit terkendali" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Penyakit terkendali sebagian" />
+        <e k="rcr_treatment_until_harvest" v="Sampai panen" />
+        <e k="rcr_treatment_months"        v="%d bulan" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Pengembalian nitrogen yang diharapkan +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Pengembalian nitrogen dari rotasi +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Tidak ada pengembalian nitrogen yang diharapkan" />
+        <e k="rcr_status_planned_no_residue" v="Tidak ada pengembalian nitrogen" />
+        <e k="rcr_weather_sun" v="Langit cerah" />
+        <e k="rcr_weather_partially_cloudy" v="Cerah berawan" />
+        <e k="rcr_weather_cloudy" v="Berawan" />
+        <e k="rcr_weather_rain" v="Hujan" />
+        <e k="rcr_weather_snow" v="Salju" />
+        <e k="rcr_weather_hail" v="Hujan es" />
+        <e k="rcr_weather_twister" v="Tornado" />
+        <e k="rcr_weather_thunder" v="Badai petir" />
+        <e k="rcr_weather_current_operational" v="%s berlangsung · berakhir %s" />
+        <e k="rcr_weather_current_calm" v="%s · hingga %s" />
+        <e k="rcr_weather_soon" v="%s %s-%s · dalam %s" />
+        <e k="rcr_weather_tomorrow" v="%s besok %s-%s" />
+        <e k="rcr_weather_later" v="%s H+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d mnt" />
+        <e k="rcr_time_hours" v="%d j" />
+        <e k="rcr_time_hours_minutes" v="%d j %02d mnt" />
+        <e k="rcr_hud_previous_n1"      v="Tanaman sebelumnya (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Tanaman dua musim lalu (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Riwayat Tanaman" />
+        <e k="rcr_section_nitrogen"     v="Status Nitrogen" />
+        <e k="rcr_section_advice"       v="Saran Agronomi" />
+        <e k="rcr_section_soil_indicators" v="Tanah dan penyemprotan" />
+        <e k="rcr_section_field"        v="Status lahan saat ini" />
+        <e k="rcr_section_lime"         v="Status Kapur / pH" />
+        <e k="rcr_section_plan"         v="Rencana Rotasi" />
+        <e k="rcr_clear_plan_button"    v="Hapus rencana" />
+        <e k="rcr_clear_plan_confirm"   v="Hapus rencana rotasi untuk %s?" />
+        <e k="rcr_section_score"        v="Kualitas Rotasi" />
+        <e k="rcr_section_overview"     v="Ikhtisar Global" />
+        <e k="rcr_overview_total_area"  v="Luas digarap: %.1f ha" />
+
+        <!-- Timeline slot labels -->
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Saat ini" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Serealia" />
+        <e k="rcr_family_legume"        v="Kacang-kacangan" />
+        <e k="rcr_family_oilseed"       v="Biji minyak" />
+        <e k="rcr_family_root"          v="Umbi-umbian" />
+        <e k="rcr_family_vegetable"     v="Sayuran" />
+        <e k="rcr_family_forage"        v="Hijauan" />
+        <e k="rcr_cover_crop"           v="Tanaman sela" />
+        <e k="rcr_fallow"              v="Bera" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Tidak dipupuk" />
+        <e k="rcr_n_partial"            v="Sebagian" />
+        <e k="rcr_n_full"               v="Penuh" />
+        <e k="rcr_n_average_value"      v="Rata-rata nitrogen: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Kebutuhan tanaman: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Nitrogen / kebutuhan tanaman" />
+        <e k="rcr_lime_none"            v="Tanpa kapur" />
+        <e k="rcr_lime_partial"         v="Kapur sebagian" />
+        <e k="rcr_lime_full"            v="Kapur sesuai" />
+        <e k="rcr_lime_average_pf"      v="Rata-rata pH" />
+        <e k="rcr_lime_average_value"   v="Rata-rata pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="Target: %.3f pH" />
+        <e k="rcr_soil_value_unmeasured" v="Nilai belum diukur" />
+        <e k="rcr_n_crop_need_unavailable" v="Kebutuhan tanaman: --" />
+        <e k="rcr_lime_status_unavailable" v="Kapur: --" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Nilai nitrogen dan pH tidak tersedia. Analisis tanah untuk mendapatkan saran agronomi yang akurat." />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal" v="Setelah serealia, tanam legum untuk mengembalikan nitrogen atau tanaman jeda melawan penyakit pangkal batang, dan beri jarak dua tahun antar serealia." />
+        <e k="rcr_advice_afterLegume" v="Setelah legum, serealia paling baik memanfaatkan nitrogen yang ditinggalkan, dan legum berikutnya harus menunggu tiga tahun." />
+        <e k="rcr_advice_afterOilseed" v="Setelah tanaman minyak, beri jarak tiga tahun sebelum tanaman minyak mana pun kembali, dengan serealia lalu legum sebagai urutan ideal." />
+        <e k="rcr_advice_afterRoot" v="Setelah tanaman umbi, tunggu empat tahun sebelum umbi kembali, lalu serealia untuk membangun kembali struktur setelah pemanenan akhir." />
+        <e k="rcr_advice_afterVegetable" v="Setelah sayuran, tunggu tiga tahun sebelum mengulanginya, dengan serealia sebagai jeda yang bersih." />
+        <e k="rcr_advice_afterForage" v="Setelah padang rumput sementara, serealia memanfaatkan kesuburan dan struktur yang terbentuk di bawah rumput." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Risiko sclerotinia tinggi: beri jarak setidaknya 3 tahun antara kanola, sesawi, bunga matahari, kedelai, kacang polong, buncis, kentang, dan wortel; fungisida membatasi kerusakan di bagian yang disemprot, tetapi tidak menghilangkan penyakit dari ladang." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Risiko nematoda tinggi: beri jarak setidaknya 3 tahun antara bit gula, bit merah, kanola, sesawi, dan bayam; nematisida melindungi bagian yang dirawat tetapi tidak menghilangkan nematoda." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Risiko sclerotinia sedang: beri jarak kanola, sesawi, bunga matahari, kedelai, kacang polong, buncis, kentang, dan wortel; hujan menaikkan risiko." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Risiko nematoda sedang: beri jarak antara bit gula, bit merah, kanola, sesawi, dan bayam." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="Setelah %s, rencana Anda menetapkan %s sebagai tanaman berikutnya." />
+        <e k="rcr_advice_memo_next_fallow" v="Setelah %s, rencana Anda menetapkan satu tahun bera." />
+        <e k="rcr_advice_memo_no_plan" v="Tidak ada tanaman berikutnya yang ditetapkan dalam rencana rotasi." />
+        <e k="rcr_advice_memo_incomplete_short" v="Rencana belum lengkap: isi setidaknya dua langkah berturut-turut." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Rencana belum lengkap: satu slot “Belum direncanakan” memisahkan dua langkah yang telah diisi." />
+        <e k="rcr_advice_memo_no_history" v="Tidak ada tanaman sebelumnya yang tercatat: langkah siklus berikutnya tidak dapat ditentukan." />
+        <e k="rcr_advice_memo_not_aligned" v="Entri riwayat terbaru (%s) tidak terdapat dalam siklus yang direncanakan. Langkah berikutnya tidak dapat ditentukan." />
+        <e k="rcr_advice_memo_ambiguous" v="%s muncul lebih dari sekali dalam siklus dengan langkah lanjutan yang berbeda. Langkah berikutnya tidak dapat ditentukan." />
+        <e k="rcr_advice_memo_conflict_family" v="Setelah %s, rencana Anda menetapkan %s, tetapi kedua tanaman termasuk dalam keluarga yang sama (%s). Masih diperlukan %d dari %d tahun yang diwajibkan sebelum dapat kembali dengan aman." />
+        <e k="rcr_advice_memo_conflict_disease" v="Setelah %s, rencana Anda menetapkan %s, tetapi kedua tanaman dapat terserang %s. Tunggu %d tahun lagi; jarak yang disarankan adalah %d tahun." />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_ready" v="Rotasi optimal" />
+        <e k="rcr_advice_title_warning" v="Konflik rotasi tanaman" />
+        <e k="rcr_advice_title_outbreak" v="Wabah penyakit aktif" />
+        <e k="rcr_advice_outbreak" v="%s sedang menyerang ladang ini, tingkat serangan %d%%. Penanganan yang disarankan: %s." />
+        <e k="rcr_advice_plan_next_conflict_family" v="%s direncanakan untuk %s: konflik rotasi tanaman, keluarga yang sama (%s) dengan tanaman saat ini, masih kurang %d dari %d tahun sebelum kembali dengan aman." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s direncanakan untuk %s: konflik rotasi. Penyakit yang sama (%s) juga dapat menyerang tanaman saat ini; masih kurang %d tahun dari jarak yang disarankan, yaitu %d tahun." />
+        <e k="rcr_advice_plan_next_ok" v="%s direncanakan untuk %s: pilihan bagus, tidak ada konflik rotasi tanaman terdeteksi." />
+        <e k="rcr_advice_title_fallow" v="Tahun jeda" />
+        <e k="rcr_advice_fallow_current" v="Bera sedang berlangsung: tidak ada tanaman utama tahun ini. Ini menambah waktu sebelum tanaman rentan berikutnya, tetapi tidak langsung menghilangkan penyakit." />
+        <e k="rcr_advice_plan_next_fallow" v="Bera direncanakan untuk %s: tidak ada tanaman utama selama satu tahun. Ini menambah waktu sebelum tanaman rentan berikutnya, tetapi tidak menjamin semua penyakit telah hilang." />
+
+        <!-- Advice card, disease pressure list -->
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Kondisi tanah" />
+        <e k="rcr_field_growth"          v="Pertumbuhan" />
+
+        <!-- Field card — weed column header (singular) -->
+        <e k="rcr_weed_header"          v="Gulma" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Belum direncanakan" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Mar" />
+        <e k="rcr_calendar_month_2"     v="Apr" />
+        <e k="rcr_calendar_month_3"     v="Mei" />
+        <e k="rcr_calendar_month_4"     v="Jun" />
+        <e k="rcr_calendar_month_5"     v="Jul" />
+        <e k="rcr_calendar_month_6"     v="Agu" />
+        <e k="rcr_calendar_month_7"     v="Sep" />
+        <e k="rcr_calendar_month_8"     v="Okt" />
+        <e k="rcr_calendar_month_9"     v="Nov" />
+        <e k="rcr_calendar_month_10"    v="Des" />
+        <e k="rcr_calendar_month_11"    v="Jan" />
+        <e k="rcr_calendar_month_12"    v="Feb" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Tanam" />
+        <e k="rcr_calendar_legend_harvest" v="Panen" />
+        <e k="rcr_calendar_legend_cover"   v="Tanam penutup" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Rencana tidak lengkap" />
+        <e k="rcr_score_excellent"      v="Rotasi sangat baik: keseimbangan agronomi tercapai" />
+        <e k="rcr_score_good"           v="Rotasi baik: ada beberapa hal yang bisa ditingkatkan" />
+        <e k="rcr_score_fair"           v="Rotasi cukup: beberapa tanaman kembali terlalu cepat" />
+        <e k="rcr_score_poor"           v="Rotasi perlu diperbaiki: tanaman terlalu berdekatan" />
+        <e k="rcr_score_bad"            v="Rotasi buruk: tanaman yang sama ditanam berturut-turut" />
+        <e k="rcr_score_label_low"      v="Skor buruk" />
+        <e k="rcr_score_label_optimal"  v="Skor optimal" />
+        <e k="rcr_score_short_optimal"  v="OPTIMAL" />
+        <e k="rcr_score_short_good"     v="BAIK" />
+        <e k="rcr_score_short_fair"     v="CUKUP" />
+        <e k="rcr_score_short_poor"     v="RENDAH" />
+        <e k="rcr_score_short_bad"      v="BURUK" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Tidak ada lahan milik sendiri untuk ditampilkan." />
+        <e k="rcr_function_fungicideTank" v="Gunakan AMISTAR pada penyemprot untuk menerapkan perlakuan fungisida pada tanaman berisiko." />
+        <e k="rcr_function_nematicideTank" v="Gunakan VELUM PRIME pada penyemprot untuk menerapkan perlakuan nematisida pada tanaman yang terpapar nematoda." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Busuk putih Sclerotinia" />
+        <e k="rcr_disease_name_phoma" v="Kanker batang (Phoma)" />
+        <e k="rcr_disease_name_takeall" v="Busuk akar serealia" />
+        <e k="rcr_disease_name_septoria" v="Septoria" />
+        <e k="rcr_disease_name_rust" v="Penyakit karat" />
+        <e k="rcr_disease_name_fusarium" v="Fusarium" />
+        <e k="rcr_disease_name_lateblight" v="Hawar daun (busuk daun)" />
+        <e k="rcr_disease_name_bcn"   v="Nematoda sista" />
+        <e k="rcr_disease_name_clubroot" v="Penyakit akar gada" />
+        <e k="rcr_disease_treatment_sclerotinia" v="Fungisida" />
+        <e k="rcr_disease_treatment_phoma" v="Fungisida" />
+        <e k="rcr_disease_treatment_takeall" v="Tidak ada (hanya rotasi)" />
+        <e k="rcr_disease_treatment_septoria" v="Fungisida" />
+        <e k="rcr_disease_treatment_rust" v="Fungisida" />
+        <e k="rcr_disease_treatment_fusarium" v="Fungisida" />
+        <e k="rcr_disease_treatment_lateblight" v="Fungisida" />
+        <e k="rcr_disease_treatment_bcn" v="Nematisida" />
+        <e k="rcr_fillType_fungicide" v="Fungisida" />
+        <e k="rcr_fillType_nematicide" v="Nematisida" />
+        <e k="rcr_disease_treatment_none" v="Tidak ada penyemprotan" />
+        <e k="rcr_disease_treatment_clubroot" v="Tidak ada (hanya rotasi)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Risiko phoma tinggi: beri jarak setidaknya 4 tahun antara kanola dan sesawi; fungisida membatasi kerusakan di bagian yang disemprot, tetapi tidak menghilangkan penyakit dari ladang." />
+        <e k="rcr_advice_pressure_high_takeall" v="Risiko busuk akar tinggi: tanam oat, legum, atau tanaman minyak di antara serealia; tidak ada produk yang melindungi dari penyakit ini, rotasi yang lebih panjang mengurangi risiko." />
+        <e k="rcr_advice_pressure_high_septoria" v="Risiko septoria tinggi: hujan menaikkan risiko serangan dalam waktu dekat dan fungisida membatasi kerusakan di bagian yang disemprot." />
+        <e k="rcr_advice_pressure_high_rust" v="Risiko karat tinggi: cuaca hangat dan lembap menaikkan risiko serangan dalam waktu dekat, sedangkan fungisida membatasi kerusakan di bagian yang disemprot." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Risiko fusarium tinggi: hindari gandum setelah jagung dan kurangi serealia beruntun; fungisida membatasi kerusakan di bagian yang disemprot, sedangkan hujan menaikkan risiko." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Risiko hawar daun tinggi: cuaca sejuk dan basah menaikkan risiko serangan dalam waktu dekat, sedangkan fungisida membatasi kerusakan di bagian yang disemprot." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Risiko akar gada tinggi: perpanjang jeda antara kanola dan sesawi sejauh mungkin; tidak ada produk yang melindungi dari penyakit ini, rotasi yang lebih panjang mengurangi risiko." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Risiko phoma sedang: perpanjang jeda antara kanola dan sesawi." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Risiko busuk akar sedang: hindari serealia ketiga berturut-turut." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Risiko septoria sedang: hujan menaikkan risiko serangan dalam waktu dekat." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Risiko karat sedang: cuaca hangat dan lembap menaikkan risiko serangan dalam waktu dekat." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Risiko fusarium sedang: beri jarak antara serealia dan jagung." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Risiko hawar daun sedang: cuaca sejuk dan basah menaikkan risiko serangan dalam waktu dekat." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Risiko akar gada sedang: perpanjang jeda antara kanola dan sesawi." />
+    </elements>
+</l10n>

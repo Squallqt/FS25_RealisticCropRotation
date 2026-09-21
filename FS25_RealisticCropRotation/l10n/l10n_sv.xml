@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Växtföljd" />
+
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Behandlingsmedel" />
+        <e k="rcr_help_title_spraying" v="Spruta tidigt" />
+        <e k="rcr_help_title_treatment_map" v="Behandlade områden" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation sparar de fyra föregående posterna med gröda eller träda för varje ägd åker. Använd Agronomi för att granska en åker, Planering för att skapa en upprepad cykel och kartan Sjukdomar för att följa risk, utbrott och behandlingsgrad." />
+        <e k="rcr_help_text_02" v="Välj en ägd åker för att se aktuell gröda, upp till fyra tidigare poster, agronomiska råd, kväve, pH, behandlingsgrad och åkerns aktuella status. Väderhuvudet hjälper dig att välja tidpunkt för sprutning." />
+        <e k="rcr_help_text_03" v="Välj en plats från N+1 till N+4 och sedan huvudgröda samt en valfri mellangröda. Fyll platser i följd: den ifyllda början blir en upprepad cykel på två, tre eller fyra år, inklusive övergången från den sista platsen tillbaka till den första." />
+        <e k="rcr_help_text_04" v="Växtföljdens kvalitet belönar variation av grödor och familjer, växling mellan höst- och vårsådd, kvävegivande grödor eller mellangrödor samt en baljväxt följd av spannmål. För snabb återkomst av samma familj eller grödor med gemensamma sjukdomar sänker poängen." />
+        <e k="rcr_help_text_05" v="En konfigurerad baljväxt återför bara kväve när den förstörs genom jordbearbetning, inte när den enbart skördas. Återföringen delas mellan de två följande grödorna; med Precision Farming skrivs den till kvävekartan, annars läggs en gödslingsnivå till." />
+        <e k="rcr_help_text_06" v="Kartan Sjukdomsrisk visar det högsta aktuella smittotrycket för grödan på varje ägd åker som lågt, måttligt eller högt. Vädret kan ändra infektionsrisken ytterligare, så använd kartan tillsammans med väderhuvudet under Agronomi." />
+        <e k="rcr_help_text_07" v="En infektion börjar dold och visas först här när den börjar förstöra grödan. Kartan identifierar utbrottet bland de nio konfigurerade sjukdomarna; därefter visas det även på åkerkortet, i HUD:en till fots och i meddelandet." />
+        <e k="rcr_help_text_09" v="Spruta tidigt. Fungicid minskar risken för utbrott och bromsar en aktiv sjukdom i förhållande till åkerns täckning. Fungicid och nematicid skyddar sprutade celler från förstörelse, men kan inte återställa förlorad gröda eller ta bort sjukdom från åkern." />
+        <e k="rcr_help_text_10" v="Kartan Behandlingar visar mark som skyddas av fungicid eller nematicid. Fungicidskyddet upphör på skördad eller slagen mark. Nematicidskyddet varar tre månader per åker och en ny behandling förnyar perioden." />
+        <e k="rcr_help_text_11" v="När du står på en åker lägger HUD:en till de två föregående grödorna, synliga sjukdomar och aktiva behandlingar. Den visar också numrerade odlingsframsteg; Precision Farming behåller sin egen information om jord, pH, kväve och avkastning." />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Fält" />
+        <e k="rcr_sidebar_no_active_crop"  v="Ingen aktiv gröda" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Agronomi" />
+        <e k="rcr_sidebar_fields"       v="Fält" />
+        <e k="rcr_tab_planning"         v="Planering" />
+        <e k="rcr_section_disease_map"     v="Sjukdomar" />
+        <e k="rcr_disease_sub_infections" v="Infekterade fält" />
+        <e k="rcr_disease_sub_pressure"   v="Sjukdomsrisk" />
+        <e k="rcr_disease_sub_treatment"  v="Behandling" />
+        <e k="rcr_disease_risk_low"       v="Låg" />
+        <e k="rcr_disease_risk_moderate"  v="Måttlig" />
+        <e k="rcr_disease_risk_high"      v="Hög" />
+        <e k="rcr_disease_notification" v="%s upptäckt på fält %s" />
+        <e k="rcr_disease_reminder" v="Sjukdom fortfarande aktiv: %s, fält %s" />
+        <e k="rcr_disease_hud_label"    v="Växtsjukdom" />
+        <e k="rcr_disease_header_active" v="Växtsjukdom (%s)" />
+        <e k="rcr_treatment_hud_label"  v="Behandling" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d månader återstår)" />
+        <e k="rcr_advice_nematicide_duration" v="Markskyddet varar 3 månader per fält; en ny behandling förnyar tiden." />
+
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="ingen" />
+        <e k="rcr_treatment_partial"  v="delvis (%d %%)" />
+        <e k="rcr_treatment_complete" v="full" />
+        <e k="rcr_treatment_disease_absent"     v="Ingen sjukdom" />
+        <e k="rcr_treatment_disease_active"     v="Sjukdom aktiv" />
+        <e k="rcr_treatment_disease_controlled" v="Sjukdom under kontroll" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Sjukdom delvis under kontroll" />
+        <e k="rcr_treatment_until_harvest" v="Fram till skörd" />
+        <e k="rcr_treatment_months"        v="%d månader" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Förväntad kväveåterföring +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Kväveåterföring från växtföljden +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Ingen kväveåterföring väntas" />
+        <e k="rcr_status_planned_no_residue" v="Ingen kväveåterföring" />
+        <e k="rcr_weather_sun" v="Klar himmel" />
+        <e k="rcr_weather_partially_cloudy" v="Tidvis sol" />
+        <e k="rcr_weather_cloudy" v="Mulet" />
+        <e k="rcr_weather_rain" v="Regn" />
+        <e k="rcr_weather_snow" v="Snö" />
+        <e k="rcr_weather_hail" v="Hagel" />
+        <e k="rcr_weather_twister" v="Tornado" />
+        <e k="rcr_weather_thunder" v="Åska" />
+        <e k="rcr_weather_current_operational" v="%s pågår · slutar %s" />
+        <e k="rcr_weather_current_calm" v="%s · till %s" />
+        <e k="rcr_weather_soon" v="%s %s-%s · om %s" />
+        <e k="rcr_weather_tomorrow" v="%s imorgon %s-%s" />
+        <e k="rcr_weather_later" v="%s D+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d min" />
+        <e k="rcr_time_hours" v="%d h" />
+        <e k="rcr_time_hours_minutes" v="%d h %02d min" />
+        <e k="rcr_hud_previous_n1"      v="Föregående gröda (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Näst senaste grödan (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Grödhistorik" />
+        <e k="rcr_section_nitrogen"     v="Kvävestatus" />
+        <e k="rcr_section_advice"       v="Agronomiskt råd" />
+        <e k="rcr_section_soil_indicators" v="Mark och behandling" />
+        <e k="rcr_section_field"        v="Aktuell fältstatus" />
+        <e k="rcr_section_lime"         v="Kalk-/pH-status" />
+        <e k="rcr_section_plan"         v="Växtföljdsplan" />
+        <e k="rcr_clear_plan_button"    v="Rensa plan" />
+        <e k="rcr_clear_plan_confirm"   v="Rensa växtföljdsplanen för %s?" />
+        <e k="rcr_section_score"        v="Växtföljdskvalitet" />
+        <e k="rcr_section_overview"     v="Översikt" />
+        <e k="rcr_overview_total_area"  v="Bearbetad areal: %.1f ha" />
+
+        <!-- Timeline slot labels -->
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Aktuell" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Spannmål" />
+        <e k="rcr_family_legume"        v="Baljväxt" />
+        <e k="rcr_family_oilseed"       v="Oljeväxt" />
+        <e k="rcr_family_root"          v="Rotfrukt" />
+        <e k="rcr_family_vegetable"     v="Grönsak" />
+        <e k="rcr_family_forage"        v="Foder" />
+        <e k="rcr_cover_crop"           v="Mellangröda" />
+        <e k="rcr_fallow"              v="Träda" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Ej gödslad" />
+        <e k="rcr_n_partial"            v="Delvis" />
+        <e k="rcr_n_full"               v="Full" />
+        <e k="rcr_n_average_value"      v="Genomsnittligt kväve: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Grödans behov: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Kväve / grödans behov" />
+        <e k="rcr_lime_none"            v="Ingen kalk" />
+        <e k="rcr_lime_partial"         v="Delvis kalk" />
+        <e k="rcr_lime_full"            v="Korrekt kalk" />
+        <e k="rcr_lime_average_pf"      v="Genomsnittligt pH" />
+        <e k="rcr_lime_average_value"   v="Genomsnittligt pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="Mål: %.3f pH" />
+        <e k="rcr_soil_value_unmeasured" v="Värde inte uppmätt" />
+        <e k="rcr_n_crop_need_unavailable" v="Grödans behov: --" />
+        <e k="rcr_lime_status_unavailable" v="Kalk: --" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Kväve- och pH-värden är inte tillgängliga. Analysera jorden för att få exakta agronomiska råd." />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal" v="Efter en spannmål, så en baljväxt för att återföra kväve eller en avbrottsgröda mot fotsjuka, och håll två år mellan spannmål." />
+        <e k="rcr_advice_afterLegume" v="Efter en baljväxt utnyttjar en spannmål det efterlämnade kvävet bäst, och en ny baljväxt bör vänta tre år." />
+        <e k="rcr_advice_afterOilseed" v="Efter en oljeväxt, låt det gå tre år innan någon oljeväxt återkommer, med en spannmål och sedan en baljväxt som idealisk följd." />
+        <e k="rcr_advice_afterRoot" v="Efter en rotfrukt, vänta fyra år innan rotfrukter återkommer, och följ med en spannmål för att bygga upp strukturen efter den sena upptagningen." />
+        <e k="rcr_advice_afterVegetable" v="Efter en grönsak, vänta tre år innan du upprepar den, med en spannmål som ren avbrott." />
+        <e k="rcr_advice_afterForage" v="Efter en vall utnyttjar en spannmål den bördighet och struktur som byggts upp under grässvålen." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Hög risk för bomullsmögel: Vänta minst 3 år innan du åter odlar raps, senap, solros, sojaböna, ärt, böna, potatis eller morot; svampmedel begränsar skadan på behandlade områden, men tar inte bort sjukdomen från fältet." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Hög risk för nematoder: Vänta minst 3 år innan du åter odlar sockerbeta, rödbeta, raps, senap eller spenat; nematicid skyddar behandlade områden, men tar inte bort nematoderna." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Måttlig risk för bomullsmögel: Vänta längre innan du åter odlar raps, senap, solros, sojaböna, ärt, böna, potatis eller morot; regn kan öka risken." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Måttlig risk för nematoder: Vänta längre innan du åter odlar betor, raps, senap eller spenat." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="Efter %s anger din plan %s som nästa gröda." />
+        <e k="rcr_advice_memo_next_fallow" v="Efter %s anger din plan ett års träda." />
+        <e k="rcr_advice_memo_no_plan" v="Ingen nästa gröda har angetts i växtföljdsplanen." />
+        <e k="rcr_advice_memo_incomplete_short" v="Planen är ofullständig: Fyll i minst två steg i följd." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Planen är ofullständig: En ruta med ”Ej planerad” skiljer två ifyllda steg åt." />
+        <e k="rcr_advice_memo_no_history" v="Ingen tidigare gröda har registrerats: Nästa steg i cykeln kan inte fastställas." />
+        <e k="rcr_advice_memo_not_aligned" v="Den senaste historikposten (%s) ingår inte i den planerade cykeln. Nästa steg kan inte fastställas." />
+        <e k="rcr_advice_memo_ambiguous" v="%s förekommer flera gånger i cykeln med olika efterföljande steg. Nästa steg kan inte fastställas." />
+        <e k="rcr_advice_memo_conflict_family" v="Efter %s anger din plan %s, men båda grödorna tillhör samma familj (%s). Ytterligare %d av de %d krävda åren behövs före en säker återkomst." />
+        <e k="rcr_advice_memo_conflict_disease" v="Efter %s anger din plan %s, men båda grödorna kan angripas av %s. Vänta ytterligare %d år; det rekommenderade intervallet är %d år." />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_ready" v="Växtföljd i ordning" />
+        <e k="rcr_advice_title_warning" v="Växtföljdskonflikt" />
+        <e k="rcr_advice_title_outbreak" v="Aktivt sjukdomsutbrott" />
+        <e k="rcr_advice_outbreak" v="%s är aktiv på detta fält. Angreppsnivå: %d %%. Rekommenderad behandling: %s." />
+        <e k="rcr_advice_plan_next_conflict_family" v="%s planerad till %s: växtföljdskonflikt, samma familj (%s) som den aktuella grödan, %d år av %d kvarstår innan en säker återkomst." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s planerad till %s: både denna och den aktuella grödan kan angripas av %s. Vänta ytterligare %d år; det rekommenderade intervallet är %d år." />
+        <e k="rcr_advice_plan_next_ok" v="%s planerad till %s: bra val, ingen växtföljdskonflikt upptäckt." />
+        <e k="rcr_advice_title_fallow" v="Viloår" />
+        <e k="rcr_advice_fallow_current" v="Träda pågår: Ingen huvudgröda odlas i år. Det ger mer tid före nästa känsliga gröda, men tar inte bort sjukdomen omedelbart." />
+        <e k="rcr_advice_plan_next_fallow" v="Träda planerad till %s: Ingen huvudgröda odlas under ett år. Det ger mer tid före nästa känsliga gröda, men garanterar inte att alla sjukdomar är borta." />
+
+        <!-- Advice card, disease pressure list -->
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Jordtillstånd" />
+        <e k="rcr_field_growth"          v="Tillväxt" />
+
+        <!-- Field card — weed column header (singular) -->
+        <e k="rcr_weed_header"          v="Ogräs" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Ej planerad" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Mar" />
+        <e k="rcr_calendar_month_2"     v="Apr" />
+        <e k="rcr_calendar_month_3"     v="Maj" />
+        <e k="rcr_calendar_month_4"     v="Jun" />
+        <e k="rcr_calendar_month_5"     v="Jul" />
+        <e k="rcr_calendar_month_6"     v="Aug" />
+        <e k="rcr_calendar_month_7"     v="Sep" />
+        <e k="rcr_calendar_month_8"     v="Okt" />
+        <e k="rcr_calendar_month_9"     v="Nov" />
+        <e k="rcr_calendar_month_10"    v="Dec" />
+        <e k="rcr_calendar_month_11"    v="Jan" />
+        <e k="rcr_calendar_month_12"    v="Feb" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Sådd" />
+        <e k="rcr_calendar_legend_harvest" v="Skörd" />
+        <e k="rcr_calendar_legend_cover"   v="Sådd av täckgröda" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Ofullständig plan" />
+        <e k="rcr_score_excellent"      v="Utmärkt växtföljd: god agronomisk balans" />
+        <e k="rcr_score_good"           v="Bra växtföljd: några punkter kan förbättras" />
+        <e k="rcr_score_fair"           v="Godtagbar växtföljd: vissa grödor kommer tillbaka för snabbt" />
+        <e k="rcr_score_poor"           v="Dålig växtföljd: grödorna ligger för tätt" />
+        <e k="rcr_score_bad"            v="Mycket dålig växtföljd: samma grödor följer på varandra" />
+        <e k="rcr_score_label_low"      v="Dålig poäng" />
+        <e k="rcr_score_label_optimal"  v="Optimal poäng" />
+        <e k="rcr_score_short_optimal"  v="OPTIMAL" />
+        <e k="rcr_score_short_good"     v="BRA" />
+        <e k="rcr_score_short_fair"     v="GODTAGBAR" />
+        <e k="rcr_score_short_poor"     v="LÅG" />
+        <e k="rcr_score_short_bad"      v="DÅLIG" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Inga egna fält att visa." />
+        <e k="rcr_function_fungicideTank" v="Använd AMISTAR i växtskyddssprutor för att applicera en fungicidbehandling på riskutsatta grödor." />
+        <e k="rcr_function_nematicideTank" v="Använd VELUM PRIME i växtskyddssprutor för att applicera en nematicidbehandling på grödor som utsätts för nematoder." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Bomullsmögel" />
+        <e k="rcr_disease_name_phoma" v="Torröta (Phoma)" />
+        <e k="rcr_disease_name_takeall" v="Rotdödare" />
+        <e k="rcr_disease_name_septoria" v="Septoria" />
+        <e k="rcr_disease_name_rust" v="Rost" />
+        <e k="rcr_disease_name_fusarium" v="Fusarios" />
+        <e k="rcr_disease_name_lateblight" v="Potatisbladmögel" />
+        <e k="rcr_disease_name_bcn"   v="Cystnematod" />
+        <e k="rcr_disease_name_clubroot" v="Klumprotsjuka" />
+        <e k="rcr_disease_treatment_sclerotinia" v="Svampmedel" />
+        <e k="rcr_disease_treatment_phoma" v="Svampmedel" />
+        <e k="rcr_disease_treatment_takeall" v="Ingen (endast växtföljd)" />
+        <e k="rcr_disease_treatment_septoria" v="Svampmedel" />
+        <e k="rcr_disease_treatment_rust" v="Svampmedel" />
+        <e k="rcr_disease_treatment_fusarium" v="Svampmedel" />
+        <e k="rcr_disease_treatment_lateblight" v="Svampmedel" />
+        <e k="rcr_disease_treatment_bcn" v="Nematicid" />
+        <e k="rcr_fillType_fungicide" v="Svampmedel" />
+        <e k="rcr_fillType_nematicide" v="Nematicid" />
+        <e k="rcr_disease_treatment_none" v="Ingen behandling" />
+        <e k="rcr_disease_treatment_clubroot" v="Ingen (endast växtföljd)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Hög risk för torröta: Vänta minst 4 år innan du åter odlar raps eller senap; svampmedel begränsar skadan på behandlade områden, men tar inte bort sjukdomen från fältet." />
+        <e k="rcr_advice_pressure_high_takeall" v="Hög risk för rotdödare: Bryt spannmålsföljden med havre, en baljväxt eller en oljeväxt; inget medel skyddar mot denna sjukdom, och mer tid mellan känsliga spannmålsgrödor minskar den framtida risken." />
+        <e k="rcr_advice_pressure_high_septoria" v="Hög risk för septoria: Regn kan öka risken ytterligare, och svampmedel begränsar skadan på behandlade områden." />
+        <e k="rcr_advice_pressure_high_rust" v="Hög risk för rost: Milt och fuktigt väder kan öka risken ytterligare, och svampmedel begränsar skadan på behandlade områden." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Hög risk för fusarium: Undvik vete direkt efter majs och spannmålsgrödor i följd; svampmedel begränsar skadan på behandlade områden, och regn kan påskynda sjukdomen." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Hög risk för bladmögel: Svalt och fuktigt väder kan öka risken ytterligare, och svampmedel begränsar skadan på behandlade områden." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Hög risk för klumprot: Vänta så länge som möjligt innan du åter odlar raps eller senap; inget medel skyddar mot denna sjukdom, som kan finnas kvar i fältet på obestämd tid." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Måttlig risk för torröta: Vänta längre innan du åter odlar raps eller senap." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Måttlig risk för rotdödare: Undvik en tredje spannmålsgröda i rad." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Måttlig risk för septoria: Regn kan öka risken ytterligare." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Måttlig risk för rost: Milt och fuktigt väder kan öka risken ytterligare." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Måttlig risk för fusarium: Låt det gå längre tid mellan spannmål och majs." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Måttlig risk för bladmögel: Svalt och fuktigt väder kan öka risken ytterligare." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Måttlig risk för klumprot: Vänta längre innan du åter odlar raps eller senap." />
+    </elements>
+</l10n>

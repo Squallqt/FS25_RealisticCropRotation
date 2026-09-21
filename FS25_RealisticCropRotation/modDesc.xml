@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<modDesc descVersion="113">
+    <author>Squallqt</author>
+    <version>1.0.0.0</version>
+    <title>
+        <en>Realistic Crop Rotation</en>
+        <de>Realistische Fruchtfolge</de>
+        <fr>Rotation Culturale Réaliste</fr>
+    </title>
+    <description>
+        <en><![CDATA[Make crop rotation matter.
+
+Every field remembers its last 4 rotation entries, whether crops or fallow years. Plan what returns, watch the disease risk, and protect a sensitive crop before an outbreak destroys part of it.
+
+PLANNING
+- A rotation calendar with a real repeating cycle of 2, 3 or 4 yearly slots, filled with crops or fallow, including the return from the last slot to the first
+- A planned fallow slot adds one full year of spacing before the next sensitive crop; it does not instantly clear the field or guarantee that every disease has disappeared
+- A clear rotation quality rating, tailored advice, and conflicts flagged before you sow
+- Diversity pays: rotate more crops, avoid repeating the same family, and alternate winter and spring sowings
+- Fields sharing a plan are grouped, with combined area, rotation quality and residue
+
+DISEASES
+Nine diseases affect specific crops: sclerotinia, phoma, take-all, septoria, rust, fusarium, late blight, beet cyst nematode and clubroot.
+
+How it works:
+- A first outbreak can happen even if the field has never been affected. Favourable weather raises the chance for weather-sensitive diseases. Rust and late blight never remain in the field after the crop.
+- After a real outbreak, sclerotinia, phoma, take-all, septoria, fusarium, beet cyst nematode or clubroot can remain in the field after harvest. The more advanced the outbreak, the greater the risk for a future sensitive crop. A crop that is never infected adds no new disease to the field.
+- This remaining risk falls once per calendar year. Beet cyst nematode and clubroot can become very weak, but they may remain in the field indefinitely.
+
+Spacing sensitive crops gives the risk time to fall. The planner warns when a crop returns too soon, and still checks crop-family diversity separately. The Disease Risk map highlights fields where the current crop is more likely to become infected; favourable weather can raise the chance further.
+
+An infection starts at a low attack level and progresses each day. It remains hidden until it begins to damage the crop; before then, only the Disease Risk map and preventive advice show that conditions are favourable. Once damage begins, the outbreak appears on the Infected Fields map, field card and on-foot HUD, and a notification is sent.
+
+TREATMENTS
+Fungicide AMISTAR (Syngenta) and nematicide VELUM PRIME (Bayer), sprayed with any compatible sprayer.
+
+Protection is measured from the share of the field you spray. Fungicide lowers the chance of an outbreak, slows an active disease and protects sprayed crop from destruction. A smaller outbreak leaves less disease behind for future crops, but spraying does not clean a field that is already affected. Nematicide protects sprayed crop from nematode damage but does not remove nematodes from the field. Neither product restores lost crop, so spray early.
+- Fungicide: used up on the ground you harvest or mow; harvesting ends the active outbreak, but disease may remain for future crops
+- Nematicide: protects sprayed ground for three months per field; spraying again renews protection without removing nematodes
+- No product works against take-all or clubroot. Only rotation keeps them down.
+
+NITROGEN RESIDUE
+A legume destroyed by tillage, not merely harvested, returns real nitrogen, split between the next crop and the one after. With Precision Farming it lands on the nitrogen map; without it the mod adds one fertilizer level.
+
+In kg N/ha, next crop then the one after: alfalfa 80 then 50, vetch-rye 60 then 20, clover 50 then 20, soybean 40 then 10, pea 40 then 10, green bean 20 then 5. Cover crops count as an estimated +25 in the planner.
+
+IN GAME
+- A dedicated "Crop Rotation" tab in the menu (ESC)
+- Three views on the map: infected fields, disease risk, treated ground
+- Treatment gauge: the share of the field sprayed, the disease status, and how long protection lasts
+- Field card: current crop, growth stage, required soil work, weeds, detected disease and its treatment, nitrogen, pH
+- On-foot HUD and a weather header so you can time your spraying
+
+CONSOLE COMMANDS (host or an admin client)
+- rcrDisease [farmlandId]: prints active disease, remaining field risk and treatment
+- rcrDiseaseInfect <farmlandId> <group> [attackLevel]: forces an infection
+- rcrDiseaseTick [farmlandId]: runs one cycle, infection roll then progression
+- rcrDiseaseClear [farmlandId]: clears active disease and any remaining field risk
+
+Valid <group> values: SCLEROTINIA, PHOMA, TAKEALL, SEPTORIA, RUST, FUSARIUM, LATEBLIGHT, BCN, CLUBROOT
+
+Singleplayer and multiplayer, with or without Precision Farming. 27 languages.
+Issues & suggestions: https://github.com/Squallqt/FS25_RealisticCropRotation
+
+Please download this mod only from the official Farming Simulator ModHub and keep the original link. Reuploading, redistribution, modification or copying of this mod or any of its files, in whole or in part, is not permitted without the author's written consent.]]></en>
+        <de><![CDATA[Gib deiner Fruchtfolge eine echte Bedeutung.
+
+Jedes Feld speichert die letzten 4 Einträge seiner Fruchtfolge, also Kulturen oder Brachejahre. Plane, was zurückkehrt, beobachte das Krankheitsrisiko und schütze eine empfindliche Kultur, bevor ein Ausbruch einen Teil davon zerstört.
+
+PLANUNG
+- Ein Fruchtfolgekalender mit einem echten, sich wiederholenden Zyklus aus 2, 3 oder 4 Planungsjahren, die mit Kulturen oder Brache belegt werden, einschließlich der Rückkehr vom letzten zum ersten Platz
+- Ein geplantes Brachejahr schafft ein volles Jahr Abstand vor der nächsten empfindlichen Kultur; es bereinigt das Feld nicht sofort und garantiert nicht, dass jede Krankheit verschwunden ist
+- Eine klare Bewertung der Fruchtfolge, passende Empfehlungen und Konflikte, die vor der Aussaat gemeldet werden
+- Vielfalt zahlt sich aus: mehr Kulturen im Wechsel, dieselbe Familie nicht wiederholen, Winter- und Sommeraussaat abwechseln
+- Felder mit gleichem Plan werden zusammengefasst, mit summierter Fläche, Fruchtfolgequalität und Rückstand
+
+KRANKHEITEN
+Neun Krankheiten befallen bestimmte Kulturen: Sklerotinia, Phoma, Schwarzbeinigkeit, Septoria, Rost, Fusariose, Kraut- und Knollenfäule, Rübenzystennematode und Kohlhernie.
+
+So funktioniert es:
+- Ein erster Befall kann auch auf einem Feld auftreten, das noch nie betroffen war. Günstiges Wetter erhöht das Risiko für wetterabhängige Krankheiten. Rost und Kraut- und Knollenfäule bleiben nach der Kultur nie im Feld.
+- Nach einem tatsächlichen Befall können Sklerotinia, Phoma, Schwarzbeinigkeit, Septoria, Fusariose, Rübenzystennematode oder Kohlhernie nach der Ernte im Feld bleiben. Je weiter der Befall fortgeschritten war, desto größer ist das Risiko für eine spätere empfindliche Kultur. Eine Kultur, die nie infiziert war, fügt dem Feld keine neue Krankheit hinzu.
+- Dieses verbleibende Risiko sinkt einmal pro Kalenderjahr. Rübenzystennematode und Kohlhernie können sehr schwach werden, aber unbegrenzt im Feld bleiben.
+
+Größere Abstände zwischen empfindlichen Kulturen geben dem Risiko Zeit zu sinken. Der Planer warnt, wenn eine Kultur zu früh zurückkehrt, und bewertet die Vielfalt der Kulturfamilien weiterhin getrennt. Die Karte "Krankheitsrisiko" markiert Felder, auf denen die aktuelle Kultur leichter erkranken kann; günstiges Wetter kann die Gefahr weiter erhöhen.
+
+Eine Infektion beginnt mit geringer Befallsstärke und schreitet täglich fort. Sie bleibt verborgen, bis sie die Kultur zu schädigen beginnt; vorher zeigen nur die Karte "Krankheitsrisiko" und vorbeugende Hinweise günstige Bedingungen an. Sobald Schäden beginnen, erscheint der Befall auf der Karte "Befallene Felder", der Feldkarte und der Feldanzeige zu Fuß, und eine Meldung wird gesendet.
+
+BEHANDLUNG
+Fungizid AMISTAR (Syngenta) und Nematizid VELUM PRIME (Bayer), ausgebracht mit jeder kompatiblen Feldspritze.
+
+Der Schutz richtet sich nach dem besprühten Anteil des Feldes. Fungizid senkt die Gefahr eines Ausbruchs, verlangsamt eine aktive Krankheit und schützt die besprühte Kultur vor Zerstörung. Ein kleinerer Befall hinterlässt weniger Krankheit für spätere Kulturen, doch eine Spritzung reinigt kein bereits betroffenes Feld. Nematizid schützt die besprühten Teile der aktuellen Kultur vor Nematodenschäden, entfernt die Nematoden aber nicht aus dem Feld. Kein Mittel stellt bereits verlorene Pflanzen wieder her, also spritze früh.
+- Fungizid: wird auf der geernteten oder gemähten Fläche verbraucht; die Ernte beendet den aktiven Befall, doch die Krankheit kann für spätere Kulturen bleiben
+- Nematizid: schützt die besprühte Fläche drei Monate je Feld; eine neue Anwendung verlängert den Schutz, ohne Nematoden zu entfernen
+- Gegen Schwarzbeinigkeit und Kohlhernie hilft kein Mittel. Nur die Fruchtfolge drückt sie.
+
+STICKSTOFFRÜCKSTAND
+Eine durch Bodenbearbeitung zerstörte Leguminose, nicht bloß geerntet, gibt echten Stickstoff zurück, aufgeteilt auf die nächste und die übernächste Kultur. Mit Precision Farming landet er auf der Stickstoffkarte, ohne PF fügt der Mod eine Düngestufe hinzu.
+
+In kg N/ha, nächste Kultur und danach: Luzerne 80 dann 50, Wicke-Roggen 60 dann 20, Klee 50 dann 20, Sojabohne 40 dann 10, Erbse 40 dann 10, Grüne Bohne 20 dann 5. Zwischenfrüchte zählen im Planer als geschätzte +25.
+
+IM SPIEL
+- Ein eigener Reiter "Fruchtfolge" im Menü (ESC)
+- Drei Ansichten auf der Karte: befallene Felder, Krankheitsrisiko, behandelte Flächen
+- Behandlungsanzeige: der behandelte Flächenanteil, der Krankheitszustand und die verbleibende Schutzdauer
+- Feldkarte: aktuelle Kultur, Wachstumsstadium, nötige Bodenbearbeitung, Unkraut, erkannte Krankheit und ihre Behandlung, Stickstoff, pH-Wert
+- Feldanzeige zu Fuß und Wetterleiste, damit du deine Spritzungen timen kannst
+
+KONSOLENBEFEHLE (Host oder Admin-Client)
+- rcrDisease [farmlandId]: zeigt aktive Krankheiten, verbleibendes Feldrisiko und Behandlung
+- rcrDiseaseInfect <farmlandId> <group> [attackLevel]: erzwingt eine Infektion
+- rcrDiseaseTick [farmlandId]: führt einen Zyklus aus, Infektionswurf und Fortschritt
+- rcrDiseaseClear [farmlandId]: löscht aktive Krankheiten und jedes verbleibende Feldrisiko
+
+Gültige <group>-Werte: SCLEROTINIA, PHOMA, TAKEALL, SEPTORIA, RUST, FUSARIUM, LATEBLIGHT, BCN, CLUBROOT
+
+Einzelspieler und Mehrspieler, mit oder ohne Precision Farming. 27 Sprachen.
+Issues & Vorschläge: https://github.com/Squallqt/FS25_RealisticCropRotation
+
+Bitte lade diesen Mod ausschließlich aus dem offiziellen Farming Simulator ModHub herunter und behalte den originalen Link bei. Das erneute Hochladen, die Weitergabe, Veränderung oder das Kopieren dieses Mods oder seiner Dateien, ganz oder teilweise, ist ohne die schriftliche Zustimmung des Autors nicht gestattet.]]></de>
+        <fr><![CDATA[Donnez un rôle réel à vos rotations.
+
+Chaque parcelle garde la mémoire de ses 4 dernières entrées de rotation, cultures ou années de jachère. Planifiez la suite, surveillez le risque de maladie et protégez une culture sensible avant qu'une attaque n'en détruise une partie.
+
+PLANIFICATION
+- Un calendrier avec un vrai cycle répétitif de 2, 3 ou 4 emplacements annuels, occupés par des cultures ou une jachère, retour du dernier emplacement au premier compris
+- Une jachère planifiée ajoute une année complète d'espacement avant la prochaine culture sensible ; elle ne nettoie pas immédiatement la parcelle et ne garantit pas la disparition de toutes les maladies
+- Une appréciation claire de la qualité de la rotation, un conseil adapté et les conflits signalés avant de semer
+- La diversité paie : variez les cultures, évitez de répéter la même famille, alternez semis d'hiver et de printemps
+- Les parcelles au même plan sont regroupées, avec surface, qualité de rotation et reliquat cumulés
+
+MALADIES
+Neuf maladies touchent des cultures précises : sclérotinia, phoma, piétin-échaudage, septoriose, rouille, fusariose, mildiou, nématode à kystes de la betterave et hernie des crucifères.
+
+Le fonctionnement est simple :
+- Une première attaque peut se produire même sur une parcelle qui n'a jamais été touchée. Une météo favorable augmente le risque pour les maladies qui y sont sensibles. La rouille et le mildiou ne restent jamais dans la parcelle après la culture.
+- Après une véritable attaque, le sclérotinia, le phoma, le piétin-échaudage, la septoriose, la fusariose, le nématode à kystes ou la hernie peuvent rester dans la parcelle après la récolte. Plus l'attaque était avancée, plus le risque sera élevé pour une prochaine culture sensible. Une culture qui n'a jamais été infectée n'ajoute aucune nouvelle maladie à la parcelle.
+- Ce risque diminue une fois par année civile. Le nématode à kystes et la hernie peuvent devenir très faibles, mais rester indéfiniment dans la parcelle.
+
+Espacer les cultures sensibles laisse au risque le temps de diminuer. Le planificateur avertit lorsqu'une culture revient trop tôt et continue d'évaluer séparément la diversité des familles. La carte « Risque de maladie » signale les parcelles où la culture actuelle a le plus de chances d'être touchée ; une météo favorable peut encore augmenter ce risque.
+
+Une infection commence à un faible niveau d'attaque et progresse chaque jour. Elle reste cachée jusqu'au début des dégâts sur la culture ; avant cela, seuls la carte « Risque de maladie » et les conseils préventifs indiquent que les conditions sont favorables. Dès que les dégâts commencent, l'attaque apparaît sur la carte « Parcelles infectées », la fiche de champ et le HUD à pied, et une notification est envoyée.
+
+TRAITEMENTS
+Fongicide AMISTAR (Syngenta) et nématicide VELUM PRIME (Bayer), à pulvériser avec un pulvérisateur compatible.
+
+La protection dépend de la part de la parcelle pulvérisée. Le fongicide réduit le risque d'attaque, ralentit une maladie active et protège la culture pulvérisée de la destruction. Une attaque moins importante laisse moins de maladie pour les cultures futures, mais pulvériser ne nettoie pas une parcelle déjà touchée. Le nématicide protège les zones pulvérisées de la culture actuelle, sans éliminer les nématodes de la parcelle. Aucun produit ne restaure une culture déjà perdue : pulvérisez donc tôt.
+- Fongicide : consommé sur la surface récoltée ou fauchée ; la récolte met fin à l'attaque active, mais la maladie peut rester pour les cultures futures
+- Nématicide : protège la zone pulvérisée pendant trois mois par parcelle ; une nouvelle application renouvelle la protection sans éliminer les nématodes
+- Aucun produit ne marche contre le piétin-échaudage ni la hernie. Seule la rotation les fait baisser.
+
+RELIQUAT D'AZOTE
+Une légumineuse détruite au travail du sol, pas simplement récoltée, restitue un vrai reliquat d'azote, réparti entre la culture suivante et celle d'après. Avec Precision Farming il est déposé sur la carte d'azote, sans PF le mod ajoute un niveau d'engrais.
+
+En kg N/ha, culture suivante puis la suivante : luzerne 80 puis 50, vesce-seigle 60 puis 20, trèfle 50 puis 20, soja 40 puis 10, pois 40 puis 10, haricot vert 20 puis 5. Les couverts comptent pour +25 estimés dans le planificateur.
+
+DANS LE JEU
+- Un onglet dédié « Assolement » dans le menu (ÉCHAP)
+- Trois vues sur la carte : parcelles infectées, risque de maladie, zones traitées
+- Jauge de traitement : la part de parcelle pulvérisée, l'état de la maladie et la durée de protection restante
+- Fiche de champ : culture en place, stade, travail du sol requis, mauvaises herbes, maladie détectée et son traitement, azote, pH
+- HUD à pied et en-tête météo pour choisir le moment de pulvériser
+
+COMMANDES CONSOLE (hôte ou client admin)
+- rcrDisease [farmlandId] : affiche les maladies actives, le risque restant dans la parcelle et le traitement
+- rcrDiseaseInfect <farmlandId> <group> [attackLevel] : force une infection
+- rcrDiseaseTick [farmlandId] : exécute un cycle, tirage d'infection puis progression
+- rcrDiseaseClear [farmlandId] : efface les maladies actives et tout risque restant dans la parcelle
+
+Valeurs valides pour <group> : SCLEROTINIA, PHOMA, TAKEALL, SEPTORIA, RUST, FUSARIUM, LATEBLIGHT, BCN, CLUBROOT
+
+Solo et multijoueur, avec ou sans Precision Farming. 27 langues.
+Issues & suggestions : https://github.com/Squallqt/FS25_RealisticCropRotation
+
+Merci de télécharger ce mod uniquement depuis le ModHub officiel de Farming Simulator et de conserver le lien original. La remise en ligne, la redistribution, la modification ou la copie de ce mod ou de l'un de ses fichiers, en tout ou partie, ne sont pas autorisées sans l'accord écrit de l'auteur.]]></fr>
+    </description>
+    <iconFilename>icon_RealCropRotation.dds</iconFilename>
+    <multiplayer supported="true" />
+
+    <fillTypes filename="fillTypes.xml" />
+
+    <storeItems>
+        <storeItem xmlFilename="pallets/fungicide/fungicideTank.xml" />
+        <storeItem xmlFilename="pallets/fungicide/multiPurchaseLiquidTank_fungicideTank.xml" />
+        <storeItem xmlFilename="pallets/nematicide/nematicideTank.xml" />
+        <storeItem xmlFilename="pallets/nematicide/multiPurchaseLiquidTank_nematicideTank.xml" />
+    </storeItems>
+
+    <brands>
+        <brand name="SYNGENTA" title="Syngenta" image="brands/brand_amistar.dds" />
+        <brand name="BAYER" title="Bayer" image="brands/brand_velumPrime.dds" />
+    </brands>
+
+    <extraSourceFiles>
+        <sourceFile filename="main.lua" />
+    </extraSourceFiles>
+
+    <specializations>
+        <specialization name="rcrPrecisionFarmingSprayer" className="RealisticCropRotationPFSprayer" filename="scripts/RealisticCropRotationPFSprayer.lua" />
+    </specializations>
+
+    <l10n filenamePrefix="l10n/l10n" />
+
+    <helpLines>
+        <category title="$l10n_realisticCropRotation_menu_title">
+            <page title="$l10n_realisticCropRotation_menu_title" iconSliceId="realisticCropRotationHelplineSmall.general">
+                <paragraph>
+                    <text text="$l10n_rcr_help_text_01" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages06.png" uvs="57px 512px 910px 512px" aspectRatio="0.562637" />
+                </paragraph>
+            </page>
+            <page title="$l10n_rcr_tab_history" iconSliceId="realisticCropRotationHelplineSmall.agronomy">
+                <paragraph>
+                    <text text="$l10n_rcr_help_text_02" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages01.png" uvs="0px 0px 1024px 252px" aspectRatio="0.246094" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages01.png" uvs="0px 252px 1024px 441px" aspectRatio="0.430664" />
+                </paragraph>
+            </page>
+            <page title="$l10n_rcr_tab_planning" iconSliceId="realisticCropRotationHelplineSmall.planning">
+                <paragraph>
+                    <text text="$l10n_rcr_help_text_03" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages01.png" uvs="0px 693px 1024px 239px" aspectRatio="0.233398" />
+                </paragraph>
+            </page>
+            <page title="$l10n_rcr_section_score" iconSliceId="realisticCropRotationHelplineSmall.rotationQuality">
+                <paragraph>
+                    <text text="$l10n_rcr_help_text_04" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages02.png" uvs="0px 0px 1024px 390px" aspectRatio="0.380859" />
+                </paragraph>
+            </page>
+            <page title="$l10n_rcr_section_nitrogen" iconSliceId="realisticCropRotationHelplineSmall.nitrogenResidue">
+                <paragraph>
+                    <text text="$l10n_rcr_help_text_05" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages02.png" uvs="0px 390px 1024px 289px" aspectRatio="0.282227" />
+                </paragraph>
+            </page>
+            <page title="$l10n_rcr_disease_sub_pressure" iconSliceId="realisticCropRotationHelplineSmall.diseaseRisk">
+                <paragraph>
+                    <text text="$l10n_rcr_help_text_06" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages03.png" uvs="57px 0px 910px 512px" aspectRatio="0.562637" />
+                </paragraph>
+            </page>
+            <page title="$l10n_rcr_disease_sub_infections" iconSliceId="realisticCropRotationHelplineSmall.infectedFields">
+                <paragraph>
+                    <text text="$l10n_rcr_help_text_07" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages03.png" uvs="57px 512px 910px 512px" aspectRatio="0.562637" />
+                </paragraph>
+            </page>
+            <page title="$l10n_rcr_help_title_products" iconSliceId="realisticCropRotationHelplineSmall.products">
+                <paragraph>
+                    <text text="$l10n_rcr_function_fungicideTank" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages04.png" uvs="57px 0px 910px 512px" aspectRatio="0.562637" />
+                </paragraph>
+                <paragraph>
+                    <text text="$l10n_rcr_function_nematicideTank" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages04.png" uvs="57px 512px 910px 512px" aspectRatio="0.562637" />
+                </paragraph>
+            </page>
+            <page title="$l10n_rcr_help_title_spraying" iconSliceId="realisticCropRotationHelplineSmall.spraying">
+                <paragraph>
+                    <text text="$l10n_rcr_help_text_09" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages05.png" uvs="57px 0px 910px 512px" aspectRatio="0.562637" />
+                </paragraph>
+            </page>
+            <page title="$l10n_rcr_help_title_treatment_map" iconSliceId="realisticCropRotationHelplineSmall.treatmentMap">
+                <paragraph>
+                    <text text="$l10n_rcr_help_text_10" />
+                </paragraph>
+                <paragraph>
+                    <text text="$l10n_rcr_advice_nematicide_duration" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages05.png" uvs="57px 512px 910px 512px" aspectRatio="0.562637" />
+                </paragraph>
+            </page>
+            <page title="$l10n_rcr_section_field" iconSliceId="realisticCropRotationHelplineSmall.fieldHud">
+                <paragraph>
+                    <text text="$l10n_rcr_help_text_11" />
+                </paragraph>
+                <paragraph>
+                    <image filename="gui/helplineImages06.png" uvs="57px 0px 910px 512px" aspectRatio="0.562637" />
+                </paragraph>
+            </page>
+        </category>
+    </helpLines>
+</modDesc>

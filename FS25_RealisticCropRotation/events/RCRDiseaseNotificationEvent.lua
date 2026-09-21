@@ -1,0 +1,89 @@
+-- Copyright © 2026 Squallqt. All rights reserved.
+-- Server notification for a new disease, displayed only to players in the farmland owner's farm.
+RCRDiseaseNotificationEvent = {}
+local RCRDiseaseNotificationEvent_mt = Class(RCRDiseaseNotificationEvent, Event)
+
+InitEventClass(RCRDiseaseNotificationEvent, "RCRDiseaseNotificationEvent")
+
+---Creates an empty event instance for deserialization.
+-- @return RCRDiseaseNotificationEvent instance Empty event
+function RCRDiseaseNotificationEvent.emptyNew()
+    return Event.new(RCRDiseaseNotificationEvent_mt)
+end
+
+---Creates a disease notification event.
+-- @param integer farmId Farm receiving the notification
+-- @param integer farmlandId Infected farmland
+-- @param string group Disease group name
+-- @param boolean isReminder True for the single delayed reminder
+-- @return RCRDiseaseNotificationEvent instance The new event instance
+function RCRDiseaseNotificationEvent.new(farmId, farmlandId, group, isReminder)
+    local self = RCRDiseaseNotificationEvent.emptyNew()
+    self.farmId = tonumber(farmId) or 0
+    self.farmlandId = tonumber(farmlandId) or 0
+    self.group = tostring(group or "")
+    self.isReminder = isReminder == true
+    return self
+end
+
+---Reads and displays a server notification.
+-- @param integer streamId Network stream identifier
+-- @param Connection connection Network connection
+function RCRDiseaseNotificationEvent:readStream(streamId, connection)
+    if not connection:getIsServer() then return end
+
+    self.farmId = streamReadInt32(streamId)
+    self.farmlandId = streamReadInt32(streamId)
+    self.group = streamReadString(streamId)
+    self.isReminder = streamReadBool(streamId)
+    self:run(connection)
+end
+
+---Writes the notification to the stream.
+-- @param integer streamId Network stream identifier
+-- @param Connection _connection Network connection
+function RCRDiseaseNotificationEvent:writeStream(streamId, _connection)
+    streamWriteInt32(streamId, self.farmId)
+    streamWriteInt32(streamId, self.farmlandId)
+    streamWriteString(streamId, self.group)
+    streamWriteBool(streamId, self.isReminder == true)
+end
+
+---Displays the notification for players in the owning farm.
+-- @param Connection? _connection Network connection
+function RCRDiseaseNotificationEvent:run(_connection)
+    if g_currentMission == nil or type(g_currentMission.getFarmId) ~= "function"
+        or g_currentMission:getFarmId() ~= self.farmId
+        or type(g_currentMission.addIngameNotification) ~= "function"
+        or FSBaseMission == nil or g_i18n == nil then
+        return
+    end
+
+    local disease = RealisticCropRotation ~= nil and RealisticCropRotation.disease or nil
+    local diseaseName = disease ~= nil and disease:getDisplayName(self.group) or self.group
+    local manager = RealisticCropRotation ~= nil and RealisticCropRotation.manager or nil
+    local fieldLabel = manager ~= nil
+        and manager:getFarmlandLabel(self.farmlandId) or tostring(self.farmlandId)
+    local text = string.format(
+        g_i18n:getText(self.isReminder and "rcr_disease_reminder" or "rcr_disease_notification"),
+        diseaseName, fieldLabel)
+    local notificationType = self.isReminder
+        and FSBaseMission.INGAME_NOTIFICATION_INFO
+        or FSBaseMission.INGAME_NOTIFICATION_CRITICAL
+    g_currentMission:addIngameNotification(notificationType, text)
+end
+
+---Broadcasts a disease notification to the farmland owner's farm.
+-- @param integer farmlandId Infected farmland
+-- @param string group Disease group name
+-- @param boolean isReminder True for the single delayed reminder
+function RCRDiseaseNotificationEvent.sendEvent(farmlandId, group, isReminder)
+    if g_server == nil or g_farmlandManager == nil
+        or type(g_farmlandManager.getFarmlandOwner) ~= "function" then return end
+    local farmId = tonumber(g_farmlandManager:getFarmlandOwner(farmlandId))
+    if farmId == nil or farmId <= 0 then return end
+
+    local event = RCRDiseaseNotificationEvent.new(farmId, farmlandId, group, isReminder)
+    g_server:broadcastEvent(event, false)
+    if g_client ~= nil then event:run(nil) end
+end

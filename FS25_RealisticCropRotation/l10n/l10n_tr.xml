@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Ekim Nöbeti" />
+
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="İlaçlama ürünleri" />
+        <e k="rcr_help_title_spraying" v="Erken ilaçla" />
+        <e k="rcr_help_title_treatment_map" v="İşlem görmüş alanlar" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation, sahip olunan her tarlanın önceki dört ürün veya nadas kaydını saklar. Bir tarlayı incelemek için Agronomi'yi, tekrarlanan bir döngü hazırlamak için Planlama'yı ve risk, salgın ile ilaçlama kapsamını izlemek için Hastalıklar haritasını kullanın." />
+        <e k="rcr_help_text_02" v="Mevcut ürünü, en fazla dört önceki kaydı, agronomik tavsiyeyi, azotu, pH değerini, ilaçlama kapsamını ve tarlanın mevcut durumunu görmek için sahip olduğunuz bir tarlayı seçin. Hava durumu başlığı ilaçlama zamanını seçmenize yardımcı olur." />
+        <e k="rcr_help_text_03" v="N+1 ile N+4 arasında bir yuva seçin, ardından ana ürünü ve isteğe bağlı bir örtü bitkisini belirleyin. Ardışık yuvaları doldurun: doldurulan başlangıç bölümü, son yuvadan ilk yuvaya dönüş dahil olmak üzere iki, üç veya dört yıllık tekrarlanan bir döngüye dönüşür." />
+        <e k="rcr_help_text_04" v="Rotasyon kalitesi ürün ve aile çeşitliliğini, kışlık ve yazlık ekim dönüşümünü, azot sağlayan ürünleri veya örtü bitkilerini ve baklagilden sonra tahıl ekilmesini ödüllendirir. Aynı ailenin veya ortak hastalıklara sahip ürünlerin çok erken geri dönmesi puanı düşürür." />
+        <e k="rcr_help_text_05" v="Ayarlanmış bir baklagil, yalnızca toprak işlemesiyle yok edildiğinde azot geri kazandırır; sadece hasat edilmesi yeterli değildir. Azot sonraki iki ürün arasında paylaşılır; Precision Farming ile azot haritasına yazılır, aksi halde bir gübreleme seviyesi eklenir." />
+        <e k="rcr_help_text_06" v="Hastalık riski haritası, sahip olunan her tarladaki mevcut ürün için en yüksek patojen baskısını düşük, orta veya yüksek olarak gösterir. Hava koşulları enfeksiyon olasılığını daha da değiştirebilir; bu yüzden haritayı Agronomi'deki hava durumu başlığıyla birlikte kullanın." />
+        <e k="rcr_help_text_07" v="Enfeksiyon gizli başlar ve yalnızca ürünü yok etmeye başladığında burada görünür. Harita, ayarlanmış dokuz hastalık arasından salgını belirler; ardından tarla kartı, yaya HUD'u ve bildirim de bunu gösterir." />
+        <e k="rcr_help_text_09" v="Erken ilaçlayın. Fungisit, tarla kapsamına göre salgın olasılığını azaltır ve aktif hastalığı yavaşlatır. Fungisit ve nematisit püskürtülen hücreleri yok olmaktan korur, ancak kaybedilen ürünü geri getiremez veya hastalığı tarladan çıkaramaz." />
+        <e k="rcr_help_text_10" v="İlaçlamalar haritası, fungisit veya nematisit ile korunan zemini gösterir. Fungisit koruması hasat edilmiş veya biçilmiş zeminde sona erer. Nematisit koruması tarla başına üç ay sürer ve yeni bir uygulama süreyi yeniler." />
+        <e k="rcr_help_text_11" v="Bir tarlada dururken HUD önceki iki ürünü, görünen hastalıkları ve etkin ilaçlamaları ekler. Ayrıca numaralı büyüme ilerlemesini gösterir; Precision Farming kendi toprak, pH, azot ve verim bilgilerini korur." />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Tarla" />
+        <e k="rcr_sidebar_no_active_crop"  v="Aktif ekin yok" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Agronomi" />
+        <e k="rcr_sidebar_fields"       v="Tarlalar" />
+        <e k="rcr_tab_planning"         v="Planlama" />
+        <e k="rcr_section_disease_map"     v="Hastalıklar" />
+        <e k="rcr_disease_sub_infections" v="Enfekte tarlalar" />
+        <e k="rcr_disease_sub_pressure"   v="Hastalık riski" />
+        <e k="rcr_disease_sub_treatment"  v="İlaçlama" />
+        <e k="rcr_disease_risk_low"       v="Düşük" />
+        <e k="rcr_disease_risk_moderate"  v="Orta" />
+        <e k="rcr_disease_risk_high"      v="Yüksek" />
+        <e k="rcr_disease_notification" v="%s, Tarla %s üzerinde tespit edildi" />
+        <e k="rcr_disease_reminder" v="Hastalık hâlâ aktif: %s, Tarla %s" />
+        <e k="rcr_disease_hud_label"    v="Hastalık" />
+        <e k="rcr_disease_header_active" v="Hastalık (%s)" />
+        <e k="rcr_treatment_hud_label"  v="İlaçlama" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d ay kaldı)" />
+        <e k="rcr_advice_nematicide_duration" v="Toprak koruması tarla başına 3 ay sürer; yeniden uygulama süreyi yeniler." />
+
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="yok" />
+        <e k="rcr_treatment_partial"  v="kısmi (%%%d)" />
+        <e k="rcr_treatment_complete" v="tam" />
+        <e k="rcr_treatment_disease_absent"     v="Hastalık yok" />
+        <e k="rcr_treatment_disease_active"     v="Hastalık aktif" />
+        <e k="rcr_treatment_disease_controlled" v="Hastalık kontrol altında" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Hastalık kısmen kontrol altında" />
+        <e k="rcr_treatment_until_harvest" v="Hasada kadar" />
+        <e k="rcr_treatment_months"        v="%d ay" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Beklenen azot geri dönüşü +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Rotasyondan azot geri dönüşü +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Beklenen azot geri dönüşü yok" />
+        <e k="rcr_status_planned_no_residue" v="Azot geri dönüşü yok" />
+        <e k="rcr_weather_sun" v="Açık gökyüzü" />
+        <e k="rcr_weather_partially_cloudy" v="Parçalı güneşli" />
+        <e k="rcr_weather_cloudy" v="Bulutlu" />
+        <e k="rcr_weather_rain" v="Yağmur" />
+        <e k="rcr_weather_snow" v="Kar" />
+        <e k="rcr_weather_hail" v="Dolu" />
+        <e k="rcr_weather_twister" v="Hortum" />
+        <e k="rcr_weather_thunder" v="Gök gürültülü fırtına" />
+        <e k="rcr_weather_current_operational" v="%s sürüyor · bitiş %s" />
+        <e k="rcr_weather_current_calm" v="%s · %s'e kadar" />
+        <e k="rcr_weather_soon" v="%s %s-%s · %s sonra" />
+        <e k="rcr_weather_tomorrow" v="%s yarın %s-%s" />
+        <e k="rcr_weather_later" v="%s G+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d dk" />
+        <e k="rcr_time_hours" v="%d sa" />
+        <e k="rcr_time_hours_minutes" v="%d sa %02d dk" />
+        <e k="rcr_hud_previous_n1"      v="Önceki ekin (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="İki dönem önceki ekin (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Ekin Geçmişi" />
+        <e k="rcr_section_nitrogen"     v="Azot Durumu" />
+        <e k="rcr_section_advice"       v="Agronomik Tavsiye" />
+        <e k="rcr_section_soil_indicators" v="Toprak ve ilaçlama" />
+        <e k="rcr_section_field"        v="Mevcut tarla durumu" />
+        <e k="rcr_section_lime"         v="Kireç / pH Durumu" />
+        <e k="rcr_section_plan"         v="Rotasyon Planı" />
+        <e k="rcr_clear_plan_button"    v="Planı temizle" />
+        <e k="rcr_clear_plan_confirm"   v="%s için rotasyon planı temizlensin mi?" />
+        <e k="rcr_section_score"        v="Rotasyon Kalitesi" />
+        <e k="rcr_section_overview"     v="Genel Bakış" />
+        <e k="rcr_overview_total_area"  v="İşlenen alan: %.1f ha" />
+
+        <!-- Timeline slot labels -->
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Mevcut" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Tahıl" />
+        <e k="rcr_family_legume"        v="Baklagil" />
+        <e k="rcr_family_oilseed"       v="Yağlı tohum" />
+        <e k="rcr_family_root"          v="Kök sebze" />
+        <e k="rcr_family_vegetable"     v="Sebze" />
+        <e k="rcr_family_forage"        v="Yem bitkisi" />
+        <e k="rcr_cover_crop"           v="Ara ekin" />
+        <e k="rcr_fallow"              v="Nadas" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Gübrelenmemiş" />
+        <e k="rcr_n_partial"            v="Kısmi" />
+        <e k="rcr_n_full"               v="Tam" />
+        <e k="rcr_n_average_value"      v="Ortalama azot: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Ekin ihtiyacı: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Azot / ekin ihtiyacı" />
+        <e k="rcr_lime_none"            v="Kireç yok" />
+        <e k="rcr_lime_partial"         v="Kısmi kireç" />
+        <e k="rcr_lime_full"            v="Kireç uygun" />
+        <e k="rcr_lime_average_pf"      v="Ortalama pH" />
+        <e k="rcr_lime_average_value"   v="Ortalama pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="Hedef: %.3f pH" />
+        <e k="rcr_soil_value_unmeasured" v="Değer ölçülmedi" />
+        <e k="rcr_n_crop_need_unavailable" v="Ürün ihtiyacı: --" />
+        <e k="rcr_lime_status_unavailable" v="Kireç: --" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Azot ve pH değerleri kullanılamıyor. Kesin tarımsal öneriler için toprağı analiz edin." />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal" v="Bir tahıldan sonra azotu geri kazandırmak için baklagil veya kök boğazı hastalıklarına karşı bir ara ürün ek, ve tahıllar arasında iki yıl bırak." />
+        <e k="rcr_advice_afterLegume" v="Bir baklagilden sonra tahıl, bırakılan azottan en iyi şekilde yararlanır ve yeni bir baklagil üç yıl beklemelidir." />
+        <e k="rcr_advice_afterOilseed" v="Bir yağlı tohumdan sonra herhangi bir yağlı tohum dönmeden önce üç yıl bırak, ideal sıralama tahıl ve ardından baklagil." />
+        <e k="rcr_advice_afterRoot" v="Bir kök bitkisinden sonra köklerin dönmesinden önce dört yıl bekle, ardından geç hasattan sonra yapıyı yeniden kurmak için bir tahıl." />
+        <e k="rcr_advice_afterVegetable" v="Bir sebzeden sonra tekrarlamadan önce üç yıl bekle, temiz bir ara olarak bir tahıl ile." />
+        <e k="rcr_advice_afterForage" v="Geçici bir çayırdan sonra tahıl, çim örtüsü altında biriken verimlilik ve yapıyı değerlendirir." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Sklerotinya riski yüksek: kanola, hardal, ayçiçeği, soya, bezelye, fasulye, patates ve havuç arasında en az 3 yıl bırakın; fungisit ilaçlanan yerdeki zararı sınırlar, ancak hastalığı tarladan temizlemez." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Nematod riski yüksek: şeker pancarı, kırmızı pancar, kanola, hardal ve ıspanak arasında en az 3 yıl bırakın; nematisit ilaçlanan alanı korur ancak nematodları ortadan kaldırmaz." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Sklerotinya riski orta: kanola, hardal, ayçiçeği, soya, bezelye, fasulye, patates ve havuç arasındaki süreyi uzatın; yağmur riski artırır." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Nematod riski orta: şeker pancarı, kırmızı pancar, kanola, hardal ve ıspanak arasındaki süreyi uzatın." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="%s sonrasında planınız bir sonraki ürün olarak %s öngörüyor." />
+        <e k="rcr_advice_memo_next_fallow" v="%s sonrasında planınız bir yıllık nadas öngörüyor." />
+        <e k="rcr_advice_memo_no_plan" v="Rotasyon planında bir sonraki ürün tanımlanmamış." />
+        <e k="rcr_advice_memo_incomplete_short" v="Plan eksik: en az iki ardışık adım girin." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Plan eksik: “Planlanmadı” yuvası doldurulmuş iki adımı ayırıyor." />
+        <e k="rcr_advice_memo_no_history" v="Önceki ürün kaydedilmemiş: döngünün bir sonraki adımı belirlenemiyor." />
+        <e k="rcr_advice_memo_not_aligned" v="Geçmişteki en son kayıt (%s) planlanan döngüde yer almıyor. Bir sonraki adım belirlenemiyor." />
+        <e k="rcr_advice_memo_ambiguous" v="%s döngüde birden fazla kez ve farklı sonraki adımlarla yer alıyor. Bir sonraki adım belirlenemiyor." />
+        <e k="rcr_advice_memo_conflict_family" v="%s sonrasında planınız %s öngörüyor, ancak iki ürün de aynı aileye (%s) ait. Güvenli dönüş için %d yıl daha gerekiyor; gerekli aralık %d yıldır." />
+        <e k="rcr_advice_memo_conflict_disease" v="%s sonrasında planınız %s öngörüyor, ancak iki ürün de %s hastalığından etkilenebilir. %d yıl daha bekleyin; önerilen aralık %d yıldır." />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_ready" v="Ekim nöbeti uygun" />
+        <e k="rcr_advice_title_warning" v="Ekim nöbeti çakışması" />
+        <e k="rcr_advice_title_outbreak" v="Aktif hastalık salgını" />
+        <e k="rcr_advice_outbreak" v="%s bu tarlada aktif, saldırı düzeyi %d%%. Önerilen tedavi: %s." />
+        <e k="rcr_advice_plan_next_conflict_family" v="%s %s için planlandı: ekim nöbeti çakışması, mevcut ürünle aynı aile (%s), güvenli dönüş için %d yıl daha (toplam %d yıl) gerekiyor." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s %s için planlandı: ekim nöbeti çakışması. Aynı hastalık (%s) mevcut ürünü de etkileyebilir; %d yıl daha gerekiyor (önerilen aralık %d yıl)." />
+        <e k="rcr_advice_plan_next_ok" v="%s %s için planlandı: iyi seçim, ekim nöbeti çakışması tespit edilmedi." />
+        <e k="rcr_advice_title_fallow" v="Dinlenme yılı" />
+        <e k="rcr_advice_fallow_current" v="Nadas sürüyor: bu yıl ana ürün yetiştirilmiyor. Sonraki hassas ürüne kadar geçen süre artar, ancak hastalık hemen ortadan kalkmaz." />
+        <e k="rcr_advice_plan_next_fallow" v="Nadas %s için planlandı: bir yıl boyunca ana ürün yetiştirilmeyecek. Sonraki hassas ürüne kadar geçen süre artar, ancak tüm hastalıkların yok olacağı garanti edilmez." />
+
+        <!-- Advice card, disease pressure list -->
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Toprak durumu" />
+        <e k="rcr_field_growth"          v="Büyüme" />
+
+        <!-- Field card — weed column header (singular) -->
+        <e k="rcr_weed_header"          v="Yabani otlar" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Planlanmadı" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Mar" />
+        <e k="rcr_calendar_month_2"     v="Nis" />
+        <e k="rcr_calendar_month_3"     v="May" />
+        <e k="rcr_calendar_month_4"     v="Haz" />
+        <e k="rcr_calendar_month_5"     v="Tem" />
+        <e k="rcr_calendar_month_6"     v="Ağu" />
+        <e k="rcr_calendar_month_7"     v="Eyl" />
+        <e k="rcr_calendar_month_8"     v="Eki" />
+        <e k="rcr_calendar_month_9"     v="Kas" />
+        <e k="rcr_calendar_month_10"    v="Ara" />
+        <e k="rcr_calendar_month_11"    v="Oca" />
+        <e k="rcr_calendar_month_12"    v="Şub" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Ekim" />
+        <e k="rcr_calendar_legend_harvest" v="Hasat" />
+        <e k="rcr_calendar_legend_cover"   v="Örtü ekimi" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Eksik plan" />
+        <e k="rcr_score_excellent"      v="Mükemmel rotasyon: iyi agronomik denge" />
+        <e k="rcr_score_good"           v="İyi rotasyon: birkaç nokta geliştirilebilir" />
+        <e k="rcr_score_fair"           v="Orta rotasyon: bazı ürünler çok erken geri dönüyor" />
+        <e k="rcr_score_poor"           v="Rotasyon geliştirilmeli: ürünler birbirine çok yakın" />
+        <e k="rcr_score_bad"            v="Kötü rotasyon: aynı ürünler art arda geliyor" />
+        <e k="rcr_score_label_low"      v="Kötü puan" />
+        <e k="rcr_score_label_optimal"  v="En uygun puan" />
+        <e k="rcr_score_short_optimal"  v="OPTİMAL" />
+        <e k="rcr_score_short_good"     v="İYİ" />
+        <e k="rcr_score_short_fair"     v="ORTA" />
+        <e k="rcr_score_short_poor"     v="DÜŞÜK" />
+        <e k="rcr_score_short_bad"      v="KÖTÜ" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Gösterilecek kendi tarlanız yok." />
+        <e k="rcr_function_fungicideTank" v="AMISTAR ürününü ilaçlama makinelerinde kullanarak risk altındaki ekinlere fungisit uygulaması yapın." />
+        <e k="rcr_function_nematicideTank" v="VELUM PRIME ürününü ilaçlama makinelerinde kullanarak nematodlara maruz kalan ekinlere nematisit uygulaması yapın." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Sklerotinya" />
+        <e k="rcr_disease_name_phoma" v="Gövde kanseri (Phoma)" />
+        <e k="rcr_disease_name_takeall" v="Buğday kök çürüklüğü" />
+        <e k="rcr_disease_name_septoria" v="Septorya" />
+        <e k="rcr_disease_name_rust" v="Pas hastalığı" />
+        <e k="rcr_disease_name_fusarium" v="Fusarium" />
+        <e k="rcr_disease_name_lateblight" v="Mildiyö (geç yanıklık)" />
+        <e k="rcr_disease_name_bcn"   v="Kist nematodu" />
+        <e k="rcr_disease_name_clubroot" v="Kök uru hastalığı" />
+        <e k="rcr_disease_treatment_sclerotinia" v="Fungisit" />
+        <e k="rcr_disease_treatment_phoma" v="Fungisit" />
+        <e k="rcr_disease_treatment_takeall" v="Yok (yalnızca münavebe)" />
+        <e k="rcr_disease_treatment_septoria" v="Fungisit" />
+        <e k="rcr_disease_treatment_rust" v="Fungisit" />
+        <e k="rcr_disease_treatment_fusarium" v="Fungisit" />
+        <e k="rcr_disease_treatment_lateblight" v="Fungisit" />
+        <e k="rcr_disease_treatment_bcn" v="Nematisit" />
+        <e k="rcr_fillType_fungicide" v="Fungisit" />
+        <e k="rcr_fillType_nematicide" v="Nematisit" />
+        <e k="rcr_disease_treatment_none" v="İlaçlama yok" />
+        <e k="rcr_disease_treatment_clubroot" v="Yok (yalnızca münavebe)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Phoma riski yüksek: kanola ve hardal arasında en az 4 yıl bırakın; fungisit ilaçlanan yerdeki zararı sınırlar, ancak hastalığı tarladan temizlemez." />
+        <e k="rcr_advice_pressure_high_takeall" v="Kök çürüklüğü riski yüksek: tahıllar arasında yulaf, baklagil veya yağlı tohum ekin; bu hastalığa karşı koruyan bir ilaç yoktur, daha uzun ekim nöbeti riski azaltır." />
+        <e k="rcr_advice_pressure_high_septoria" v="Septorya riski yüksek: yağmur yakın dönemdeki hastalık riskini artırır ve fungisit ilaçlanan yerdeki zararı sınırlar." />
+        <e k="rcr_advice_pressure_high_rust" v="Pas riski yüksek: ılıman ve nemli hava yakın dönemdeki hastalık riskini artırır ve fungisit ilaçlanan yerdeki zararı sınırlar." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Fusarium riski yüksek: mısırdan sonra buğday ekmeyin ve arka arkaya tahıl ekimini azaltın; fungisit ilaçlanan yerdeki zararı sınırlar, yağmur ise riski artırır." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Mildiyö riski yüksek: serin ve nemli hava yakın dönemdeki hastalık riskini artırır ve fungisit ilaçlanan yerdeki zararı sınırlar." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Kök uru riski yüksek: kanola ve hardal arasındaki süreyi olabildiğince uzatın; bu hastalığa karşı koruyan bir ilaç yoktur, daha uzun ekim nöbeti riski azaltır." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Phoma riski orta: kanola ve hardal arasındaki süreyi uzatın." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Kök çürüklüğü riski orta: üst üste üçüncü tahıldan kaçının." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Septorya riski orta: yağmur yakın dönemdeki hastalık riskini artırır." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Pas riski orta: ılıman ve nemli hava yakın dönemdeki hastalık riskini artırır." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Fusarium riski orta: tahıl ve mısır arasındaki süreyi uzatın." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Mildiyö riski orta: serin ve nemli hava yakın dönemdeki hastalık riskini artırır." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Kök uru riski orta: kanola ve hardal arasındaki süreyi uzatın." />
+    </elements>
+</l10n>

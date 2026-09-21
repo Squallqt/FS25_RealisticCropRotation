@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Osevní postup" />
+
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Přípravky k ošetření" />
+        <e k="rcr_help_title_spraying" v="Postřikujte včas" />
+        <e k="rcr_help_title_treatment_map" v="Ošetřené plochy" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation ukládá pro každé vlastněné pole čtyři předchozí záznamy o plodině nebo úhoru. Pomocí Agronomie zkontrolujte pole, v Plánování připravte opakující se cyklus a na mapě Choroby sledujte riziko, výskyty a pokrytí ošetřením." />
+        <e k="rcr_help_text_02" v="Vyberte vlastněné pole a zobrazte aktuální plodinu, až čtyři předchozí záznamy, agronomické doporučení, dusík, pH, pokrytí ošetřením a současný stav pole. Záhlaví počasí pomáhá zvolit dobu postřiku." />
+        <e k="rcr_help_text_03" v="Vyberte pozici od N+1 do N+4 a potom hlavní plodinu a volitelnou meziplodinu. Vyplňte sousední pozice: vyplněný začátek se stane opakujícím se dvou-, tří- nebo čtyřletým cyklem včetně návratu z poslední pozice na první." />
+        <e k="rcr_help_text_04" v="Kvalita střídání odměňuje rozmanitost plodin a čeledí, střídání ozimů a jařin, plodiny dodávající dusík nebo meziplodiny a luskovinu následovanou obilninou. Příliš brzký návrat stejné čeledi nebo plodin se společnými chorobami snižuje skóre." />
+        <e k="rcr_help_text_05" v="Nastavená luskovina vrátí dusík jen tehdy, když je zničena zpracováním půdy, nikoli pouhou sklizní. Přínos se rozdělí mezi následující dvě plodiny; s Precision Farming se zapíše do mapy dusíku, jinak se přidá jedna úroveň hnojení." />
+        <e k="rcr_help_text_06" v="Mapa Riziko chorob zobrazuje nejvyšší aktuální tlak patogenů na plodinu rostoucí na každém vlastněném poli jako nízký, střední nebo vysoký. Počasí může pravděpodobnost infekce dále změnit, proto používejte tuto mapu společně se záhlavím počasí v Agronomii." />
+        <e k="rcr_help_text_07" v="Infekce začíná skrytě a objeví se zde, až když začne ničit plodinu. Mapa určí výskyt mezi devíti nastavenými chorobami; poté jej ukáže také karta pole, HUD při chůzi a oznámení." />
+        <e k="rcr_help_text_09" v="Postřikujte včas. Fungicid snižuje pravděpodobnost výskytu a zpomaluje aktivní chorobu podle pokrytí pole. Fungicid i nematicid chrání postříkané buňky před zničením, ale neobnoví ztracenou plodinu ani neodstraní chorobu z pole." />
+        <e k="rcr_help_text_10" v="Mapa Ošetření zobrazuje půdu chráněnou fungicidem nebo nematicidem. Fungicidní ochrana končí na sklizené nebo posečené půdě. Nematicidní ochrana trvá tři měsíce na každém poli a další aplikace tuto dobu obnoví." />
+        <e k="rcr_help_text_11" v="Když stojíte na poli, HUD doplní dvě předchozí plodiny, viditelné choroby a aktivní ošetření. Zobrazuje také číslovaný průběh růstu; Precision Farming si ponechává vlastní údaje o půdě, pH, dusíku a výnosu." />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Pole" />
+        <e k="rcr_sidebar_no_active_crop"  v="Žádná aktivní plodina" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Agronomie" />
+        <e k="rcr_sidebar_fields"       v="Pole" />
+        <e k="rcr_tab_planning"         v="Plánování" />
+        <e k="rcr_section_disease_map"     v="Choroby" />
+        <e k="rcr_disease_sub_infections" v="Infikovaná pole" />
+        <e k="rcr_disease_sub_pressure"   v="Riziko chorob" />
+        <e k="rcr_disease_sub_treatment"  v="Ošetření" />
+        <e k="rcr_disease_risk_low"       v="Nízké" />
+        <e k="rcr_disease_risk_moderate"  v="Střední" />
+        <e k="rcr_disease_risk_high"      v="Vysoké" />
+        <e k="rcr_disease_notification" v="Výskyt choroby: %s, pole %s" />
+        <e k="rcr_disease_reminder" v="Choroba je stále aktivní: %s, pole %s" />
+        <e k="rcr_disease_hud_label"    v="Choroba" />
+        <e k="rcr_disease_header_active" v="Choroba (%s)" />
+        <e k="rcr_treatment_hud_label"  v="Ošetření" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (zbývá měsíců: %d)" />
+        <e k="rcr_advice_nematicide_duration" v="Ochrana půdy trvá na každém poli 3 měsíce; nová aplikace dobu obnoví." />
+
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="chybí" />
+        <e k="rcr_treatment_partial"  v="částečné (%d %%)" />
+        <e k="rcr_treatment_complete" v="plné" />
+        <e k="rcr_treatment_disease_absent"     v="Bez choroby" />
+        <e k="rcr_treatment_disease_active"     v="Choroba aktivní" />
+        <e k="rcr_treatment_disease_controlled" v="Choroba pod kontrolou" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Choroba částečně pod kontrolou" />
+        <e k="rcr_treatment_until_harvest" v="Do sklizně" />
+        <e k="rcr_treatment_months"        v="%d měsíců" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Očekávaný návrat dusíku +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Návrat dusíku z osevního postupu +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Žádný očekávaný návrat dusíku" />
+        <e k="rcr_status_planned_no_residue" v="Žádný návrat dusíku" />
+        <e k="rcr_weather_sun" v="Jasno" />
+        <e k="rcr_weather_partially_cloudy" v="Polojasno" />
+        <e k="rcr_weather_cloudy" v="Zataženo" />
+        <e k="rcr_weather_rain" v="Déšť" />
+        <e k="rcr_weather_snow" v="Sníh" />
+        <e k="rcr_weather_hail" v="Krupobití" />
+        <e k="rcr_weather_twister" v="Tornádo" />
+        <e k="rcr_weather_thunder" v="Bouřka" />
+        <e k="rcr_weather_current_operational" v="%s probíhá · končí %s" />
+        <e k="rcr_weather_current_calm" v="%s · do %s" />
+        <e k="rcr_weather_soon" v="%s %s-%s · za %s" />
+        <e k="rcr_weather_tomorrow" v="%s zítra %s-%s" />
+        <e k="rcr_weather_later" v="%s D+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d min" />
+        <e k="rcr_time_hours" v="%d h" />
+        <e k="rcr_time_hours_minutes" v="%d h %02d min" />
+        <e k="rcr_hud_previous_n1"      v="Předchozí plodina (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Dřívější plodina (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Historie plodin" />
+        <e k="rcr_section_nitrogen"     v="Stav dusíku" />
+        <e k="rcr_section_advice"       v="Agronomická rada" />
+        <e k="rcr_section_soil_indicators" v="Půda a ošetření" />
+        <e k="rcr_section_field"        v="Aktuální stav pole" />
+        <e k="rcr_section_lime"         v="Stav vápna / pH" />
+        <e k="rcr_section_plan"         v="Plán osevního postupu" />
+        <e k="rcr_clear_plan_button"    v="Vymazat plán" />
+        <e k="rcr_clear_plan_confirm"   v="Vymazat plán osevního postupu pro %s?" />
+        <e k="rcr_section_score"        v="Kvalita osevního postupu" />
+        <e k="rcr_section_overview"     v="Celkový přehled" />
+        <e k="rcr_overview_total_area"  v="Obdělaná plocha: %.1f ha" />
+
+        <!-- Timeline slot labels -->
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Aktuální" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Obilnina" />
+        <e k="rcr_family_legume"        v="Luskovina" />
+        <e k="rcr_family_oilseed"       v="Olejnina" />
+        <e k="rcr_family_root"          v="Okopanina" />
+        <e k="rcr_family_vegetable"     v="Zelenina" />
+        <e k="rcr_family_forage"        v="Pícnina" />
+        <e k="rcr_cover_crop"           v="Meziplodina" />
+        <e k="rcr_fallow"              v="Úhor" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Nehnojeno" />
+        <e k="rcr_n_partial"            v="Částečně" />
+        <e k="rcr_n_full"               v="Plně" />
+        <e k="rcr_n_average_value"      v="Průměrný dusík: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Potřeba plodiny: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Dusík / potřeba plodiny" />
+        <e k="rcr_lime_none"            v="Bez vápna" />
+        <e k="rcr_lime_partial"         v="Částečné vápno" />
+        <e k="rcr_lime_full"            v="Vápno správně" />
+        <e k="rcr_lime_average_pf"      v="Průměrné pH" />
+        <e k="rcr_lime_average_value"   v="Průměrné pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="Cíl: %.3f pH" />
+        <e k="rcr_soil_value_unmeasured" v="Hodnota nezměřena" />
+        <e k="rcr_n_crop_need_unavailable" v="Potřeba plodiny: --" />
+        <e k="rcr_lime_status_unavailable" v="Vápno: --" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Hodnoty dusíku a pH nejsou dostupné. Pro přesné agronomické doporučení proveďte rozbor půdy." />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal" v="Po obilnině zasej luskovinu pro doplnění dusíku nebo přerušovací plodinu proti chorobám pat stébel a ponech dva roky mezi obilninami." />
+        <e k="rcr_advice_afterLegume" v="Po luskovině obilnina nejlépe využije zanechaný dusík a další luskovina by měla počkat tři roky." />
+        <e k="rcr_advice_afterOilseed" v="Po olejnině ponech tři roky před návratem jakékoli olejniny, s obilninou a poté luskovinou jako ideální posloupností." />
+        <e k="rcr_advice_afterRoot" v="Po okopanině počkej čtyři roky, než se okopaniny vrátí, a poté obilninu pro obnovení struktury po pozdní sklizni." />
+        <e k="rcr_advice_afterVegetable" v="Po zelenině počkej tři roky, než ji zopakuješ, s obilninou jako čistým přerušením." />
+        <e k="rcr_advice_afterForage" v="Po dočasném travním porostu obilnina zhodnotí úrodnost a strukturu nahromaděnou pod drnem." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Vysoké riziko sklerotinie: mezi řepkou, hořčicí, slunečnicí, sójou, hrachem, fazolem, bramborami a mrkví dodržte odstup alespoň 3 let; fungicid omezuje škody na ošetřených plochách, ale chorobu z pole neodstraní." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Vysoké riziko háďátka: mezi cukrovkou, červenou řepou, řepkou, hořčicí a špenátem dodržte odstup alespoň 3 let; nematicid chrání ošetřené plochy, ale háďátka neodstraní." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Střední riziko sklerotinie: prodlužte odstup řepky, hořčice, slunečnice, sóji, hrachu, fazolu, brambor a mrkve; déšť riziko zvyšuje." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Střední riziko háďátka: prodlužte odstup cukrovky, červené řepy, řepky, hořčice a špenátu." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="Po %s váš plán počítá s %s jako další plodinou." />
+        <e k="rcr_advice_memo_next_fallow" v="Po %s váš plán počítá s jednoletým úhorem." />
+        <e k="rcr_advice_memo_no_plan" v="V plánu osevního postupu není definována žádná další plodina." />
+        <e k="rcr_advice_memo_incomplete_short" v="Plán je neúplný: zadejte alespoň dva po sobě jdoucí kroky." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Plán je neúplný: položka „Neplánováno“ odděluje dva vyplněné kroky." />
+        <e k="rcr_advice_memo_no_history" v="Není zaznamenána žádná předchozí plodina: nelze určit další krok cyklu." />
+        <e k="rcr_advice_memo_not_aligned" v="Nejnovější záznam historie (%s) není součástí plánovaného cyklu. Další krok nelze určit." />
+        <e k="rcr_advice_memo_ambiguous" v="%s se v cyklu vyskytuje vícekrát a následují po ní různé kroky. Další krok nelze určit." />
+        <e k="rcr_advice_memo_conflict_family" v="Po %s váš plán počítá s %s, ale obě plodiny patří do stejné čeledi (%s). Před bezpečným návratem chybí ještě %d rok(y) z požadovaných %d." />
+        <e k="rcr_advice_memo_conflict_disease" v="Po %s váš plán počítá s %s, ale obě plodiny může napadnout %s. Počkejte ještě %d rok(y); doporučený odstup je %d let." />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_ready" v="Osevní postup v pořádku" />
+        <e k="rcr_advice_title_warning" v="Konflikt osevního postupu" />
+        <e k="rcr_advice_title_outbreak" v="Aktivní nákaza" />
+        <e k="rcr_advice_outbreak" v="%s je aktivní na tomto poli, úroveň napadení %d %%. Doporučené ošetření: %s." />
+        <e k="rcr_advice_plan_next_conflict_family" v="%s naplánováno na %s: konflikt osevního postupu, stejná čeleď (%s) jako současná plodina, chybí %d rok(y) z %d před bezpečným návratem." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s naplánováno na %s: konflikt osevního postupu. Stejná choroba (%s) může napadnout i současnou plodinu; chybí ještě %d rok(y) z doporučeného odstupu %d let." />
+        <e k="rcr_advice_plan_next_ok" v="%s naplánováno na %s: dobrá volba, nebyl zjištěn konflikt osevního postupu." />
+        <e k="rcr_advice_title_fallow" v="Rok přerušení" />
+        <e k="rcr_advice_fallow_current" v="Probíhá úhor: letos se nepěstuje hlavní plodina. Tím se prodlouží doba před další náchylnou plodinou, ale choroba nezmizí okamžitě." />
+        <e k="rcr_advice_plan_next_fallow" v="Úhor naplánován na %s: jeden rok se nebude pěstovat hlavní plodina. Tím se prodlouží doba před další náchylnou plodinou, ale není zaručeno, že všechny choroby zmizí." />
+
+        <!-- Advice card, disease pressure list -->
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Stav půdy" />
+        <e k="rcr_field_growth"          v="Růst" />
+
+        <!-- Field card — weed column header (singular) -->
+        <e k="rcr_weed_header"          v="Plevel" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Neplánováno" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Bře" />
+        <e k="rcr_calendar_month_2"     v="Dub" />
+        <e k="rcr_calendar_month_3"     v="Kvě" />
+        <e k="rcr_calendar_month_4"     v="Čvn" />
+        <e k="rcr_calendar_month_5"     v="Čvc" />
+        <e k="rcr_calendar_month_6"     v="Srp" />
+        <e k="rcr_calendar_month_7"     v="Zář" />
+        <e k="rcr_calendar_month_8"     v="Říj" />
+        <e k="rcr_calendar_month_9"     v="Lis" />
+        <e k="rcr_calendar_month_10"    v="Pro" />
+        <e k="rcr_calendar_month_11"    v="Led" />
+        <e k="rcr_calendar_month_12"    v="Úno" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Setí" />
+        <e k="rcr_calendar_legend_harvest" v="Sklizeň" />
+        <e k="rcr_calendar_legend_cover"   v="Setí krycí plodiny" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Neúplný plán" />
+        <e k="rcr_score_excellent"      v="Vynikající osevní postup: plodiny jsou dobře vyvážené" />
+        <e k="rcr_score_good"           v="Dobrý osevní postup: pár věcí lze zlepšit" />
+        <e k="rcr_score_fair"           v="Průměrný osevní postup: některé plodiny se vrací příliš brzy" />
+        <e k="rcr_score_poor"           v="Osevní postup ke zlepšení: plodiny na sebe navazují příliš blízko" />
+        <e k="rcr_score_bad"            v="Špatný osevní postup: stejné plodiny se opakují pořád dokola" />
+        <e k="rcr_score_label_low"      v="Špatné skóre" />
+        <e k="rcr_score_label_optimal"  v="Optimální skóre" />
+        <e k="rcr_score_short_optimal"  v="OPTIMÁLNÍ" />
+        <e k="rcr_score_short_good"     v="DOBRÝ" />
+        <e k="rcr_score_short_fair"     v="PRŮMĚRNÝ" />
+        <e k="rcr_score_short_poor"     v="NÍZKÝ" />
+        <e k="rcr_score_short_bad"      v="ŠPATNÝ" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Žádná vlastní pole k zobrazení." />
+        <e k="rcr_function_fungicideTank" v="Použijte AMISTAR v postřikovačích k aplikaci fungicidního ošetření na ohrožené plodiny." />
+        <e k="rcr_function_nematicideTank" v="Použijte VELUM PRIME v postřikovačích k aplikaci nematicidního ošetření na plodiny ohrožené háďátky." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Sklerotiniová hniloba" />
+        <e k="rcr_disease_name_phoma" v="Fomová hniloba (černání stonku řepky)" />
+        <e k="rcr_disease_name_takeall" v="Černání pat stébel" />
+        <e k="rcr_disease_name_septoria" v="Septorióza" />
+        <e k="rcr_disease_name_rust" v="Rez" />
+        <e k="rcr_disease_name_fusarium" v="Fuzarióza" />
+        <e k="rcr_disease_name_lateblight" v="Plíseň bramboru" />
+        <e k="rcr_disease_name_bcn"   v="Háďátko řepné" />
+        <e k="rcr_disease_name_clubroot" v="Nádorovitost brukvovitých" />
+        <e k="rcr_disease_treatment_sclerotinia" v="Fungicid" />
+        <e k="rcr_disease_treatment_phoma" v="Fungicid" />
+        <e k="rcr_disease_treatment_takeall" v="Žádné (pouze osevní postup)" />
+        <e k="rcr_disease_treatment_septoria" v="Fungicid" />
+        <e k="rcr_disease_treatment_rust" v="Fungicid" />
+        <e k="rcr_disease_treatment_fusarium" v="Fungicid" />
+        <e k="rcr_disease_treatment_lateblight" v="Fungicid" />
+        <e k="rcr_disease_treatment_bcn" v="Nematicid" />
+        <e k="rcr_fillType_fungicide" v="Fungicid" />
+        <e k="rcr_fillType_nematicide" v="Nematicid" />
+        <e k="rcr_disease_treatment_none" v="Žádné ošetření" />
+        <e k="rcr_disease_treatment_clubroot" v="Žádné (pouze osevní postup)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Vysoké riziko fomové hniloby: mezi řepkou a hořčicí dodržte odstup alespoň 4 let; fungicid omezuje škody na ošetřených plochách, ale chorobu z pole neodstraní." />
+        <e k="rcr_advice_pressure_high_takeall" v="Vysoké riziko černání pat stébel: mezi obilniny zařaďte oves, luskovinu nebo olejninu; proti této chorobě není ochranný přípravek, delší osevní postup riziko snižuje." />
+        <e k="rcr_advice_pressure_high_septoria" v="Vysoké riziko septoriózy: déšť zvyšuje bezprostřední riziko a fungicid omezuje škody na ošetřených plochách." />
+        <e k="rcr_advice_pressure_high_rust" v="Vysoké riziko rzi: mírné vlhké počasí zvyšuje bezprostřední riziko a fungicid omezuje škody na ošetřených plochách." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Vysoké riziko fuzariózy: nepěstujte pšenici po kukuřici a omezte obilniny pěstované za sebou; fungicid omezuje škody na ošetřených plochách a déšť riziko zvyšuje." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Vysoké riziko plísně bramboru: chladné vlhké počasí zvyšuje bezprostřední riziko a fungicid omezuje škody na ošetřených plochách." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Vysoké riziko nádorovitosti: co nejvíce prodlužte odstup řepky a hořčice; proti této chorobě není ochranný přípravek, delší osevní postup riziko snižuje." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Střední riziko fomové hniloby: prodlužte odstup řepky a hořčice." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Střední riziko černání pat stébel: vyhněte se třetí obilnině v řadě." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Střední riziko septoriózy: déšť zvyšuje bezprostřední riziko." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Střední riziko rzi: mírné vlhké počasí zvyšuje bezprostřední riziko." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Střední riziko fuzariózy: prodlužte odstup obilnin a kukuřice." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Střední riziko plísně bramboru: chladné vlhké počasí zvyšuje bezprostřední riziko." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Střední riziko nádorovitosti: prodlužte odstup řepky a hořčice." />
+    </elements>
+</l10n>

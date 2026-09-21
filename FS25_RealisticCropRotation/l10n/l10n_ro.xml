@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Rotația Culturilor" />
+
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Produse de tratament" />
+        <e k="rcr_help_title_spraying" v="Pulverizează devreme" />
+        <e k="rcr_help_title_treatment_map" v="Zone tratate" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation păstrează pentru fiecare parcelă deținută cele patru înregistrări anterioare de cultură sau pârloagă. Folosește Agronomie pentru a examina parcela, Planificare pentru a pregăti un ciclu repetitiv și harta Boli pentru a urmări riscul, focarele și acoperirea tratamentului." />
+        <e k="rcr_help_text_02" v="Selectează o parcelă deținută pentru a vedea cultura actuală, până la patru înregistrări anterioare, sfatul agronomic, azotul, pH-ul, acoperirea tratamentului și starea actuală a parcelei. Antetul meteo te ajută să alegi momentul pulverizării." />
+        <e k="rcr_help_text_03" v="Selectează o poziție de la N+1 la N+4, apoi cultura principală și o cultură de acoperire opțională. Completează poziții consecutive: începutul completat devine un ciclu repetitiv de doi, trei sau patru ani, inclusiv revenirea de la ultima poziție la prima." />
+        <e k="rcr_help_text_04" v="Calitatea rotației recompensează diversitatea culturilor și a familiilor, alternarea semănatului de iarnă și de primăvară, culturile care produc azot sau culturile de acoperire și o leguminoasă urmată de o cereală. Revenirea prea rapidă a aceleiași familii sau a culturilor cu boli comune reduce scorul." />
+        <e k="rcr_help_text_05" v="O leguminoasă configurată restituie azot numai când este distrusă prin lucrarea solului, nu când este doar recoltată. Restituirea se împarte între următoarele două culturi; cu Precision Farming este scrisă pe harta azotului, iar fără acesta se adaugă un nivel de fertilizare." />
+        <e k="rcr_help_text_06" v="Harta Risc de boli arată cea mai mare presiune actuală a agenților patogeni asupra culturii de pe fiecare parcelă deținută ca scăzută, moderată sau ridicată. Vremea poate modifica suplimentar șansa de infectare, deci folosește harta împreună cu antetul meteo din Agronomie." />
+        <e k="rcr_help_text_07" v="O infecție începe ascunsă și apare aici numai când începe să distrugă cultura. Harta identifică focarul dintre cele nouă boli configurate; apoi îl afișează și fișa parcelei, HUD-ul la mers și notificarea." />
+        <e k="rcr_help_text_09" v="Pulverizează devreme. Fungicidul scade șansa unui focar și încetinește o boală activă proporțional cu acoperirea parcelei. Fungicidul și nematicidul protejează celulele pulverizate de distrugere, dar nu refac cultura pierdută și nu elimină boala din parcelă." />
+        <e k="rcr_help_text_10" v="Harta Tratamente arată terenul protejat de fungicid sau nematicid. Protecția fungicidă se încheie pe terenul recoltat sau cosit. Protecția nematicidă durează trei luni pentru fiecare parcelă, iar o nouă aplicare reînnoiește durata." />
+        <e k="rcr_help_text_11" v="Când te afli pe o parcelă, HUD-ul adaugă cele două culturi anterioare, bolile vizibile și tratamentele active. Afișează și progresul numerotat al creșterii; Precision Farming își păstrează propriile informații despre sol, pH, azot și producție." />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Parcelă" />
+        <e k="rcr_sidebar_no_active_crop"  v="Nicio cultură activă" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Agronomie" />
+        <e k="rcr_sidebar_fields"       v="Parcele" />
+        <e k="rcr_tab_planning"         v="Planificare" />
+        <e k="rcr_section_disease_map"     v="Boli" />
+        <e k="rcr_disease_sub_infections" v="Parcele infectate" />
+        <e k="rcr_disease_sub_pressure"   v="Risc de boli" />
+        <e k="rcr_disease_sub_treatment"  v="Tratamente" />
+        <e k="rcr_disease_risk_low"       v="Scăzut" />
+        <e k="rcr_disease_risk_moderate"  v="Moderat" />
+        <e k="rcr_disease_risk_high"      v="Ridicat" />
+        <e k="rcr_disease_notification" v="Focar de %s pe parcela %s" />
+        <e k="rcr_disease_reminder" v="Boală încă activă: %s, parcela %s" />
+        <e k="rcr_disease_hud_label"    v="Boală" />
+        <e k="rcr_disease_header_active" v="Boală (%s)" />
+        <e k="rcr_treatment_hud_label"  v="Tratament" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d luni rămase)" />
+        <e k="rcr_advice_nematicide_duration" v="Protecția solului durează 3 luni pentru fiecare teren; reaplicarea reînnoiește durata." />
+
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="absent" />
+        <e k="rcr_treatment_partial"  v="parțial (%d %%)" />
+        <e k="rcr_treatment_complete" v="complet" />
+        <e k="rcr_treatment_disease_absent"     v="Fără boală" />
+        <e k="rcr_treatment_disease_active"     v="Boală activă" />
+        <e k="rcr_treatment_disease_controlled" v="Boală sub control" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Boală parțial controlată" />
+        <e k="rcr_treatment_until_harvest" v="Până la recoltare" />
+        <e k="rcr_treatment_months"        v="%d luni" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Aport estimat de azot +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Aport de azot din rotație +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Niciun aport de azot estimat" />
+        <e k="rcr_status_planned_no_residue" v="Niciun aport de azot" />
+        <e k="rcr_weather_sun" v="Cer senin" />
+        <e k="rcr_weather_partially_cloudy" v="Parțial înnorat" />
+        <e k="rcr_weather_cloudy" v="Înnorat" />
+        <e k="rcr_weather_rain" v="Ploaie" />
+        <e k="rcr_weather_snow" v="Ninsoare" />
+        <e k="rcr_weather_hail" v="Grindină" />
+        <e k="rcr_weather_twister" v="Tornadă" />
+        <e k="rcr_weather_thunder" v="Furtună" />
+        <e k="rcr_weather_current_operational" v="%s în curs · se termină %s" />
+        <e k="rcr_weather_current_calm" v="%s · până la %s" />
+        <e k="rcr_weather_soon" v="%s %s-%s · în %s" />
+        <e k="rcr_weather_tomorrow" v="%s mâine %s-%s" />
+        <e k="rcr_weather_later" v="%s Z+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d min" />
+        <e k="rcr_time_hours" v="%d h" />
+        <e k="rcr_time_hours_minutes" v="%d h %02d min" />
+        <e k="rcr_hud_previous_n1"      v="Cultura precedentă (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Penultima cultură (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Istoric Culturi" />
+        <e k="rcr_section_nitrogen"     v="Stare Azot" />
+        <e k="rcr_section_advice"       v="Sfat Agronomic" />
+        <e k="rcr_section_soil_indicators" v="Sol și tratament" />
+        <e k="rcr_section_field"        v="Starea actuală a parcelei" />
+        <e k="rcr_section_lime"         v="Stare Var / pH" />
+        <e k="rcr_section_plan"         v="Plan de Rotație" />
+        <e k="rcr_clear_plan_button"    v="Șterge planul" />
+        <e k="rcr_clear_plan_confirm"   v="Ștergeți planul de rotație pentru %s?" />
+        <e k="rcr_section_score"        v="Calitatea Rotației" />
+        <e k="rcr_section_overview"     v="Prezentare Generală" />
+        <e k="rcr_overview_total_area"  v="Suprafață lucrată: %.1f ha" />
+
+        <!-- Timeline slot labels -->
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Curent" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Cereală" />
+        <e k="rcr_family_legume"        v="Leguminoasă" />
+        <e k="rcr_family_oilseed"       v="Oleaginoasă" />
+        <e k="rcr_family_root"          v="Rădăcinoase" />
+        <e k="rcr_family_vegetable"     v="Legumă" />
+        <e k="rcr_family_forage"        v="Furaj" />
+        <e k="rcr_cover_crop"           v="Cultură intercalată" />
+        <e k="rcr_fallow"              v="Pârloagă" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Nefertilizat" />
+        <e k="rcr_n_partial"            v="Parțial" />
+        <e k="rcr_n_full"               v="Complet" />
+        <e k="rcr_n_average_value"      v="Azot mediu: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Necesarul culturii: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Azot / necesarul culturii" />
+        <e k="rcr_lime_none"            v="Fără Var" />
+        <e k="rcr_lime_partial"         v="Var parțial" />
+        <e k="rcr_lime_full"            v="Var corect" />
+        <e k="rcr_lime_average_pf"      v="pH mediu" />
+        <e k="rcr_lime_average_value"   v="pH mediu: %.3f pH" />
+        <e k="rcr_lime_target"          v="Țintă: %.3f pH" />
+        <e k="rcr_soil_value_unmeasured" v="Valoare nemăsurată" />
+        <e k="rcr_n_crop_need_unavailable" v="Necesarul culturii: --" />
+        <e k="rcr_lime_status_unavailable" v="Var: --" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Valorile azotului și pH-ului nu sunt disponibile. Analizează solul pentru recomandări agronomice precise." />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal" v="După o cereală, semănă o leguminoasă pentru a reface azotul sau o cultură de întrerupere împotriva bolilor bazei tulpinii, și lasă doi ani între cereale." />
+        <e k="rcr_advice_afterLegume" v="După o leguminoasă, o cereală valorifică cel mai bine azotul lăsat, iar o nouă leguminoasă trebuie să aștepte trei ani." />
+        <e k="rcr_advice_afterOilseed" v="După o oleaginoasă, lasă trei ani înainte de revenirea oricărei oleaginoase, cu o cereală și apoi o leguminoasă ca succesiune ideală." />
+        <e k="rcr_advice_afterRoot" v="După o cultură de rădăcinoase, așteaptă patru ani înainte de revenirea rădăcinoaselor, urmată de o cereală pentru a reface structura după recoltarea târzie." />
+        <e k="rcr_advice_afterVegetable" v="După o legumă, așteaptă trei ani înainte de a o repeta, cu o cereală ca întrerupere curată." />
+        <e k="rcr_advice_afterForage" v="După o pajiște temporară, o cereală valorifică fertilitatea și structura acumulate sub covorul ierbos." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Risc mare de putregai alb: păstrați cel puțin 3 ani între rapiță, muștar, floarea-soarelui, soia, mazăre, fasole, cartof și morcov; fungicidul limitează pagubele pe zonele tratate, dar nu elimină boala din teren." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Risc mare de nematozi: păstrați cel puțin 3 ani între sfecla de zahăr, sfecla roșie, rapiță, muștar și spanac; nematicidul protejează zonele tratate, dar nu elimină nematozii." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Risc moderat de putregai alb: măriți intervalul dintre rapiță, muștar, floarea-soarelui, soia, mazăre, fasole, cartof și morcov; ploaia crește riscul." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Risc moderat de nematozi: măriți intervalul dintre sfeclă, rapiță, muștar și spanac." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="După %s, planul tău prevede %s drept următoarea cultură." />
+        <e k="rcr_advice_memo_next_fallow" v="După %s, planul tău prevede un an de pârloagă." />
+        <e k="rcr_advice_memo_no_plan" v="În planul de rotație nu este definită nicio cultură următoare." />
+        <e k="rcr_advice_memo_incomplete_short" v="Planul este incomplet: introdu cel puțin două etape consecutive." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Planul este incomplet: o căsuță „Neplanificat” separă două etape completate." />
+        <e k="rcr_advice_memo_no_history" v="Nu este înregistrată nicio cultură anterioară: următoarea etapă a ciclului nu poate fi determinată." />
+        <e k="rcr_advice_memo_not_aligned" v="Cea mai recentă intrare din istoric (%s) nu apare în ciclul planificat. Următoarea etapă nu poate fi determinată." />
+        <e k="rcr_advice_memo_ambiguous" v="%s apare de mai multe ori în ciclu, cu etape următoare diferite. Următoarea etapă nu poate fi determinată." />
+        <e k="rcr_advice_memo_conflict_family" v="După %s, planul tău prevede %s, dar ambele culturi aparțin aceleiași familii (%s). Mai sunt necesari %d din cei %d ani impuși înainte de o revenire sigură." />
+        <e k="rcr_advice_memo_conflict_disease" v="După %s, planul tău prevede %s, dar ambele culturi pot fi afectate de %s. Mai așteaptă %d ani; intervalul recomandat este de %d ani." />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_ready" v="Rotație optimă" />
+        <e k="rcr_advice_title_warning" v="Conflict de rotație" />
+        <e k="rcr_advice_title_outbreak" v="Infecție activă" />
+        <e k="rcr_advice_outbreak" v="%s este activă pe acest teren, nivelul atacului %d %%. Tratament recomandat: %s." />
+        <e k="rcr_advice_plan_next_conflict_family" v="%s planificată pentru %s: conflict de rotație, aceeași familie (%s) ca cultura actuală, mai sunt necesari %d din %d ani înainte de o revenire sigură." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s planificată pentru %s: conflict de rotație. Aceeași boală (%s) poate afecta și cultura actuală; mai lipsesc %d ani din intervalul recomandat de %d ani." />
+        <e k="rcr_advice_plan_next_ok" v="%s planificată pentru %s: alegere bună, niciun conflict de rotație detectat." />
+        <e k="rcr_advice_title_fallow" v="An de pauză" />
+        <e k="rcr_advice_fallow_current" v="Pârloagă în curs: anul acesta nu se cultivă o cultură principală. Astfel crește timpul până la următoarea cultură sensibilă, dar boala nu dispare imediat." />
+        <e k="rcr_advice_plan_next_fallow" v="Pârloagă planificată pentru %s: timp de un an nu se va cultiva o cultură principală. Astfel crește timpul până la următoarea cultură sensibilă, dar nu este garantată dispariția tuturor bolilor." />
+
+        <!-- Advice card, disease pressure list -->
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Starea solului" />
+        <e k="rcr_field_growth"          v="Creștere" />
+
+        <!-- Field card — weed column header (singular) -->
+        <e k="rcr_weed_header"          v="Buruieni" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Neplanificat" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Mar" />
+        <e k="rcr_calendar_month_2"     v="Apr" />
+        <e k="rcr_calendar_month_3"     v="Mai" />
+        <e k="rcr_calendar_month_4"     v="Iun" />
+        <e k="rcr_calendar_month_5"     v="Iul" />
+        <e k="rcr_calendar_month_6"     v="Aug" />
+        <e k="rcr_calendar_month_7"     v="Sep" />
+        <e k="rcr_calendar_month_8"     v="Oct" />
+        <e k="rcr_calendar_month_9"     v="Noi" />
+        <e k="rcr_calendar_month_10"    v="Dec" />
+        <e k="rcr_calendar_month_11"    v="Ian" />
+        <e k="rcr_calendar_month_12"    v="Feb" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Semănat" />
+        <e k="rcr_calendar_legend_harvest" v="Recoltare" />
+        <e k="rcr_calendar_legend_cover"   v="Semănat acoperire" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Plan incomplet" />
+        <e k="rcr_score_excellent"      v="Rotație excelentă: echilibru agronomic bun" />
+        <e k="rcr_score_good"           v="Rotație bună: câteva puncte pot fi îmbunătățite" />
+        <e k="rcr_score_fair"           v="Rotație acceptabilă: unele culturi revin prea repede" />
+        <e k="rcr_score_poor"           v="Rotație slabă: culturile sunt prea apropiate între ele" />
+        <e k="rcr_score_bad"            v="Rotație foarte slabă: aceleași culturi se succedă" />
+        <e k="rcr_score_label_low"      v="Scor slab" />
+        <e k="rcr_score_label_optimal"  v="Scor optim" />
+        <e k="rcr_score_short_optimal"  v="OPTIM" />
+        <e k="rcr_score_short_good"     v="BUNĂ" />
+        <e k="rcr_score_short_fair"     v="ACCEPTABIL" />
+        <e k="rcr_score_short_poor"     v="SLABĂ" />
+        <e k="rcr_score_short_bad"      v="FOARTE SLABĂ" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Nicio parcelă proprie de afișat." />
+        <e k="rcr_function_fungicideTank" v="Folosește AMISTAR în pulverizatoare pentru a aplica un tratament fungicid pe culturile expuse riscului." />
+        <e k="rcr_function_nematicideTank" v="Folosește VELUM PRIME în pulverizatoare pentru a aplica un tratament nematicid pe culturile expuse la nematozi." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Putregaiul alb" />
+        <e k="rcr_disease_name_phoma" v="Putregaiul uscat / cancerul tulpinii (Phoma)" />
+        <e k="rcr_disease_name_takeall" v="Înnegrirea bazei paiului" />
+        <e k="rcr_disease_name_septoria" v="Septorioza" />
+        <e k="rcr_disease_name_rust" v="Rugina" />
+        <e k="rcr_disease_name_fusarium" v="Fuzarioza" />
+        <e k="rcr_disease_name_lateblight" v="Mana cartofului" />
+        <e k="rcr_disease_name_bcn"   v="Nematod cu chisturi" />
+        <e k="rcr_disease_name_clubroot" v="Hernia rădăcinilor de crucifere" />
+        <e k="rcr_disease_treatment_sclerotinia" v="Fungicid" />
+        <e k="rcr_disease_treatment_phoma" v="Fungicid" />
+        <e k="rcr_disease_treatment_takeall" v="Niciunul (doar rotație)" />
+        <e k="rcr_disease_treatment_septoria" v="Fungicid" />
+        <e k="rcr_disease_treatment_rust" v="Fungicid" />
+        <e k="rcr_disease_treatment_fusarium" v="Fungicid" />
+        <e k="rcr_disease_treatment_lateblight" v="Fungicid" />
+        <e k="rcr_disease_treatment_bcn" v="Nematicid" />
+        <e k="rcr_fillType_fungicide" v="Fungicid" />
+        <e k="rcr_fillType_nematicide" v="Nematicid" />
+        <e k="rcr_disease_treatment_none" v="Niciun tratament" />
+        <e k="rcr_disease_treatment_clubroot" v="Niciunul (doar rotație)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Risc mare de Phoma: păstrați cel puțin 4 ani între rapiță și muștar; fungicidul limitează pagubele pe zonele tratate, dar nu elimină boala din teren." />
+        <e k="rcr_advice_pressure_high_takeall" v="Risc mare de înnegrire a bazei paiului: cultivați ovăz, leguminoase sau oleaginoase între cereale; niciun produs nu protejează de această boală, o rotație mai lungă reduce riscul." />
+        <e k="rcr_advice_pressure_high_septoria" v="Risc mare de septorioză: ploaia mărește riscul imediat, iar fungicidul limitează pagubele pe zonele tratate." />
+        <e k="rcr_advice_pressure_high_rust" v="Risc mare de rugină: vremea blândă și umedă mărește riscul imediat, iar fungicidul limitează pagubele pe zonele tratate." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Risc mare de fuzarioză: evitați grâul după porumb și reduceți cerealele cultivate consecutiv; fungicidul limitează pagubele pe zonele tratate, iar ploaia mărește riscul." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Risc mare de mană: vremea răcoroasă și umedă mărește riscul imediat, iar fungicidul limitează pagubele pe zonele tratate." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Risc mare de hernie: prelungiți cât mai mult pauza dintre rapiță și muștar; niciun produs nu protejează de această boală, o rotație mai lungă reduce riscul." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Risc moderat de Phoma: prelungiți pauza dintre rapiță și muștar." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Risc moderat de înnegrire a bazei paiului: evitați a treia cereală la rând." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Risc moderat de septorioză: ploaia mărește riscul imediat." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Risc moderat de rugină: vremea blândă și umedă mărește riscul imediat." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Risc moderat de fuzarioză: măriți intervalul dintre cereale și porumb." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Risc moderat de mană: vremea răcoroasă și umedă mărește riscul imediat." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Risc moderat de hernie: prelungiți pauza dintre rapiță și muștar." />
+    </elements>
+</l10n>

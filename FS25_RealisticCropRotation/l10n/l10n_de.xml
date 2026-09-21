@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Fruchtfolge" />
+
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Behandlungsprodukte" />
+        <e k="rcr_help_title_spraying" v="Früh spritzen" />
+        <e k="rcr_help_title_treatment_map" v="Behandelte Flächen" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation speichert für jedes eigene Feld die vier vorherigen Einträge, also Kulturen oder Brache. Unter Agronomie prüfst du ein Feld, unter Planung erstellst du einen wiederholten Zyklus und auf der Karte Krankheiten überwachst du Risiko, Befall und Behandlungsabdeckung." />
+        <e k="rcr_help_text_02" v="Wähle ein eigenes Feld, um die aktuelle Kultur, bis zu vier vorherige Einträge, agronomische Empfehlungen, Stickstoff, pH-Wert, Behandlungsabdeckung und den aktuellen Feldzustand zu sehen. Die Wetterleiste hilft dir, den Spritzzeitpunkt zu wählen." />
+        <e k="rcr_help_text_03" v="Wähle einen Platz von N+1 bis N+4 und danach die Hauptkultur sowie optional eine Zwischenfrucht. Fülle aufeinanderfolgende Plätze: Der ausgefüllte Anfang wird zu einem wiederholten zwei-, drei- oder vierjährigen Zyklus, einschließlich der Rückkehr vom letzten zum ersten Platz." />
+        <e k="rcr_help_text_04" v="Die Fruchtfolgequalität belohnt Kultur- und Familienvielfalt, den Wechsel zwischen Winter- und Sommeraussaat, stickstoffliefernde Kulturen oder Zwischenfrüchte sowie eine Leguminose vor Getreide. Eine zu frühe Rückkehr derselben Familie oder von Kulturen mit gemeinsamen Krankheiten senkt die Bewertung." />
+        <e k="rcr_help_text_05" v="Eine konfigurierte Leguminose gibt Stickstoff nur zurück, wenn sie durch Bodenbearbeitung zerstört und nicht bloß geerntet wird. Der Rückstand wird auf die nächsten zwei Kulturen verteilt; mit Precision Farming wird er in die Stickstoffkarte geschrieben, sonst wird eine Düngestufe hinzugefügt." />
+        <e k="rcr_help_text_06" v="Die Karte Krankheitsrisiko zeigt den höchsten aktuellen Erregerdruck für die Kultur auf jedem eigenen Feld als niedrig, mittel oder hoch. Das Wetter kann die Infektionsgefahr weiter verändern; nutze diese Karte deshalb zusammen mit der Wetterleiste unter Agronomie." />
+        <e k="rcr_help_text_07" v="Eine Infektion beginnt verborgen und erscheint hier erst, wenn sie die Kultur zu zerstören beginnt. Die Karte ordnet den Befall einer der neun konfigurierten Krankheiten zu; danach zeigen ihn auch die Feldkarte, die Feldanzeige zu Fuß und die Meldung." />
+        <e k="rcr_help_text_09" v="Spritze früh. Fungizid senkt die Ausbruchsgefahr und verlangsamt eine aktive Krankheit entsprechend der Feldabdeckung. Fungizid und Nematizid schützen besprühte Zellen vor Zerstörung, stellen aber keine verlorene Kultur wieder her und entfernen keine Krankheit aus dem Feld." />
+        <e k="rcr_help_text_10" v="Die Karte Behandlungen zeigt mit Fungizid oder Nematizid geschützte Flächen. Der Fungizidschutz endet auf geerntetem oder gemähtem Boden. Der Nematizidschutz hält je Feld drei Monate; eine weitere Anwendung erneuert die Dauer." />
+        <e k="rcr_help_text_11" v="Wenn du auf einem Feld stehst, ergänzt die Feldanzeige die zwei vorherigen Kulturen, sichtbare Krankheiten und aktive Behandlungen. Sie zeigt außerdem den nummerierten Wachstumsfortschritt; Precision Farming behält seine eigenen Angaben zu Boden, pH-Wert, Stickstoff und Ertrag." />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Feld" />
+        <e k="rcr_sidebar_no_active_crop"  v="Keine aktive Kultur" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Agronomie" />
+        <e k="rcr_sidebar_fields"       v="Felder" />
+        <e k="rcr_tab_planning"         v="Planung" />
+        <e k="rcr_section_disease_map"     v="Krankheiten" />
+        <e k="rcr_disease_sub_infections" v="Infizierte Felder" />
+        <e k="rcr_disease_sub_pressure"   v="Krankheitsrisiko" />
+        <e k="rcr_disease_sub_treatment"  v="Behandlung" />
+        <e k="rcr_disease_risk_low"       v="Gering" />
+        <e k="rcr_disease_risk_moderate"  v="Mittel" />
+        <e k="rcr_disease_risk_high"      v="Hoch" />
+        <e k="rcr_disease_notification" v="%s auf Feld %s entdeckt" />
+        <e k="rcr_disease_reminder" v="Krankheit weiterhin aktiv: %s, Feld %s" />
+        <e k="rcr_disease_hud_label"    v="Krankheit" />
+        <e k="rcr_disease_header_active" v="Krankheit (%s)" />
+        <e k="rcr_treatment_hud_label"  v="Behandlung" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d Monate verbleibend)" />
+        <e k="rcr_advice_nematicide_duration" v="Der Bodenschutz hält je Feld 3 Monate; eine erneute Anwendung verlängert die Dauer." />
+
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="fehlt" />
+        <e k="rcr_treatment_partial"  v="teilweise (%d %%)" />
+        <e k="rcr_treatment_complete" v="vollständig" />
+        <e k="rcr_treatment_disease_absent"     v="Keine Krankheit" />
+        <e k="rcr_treatment_disease_active"     v="Krankheit aktiv" />
+        <e k="rcr_treatment_disease_controlled" v="Krankheit unter Kontrolle" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Krankheit teilweise unter Kontrolle" />
+        <e k="rcr_treatment_until_harvest" v="Bis zur Ernte" />
+        <e k="rcr_treatment_months"        v="%d Monate" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Stickstoffrückgabe +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Stickstoffrückgabe der Fruchtfolge +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Keine Stickstoffrückgabe zu erwarten" />
+        <e k="rcr_status_planned_no_residue" v="Keine Stickstoffrückgabe" />
+        <e k="rcr_weather_sun" v="Klarer Himmel" />
+        <e k="rcr_weather_partially_cloudy" v="Aufheiterungen" />
+        <e k="rcr_weather_cloudy" v="Bedeckt" />
+        <e k="rcr_weather_rain" v="Regen" />
+        <e k="rcr_weather_snow" v="Schnee" />
+        <e k="rcr_weather_hail" v="Hagel" />
+        <e k="rcr_weather_twister" v="Tornado" />
+        <e k="rcr_weather_thunder" v="Gewitter" />
+        <e k="rcr_weather_current_operational" v="%s aktiv · Ende %s" />
+        <e k="rcr_weather_current_calm" v="%s · bis %s" />
+        <e k="rcr_weather_soon" v="%s %s-%s · in %s" />
+        <e k="rcr_weather_tomorrow" v="%s morgen %s-%s" />
+        <e k="rcr_weather_later" v="%s T+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d min" />
+        <e k="rcr_time_hours" v="%d h" />
+        <e k="rcr_time_hours_minutes" v="%d h %02d min" />
+        <e k="rcr_hud_previous_n1"      v="Vorfrucht (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Vorvorfrucht (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Anbaugeschichte" />
+        <e k="rcr_section_nitrogen"     v="Stickstoffstatus" />
+        <e k="rcr_section_advice"       v="Agronomische Empfehlung" />
+        <e k="rcr_section_soil_indicators" v="Boden und Behandlung" />
+        <e k="rcr_section_field"        v="Aktueller Feldzustand" />
+        <e k="rcr_section_lime"         v="Kalk-/pH-Status" />
+        <e k="rcr_section_plan"         v="Rotationsplan" />
+        <e k="rcr_clear_plan_button"    v="Plan löschen" />
+        <e k="rcr_clear_plan_confirm"   v="Rotationsplan für %s löschen?" />
+        <e k="rcr_section_score"        v="Rotationsqualität" />
+        <e k="rcr_section_overview"     v="Gesamtübersicht" />
+        <e k="rcr_overview_total_area"  v="Bewirtschaftete Fläche: %.1f ha" />
+
+        <!-- Timeline slot labels -->
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Aktuell" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Getreide" />
+        <e k="rcr_family_legume"        v="Hülsenfrucht" />
+        <e k="rcr_family_oilseed"       v="Ölsaat" />
+        <e k="rcr_family_root"          v="Wurzelgemüse" />
+        <e k="rcr_family_vegetable"     v="Gemüse" />
+        <e k="rcr_family_forage"        v="Futter" />
+        <e k="rcr_cover_crop"           v="Zwischenkultur" />
+        <e k="rcr_fallow"              v="Brache" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Kein Dünger" />
+        <e k="rcr_n_partial"            v="Teilweise" />
+        <e k="rcr_n_full"               v="Vollständig" />
+        <e k="rcr_n_average_value"      v="Durchschnitt Stickstoff: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Kulturbedarf: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Stickstoff / Pflanzenbedarf" />
+        <e k="rcr_lime_none"            v="Kein Kalk" />
+        <e k="rcr_lime_partial"         v="Teilweise Kalk" />
+        <e k="rcr_lime_full"            v="Kalk korrekt" />
+        <e k="rcr_lime_average_pf"      v="Durchschnitt pH" />
+        <e k="rcr_lime_average_value"   v="Durchschnitt pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="Ziel: %.3f pH" />
+        <e k="rcr_soil_value_unmeasured" v="Wert nicht gemessen" />
+        <e k="rcr_n_crop_need_unavailable" v="Pflanzenbedarf: --" />
+        <e k="rcr_lime_status_unavailable" v="Kalk: --" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Stickstoff- und pH-Werte sind nicht verfügbar. Analysiere den Boden, um genaue agronomische Empfehlungen zu erhalten." />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal"    v="Nach Getreide eine Hülsenfrucht zur Stickstoffrückführung oder eine Blattfrucht gegen Fußkrankheiten säen, und zwei Jahre zwischen zwei Getreidekulturen lassen." />
+        <e k="rcr_advice_afterLegume"    v="Nach einer Hülsenfrucht nutzt Getreide den hinterlassenen Stickstoff am besten, und eine neue Hülsenfrucht sollte drei Jahre warten." />
+        <e k="rcr_advice_afterOilseed"   v="Nach einer Ölsaat drei Jahre bis zur nächsten Ölsaat lassen, mit Getreide und danach einer Hülsenfrucht als idealer Folge." />
+        <e k="rcr_advice_afterRoot"      v="Nach einer Hackfrucht vier Jahre bis zur Wiederkehr lassen, dann Getreide, um die Struktur nach der späten Ernte wieder aufzubauen." />
+        <e k="rcr_advice_afterVegetable" v="Nach Gemüse drei Jahre bis zur Wiederholung warten, mit Getreide als saubere Anbaupause." />
+        <e k="rcr_advice_afterForage"    v="Nach einer Grasphase verwertet Getreide die unter der Grasnarbe aufgebaute Fruchtbarkeit und Struktur." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Hohes Sclerotinia-Risiko: Mindestens 3 Jahre warten, bevor Raps, Senf, Sonnenblume, Soja, Erbse, Bohne, Kartoffel oder Möhre erneut angebaut werden; Fungizid begrenzt Schäden auf behandelten Flächen, beseitigt die Krankheit aber nicht aus dem Feld." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Hohes Nematodenrisiko: Mindestens 3 Jahre warten, bevor Zuckerrübe, Rote Bete, Raps, Senf oder Spinat erneut angebaut werden; Nematizid schützt behandelte Flächen, beseitigt die Nematoden aber nicht." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Mäßiges Sclerotinia-Risiko: Mehr Zeit lassen, bevor Raps, Senf, Sonnenblume, Soja, Erbse, Bohne, Kartoffel oder Möhre erneut angebaut werden; Regen kann das Risiko erhöhen." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Mäßiges Nematodenrisiko: Mehr Zeit lassen, bevor Rüben, Raps, Senf oder Spinat erneut angebaut werden." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="Nach %s sieht dein Plan %s als nächste Kultur vor." />
+        <e k="rcr_advice_memo_next_fallow" v="Nach %s sieht dein Plan ein Jahr Brache vor." />
+        <e k="rcr_advice_memo_no_plan" v="Im Rotationsplan ist keine nächste Kultur festgelegt." />
+        <e k="rcr_advice_memo_incomplete_short" v="Der Plan ist unvollständig: Trage mindestens zwei aufeinanderfolgende Schritte ein." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Der Plan ist unvollständig: Ein Feld „Nicht geplant“ trennt zwei ausgefüllte Schritte." />
+        <e k="rcr_advice_memo_no_history" v="Es ist keine vorherige Kultur gespeichert: Der nächste Schritt des Zyklus kann nicht bestimmt werden." />
+        <e k="rcr_advice_memo_not_aligned" v="Der neueste Verlaufseintrag (%s) kommt im geplanten Zyklus nicht vor. Der nächste Schritt kann nicht bestimmt werden." />
+        <e k="rcr_advice_memo_ambiguous" v="%s kommt im Zyklus mehrfach mit unterschiedlichen Folgeschritten vor. Der nächste Schritt kann nicht bestimmt werden." />
+        <e k="rcr_advice_memo_conflict_family" v="Nach %s sieht dein Plan %s vor, aber beide Kulturen gehören zur selben Familie (%s). Vor einer sicheren Rückkehr fehlen noch %d der erforderlichen %d Jahr(e)." />
+        <e k="rcr_advice_memo_conflict_disease" v="Nach %s sieht dein Plan %s vor, aber beide Kulturen können von %s befallen werden. Warte noch %d Jahr(e); der empfohlene Abstand beträgt %d Jahr(e)." />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_ready" v="Fruchtfolge optimal" />
+        <e k="rcr_advice_title_warning" v="Fruchtfolgekonflikt" />
+        <e k="rcr_advice_title_outbreak" v="Aktive Infektion" />
+        <e k="rcr_advice_outbreak" v="%s ist auf diesem Feld aktiv. Befallsstärke: %d %%. Empfohlene Behandlung: %s." />
+        <e k="rcr_advice_plan_next_conflict_family" v="%s geplant für %s: Fruchtfolgekonflikt, gleiche Familie (%s) wie die aktuelle Kultur, noch %d Jahr(e) von %d nötig, bevor eine sichere Rückkehr möglich ist." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s geplant für %s: Diese und die aktuelle Kultur können beide von %s befallen werden. Noch %d Jahr(e) warten; der empfohlene Abstand beträgt %d Jahr(e)." />
+        <e k="rcr_advice_plan_next_ok" v="%s geplant für %s: gute Wahl, kein Fruchtfolgekonflikt festgestellt." />
+        <e k="rcr_advice_title_fallow" v="Anbaupause" />
+        <e k="rcr_advice_fallow_current" v="Brache im Gange: In diesem Jahr wird keine Hauptkultur angebaut. Dadurch vergeht mehr Zeit bis zur nächsten empfindlichen Kultur, die Krankheit verschwindet aber nicht sofort." />
+        <e k="rcr_advice_plan_next_fallow" v="Brache für %s geplant: Ein Jahr lang wird keine Hauptkultur angebaut. Dadurch vergeht mehr Zeit bis zur nächsten empfindlichen Kultur, es ist aber nicht garantiert, dass alle Krankheiten verschwunden sind." />
+
+        <!-- Advice card, disease pressure list -->
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Bodenzustand" />
+        <e k="rcr_field_growth"          v="Wachstum" />
+
+        <!-- Field card — weed column header (singular) -->
+        <e k="rcr_weed_header"          v="Unkraut" />
+
+        <!-- Planning tab — year slots -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Nicht geplant" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Mär" />
+        <e k="rcr_calendar_month_2"     v="Apr" />
+        <e k="rcr_calendar_month_3"     v="Mai" />
+        <e k="rcr_calendar_month_4"     v="Jun" />
+        <e k="rcr_calendar_month_5"     v="Jul" />
+        <e k="rcr_calendar_month_6"     v="Aug" />
+        <e k="rcr_calendar_month_7"     v="Sep" />
+        <e k="rcr_calendar_month_8"     v="Okt" />
+        <e k="rcr_calendar_month_9"     v="Nov" />
+        <e k="rcr_calendar_month_10"    v="Dez" />
+        <e k="rcr_calendar_month_11"    v="Jan" />
+        <e k="rcr_calendar_month_12"    v="Feb" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Aussaat" />
+        <e k="rcr_calendar_legend_harvest" v="Ernte" />
+        <e k="rcr_calendar_legend_cover"   v="Zwischenfrucht-Aussaat" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Unvollständiger Plan" />
+        <e k="rcr_score_excellent"      v="Ausgezeichnete Rotation: agronomisch gut ausbalanciert" />
+        <e k="rcr_score_good"           v="Gute Rotation: einige Punkte lassen sich verbessern" />
+        <e k="rcr_score_fair"           v="Angemessene Rotation: manche Kulturen kehren zu früh zurück" />
+        <e k="rcr_score_poor"           v="Schlechte Rotation: Kulturen stehen zu dicht beieinander" />
+        <e k="rcr_score_bad"            v="Sehr schlechte Rotation: dieselben Kulturen folgen aufeinander" />
+        <e k="rcr_score_label_low"      v="Schlechte Bewertung" />
+        <e k="rcr_score_label_optimal"  v="Optimale Bewertung" />
+        <e k="rcr_score_short_optimal"  v="OPTIMAL" />
+        <e k="rcr_score_short_good"     v="GUT" />
+        <e k="rcr_score_short_fair"     v="OK" />
+        <e k="rcr_score_short_poor"     v="SCHWACH" />
+        <e k="rcr_score_short_bad"      v="SCHLECHT" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Keine eigenen Felder anzuzeigen." />
+        <e k="rcr_function_fungicideTank" v="Verwende AMISTAR in Feldspritzen, um eine Fungizidbehandlung auf gefährdeten Kulturen auszubringen." />
+        <e k="rcr_function_nematicideTank" v="Verwende VELUM PRIME in Feldspritzen, um eine Nematizidbehandlung auf nematodengefährdeten Kulturen auszubringen." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia" />
+        <e k="rcr_disease_name_phoma" v="Phoma (Wurzelhalsfäule)" />
+        <e k="rcr_disease_name_takeall" v="Schwarzbeinigkeit" />
+        <e k="rcr_disease_name_septoria" v="Septoria" />
+        <e k="rcr_disease_name_rust" v="Rost" />
+        <e k="rcr_disease_name_fusarium" v="Fusariose" />
+        <e k="rcr_disease_name_lateblight" v="Kraut- und Knollenfäule" />
+        <e k="rcr_disease_name_bcn"   v="Zystennematode" />
+        <e k="rcr_disease_name_clubroot" v="Kohlhernie" />
+        <e k="rcr_disease_treatment_sclerotinia" v="Fungizid" />
+        <e k="rcr_disease_treatment_phoma" v="Fungizid" />
+        <e k="rcr_disease_treatment_takeall" v="Keine (nur Fruchtfolge)" />
+        <e k="rcr_disease_treatment_septoria" v="Fungizid" />
+        <e k="rcr_disease_treatment_rust" v="Fungizid" />
+        <e k="rcr_disease_treatment_fusarium" v="Fungizid" />
+        <e k="rcr_disease_treatment_lateblight" v="Fungizid" />
+        <e k="rcr_disease_treatment_bcn" v="Nematizid" />
+        <e k="rcr_fillType_fungicide" v="Fungizid" />
+        <e k="rcr_fillType_nematicide" v="Nematizid" />
+        <e k="rcr_disease_treatment_none" v="Keine Behandlung" />
+        <e k="rcr_disease_treatment_clubroot" v="Keine (nur Fruchtfolge)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Hohes Phoma-Risiko: Mindestens 4 Jahre warten, bevor Raps oder Senf erneut angebaut werden; Fungizid begrenzt Schäden auf behandelten Flächen, beseitigt die Krankheit aber nicht aus dem Feld." />
+        <e k="rcr_advice_pressure_high_takeall" v="Hohes Schwarzbeinigkeitsrisiko: Die Getreidefolge mit Hafer, einer Leguminose oder einer Ölfrucht unterbrechen; kein Mittel schützt vor dieser Krankheit, und mehr Zeit zwischen empfindlichen Getreidekulturen senkt das zukünftige Risiko." />
+        <e k="rcr_advice_pressure_high_septoria" v="Hohes Septoria-Risiko: Regen kann das Risiko weiter erhöhen, und Fungizid begrenzt Schäden auf behandelten Flächen." />
+        <e k="rcr_advice_pressure_high_rust" v="Hohes Rostrisiko: Mildes, feuchtes Wetter kann das Risiko weiter erhöhen, und Fungizid begrenzt Schäden auf behandelten Flächen." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Hohes Fusarium-Risiko: Weizen direkt nach Mais und mehrere Getreidekulturen in Folge vermeiden; Fungizid begrenzt Schäden auf behandelten Flächen, und Regen kann die Krankheit beschleunigen." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Hohes Krautfäulerisiko: Kühles, feuchtes Wetter kann das Risiko weiter erhöhen, und Fungizid begrenzt Schäden auf behandelten Flächen." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Hohes Kohlhernierisiko: So lange wie möglich warten, bevor Raps oder Senf erneut angebaut werden; kein Mittel schützt vor dieser Krankheit, die dauerhaft im Feld bleiben kann." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Mäßiges Phoma-Risiko: Mehr Zeit lassen, bevor Raps oder Senf erneut angebaut werden." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Mäßiges Schwarzbeinigkeitsrisiko: Eine dritte Getreidekultur in Folge vermeiden." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Mäßiges Septoria-Risiko: Regen kann das Risiko weiter erhöhen." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Mäßiges Rostrisiko: Mildes, feuchtes Wetter kann das Risiko weiter erhöhen." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Mäßiges Fusarium-Risiko: Mehr Zeit zwischen Getreide und Mais lassen." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Mäßiges Krautfäulerisiko: Kühles, feuchtes Wetter kann das Risiko weiter erhöhen." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Mäßiges Kohlhernierisiko: Mehr Zeit lassen, bevor Raps oder Senf erneut angebaut werden." />
+    </elements>
+</l10n>

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Сівозміна" />
+
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Засоби обробки" />
+        <e k="rcr_help_title_spraying" v="Обприскуйте завчасно" />
+        <e k="rcr_help_title_treatment_map" v="Оброблені ділянки" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation зберігає для кожного вашого поля чотири попередні записи про культури або пар. У розділі «Агрономія» можна перевірити поле, у «Плануванні» — скласти повторюваний цикл, а на карті «Хвороби» — стежити за ризиком, спалахами та покриттям обробки." />
+        <e k="rcr_help_text_02" v="Виберіть своє поле, щоб переглянути поточну культуру, до чотирьох попередніх записів, агрономічну пораду, азот, pH, покриття обробки та поточний стан поля. Заголовок погоди допомагає вибрати час обприскування." />
+        <e k="rcr_help_text_03" v="Виберіть комірку від N+1 до N+4, потім основну культуру та необов’язкову покривну культуру. Заповнюйте комірки поспіль: заповнена початкова частина стає повторюваним циклом на два, три або чотири роки, включно з переходом від останньої комірки до першої." />
+        <e k="rcr_help_text_04" v="Якість сівозміни підвищують різноманіття культур і родин, чергування озимої та ярої сівби, азотфіксувальні або покривні культури, а також зернова після бобової. Надто раннє повернення однієї родини або культур зі спільними хворобами знижує оцінку." />
+        <e k="rcr_help_text_05" v="Налаштована бобова культура повертає азот лише тоді, коли її знищують обробітком ґрунту, а не просто збирають. Азот розподіляється між наступними двома культурами; з Precision Farming він записується на карту азоту, а без нього додається один рівень удобрення." />
+        <e k="rcr_help_text_06" v="Карта «Ризик хвороб» показує найбільший поточний тиск збудників на культуру кожного вашого поля як низький, помірний або високий. Погода може додатково змінити ймовірність зараження, тому використовуйте карту разом із заголовком погоди в розділі «Агрономія»." />
+        <e k="rcr_help_text_07" v="Зараження починається приховано й з’являється тут лише після того, як починає знищувати культуру. Карта визначає спалах однієї з дев’яти налаштованих хвороб; потім його також показують картка поля, інтерфейс під час ходьби та сповіщення." />
+        <e k="rcr_help_text_09" v="Обприскуйте завчасно. Фунгіцид знижує ймовірність спалаху та сповільнює активну хворобу пропорційно до покриття поля. Фунгіцид і нематицид захищають обприскані комірки від знищення, але не відновлюють утрачену культуру й не видаляють хворобу з поля." />
+        <e k="rcr_help_text_10" v="Карта «Обробки» показує землю, захищену фунгіцидом або нематицидом. Захист фунгіцидом припиняється на зібраній або скошеній землі. Захист нематицидом триває три місяці на кожному полі, а нова обробка поновлює цей строк." />
+        <e k="rcr_help_text_11" v="Коли ви стоїте на полі, інтерфейс додає дві попередні культури, видимі хвороби й активні обробки. Він також показує пронумерований хід росту; Precision Farming зберігає власні дані про ґрунт, pH, азот і врожайність." />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Поле" />
+        <e k="rcr_sidebar_no_active_crop"  v="Немає активної культури" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Агрономія" />
+        <e k="rcr_sidebar_fields"       v="Поля" />
+        <e k="rcr_tab_planning"         v="Планування" />
+        <e k="rcr_section_disease_map"     v="Хвороби" />
+        <e k="rcr_disease_sub_infections" v="Заражені поля" />
+        <e k="rcr_disease_sub_pressure"   v="Ризик хвороб" />
+        <e k="rcr_disease_sub_treatment"  v="Обробки" />
+        <e k="rcr_disease_risk_low"       v="Низький" />
+        <e k="rcr_disease_risk_moderate"  v="Помірний" />
+        <e k="rcr_disease_risk_high"      v="Високий" />
+        <e k="rcr_disease_notification" v="Поява хвороби: %s, поле %s" />
+        <e k="rcr_disease_reminder" v="Хвороба все ще активна: %s, поле %s" />
+        <e k="rcr_disease_hud_label"    v="Хвороба" />
+        <e k="rcr_disease_header_active" v="Хвороба (%s)" />
+        <e k="rcr_treatment_hud_label"  v="Обробка" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (залишилося місяців: %d)" />
+        <e k="rcr_advice_nematicide_duration" v="Захист ґрунту діє 3 місяці на кожному полі; повторне внесення оновлює строк." />
+
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="немає" />
+        <e k="rcr_treatment_partial"  v="частково (%d %%)" />
+        <e k="rcr_treatment_complete" v="повністю" />
+        <e k="rcr_treatment_disease_absent"     v="Хвороби немає" />
+        <e k="rcr_treatment_disease_active"     v="Хвороба активна" />
+        <e k="rcr_treatment_disease_controlled" v="Хвороба під контролем" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Хвороба частково під контролем" />
+        <e k="rcr_treatment_until_harvest" v="До збирання" />
+        <e k="rcr_treatment_months"        v="%d місяців" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Очікуване надходження азоту +%d (N+1) / +%d (N+2) кг/га" />
+        <e k="rcr_status_planned_residue" v="Надходження азоту від сівозміни +%d кг/га" />
+        <e k="rcr_status_current_no_residue" v="Надходження азоту не очікується" />
+        <e k="rcr_status_planned_no_residue" v="Надходження азоту відсутнє" />
+        <e k="rcr_weather_sun" v="Ясно" />
+        <e k="rcr_weather_partially_cloudy" v="Прояснення" />
+        <e k="rcr_weather_cloudy" v="Хмарно" />
+        <e k="rcr_weather_rain" v="Дощ" />
+        <e k="rcr_weather_snow" v="Сніг" />
+        <e k="rcr_weather_hail" v="Град" />
+        <e k="rcr_weather_twister" v="Смерч" />
+        <e k="rcr_weather_thunder" v="Гроза" />
+        <e k="rcr_weather_current_operational" v="%s триває · кінець %s" />
+        <e k="rcr_weather_current_calm" v="%s · до %s" />
+        <e k="rcr_weather_soon" v="%s %s-%s · через %s" />
+        <e k="rcr_weather_tomorrow" v="%s завтра %s-%s" />
+        <e k="rcr_weather_later" v="%s Д+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d хв" />
+        <e k="rcr_time_hours" v="%d год" />
+        <e k="rcr_time_hours_minutes" v="%d год %02d хв" />
+        <e k="rcr_hud_previous_n1"      v="Попередня культура (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Більш рання культура (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Історія культур" />
+        <e k="rcr_section_nitrogen"     v="Стан азоту" />
+        <e k="rcr_section_advice"       v="Агрономічна порада" />
+        <e k="rcr_section_soil_indicators" v="Ґрунт і обробка" />
+        <e k="rcr_section_field"        v="Поточний стан поля" />
+        <e k="rcr_section_lime"         v="Стан вапна / pH" />
+        <e k="rcr_section_plan"         v="План сівозміни" />
+        <e k="rcr_clear_plan_button"    v="Очистити план" />
+        <e k="rcr_clear_plan_confirm"   v="Очистити план сівозміни для %s?" />
+        <e k="rcr_section_score"        v="Якість сівозміни" />
+        <e k="rcr_section_overview"     v="Загальний огляд" />
+        <e k="rcr_overview_total_area"  v="Оброблена площа: %.1f га" />
+
+        <!-- Timeline slot labels -->
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Поточна" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Зернові" />
+        <e k="rcr_family_legume"        v="Бобові" />
+        <e k="rcr_family_oilseed"       v="Олійні" />
+        <e k="rcr_family_root"          v="Коренеплоди" />
+        <e k="rcr_family_vegetable"     v="Овочі" />
+        <e k="rcr_family_forage"        v="Кормові" />
+        <e k="rcr_cover_crop"           v="Проміжна культура" />
+        <e k="rcr_fallow"              v="Пар" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Без добрив" />
+        <e k="rcr_n_partial"            v="Частково" />
+        <e k="rcr_n_full"               v="Повністю" />
+        <e k="rcr_n_average_value"      v="Середній азот: %.0f кг/га" />
+        <e k="rcr_n_crop_need"          v="Потреба культури: %.0f кг/га" />
+        <e k="rcr_n_average_pf"         v="Азот / потреба культури" />
+        <e k="rcr_lime_none"            v="Без вапна" />
+        <e k="rcr_lime_partial"         v="Часткове вапно" />
+        <e k="rcr_lime_full"            v="Вапно в нормі" />
+        <e k="rcr_lime_average_pf"      v="Середній pH" />
+        <e k="rcr_lime_average_value"   v="Середній pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="Ціль: %.3f pH" />
+        <e k="rcr_soil_value_unmeasured" v="Значення не виміряно" />
+        <e k="rcr_n_crop_need_unavailable" v="Потреба культури: --" />
+        <e k="rcr_lime_status_unavailable" v="Вапно: --" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Значення азоту та pH недоступні. Проведіть аналіз ґрунту, щоб отримати точні агрономічні рекомендації." />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal" v="Після зернової культури посійте бобову для повернення азоту або розривну культуру проти прикореневих хвороб і витримайте два роки між зерновими." />
+        <e k="rcr_advice_afterLegume" v="Після бобової культури зернова найкраще використає залишений азот, а наступна бобова має зачекати три роки." />
+        <e k="rcr_advice_afterOilseed" v="Після олійної культури витримайте три роки до будь-якого повернення олійної, із зерновою, а потім бобовою як ідеальною послідовністю." />
+        <e k="rcr_advice_afterRoot" v="Після коренеплоду зачекайте чотири роки до повернення коренеплодів, потім зернову для відновлення структури після пізнього збирання." />
+        <e k="rcr_advice_afterVegetable" v="Після овоча зачекайте три роки перед його повторенням, із зерновою як чистою перервою." />
+        <e k="rcr_advice_afterForage" v="Після тимчасового травостою зернова використовує родючість і структуру, накопичені під дерниною." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Високий ризик склеротиніозу: витримуйте щонайменше 3 роки між ріпаком, гірчицею, соняшником, соєю, горохом, квасолею, картоплею та морквою; фунгіцид обмежує шкоду на оброблених ділянках, але не видаляє хворобу з поля." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Високий ризик нематоди: витримуйте щонайменше 3 роки між цукровим буряком, столовим буряком, ріпаком, гірчицею та шпинатом; нематицид захищає оброблені ділянки, але не видаляє нематод." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Помірний ризик склеротиніозу: збільште інтервали між ріпаком, гірчицею, соняшником, соєю, горохом, квасолею, картоплею та морквою; дощ підвищує ризик." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Помірний ризик нематоди: збільште інтервали між цукровим буряком, столовим буряком, ріпаком, гірчицею та шпинатом." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="Після %s ваш план передбачає %s як наступну культуру." />
+        <e k="rcr_advice_memo_next_fallow" v="Після %s ваш план передбачає один рік під паром." />
+        <e k="rcr_advice_memo_no_plan" v="У плані сівозміни не вказано наступну культуру." />
+        <e k="rcr_advice_memo_incomplete_short" v="План неповний: укажіть щонайменше два послідовні етапи." />
+        <e k="rcr_advice_memo_incomplete_gap" v="План неповний: комірка «Не заплановано» розділяє два заповнені етапи." />
+        <e k="rcr_advice_memo_no_history" v="Попередню культуру не записано: наступний етап циклу визначити неможливо." />
+        <e k="rcr_advice_memo_not_aligned" v="Останній запис історії (%s) відсутній у запланованому циклі. Наступний етап визначити неможливо." />
+        <e k="rcr_advice_memo_ambiguous" v="%s трапляється в циклі кілька разів із різними наступними етапами. Наступний етап визначити неможливо." />
+        <e k="rcr_advice_memo_conflict_family" v="Після %s ваш план передбачає %s, але обидві культури належать до однієї родини (%s). До безпечного повернення бракує ще %d року(ів) із необхідних %d." />
+        <e k="rcr_advice_memo_conflict_disease" v="Після %s ваш план передбачає %s, але обидві культури можуть бути уражені хворобою %s. Зачекайте ще %d року(ів); рекомендований інтервал становить %d років." />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_ready" v="Сівозміна в порядку" />
+        <e k="rcr_advice_title_warning" v="Конфлікт сівозміни" />
+        <e k="rcr_advice_title_outbreak" v="Активний спалах хвороби" />
+        <e k="rcr_advice_outbreak" v="%s активна на цьому полі, рівень ураження %d %%. Рекомендоване лікування: %s." />
+        <e k="rcr_advice_plan_next_conflict_family" v="%s заплановано на %s: конфлікт сівозміни, та сама родина (%s), що й у поточної культури, бракує %d року(ів) з %d до безпечного повернення." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s заплановано на %s: конфлікт сівозміни. Та сама хвороба (%s) може вразити й поточну культуру; бракує ще %d року(ів) до рекомендованого інтервалу %d років." />
+        <e k="rcr_advice_plan_next_ok" v="%s заплановано на %s: гарний вибір, конфліктів сівозміни не виявлено." />
+        <e k="rcr_advice_title_fallow" v="Рік перерви" />
+        <e k="rcr_advice_fallow_current" v="Поле під паром: цього року основна культура не вирощується. Це збільшує інтервал до наступної сприйнятливої культури, але не видаляє хворобу одразу." />
+        <e k="rcr_advice_plan_next_fallow" v="Пар заплановано на %s: основна культура не вирощуватиметься один рік. Це збільшує інтервал до наступної сприйнятливої культури, але не гарантує зникнення всіх хвороб." />
+
+        <!-- Advice card, disease pressure list -->
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Стан ґрунту" />
+        <e k="rcr_field_growth"          v="Ріст" />
+
+        <!-- Field card — weed column header (singular) -->
+        <e k="rcr_weed_header"          v="Бур'яни" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Не заплановано" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Бер" />
+        <e k="rcr_calendar_month_2"     v="Кві" />
+        <e k="rcr_calendar_month_3"     v="Тра" />
+        <e k="rcr_calendar_month_4"     v="Чер" />
+        <e k="rcr_calendar_month_5"     v="Лип" />
+        <e k="rcr_calendar_month_6"     v="Сер" />
+        <e k="rcr_calendar_month_7"     v="Вер" />
+        <e k="rcr_calendar_month_8"     v="Жов" />
+        <e k="rcr_calendar_month_9"     v="Лис" />
+        <e k="rcr_calendar_month_10"    v="Гру" />
+        <e k="rcr_calendar_month_11"    v="Січ" />
+        <e k="rcr_calendar_month_12"    v="Лют" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Посів" />
+        <e k="rcr_calendar_legend_harvest" v="Збір" />
+        <e k="rcr_calendar_legend_cover"   v="Посів покривної" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Неповний план" />
+        <e k="rcr_score_excellent"      v="Відмінна сівозміна: добрий агрономічний баланс" />
+        <e k="rcr_score_good"           v="Добра сівозміна: є кілька моментів для покращення" />
+        <e k="rcr_score_fair"           v="Середня сівозміна: деякі культури повертаються надто рано" />
+        <e k="rcr_score_poor"           v="Сівозміна потребує покращення: культури розташовані надто близько" />
+        <e k="rcr_score_bad"            v="Погана сівозміна: одні й ті самі культури йдуть підряд" />
+        <e k="rcr_score_label_low"      v="Погана оцінка" />
+        <e k="rcr_score_label_optimal"  v="Оптимальна оцінка" />
+        <e k="rcr_score_short_optimal"  v="ОПТИМАЛЬНО" />
+        <e k="rcr_score_short_good"     v="ДОБРЕ" />
+        <e k="rcr_score_short_fair"     v="СЕРЕДНЬО" />
+        <e k="rcr_score_short_poor"     v="НИЗЬКО" />
+        <e k="rcr_score_short_bad"      v="ПОГАНО" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Немає власних полів для відображення." />
+        <e k="rcr_function_fungicideTank" v="Використовуйте AMISTAR в обприскувачах для внесення фунгіцидної обробки на культури в зоні ризику." />
+        <e k="rcr_function_nematicideTank" v="Використовуйте VELUM PRIME в обприскувачах для внесення нематицидної обробки на культури, уражені нематодами." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Склеротиніоз" />
+        <e k="rcr_disease_name_phoma" v="Фомоз (рак стебла)" />
+        <e k="rcr_disease_name_takeall" v="Офіобольозна коренева гниль" />
+        <e k="rcr_disease_name_septoria" v="Септоріоз" />
+        <e k="rcr_disease_name_rust" v="Іржа" />
+        <e k="rcr_disease_name_fusarium" v="Фузаріоз" />
+        <e k="rcr_disease_name_lateblight" v="Фітофтороз картоплі" />
+        <e k="rcr_disease_name_bcn"   v="Цистова нематода" />
+        <e k="rcr_disease_name_clubroot" v="Кила капусти" />
+        <e k="rcr_disease_treatment_sclerotinia" v="Фунгіцид" />
+        <e k="rcr_disease_treatment_phoma" v="Фунгіцид" />
+        <e k="rcr_disease_treatment_takeall" v="Немає (лише сівозміна)" />
+        <e k="rcr_disease_treatment_septoria" v="Фунгіцид" />
+        <e k="rcr_disease_treatment_rust" v="Фунгіцид" />
+        <e k="rcr_disease_treatment_fusarium" v="Фунгіцид" />
+        <e k="rcr_disease_treatment_lateblight" v="Фунгіцид" />
+        <e k="rcr_disease_treatment_bcn" v="Нематицид" />
+        <e k="rcr_fillType_fungicide" v="Фунгіцид" />
+        <e k="rcr_fillType_nematicide" v="Нематицид" />
+        <e k="rcr_disease_treatment_none" v="Немає обробки" />
+        <e k="rcr_disease_treatment_clubroot" v="Немає (лише сівозміна)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Високий ризик фомозу: витримуйте щонайменше 4 роки між ріпаком і гірчицею; фунгіцид обмежує шкоду на оброблених ділянках, але не видаляє хворобу з поля." />
+        <e k="rcr_advice_pressure_high_takeall" v="Високий ризик офіобольозної гнилі: вирощуйте овес, бобові або олійні між зерновими; жоден препарат не захищає від цієї хвороби, довша сівозміна знижує ризик." />
+        <e k="rcr_advice_pressure_high_septoria" v="Високий ризик септоріозу: дощ підвищує безпосередній ризик, а фунгіцид обмежує шкоду на оброблених ділянках." />
+        <e k="rcr_advice_pressure_high_rust" v="Високий ризик іржі: м'яка волога погода підвищує безпосередній ризик, а фунгіцид обмежує шкоду на оброблених ділянках." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Високий ризик фузаріозу: не сійте пшеницю після кукурудзи та скоротіть кількість зернових поспіль; фунгіцид обмежує шкоду на оброблених ділянках, а дощ підвищує ризик." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Високий ризик фітофторозу: прохолодна волога погода підвищує безпосередній ризик, а фунгіцид обмежує шкоду на оброблених ділянках." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Високий ризик кили: максимально збільште перерву між ріпаком і гірчицею; жоден препарат не захищає від цієї хвороби, довша сівозміна знижує ризик." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Помірний ризик фомозу: збільште перерву між ріпаком і гірчицею." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Помірний ризик офіобольозної гнилі: уникайте третьої зернової поспіль." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Помірний ризик септоріозу: дощ підвищує безпосередній ризик." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Помірний ризик іржі: м'яка волога погода підвищує безпосередній ризик." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Помірний ризик фузаріозу: збільште інтервал між зерновими та кукурудзою." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Помірний ризик фітофторозу: прохолодна волога погода підвищує безпосередній ризик." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Помірний ризик кили: збільште перерву між ріпаком і гірчицею." />
+    </elements>
+</l10n>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<map xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../shared/xml/schema/fillTypes.xsd">
+    <fillTypes>
+        <fillType name="RCR_FUNGICIDE" title="$l10n_rcr_fillType_fungicide" showOnPriceTable="true" isBulkType="true" unitShort="$l10n_unit_literShort">
+            <physics massPerLiter="1.0" maxPhysicalSurfaceAngle="0" />
+            <economy pricePerLiter="1.8" />
+            <image hud="hud/hud_fill_fungicide.dds" />
+            <pallet filename="pallets/fungicide/fungicideTank.xml" />
+        </fillType>
+
+        <fillType name="RCR_NEMATICIDE" title="$l10n_rcr_fillType_nematicide" showOnPriceTable="true" isBulkType="true" unitShort="$l10n_unit_literShort">
+            <physics massPerLiter="1.0" maxPhysicalSurfaceAngle="0" />
+            <economy pricePerLiter="2.4" />
+            <image hud="hud/hud_fill_nematicide.dds" />
+            <pallet filename="pallets/nematicide/nematicideTank.xml" />
+        </fillType>
+    </fillTypes>
+
+    <fillTypeCategories>
+        <fillTypeCategory name="SPRAYER">RCR_FUNGICIDE RCR_NEMATICIDE</fillTypeCategory>
+    </fillTypeCategories>
+
+    <fillTypeSounds>
+        <fillTypeSound fillTypes="RCR_FUNGICIDE RCR_NEMATICIDE">
+            <sound template="defaultRefuelSound" />
+        </fillTypeSound>
+    </fillTypeSounds>
+</map>

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="作物轮作" />
+
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="防治产品" />
+        <e k="rcr_help_title_spraying" v="尽早喷洒" />
+        <e k="rcr_help_title_treatment_map" v="已处理区域" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation 会为每块自有田地保存此前四个作物或休耕记录。使用“农学”查看田地，使用“规划”准备重复周期，并通过“病害”地图监控风险、病害爆发和防治覆盖率。" />
+        <e k="rcr_help_text_02" v="选择一块自有田地，即可查看当前作物、最多四条历史记录、农艺建议、氮、pH、防治覆盖率和田地当前状态。天气标题可帮助你选择喷洒时机。" />
+        <e k="rcr_help_text_03" v="选择 N+1 至 N+4 的一个位置，然后选择主作物和可选的覆盖作物。连续填写各位置：已填写的前段会成为两年、三年或四年的重复周期，其中包括从最后一个位置回到第一个位置。" />
+        <e k="rcr_help_text_04" v="轮作品质会奖励作物与科属多样性、冬播与春播交替、产氮作物或覆盖作物，以及豆科作物后接谷物。同科作物或共有病害的作物过早回归会降低评分。" />
+        <e k="rcr_help_text_05" v="已配置的豆科作物只有在耕作中被毁掉时才会返还氮，仅收获不会返还。返还量分配给随后两季作物；启用 Precision Farming 时会写入氮素地图，否则会增加一级施肥状态。" />
+        <e k="rcr_help_text_06" v="“病害风险”地图以低、中或高显示每块自有田地当前作物所承受的最高病原压力。天气还会改变感染概率，因此请将此地图与“农学”中的天气标题配合使用。" />
+        <e k="rcr_help_text_07" v="感染起初处于隐藏状态，只有开始毁坏作物后才会在这里显示。地图会在九种已配置病害中标出这次爆发；随后田地信息卡、步行 HUD 和通知也会显示它。" />
+        <e k="rcr_help_text_09" v="请尽早喷洒。杀菌剂会根据田地覆盖率降低爆发概率并减缓活动性病害。杀菌剂和杀线虫剂可保护已喷洒网格免遭毁坏，但不能恢复已损失的作物，也不能清除田地中的病害。" />
+        <e k="rcr_help_text_10" v="“防治”地图显示受杀菌剂或杀线虫剂保护的地面。杀菌剂保护会在地面收获或割草后结束。杀线虫剂对每块田地保护三个月，再次施用会续期。" />
+        <e k="rcr_help_text_11" v="当你站在田地中时，HUD 会添加前两季作物、可见病害和有效防治。它还会显示带数字的生长进度；Precision Farming 会保留自己的土壤、pH、氮和产量信息。" />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="田块" />
+        <e k="rcr_sidebar_no_active_crop"  v="无活动作物" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="农学" />
+        <e k="rcr_sidebar_fields"       v="田块" />
+        <e k="rcr_tab_planning"         v="规划" />
+        <e k="rcr_section_disease_map"     v="疾病" />
+        <e k="rcr_disease_sub_infections" v="受感染地块" />
+        <e k="rcr_disease_sub_pressure"   v="病害风险" />
+        <e k="rcr_disease_sub_treatment"  v="防治" />
+        <e k="rcr_disease_risk_low"       v="低" />
+        <e k="rcr_disease_risk_moderate"  v="中" />
+        <e k="rcr_disease_risk_high"      v="高" />
+        <e k="rcr_disease_notification" v="%s 在田块 %s 出现" />
+        <e k="rcr_disease_reminder" v="病害仍在活动：%s，田块 %s" />
+        <e k="rcr_disease_hud_label"    v="病害" />
+        <e k="rcr_disease_header_active" v="病害（%s）" />
+        <e k="rcr_treatment_hud_label"  v="防治" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s（剩余%d个月）" />
+        <e k="rcr_advice_nematicide_duration" v="土壤保护在每块田地持续3个月；重新施用会重置持续时间。" />
+
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="无" />
+        <e k="rcr_treatment_partial"  v="部分（%d%%）" />
+        <e k="rcr_treatment_complete" v="完全" />
+        <e k="rcr_treatment_disease_absent"     v="无病害" />
+        <e k="rcr_treatment_disease_active"     v="病害活跃" />
+        <e k="rcr_treatment_disease_controlled" v="病害受控" />
+        <e k="rcr_treatment_disease_partially_controlled" v="病害部分受控" />
+        <e k="rcr_treatment_until_harvest" v="直到收获" />
+        <e k="rcr_treatment_months"        v="%d个月" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="预计返还氮素 +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="轮作返还氮素 +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="预计无氮素返还" />
+        <e k="rcr_status_planned_no_residue" v="无氮素返还" />
+        <e k="rcr_weather_sun" v="晴朗" />
+        <e k="rcr_weather_partially_cloudy" v="多云间晴" />
+        <e k="rcr_weather_cloudy" v="阴天" />
+        <e k="rcr_weather_rain" v="雨" />
+        <e k="rcr_weather_snow" v="雪" />
+        <e k="rcr_weather_hail" v="冰雹" />
+        <e k="rcr_weather_twister" v="龙卷风" />
+        <e k="rcr_weather_thunder" v="雷暴" />
+        <e k="rcr_weather_current_operational" v="%s 进行中 · 结束 %s" />
+        <e k="rcr_weather_current_calm" v="%s · 直到 %s" />
+        <e k="rcr_weather_soon" v="%s %s-%s · %s 后" />
+        <e k="rcr_weather_tomorrow" v="%s 明天 %s-%s" />
+        <e k="rcr_weather_later" v="%s +%d天 %s-%s" />
+        <e k="rcr_time_minutes" v="%d 分钟" />
+        <e k="rcr_time_hours" v="%d 小时" />
+        <e k="rcr_time_hours_minutes" v="%d 小时 %02d 分" />
+        <e k="rcr_hud_previous_n1"      v="上一茬作物 (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="上上茬作物 (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="作物历史" />
+        <e k="rcr_section_nitrogen"     v="氮素状态" />
+        <e k="rcr_section_advice"       v="农艺建议" />
+        <e k="rcr_section_soil_indicators" v="土壤与防治" />
+        <e k="rcr_section_field"        v="当前田块状态" />
+        <e k="rcr_section_lime"         v="石灰 / pH 状态" />
+        <e k="rcr_section_plan"         v="轮作计划" />
+        <e k="rcr_clear_plan_button"    v="清除计划" />
+        <e k="rcr_clear_plan_confirm"   v="清除 %s 的轮作计划？" />
+        <e k="rcr_section_score"        v="轮作质量" />
+        <e k="rcr_section_overview"     v="全局概览" />
+        <e k="rcr_overview_total_area"  v="耕作面积: %.1f ha" />
+
+        <!-- Timeline slot labels -->
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="当前" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="谷物" />
+        <e k="rcr_family_legume"        v="豆科" />
+        <e k="rcr_family_oilseed"       v="油料" />
+        <e k="rcr_family_root"          v="根茎类" />
+        <e k="rcr_family_vegetable"     v="蔬菜" />
+        <e k="rcr_family_forage"        v="饲草" />
+        <e k="rcr_cover_crop"           v="间作作物" />
+        <e k="rcr_fallow"              v="休耕" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="未施肥" />
+        <e k="rcr_n_partial"            v="部分" />
+        <e k="rcr_n_full"               v="完全" />
+        <e k="rcr_n_average_value"      v="平均氮素: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="作物需求: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="氮素 / 作物需求" />
+        <e k="rcr_lime_none"            v="无石灰" />
+        <e k="rcr_lime_partial"         v="部分石灰" />
+        <e k="rcr_lime_full"            v="石灰适宜" />
+        <e k="rcr_lime_average_pf"      v="平均 pH" />
+        <e k="rcr_lime_average_value"   v="平均 pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="目标: %.3f pH" />
+        <e k="rcr_soil_value_unmeasured" v="数值未测量" />
+        <e k="rcr_n_crop_need_unavailable" v="作物需求：--" />
+        <e k="rcr_lime_status_unavailable" v="石灰：--" />
+        <e k="rcr_advice_soil_analysis_required_body" v="氮素和 pH 数值不可用。请分析土壤以获取精确的农艺建议。" />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal" v="种植谷物后，播种豆科作物以补充氮，或种植隔茬作物以减少基腐病，并在两次谷物之间间隔两年。" />
+        <e k="rcr_advice_afterLegume" v="种植豆科作物后，谷物能最好地利用其留下的氮，下一次豆科作物应间隔三年。" />
+        <e k="rcr_advice_afterOilseed" v="种植油料作物后，任何油料作物再次种植前需间隔三年，理想顺序是谷物随后豆科作物。" />
+        <e k="rcr_advice_afterRoot" v="种植块根作物后，需间隔四年再种块根，随后种谷物以在晚收后重建土壤结构。" />
+        <e k="rcr_advice_afterVegetable" v="种植蔬菜后，需间隔三年再重复，以谷物作为干净的轮换间隔。" />
+        <e k="rcr_advice_afterForage" v="短期草地之后，谷物可利用草皮下积累的肥力与结构。" />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病风险高：油菜、芥菜、向日葵、大豆、豌豆、菜豆、马铃薯和胡萝卜至少间隔3年；杀菌剂可限制已喷施区域的损失，但不会清除地块中的病害。" />
+        <e k="rcr_advice_pressure_high_bcn"           v="线虫风险高：甜菜、红甜菜、油菜、芥菜和菠菜至少间隔3年；杀线虫剂可保护已喷施区域，但不会清除线虫。" />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病风险中等：拉开油菜、芥菜、向日葵、大豆、豌豆、菜豆、马铃薯和胡萝卜的种植间隔；降雨会提高风险。" />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="线虫风险中等：拉开甜菜、红甜菜、油菜、芥菜和菠菜的种植间隔。" />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="种植%s后，您的计划将%s安排为下一种作物。" />
+        <e k="rcr_advice_memo_next_fallow" v="种植%s后，您的计划安排休耕一年。" />
+        <e k="rcr_advice_memo_no_plan" v="轮作计划中未定义下一种作物。" />
+        <e k="rcr_advice_memo_incomplete_short" v="计划不完整：请至少连续填写两个步骤。" />
+        <e k="rcr_advice_memo_incomplete_gap" v="计划不完整：一个“未规划”栏位将两个已填写步骤隔开。" />
+        <e k="rcr_advice_memo_no_history" v="未记录前茬作物：无法确定循环的下一步。" />
+        <e k="rcr_advice_memo_not_aligned" v="历史记录中的最新条目（%s）不在计划循环中。无法确定下一步。" />
+        <e k="rcr_advice_memo_ambiguous" v="%s在循环中出现多次，且后续步骤不同。无法确定下一步。" />
+        <e k="rcr_advice_memo_conflict_family" v="种植%s后，您的计划安排种植%s，但这两种作物属于同一科（%s）。安全轮作前还需等待%d年（要求间隔%d年）。" />
+        <e k="rcr_advice_memo_conflict_disease" v="种植%s后，您的计划安排种植%s，但这两种作物都可能感染%s。还需等待%d年；建议间隔%d年。" />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_ready" v="轮作良好" />
+        <e k="rcr_advice_title_warning" v="轮作冲突" />
+        <e k="rcr_advice_title_outbreak" v="活跃感染" />
+        <e k="rcr_advice_outbreak" v="%s正在此地块发病，受害程度%d%%。建议处理：%s。" />
+        <e k="rcr_advice_plan_next_conflict_family" v="%s计划种植于%s：轮作冲突，与当前作物同科（%s），距离安全轮作还差%d年（共需%d年）。" />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s计划种植于%s：轮作冲突。它和当前作物可能感染同一种病害（%s），还需等待%d年（建议间隔%d年）。" />
+        <e k="rcr_advice_plan_next_ok" v="%s计划种植于%s：选择得当，未检测到轮作冲突。" />
+        <e k="rcr_advice_title_fallow" v="休耕年" />
+        <e k="rcr_advice_fallow_current" v="正在休耕：今年不种植主要作物。这会延长下一次种植易感作物前的间隔，但不会立即清除病害。" />
+        <e k="rcr_advice_plan_next_fallow" v="计划于%s休耕：一年内不种植主要作物。这会延长下一次种植易感作物前的间隔，但不能保证所有病害都已消失。" />
+
+        <!-- Advice card, disease pressure list -->
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="土壤状况" />
+        <e k="rcr_field_growth"          v="生长" />
+
+        <!-- Field card — weed column header (singular) -->
+        <e k="rcr_weed_header"          v="杂草" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="未规划" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="3月" />
+        <e k="rcr_calendar_month_2"     v="4月" />
+        <e k="rcr_calendar_month_3"     v="5月" />
+        <e k="rcr_calendar_month_4"     v="6月" />
+        <e k="rcr_calendar_month_5"     v="7月" />
+        <e k="rcr_calendar_month_6"     v="8月" />
+        <e k="rcr_calendar_month_7"     v="9月" />
+        <e k="rcr_calendar_month_8"     v="10月" />
+        <e k="rcr_calendar_month_9"     v="11月" />
+        <e k="rcr_calendar_month_10"    v="12月" />
+        <e k="rcr_calendar_month_11"    v="1月" />
+        <e k="rcr_calendar_month_12"    v="2月" />
+
+        <e k="rcr_calendar_legend_sowing"  v="播种" />
+        <e k="rcr_calendar_legend_harvest" v="收获" />
+        <e k="rcr_calendar_legend_cover"   v="覆盖播种" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="计划不完整" />
+        <e k="rcr_score_excellent"      v="轮作优秀，作物搭配合理" />
+        <e k="rcr_score_good"           v="轮作良好，仍有改进空间" />
+        <e k="rcr_score_fair"           v="轮作尚可，部分作物回归过快" />
+        <e k="rcr_score_poor"           v="轮作有待改进，作物间隔过近" />
+        <e k="rcr_score_bad"            v="轮作极差，相同作物连续种植" />
+        <e k="rcr_score_label_low"      v="评分差" />
+        <e k="rcr_score_label_optimal"  v="评分最佳" />
+        <e k="rcr_score_short_optimal"  v="最佳" />
+        <e k="rcr_score_short_good"     v="良好" />
+        <e k="rcr_score_short_fair"     v="尚可" />
+        <e k="rcr_score_short_poor"     v="较低" />
+        <e k="rcr_score_short_bad"      v="极差" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="没有可显示的自有田块。" />
+        <e k="rcr_function_fungicideTank" v="将 AMISTAR 用于喷雾机，为高风险作物施用杀菌剂处理。" />
+        <e k="rcr_function_nematicideTank" v="将 VELUM PRIME 用于喷雾机，为受线虫威胁的作物施用杀线虫剂处理。" />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="菌核病" />
+        <e k="rcr_disease_name_phoma" v="黑胫病（茎溃疡）" />
+        <e k="rcr_disease_name_takeall" v="全蚀病" />
+        <e k="rcr_disease_name_septoria" v="壳针孢病" />
+        <e k="rcr_disease_name_rust" v="锈病" />
+        <e k="rcr_disease_name_fusarium" v="镰刀菌病" />
+        <e k="rcr_disease_name_lateblight" v="晚疫病" />
+        <e k="rcr_disease_name_bcn"   v="孢囊线虫" />
+        <e k="rcr_disease_name_clubroot" v="根肿病" />
+        <e k="rcr_disease_treatment_sclerotinia" v="杀菌剂" />
+        <e k="rcr_disease_treatment_phoma" v="杀菌剂" />
+        <e k="rcr_disease_treatment_takeall" v="无（仅靠轮作）" />
+        <e k="rcr_disease_treatment_septoria" v="杀菌剂" />
+        <e k="rcr_disease_treatment_rust" v="杀菌剂" />
+        <e k="rcr_disease_treatment_fusarium" v="杀菌剂" />
+        <e k="rcr_disease_treatment_lateblight" v="杀菌剂" />
+        <e k="rcr_disease_treatment_bcn" v="杀线虫剂" />
+        <e k="rcr_fillType_fungicide" v="杀菌剂" />
+        <e k="rcr_fillType_nematicide" v="杀线虫剂" />
+        <e k="rcr_disease_treatment_none" v="无防治" />
+        <e k="rcr_disease_treatment_clubroot" v="无（仅靠轮作）" />
+        <e k="rcr_advice_pressure_high_phoma" v="黑胫病风险高：油菜和芥菜至少间隔4年；杀菌剂可限制已喷施区域的损失，但不会清除地块中的病害。" />
+        <e k="rcr_advice_pressure_high_takeall" v="全蚀病风险高：在谷物之间种植燕麦、豆科或油料作物；没有药剂能防治这种病害，延长轮作间隔可降低风险。" />
+        <e k="rcr_advice_pressure_high_septoria" v="壳针孢病风险高：降雨会提高近期发病风险，杀菌剂可限制已喷施区域的损失。" />
+        <e k="rcr_advice_pressure_high_rust" v="锈病风险高：温暖潮湿的天气会提高近期发病风险，杀菌剂可限制已喷施区域的损失。" />
+        <e k="rcr_advice_pressure_high_fusarium" v="镰刀菌病风险高：避免玉米后种小麦，并减少连续种植谷物；杀菌剂可限制已喷施区域的损失，降雨会提高风险。" />
+        <e k="rcr_advice_pressure_high_lateblight" v="晚疫病风险高：凉爽潮湿的天气会提高近期发病风险，杀菌剂可限制已喷施区域的损失。" />
+        <e k="rcr_advice_pressure_high_clubroot" v="根肿病风险高：尽量拉长油菜和芥菜的种植间隔；没有药剂能防治这种病害，延长轮作间隔可降低风险。" />
+        <e k="rcr_advice_pressure_moderate_phoma" v="黑胫病风险中等：拉长油菜和芥菜的种植间隔。" />
+        <e k="rcr_advice_pressure_moderate_takeall" v="全蚀病风险中等：避免连续第三茬种植谷物。" />
+        <e k="rcr_advice_pressure_moderate_septoria" v="壳针孢病风险中等：降雨会提高近期发病风险。" />
+        <e k="rcr_advice_pressure_moderate_rust" v="锈病风险中等：温暖潮湿的天气会提高近期发病风险。" />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="镰刀菌病风险中等：拉开谷物和玉米的种植间隔。" />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="晚疫病风险中等：凉爽潮湿的天气会提高近期发病风险。" />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="根肿病风险中等：拉长油菜和芥菜的种植间隔。" />
+    </elements>
+</l10n>

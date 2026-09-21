@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Vruchtwisseling" />
+
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Behandelingsmiddelen" />
+        <e k="rcr_help_title_spraying" v="Spuit vroeg" />
+        <e k="rcr_help_title_treatment_map" v="Behandelde gebieden" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation bewaart voor elk eigen veld de vier vorige vermeldingen van gewassen of braak. Gebruik Agronomie om een veld te bekijken, Planning om een herhalende cyclus op te stellen en de kaart Ziekten om risico, uitbraken en behandelingsdekking te volgen." />
+        <e k="rcr_help_text_02" v="Selecteer een eigen veld om het huidige gewas, maximaal vier vorige vermeldingen, agronomisch advies, stikstof, pH, behandelingsdekking en de huidige veldstatus te bekijken. De weerbalk helpt je het spuitmoment te kiezen." />
+        <e k="rcr_help_text_03" v="Selecteer een positie van N+1 tot N+4 en kies daarna het hoofdgewas en optioneel een groenbemester. Vul opeenvolgende posities in: het ingevulde begin wordt een herhalende cyclus van twee, drie of vier jaar, inclusief de overgang van de laatste naar de eerste positie." />
+        <e k="rcr_help_text_04" v="De kwaliteit van de vruchtwisseling beloont variatie in gewassen en families, afwisseling tussen winter- en voorjaarszaai, stikstofleverende gewassen of groenbemesters en een vlinderbloemige gevolgd door graan. Een te snelle terugkeer van dezelfde familie of van gewassen met gedeelde ziekten verlaagt de score." />
+        <e k="rcr_help_text_05" v="Een ingestelde vlinderbloemige geeft alleen stikstof terug wanneer deze door grondbewerking wordt vernietigd, niet wanneer hij alleen wordt geoogst. De teruggave wordt over de volgende twee gewassen verdeeld; met Precision Farming wordt ze op de stikstofkaart geschreven, anders wordt één bemestingsniveau toegevoegd." />
+        <e k="rcr_help_text_06" v="De kaart Ziekterisico toont de hoogste huidige ziekteverwekkerdruk voor het gewas op elk eigen veld als laag, gemiddeld of hoog. Het weer kan de infectiekans verder veranderen, dus gebruik deze kaart samen met de weerbalk onder Agronomie." />
+        <e k="rcr_help_text_07" v="Een infectie begint verborgen en verschijnt hier pas wanneer ze het gewas begint te vernietigen. De kaart herkent de uitbraak als een van de negen ingestelde ziekten; daarna tonen ook de veldkaart, de HUD te voet en de melding deze." />
+        <e k="rcr_help_text_09" v="Spuit vroeg. Fungicide verlaagt de kans op een uitbraak en vertraagt een actieve ziekte naar verhouding van de velddekking. Fungicide en nematicide beschermen bespoten cellen tegen vernietiging, maar herstellen geen verloren gewas en verwijderen geen ziekte uit het veld." />
+        <e k="rcr_help_text_10" v="De kaart Behandelingen toont grond die door fungicide of nematicide wordt beschermd. Fungicidebescherming eindigt op geoogste of gemaaide grond. Nematicidebescherming duurt drie maanden per veld en een nieuwe toepassing vernieuwt die periode." />
+        <e k="rcr_help_text_11" v="Wanneer je in een veld staat, voegt de HUD de twee vorige gewassen, zichtbare ziekten en actieve behandelingen toe. Hij toont ook de genummerde groeivoortgang; Precision Farming behoudt zijn eigen informatie over bodem, pH, stikstof en opbrengst." />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Veld" />
+        <e k="rcr_sidebar_no_active_crop"  v="Geen actief gewas" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Agronomie" />
+        <e k="rcr_sidebar_fields"       v="Velden" />
+        <e k="rcr_tab_planning"         v="Planning" />
+        <e k="rcr_section_disease_map"     v="Ziekten" />
+        <e k="rcr_disease_sub_infections" v="Geïnfecteerde velden" />
+        <e k="rcr_disease_sub_pressure"   v="Ziekterisico" />
+        <e k="rcr_disease_sub_treatment"  v="Behandelingen" />
+        <e k="rcr_disease_risk_low"       v="Laag" />
+        <e k="rcr_disease_risk_moderate"  v="Matig" />
+        <e k="rcr_disease_risk_high"      v="Hoog" />
+        <e k="rcr_disease_notification" v="%s gedetecteerd op veld %s" />
+        <e k="rcr_disease_reminder" v="Ziekte nog steeds actief: %s, veld %s" />
+        <e k="rcr_disease_hud_label"    v="Gewasziekte" />
+        <e k="rcr_disease_header_active" v="Gewasziekte (%s)" />
+        <e k="rcr_treatment_hud_label"  v="Behandeling" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (%d maanden resterend)" />
+        <e k="rcr_advice_nematicide_duration" v="De bodembescherming duurt 3 maanden per veld; opnieuw toepassen vernieuwt de duur." />
+
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="afwezig" />
+        <e k="rcr_treatment_partial"  v="gedeeltelijk (%d %%)" />
+        <e k="rcr_treatment_complete" v="volledig" />
+        <e k="rcr_treatment_disease_absent"     v="Geen ziekte" />
+        <e k="rcr_treatment_disease_active"     v="Ziekte actief" />
+        <e k="rcr_treatment_disease_controlled" v="Ziekte onder controle" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Ziekte gedeeltelijk onder controle" />
+        <e k="rcr_treatment_until_harvest" v="Tot de oogst" />
+        <e k="rcr_treatment_months"        v="%d maanden" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Verwachte stikstofteruggave +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Stikstofteruggave uit rotatie +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Geen stikstofteruggave verwacht" />
+        <e k="rcr_status_planned_no_residue" v="Geen stikstofteruggave" />
+        <e k="rcr_weather_sun" v="Heldere hemel" />
+        <e k="rcr_weather_partially_cloudy" v="Opklaringen" />
+        <e k="rcr_weather_cloudy" v="Bewolkt" />
+        <e k="rcr_weather_rain" v="Regen" />
+        <e k="rcr_weather_snow" v="Sneeuw" />
+        <e k="rcr_weather_hail" v="Hagel" />
+        <e k="rcr_weather_twister" v="Wervelwind" />
+        <e k="rcr_weather_thunder" v="Onweer" />
+        <e k="rcr_weather_current_operational" v="%s bezig · eindigt %s" />
+        <e k="rcr_weather_current_calm" v="%s · tot %s" />
+        <e k="rcr_weather_soon" v="%s %s-%s · over %s" />
+        <e k="rcr_weather_tomorrow" v="%s morgen %s-%s" />
+        <e k="rcr_weather_later" v="%s D+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d min" />
+        <e k="rcr_time_hours" v="%d u" />
+        <e k="rcr_time_hours_minutes" v="%d u %02d min" />
+        <e k="rcr_hud_previous_n1"      v="Vorige teelt (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Voorvorige teelt (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Gewasgeschiedenis" />
+        <e k="rcr_section_nitrogen"     v="Stikstofstatus" />
+        <e k="rcr_section_advice"       v="Agronomisch advies" />
+        <e k="rcr_section_soil_indicators" v="Bodem en behandeling" />
+        <e k="rcr_section_field"        v="Huidige veldstatus" />
+        <e k="rcr_section_lime"         v="Kalk-/pH-status" />
+        <e k="rcr_section_plan"         v="Rotatieplan" />
+        <e k="rcr_clear_plan_button"    v="Plan wissen" />
+        <e k="rcr_clear_plan_confirm"   v="Rotatieplan van %s wissen?" />
+        <e k="rcr_section_score"        v="Rotatiekwaliteit" />
+        <e k="rcr_section_overview"     v="Algemeen overzicht" />
+        <e k="rcr_overview_total_area"  v="Bewerkte oppervlakte: %.1f ha" />
+
+        <!-- Timeline slot labels -->
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Huidig" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Graan" />
+        <e k="rcr_family_legume"        v="Peulvrucht" />
+        <e k="rcr_family_oilseed"       v="Oliezaad" />
+        <e k="rcr_family_root"          v="Wortelgewas" />
+        <e k="rcr_family_vegetable"     v="Groente" />
+        <e k="rcr_family_forage"        v="Voeder" />
+        <e k="rcr_cover_crop"           v="Tussengewas" />
+        <e k="rcr_fallow"              v="Braak" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Niet bemest" />
+        <e k="rcr_n_partial"            v="Gedeeltelijk" />
+        <e k="rcr_n_full"               v="Volledig" />
+        <e k="rcr_n_average_value"      v="Gemiddelde stikstof: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Gewasbehoefte: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Stikstof / gewasbehoefte" />
+        <e k="rcr_lime_none"            v="Geen kalk" />
+        <e k="rcr_lime_partial"         v="Gedeeltelijk kalk" />
+        <e k="rcr_lime_full"            v="Kalk correct" />
+        <e k="rcr_lime_average_pf"      v="Gemiddelde pH" />
+        <e k="rcr_lime_average_value"   v="Gemiddelde pH: %.3f pH" />
+        <e k="rcr_lime_target"          v="Doel: %.3f pH" />
+        <e k="rcr_soil_value_unmeasured" v="Waarde niet gemeten" />
+        <e k="rcr_n_crop_need_unavailable" v="Gewasbehoefte: --" />
+        <e k="rcr_lime_status_unavailable" v="Kalk: --" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Stikstof- en pH-waarden zijn niet beschikbaar. Analyseer de bodem voor nauwkeurig agronomisch advies." />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal" v="Na een graan zaai je een vlinderbloemige om stikstof terug te geven of een rustgewas tegen voetziekten, en houd twee jaar tussen granen." />
+        <e k="rcr_advice_afterLegume" v="Na een vlinderbloemige benut een graan de achtergelaten stikstof het best, en een volgende vlinderbloemige moet drie jaar wachten." />
+        <e k="rcr_advice_afterOilseed" v="Na een oliehoudend gewas laat je drie jaar voordat opnieuw een oliehoudend gewas terugkomt, met een graan en dan een vlinderbloemige als ideale opvolging." />
+        <e k="rcr_advice_afterRoot" v="Na een hakvrucht wacht je vier jaar voordat wortelgewassen terugkomen, gevolgd door een graan om de structuur na de late oogst te herstellen." />
+        <e k="rcr_advice_afterVegetable" v="Na een groente wacht je drie jaar voordat je ze herhaalt, met een graan als schone onderbreking." />
+        <e k="rcr_advice_afterForage" v="Na een tijdelijk grasland benut een graan de onder de zode opgebouwde vruchtbaarheid en structuur." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Hoog risico op sclerotinia: wacht minstens 3 jaar voordat je opnieuw koolzaad, mosterd, zonnebloem, soja, erwt, boon, aardappel of wortel teelt; fungicide beperkt de schade op behandelde delen, maar verwijdert de ziekte niet uit het perceel." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Hoog risico op aaltjes: wacht minstens 3 jaar voordat je opnieuw suikerbiet, rode biet, koolzaad, mosterd of spinazie teelt; nematicide beschermt behandelde delen, maar verwijdert de aaltjes niet." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Matig risico op sclerotinia: wacht langer voordat je opnieuw koolzaad, mosterd, zonnebloem, soja, erwt, boon, aardappel of wortel teelt; regen kan het risico verhogen." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Matig risico op aaltjes: wacht langer voordat je opnieuw bieten, koolzaad, mosterd of spinazie teelt." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="Na %s voorziet je plan %s als het volgende gewas." />
+        <e k="rcr_advice_memo_next_fallow" v="Na %s voorziet je plan één jaar braak." />
+        <e k="rcr_advice_memo_no_plan" v="In het rotatieplan is geen volgend gewas vastgelegd." />
+        <e k="rcr_advice_memo_incomplete_short" v="Het plan is onvolledig: vul minstens twee opeenvolgende stappen in." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Het plan is onvolledig: een vak ‘Niet gepland’ scheidt twee ingevulde stappen." />
+        <e k="rcr_advice_memo_no_history" v="Er is geen vorig gewas geregistreerd: de volgende stap van de cyclus kan niet worden bepaald." />
+        <e k="rcr_advice_memo_not_aligned" v="De meest recente geschiedenisvermelding (%s) staat niet in de geplande cyclus. De volgende stap kan niet worden bepaald." />
+        <e k="rcr_advice_memo_ambiguous" v="%s komt meerdere keren in de cyclus voor met verschillende vervolgstappen. De volgende stap kan niet worden bepaald." />
+        <e k="rcr_advice_memo_conflict_family" v="Na %s voorziet je plan %s, maar beide gewassen behoren tot dezelfde familie (%s). Voor een veilige terugkeer zijn nog %d van de vereiste %d jaar nodig." />
+        <e k="rcr_advice_memo_conflict_disease" v="Na %s voorziet je plan %s, maar beide gewassen kunnen door %s worden aangetast. Wacht nog %d jaar; het aanbevolen interval is %d jaar." />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_ready" v="Vruchtwisseling in orde" />
+        <e k="rcr_advice_title_warning" v="Vruchtwisselingsconflict" />
+        <e k="rcr_advice_title_outbreak" v="Actieve infectie" />
+        <e k="rcr_advice_outbreak" v="%s is actief op dit perceel. Aantastingsniveau: %d %%. Aanbevolen behandeling: %s." />
+        <e k="rcr_advice_plan_next_conflict_family" v="%s gepland voor %s: vruchtwisselingsconflict, zelfde familie (%s) als het huidige gewas, nog %d jaar van %d nodig voor een veilige terugkeer." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s gepland voor %s: dit gewas en het huidige gewas kunnen beide door %s worden aangetast. Wacht nog %d jaar; het aanbevolen interval is %d jaar." />
+        <e k="rcr_advice_plan_next_ok" v="%s gepland voor %s: goede keuze, geen vruchtwisselingsconflict gedetecteerd." />
+        <e k="rcr_advice_title_fallow" v="Rustjaar" />
+        <e k="rcr_advice_fallow_current" v="Braak in uitvoering: dit jaar wordt geen hoofdgewas geteeld. Dit geeft meer tijd vóór het volgende gevoelige gewas, maar verwijdert de ziekte niet onmiddellijk." />
+        <e k="rcr_advice_plan_next_fallow" v="Braak gepland voor %s: één jaar lang wordt geen hoofdgewas geteeld. Dit geeft meer tijd vóór het volgende gevoelige gewas, maar garandeert niet dat alle ziekten verdwenen zijn." />
+
+        <!-- Advice card, disease pressure list -->
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Bodemtoestand" />
+        <e k="rcr_field_growth"          v="Groei" />
+
+        <!-- Field card — weed column header (singular) -->
+        <e k="rcr_weed_header"          v="Onkruid" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Niet gepland" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Mrt" />
+        <e k="rcr_calendar_month_2"     v="Apr" />
+        <e k="rcr_calendar_month_3"     v="Mei" />
+        <e k="rcr_calendar_month_4"     v="Jun" />
+        <e k="rcr_calendar_month_5"     v="Jul" />
+        <e k="rcr_calendar_month_6"     v="Aug" />
+        <e k="rcr_calendar_month_7"     v="Sep" />
+        <e k="rcr_calendar_month_8"     v="Okt" />
+        <e k="rcr_calendar_month_9"     v="Nov" />
+        <e k="rcr_calendar_month_10"    v="Dec" />
+        <e k="rcr_calendar_month_11"    v="Jan" />
+        <e k="rcr_calendar_month_12"    v="Feb" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Inzaai" />
+        <e k="rcr_calendar_legend_harvest" v="Oogst" />
+        <e k="rcr_calendar_legend_cover"   v="Bedekking zaaien" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Onvolledig plan" />
+        <e k="rcr_score_excellent"      v="Uitstekende rotatie: goede agronomische balans" />
+        <e k="rcr_score_good"           v="Goede rotatie: enkele punten voor verbetering" />
+        <e k="rcr_score_fair"           v="Redelijke rotatie: sommige gewassen komen te snel terug" />
+        <e k="rcr_score_poor"           v="Slechte rotatie: gewassen staan te dicht op elkaar" />
+        <e k="rcr_score_bad"            v="Zeer slechte rotatie: dezelfde gewassen volgen elkaar op" />
+        <e k="rcr_score_label_low"      v="Slechte score" />
+        <e k="rcr_score_label_optimal"  v="Optimale score" />
+        <e k="rcr_score_short_optimal"  v="OPTIMAAL" />
+        <e k="rcr_score_short_good"     v="GOED" />
+        <e k="rcr_score_short_fair"     v="REDELIJK" />
+        <e k="rcr_score_short_poor"     v="LAAG" />
+        <e k="rcr_score_short_bad"      v="SLECHT" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Geen eigen velden om weer te geven." />
+        <e k="rcr_function_fungicideTank" v="Gebruik AMISTAR in veldspuiten om een fungicidebehandeling toe te passen op risicogewassen." />
+        <e k="rcr_function_nematicideTank" v="Gebruik VELUM PRIME in veldspuiten om een nematicidebehandeling toe te passen op gewassen die aan nematoden zijn blootgesteld." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Sclerotinia" />
+        <e k="rcr_disease_name_phoma" v="Phoma (stengelkanker)" />
+        <e k="rcr_disease_name_takeall" v="Tarwehalmdoder" />
+        <e k="rcr_disease_name_septoria" v="Septoria" />
+        <e k="rcr_disease_name_rust" v="Roest" />
+        <e k="rcr_disease_name_fusarium" v="Fusarium" />
+        <e k="rcr_disease_name_lateblight" v="Aardappelziekte (Phytophthora)" />
+        <e k="rcr_disease_name_bcn"   v="Cystenaaltje" />
+        <e k="rcr_disease_name_clubroot" v="Knolvoet" />
+        <e k="rcr_disease_treatment_sclerotinia" v="Fungicide" />
+        <e k="rcr_disease_treatment_phoma" v="Fungicide" />
+        <e k="rcr_disease_treatment_takeall" v="Geen (alleen vruchtwisseling)" />
+        <e k="rcr_disease_treatment_septoria" v="Fungicide" />
+        <e k="rcr_disease_treatment_rust" v="Fungicide" />
+        <e k="rcr_disease_treatment_fusarium" v="Fungicide" />
+        <e k="rcr_disease_treatment_lateblight" v="Fungicide" />
+        <e k="rcr_disease_treatment_bcn" v="Nematicide" />
+        <e k="rcr_fillType_fungicide" v="Fungicide" />
+        <e k="rcr_fillType_nematicide" v="Nematicide" />
+        <e k="rcr_disease_treatment_none" v="Geen behandeling" />
+        <e k="rcr_disease_treatment_clubroot" v="Geen (alleen vruchtwisseling)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Hoog risico op phoma: wacht minstens 4 jaar voordat je opnieuw koolzaad of mosterd teelt; fungicide beperkt de schade op behandelde delen, maar verwijdert de ziekte niet uit het perceel." />
+        <e k="rcr_advice_pressure_high_takeall" v="Hoog risico op tarwehalmdoder: onderbreek de graanreeks met haver, een vlinderbloemige of een oliehoudend gewas; geen enkel middel beschermt tegen deze ziekte, en meer tijd tussen gevoelige granen verlaagt het toekomstige risico." />
+        <e k="rcr_advice_pressure_high_septoria" v="Hoog risico op septoria: regen kan het risico verder verhogen, en fungicide beperkt de schade op behandelde delen." />
+        <e k="rcr_advice_pressure_high_rust" v="Hoog risico op roest: zacht en vochtig weer kan het risico verder verhogen, en fungicide beperkt de schade op behandelde delen." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Hoog risico op fusarium: vermijd tarwe direct na maïs en opeenvolgende graangewassen; fungicide beperkt de schade op behandelde delen, en regen kan de ziekte versnellen." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Hoog risico op phytophthora: koel en vochtig weer kan het risico verder verhogen, en fungicide beperkt de schade op behandelde delen." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Hoog risico op knolvoet: wacht zo lang mogelijk voordat je opnieuw koolzaad of mosterd teelt; geen enkel middel beschermt tegen deze ziekte, die onbeperkt in het perceel kan achterblijven." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Matig risico op phoma: wacht langer voordat je opnieuw koolzaad of mosterd teelt." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Matig risico op tarwehalmdoder: vermijd een derde graangewas op rij." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Matig risico op septoria: regen kan het risico verder verhogen." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Matig risico op roest: zacht en vochtig weer kan het risico verder verhogen." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Matig risico op fusarium: laat meer tijd tussen graan en maïs." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Matig risico op phytophthora: koel en vochtig weer kan het risico verder verhogen." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Matig risico op knolvoet: wacht langer voordat je opnieuw koolzaad of mosterd teelt." />
+    </elements>
+</l10n>

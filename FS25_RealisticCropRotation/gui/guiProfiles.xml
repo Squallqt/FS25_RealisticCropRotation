@@ -1,0 +1,1085 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<GUIProfiles>
+
+    <!-- Profiles referenced by name from Lua via applyProfile(): renaming breaks the GUI silently -->
+
+    <!-- Sidebar -->
+
+    <Profile name="frSidebarList" extends="emptyPanel"/>
+
+
+    <Profile name="frSidebarItemName" extends="fs25_subCategoryListItemName">
+        <width value="150px"/>
+        <position value="94px -18px"/>
+        <textSize value="16px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frSidebarItemArea" extends="fs25_subCategoryListItemName" with="anchorTopRight">
+        <width value="84px"/>
+        <position value="-46px -18px"/>
+        <textSize value="16px"/>
+        <textBold value="true"/>
+        <textAlignment value="right"/>
+        <textColor value="$preset_fs25_colorMainHighlight"/>
+        <textSelectedColor value="$preset_fs25_colorMainDark"/>
+    </Profile>
+
+    <Profile name="frSidebarItemCropLine" extends="fs25_subCategoryListItemName">
+        <width value="238px"/>
+        <position value="94px -46px"/>
+        <textSize value="13px"/>
+        <textBold value="false"/>
+        <textUpperCase value="false"/>
+        <textColor value="$preset_colorWhite_50"/>
+        <textSelectedColor value="$preset_fs25_colorMainDark"/>
+    </Profile>
+
+    <!-- Detail container -->
+
+    <Profile name="frDetailContainer" extends="baseReference" with="anchorTopLeft">
+        <width value="1280px"/>
+        <position value="0px -28px"/>
+    </Profile>
+
+
+    <Profile name="frHeroCard" extends="emptyPanel" with="anchorTopLeft">
+        <size value="1280px 56px"/>
+    </Profile>
+
+    <Profile name="frHeroCardShadow" extends="baseReference" with="anchorTopLeft">
+        <position value="3px 3px"/>
+        <size value="1280px 56px"/>
+        <color value="0 0 0 0.28"/>
+        <cornerSize value="0.35"/>
+    </Profile>
+
+    <Profile name="frHeroCardBg" extends="baseReference" with="anchorTopLeft">
+        <size value="1280px 56px"/>
+        <color value="$preset_fs25_colorMainDark"/>
+        <cornerSize value="0.35"/>
+    </Profile>
+
+    <Profile name="frHeroAccent" extends="fs25_lineSeparatorTopHighlighted" with="anchorTopLeft">
+        <size value="1280px 3dp"/>
+        <position value="0px 0px"/>
+    </Profile>
+
+    <Profile name="frHeroAccentBottom" extends="frHeroAccent" with="anchorBottomLeft"/>
+
+    <Profile name="frHeroTitle" extends="fs25_textDefault" with="anchorMiddleLeft">
+        <position value="50px 0px"/>
+        <size value="750px 28px"/>
+        <textSize value="20px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_fs25_colorMainLight"/>
+        <textAlignment value="left"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frHeaderRow" extends="baseReference" with="anchorTopLeft">
+        <width value="1280px"/>
+        <position value="0px 74px"/>
+    </Profile>
+
+    <!-- Weather card: authored width is only a hidden bootstrap value; Lua fits it to rendered text before display. -->
+    <Profile name="frHeaderWeather" extends="emptyPanel" with="anchorTopRight">
+        <position value="-24px 0px"/>
+        <size value="300px 60px"/>
+    </Profile>
+
+    <Profile name="frHeaderWeatherShadow" extends="baseReference" with="anchorTopLeft">
+        <position value="3px 3px"/>
+        <size value="297px 60px"/>
+        <color value="0 0 0 0.28"/>
+        <cornerSize value="0.28"/>
+    </Profile>
+
+    <Profile name="frHeaderWeatherBg" extends="baseReference" with="anchorTopLeft">
+        <size value="300px 60px"/>
+        <color value="0.035 0.050 0.060 0.97"/>
+        <cornerSize value="0.28"/>
+    </Profile>
+
+    <Profile name="frHeaderWeatherAccent" extends="fs25_lineSeparatorTopHighlighted" with="anchorTopLeft">
+        <size value="300px 3dp"/>
+        <position value="0px 0px"/>
+    </Profile>
+
+    <Profile name="frHeaderWeatherAccentBottom" extends="frHeaderWeatherAccent" with="anchorBottomLeft"/>
+
+    <Profile name="frHeaderWeatherIconBg" extends="baseReference" with="anchorMiddleLeft">
+        <position value="12px 0px"/>
+        <size value="48px 44px"/>
+        <color value="0.18 0.48 0.66 1"/>
+        <cornerSize value="0.28"/>
+    </Profile>
+
+    <Profile name="frHeaderWeatherIcon" extends="baseReference" with="anchorMiddleLeft">
+        <position value="21px 0px"/>
+        <size value="30px 30px"/>
+        <imageSliceId value="gui.icon_weather_rain"/>
+        <imageColor value="$preset_fs25_colorMainLight"/>
+    </Profile>
+
+    <Profile name="frHeaderWeatherText" extends="fs25_textDefault" with="anchorMiddleLeft">
+        <position value="76px 0px"/>
+        <size value="110px 24px"/>
+        <textSize value="19px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_fs25_colorMainLight"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frHeaderWeatherDivider" extends="baseReference" with="anchorMiddleLeft">
+        <position value="200px 0px"/>
+        <size value="1px 34px"/>
+        <color value="$preset_fs25_colorGreyLight"/>
+        <cornerSize value="0"/>
+    </Profile>
+
+    <Profile name="frHeaderWeatherWindow" extends="fs25_textDefault" with="anchorMiddleRight">
+        <position value="-12px -10px"/>
+        <size value="88px 15px"/>
+        <textSize value="11px"/>
+        <textBold value="false"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_colorWhite_50"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frHeaderWeatherStatus" extends="fs25_textDefault" with="anchorMiddleRight">
+        <position value="-12px 9px"/>
+        <size value="88px 16px"/>
+        <textSize value="13px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_fs25_colorMainLight"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frStatusPillBg" extends="baseReference" with="anchorMiddleRight">
+        <position value="-50px 0px"/>
+        <size value="196px 28px"/>
+        <color value="$preset_fs25_colorGreyLight"/>
+        <cornerSize value="0.20"/>
+    </Profile>
+
+    <Profile name="frStatusPillBgBonus" extends="frStatusPillBg">
+        <color value="$preset_fs25_colorGreen"/>
+    </Profile>
+
+    <Profile name="frStatusPillText" extends="fs25_textDefault" with="anchorMiddleRight">
+        <position value="-50px 0px"/>
+        <size value="196px 28px"/>
+        <textSize value="12px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_fs25_colorMainDark"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+
+    <Profile name="frSectionBar" extends="emptyPanel" with="anchorTopLeft">
+        <size value="1280px 32px"/>
+    </Profile>
+
+    <Profile name="frSectionLine" extends="baseReference" with="anchorMiddleLeft">
+        <position value="0px 0px"/>
+        <size value="0px 1px"/>
+        <color value="$preset_fs25_colorGreyLight"/>
+        <cornerSize value="0"/>
+    </Profile>
+
+    <Profile name="frSectionAccent" extends="baseReference" with="anchorMiddleLeft">
+        <position value="0px 0px"/>
+        <size value="3px 22px"/>
+        <color value="$preset_fs25_colorMainHighlight"/>
+        <cornerSize value="0.05"/>
+    </Profile>
+
+    <Profile name="frSectionAccentN" extends="frSectionAccent">
+        <color value="$preset_fs25_colorGreen"/>
+    </Profile>
+
+    <Profile name="frSectionAccentAdvice" extends="frSectionAccentN"/>
+
+    <Profile name="frSectionTitle" extends="fs25_textDefault" with="anchorMiddleLeft">
+        <position value="26px 0px"/>
+        <size value="500px 28px"/>
+        <textSize value="16px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_fs25_colorMainHighlight"/>
+        <textAlignment value="left"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frSectionTitleN" extends="frSectionTitle">
+        <textColor value="$preset_fs25_colorGreen"/>
+    </Profile>
+
+    <Profile name="frSectionTitleAdvice" extends="frSectionTitleN"/>
+
+    <Profile name="frSectionAccentField" extends="frSectionAccent">
+        <color value="$preset_fs25_colorOrangeDark"/>
+    </Profile>
+
+    <Profile name="frSectionTitleField" extends="frSectionTitle">
+        <textColor value="$preset_fs25_colorOrangeDark"/>
+    </Profile>
+
+    <Profile name="frOverviewTotalArea" extends="fs25_textDefault" with="anchorMiddleRight">
+        <position value="-26px 0px"/>
+        <size value="420px 28px"/>
+        <textSize value="14px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_fs25_colorMainHighlight"/>
+        <textAlignment value="right"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <!-- Timeline strip -->
+
+    <Profile name="frTimeline" extends="emptyPanel" with="anchorTopLeft">
+        <size value="1240px 194px"/>
+    </Profile>
+
+    <Profile name="frRailCell" extends="emptyPanel" with="anchorTopLeft">
+        <size value="224px 24px"/>
+    </Profile>
+
+    <Profile name="frSlotSeasonLabel" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="7px -4px"/>
+        <size value="210px 18px"/>
+        <textSize value="12px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_colorWhite_50"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frRailSeasonLabelCurrent" extends="frSlotSeasonLabel">
+        <textColor value="$preset_fs25_colorGreen"/>
+    </Profile>
+
+    <Profile name="frSlotCard" extends="emptyPanel" with="anchorTopLeft">
+        <size value="224px 156px"/>
+    </Profile>
+
+    <Profile name="frTimelineArrowIcon" extends="baseReference" with="anchorMiddleCenter">
+        <position value="0px 0px"/>
+        <size value="25px 18px"/>
+        <imageSliceId value="realisticCropRotation.timelineArrowRight"/>
+        <imageColor value="$preset_fs25_colorMainHighlight"/>
+    </Profile>
+
+    <Profile name="frHistoryTimelineConnector" extends="emptyPanel" with="anchorTopLeft">
+        <size value="25px 156px"/>
+    </Profile>
+
+    <Profile name="frSlotFrameH" extends="baseReference" with="anchorTopLeft">
+        <size value="224px 1px"/>
+        <color value="$preset_fs25_colorGreyLight"/>
+        <cornerSize value="0"/>
+    </Profile>
+
+    <Profile name="frSlotFrameV" extends="baseReference" with="anchorTopLeft">
+        <size value="1px 156px"/>
+        <color value="$preset_fs25_colorGreyLight"/>
+        <cornerSize value="0"/>
+    </Profile>
+
+    <Profile name="frSlotFrameHCurrent" extends="frSlotFrameH">
+        <color value="$preset_fs25_colorGreen"/>
+    </Profile>
+
+    <Profile name="frSlotFrameVCurrent" extends="frSlotFrameV">
+        <color value="$preset_fs25_colorGreen"/>
+    </Profile>
+
+    <Profile name="frSlotCardBg" extends="baseReference" with="anchorTopLeft">
+        <size value="224px 156px"/>
+        <color value="0 0 0 0.44"/>
+        <cornerSize value="0"/>
+    </Profile>
+
+    <Profile name="frSlotCardBgN4" extends="frSlotCardBg">
+        <color value="0 0 0 0.22"/>
+    </Profile>
+
+    <Profile name="frSlotCardBgN3" extends="frSlotCardBg">
+        <color value="0 0 0 0.32"/>
+    </Profile>
+
+    <Profile name="frSlotCardBgN2" extends="frSlotCardBg">
+        <color value="0 0 0 0.44"/>
+    </Profile>
+
+    <Profile name="frSlotCardBgN1" extends="frSlotCardBg">
+        <color value="0 0 0 0.50"/>
+    </Profile>
+
+    <Profile name="frSlotCardBgCurrent" extends="frSlotCardBg">
+        <color value="0 0 0 0.58"/>
+    </Profile>
+
+    <Profile name="frSlotAvatarBg" extends="baseReference" with="anchorTopLeft">
+        <position value="82px -18px"/>
+        <size value="60px 60px"/>
+        <color value="$preset_fs25_colorGrey"/>
+        <cornerSize value="1"/>
+    </Profile>
+
+    <Profile name="frSlotIcon" extends="baseReference" with="anchorTopLeft">
+        <position value="92px -28px"/>
+        <size value="40px 40px"/>
+    </Profile>
+
+    <Profile name="frSlotCropName" extends="fs25_textDefault" with="anchorTopCenter">
+        <position value="0px -88px"/>
+        <size value="210px 20px"/>
+        <textSize value="16px"/>
+        <textBold value="false"/>
+        <textUpperCase value="false"/>
+        <textColor value="$preset_fs25_colorMainLight"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frSlotCropNameCentered" extends="fs25_textDefault" with="anchorTopCenter">
+        <position value="0px -68px"/>
+        <size value="210px 20px"/>
+        <textSize value="16px"/>
+        <textBold value="false"/>
+        <textUpperCase value="false"/>
+        <textColor value="$preset_fs25_colorMainLight"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frSlotFamilyBadgeBg" extends="baseReference" with="anchorBottomCenter">
+        <position value="0px 18px"/>
+        <size value="96px 24px"/>
+        <color value="$preset_fs25_colorGrey"/>
+        <cornerSize value="0.20"/>
+    </Profile>
+
+    <Profile name="frSlotFamilyBadgeText" extends="fs25_textDefault" with="anchorBottomCenter">
+        <position value="0px 18px"/>
+        <size value="96px 24px"/>
+        <textSize value="13px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_fs25_colorMainDark"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frDetailCardBg" extends="baseReference" with="anchorTopLeft">
+        <color value="0 0 0 0.50"/>
+        <cornerSize value="0.35"/>
+    </Profile>
+
+    <!-- Unified soil indicators card (1240 x 198 px): nitrogen / pH / treatment, three 66px rows -->
+
+    <Profile name="frSoilIndicatorsCard" extends="emptyPanel" with="anchorTopLeft">
+        <size value="1240px 198px"/>
+    </Profile>
+
+    <Profile name="frSoilIndicatorsCardBg" extends="frDetailCardBg">
+        <size value="1240px 198px"/>
+    </Profile>
+
+    <Profile name="frSoilRowTitleTop" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="24px -24px"/>
+        <size value="220px 20px"/>
+        <textSize value="16px"/>
+        <textBold value="true"/>
+        <textColor value="$preset_fs25_colorMainLight"/>
+        <textAlignment value="left"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frSoilRowTitleBottom" extends="frSoilRowTitleTop">
+        <position value="24px -92px"/>
+    </Profile>
+
+    <Profile name="frSoilStateTop" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="220px -8px"/>
+        <size value="600px 18px"/>
+        <textSize value="12px"/>
+        <textBold value="true"/>
+        <textUpperCase value="false"/>
+        <textColor value="$preset_colorWhite_50"/>
+        <textAlignment value="left"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frSoilStateBottom" extends="frSoilStateTop">
+        <position value="220px -74px"/>
+    </Profile>
+
+    <Profile name="frSoilValueTop" extends="fs25_textDefault" with="anchorTopRight">
+        <position value="-24px -8px"/>
+        <size value="360px 18px"/>
+        <textSize value="12px"/>
+        <textBold value="true"/>
+        <textUpperCase value="false"/>
+        <textColor value="$preset_fs25_colorGreen"/>
+        <textAlignment value="right"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frSoilValueBottom" extends="frSoilValueTop">
+        <position value="-24px -74px"/>
+    </Profile>
+
+    <Profile name="frSoilValueUnavailableTop" extends="frSoilValueTop">
+        <textColor value="$preset_fs25_colorGrey"/>
+    </Profile>
+
+    <Profile name="frSoilValueUnavailableBottom" extends="frSoilValueBottom">
+        <textColor value="$preset_fs25_colorGrey"/>
+    </Profile>
+
+    <Profile name="frSoilTrackTop" extends="baseReference" with="anchorTopLeft">
+        <position value="230px -38px"/>
+        <size value="986px 14px"/>
+        <color value="$preset_fs25_colorGreyDark_50"/>
+        <cornerSize value="0.5"/>
+    </Profile>
+
+    <Profile name="frSoilFillTop" extends="frSoilTrackTop">
+        <color value="$preset_fs25_colorGreen"/>
+    </Profile>
+
+    <Profile name="frSoilTrackBottom" extends="frSoilTrackTop">
+        <position value="230px -104px"/>
+    </Profile>
+
+    <Profile name="frSoilFillBottom" extends="frSoilTrackBottom">
+        <color value="$preset_fs25_colorGreen"/>
+    </Profile>
+
+    <Profile name="frSoilRowDivider" extends="baseReference" with="anchorTopLeft">
+        <position value="24px -66px"/>
+        <size value="1192px 1px"/>
+        <color value="$preset_fs25_colorGreyLight"/>
+        <cornerSize value="0"/>
+    </Profile>
+
+    <Profile name="frSoilRowTitleTreatment" extends="frSoilRowTitleTop">
+        <position value="24px -158px"/>
+    </Profile>
+
+    <Profile name="frSoilStateTreatment" extends="frSoilStateTop">
+        <position value="220px -140px"/>
+    </Profile>
+
+    <Profile name="frSoilValueTreatment" extends="frSoilValueTop">
+        <position value="-24px -140px"/>
+    </Profile>
+
+    <Profile name="frSoilTrackTreatment" extends="frSoilTrackTop">
+        <position value="230px -170px"/>
+    </Profile>
+
+    <Profile name="frSoilFillTreatment" extends="frSoilTrackTreatment">
+        <color value="$preset_fs25_colorGreen"/>
+    </Profile>
+
+    <Profile name="frSoilRowDivider2" extends="frSoilRowDivider">
+        <position value="24px -132px"/>
+    </Profile>
+
+    <!-- Agronomic advice card (1240 x 110 px) -->
+
+    <Profile name="frAdviceCard" extends="emptyPanel" with="anchorTopLeft">
+        <size value="1240px 110px"/>
+    </Profile>
+
+    <Profile name="frAdviceCardBgNeutral" extends="frDetailCardBg">
+        <size value="1240px 110px"/>
+    </Profile>
+
+    <Profile name="frAdviceCardBgWarning" extends="frAdviceCardBgNeutral">
+        <color value="0.24 0.18 0.02 0.82"/>
+    </Profile>
+
+    <Profile name="frAdviceCardBgReady" extends="frAdviceCardBgNeutral">
+        <color value="0.10 0.20 0.03 0.76"/>
+    </Profile>
+
+    <Profile name="frAdviceStatusBadgeBgNeutral" extends="baseReference" with="anchorTopLeft">
+        <position value="18px -51px"/>
+        <size value="40px 40px"/>
+        <color value="0.32 0.32 0.32 1"/>
+        <cornerSize value="0.5"/>
+    </Profile>
+
+    <Profile name="frAdviceStatusBadgeBgWarning" extends="frAdviceStatusBadgeBgNeutral">
+        <color value="0.95 0.70 0.08 1"/>
+    </Profile>
+
+    <Profile name="frAdviceStatusBadgeBgReady" extends="frAdviceStatusBadgeBgNeutral">
+        <color value="$preset_fs25_colorGreen"/>
+    </Profile>
+
+    <Profile name="frAdviceStatusBadgeBgNeutralCentered" extends="frAdviceStatusBadgeBgNeutral">
+        <position value="18px -35px"/>
+    </Profile>
+
+    <Profile name="frAdviceCardBgDanger" extends="frAdviceCardBgNeutral">
+        <color value="0.30 0.06 0.05 0.85"/>
+    </Profile>
+
+    <Profile name="frAdviceStatusBadgeBgDanger" extends="frAdviceStatusBadgeBgNeutral">
+        <color value="0.86 0.17 0.14 1"/>
+    </Profile>
+
+    <Profile name="frAdviceStatusBadgeText" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="18px -51px"/>
+        <size value="40px 40px"/>
+        <textSize value="16px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_fs25_colorMainDark"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frAdviceStatusBadgeTextCentered" extends="frAdviceStatusBadgeText">
+        <position value="18px -35px"/>
+    </Profile>
+
+    <Profile name="frAdviceTitleNeutral" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="0px -6px"/>
+        <size value="1240px 22px"/>
+        <textSize value="16px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="0.95 0.85 0.05 1.0"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frAdviceTitleWarning" extends="frAdviceTitleNeutral"/>
+
+    <Profile name="frAdviceTitleReady" extends="frAdviceTitleNeutral">
+        <textColor value="$preset_fs25_colorGreen"/>
+    </Profile>
+
+    <Profile name="frAdviceTitleDanger" extends="frAdviceTitleNeutral">
+        <textColor value="0.86 0.17 0.14 1"/>
+    </Profile>
+
+    <Profile name="frAdviceTitleDivider" extends="baseReference" with="anchorTopLeft">
+        <position value="24px -32px"/>
+        <size value="1192px 1px"/>
+        <color value="$preset_fs25_colorGreyLight"/>
+        <cornerSize value="0"/>
+    </Profile>
+
+    <Profile name="frAdviceText" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="72px -42px"/>
+        <size value="1148px 58px"/>
+        <textSize value="14px"/>
+        <textBold value="false"/>
+        <textUpperCase value="false"/>
+        <textColor value="$preset_fs25_colorMainLight"/>
+        <textAlignment value="left"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="3"/>
+    </Profile>
+
+    <Profile name="frAdviceTextNeutral" extends="frAdviceText">
+        <position value="72px -6px"/>
+        <size value="1148px 98px"/>
+    </Profile>
+
+    <!-- Field card (1240 x 82 px) -->
+
+    <Profile name="frFieldCard" extends="emptyPanel" with="anchorTopLeft">
+        <size value="1240px 82px"/>
+    </Profile>
+
+    <Profile name="frFieldCardBg" extends="frDetailCardBg">
+        <size value="1240px 82px"/>
+    </Profile>
+
+    <Profile name="frFieldKpi" extends="emptyPanel" with="anchorTopLeft">
+        <size value="310px 82px"/>
+    </Profile>
+
+    <Profile name="frFieldKpiLabel" extends="fs25_textDefault" with="anchorTopCenter">
+        <position value="0px -10px"/>
+        <size value="290px 18px"/>
+        <textSize value="12px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_fs25_colorMainLight"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frFieldKpiValue" extends="fs25_textDefault" with="anchorBottomCenter">
+        <position value="0px 12px"/>
+        <size value="290px 38px"/>
+        <textSize value="26px"/>
+        <textBold value="true"/>
+        <textColor value="$preset_fs25_colorOrangeDark"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+        <textUpperCase value="false"/>
+    </Profile>
+
+    <Profile name="frFieldKpiValueNA" extends="frFieldKpiValue">
+        <textColor value="$preset_colorWhite_50"/>
+    </Profile>
+
+    <Profile name="frFieldKpiValueSmall" extends="frFieldKpiValue">
+        <textSize value="15px"/>
+    </Profile>
+
+    <Profile name="frFieldKpiValueSmallNA" extends="frFieldKpiValueSmall">
+        <textColor value="$preset_colorWhite_50"/>
+    </Profile>
+
+    <Profile name="frFieldDivider" extends="baseReference" with="anchorTopCenter">
+        <position value="0px -18px"/>
+        <size value="1px 46px"/>
+        <color value="$preset_fs25_colorGreyLight"/>
+        <cornerSize value="0.05"/>
+    </Profile>
+
+    <!-- Planning tab -->
+
+    <Profile name="frPlanContainer" extends="frDetailContainer"/>
+
+    <!-- Annual calendar strip: top editor + 1130px month axis -->
+    <Profile name="frCalendarTimeline" extends="emptyPanel" with="anchorTopLeft">
+        <size value="1240px 238px"/>
+    </Profile>
+
+    <Profile name="frCalendarBg" extends="baseReference" with="anchorTopLeft">
+        <size value="1240px 238px"/>
+        <color value="0 0 0 0.50"/>
+        <cornerSize value="0.35"/>
+    </Profile>
+
+    <Profile name="frCalendarEditor" extends="emptyPanel" with="anchorTopLeft">
+        <position value="10px -7px"/>
+        <size value="736px 30px"/>
+    </Profile>
+
+    <Profile name="frCalendarEditCropSelector" extends="fs25_multiTextOption" with="anchorTopLeft">
+        <position value="0px 0px"/>
+        <size value="360px 24px"/>
+        <wrap value="true"/>
+    </Profile>
+
+    <Profile name="frCalendarEditCoverSelector" extends="fs25_multiTextOption" with="anchorTopLeft">
+        <position value="380px 0px"/>
+        <size value="360px 24px"/>
+        <wrap value="true"/>
+    </Profile>
+
+    <Profile name="frCalendarMonthLabel" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="94px -38px"/>
+        <size value="86px 14px"/>
+        <textSize value="10px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_colorWhite_50"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <!-- Vertical month grid lines: RoundCorner (not Bitmap) so <color> applies -->
+    <Profile name="frCalendarMonthGridLine" extends="baseReference" with="anchorTopLeft">
+        <position value="94px -38px"/>
+        <size value="1px 188px"/>
+        <color value="$preset_fs25_colorGreyLight"/>
+        <cornerSize value="0.05"/>
+    </Profile>
+
+    <!-- Transparent container; position set in Lua, frCalendarTodayDash children have fixed XML positions -->
+    <Profile name="frCalendarTodayMarker" extends="emptyPanel" with="anchorTopLeft"/>
+
+    <Profile name="frCalendarTodayDash" extends="baseReference" with="anchorTopLeft">
+        <size value="2px 8px"/>
+        <color value="$preset_colorWhite_50"/>
+    </Profile>
+
+    <Profile name="frCalendarHeaderSep" extends="baseReference" with="anchorTopLeft">
+        <position value="94px -52px"/>
+        <size value="1130px 1px"/>
+        <color value="$preset_fs25_colorMainHighlight"/>
+        <cornerSize value="0.05"/>
+    </Profile>
+
+    <Profile name="frCalendarRow" extends="emptyPanel" with="anchorTopLeft">
+        <size value="1240px 43px"/>
+    </Profile>
+
+    <!-- Invisible click overlay so a row can be selected by clicking anywhere on it -->
+    <Profile name="frCalendarRowButton" extends="emptyPanel" with="anchorTopLeft">
+        <position value="0px 0px"/>
+        <size value="1240px 43px"/>
+    </Profile>
+
+    <Profile name="frCalendarRowBg" extends="baseReference" with="anchorTopLeft">
+        <position value="0px 0px"/>
+        <size value="1240px 43px"/>
+        <color value="$preset_fs25_colorGreyDark"/>
+        <cornerSize value="0"/>
+    </Profile>
+
+    <Profile name="frCalendarRowBgOdd" extends="frCalendarRowBg">
+        <color value="$preset_colorTransparent"/>
+    </Profile>
+
+    <Profile name="frCalendarRowBgEven" extends="frCalendarRowBg">
+        <color value="$preset_fs25_colorGreyDark_50"/>
+    </Profile>
+
+    <Profile name="frCalendarStepLabel" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="4px -6px"/>
+        <size value="50px 30px"/>
+        <textSize value="20px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_fs25_colorMainHighlight"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frCalendarCropIcon" extends="baseReference" with="anchorTopLeft">
+        <position value="58px -3px"/>
+        <size value="18px 18px"/>
+    </Profile>
+
+    <Profile name="frCalendarCoverIcon" extends="baseReference" with="anchorTopLeft">
+        <position value="58px -22px"/>
+        <size value="18px 18px"/>
+    </Profile>
+
+    <Profile name="frCalendarCropBar" extends="baseReference" with="anchorTopLeft">
+        <color value="$preset_fs25_colorGreen"/>
+        <cornerSize value="0.17"/>
+    </Profile>
+
+    <Profile name="frCalendarHarvestBar" extends="baseReference" with="anchorTopLeft">
+        <color value="$preset_fs25_colorOrangeDark"/>
+        <cornerSize value="0.17"/>
+    </Profile>
+
+    <Profile name="frCalendarCoverMarker" extends="frCalendarCropBar"/>
+
+    <Profile name="frCalendarLegend" extends="emptyPanel" with="anchorTopRight">
+        <position value="-10px -7px"/>
+        <size value="460px 24px"/>
+    </Profile>
+
+    <Profile name="frCalendarLegendSwatch" extends="baseReference" with="anchorTopLeft">
+        <size value="14px 14px"/>
+        <cornerSize value="0.17"/>
+    </Profile>
+
+    <Profile name="frCalendarLegendSwatchSow" extends="frCalendarLegendSwatch">
+        <color value="$preset_fs25_colorGreen"/>
+    </Profile>
+
+    <Profile name="frCalendarLegendSwatchHarvest" extends="frCalendarLegendSwatch">
+        <color value="$preset_fs25_colorOrangeDark"/>
+    </Profile>
+
+    <Profile name="frCalendarLegendSwatchCover" extends="frCalendarLegendSwatchSow"/>
+
+    <Profile name="frCalendarLegendLabel" extends="fs25_textDefault" with="anchorTopLeft">
+        <size value="200px 24px"/>
+        <textSize value="12px"/>
+        <textBold value="true"/>
+        <textColor value="$preset_colorWhite_50"/>
+        <textAlignment value="left"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <!-- Score card (1240 x 56 px): text left, cursor track right -->
+    <Profile name="frScoreCard" extends="emptyPanel" with="anchorTopLeft">
+        <size value="1240px 56px"/>
+    </Profile>
+
+    <Profile name="frScoreCardBg" extends="frDetailCardBg">
+        <size value="1240px 56px"/>
+    </Profile>
+
+    <Profile name="frScoreText" extends="fs25_textDefault" with="anchorMiddleLeft">
+        <position value="24px 0px"/>
+        <size value="640px 30px"/>
+        <textSize value="18px"/>
+        <textBold value="false"/>
+        <textColor value="$preset_fs25_colorMainLight"/>
+        <textAlignment value="left"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <!-- Cursor track: pill shape; keep width in sync with updateScoreCard (trackW=400) -->
+    <Profile name="frScoreTrack" extends="baseReference" with="anchorMiddleRight">
+        <position value="-24px 0px"/>
+        <size value="400px 14px"/>
+        <color value="$preset_fs25_colorGreyDark_50"/>
+        <cornerSize value="0.5"/>
+    </Profile>
+
+    <!-- Cursor positioner: width set in Lua to move cursor; keep in sync with trackW=400 -->
+    <Profile name="frScoreCursorPos" extends="emptyPanel" with="anchorMiddleLeft">
+        <position value="816px 0px"/>
+        <size value="14px 14px"/>
+    </Profile>
+
+    <Profile name="frScoreCursor" extends="baseReference" with="anchorMiddleRight">
+        <size value="14px 14px"/>
+        <color value="$preset_fs25_colorGreen"/>
+        <cornerSize value="0.5"/>
+    </Profile>
+
+    <Profile name="frScoreLabelLeft" extends="fs25_textDefault" with="anchorMiddleLeft">
+        <position value="816px -14px"/>
+        <size value="180px 14px"/>
+        <textSize value="10px"/>
+        <textBold value="false"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_colorWhite_50"/>
+        <textAlignment value="left"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frScoreLabelRight" extends="fs25_textDefault" with="anchorMiddleRight">
+        <position value="-24px -14px"/>
+        <size value="180px 14px"/>
+        <textSize value="10px"/>
+        <textBold value="false"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_colorWhite_50"/>
+        <textAlignment value="right"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <!-- Global overview (1240 x 312 px); wrap bottom matches history panel -->
+
+    <Profile name="frOverviewWrap" extends="emptyPanel" with="anchorTopLeft">
+        <size value="1240px 312px"/>
+    </Profile>
+
+    <Profile name="frOverviewBg" extends="baseReference" with="anchorTopLeft">
+        <size value="1240px 312px"/>
+        <color value="0 0 0 0.50"/>
+        <cornerSize value="0.35"/>
+    </Profile>
+
+    <Profile name="frOverviewInner" extends="emptyPanel" with="anchorStretchingYStretchingX"/>
+
+    <Profile name="frOverviewList" extends="emptyPanel" with="anchorTopLeft">
+        <position value="10px -10px"/>
+        <size value="1206px 292px"/>
+    </Profile>
+
+    <Profile name="frOverviewSliderBox" extends="fs25_listSliderBox" with="anchorTopRight">
+        <position value="-8px -8px"/>
+        <size value="6px 292px"/>
+    </Profile>
+
+    <Profile name="frOverviewSlider" extends="fs25_listSlider" with="anchorTopLeft">
+        <position value="0px 0px"/>
+        <size value="6px 292px"/>
+    </Profile>
+
+    <!-- Rotation group rows (1 row = 1 unique rotation pattern, 80 px tall) -->
+
+    <Profile name="frOverviewListItem" extends="baseReference" with="anchorTopStretchingX">
+        <height value="80px"/>
+        <imageColor value="$preset_colorTransparent"/>
+        <imageSelectedColor value="$preset_colorTransparent"/>
+    </Profile>
+
+    <Profile name="frGroupCardBg" extends="baseReference" with="anchorTopLeft">
+        <size value="1206px 80px"/>
+        <position value="0px 0px"/>
+        <color value="0 0 0 0.45"/>
+        <cornerSize value="0.35"/>
+    </Profile>
+
+    <Profile name="frGroupCountLane" extends="baseReference" with="anchorTopLeft">
+        <size value="104px 80px"/>
+        <position value="0px 0px"/>
+        <color value="0 0 0 0.30"/>
+        <cornerSize value="0.35"/>
+    </Profile>
+
+    <Profile name="frGroupBadge" extends="baseReference" with="anchorTopLeft">
+        <size value="300px 26px"/>
+        <color value="$preset_fs25_colorGrey"/>
+        <cornerSize value="0.20"/>
+    </Profile>
+
+    <Profile name="frGroupCropIconCard" extends="baseReference" with="anchorTopLeft">
+        <size value="20px 20px"/>
+    </Profile>
+
+    <Profile name="frGroupCoverIconBg" extends="baseReference" with="anchorTopLeft">
+        <size value="18px 18px"/>
+        <color value="$preset_fs25_colorGrey"/>
+        <cornerSize value="0.20"/>
+    </Profile>
+
+    <Profile name="frGroupBadgeLabel" extends="fs25_textDefault" with="anchorTopLeft">
+        <size value="300px 26px"/>
+        <textSize value="12px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_fs25_colorMainLight"/>
+        <textAlignment value="left"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+        <textLayoutMode value="resize"/>
+    </Profile>
+
+    <Profile name="frGroupYearLabel" extends="fs25_textDefault" with="anchorTopLeft">
+        <size value="300px 12px"/>
+        <textSize value="10px"/>
+        <textBold value="false"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_colorWhite_50"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frGroupArrow" extends="baseReference" with="anchorTopLeft">
+        <size value="25px 18px"/>
+        <imageSliceId value="realisticCropRotation.timelineArrowRight"/>
+        <imageColor value="$preset_fs25_colorMainHighlight"/>
+    </Profile>
+
+    <Profile name="frGroupCount" extends="fs25_textDefault" with="anchorTopLeft">
+        <size value="86px 32px"/>
+        <textSize value="18px"/>
+        <textBold value="true"/>
+        <textColor value="$preset_fs25_colorMainHighlight"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frGroupArea" extends="fs25_textDefault" with="anchorTopLeft">
+        <size value="86px 18px"/>
+        <textSize value="12px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_colorWhite_50"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frOverviewMetaColumn" extends="emptyPanel" with="anchorTopRight">
+        <position value="-26px 0px"/>
+        <size value="228px 80px"/>
+        <flowDirection value="vertical"/>
+        <alignmentX value="right"/>
+        <alignmentY value="middle"/>
+        <fillDirectionY value="topToBottom"/>
+        <elementSpacing value="6px"/>
+        <autoValidateLayout value="true"/>
+    </Profile>
+
+    <Profile name="frOverviewScore" extends="fs25_textDefault">
+        <size value="228px 22px"/>
+        <textSize value="14px"/>
+        <textBold value="true"/>
+        <textColor value="$preset_fs25_colorGreen"/>
+        <textAlignment value="right"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frOverviewResidueCard" extends="baseReference">
+        <size value="228px 22px"/>
+    </Profile>
+
+    <Profile name="frGroupPlanSummary" extends="fs25_textDefault" with="anchorTopLeft">
+        <size value="780px 28px"/>
+        <textSize value="16px"/>
+        <textBold value="true"/>
+        <textUpperCase value="true"/>
+        <textColor value="$preset_fs25_colorMainLight"/>
+        <textAlignment value="left"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <Profile name="frGroupFieldNames" extends="fs25_textDefault" with="anchorTopLeft">
+        <position value="132px -62.5px"/>
+        <size value="1046px 14px"/>
+        <textSize value="11px"/>
+        <textBold value="true"/>
+        <textUpperCase value="false"/>
+        <textColor value="$preset_colorWhite_50"/>
+        <textAlignment value="left"/>
+        <textVerticalAlignment value="middle"/>
+        <textLayoutMode value="scrolling"/>
+        <textScrollOnFocusOnly value="false"/>
+        <textMaxNumLines value="1"/>
+    </Profile>
+
+    <!-- Empty state -->
+
+    <Profile name="frEmptyText" extends="fs25_textDefault" with="anchorMiddleCenter">
+        <position value="0px 0px"/>
+        <size value="800px 60px"/>
+        <textAlignment value="center"/>
+        <textVerticalAlignment value="middle"/>
+        <textMaxWidth value="800px"/>
+        <textSize value="20px"/>
+        <textColor value="$preset_fs25_colorGrey"/>
+        <textUpperCase value="false"/>
+        <textMaxNumLines value="2"/>
+    </Profile>
+
+</GUIProfiles>

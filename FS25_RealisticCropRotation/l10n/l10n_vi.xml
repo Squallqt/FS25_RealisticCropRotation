@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <elements>
+        <!-- General -->
+        <e k="realisticCropRotation_menu_title" v="Luân canh cây trồng" />
+
+        <!-- Help -->
+        <e k="rcr_help_title_products" v="Sản phẩm xử lý" />
+        <e k="rcr_help_title_spraying" v="Phun sớm" />
+        <e k="rcr_help_title_treatment_map" v="Khu vực đã xử lý" />
+        <e k="rcr_help_text_01" v="Realistic Crop Rotation lưu bốn mục cây trồng hoặc đất bỏ hóa trước đó cho mỗi thửa ruộng thuộc sở hữu. Dùng Nông học để xem xét ruộng, Lập kế hoạch để chuẩn bị chu kỳ lặp lại và bản đồ Bệnh hại để theo dõi nguy cơ, đợt bùng phát cùng độ phủ xử lý." />
+        <e k="rcr_help_text_02" v="Chọn một thửa ruộng thuộc sở hữu để xem cây trồng hiện tại, tối đa bốn mục trước đó, tư vấn nông học, đạm, pH, độ phủ xử lý và trạng thái hiện tại của ruộng. Tiêu đề thời tiết giúp bạn chọn thời điểm phun." />
+        <e k="rcr_help_text_03" v="Chọn một ô từ N+1 đến N+4, sau đó chọn cây trồng chính và cây che phủ tùy chọn. Điền các ô liên tiếp: phần đầu đã điền sẽ trở thành chu kỳ lặp lại hai, ba hoặc bốn năm, bao gồm cả việc quay từ ô cuối về ô đầu." />
+        <e k="rcr_help_text_04" v="Chất lượng luân canh thưởng cho sự đa dạng cây trồng và họ cây, việc xen kẽ gieo mùa đông và mùa xuân, cây tạo đạm hoặc cây che phủ, cùng với cây họ đậu trước cây ngũ cốc. Việc cùng một họ hoặc các cây có chung bệnh quay lại quá sớm sẽ làm giảm điểm." />
+        <e k="rcr_help_text_05" v="Cây họ đậu đã cấu hình chỉ hoàn trả đạm khi bị phá hủy bằng canh tác đất, không phải khi chỉ được thu hoạch. Lượng đạm được chia cho hai vụ tiếp theo; với Precision Farming, nó được ghi lên bản đồ đạm, nếu không thì thêm một mức bón phân." />
+        <e k="rcr_help_text_06" v="Bản đồ Nguy cơ bệnh hại hiển thị áp lực mầm bệnh cao nhất hiện tại đối với cây trồng trên mỗi ruộng thuộc sở hữu ở mức thấp, trung bình hoặc cao. Thời tiết có thể tiếp tục thay đổi khả năng nhiễm bệnh, vì vậy hãy dùng bản đồ này cùng tiêu đề thời tiết trong Nông học." />
+        <e k="rcr_help_text_07" v="Nhiễm bệnh bắt đầu ở trạng thái ẩn và chỉ xuất hiện tại đây khi nó bắt đầu phá hủy cây trồng. Bản đồ xác định đợt bùng phát trong số chín bệnh đã cấu hình; sau đó thẻ thông tin ruộng, HUD khi đi bộ và thông báo cũng hiển thị bệnh." />
+        <e k="rcr_help_text_09" v="Hãy phun sớm. Thuốc trừ nấm làm giảm khả năng bùng phát và làm chậm bệnh đang hoạt động theo độ phủ của ruộng. Thuốc trừ nấm và thuốc trừ tuyến trùng bảo vệ các ô đã phun khỏi bị phá hủy, nhưng không thể phục hồi cây đã mất hoặc loại bỏ bệnh khỏi ruộng." />
+        <e k="rcr_help_text_10" v="Bản đồ Phun thuốc hiển thị mặt đất được thuốc trừ nấm hoặc thuốc trừ tuyến trùng bảo vệ. Bảo vệ bằng thuốc trừ nấm kết thúc trên mặt đất đã thu hoạch hoặc cắt. Bảo vệ bằng thuốc trừ tuyến trùng kéo dài ba tháng cho mỗi ruộng và lần phun mới sẽ gia hạn thời gian." />
+        <e k="rcr_help_text_11" v="Khi bạn đứng trong ruộng, HUD bổ sung hai cây trồng trước đó, bệnh nhìn thấy được và các xử lý đang hoạt động. HUD cũng hiển thị tiến độ sinh trưởng bằng số; Precision Farming giữ nguyên thông tin riêng về đất, pH, đạm và sản lượng." />
+
+        <!-- Sidebar -->
+        <e k="rcr_field_prefix"         v="Ruộng" />
+        <e k="rcr_sidebar_no_active_crop"  v="Không có cây trồng hoạt động" />
+
+        <!-- Tabs -->
+        <e k="rcr_tab_history"          v="Nông học" />
+        <e k="rcr_sidebar_fields"       v="Ruộng" />
+        <e k="rcr_tab_planning"         v="Lập kế hoạch" />
+        <e k="rcr_section_disease_map"     v="Bệnh hại" />
+        <e k="rcr_disease_sub_infections" v="Ruộng bị nhiễm bệnh" />
+        <e k="rcr_disease_sub_pressure"   v="Nguy cơ bệnh hại" />
+        <e k="rcr_disease_sub_treatment"  v="Phun thuốc" />
+        <e k="rcr_disease_risk_low"       v="Thấp" />
+        <e k="rcr_disease_risk_moderate"  v="Trung bình" />
+        <e k="rcr_disease_risk_high"      v="Cao" />
+        <e k="rcr_disease_notification" v="%s xuất hiện trên Ruộng %s" />
+        <e k="rcr_disease_reminder" v="Bệnh vẫn đang hoạt động: %s, Ruộng %s" />
+        <e k="rcr_disease_hud_label"    v="Dịch bệnh" />
+        <e k="rcr_disease_header_active" v="Dịch bệnh (%s)" />
+        <e k="rcr_treatment_hud_label"  v="Phun thuốc" />
+        <e k="rcr_treatment_nematicide_remaining" v="%s (còn %d tháng)" />
+        <e k="rcr_advice_nematicide_duration" v="Bảo vệ đất kéo dài 3 tháng cho mỗi ruộng; phun lại sẽ gia hạn thời gian." />
+
+        <!-- Treatment gauge -->
+        <e k="rcr_treatment_absent"   v="không có" />
+        <e k="rcr_treatment_partial"  v="một phần (%d%%)" />
+        <e k="rcr_treatment_complete" v="đầy đủ" />
+        <e k="rcr_treatment_disease_absent"     v="Không có bệnh" />
+        <e k="rcr_treatment_disease_active"     v="Bệnh đang hoạt động" />
+        <e k="rcr_treatment_disease_controlled" v="Bệnh được kiểm soát" />
+        <e k="rcr_treatment_disease_partially_controlled" v="Bệnh được kiểm soát một phần" />
+        <e k="rcr_treatment_until_harvest" v="Đến khi thu hoạch" />
+        <e k="rcr_treatment_months"        v="%d tháng" />
+
+        <!-- Status labels -->
+        <e k="rcr_status_current_residue" v="Lượng đạm dự kiến hoàn trả +%d (N+1) / +%d (N+2) kg/ha" />
+        <e k="rcr_status_planned_residue" v="Lượng đạm hoàn trả từ luân canh +%d kg/ha" />
+        <e k="rcr_status_current_no_residue" v="Không có lượng đạm hoàn trả dự kiến" />
+        <e k="rcr_status_planned_no_residue" v="Không có lượng đạm hoàn trả" />
+        <e k="rcr_weather_sun" v="Trời quang" />
+        <e k="rcr_weather_partially_cloudy" v="Hửng nắng" />
+        <e k="rcr_weather_cloudy" v="Nhiều mây" />
+        <e k="rcr_weather_rain" v="Mưa" />
+        <e k="rcr_weather_snow" v="Tuyết" />
+        <e k="rcr_weather_hail" v="Mưa đá" />
+        <e k="rcr_weather_twister" v="Lốc xoáy" />
+        <e k="rcr_weather_thunder" v="Giông bão" />
+        <e k="rcr_weather_current_operational" v="%s đang diễn ra · kết thúc %s" />
+        <e k="rcr_weather_current_calm" v="%s · đến %s" />
+        <e k="rcr_weather_soon" v="%s %s-%s · sau %s" />
+        <e k="rcr_weather_tomorrow" v="%s ngày mai %s-%s" />
+        <e k="rcr_weather_later" v="%s N+%d %s-%s" />
+        <e k="rcr_time_minutes" v="%d phút" />
+        <e k="rcr_time_hours" v="%d giờ" />
+        <e k="rcr_time_hours_minutes" v="%d giờ %02d phút" />
+        <e k="rcr_hud_previous_n1"      v="Cây trồng trước (N-1)" />
+        <e k="rcr_hud_previous_n2"      v="Cây trồng hai vụ trước (N-2)" />
+
+        <!-- Section bars -->
+        <e k="rcr_section_history"      v="Lịch sử cây trồng" />
+        <e k="rcr_section_nitrogen"     v="Trạng thái đạm" />
+        <e k="rcr_section_advice"       v="Tư vấn nông học" />
+        <e k="rcr_section_soil_indicators" v="Đất và phun thuốc" />
+        <e k="rcr_section_field"        v="Trạng thái ruộng hiện tại" />
+        <e k="rcr_section_lime"         v="Trạng thái vôi / pH" />
+        <e k="rcr_section_plan"         v="Kế hoạch luân canh" />
+        <e k="rcr_clear_plan_button"    v="Xóa kế hoạch" />
+        <e k="rcr_clear_plan_confirm"   v="Xóa kế hoạch luân canh của %s?" />
+        <e k="rcr_section_score"        v="Chất lượng luân canh" />
+        <e k="rcr_section_overview"     v="Tổng quan" />
+        <e k="rcr_overview_total_area"  v="Diện tích canh tác: %.1f ha" />
+
+        <!-- Timeline slot labels -->
+        <e k="rcr_slot_n4"              v="N-4" />
+        <e k="rcr_slot_n3"              v="N-3" />
+        <e k="rcr_slot_n2"              v="N-2" />
+        <e k="rcr_slot_n1"              v="N-1" />
+        <e k="rcr_slot_current"         v="Hiện tại" />
+
+        <!-- Crop family badge labels -->
+        <e k="rcr_family_cereal"        v="Ngũ cốc" />
+        <e k="rcr_family_legume"        v="Cây họ đậu" />
+        <e k="rcr_family_oilseed"       v="Cây lấy dầu" />
+        <e k="rcr_family_root"          v="Cây lấy củ" />
+        <e k="rcr_family_vegetable"     v="Rau" />
+        <e k="rcr_family_forage"        v="Cây thức ăn" />
+        <e k="rcr_cover_crop"           v="Cây xen canh" />
+        <e k="rcr_fallow"              v="Bỏ hóa" />
+
+        <!-- Nitrogen gauge -->
+        <e k="rcr_n_none"               v="Chưa bón phân" />
+        <e k="rcr_n_partial"            v="Một phần" />
+        <e k="rcr_n_full"               v="Đầy đủ" />
+        <e k="rcr_n_average_value"      v="Đạm trung bình: %.0f kg/ha" />
+        <e k="rcr_n_crop_need"          v="Nhu cầu cây trồng: %.0f kg/ha" />
+        <e k="rcr_n_average_pf"         v="Đạm / nhu cầu cây trồng" />
+        <e k="rcr_lime_none"            v="Không có vôi" />
+        <e k="rcr_lime_partial"         v="Vôi một phần" />
+        <e k="rcr_lime_full"            v="Vôi phù hợp" />
+        <e k="rcr_lime_average_pf"      v="pH trung bình" />
+        <e k="rcr_lime_average_value"   v="pH trung bình: %.3f pH" />
+        <e k="rcr_lime_target"          v="Mục tiêu: %.3f pH" />
+        <e k="rcr_soil_value_unmeasured" v="Giá trị chưa đo" />
+        <e k="rcr_n_crop_need_unavailable" v="Nhu cầu cây trồng: --" />
+        <e k="rcr_lime_status_unavailable" v="Vôi: --" />
+        <e k="rcr_advice_soil_analysis_required_body" v="Không có dữ liệu nitơ và pH. Hãy phân tích đất để nhận khuyến nghị nông học chính xác." />
+
+        <!-- Agronomic advice -->
+        <e k="rcr_advice_afterCereal" v="Sau cây ngũ cốc, gieo cây họ đậu để hoàn trả đạm hoặc cây cắt vụ chống bệnh thối gốc, và giữ khoảng cách hai năm giữa các vụ ngũ cốc." />
+        <e k="rcr_advice_afterLegume" v="Sau cây họ đậu, ngũ cốc tận dụng tốt nhất lượng đạm để lại, và cây họ đậu tiếp theo nên chờ ba năm." />
+        <e k="rcr_advice_afterOilseed" v="Sau cây lấy dầu, để ba năm trước khi bất kỳ cây lấy dầu nào quay lại, với ngũ cốc rồi cây họ đậu là trình tự lý tưởng." />
+        <e k="rcr_advice_afterRoot" v="Sau cây lấy củ, chờ bốn năm trước khi cây lấy củ quay lại, tiếp theo là ngũ cốc để tái tạo cấu trúc đất sau thu hoạch muộn." />
+        <e k="rcr_advice_afterVegetable" v="Sau rau, chờ ba năm trước khi lặp lại, với ngũ cốc làm khoảng nghỉ sạch." />
+        <e k="rcr_advice_afterForage" v="Sau đồng cỏ tạm thời, ngũ cốc tận dụng độ phì và cấu trúc tích lũy dưới lớp cỏ." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Nguy cơ thối hạch cao: giãn cách ít nhất 3 năm giữa cải dầu, mù tạt, hướng dương, đậu tương, đậu Hà Lan, đậu, khoai tây và cà rốt; thuốc trừ nấm hạn chế thiệt hại trên phần đã phun nhưng không loại bỏ bệnh khỏi ruộng." />
+        <e k="rcr_advice_pressure_high_bcn"           v="Nguy cơ tuyến trùng cao: giãn cách ít nhất 3 năm giữa củ cải đường, củ dền, cải dầu, mù tạt và rau chân vịt; thuốc trừ tuyến trùng bảo vệ phần đã xử lý nhưng không loại bỏ tuyến trùng." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Nguy cơ thối hạch trung bình: giãn cách cải dầu, mù tạt, hướng dương, đậu tương, đậu Hà Lan, đậu, khoai tây và cà rốt; mưa làm tăng nguy cơ." />
+        <e k="rcr_advice_pressure_moderate_bcn"         v="Nguy cơ tuyến trùng trung bình: giãn cách củ cải đường, củ dền, cải dầu, mù tạt và rau chân vịt." />
+
+        <!-- Advice card, history-based rotation memo -->
+        <e k="rcr_advice_memo_next_crop" v="Sau %s, kế hoạch của bạn chọn %s làm cây trồng tiếp theo." />
+        <e k="rcr_advice_memo_next_fallow" v="Sau %s, kế hoạch của bạn bố trí một năm bỏ hóa." />
+        <e k="rcr_advice_memo_no_plan" v="Không có cây trồng tiếp theo nào được xác định trong kế hoạch luân canh." />
+        <e k="rcr_advice_memo_incomplete_short" v="Kế hoạch chưa đầy đủ: hãy nhập ít nhất hai bước liên tiếp." />
+        <e k="rcr_advice_memo_incomplete_gap" v="Kế hoạch chưa đầy đủ: một ô “Chưa lên kế hoạch” ngăn cách hai bước đã điền." />
+        <e k="rcr_advice_memo_no_history" v="Không có cây trồng trước đó được ghi lại: không thể xác định bước tiếp theo của chu kỳ." />
+        <e k="rcr_advice_memo_not_aligned" v="Mục mới nhất trong lịch sử (%s) không nằm trong chu kỳ đã lên kế hoạch. Không thể xác định bước tiếp theo." />
+        <e k="rcr_advice_memo_ambiguous" v="%s xuất hiện nhiều lần trong chu kỳ với các bước tiếp theo khác nhau. Không thể xác định bước tiếp theo." />
+        <e k="rcr_advice_memo_conflict_family" v="Sau %s, kế hoạch của bạn chọn %s, nhưng cả hai cây trồng thuộc cùng một họ (%s). Cần thêm %d trong tổng số %d năm bắt buộc trước khi có thể quay lại an toàn." />
+        <e k="rcr_advice_memo_conflict_disease" v="Sau %s, kế hoạch của bạn chọn %s, nhưng cả hai cây trồng đều có thể bị ảnh hưởng bởi %s. Hãy chờ thêm %d năm; khoảng cách khuyến nghị là %d năm." />
+
+        <!-- Advice card, active outbreak and planned-rotation-step evaluation -->
+        <e k="rcr_advice_title_ready" v="Luân canh hợp lý" />
+        <e k="rcr_advice_title_warning" v="Xung đột luân canh" />
+        <e k="rcr_advice_title_outbreak" v="Dịch bệnh đang hoạt động" />
+        <e k="rcr_advice_outbreak" v="%s đang phát triển trên cánh đồng này, mức độ gây hại %d%%. Biện pháp xử lý khuyến nghị: %s." />
+        <e k="rcr_advice_plan_next_conflict_family" v="%s dự kiến cho %s: xung đột luân canh, cùng họ (%s) với cây trồng hiện tại, còn thiếu %d/%d năm trước khi có thể quay lại an toàn." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s dự kiến cho %s: xung đột luân canh. Cùng một bệnh (%s) cũng có thể ảnh hưởng đến cây trồng hiện tại; còn thiếu %d năm so với khoảng cách khuyến nghị %d năm." />
+        <e k="rcr_advice_plan_next_ok" v="%s dự kiến cho %s: lựa chọn tốt, không phát hiện xung đột luân canh." />
+        <e k="rcr_advice_title_fallow" v="Năm nghỉ" />
+        <e k="rcr_advice_fallow_current" v="Đang bỏ hóa: năm nay không trồng cây chính. Điều này kéo dài thời gian trước cây trồng nhạy cảm tiếp theo nhưng không loại bỏ bệnh ngay lập tức." />
+        <e k="rcr_advice_plan_next_fallow" v="Bỏ hóa dự kiến cho %s: không trồng cây chính trong một năm. Điều này kéo dài thời gian trước cây trồng nhạy cảm tiếp theo nhưng không bảo đảm mọi bệnh đã biến mất." />
+
+        <!-- Advice card, disease pressure list -->
+
+        <!-- Field card — required actions / growth -->
+        <e k="rcr_action_header"        v="Tình trạng đất" />
+        <e k="rcr_field_growth"          v="Sinh trưởng" />
+
+        <!-- Field card — weed column header (singular) -->
+        <e k="rcr_weed_header"          v="Cỏ dại" />
+
+        <!-- Planning tab — year slots (relative to current year, never stale) -->
+        <e k="rcr_plan_year1"           v="N+1" />
+        <e k="rcr_plan_year2"           v="N+2" />
+        <e k="rcr_plan_year3"           v="N+3" />
+        <e k="rcr_plan_year4"           v="N+4" />
+        <e k="rcr_plan_none"            v="Chưa lên kế hoạch" />
+
+        <!-- Planning tab — annual calendar -->
+        <e k="rcr_calendar_month_1"     v="Th3" />
+        <e k="rcr_calendar_month_2"     v="Th4" />
+        <e k="rcr_calendar_month_3"     v="Th5" />
+        <e k="rcr_calendar_month_4"     v="Th6" />
+        <e k="rcr_calendar_month_5"     v="Th7" />
+        <e k="rcr_calendar_month_6"     v="Th8" />
+        <e k="rcr_calendar_month_7"     v="Th9" />
+        <e k="rcr_calendar_month_8"     v="Th10" />
+        <e k="rcr_calendar_month_9"     v="Th11" />
+        <e k="rcr_calendar_month_10"    v="Th12" />
+        <e k="rcr_calendar_month_11"    v="Th1" />
+        <e k="rcr_calendar_month_12"    v="Th2" />
+
+        <e k="rcr_calendar_legend_sowing"  v="Gieo" />
+        <e k="rcr_calendar_legend_harvest" v="Thu hoạch" />
+        <e k="rcr_calendar_legend_cover"   v="Gieo che phủ" />
+
+        <!-- Planning tab — score -->
+        <e k="rcr_score_incomplete"     v="Kế hoạch chưa đầy đủ" />
+        <e k="rcr_score_excellent"      v="Luân canh xuất sắc: cân bằng nông học tốt" />
+        <e k="rcr_score_good"           v="Luân canh tốt: còn vài điểm có thể cải thiện" />
+        <e k="rcr_score_fair"           v="Luân canh khá: một số cây trồng quay lại quá sớm" />
+        <e k="rcr_score_poor"           v="Luân canh cần cải thiện: các cây trồng quá gần nhau" />
+        <e k="rcr_score_bad"            v="Luân canh kém: cùng loại cây trồng lặp lại liên tục" />
+        <e k="rcr_score_label_low"      v="Điểm kém" />
+        <e k="rcr_score_label_optimal"  v="Điểm tối ưu" />
+        <e k="rcr_score_short_optimal"  v="TỐI ƯU" />
+        <e k="rcr_score_short_good"     v="TỐT" />
+        <e k="rcr_score_short_fair"     v="KHÁ" />
+        <e k="rcr_score_short_poor"     v="THẤP" />
+        <e k="rcr_score_short_bad"      v="KÉM" />
+
+        <!-- Empty state -->
+        <e k="rcr_empty_no_fields"      v="Không có ruộng sở hữu để hiển thị." />
+        <e k="rcr_function_fungicideTank" v="Sử dụng AMISTAR trong máy phun để áp dụng xử lý thuốc trừ nấm cho cây trồng có nguy cơ." />
+        <e k="rcr_function_nematicideTank" v="Sử dụng VELUM PRIME trong máy phun để áp dụng xử lý thuốc trừ tuyến trùng cho cây trồng phơi nhiễm tuyến trùng." />
+        <!-- Disease system (9 pathogens) -->
+        <e k="rcr_disease_name_sclerotinia" v="Bệnh thối hạch" />
+        <e k="rcr_disease_name_phoma" v="Bệnh loét thân (Phoma)" />
+        <e k="rcr_disease_name_takeall" v="Bệnh thối rễ ngũ cốc" />
+        <e k="rcr_disease_name_septoria" v="Bệnh Septoria" />
+        <e k="rcr_disease_name_rust" v="Bệnh gỉ sắt" />
+        <e k="rcr_disease_name_fusarium" v="Bệnh Fusarium" />
+        <e k="rcr_disease_name_lateblight" v="Bệnh mốc sương" />
+        <e k="rcr_disease_name_bcn"   v="Tuyến trùng bào nang" />
+        <e k="rcr_disease_name_clubroot" v="Bệnh sưng rễ họ cải" />
+        <e k="rcr_disease_treatment_sclerotinia" v="Thuốc trừ nấm" />
+        <e k="rcr_disease_treatment_phoma" v="Thuốc trừ nấm" />
+        <e k="rcr_disease_treatment_takeall" v="Không có (chỉ luân canh)" />
+        <e k="rcr_disease_treatment_septoria" v="Thuốc trừ nấm" />
+        <e k="rcr_disease_treatment_rust" v="Thuốc trừ nấm" />
+        <e k="rcr_disease_treatment_fusarium" v="Thuốc trừ nấm" />
+        <e k="rcr_disease_treatment_lateblight" v="Thuốc trừ nấm" />
+        <e k="rcr_disease_treatment_bcn" v="Thuốc trừ tuyến trùng" />
+        <e k="rcr_fillType_fungicide" v="Thuốc trừ nấm" />
+        <e k="rcr_fillType_nematicide" v="Thuốc trừ tuyến trùng" />
+        <e k="rcr_disease_treatment_none" v="Không phun thuốc" />
+        <e k="rcr_disease_treatment_clubroot" v="Không có (chỉ luân canh)" />
+        <e k="rcr_advice_pressure_high_phoma" v="Nguy cơ Phoma cao: giãn cách ít nhất 4 năm giữa cải dầu và mù tạt; thuốc trừ nấm hạn chế thiệt hại trên phần đã phun nhưng không loại bỏ bệnh khỏi ruộng." />
+        <e k="rcr_advice_pressure_high_takeall" v="Nguy cơ thối rễ cao: trồng yến mạch, cây họ đậu hoặc cây lấy dầu xen giữa các vụ ngũ cốc; không thuốc nào bảo vệ được trước bệnh này, luân canh dài hơn sẽ giảm nguy cơ." />
+        <e k="rcr_advice_pressure_high_septoria" v="Nguy cơ Septoria cao: mưa làm tăng nguy cơ phát bệnh trước mắt và thuốc trừ nấm hạn chế thiệt hại trên phần đã phun." />
+        <e k="rcr_advice_pressure_high_rust" v="Nguy cơ gỉ sắt cao: thời tiết ôn hòa và ẩm ướt làm tăng nguy cơ phát bệnh trước mắt, còn thuốc trừ nấm hạn chế thiệt hại trên phần đã phun." />
+        <e k="rcr_advice_pressure_high_fusarium" v="Nguy cơ Fusarium cao: tránh trồng lúa mì sau ngô và giảm số vụ ngũ cốc liên tiếp; thuốc trừ nấm hạn chế thiệt hại trên phần đã phun, còn mưa làm tăng nguy cơ." />
+        <e k="rcr_advice_pressure_high_lateblight" v="Nguy cơ mốc sương cao: thời tiết mát và ẩm làm tăng nguy cơ phát bệnh trước mắt, còn thuốc trừ nấm hạn chế thiệt hại trên phần đã phun." />
+        <e k="rcr_advice_pressure_high_clubroot" v="Nguy cơ sưng rễ cao: kéo dài tối đa khoảng cách giữa cải dầu và mù tạt; không thuốc nào bảo vệ được trước bệnh này, luân canh dài hơn sẽ giảm nguy cơ." />
+        <e k="rcr_advice_pressure_moderate_phoma" v="Nguy cơ Phoma trung bình: kéo dài khoảng cách giữa cải dầu và mù tạt." />
+        <e k="rcr_advice_pressure_moderate_takeall" v="Nguy cơ thối rễ trung bình: tránh vụ ngũ cốc thứ ba liên tiếp." />
+        <e k="rcr_advice_pressure_moderate_septoria" v="Nguy cơ Septoria trung bình: mưa làm tăng nguy cơ phát bệnh trước mắt." />
+        <e k="rcr_advice_pressure_moderate_rust" v="Nguy cơ gỉ sắt trung bình: thời tiết ôn hòa và ẩm ướt làm tăng nguy cơ phát bệnh trước mắt." />
+        <e k="rcr_advice_pressure_moderate_fusarium" v="Nguy cơ Fusarium trung bình: giãn cách ngũ cốc và ngô." />
+        <e k="rcr_advice_pressure_moderate_lateblight" v="Nguy cơ mốc sương trung bình: thời tiết mát và ẩm làm tăng nguy cơ phát bệnh trước mắt." />
+        <e k="rcr_advice_pressure_moderate_clubroot" v="Nguy cơ sưng rễ trung bình: kéo dài khoảng cách giữa cải dầu và mù tạt." />
+    </elements>
+</l10n>
