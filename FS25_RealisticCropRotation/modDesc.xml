@@ -66,6 +66,7 @@ Changelog:
 
 1.0.1.0:
 - Fixed an unnecessary warning when loading a singleplayer game
+- Improved performance when displaying field information
 
 1.0.0.0:
 - Initial release
@@ -129,6 +130,7 @@ Changelog:
 
 1.0.1.0:
 - Unnötige Warnmeldung beim Laden eines Einzelspielerspiels behoben
+- Leistung beim Anzeigen von Feldinformationen verbessert
 
 1.0.0.0:
 - Erstveröffentlichung
@@ -192,6 +194,7 @@ Changelog :
 
 1.0.1.0 :
 - Correction d'un avertissement injustifié au chargement d'une partie solo
+- Amélioration des performances à l'affichage des informations des champs
 
 1.0.0.0 :
 - Version initiale

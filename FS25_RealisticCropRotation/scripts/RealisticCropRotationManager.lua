@@ -307,16 +307,23 @@ local applyRegionToModifier = RealisticCropRotationManager.applyRegionToModifier
 -- @param integer mapId
 -- @param integer firstChannel
 -- @param integer numChannels
--- @param table filterA Optional density filter
--- @param table filterB Optional second density filter
+-- @param any? filterA Optional native density filter
+-- @param any? filterB Optional second native density filter
+-- @param table? readContext Optional modifier shared only within one region scan
 -- @return number sum, number pixels, number totalPixels, or nil when the region cannot be bound
-local function aggregateRegionLayer(region, mapId, firstChannel, numChannels, filterA, filterB)
+local function aggregateRegionLayer(region, mapId, firstChannel, numChannels, filterA, filterB, readContext)
     if region == nil or mapId == nil or firstChannel == nil or numChannels == nil then return nil end
     if DensityMapModifier == nil or g_terrainNode == nil then return nil end
 
-    local modifier = DensityMapModifier.new(mapId, firstChannel, numChannels, g_terrainNode)
-    if modifier == nil then return nil end
-    if not applyRegionToModifier(region, modifier) then return nil end
+    local modifier = readContext ~= nil and readContext.modifier or nil
+    if modifier == nil then
+        modifier = DensityMapModifier.new(mapId, firstChannel, numChannels, g_terrainNode)
+        if modifier == nil then return nil end
+        if not applyRegionToModifier(region, modifier) then return nil end
+        if readContext ~= nil then readContext.modifier = modifier end
+    else
+        modifier:resetDensityMapAndChannels(mapId, firstChannel, numChannels)
+    end
 
     local f1, f2, f3 = filterA, filterB, region.filter
     if f1 == nil then f1, f2, f3 = f2, f3, nil end
@@ -428,12 +435,13 @@ local function getRegionFruitTypeIndex(region, hintFruitTypeIndex, capacity, hin
         return nil
     end
     local fruitTypes = g_fruitTypeManager:getFruitTypes()
+    local readContext = {}
 
     local function countPixels(desc)
         local filter = DensityMapFilter.new(desc.terrainDataPlaneId, desc.startStateChannel, desc.numStateChannels)
         filter:setValueCompareParams(DensityValueCompareType.GREATER, 0)
         local _, pixels = aggregateRegionLayer(region, desc.terrainDataPlaneId,
-            desc.startStateChannel, desc.numStateChannels, filter)
+            desc.startStateChannel, desc.numStateChannels, filter, nil, readContext)
         return pixels or 0
     end
 
@@ -481,7 +489,7 @@ local function getRegionFruitTypeIndex(region, hintFruitTypeIndex, capacity, hin
         local filter = DensityMapFilter.new(bestDesc.terrainDataPlaneId, bestDesc.startStateChannel, bestDesc.numStateChannels)
         filter:setValueCompareParams(DensityValueCompareType.EQUAL, state)
         local _, pixels = aggregateRegionLayer(region, bestDesc.terrainDataPlaneId,
-            bestDesc.startStateChannel, bestDesc.numStateChannels, filter)
+            bestDesc.startStateChannel, bestDesc.numStateChannels, filter, nil, readContext)
         return pixels or 0
     end
 
@@ -1362,9 +1370,10 @@ local function getRegionSoilTypeWeights(region, soilMap, restrictFilter)
     local numChannels = math.floor(tonumber(soilMap.typeNumChannels) or 0)
     if mapId == nil or firstChannel == nil or numChannels <= 0 then return weights end
 
+    local readContext = {}
     for value = 0, (2 ^ numChannels) - 1 do
         local filter = makeDensityFilter(mapId, firstChannel, numChannels, DensityValueCompareType.EQUAL, value)
-        local _, pixels = aggregateRegionLayer(region, mapId, firstChannel, numChannels, filter, restrictFilter)
+        local _, pixels = aggregateRegionLayer(region, mapId, firstChannel, numChannels, filter, restrictFilter, readContext)
         if pixels ~= nil and pixels > 0 then
             weights[value + 1] = pixels
         end

@@ -1612,9 +1612,13 @@ function RealisticCropRotationFrame:updateTreatmentGauge(farmlandId, sharedRowTi
     local grid = RealisticCropRotation ~= nil and RealisticCropRotation.grid or nil
     local region = mgr:getFieldRegion(farmlandId)
 
+    local coverageCache = {}
     local coverageOf = function(fam)
-        return (grid ~= nil and region ~= nil)
-            and grid:getProtectionCoverage(region, fam) or 0
+        if coverageCache[fam] == nil then
+            coverageCache[fam] = (grid ~= nil and region ~= nil)
+                and grid:getProtectionCoverage(region, fam) or 0
+        end
+        return coverageCache[fam]
     end
 
     -- Show the least protected active disease; severity breaks ties.

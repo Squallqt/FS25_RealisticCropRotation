@@ -124,6 +124,7 @@ Valid `<group>` values: `SCLEROTINIA`, `PHOMA`, `TAKEALL`, `SEPTORIA`, `RUST`, `
 ### v1.0.1.0
 
 - Fixed an unnecessary warning when loading a singleplayer game
+- Improved performance when displaying field information
 
 ### v1.0.0.0
 
