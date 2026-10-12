@@ -89,7 +89,7 @@ function RealisticCropRotationDiseaseGrid:loadMap(savegamePath, densityMapSyncer
     if densityMapSyncer ~= nil and type(densityMapSyncer.addDensityMap) == "function" then
         densityMapSyncer:addDensityMap(self.fungicideProtectionMapId)
         densityMapSyncer:addDensityMap(self.nematicideProtectionMapId)
-    else
+    elseif g_currentMission.missionDynamicInfo.isMultiplayer then
         Logging.warning("[RealisticCropRotation] Density-map synchronizer unavailable; treatment coverage cannot synchronize")
     end
 

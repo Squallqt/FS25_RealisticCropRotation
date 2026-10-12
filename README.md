@@ -2,7 +2,7 @@
 
 Crop rotation planning and disease simulation for Farming Simulator 25.
 
-[![Version](https://img.shields.io/badge/version-1.0.0.0-blue.svg)](https://github.com/Squallqt/FS25_RealisticCropRotation/releases)
+[![Version](https://img.shields.io/badge/version-1.0.1.0-blue.svg)](https://github.com/Squallqt/FS25_RealisticCropRotation/releases)
 [![FS25](https://img.shields.io/badge/FS25-compatible-green.svg)](https://farming-simulator.com/)
 ![Multiplayer](https://img.shields.io/badge/multiplayer-supported-success.svg)
 ![Languages](https://img.shields.io/badge/languages-27-blue.svg)
@@ -81,7 +81,7 @@ Cover crops (oilseed radish, flowering catch crop) add an estimated flat +25 kg 
 
 ### From ModHub
 
-Search for "Realistic Crop Rotation" on the official [Farming Simulator ModHub](https://www.farming-simulator.com/mods.php).
+Download [Realistic Crop Rotation from the official Farming Simulator ModHub](https://www.farming-simulator.com/mod.php?mod_id=370461&title=fs2025).
 
 ### Manual
 
@@ -120,6 +120,10 @@ Testing and admin tools registered by the mod. They run on the server; typed on 
 Valid `<group>` values: `SCLEROTINIA`, `PHOMA`, `TAKEALL`, `SEPTORIA`, `RUST`, `FUSARIUM`, `LATEBLIGHT`, `BCN`, `CLUBROOT`.
 
 ## Changelog
+
+### v1.0.1.0
+
+- Fixed an unnecessary warning when loading a singleplayer game
 
 ### v1.0.0.0
 

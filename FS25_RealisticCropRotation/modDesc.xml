@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <modDesc descVersion="113">
     <author>Squallqt</author>
-    <version>1.0.0.0</version>
+    <version>1.0.1.0</version>
     <title>
         <en>Realistic Crop Rotation</en>
         <de>Realistische Fruchtfolge</de>
@@ -62,6 +62,14 @@ Valid <group> values: SCLEROTINIA, PHOMA, TAKEALL, SEPTORIA, RUST, FUSARIUM, LAT
 Singleplayer and multiplayer, with or without Precision Farming. 27 languages.
 Issues & suggestions: https://github.com/Squallqt/FS25_RealisticCropRotation
 
+Changelog:
+
+1.0.1.0:
+- Fixed an unnecessary warning when loading a singleplayer game
+
+1.0.0.0:
+- Initial release
+
 Please download this mod only from the official Farming Simulator ModHub and keep the original link. Reuploading, redistribution, modification or copying of this mod or any of its files, in whole or in part, is not permitted without the author's written consent.]]></en>
         <de><![CDATA[Gib deiner Fruchtfolge eine echte Bedeutung.
 
@@ -117,6 +125,14 @@ Gültige <group>-Werte: SCLEROTINIA, PHOMA, TAKEALL, SEPTORIA, RUST, FUSARIUM, L
 Einzelspieler und Mehrspieler, mit oder ohne Precision Farming. 27 Sprachen.
 Issues & Vorschläge: https://github.com/Squallqt/FS25_RealisticCropRotation
 
+Changelog:
+
+1.0.1.0:
+- Unnötige Warnmeldung beim Laden eines Einzelspielerspiels behoben
+
+1.0.0.0:
+- Erstveröffentlichung
+
 Bitte lade diesen Mod ausschließlich aus dem offiziellen Farming Simulator ModHub herunter und behalte den originalen Link bei. Das erneute Hochladen, die Weitergabe, Veränderung oder das Kopieren dieses Mods oder seiner Dateien, ganz oder teilweise, ist ohne die schriftliche Zustimmung des Autors nicht gestattet.]]></de>
         <fr><![CDATA[Donnez un rôle réel à vos rotations.
 
@@ -171,6 +187,14 @@ Valeurs valides pour <group> : SCLEROTINIA, PHOMA, TAKEALL, SEPTORIA, RUST, FUSA
 
 Solo et multijoueur, avec ou sans Precision Farming. 27 langues.
 Issues & suggestions : https://github.com/Squallqt/FS25_RealisticCropRotation
+
+Changelog :
+
+1.0.1.0 :
+- Correction d'un avertissement injustifié au chargement d'une partie solo
+
+1.0.0.0 :
+- Version initiale
 
 Merci de télécharger ce mod uniquement depuis le ModHub officiel de Farming Simulator et de conserver le lien original. La remise en ligne, la redistribution, la modification ou la copie de ce mod ou de l'un de ses fichiers, en tout ou partie, ne sont pas autorisées sans l'accord écrit de l'auteur.]]></fr>
     </description>
