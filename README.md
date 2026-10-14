@@ -89,6 +89,8 @@ Download [Realistic Crop Rotation from the official Farming Simulator ModHub](ht
 2. Activate the mod in mod selection
 3. Access via the dedicated "Crop Rotation" tab in the InGame Menu (ESC)
 
+> **Note:** RCR raises the game's limit of 255 fill types to 511, so its fungicide and nematicide stay available on large maps and long mod lists.
+
 ## Usage
 
 ### Planning a rotation
@@ -123,8 +125,11 @@ Valid `<group>` values: `SCLEROTINIA`, `PHOMA`, `TAKEALL`, `SEPTORIA`, `RUST`, `
 
 ### v1.0.1.0
 
+- Fixed long freezes and low frame rates in the crop rotation menu on some maps and savegames
 - Fixed an unnecessary warning when loading a singleplayer game
-- Improved performance when displaying field information
+- Fixed the current-date marker in the crop rotation calendar
+- Fixed incorrect crop detection on fields with missing boundaries
+- Fixed fungicide and nematicide missing on large maps and long mod lists: the game's limit of 255 fill types is raised to 511
 
 ### v1.0.0.0
 

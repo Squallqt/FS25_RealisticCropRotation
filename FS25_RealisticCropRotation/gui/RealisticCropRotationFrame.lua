@@ -220,6 +220,7 @@ function RealisticCropRotationFrame:onFrameOpen()
     self:subscribeFarmlandChanges()
     self:populateSidebar()
     self:setMenuButtonInfoDirty()
+    self:getManager():requestOwnedParcelScans()
     RealisticCropRotation.requestMenuReconcile(
         self.selectedId, false, self:getSidebarFarmlandIds())
     if FocusManager ~= nil and self.listFields:getItemCount() > 0 then
@@ -257,12 +258,25 @@ function RealisticCropRotationFrame:onMenuReconcileComplete(changed, fullBatch)
     self.listFields:reloadData()
 end
 
+---Rebuilds the field list after a parcel scan found other field ground.
+function RealisticCropRotationFrame:onParcelScanChanged()
+    if not self.isMenuOpen then return end
+    self:populateSidebar()
+    RealisticCropRotation.requestMenuReconcile(
+        self.selectedId, false, self:getSidebarFarmlandIds())
+end
+
 ---Keeps the weather card and the history detail panel synchronized while this menu frame is active.
 -- @param integer dt Frame delta in milliseconds
 function RealisticCropRotationFrame:update(dt)
     local superClass = RealisticCropRotationFrame:superClass()
     if superClass.update ~= nil then
         superClass.update(self, dt)
+    end
+
+    -- The server advances its parcel scans from the mission update
+    if not g_currentMission:getIsServer() and self:getManager():updateParcelScans() then
+        self:onParcelScanChanged()
     end
 
     self.refreshTimerMs = self.refreshTimerMs + dt
@@ -273,6 +287,7 @@ function RealisticCropRotationFrame:update(dt)
         self.weatherCard:refresh(false)
     end
     if self.selectedId ~= nil and self:isHistoryTab() then
+        self:getManager():requestParcelScan(self.selectedId)
         RealisticCropRotation.requestMenuReconcile(self.selectedId, true)
         self:updateDetailPanel(self.selectedId)
     end
@@ -2269,10 +2284,10 @@ function RealisticCropRotationFrame:updateCalendarAxis()
     local dayFrac = 0.5
     local env = g_currentMission ~= nil and g_currentMission.environment or nil
     if env ~= nil and env.getDayInPeriodFromDay ~= nil then
-        local daysPerPeriod = tonumber(env.plannedDaysPerPeriod)
-        local currentDay = tonumber(env.currentDay)
-        if daysPerPeriod ~= nil and daysPerPeriod > 0 and currentDay ~= nil then
-            local dayInPeriod = tonumber(env:getDayInPeriodFromDay(currentDay))
+        local daysPerPeriod = tonumber(env.daysPerPeriod)
+        local currentMonotonicDay = tonumber(env.currentMonotonicDay)
+        if daysPerPeriod ~= nil and daysPerPeriod > 0 and currentMonotonicDay ~= nil then
+            local dayInPeriod = tonumber(env:getDayInPeriodFromDay(currentMonotonicDay))
             if dayInPeriod ~= nil and dayInPeriod >= 1 and dayInPeriod <= daysPerPeriod then
                 dayFrac = (dayInPeriod - 0.5) / daysPerPeriod
             end

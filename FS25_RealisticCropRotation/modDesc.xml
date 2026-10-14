@@ -65,8 +65,11 @@ Issues & suggestions: https://github.com/Squallqt/FS25_RealisticCropRotation
 Changelog:
 
 1.0.1.0:
+- Fixed long freezes and low frame rates in the crop rotation menu on some maps and savegames
 - Fixed an unnecessary warning when loading a singleplayer game
-- Improved performance when displaying field information
+- Fixed the current-date marker in the crop rotation calendar
+- Fixed incorrect crop detection on fields with missing boundaries
+- Fixed fungicide and nematicide missing on large maps and long mod lists: the game's limit of 255 fill types is raised to 511
 
 1.0.0.0:
 - Initial release
@@ -129,8 +132,11 @@ Issues & Vorschläge: https://github.com/Squallqt/FS25_RealisticCropRotation
 Changelog:
 
 1.0.1.0:
+- Lange Hänger und niedrige Bildraten im Fruchtfolgemenü auf manchen Karten und Spielständen behoben
 - Unnötige Warnmeldung beim Laden eines Einzelspielerspiels behoben
-- Leistung beim Anzeigen von Feldinformationen verbessert
+- Markierung des aktuellen Datums im Fruchtfolgekalender korrigiert
+- Falsche Kulturerkennung bei fehlenden Feldgrenzen korrigiert
+- Fehlendes Fungizid und Nematizid auf großen Karten und langen Modlisten behoben: Das Limit des Spiels steigt von 255 auf 511 Fülltypen
 
 1.0.0.0:
 - Erstveröffentlichung
@@ -193,8 +199,11 @@ Issues & suggestions : https://github.com/Squallqt/FS25_RealisticCropRotation
 Changelog :
 
 1.0.1.0 :
+- Correction des longs blocages et des chutes d'images dans le menu de rotation sur certaines cartes et sauvegardes
 - Correction d'un avertissement injustifié au chargement d'une partie solo
-- Amélioration des performances à l'affichage des informations des champs
+- Correction du repère de la date actuelle dans le calendrier de rotation
+- Correction des cultures mal identifiées sur les champs sans contour valide
+- Correction du fongicide et du nématicide absents sur les grandes cartes et les longues listes de mods : la limite du jeu passe de 255 à 511 types de remplissage
 
 1.0.0.0 :
 - Version initiale

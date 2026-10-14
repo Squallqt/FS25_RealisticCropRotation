@@ -37,7 +37,7 @@ function RealisticCropRotationDiseaseGrid.new()
 end
 
 local regionWorldBounds = RealisticCropRotationManager.regionWorldBounds
-local applyRegionToModifier = RealisticCropRotationManager.applyRegionToModifier
+local aggregateRegionLayer = RealisticCropRotationManager.aggregateRegionLayer
 
 ---Creates or loads one persistent treatment-protection map and records its actual size.
 -- @param table owner Disease-grid instance
@@ -352,17 +352,15 @@ function RealisticCropRotationDiseaseGrid:getProtectionCoverage(region, family)
         return 0
     end
 
-    local modifier = DensityMapModifier.new(protectionMapId, 0, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS, g_terrainNode)
-    if not applyRegionToModifier(region, modifier) then return 0 end
-
-    local filter = DensityMapFilter.new(protectionMapId, 0, RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS)
+    local numChannels = RealisticCropRotationDiseaseGrid.PROTECTION_NUM_CHANNELS
+    local filter = DensityMapFilter.new(protectionMapId, 0, numChannels)
     filter:setValueCompareParams(DensityValueCompareType.EQUAL, 1)
 
     -- Worked-ground pixels counted in their own pass.
     local groundFilter = RealisticCropRotationManager.makeFieldGroundFilter()
     if groundFilter == nil then return 0 end
-    local _, protectedPixels = modifier:executeGet(filter, groundFilter, region.filter)
-    local _, groundPixels = modifier:executeGet(groundFilter, region.filter)
+    local _, protectedPixels = aggregateRegionLayer(region, protectionMapId, 0, numChannels, filter, groundFilter)
+    local _, groundPixels = aggregateRegionLayer(region, protectionMapId, 0, numChannels, groundFilter)
     if groundPixels == nil or groundPixels <= 0 then return 0 end
     return (protectedPixels or 0) / groundPixels
 end
