@@ -2,7 +2,7 @@
 
 Crop rotation planning and disease simulation for Farming Simulator 25.
 
-[![Version](https://img.shields.io/badge/version-1.0.0.0-blue.svg)](https://github.com/Squallqt/FS25_RealisticCropRotation/releases)
+[![Version](https://img.shields.io/badge/version-1.1.0.0-blue.svg)](https://github.com/Squallqt/FS25_RealisticCropRotation/releases)
 [![FS25](https://img.shields.io/badge/FS25-compatible-green.svg)](https://farming-simulator.com/)
 ![Multiplayer](https://img.shields.io/badge/multiplayer-supported-success.svg)
 ![Languages](https://img.shields.io/badge/languages-27-blue.svg)
@@ -64,6 +64,7 @@ Legumes destroyed by tillage (disc harrow / cultivator, not simple harvest) retu
 | Soybean | 40 kg N/ha | 10 kg N/ha |
 | Pea | 40 kg N/ha | 10 kg N/ha |
 | Green bean | 20 kg N/ha | 5 kg N/ha |
+| Peanut | 20 kg N/ha | 0 kg N/ha |
 
 Cover crops (oilseed radish, flowering catch crop) add an estimated flat +25 kg N/ha instead, reflected as an estimate in the planner. With Precision Farming, the residue is added directly to the nitrogen map; without it, the mod adds one vanilla fertilizer level regardless of the crop.
 
@@ -81,13 +82,15 @@ Cover crops (oilseed radish, flowering catch crop) add an estimated flat +25 kg 
 
 ### From ModHub
 
-Search for "Realistic Crop Rotation" on the official [Farming Simulator ModHub](https://www.farming-simulator.com/mods.php).
+Download [Realistic Crop Rotation from the official Farming Simulator ModHub](https://www.farming-simulator.com/mod.php?mod_id=370461&title=fs2025).
 
 ### Manual
 
 1. Place the downloaded `FS25_RealisticCropRotation.zip` file into your FS25 `mods/` directory (do not extract)
 2. Activate the mod in mod selection
 3. Access via the dedicated "Crop Rotation" tab in the InGame Menu (ESC)
+
+> **Note:** RCR raises the game's limit of 255 fill types to 511, so its fungicide and nematicide stay available on large maps and long mod lists.
 
 ## Usage
 
@@ -120,6 +123,16 @@ Testing and admin tools registered by the mod. They run on the server; typed on 
 Valid `<group>` values: `SCLEROTINIA`, `PHOMA`, `TAKEALL`, `SEPTORIA`, `RUST`, `FUSARIUM`, `LATEBLIGHT`, `BCN`, `CLUBROOT`.
 
 ## Changelog
+
+### v1.1.0.0
+
+- Added buckwheat, peanut, sesame and mint to crop rotation
+- Fixed long freezes and low frame rates in the crop rotation menu on some maps and savegames
+- Fixed advice text cut short in some languages
+- Fixed an unnecessary warning when loading a singleplayer game
+- Fixed the current-date marker in the crop rotation calendar
+- Fixed incorrect crop detection on fields with missing boundaries
+- Fixed fungicide and nematicide missing on large maps and long mod lists: the game's limit of 255 fill types is raised to 511
 
 ### v1.0.0.0
 

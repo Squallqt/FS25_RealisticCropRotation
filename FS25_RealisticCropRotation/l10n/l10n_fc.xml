@@ -40,7 +40,7 @@
         <e k="rcr_disease_header_active" v="Maladie (%s)" />
         <e k="rcr_treatment_hud_label"  v="Traitement" />
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d mois restants)" />
-        <e k="rcr_advice_nematicide_duration" v="La protection du sol dure 3 mois par champ ; une nouvelle application renouvelle cette durée." />
+        <e k="rcr_advice_nematicide_duration" v="La protection dure 3 mois par champ ; une nouvelle application la renouvelle." />
 
         <!-- Treatment gauge -->
         <e k="rcr_treatment_absent"   v="absent" />
@@ -105,6 +105,8 @@
         <e k="rcr_family_root"          v="Légumes-racines" />
         <e k="rcr_family_vegetable"     v="Légumes" />
         <e k="rcr_family_forage"        v="Fourrage" />
+        <e k="rcr_family_pseudocereal"  v="Pseudo-céréale" />
+        <e k="rcr_family_aromatic"      v="Plante aromatique" />
         <e k="rcr_cover_crop"           v="Interculture" />
         <e k="rcr_fallow"              v="Jachère" />
 
@@ -124,7 +126,7 @@
         <e k="rcr_soil_value_unmeasured" v="Valeur non mesurée" />
         <e k="rcr_n_crop_need_unavailable" v="Besoin de la culture : --" />
         <e k="rcr_lime_status_unavailable" v="Chaux : --" />
-        <e k="rcr_advice_soil_analysis_required_body" v="Les valeurs d’azote et de pH sont indisponibles. Analysez le sol pour obtenir des conseils agronomiques précis." />
+        <e k="rcr_advice_soil_analysis_required_body" v="Azote et pH indisponibles : analysez le sol pour obtenir des conseils précis." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Après une céréale, semez une légumineuse pour restituer l'azote ou une culture de coupure contre le piétin, et gardez deux ans entre céréales." />
@@ -133,9 +135,11 @@
         <e k="rcr_advice_afterRoot" v="Après une culture sarclée, attendez quatre ans avant d'y revenir, puis une céréale pour restructurer le sol après l'arrachage tardif." />
         <e k="rcr_advice_afterVegetable" v="Après un légume, attendez trois ans avant de le répéter, avec une céréale comme coupure nette." />
         <e k="rcr_advice_afterForage" v="Après une prairie temporaire, une céréale valorise la fertilité et la structure accumulées sous le couvert." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Risque élevé de sclérotinia : attendez au moins 3 ans avant de remettre du canola, de la moutarde, du tournesol, du soya, des pois, des haricots, des pommes de terre ou des carottes ; le fongicide limite les dommages dans les zones traitées, mais n'élimine pas la maladie du champ." />
+        <e k="rcr_advice_afterPseudocereal" v="Après une pseudo-céréale, attendez-vous à des repousses dans la culture suivante, car les graines tombent avant la récolte ; le chaume peu fourni laisse aussi un sol meuble et sensible à l'érosion." />
+        <e k="rcr_advice_afterAromatic" v="Après une plante aromatique, tenez-la cinq ans hors du champ contre la verticilliose, avec du maïs ou de la luzerne entre-temps pour assainir le sol." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Risque élevé de sclérotinia : attendez au moins 3 ans avant de remettre canola, moutarde, tournesol, soya, pois, haricot, arachide, pomme de terre ou carotte ; le fongicide limite les dommages dans les zones traitées, mais n'élimine pas la maladie du champ." />
         <e k="rcr_advice_pressure_high_bcn"           v="Risque élevé de nématodes : attendez au moins 3 ans avant de remettre des betteraves, du canola, de la moutarde ou des épinards ; le nématicide protège les zones traitées, mais n'élimine pas les nématodes." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Risque modéré de sclérotinia : attendez plus longtemps avant de remettre du canola, de la moutarde, du tournesol, du soya, des pois, des haricots, des pommes de terre ou des carottes ; la pluie peut augmenter le risque." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Risque modéré de sclérotinia : attendez plus longtemps avant de remettre canola, moutarde, tournesol, soya, pois, haricot, arachide, pomme de terre ou carotte ; la pluie peut augmenter le risque." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Risque modéré de nématodes : attendez plus longtemps avant de remettre des betteraves, du canola, de la moutarde ou des épinards." />
 
         <!-- Advice card, history-based rotation memo -->
@@ -156,11 +160,11 @@
         <e k="rcr_advice_title_outbreak" v="Infection active" />
         <e k="rcr_advice_outbreak" v="%s active dans ce champ. Niveau d'attaque : %d %%. Traitement recommandé : %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s prévu en %s : conflit de rotation, même famille (%s) que la culture actuelle, il reste %d an(s) sur %d requis avant un retour sûr." />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s prévu en %s : cette culture et la culture actuelle peuvent toutes deux être touchées par %s. Attendez encore %d an(s) ; l'intervalle recommandé est de %d an(s)." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s prévu en %s : %s peut toucher cette culture comme l'actuelle. Il reste %d an(s) sur les %d recommandés." />
         <e k="rcr_advice_plan_next_ok" v="%s prévu en %s : bon choix, aucun conflit de rotation détecté." />
         <e k="rcr_advice_title_fallow" v="Année de coupure" />
         <e k="rcr_advice_fallow_current" v="Jachère en cours : aucune culture principale n'est cultivée cette année. Cela ajoute du temps avant la prochaine culture sensible, mais n'élimine pas immédiatement la maladie." />
-        <e k="rcr_advice_plan_next_fallow" v="Jachère prévue en %s : aucune culture principale ne sera cultivée pendant un an. Cela ajoute du temps avant la prochaine culture sensible, mais ne garantit pas que toutes les maladies auront disparu." />
+        <e k="rcr_advice_plan_next_fallow" v="Jachère prévue en %s : un an sans culture principale. Cela ajoute du temps avant la prochaine culture sensible, sans garantir la disparition de toutes les maladies." />
 
         <!-- Advice card, disease pressure list -->
 

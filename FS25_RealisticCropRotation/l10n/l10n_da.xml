@@ -105,6 +105,8 @@
         <e k="rcr_family_root"          v="Rodfrugt" />
         <e k="rcr_family_vegetable"     v="Grøntsag" />
         <e k="rcr_family_forage"        v="Foder" />
+        <e k="rcr_family_pseudocereal"  v="Pseudokorn" />
+        <e k="rcr_family_aromatic"      v="Krydderurt" />
         <e k="rcr_cover_crop"           v="Mellemafgrøde" />
         <e k="rcr_fallow"              v="Brak" />
 
@@ -133,9 +135,11 @@
         <e k="rcr_advice_afterRoot" v="Efter en rodafgrøde vent fire år før rodafgrøder vender tilbage, og følg op med en kornafgrøde for at genopbygge strukturen efter den sene optagning." />
         <e k="rcr_advice_afterVegetable" v="Efter en grøntsag vent tre år før den gentages, med en kornafgrøde som ren afbrydelse." />
         <e k="rcr_advice_afterForage" v="Efter en kløvergræsmark udnytter en kornafgrøde den frugtbarhed og struktur, der er opbygget under græsset." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Høj risiko for sclerotinia: Vent mindst 3 år, før du igen dyrker raps, sennep, solsikke, sojabønne, ært, bønne, kartoffel eller gulerod; svampemiddel begrænser skaden på behandlede områder, men fjerner ikke sygdommen fra marken." />
+        <e k="rcr_advice_afterPseudocereal" v="Efter pseudokorn kan du vente spildplanter i den næste afgrøde, da frøet drysser før høst; den tynde stub efterlader desuden jorden løs og udsat for erosion." />
+        <e k="rcr_advice_afterAromatic" v="Efter en krydderurt holder du den væk fra marken i fem år mod verticillium-visnesyge, med majs eller lucerne imellem for at sanere jorden." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Høj risiko for sclerotinia: Vent mindst 3 år, før du igen dyrker raps, sennep, solsikke, sojabønne, ært, bønne, jordnød, kartoffel eller gulerod; svampemiddel begrænser skaden på behandlede områder, men fjerner ikke sygdommen fra marken." />
         <e k="rcr_advice_pressure_high_bcn"           v="Høj risiko for nematoder: Vent mindst 3 år, før du igen dyrker sukkerroe, rødbede, raps, sennep eller spinat; nematicid beskytter behandlede områder, men fjerner ikke nematoderne." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderat risiko for sclerotinia: Vent længere, før du igen dyrker raps, sennep, solsikke, sojabønne, ært, bønne, kartoffel eller gulerod; regn kan øge risikoen." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderat risiko for sclerotinia: Vent længere, før du igen dyrker raps, sennep, solsikke, sojabønne, ært, bønne, jordnød, kartoffel eller gulerod; regn kan øge risikoen." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Moderat risiko for nematoder: Vent længere, før du igen dyrker roer, raps, sennep eller spinat." />
 
         <!-- Advice card, history-based rotation memo -->

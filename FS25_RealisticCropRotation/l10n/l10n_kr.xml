@@ -105,6 +105,8 @@
         <e k="rcr_family_root"          v="뿌리채소" />
         <e k="rcr_family_vegetable"     v="채소" />
         <e k="rcr_family_forage"        v="사료작물" />
+        <e k="rcr_family_pseudocereal"  v="유사곡물" />
+        <e k="rcr_family_aromatic"      v="향료작물" />
         <e k="rcr_cover_crop"           v="사이짓기" />
         <e k="rcr_fallow"              v="휴경" />
 
@@ -133,9 +135,11 @@
         <e k="rcr_advice_afterRoot" v="뿌리 작물 다음에는 뿌리 작물이 돌아오기까지 4년을 기다리고, 늦은 수확 후 토양 구조를 회복하기 위해 곡물을 이어 심으세요." />
         <e k="rcr_advice_afterVegetable" v="채소 다음에는 반복하기 전에 3년을 기다리고, 곡물을 깔끔한 휴지로 두세요." />
         <e k="rcr_advice_afterForage" v="단기 초지 다음에는 곡물이 잔디 아래 쌓인 비옥도와 구조를 활용합니다." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="균핵병 위험 높음: 유채, 겨자, 해바라기, 대두, 완두, 강낭콩, 감자, 당근의 재배 간격을 3년 이상 둡니다. 살균제는 살포한 구역의 피해를 줄이지만 밭에서 병을 없애지는 못합니다." />
+        <e k="rcr_advice_afterPseudocereal" v="유사곡물 다음에는 수확 전에 씨앗이 떨어지므로 다음 작물에 자생 개체가 나타납니다. 얇은 그루터기는 흙을 느슨하고 침식되기 쉽게 남깁니다." />
+        <e k="rcr_advice_afterAromatic" v="향료작물 다음에는 반쪽시들음병을 막기 위해 5년 동안 밭에 다시 심지 말고, 그 사이 옥수수나 알팔파로 흙을 정화하세요." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="균핵병 위험 높음: 유채, 겨자, 해바라기, 대두, 완두, 강낭콩, 땅콩, 감자, 당근의 재배 간격을 3년 이상 둡니다. 살균제는 살포한 구역의 피해를 줄이지만 밭에서 병을 없애지는 못합니다." />
         <e k="rcr_advice_pressure_high_bcn"           v="선충 위험 높음: 사탕무, 비트, 유채, 겨자, 시금치의 재배 간격을 3년 이상 둡니다. 살선충제는 처리한 구역을 보호하지만 선충을 없애지는 못합니다." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="균핵병 위험 보통: 유채, 겨자, 해바라기, 대두, 완두, 강낭콩, 감자, 당근의 재배 간격을 늘립니다. 비가 오면 위험이 높아집니다." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="균핵병 위험 보통: 유채, 겨자, 해바라기, 대두, 완두, 강낭콩, 땅콩, 감자, 당근의 재배 간격을 늘립니다. 비가 오면 위험이 높아집니다." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="선충 위험 보통: 사탕무, 비트, 유채, 겨자, 시금치의 재배 간격을 늘립니다." />
 
         <!-- Advice card, history-based rotation memo -->

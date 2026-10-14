@@ -105,6 +105,8 @@
         <e k="rcr_family_root"          v="Cây lấy củ" />
         <e k="rcr_family_vegetable"     v="Rau" />
         <e k="rcr_family_forage"        v="Cây thức ăn" />
+        <e k="rcr_family_pseudocereal"  v="Ngũ cốc giả" />
+        <e k="rcr_family_aromatic"      v="Cây hương liệu" />
         <e k="rcr_cover_crop"           v="Cây xen canh" />
         <e k="rcr_fallow"              v="Bỏ hóa" />
 
@@ -133,9 +135,11 @@
         <e k="rcr_advice_afterRoot" v="Sau cây lấy củ, chờ bốn năm trước khi cây lấy củ quay lại, tiếp theo là ngũ cốc để tái tạo cấu trúc đất sau thu hoạch muộn." />
         <e k="rcr_advice_afterVegetable" v="Sau rau, chờ ba năm trước khi lặp lại, với ngũ cốc làm khoảng nghỉ sạch." />
         <e k="rcr_advice_afterForage" v="Sau đồng cỏ tạm thời, ngũ cốc tận dụng độ phì và cấu trúc tích lũy dưới lớp cỏ." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Nguy cơ thối hạch cao: giãn cách ít nhất 3 năm giữa cải dầu, mù tạt, hướng dương, đậu tương, đậu Hà Lan, đậu, khoai tây và cà rốt; thuốc trừ nấm hạn chế thiệt hại trên phần đã phun nhưng không loại bỏ bệnh khỏi ruộng." />
+        <e k="rcr_advice_afterPseudocereal" v="Sau cây ngũ cốc giả, hãy lường trước cây mọc tự nhiên trong vụ sau vì hạt rụng trước khi thu hoạch; gốc rạ thưa còn để lại đất tơi xốp và dễ bị xói mòn." />
+        <e k="rcr_advice_afterAromatic" v="Sau cây hương liệu, giữ cây này cách xa ruộng năm năm để phòng bệnh héo verticillium, xen giữa bằng ngô hoặc cỏ linh lăng để làm sạch đất." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Nguy cơ thối hạch cao: giãn cách ít nhất 3 năm giữa cải dầu, mù tạt, hướng dương, đậu tương, đậu Hà Lan, đậu, lạc, khoai tây và cà rốt; thuốc trừ nấm hạn chế thiệt hại trên phần đã phun nhưng không loại bỏ bệnh khỏi ruộng." />
         <e k="rcr_advice_pressure_high_bcn"           v="Nguy cơ tuyến trùng cao: giãn cách ít nhất 3 năm giữa củ cải đường, củ dền, cải dầu, mù tạt và rau chân vịt; thuốc trừ tuyến trùng bảo vệ phần đã xử lý nhưng không loại bỏ tuyến trùng." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Nguy cơ thối hạch trung bình: giãn cách cải dầu, mù tạt, hướng dương, đậu tương, đậu Hà Lan, đậu, khoai tây và cà rốt; mưa làm tăng nguy cơ." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Nguy cơ thối hạch trung bình: giãn cách cải dầu, mù tạt, hướng dương, đậu tương, đậu Hà Lan, đậu, lạc, khoai tây và cà rốt; mưa làm tăng nguy cơ." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Nguy cơ tuyến trùng trung bình: giãn cách củ cải đường, củ dền, cải dầu, mù tạt và rau chân vịt." />
 
         <!-- Advice card, history-based rotation memo -->

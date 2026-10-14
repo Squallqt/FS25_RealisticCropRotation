@@ -40,7 +40,7 @@
         <e k="rcr_disease_header_active" v="Penyakit (%s)" />
         <e k="rcr_treatment_hud_label"  v="Penyemprotan" />
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d bulan tersisa)" />
-        <e k="rcr_advice_nematicide_duration" v="Perlindungan tanah berlangsung 3 bulan per ladang; aplikasi ulang memperbarui durasinya." />
+        <e k="rcr_advice_nematicide_duration" v="Perlindungan bertahan 3 bulan per ladang; aplikasi ulang memperbaruinya." />
 
         <!-- Treatment gauge -->
         <e k="rcr_treatment_absent"   v="tidak ada" />
@@ -105,6 +105,8 @@
         <e k="rcr_family_root"          v="Umbi-umbian" />
         <e k="rcr_family_vegetable"     v="Sayuran" />
         <e k="rcr_family_forage"        v="Hijauan" />
+        <e k="rcr_family_pseudocereal"  v="Pseudoserealia" />
+        <e k="rcr_family_aromatic"      v="Tanaman aromatik" />
         <e k="rcr_cover_crop"           v="Tanaman sela" />
         <e k="rcr_fallow"              v="Bera" />
 
@@ -124,7 +126,7 @@
         <e k="rcr_soil_value_unmeasured" v="Nilai belum diukur" />
         <e k="rcr_n_crop_need_unavailable" v="Kebutuhan tanaman: --" />
         <e k="rcr_lime_status_unavailable" v="Kapur: --" />
-        <e k="rcr_advice_soil_analysis_required_body" v="Nilai nitrogen dan pH tidak tersedia. Analisis tanah untuk mendapatkan saran agronomi yang akurat." />
+        <e k="rcr_advice_soil_analysis_required_body" v="Nilai nitrogen dan pH belum tersedia: analisis tanah untuk saran yang akurat." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Setelah serealia, tanam legum untuk mengembalikan nitrogen atau tanaman jeda melawan penyakit pangkal batang, dan beri jarak dua tahun antar serealia." />
@@ -133,9 +135,11 @@
         <e k="rcr_advice_afterRoot" v="Setelah tanaman umbi, tunggu empat tahun sebelum umbi kembali, lalu serealia untuk membangun kembali struktur setelah pemanenan akhir." />
         <e k="rcr_advice_afterVegetable" v="Setelah sayuran, tunggu tiga tahun sebelum mengulanginya, dengan serealia sebagai jeda yang bersih." />
         <e k="rcr_advice_afterForage" v="Setelah padang rumput sementara, serealia memanfaatkan kesuburan dan struktur yang terbentuk di bawah rumput." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Risiko sclerotinia tinggi: beri jarak setidaknya 3 tahun antara kanola, sesawi, bunga matahari, kedelai, kacang polong, buncis, kentang, dan wortel; fungisida membatasi kerusakan di bagian yang disemprot, tetapi tidak menghilangkan penyakit dari ladang." />
+        <e k="rcr_advice_afterPseudocereal" v="Setelah pseudoserealia, bersiaplah menghadapi tanaman yang tumbuh sendiri di pertanaman berikutnya, karena biji rontok sebelum panen; tunggul yang jarang juga membuat tanah gembur dan rentan erosi." />
+        <e k="rcr_advice_afterAromatic" v="Setelah tanaman aromatik, jauhkan dari ladang selama lima tahun untuk mencegah layu verticillium, dengan jagung atau alfalfa di sela waktunya untuk menyehatkan tanah." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Risiko sclerotinia tinggi: beri jarak setidaknya 3 tahun antara kanola, sesawi, bunga matahari, kedelai, kacang polong, buncis, kacang tanah, kentang, dan wortel; fungisida membatasi kerusakan di bagian yang disemprot, tetapi tidak membersihkan ladang." />
         <e k="rcr_advice_pressure_high_bcn"           v="Risiko nematoda tinggi: beri jarak setidaknya 3 tahun antara bit gula, bit merah, kanola, sesawi, dan bayam; nematisida melindungi bagian yang dirawat tetapi tidak menghilangkan nematoda." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Risiko sclerotinia sedang: beri jarak kanola, sesawi, bunga matahari, kedelai, kacang polong, buncis, kentang, dan wortel; hujan menaikkan risiko." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Risiko sclerotinia sedang: beri jarak kanola, sesawi, bunga matahari, kedelai, kacang polong, buncis, kacang tanah, kentang, dan wortel; hujan menaikkan risiko." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Risiko nematoda sedang: beri jarak antara bit gula, bit merah, kanola, sesawi, dan bayam." />
 
         <!-- Advice card, history-based rotation memo -->
@@ -156,7 +160,7 @@
         <e k="rcr_advice_title_outbreak" v="Wabah penyakit aktif" />
         <e k="rcr_advice_outbreak" v="%s sedang menyerang ladang ini, tingkat serangan %d%%. Penanganan yang disarankan: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s direncanakan untuk %s: konflik rotasi tanaman, keluarga yang sama (%s) dengan tanaman saat ini, masih kurang %d dari %d tahun sebelum kembali dengan aman." />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s direncanakan untuk %s: konflik rotasi. Penyakit yang sama (%s) juga dapat menyerang tanaman saat ini; masih kurang %d tahun dari jarak yang disarankan, yaitu %d tahun." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s direncanakan untuk %s: %s dapat menyerang tanaman ini dan tanaman saat ini. Masih kurang %d dari %d tahun yang disarankan." />
         <e k="rcr_advice_plan_next_ok" v="%s direncanakan untuk %s: pilihan bagus, tidak ada konflik rotasi tanaman terdeteksi." />
         <e k="rcr_advice_title_fallow" v="Tahun jeda" />
         <e k="rcr_advice_fallow_current" v="Bera sedang berlangsung: tidak ada tanaman utama tahun ini. Ini menambah waktu sebelum tanaman rentan berikutnya, tetapi tidak langsung menghilangkan penyakit." />

@@ -40,7 +40,7 @@
         <e k="rcr_disease_header_active" v="Betegség (%s)" />
         <e k="rcr_treatment_hud_label"  v="Kezelés" />
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d hónap van hátra)" />
-        <e k="rcr_advice_nematicide_duration" v="A talajvédelem táblánként 3 hónapig tart; az új kezelés megújítja az időtartamot." />
+        <e k="rcr_advice_nematicide_duration" v="A védelem táblánként 3 hónapig tart; az új kezelés megújítja." />
 
         <!-- Treatment gauge -->
         <e k="rcr_treatment_absent"   v="nincs" />
@@ -105,6 +105,8 @@
         <e k="rcr_family_root"          v="Gyökérnövény" />
         <e k="rcr_family_vegetable"     v="Zöldség" />
         <e k="rcr_family_forage"        v="Takarmány" />
+        <e k="rcr_family_pseudocereal"  v="Álgabona" />
+        <e k="rcr_family_aromatic"      v="Fűszernövény" />
         <e k="rcr_cover_crop"           v="Köztes növény" />
         <e k="rcr_fallow"              v="Ugar" />
 
@@ -124,7 +126,7 @@
         <e k="rcr_soil_value_unmeasured" v="Nincs mért érték" />
         <e k="rcr_n_crop_need_unavailable" v="Növény igénye: --" />
         <e k="rcr_lime_status_unavailable" v="Mész: --" />
-        <e k="rcr_advice_soil_analysis_required_body" v="A nitrogén- és pH-értékek nem érhetők el. A pontos agronómiai tanácsokhoz vizsgáld meg a talajt." />
+        <e k="rcr_advice_soil_analysis_required_body" v="Nincs nitrogén- és pH-érték: a pontos tanácsokhoz vizsgáld meg a talajt." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Gabona után vess pillangóst a nitrogén visszapótlására vagy megszakító növényt a lábbetegségek ellen, és hagyj két évet a gabonák között." />
@@ -133,9 +135,11 @@
         <e k="rcr_advice_afterRoot" v="Kapásnövény után várj négy évet a kapások visszatéréséig, majd gabonát a szerkezet helyreállítására a késői betakarítás után." />
         <e k="rcr_advice_afterVegetable" v="Zöldség után várj három évet az ismétlése előtt, gabonával mint tiszta megszakítás." />
         <e k="rcr_advice_afterForage" v="Ideiglenes gyep után a gabona hasznosítja a gyep alatt felhalmozott termékenységet és szerkezetet." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Magas fehérpenész-kockázat: a repce, mustár, napraforgó, szója, borsó, bab, burgonya és sárgarépa között tartson legalább 3 év szünetet; a gombaölő szer mérsékli a kárt a permetezett részeken, de nem távolítja el a betegséget a tábláról." />
+        <e k="rcr_advice_afterPseudocereal" v="Álgabona után számíts árvakelésre a következő kultúrában, mert a mag betakarítás előtt kipereg; a gyér tarló ráadásul laza, erózióra hajlamos talajt hagy." />
+        <e k="rcr_advice_afterAromatic" v="Fűszernövény után tartsd öt évig távol a táblától a verticilliumos hervadás ellen, közben kukoricával vagy lucernával a talaj tisztítására." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Magas fehérpenész-kockázat: a repce, mustár, napraforgó, szója, borsó, bab, földimogyoró, burgonya és sárgarépa között tartson legalább 3 év szünetet; a gombaölő szer mérsékli a kárt a permetezett részeken, de nem távolítja el a betegséget a tábláról." />
         <e k="rcr_advice_pressure_high_bcn"           v="Magas fonálféreg-kockázat: a cukorrépa, cékla, repce, mustár és spenót között tartson legalább 3 év szünetet; a fonálféregölő szer védi a kezelt területet, de nem távolítja el a fonálférgeket." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Mérsékelt fehérpenész-kockázat: ritkítsa a repcét, mustárt, napraforgót, szóját, borsót, babot, burgonyát és sárgarépát; az eső növeli a kockázatot." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Mérsékelt fehérpenész-kockázat: ritkítsa a repcét, mustárt, napraforgót, szóját, borsót, babot, földimogyorót, burgonyát és sárgarépát; az eső növeli a kockázatot." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Mérsékelt fonálféreg-kockázat: ritkítsa a cukorrépát, céklát, repcét, mustárt és spenótot." />
 
         <!-- Advice card, history-based rotation memo -->

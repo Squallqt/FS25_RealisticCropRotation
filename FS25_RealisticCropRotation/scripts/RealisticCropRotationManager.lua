@@ -18,6 +18,15 @@ local MIN_CROP_COVERAGE = 0.05
 -- Minimum field area considered relevant for crop rotation.
 local MIN_ROTATION_AREA_HA = 0.01
 
+-- Edge in metres of the squares a parcel is searched through for its field ground.
+local PARCEL_TILE_SIZE = 64
+
+-- Squares a queued parcel scan reads per frame.
+local PARCEL_SCAN_TILES_PER_FRAME = 16
+
+-- Grouped readers shared by the mapped fields, built once for the mission.
+local fieldGroupedReaders = {}
+
 -- PF field-info only displays legend values (PrecisionFarming.xml showOnHud): nitrogen per 20 kg/ha, pH per 0.25.
 local PF_N_DISPLAY_STEP = 20
 local PF_PH_DISPLAY_STEP = 0.25
@@ -212,28 +221,11 @@ local function locateParcelSamplePoint(region)
     return bestX, bestZ
 end
 
----Builds a parcel bounding-box region narrowed by its farmland mask.
--- @param integer farmlandId
--- @return table region, or nil when the parcel mask is unavailable
-local function buildFarmlandRegion(farmlandId)
-    local minX, minZ, maxX, maxZ = getFarmlandBounds(getFarmlandById(farmlandId))
-    if minX == nil then return nil end
-
-    local filter = makeFarmlandFilter(farmlandId)
-    if filter == nil then return nil end
-
-    return {
-        farmlandId = farmlandId,
-        minX = minX, minZ = minZ, maxX = maxX, maxZ = maxZ,
-        filter = filter,
-    }
-end
-
----Builds the ground area a farmland's native reads run over: the mapped field's polygon, or the parcel's bounding box narrowed by the farmland mask.
--- @param integer farmlandId
--- @param table field Mapped Field object, or nil
--- @return table region, or nil when neither a field polygon nor a parcel mask is available
-local function buildFieldRegion(farmlandId, field)
+---Builds the ground area a farmland's native reads run over: the mapped field's polygon, or the strips of the parcel that hold field ground.
+-- @param table? field Mapped Field object, or nil
+-- @param table? parcel Finished parcel scan, read when the farmland has no mapped field
+-- @return table region, or nil when the farmland has neither a field polygon nor field ground
+local function buildFieldRegion(field, parcel)
     if field ~= nil then
         return {
             field = field,
@@ -242,11 +234,20 @@ local function buildFieldRegion(farmlandId, field)
             sampleZ = tonumber(field.posZ),
         }
     end
+    if parcel == nil or #parcel.strips == 0 then return nil end
 
-    local region = buildFarmlandRegion(farmlandId)
-    if region ~= nil then
-        region.sampleX, region.sampleZ = locateParcelSamplePoint(region)
+    local region = {
+        farmlandId = parcel.farmlandId,
+        filter = parcel.filter,
+        strips = parcel.strips,
+        groupedReaders = {},
+        minX = math.huge, minZ = math.huge, maxX = -math.huge, maxZ = -math.huge,
+    }
+    for _, strip in ipairs(parcel.strips) do
+        region.minX, region.minZ = math.min(region.minX, strip.minX), math.min(region.minZ, strip.minZ)
+        region.maxX, region.maxZ = math.max(region.maxX, strip.maxX), math.max(region.maxZ, strip.maxZ)
     end
+    region.sampleX, region.sampleZ = locateParcelSamplePoint(region)
     return region
 end
 
@@ -288,7 +289,8 @@ function RealisticCropRotationManager.applyRegionToModifier(region, modifier)
     if region == nil or modifier == nil then return false end
     if region.field ~= nil then
         local polygon = region.field:getDensityMapPolygon()
-        if polygon == nil then return false end
+        -- GIANTS polygon constructors require at least three points.
+        if polygon == nil or #polygon.pointsX < 3 then return false end
         polygon:applyToModifier(modifier)
         return true
     end
@@ -307,23 +309,78 @@ local applyRegionToModifier = RealisticCropRotationManager.applyRegionToModifier
 -- @param integer mapId
 -- @param integer firstChannel
 -- @param integer numChannels
--- @param table filterA Optional density filter
--- @param table filterB Optional second density filter
+-- @param any? filterA Optional native density filter
+-- @param any? filterB Optional second native density filter
 -- @return number sum, number pixels, number totalPixels, or nil when the region cannot be bound
-local function aggregateRegionLayer(region, mapId, firstChannel, numChannels, filterA, filterB)
+function RealisticCropRotationManager.aggregateRegionLayer(region, mapId, firstChannel, numChannels, filterA, filterB)
     if region == nil or mapId == nil or firstChannel == nil or numChannels == nil then return nil end
     if DensityMapModifier == nil or g_terrainNode == nil then return nil end
 
     local modifier = DensityMapModifier.new(mapId, firstChannel, numChannels, g_terrainNode)
     if modifier == nil then return nil end
-    if not applyRegionToModifier(region, modifier) then return nil end
 
     local f1, f2, f3 = filterA, filterB, region.filter
     if f1 == nil then f1, f2, f3 = f2, f3, nil end
     if f2 == nil then f2, f3 = f3, nil end
 
-    local sum, pixels, totalPixels = modifier:executeGet(f1, f2, f3)
-    return tonumber(sum) or 0, tonumber(pixels) or 0, tonumber(totalPixels) or 0
+    if region.strips == nil then
+        if not applyRegionToModifier(region, modifier) then return nil end
+        local sum, pixels, totalPixels = modifier:executeGet(f1, f2, f3)
+        return tonumber(sum) or 0, tonumber(pixels) or 0, tonumber(totalPixels) or 0
+    end
+
+    -- A parcel with no mapped field is read strip by strip
+    local sum, pixels, totalPixels = 0, 0, 0
+    for _, strip in ipairs(region.strips) do
+        modifier:setParallelogramWorldCoords(
+            strip.minX, strip.minZ, strip.maxX, strip.minZ, strip.minX, strip.maxZ, DensityCoordType.POINT_POINT_POINT)
+        local stripSum, stripPixels, stripTotalPixels = modifier:executeGet(f1, f2, f3)
+        sum, pixels, totalPixels = sum + stripSum, pixels + stripPixels, totalPixels + stripTotalPixels
+    end
+    return sum, pixels, totalPixels
+end
+
+local aggregateRegionLayer = RealisticCropRotationManager.aggregateRegionLayer
+
+---Counts the cells of a keyed set of reads over a region, in one grouped pass per area
+local function countRegionLayers(region, key, makeReads)
+    -- A parcel reads through its own farmland mask
+    local readers = region.field ~= nil and fieldGroupedReaders or region.groupedReaders
+    local reader = readers[key]
+    if reader == nil then
+        reader = { reads = makeReads(), multiModifier = DensityMapMultiModifier.new(), sums = {}, pixels = {}, totalPixels = {} }
+        for index, read in ipairs(reader.reads) do
+            local filterB, filterC = read.filterB, region.filter
+            if filterB == nil then filterB, filterC = filterC, nil end
+            reader.multiModifier:addExecuteGet(tostring(index),
+                DensityMapModifier.new(read.mapId, read.firstChannel, read.numChannels, g_terrainNode), read.filter, filterB, filterC)
+        end
+        readers[key] = reader
+    end
+
+    local counts = {}
+    for index in ipairs(reader.reads) do counts[index] = 0 end
+    if #counts == 0 then return counts, reader.reads end
+
+    local function execute()
+        reader.multiModifier:resetStats()
+        reader.multiModifier:execute(reader.sums, reader.pixels, reader.totalPixels)
+        for index in ipairs(reader.reads) do
+            counts[index] = counts[index] + reader.pixels[tostring(index)]
+        end
+    end
+
+    if region.strips == nil then
+        -- An unbound modifier reads the whole map
+        if applyRegionToModifier(region, reader.multiModifier) then execute() end
+    else
+        for _, strip in ipairs(region.strips) do
+            reader.multiModifier:updateParallelogramWorldCoords(
+                strip.minX, strip.minZ, strip.maxX, strip.minZ, strip.minX, strip.maxZ, DensityCoordType.POINT_POINT_POINT)
+            execute()
+        end
+    end
+    return counts, reader.reads
 end
 
 ---Resolves a vanilla field density layer's map handle.
@@ -344,6 +401,75 @@ function RealisticCropRotationManager.makeFieldGroundFilter()
     local mapId, firstChannel, numChannels = getFieldGroundLayer(layer)
     if mapId == nil then return nil end
     return makeDensityFilter(mapId, firstChannel, numChannels, DensityValueCompareType.GREATER, 0)
+end
+
+---Starts the scan of a farmland's bounding box for the strips holding its field ground.
+local function startParcelScan(farmlandId)
+    local minX, minZ, maxX, maxZ = getFarmlandBounds(getFarmlandById(farmlandId))
+    if minX == nil then return nil end
+
+    local filter = makeFarmlandFilter(farmlandId)
+    if filter == nil then return nil end
+
+    -- Squares start on the terrain corner, so their edges fall between the cells of every map
+    local origin = -g_currentMission.terrainSize / 2
+    local firstColumn = math.floor((minX - origin) / PARCEL_TILE_SIZE)
+    local firstRow = math.floor((minZ - origin) / PARCEL_TILE_SIZE)
+    local columns = math.ceil((maxX - origin) / PARCEL_TILE_SIZE) - firstColumn
+
+    local mapId, firstChannel, numChannels = getFieldGroundLayer(FieldDensityMap.GROUND_TYPE)
+    return {
+        farmlandId = farmlandId,
+        filter = filter,
+        groundFilter = RealisticCropRotationManager.makeFieldGroundFilter(),
+        modifier = DensityMapModifier.new(mapId, firstChannel, numChannels, g_terrainNode),
+        minX = origin + firstColumn * PARCEL_TILE_SIZE,
+        minZ = origin + firstRow * PARCEL_TILE_SIZE,
+        columns = columns,
+        numTiles = columns * (math.ceil((maxZ - origin) / PARCEL_TILE_SIZE) - firstRow),
+        nextTile = 0,
+        strips = {},
+        groundPixels = 0,
+    }
+end
+
+---Reads the next squares of a parcel scan, to its end when no count is given.
+local function advanceParcelScan(scan, numTiles)
+    local lastTile = scan.numTiles - 1
+    if numTiles ~= nil then lastTile = math.min(lastTile, scan.nextTile + numTiles - 1) end
+
+    for tile = scan.nextTile, lastTile do
+        local column, row = tile % scan.columns, math.floor(tile / scan.columns)
+        local minX, minZ = scan.minX + column * PARCEL_TILE_SIZE, scan.minZ + row * PARCEL_TILE_SIZE
+        local maxX, maxZ = minX + PARCEL_TILE_SIZE, minZ + PARCEL_TILE_SIZE
+
+        scan.modifier:setParallelogramWorldCoords(minX, minZ, maxX, minZ, minX, maxZ, DensityCoordType.POINT_POINT_POINT)
+        local _, pixels = scan.modifier:executeGet(scan.groundFilter, scan.filter)
+        if pixels > 0 then
+            local strip = scan.strips[#scan.strips]
+            if column > 0 and strip ~= nil and strip.lastTile == tile - 1 then
+                -- Squares side by side on a row join into one strip
+                strip.maxX, strip.lastTile = maxX, tile
+            else
+                scan.strips[#scan.strips + 1] = {
+                    minX = minX, minZ = minZ, maxX = maxX, maxZ = maxZ, firstTile = tile, lastTile = tile }
+            end
+            scan.groundPixels = scan.groundPixels + pixels
+        end
+    end
+
+    scan.nextTile = lastTile + 1
+    return scan.nextTile >= scan.numTiles
+end
+
+---True when two parcel scans found the same field ground.
+local function isSameParcelGround(scan, otherScan)
+    if scan.groundPixels ~= otherScan.groundPixels or #scan.strips ~= #otherScan.strips then return false end
+    for index, strip in ipairs(scan.strips) do
+        local otherStrip = otherScan.strips[index]
+        if strip.firstTile ~= otherStrip.firstTile or strip.lastTile ~= otherStrip.lastTile then return false end
+    end
+    return true
 end
 
 ---Sums a vanilla field layer over a read region, narrowed by an optional value filter and mask.
@@ -429,11 +555,19 @@ local function getRegionFruitTypeIndex(region, hintFruitTypeIndex, capacity, hin
     end
     local fruitTypes = g_fruitTypeManager:getFruitTypes()
 
-    local function countPixels(desc)
+    local function makeStateRead(desc, compareType, value)
         local filter = DensityMapFilter.new(desc.terrainDataPlaneId, desc.startStateChannel, desc.numStateChannels)
-        filter:setValueCompareParams(DensityValueCompareType.GREATER, 0)
-        local _, pixels = aggregateRegionLayer(region, desc.terrainDataPlaneId,
-            desc.startStateChannel, desc.numStateChannels, filter)
+        filter:setValueCompareParams(compareType, value)
+        return {
+            mapId = desc.terrainDataPlaneId,
+            firstChannel = desc.startStateChannel,
+            numChannels = desc.numStateChannels,
+            filter = filter,
+        }
+    end
+
+    local function countPixels(read)
+        local _, pixels = aggregateRegionLayer(region, read.mapId, read.firstChannel, read.numChannels, read.filter)
         return pixels or 0
     end
 
@@ -447,18 +581,27 @@ local function getRegionFruitTypeIndex(region, hintFruitTypeIndex, capacity, hin
     local hint = normalizeFruitTypeIndex(hintFruitTypeIndex)
     if hint ~= nil then
         local desc = g_fruitTypeManager:getFruitTypeByIndex(hint)
-        if isReadable(desc) then bestDesc, bestPixels = desc, countPixels(desc) end
+        if isReadable(desc) then
+            bestDesc, bestPixels = desc, countPixels(makeStateRead(desc, DensityValueCompareType.GREATER, 0))
+        end
     end
 
-    -- The sweep stops once a crop passes half the region.
+    -- Unless it passes half the region, every crop is counted in one pass.
     local majority = (tonumber(capacity) or 0) > 0 and capacity / 2 or nil
     if majority == nil or bestPixels <= majority then
-        for _, desc in pairs(fruitTypes) do
-            if isReadable(desc) and desc ~= bestDesc then
-                local pixels = countPixels(desc)
-                if pixels > bestPixels then bestDesc, bestPixels = desc, pixels end
-                if majority ~= nil and bestPixels > majority then break end
+        local counts, reads = countRegionLayers(region, "crops", function()
+            local cropReads = {}
+            for _, desc in pairs(fruitTypes) do
+                if isReadable(desc) then
+                    local read = makeStateRead(desc, DensityValueCompareType.GREATER, 0)
+                    read.desc = desc
+                    cropReads[#cropReads + 1] = read
+                end
             end
+            return cropReads
+        end)
+        for index, pixels in ipairs(counts) do
+            if pixels > bestPixels then bestDesc, bestPixels = reads[index].desc, pixels end
         end
     end
     if bestDesc == nil or bestPixels <= 0 then return nil end
@@ -477,26 +620,23 @@ local function getRegionFruitTypeIndex(region, hintFruitTypeIndex, capacity, hin
     local bestState, bestStatePixels = nil, 0
     local stateMajority = bestPixels / 2
 
-    local function countState(state)
-        local filter = DensityMapFilter.new(bestDesc.terrainDataPlaneId, bestDesc.startStateChannel, bestDesc.numStateChannels)
-        filter:setValueCompareParams(DensityValueCompareType.EQUAL, state)
-        local _, pixels = aggregateRegionLayer(region, bestDesc.terrainDataPlaneId,
-            bestDesc.startStateChannel, bestDesc.numStateChannels, filter)
-        return pixels or 0
-    end
-
     -- The stage last seen here is tried first.
     local stateHint = tonumber(hintGrowthState)
     if stateHint ~= nil and stateHint >= 1 and stateHint <= maxState then
-        bestState, bestStatePixels = stateHint, countState(stateHint)
+        bestState = stateHint
+        bestStatePixels = countPixels(makeStateRead(bestDesc, DensityValueCompareType.EQUAL, stateHint))
     end
+    -- Unless it passes half the crop, every stage is counted in one pass.
     if bestStatePixels <= stateMajority then
-        for state = 1, maxState do
-            if state ~= stateHint then
-                local pixels = countState(state)
-                if pixels > bestStatePixels then bestState, bestStatePixels = state, pixels end
-                if bestStatePixels > stateMajority then break end
+        local counts = countRegionLayers(region, bestDesc, function()
+            local stateReads = {}
+            for state = 1, maxState do
+                stateReads[state] = makeStateRead(bestDesc, DensityValueCompareType.EQUAL, state)
             end
+            return stateReads
+        end)
+        for state, pixels in ipairs(counts) do
+            if pixels > bestStatePixels then bestState, bestStatePixels = state, pixels end
         end
     end
 
@@ -546,33 +686,24 @@ local function getRegionGroundCoverage(region)
     return filter, pixels
 end
 
----Worked field ground inside a region, in hectares.
--- @param table region
--- @return number areaHa
-local function measureRegionFieldAreaHa(region)
-    local _, pixels = getRegionGroundCoverage(region)
-    if pixels == nil or pixels <= 0 then return 0 end
-
-    local terrainSize = g_currentMission ~= nil and tonumber(g_currentMission.terrainSize) or nil
-    local mapId = FieldDensityMap ~= nil and getFieldGroundLayer(FieldDensityMap.GROUND_TYPE) or nil
-    local mapSize = mapId ~= nil and getDensityMapSize(mapId) or nil
-    if terrainSize == nil or mapSize == nil or mapSize <= 0 then return 0 end
-
-    local pixelSize = terrainSize / mapSize
+---Converts field-ground pixels to hectares.
+local function groundPixelsToHa(pixels)
+    local mapId = getFieldGroundLayer(FieldDensityMap.GROUND_TYPE)
+    local pixelSize = g_currentMission.terrainSize / getDensityMapSize(mapId)
     return MathUtil.areaToHa(pixels, pixelSize * pixelSize)
 end
 
----Counts the field-ground pixels holding one exact value on a vanilla layer.
--- @param table region
--- @param integer layer FieldDensityMap entry
--- @param integer value
--- @param table groundFilter Field-ground mask, or nil when the value implies it
--- @return number pixels
-local function countRegionLayerValue(region, layer, value, groundFilter)
-    if value == nil then return 0 end
-    local _, pixels = aggregateRegionGroundLayer(region, layer,
-        DensityValueCompareType.EQUAL, value, nil, groundFilter)
-    return pixels or 0
+---Read of the cells holding one value on a vanilla layer, nil when the map lacks the layer
+local function makeLayerValueRead(layer, value, groundFilter)
+    local mapId, firstChannel, numChannels = getFieldGroundLayer(layer)
+    if mapId == nil or value == nil then return nil end
+    return {
+        mapId = mapId,
+        firstChannel = firstChannel,
+        numChannels = numChannels,
+        filter = makeDensityFilter(mapId, firstChannel, numChannels, DensityValueCompareType.EQUAL, value),
+        filterB = groundFilter,
+    }
 end
 
 ---Ground types grouped by the GROWTH_STATE_INDEX the field card reports them as.
@@ -588,32 +719,6 @@ local function getGroundStateGroups()
         { index = indices.CULTIVATED,      types = { FieldGroundType.CULTIVATED } },
         { index = indices.SEEDBED,         types = { FieldGroundType.SEEDBED, FieldGroundType.ROLLED_SEEDBED } },
     }
-end
-
----Ground state covering most of a region's worked ground.
--- @param table region
--- @param number groundPixels Field-ground pixel count from getRegionGroundCoverage
--- @return integer index GROWTH_STATE_INDEX, or nil when no state covers the region
-local function getNativeGroundStateIndex(region, groundPixels)
-    local groups = getGroundStateGroups()
-    if region == nil or groups == nil or groundPixels == nil then return nil end
-
-    local layer = FieldDensityMap.GROUND_TYPE
-    local threshold = groundPixels * FIELD_STATE_COVERAGE
-    for _, group in ipairs(groups) do
-        if group.index ~= nil then
-            local pixels = 0
-            for _, groundType in ipairs(group.types) do
-                if groundType ~= nil then
-                    local value = FieldGroundType.getValueByType(groundType)
-                    pixels = pixels + countRegionLayerValue(region, layer, tonumber(value), nil)
-                end
-            end
-            if pixels > threshold then return group.index end
-        end
-    end
-
-    return nil
 end
 
 ---Soil states the field card reports, each with the layer value the soil overlay paints.
@@ -644,24 +749,58 @@ local function getSoilStateDefinitions()
     return states
 end
 
----Soil state covering most of a region's worked ground.
+---Ground state and soil state covering most of a region's worked ground, counted in one pass.
 -- @param table region
--- @param table groundFilter Field-ground mask from getRegionGroundCoverage
--- @param number groundPixels Field-ground pixel count from getRegionGroundCoverage
--- @return integer index SOIL_STATE_INDEX, or nil when no state covers the region
-local function getNativeSoilStateIndex(region, groundFilter, groundPixels)
-    local states = getSoilStateDefinitions()
-    if region == nil or states == nil or #states == 0 or groundPixels == nil then return nil end
+-- @return integer groundIndex GROWTH_STATE_INDEX, or nil when no ground state covers the region
+-- @return integer soilIndex SOIL_STATE_INDEX, or nil when no soil state covers the region
+local function getNativeFieldStateIndices(region)
+    local groups, states = getGroundStateGroups() or {}, getSoilStateDefinitions() or {}
 
-    local threshold = groundPixels * FIELD_STATE_COVERAGE
-    for _, state in ipairs(states) do
-        if state.layer ~= nil then
-            local pixels = countRegionLayerValue(region, state.layer, state.value, groundFilter)
-            if pixels > threshold then return state.index end
+    -- The soil states follow the game settings, each set of them gets its own grouped reader
+    local key = "fieldState"
+    for _, state in ipairs(states) do key = key .. ":" .. tostring(state.index) end
+
+    local counts, reads = countRegionLayers(region, key, function()
+        local groundFilter = RealisticCropRotationManager.makeFieldGroundFilter()
+        local mapId, firstChannel, numChannels = getFieldGroundLayer(FieldDensityMap.GROUND_TYPE)
+        local stateReads = { { mapId = mapId, firstChannel = firstChannel, numChannels = numChannels, filter = groundFilter } }
+
+        for _, group in ipairs(groups) do
+            for _, groundType in ipairs(group.types) do
+                local read = group.index ~= nil
+                    and makeLayerValueRead(FieldDensityMap.GROUND_TYPE, tonumber(FieldGroundType.getValueByType(groundType)))
+                if read then
+                    read.groundIndex = group.index
+                    stateReads[#stateReads + 1] = read
+                end
+            end
+        end
+        for _, state in ipairs(states) do
+            local read = makeLayerValueRead(state.layer, state.value, groundFilter)
+            if read ~= nil then
+                read.soilIndex = state.index
+                stateReads[#stateReads + 1] = read
+            end
+        end
+        return stateReads
+    end)
+
+    local threshold = counts[1] * FIELD_STATE_COVERAGE
+    if threshold <= 0 then return nil, nil end
+
+    -- The first state past the threshold wins, in the order the groups and states are declared
+    local groundPixels, soilIndex = {}, nil
+    for index, read in ipairs(reads) do
+        if read.groundIndex ~= nil then
+            groundPixels[read.groundIndex] = (groundPixels[read.groundIndex] or 0) + counts[index]
+        elseif read.soilIndex ~= nil and soilIndex == nil and counts[index] > threshold then
+            soilIndex = read.soilIndex
         end
     end
-
-    return nil
+    for _, group in ipairs(groups) do
+        if (groundPixels[group.index] or 0) > threshold then return group.index, soilIndex end
+    end
+    return nil, soilIndex
 end
 
 ---Ground state -> native l10n label (GROWTH_MAP_* via MapOverlayGenerator.L10N_SYMBOL).
@@ -756,8 +895,10 @@ function RealisticCropRotationManager.new()
     self.repository = RealisticCropRotationRepository.new()
     self.service = RealisticCropRotationService.new(self.repository)
     self.activeCropNameCache = {}
-    self.rotationAreaHaCache = {}
     self.fieldRegions = {}
+    self.parcels = {}
+    self.parcelScanQueue = {}
+    self.queuedParcelScans = {}
     self.isInitialized = false
     return self
 end
@@ -768,8 +909,12 @@ function RealisticCropRotationManager:initialize()
     self.service:reset()
     self.activeCropNameCache = {}
     self.fieldStateMemo = nil
-    self.rotationAreaHaCache = {}
     self.fieldRegions = {}
+    self.parcels = {}
+    self.parcelScanQueue = {}
+    self.queuedParcelScans = {}
+    self.parcelScan = nil
+    fieldGroupedReaders = {}
     self.isInitialized = true
 end
 
@@ -779,8 +924,12 @@ function RealisticCropRotationManager:cleanup()
     self.activeCropNameCache = {}
     self.fieldStateMemo = nil
     self.soilScanMemo = nil
-    self.rotationAreaHaCache = nil
     self.fieldRegions = {}
+    self.parcels = {}
+    self.parcelScanQueue = {}
+    self.queuedParcelScans = {}
+    self.parcelScan = nil
+    fieldGroupedReaders = {}
     self.isInitialized = false
 end
 
@@ -932,18 +1081,96 @@ function RealisticCropRotationManager:getFieldByFarmlandId(farmlandId)
     return g_fieldManager.farmlandIdFieldMapping[n]
 end
 
----Ground area a farmland's native reads run over, cached after successful resolution.
+---Field mapped to a farmland whose outline can bound a read.
 -- @param integer farmlandId
--- @return table region, or nil when the farmland has neither a field polygon nor a parcel mask
+-- @return table field, or nil
+function RealisticCropRotationManager:getMappedField(farmlandId)
+    local field = self:getFieldByFarmlandId(farmlandId)
+    local polygon = field ~= nil and field:getDensityMapPolygon() or nil
+    -- GIANTS polygon constructors require at least three points.
+    if polygon == nil or #polygon.pointsX < 3 then return nil end
+    return field
+end
+
+---Scan of a farmland's bounding box for its field ground, kept until a queued scan finds other ground.
+-- @param integer farmlandId
+-- @return table parcel, or nil when the farmland has no bounding box or mask
+function RealisticCropRotationManager:getParcel(farmlandId)
+    local parcel = self.parcels[farmlandId]
+    if parcel == nil then
+        parcel = startParcelScan(farmlandId)
+        if parcel == nil then return nil end
+        advanceParcelScan(parcel)
+        self.parcels[farmlandId] = parcel
+    end
+    return parcel
+end
+
+---Queues a new scan of a parcel, so ground worked since its last scan is found.
+-- A mapped field keeps the area of its first scan.
+-- @param integer farmlandId
+function RealisticCropRotationManager:requestParcelScan(farmlandId)
+    local n = tonumber(farmlandId)
+    local parcel = n ~= nil and self.parcels[n] or nil
+    if parcel == nil or self.queuedParcelScans[n] then return end
+    if parcel.groundPixels > 0 and self:getMappedField(n) ~= nil then return end
+
+    self.queuedParcelScans[n] = true
+    table.insert(self.parcelScanQueue, n)
+end
+
+---Queues a new scan of the local farm's parcels.
+function RealisticCropRotationManager:requestOwnedParcelScans()
+    local farmId = self:getCurrentFarmId()
+    if farmId == nil then return end
+
+    for _, farmlandId in ipairs(g_farmlandManager:getOwnedFarmlandIdsByFarmId(farmId)) do
+        self:requestParcelScan(farmlandId)
+    end
+end
+
+---Advances the queued parcel scans by one frame's share.
+-- @return boolean changed True when a scan ended on other field ground than the one it replaces
+function RealisticCropRotationManager:updateParcelScans()
+    local scan = self.parcelScan
+    if scan == nil then
+        local farmlandId = table.remove(self.parcelScanQueue, 1)
+        if farmlandId == nil then return false end
+        scan = startParcelScan(farmlandId)
+        self.parcelScan = scan
+    end
+    if not advanceParcelScan(scan, PARCEL_SCAN_TILES_PER_FRAME) then return false end
+
+    self.parcelScan = nil
+    self.queuedParcelScans[scan.farmlandId] = nil
+    if isSameParcelGround(scan, self.parcels[scan.farmlandId]) then return false end
+
+    self.parcels[scan.farmlandId] = scan
+    return true
+end
+
+---Ground area a farmland's native reads run over, rebuilt when its mapped field or its parcel scan changes.
+-- @param integer farmlandId
+-- @return table region, or nil when the farmland has neither a field polygon nor field ground
 function RealisticCropRotationManager:getFieldRegion(farmlandId)
     local n = tonumber(farmlandId)
     if n == nil or n <= 0 then return nil end
 
-    local cached = self.fieldRegions[n]
-    if cached ~= nil then return cached end
+    local field = self:getMappedField(n)
+    local parcel = field == nil and self:getParcel(n) or nil
+    local strips = parcel ~= nil and parcel.strips or nil
 
-    local region = buildFieldRegion(n, self:getFieldByFarmlandId(n))
-    if region ~= nil then self.fieldRegions[n] = region end
+    local cached = self.fieldRegions[n]
+    if cached ~= nil and cached.field == field and cached.strips == strips then return cached end
+
+    -- Pixel counts and panel reads depend on the resolved ground area.
+    self:invalidateActiveCropCache(n)
+    if self.fieldPixelCapacity ~= nil then self.fieldPixelCapacity[n] = nil end
+    if self.fieldStateMemo ~= nil then self.fieldStateMemo[n] = nil end
+    if self.soilScanMemo ~= nil then self.soilScanMemo[n] = nil end
+
+    local region = buildFieldRegion(field, parcel)
+    self.fieldRegions[n] = region
     return region
 end
 
@@ -954,16 +1181,11 @@ function RealisticCropRotationManager:getRotationAreaHa(farmlandId)
     local n = tonumber(farmlandId)
     if n == nil or n <= 0 then return 0 end
 
-    self.rotationAreaHaCache = self.rotationAreaHaCache or {}
-    local cached = self.rotationAreaHaCache[n]
-    if cached ~= nil then return cached end
+    local parcel = self:getParcel(n)
+    if parcel == nil then return 0 end
 
-    local areaHa = measureRegionFieldAreaHa(buildFarmlandRegion(n))
-    if areaHa > MIN_ROTATION_AREA_HA then
-        self.rotationAreaHaCache[n] = areaHa
-        return areaHa
-    end
-    return 0
+    local areaHa = groundPixelsToHa(parcel.groundPixels)
+    return areaHa > MIN_ROTATION_AREA_HA and areaHa or 0
 end
 
 ---Cells a region holds on the fruit map, measured once per farmland.
@@ -978,10 +1200,12 @@ function RealisticCropRotationManager:getFieldPixelCapacity(farmlandId, region, 
 
     local desc = (fruitTypeIndex ~= nil and g_fruitTypeManager ~= nil)
         and g_fruitTypeManager:getFruitTypeByIndex(fruitTypeIndex) or nil
-    if desc == nil or desc.terrainDataPlaneId == nil then return nil end
+    if region == nil or desc == nil or desc.terrainDataPlaneId == nil then return nil end
 
+    -- A parcel with no mapped field holds its crops on its worked ground
+    local groundFilter = region.strips ~= nil and RealisticCropRotationManager.makeFieldGroundFilter() or nil
     local _, pixels, totalPixels = aggregateRegionLayer(region, desc.terrainDataPlaneId,
-        desc.startStateChannel, desc.numStateChannels)
+        desc.startStateChannel, desc.numStateChannels, groundFilter)
 
     local capacity = totalPixels
     if region ~= nil and region.filter ~= nil then
@@ -1126,11 +1350,8 @@ function RealisticCropRotationManager:getFieldStateIndices(farmlandId)
     local region = self:getFieldRegion(n)
     if region == nil then return nil end
 
-    local groundFilter, groundPixels = getRegionGroundCoverage(region)
-    local entry = {
-        groundIndex = getNativeGroundStateIndex(region, groundPixels),
-        soilIndex = getNativeSoilStateIndex(region, groundFilter, groundPixels),
-    }
+    local groundIndex, soilIndex = getNativeFieldStateIndices(region)
+    local entry = { groundIndex = groundIndex, soilIndex = soilIndex }
     memo[n] = entry
     return entry
 end
@@ -1192,9 +1413,11 @@ function RealisticCropRotationManager:getOwnedRotationFarmlandIds()
     if g_farmlandManager == nil then return result end
 
     for farmlandId in pairs(g_farmlandManager:getFarmlands() or {}) do
-        if isRealFarmOwner(getOwnerFarmIdForFarmland(farmlandId))
-            and self:getRotationAreaHa(farmlandId) > 0 then
-            table.insert(result, tonumber(farmlandId) or farmlandId)
+        if isRealFarmOwner(getOwnerFarmIdForFarmland(farmlandId)) then
+            self:requestParcelScan(farmlandId)
+            if self:getRotationAreaHa(farmlandId) > 0 then
+                table.insert(result, tonumber(farmlandId) or farmlandId)
+            end
         end
     end
 

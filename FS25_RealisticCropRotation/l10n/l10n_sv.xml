@@ -105,6 +105,8 @@
         <e k="rcr_family_root"          v="Rotfrukt" />
         <e k="rcr_family_vegetable"     v="Grönsak" />
         <e k="rcr_family_forage"        v="Foder" />
+        <e k="rcr_family_pseudocereal"  v="Pseudospannmål" />
+        <e k="rcr_family_aromatic"      v="Kryddväxt" />
         <e k="rcr_cover_crop"           v="Mellangröda" />
         <e k="rcr_fallow"              v="Träda" />
 
@@ -133,9 +135,11 @@
         <e k="rcr_advice_afterRoot" v="Efter en rotfrukt, vänta fyra år innan rotfrukter återkommer, och följ med en spannmål för att bygga upp strukturen efter den sena upptagningen." />
         <e k="rcr_advice_afterVegetable" v="Efter en grönsak, vänta tre år innan du upprepar den, med en spannmål som ren avbrott." />
         <e k="rcr_advice_afterForage" v="Efter en vall utnyttjar en spannmål den bördighet och struktur som byggts upp under grässvålen." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Hög risk för bomullsmögel: Vänta minst 3 år innan du åter odlar raps, senap, solros, sojaböna, ärt, böna, potatis eller morot; svampmedel begränsar skadan på behandlade områden, men tar inte bort sjukdomen från fältet." />
+        <e k="rcr_advice_afterPseudocereal" v="Efter pseudospannmål, räkna med spillplantor i nästa gröda, eftersom fröet faller av före skörden; den tunna stubben lämnar dessutom jorden lös och utsatt för erosion." />
+        <e k="rcr_advice_afterAromatic" v="Efter en kryddväxt, håll den borta från fältet i fem år mot verticilliumvissne, med majs eller lusern emellan för att sanera jorden." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Hög risk för bomullsmögel: Vänta minst 3 år innan du åter odlar raps, senap, solros, sojaböna, ärt, böna, jordnöt, potatis eller morot; svampmedel begränsar skadan på behandlade områden, men tar inte bort sjukdomen från fältet." />
         <e k="rcr_advice_pressure_high_bcn"           v="Hög risk för nematoder: Vänta minst 3 år innan du åter odlar sockerbeta, rödbeta, raps, senap eller spenat; nematicid skyddar behandlade områden, men tar inte bort nematoderna." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Måttlig risk för bomullsmögel: Vänta längre innan du åter odlar raps, senap, solros, sojaböna, ärt, böna, potatis eller morot; regn kan öka risken." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Måttlig risk för bomullsmögel: Vänta längre innan du åter odlar raps, senap, solros, sojaböna, ärt, böna, jordnöt, potatis eller morot; regn kan öka risken." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Måttlig risk för nematoder: Vänta längre innan du åter odlar betor, raps, senap eller spenat." />
 
         <!-- Advice card, history-based rotation memo -->

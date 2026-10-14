@@ -64,6 +64,7 @@
     <crop name="CANOLA"    family="OILSEED" disease="SCLEROTINIA PHOMA RUST BCN CLUBROOT" />
     <crop name="SUNFLOWER" family="OILSEED" disease="SCLEROTINIA RUST" />
     <crop name="MUSTARD"   family="OILSEED" disease="SCLEROTINIA PHOMA BCN CLUBROOT" />
+    <crop name="SESAME"    family="OILSEED" />
     <!-- Legumes (n1/n2 in PF states; 1 state = 5 kg N/ha) -->
     <crop name="SOYBEAN"   family="LEGUME" n1="8"  n2="2"  disease="SCLEROTINIA" />
     <crop name="ALFALFA"   family="LEGUME" n1="16" n2="10" />
@@ -71,6 +72,7 @@
     <crop name="PEA"       family="LEGUME" n1="8"  n2="2"  disease="SCLEROTINIA" />
     <crop name="GREENBEAN" family="LEGUME" n1="4"  n2="1"  disease="SCLEROTINIA" />
     <crop name="VETCHRYE"  family="LEGUME" n1="12" n2="4"  />
+    <crop name="PEANUT"    family="LEGUME" n1="4"  n2="0"  disease="SCLEROTINIA RUST" />
 
     <!-- Root vegetables -->
     <crop name="SUGARBEET" family="ROOT" disease="BCN" />
@@ -86,6 +88,12 @@
     <!-- Forage / grass -->
     <crop name="GRASS"      family="FORAGE" />
     <crop name="FIELDGRASS" family="FORAGE" />
+
+    <!-- Pseudocereals -->
+    <crop name="BUCKWHEAT" family="PSEUDOCEREAL" />
+
+    <!-- Aromatic plants -->
+    <crop name="MINT" family="AROMATIC" />
 
     <!-- Cover crops (excluded from rotation history) -->
     <crop name="OILSEEDRADISH"      family="COVER" cover="true" />

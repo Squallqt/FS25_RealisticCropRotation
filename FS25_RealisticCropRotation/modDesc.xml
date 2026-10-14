@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <modDesc descVersion="113">
     <author>Squallqt</author>
-    <version>1.0.0.0</version>
+    <version>1.1.0.0</version>
     <title>
         <en>Realistic Crop Rotation</en>
         <de>Realistische Fruchtfolge</de>
@@ -62,6 +62,20 @@ Valid <group> values: SCLEROTINIA, PHOMA, TAKEALL, SEPTORIA, RUST, FUSARIUM, LAT
 Singleplayer and multiplayer, with or without Precision Farming. 27 languages.
 Issues & suggestions: https://github.com/Squallqt/FS25_RealisticCropRotation
 
+Changelog:
+
+1.1.0.0:
+- Added buckwheat, peanut, sesame and mint to crop rotation
+- Fixed long freezes and low frame rates in the crop rotation menu on some maps and savegames
+- Fixed advice text cut short in some languages
+- Fixed an unnecessary warning when loading a singleplayer game
+- Fixed the current-date marker in the crop rotation calendar
+- Fixed incorrect crop detection on fields with missing boundaries
+- Fixed fungicide and nematicide missing on large maps and long mod lists: the game's limit of 255 fill types is raised to 511
+
+1.0.0.0:
+- Initial release
+
 Please download this mod only from the official Farming Simulator ModHub and keep the original link. Reuploading, redistribution, modification or copying of this mod or any of its files, in whole or in part, is not permitted without the author's written consent.]]></en>
         <de><![CDATA[Gib deiner Fruchtfolge eine echte Bedeutung.
 
@@ -117,6 +131,20 @@ Gültige <group>-Werte: SCLEROTINIA, PHOMA, TAKEALL, SEPTORIA, RUST, FUSARIUM, L
 Einzelspieler und Mehrspieler, mit oder ohne Precision Farming. 27 Sprachen.
 Issues & Vorschläge: https://github.com/Squallqt/FS25_RealisticCropRotation
 
+Changelog:
+
+1.1.0.0:
+- Buchweizen, Erdnuss, Sesam und Minze in die Fruchtfolge aufgenommen
+- Lange Hänger und niedrige Bildraten im Fruchtfolgemenü auf manchen Karten und Spielständen behoben
+- Abgeschnittene Ratschläge in einigen Sprachen behoben
+- Unnötige Warnmeldung beim Laden eines Einzelspielerspiels behoben
+- Markierung des aktuellen Datums im Fruchtfolgekalender korrigiert
+- Falsche Kulturerkennung bei fehlenden Feldgrenzen korrigiert
+- Fehlendes Fungizid und Nematizid auf großen Karten und langen Modlisten behoben: Das Limit des Spiels steigt von 255 auf 511 Fülltypen
+
+1.0.0.0:
+- Erstveröffentlichung
+
 Bitte lade diesen Mod ausschließlich aus dem offiziellen Farming Simulator ModHub herunter und behalte den originalen Link bei. Das erneute Hochladen, die Weitergabe, Veränderung oder das Kopieren dieses Mods oder seiner Dateien, ganz oder teilweise, ist ohne die schriftliche Zustimmung des Autors nicht gestattet.]]></de>
         <fr><![CDATA[Donnez un rôle réel à vos rotations.
 
@@ -171,6 +199,20 @@ Valeurs valides pour <group> : SCLEROTINIA, PHOMA, TAKEALL, SEPTORIA, RUST, FUSA
 
 Solo et multijoueur, avec ou sans Precision Farming. 27 langues.
 Issues & suggestions : https://github.com/Squallqt/FS25_RealisticCropRotation
+
+Changelog :
+
+1.1.0.0 :
+- Ajout du sarrasin, de l'arachide, du sésame et de la menthe dans la rotation
+- Correction des longs blocages et des chutes d'images dans le menu de rotation sur certaines cartes et sauvegardes
+- Correction des conseils coupés dans certaines langues
+- Correction d'un avertissement injustifié au chargement d'une partie solo
+- Correction du repère de la date actuelle dans le calendrier de rotation
+- Correction des cultures mal identifiées sur les champs sans contour valide
+- Correction du fongicide et du nématicide absents sur les grandes cartes et les longues listes de mods : la limite du jeu passe de 255 à 511 types de remplissage
+
+1.0.0.0 :
+- Version initiale
 
 Merci de télécharger ce mod uniquement depuis le ModHub officiel de Farming Simulator et de conserver le lien original. La remise en ligne, la redistribution, la modification ou la copie de ce mod ou de l'un de ses fichiers, en tout ou partie, ne sont pas autorisées sans l'accord écrit de l'auteur.]]></fr>
     </description>

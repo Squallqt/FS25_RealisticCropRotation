@@ -40,7 +40,7 @@
         <e k="rcr_disease_header_active" v="Enfermedad (%s)" />
         <e k="rcr_treatment_hud_label"  v="Tratamiento" />
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d meses restantes)" />
-        <e k="rcr_advice_nematicide_duration" v="La protección del suelo dura 3 meses por campo; una nueva aplicación renueva la duración." />
+        <e k="rcr_advice_nematicide_duration" v="La protección dura 3 meses por campo; volver a aplicar la renueva." />
 
         <!-- Treatment gauge -->
         <e k="rcr_treatment_absent"   v="ausente" />
@@ -105,6 +105,8 @@
         <e k="rcr_family_root"          v="Raíces" />
         <e k="rcr_family_vegetable"     v="Hortaliza" />
         <e k="rcr_family_forage"        v="Forraje" />
+        <e k="rcr_family_pseudocereal"  v="Pseudocereal" />
+        <e k="rcr_family_aromatic"      v="Aromática" />
         <e k="rcr_cover_crop"           v="Cultivo intercalar" />
         <e k="rcr_fallow"              v="Barbecho" />
 
@@ -124,7 +126,7 @@
         <e k="rcr_soil_value_unmeasured" v="Valor no medido" />
         <e k="rcr_n_crop_need_unavailable" v="Necesidad del cultivo: --" />
         <e k="rcr_lime_status_unavailable" v="Cal: --" />
-        <e k="rcr_advice_soil_analysis_required_body" v="Los valores de nitrógeno y pH no están disponibles. Analiza el suelo para obtener recomendaciones agronómicas precisas." />
+        <e k="rcr_advice_soil_analysis_required_body" v="Sin valores de nitrógeno y pH: analiza el suelo para obtener recomendaciones precisas." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Después de un cereal, siembra una leguminosa para reponer nitrógeno o un cultivo de corte contra las enfermedades del pie, y deja dos años entre cereales." />
@@ -133,9 +135,11 @@
         <e k="rcr_advice_afterRoot" v="Después de un cultivo de raíz, espera cuatro años antes de que vuelvan las raíces, y sigue con un cereal para rehacer la estructura tras el arranque tardío." />
         <e k="rcr_advice_afterVegetable" v="Después de una hortaliza, espera tres años antes de repetirla, con un cereal como corte limpio." />
         <e k="rcr_advice_afterForage" v="Después de una pradera temporal, un cereal aprovecha la fertilidad y la estructura acumuladas bajo la hierba." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Riesgo alto de esclerotinia: espera al menos 3 años antes de volver a cultivar canola, mostaza, girasol, soja, arveja, frijol, papa o zanahoria; el fungicida limita los daños en las zonas tratadas, pero no elimina la enfermedad del campo." />
+        <e k="rcr_advice_afterPseudocereal" v="Después de un pseudocereal, cuenta con plantas espontáneas en el cultivo siguiente, ya que el grano se desgrana antes de la cosecha; el rastrojo escaso deja además el suelo suelto y expuesto a la erosión." />
+        <e k="rcr_advice_afterAromatic" v="Después de una planta aromática, mantenla cinco años fuera del campo contra la verticilosis, con maíz o alfalfa mientras tanto para sanear el suelo." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Riesgo alto de esclerotinia: espera al menos 3 años antes de volver a cultivar canola, mostaza, girasol, soja, arveja, frijol, maní, papa o zanahoria; el fungicida limita los daños en las zonas tratadas, pero no elimina la enfermedad del campo." />
         <e k="rcr_advice_pressure_high_bcn"           v="Riesgo alto de nematodos: espera al menos 3 años antes de volver a cultivar remolacha azucarera, remolacha de mesa, canola, mostaza o espinaca; el nematicida protege las zonas tratadas, pero no elimina los nematodos." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Riesgo moderado de esclerotinia: espera más tiempo antes de volver a cultivar canola, mostaza, girasol, soja, arveja, frijol, papa o zanahoria; la lluvia puede aumentar el riesgo." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Riesgo moderado de esclerotinia: espera más tiempo antes de volver a cultivar canola, mostaza, girasol, soja, arveja, frijol, maní, papa o zanahoria; la lluvia puede aumentar el riesgo." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Riesgo moderado de nematodos: espera más tiempo antes de volver a cultivar remolachas, canola, mostaza o espinaca." />
 
         <!-- Advice card, history-based rotation memo -->
@@ -156,11 +160,11 @@
         <e k="rcr_advice_title_outbreak" v="Infección activa" />
         <e k="rcr_advice_outbreak" v="%s está activa en este campo. Nivel de ataque: %d %%. Tratamiento recomendado: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s previsto para %s: conflicto de rotación, misma familia (%s) que el cultivo actual, faltan %d año(s) de %d antes de un retorno seguro." />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s previsto para %s: tanto este cultivo como el actual pueden verse afectados por %s. Espera %d año(s) más; el intervalo recomendado es de %d año(s)." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s previsto para %s: %s puede afectarlo igual que al cultivo actual. Faltan %d de los %d año(s) recomendados." />
         <e k="rcr_advice_plan_next_ok" v="%s previsto para %s: buena elección, no se detecta conflicto de rotación." />
         <e k="rcr_advice_title_fallow" v="Año de descanso" />
         <e k="rcr_advice_fallow_current" v="Barbecho en curso: este año no se cultiva ningún cultivo principal. Esto añade tiempo antes del siguiente cultivo sensible, pero no elimina la enfermedad de inmediato." />
-        <e k="rcr_advice_plan_next_fallow" v="Barbecho previsto para %s: no se cultivará ningún cultivo principal durante un año. Esto añade tiempo antes del siguiente cultivo sensible, pero no garantiza que hayan desaparecido todas las enfermedades." />
+        <e k="rcr_advice_plan_next_fallow" v="Barbecho previsto para %s: un año sin cultivo principal. Añade tiempo antes del siguiente cultivo sensible, pero no garantiza que desaparezcan todas las enfermedades." />
 
         <!-- Advice card, disease pressure list -->
 

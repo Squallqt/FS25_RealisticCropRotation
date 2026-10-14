@@ -40,7 +40,7 @@
         <e k="rcr_disease_header_active" v="Boală (%s)" />
         <e k="rcr_treatment_hud_label"  v="Tratament" />
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d luni rămase)" />
-        <e k="rcr_advice_nematicide_duration" v="Protecția solului durează 3 luni pentru fiecare teren; reaplicarea reînnoiește durata." />
+        <e k="rcr_advice_nematicide_duration" v="Protecția durează 3 luni pe teren; reaplicarea o reînnoiește." />
 
         <!-- Treatment gauge -->
         <e k="rcr_treatment_absent"   v="absent" />
@@ -105,6 +105,8 @@
         <e k="rcr_family_root"          v="Rădăcinoase" />
         <e k="rcr_family_vegetable"     v="Legumă" />
         <e k="rcr_family_forage"        v="Furaj" />
+        <e k="rcr_family_pseudocereal"  v="Pseudocereală" />
+        <e k="rcr_family_aromatic"      v="Aromatică" />
         <e k="rcr_cover_crop"           v="Cultură intercalată" />
         <e k="rcr_fallow"              v="Pârloagă" />
 
@@ -124,7 +126,7 @@
         <e k="rcr_soil_value_unmeasured" v="Valoare nemăsurată" />
         <e k="rcr_n_crop_need_unavailable" v="Necesarul culturii: --" />
         <e k="rcr_lime_status_unavailable" v="Var: --" />
-        <e k="rcr_advice_soil_analysis_required_body" v="Valorile azotului și pH-ului nu sunt disponibile. Analizează solul pentru recomandări agronomice precise." />
+        <e k="rcr_advice_soil_analysis_required_body" v="Valorile azotului și pH-ului lipsesc: analizează solul pentru recomandări precise." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="După o cereală, semănă o leguminoasă pentru a reface azotul sau o cultură de întrerupere împotriva bolilor bazei tulpinii, și lasă doi ani între cereale." />
@@ -133,9 +135,11 @@
         <e k="rcr_advice_afterRoot" v="După o cultură de rădăcinoase, așteaptă patru ani înainte de revenirea rădăcinoaselor, urmată de o cereală pentru a reface structura după recoltarea târzie." />
         <e k="rcr_advice_afterVegetable" v="După o legumă, așteaptă trei ani înainte de a o repeta, cu o cereală ca întrerupere curată." />
         <e k="rcr_advice_afterForage" v="După o pajiște temporară, o cereală valorifică fertilitatea și structura acumulate sub covorul ierbos." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Risc mare de putregai alb: păstrați cel puțin 3 ani între rapiță, muștar, floarea-soarelui, soia, mazăre, fasole, cartof și morcov; fungicidul limitează pagubele pe zonele tratate, dar nu elimină boala din teren." />
+        <e k="rcr_advice_afterPseudocereal" v="După o pseudocereală, așteaptă-te la samulastră în cultura următoare, deoarece semințele se scutură înainte de recoltare; miriștea rară lasă și solul afânat și expus eroziunii." />
+        <e k="rcr_advice_afterAromatic" v="După o plantă aromatică, ține-o cinci ani departe de teren împotriva ofilirii verticiliene, cu porumb sau lucernă între timp pentru a asana solul." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Risc mare de putregai alb: păstrați cel puțin 3 ani între rapiță, muștar, floarea-soarelui, soia, mazăre, fasole, arahide, cartof și morcov; fungicidul limitează pagubele pe zonele tratate, dar nu elimină boala din teren." />
         <e k="rcr_advice_pressure_high_bcn"           v="Risc mare de nematozi: păstrați cel puțin 3 ani între sfecla de zahăr, sfecla roșie, rapiță, muștar și spanac; nematicidul protejează zonele tratate, dar nu elimină nematozii." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Risc moderat de putregai alb: măriți intervalul dintre rapiță, muștar, floarea-soarelui, soia, mazăre, fasole, cartof și morcov; ploaia crește riscul." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Risc moderat de putregai alb: măriți intervalul dintre rapiță, muștar, floarea-soarelui, soia, mazăre, fasole, arahide, cartof și morcov; ploaia crește riscul." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Risc moderat de nematozi: măriți intervalul dintre sfeclă, rapiță, muștar și spanac." />
 
         <!-- Advice card, history-based rotation memo -->

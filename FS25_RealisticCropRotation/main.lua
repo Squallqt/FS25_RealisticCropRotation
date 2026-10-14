@@ -285,6 +285,8 @@ function RealisticCropRotation.requestMenuReconcile(selectedFarmlandId, selected
     local known = {}
     for _, farmlandId in ipairs(job.farmlandIds) do known[tonumber(farmlandId)] = true end
     for _, farmlandId in ipairs(farmlandIds) do
+        -- A remote page scanned its own copy of the parcel, the server follows
+        if connection ~= nil then manager:requestParcelScan(farmlandId) end
         if not known[farmlandId] then
             job.farmlandIds[#job.farmlandIds + 1] = farmlandId
             known[farmlandId] = true
@@ -673,6 +675,10 @@ local function loadedMission()
     if g_currentMission:getIsServer() and type(g_currentMission.addUpdateable) == "function" then
         RealisticCropRotation.broadcastUpdateable = {
             update = function(_self, dt)
+                -- Queued parcel scans advance a few squares per frame.
+                if RealisticCropRotation.manager:updateParcelScans() and RealisticCropRotation.frame ~= nil then
+                    RealisticCropRotation.frame:onParcelScanChanged()
+                end
                 -- Menu reconciliation is authoritative and limited to one farmland per frame.
                 processMenuReconcileQueue()
                 -- Daily disease work is also drained incrementally to keep frame time bounded.
@@ -785,6 +791,10 @@ local function initRealisticCropRotation()
     RealisticCropRotation.cropConfig = loadCropConfig()
 
     RealisticCropRotationSprayerProducts.registerMaterialHolder(modDirectory)
+
+    -- the game refuses the fill types past 2 ^ bits - 1 and sends every one of them on this width: 511 instead of 255,
+    -- set before the map registers its first fill type, so fungicide and nematicide keep theirs on a large mod list
+    FillTypeManager.SEND_NUM_BITS = math.max(FillTypeManager.SEND_NUM_BITS, 9)
 
     Mission00.loadMission00Finished = Utils.appendedFunction(Mission00.loadMission00Finished, loadedMission)
     FSBaseMission.initTerrain = Utils.prependedFunction(FSBaseMission.initTerrain, installPFTramlineSync)

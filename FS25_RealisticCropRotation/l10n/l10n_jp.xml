@@ -105,6 +105,8 @@
         <e k="rcr_family_root"          v="根菜" />
         <e k="rcr_family_vegetable"     v="野菜" />
         <e k="rcr_family_forage"        v="飼料作物" />
+        <e k="rcr_family_pseudocereal"  v="擬穀類" />
+        <e k="rcr_family_aromatic"      v="香料作物" />
         <e k="rcr_cover_crop"           v="間作" />
         <e k="rcr_fallow"              v="休閑" />
 
@@ -133,9 +135,11 @@
         <e k="rcr_advice_afterRoot" v="根菜の後は、根菜が戻るまで4年あけ、遅い収穫の後に土壌構造を回復させるため穀物を続けてください。" />
         <e k="rcr_advice_afterVegetable" v="野菜の後は、繰り返す前に3年あけ、穀物をきれいな区切りとしてください。" />
         <e k="rcr_advice_afterForage" v="短期草地の後は、穀物が芝の下に蓄えられた地力と構造を活用します。" />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病のリスクが高い。ナタネ、カラシナ、ヒマワリ、ダイズ、エンドウ、インゲン、ジャガイモ、ニンジンの栽培間隔を3年以上あける。殺菌剤は散布した場所の被害を抑えるが、畑から病気を取り除くことはできない。" />
+        <e k="rcr_advice_afterPseudocereal" v="擬穀類の後は、収穫前に種子がこぼれるため、次の作物にこぼれ種が生えます。まばらな刈り株は土を緩く、侵食されやすい状態にします。" />
+        <e k="rcr_advice_afterAromatic" v="香料作物の後は、半身萎凋病を防ぐため5年間は畑に戻さず、その間にトウモロコシやアルファルファを作って土をきれいにしてください。" />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病のリスクが高い。ナタネ、カラシナ、ヒマワリ、ダイズ、エンドウ、インゲン、ラッカセイ、ジャガイモ、ニンジンの栽培間隔を3年以上あける。殺菌剤は散布した場所の被害を抑えるが、畑から病気を取り除くことはできない。" />
         <e k="rcr_advice_pressure_high_bcn"           v="センチュウのリスクが高い。テンサイ、ビート、ナタネ、カラシナ、ホウレンソウの栽培間隔を3年以上あける。殺線虫剤は処理した場所を守るが、センチュウを取り除くことはできない。" />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病のリスクは中程度。ナタネ、カラシナ、ヒマワリ、ダイズ、エンドウ、インゲン、ジャガイモ、ニンジンの栽培間隔をあける。降雨はリスクを高める。" />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病のリスクは中程度。ナタネ、カラシナ、ヒマワリ、ダイズ、エンドウ、インゲン、ラッカセイ、ジャガイモ、ニンジンの栽培間隔をあける。降雨はリスクを高める。" />
         <e k="rcr_advice_pressure_moderate_bcn"         v="センチュウのリスクは中程度。テンサイ、ビート、ナタネ、カラシナ、ホウレンソウの栽培間隔をあける。" />
 
         <!-- Advice card, history-based rotation memo -->

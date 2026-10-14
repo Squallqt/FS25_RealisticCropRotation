@@ -40,7 +40,7 @@
         <e k="rcr_disease_header_active" v="Gewasziekte (%s)" />
         <e k="rcr_treatment_hud_label"  v="Behandeling" />
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d maanden resterend)" />
-        <e k="rcr_advice_nematicide_duration" v="De bodembescherming duurt 3 maanden per veld; opnieuw toepassen vernieuwt de duur." />
+        <e k="rcr_advice_nematicide_duration" v="De bescherming duurt 3 maanden per veld; opnieuw toepassen verlengt ze." />
 
         <!-- Treatment gauge -->
         <e k="rcr_treatment_absent"   v="afwezig" />
@@ -105,6 +105,8 @@
         <e k="rcr_family_root"          v="Wortelgewas" />
         <e k="rcr_family_vegetable"     v="Groente" />
         <e k="rcr_family_forage"        v="Voeder" />
+        <e k="rcr_family_pseudocereal"  v="Pseudograan" />
+        <e k="rcr_family_aromatic"      v="Kruidengewas" />
         <e k="rcr_cover_crop"           v="Tussengewas" />
         <e k="rcr_fallow"              v="Braak" />
 
@@ -124,7 +126,7 @@
         <e k="rcr_soil_value_unmeasured" v="Waarde niet gemeten" />
         <e k="rcr_n_crop_need_unavailable" v="Gewasbehoefte: --" />
         <e k="rcr_lime_status_unavailable" v="Kalk: --" />
-        <e k="rcr_advice_soil_analysis_required_body" v="Stikstof- en pH-waarden zijn niet beschikbaar. Analyseer de bodem voor nauwkeurig agronomisch advies." />
+        <e k="rcr_advice_soil_analysis_required_body" v="Geen stikstof- en pH-waarden: analyseer de bodem voor nauwkeurig advies." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Na een graan zaai je een vlinderbloemige om stikstof terug te geven of een rustgewas tegen voetziekten, en houd twee jaar tussen granen." />
@@ -133,9 +135,11 @@
         <e k="rcr_advice_afterRoot" v="Na een hakvrucht wacht je vier jaar voordat wortelgewassen terugkomen, gevolgd door een graan om de structuur na de late oogst te herstellen." />
         <e k="rcr_advice_afterVegetable" v="Na een groente wacht je drie jaar voordat je ze herhaalt, met een graan als schone onderbreking." />
         <e k="rcr_advice_afterForage" v="Na een tijdelijk grasland benut een graan de onder de zode opgebouwde vruchtbaarheid en structuur." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Hoog risico op sclerotinia: wacht minstens 3 jaar voordat je opnieuw koolzaad, mosterd, zonnebloem, soja, erwt, boon, aardappel of wortel teelt; fungicide beperkt de schade op behandelde delen, maar verwijdert de ziekte niet uit het perceel." />
+        <e k="rcr_advice_afterPseudocereal" v="Na een pseudograan krijg je opslag in het volggewas, omdat het zaad voor de oogst uitvalt; de dunne stoppel laat de grond bovendien los en gevoelig voor erosie." />
+        <e k="rcr_advice_afterAromatic" v="Na een kruidengewas houd je het vijf jaar van het perceel tegen verticilliumverwelking, met maïs of luzerne ertussen om de grond te saneren." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Hoog risico op sclerotinia: wacht minstens 3 jaar voordat je opnieuw koolzaad, mosterd, zonnebloem, soja, erwt, boon, pinda, aardappel of wortel teelt; fungicide beperkt de schade op behandelde delen, maar verwijdert de ziekte niet uit het perceel." />
         <e k="rcr_advice_pressure_high_bcn"           v="Hoog risico op aaltjes: wacht minstens 3 jaar voordat je opnieuw suikerbiet, rode biet, koolzaad, mosterd of spinazie teelt; nematicide beschermt behandelde delen, maar verwijdert de aaltjes niet." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Matig risico op sclerotinia: wacht langer voordat je opnieuw koolzaad, mosterd, zonnebloem, soja, erwt, boon, aardappel of wortel teelt; regen kan het risico verhogen." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Matig risico op sclerotinia: wacht langer voordat je opnieuw koolzaad, mosterd, zonnebloem, soja, erwt, boon, pinda, aardappel of wortel teelt; regen kan het risico verhogen." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Matig risico op aaltjes: wacht langer voordat je opnieuw bieten, koolzaad, mosterd of spinazie teelt." />
 
         <!-- Advice card, history-based rotation memo -->
