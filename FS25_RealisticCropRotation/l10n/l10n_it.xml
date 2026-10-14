@@ -40,7 +40,7 @@
         <e k="rcr_disease_header_active" v="Malattia (%s)" />
         <e k="rcr_treatment_hud_label"  v="Trattamento" />
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d mesi rimanenti)" />
-        <e k="rcr_advice_nematicide_duration" v="La protezione del suolo dura 3 mesi per campo; una nuova applicazione rinnova la durata." />
+        <e k="rcr_advice_nematicide_duration" v="La protezione dura 3 mesi per campo; una nuova applicazione la rinnova." />
 
         <!-- Treatment gauge -->
         <e k="rcr_treatment_absent"   v="assente" />
@@ -105,6 +105,8 @@
         <e k="rcr_family_root"          v="Radici" />
         <e k="rcr_family_vegetable"     v="Ortaggio" />
         <e k="rcr_family_forage"        v="Foraggio" />
+        <e k="rcr_family_pseudocereal"  v="Pseudocereale" />
+        <e k="rcr_family_aromatic"      v="Aromatica" />
         <e k="rcr_cover_crop"           v="Coltura intercalare" />
         <e k="rcr_fallow"              v="Maggese" />
 
@@ -124,7 +126,7 @@
         <e k="rcr_soil_value_unmeasured" v="Valore non misurato" />
         <e k="rcr_n_crop_need_unavailable" v="Fabbisogno coltura: --" />
         <e k="rcr_lime_status_unavailable" v="Calce: --" />
-        <e k="rcr_advice_soil_analysis_required_body" v="I valori di azoto e pH non sono disponibili. Analizza il terreno per ottenere consigli agronomici precisi." />
+        <e k="rcr_advice_soil_analysis_required_body" v="Valori di azoto e pH non disponibili: analizza il terreno per consigli precisi." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Dopo un cereale, semina una leguminosa per ripristinare l'azoto o una coltura da rottura contro le malattie del piede, e lascia due anni tra i cereali." />
@@ -133,9 +135,11 @@
         <e k="rcr_advice_afterRoot" v="Dopo una coltura da radice, attendi quattro anni prima che le radici tornino, poi un cereale per ricostruire la struttura dopo la raccolta tardiva." />
         <e k="rcr_advice_afterVegetable" v="Dopo un ortaggio, attendi tre anni prima di ripeterlo, con un cereale come rottura netta." />
         <e k="rcr_advice_afterForage" v="Dopo un prato di breve durata, un cereale valorizza la fertilità e la struttura accumulate sotto il cotico." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Rischio elevato di sclerotinia: attendi almeno 3 anni prima di coltivare di nuovo colza, senape, girasole, soia, pisello, fagiolo, patata o carota; il fungicida limita i danni nelle zone trattate, ma non elimina la malattia dal campo." />
+        <e k="rcr_advice_afterPseudocereal" v="Dopo uno pseudocereale, aspettati piante spontanee nella coltura successiva, perché il seme cade prima della raccolta; le stoppie scarse lasciano inoltre il terreno sciolto ed esposto all'erosione." />
+        <e k="rcr_advice_afterAromatic" v="Dopo una pianta aromatica, tienila lontana dal campo per cinque anni contro la verticillosi, con mais o erba medica nel frattempo per risanare il terreno." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Rischio elevato di sclerotinia: attendi almeno 3 anni prima di coltivare di nuovo colza, senape, girasole, soia, pisello, fagiolo, arachide, patata o carota; il fungicida limita i danni nelle zone trattate, ma non elimina la malattia dal campo." />
         <e k="rcr_advice_pressure_high_bcn"           v="Rischio elevato di nematodi: attendi almeno 3 anni prima di coltivare di nuovo barbabietola da zucchero, barbabietola rossa, colza, senape o spinacio; il nematocida protegge le zone trattate, ma non elimina i nematodi." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Rischio moderato di sclerotinia: attendi più a lungo prima di coltivare di nuovo colza, senape, girasole, soia, pisello, fagiolo, patata o carota; la pioggia può aumentare il rischio." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Rischio moderato di sclerotinia: attendi più a lungo prima di coltivare di nuovo colza, senape, girasole, soia, pisello, fagiolo, arachide, patata o carota; la pioggia può aumentare il rischio." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Rischio moderato di nematodi: attendi più a lungo prima di coltivare di nuovo barbabietole, colza, senape o spinacio." />
 
         <!-- Advice card, history-based rotation memo -->
@@ -156,11 +160,11 @@
         <e k="rcr_advice_title_outbreak" v="Infezione attiva" />
         <e k="rcr_advice_outbreak" v="%s è attiva in questo campo. Livello di attacco: %d %%. Trattamento consigliato: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s prevista per %s: conflitto di rotazione, stessa famiglia (%s) della coltura attuale, mancano %d anno/i su %d prima di un ritorno sicuro." />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s prevista per %s: sia questa coltura sia quella attuale possono essere colpite da %s. Attendi ancora %d anno/i; l'intervallo consigliato è di %d anno/i." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s prevista per %s: %s può colpirla come la coltura attuale. Mancano %d anno/i sui %d consigliati." />
         <e k="rcr_advice_plan_next_ok" v="%s prevista per %s: buona scelta, nessun conflitto di rotazione rilevato." />
         <e k="rcr_advice_title_fallow" v="Anno di pausa" />
         <e k="rcr_advice_fallow_current" v="Maggese in corso: quest'anno non viene coltivata alcuna coltura principale. Questo aggiunge tempo prima della prossima coltura sensibile, ma non elimina subito la malattia." />
-        <e k="rcr_advice_plan_next_fallow" v="Maggese previsto per %s: per un anno non verrà coltivata alcuna coltura principale. Questo aggiunge tempo prima della prossima coltura sensibile, ma non garantisce che tutte le malattie siano scomparse." />
+        <e k="rcr_advice_plan_next_fallow" v="Maggese previsto per %s: un anno senza coltura principale. Aggiunge tempo prima della prossima coltura sensibile, ma non garantisce la scomparsa di tutte le malattie." />
 
         <!-- Advice card, disease pressure list -->
 

@@ -105,6 +105,8 @@
         <e k="rcr_family_root"          v="Juurikasvi" />
         <e k="rcr_family_vegetable"     v="Vihannes" />
         <e k="rcr_family_forage"        v="Rehu" />
+        <e k="rcr_family_pseudocereal"  v="Valevilja" />
+        <e k="rcr_family_aromatic"      v="Maustekasvi" />
         <e k="rcr_cover_crop"           v="Välikasvi" />
         <e k="rcr_fallow"              v="Kesanto" />
 
@@ -133,9 +135,11 @@
         <e k="rcr_advice_afterRoot" v="Juurikasvin jälkeen odota neljä vuotta ennen juurikasvien paluuta, ja jatka viljalla rakenteen palauttamiseksi myöhäisen noston jälkeen." />
         <e k="rcr_advice_afterVegetable" v="Vihanneksen jälkeen odota kolme vuotta ennen sen toistamista, vilja puhtaana katkona." />
         <e k="rcr_advice_afterForage" v="Lyhytaikaisen nurmen jälkeen vilja hyödyntää turpeen alle kertyneen viljavuuden ja rakenteen." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Suuri pahkahomeen riski: Odota vähintään 3 vuotta ennen kuin viljelet uudelleen rapsia, sinappia, auringonkukkaa, soijapapua, hernettä, papua, perunaa tai porkkanaa; sienitorjunta-aine rajoittaa vahinkoa käsitellyillä alueilla, mutta ei poista tautia lohkolta." />
+        <e k="rcr_advice_afterPseudocereal" v="Valeviljan jälkeen varaudu itsestään kylväytyneisiin taimiin seuraavassa kasvissa, koska siemenet varisevat ennen puintia; ohut sänki jättää lisäksi maan kuohkeaksi ja alttiiksi eroosiolle." />
+        <e k="rcr_advice_afterAromatic" v="Maustekasvin jälkeen pidä se viisi vuotta poissa lohkolta verticillium-lakastumistautia vastaan, välillä maissia tai sinimailasta maan puhdistamiseksi." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Suuri pahkahomeen riski: Odota vähintään 3 vuotta ennen kuin viljelet uudelleen rapsia, sinappia, auringonkukkaa, soijapapua, hernettä, papua, maapähkinää, perunaa tai porkkanaa; sienitorjunta-aine rajoittaa vahinkoa käsitellyillä alueilla, mutta ei poista tautia lohkolta." />
         <e k="rcr_advice_pressure_high_bcn"           v="Suuri ankeroisriski: Odota vähintään 3 vuotta ennen kuin viljelet uudelleen sokerijuurikasta, punajuurta, rapsia, sinappia tai pinaattia; ankeroistorjunta-aine suojaa käsiteltyjä alueita, mutta ei poista ankeroisia." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Kohtalainen pahkahomeen riski: Odota pidempään ennen kuin viljelet uudelleen rapsia, sinappia, auringonkukkaa, soijapapua, hernettä, papua, perunaa tai porkkanaa; sade voi lisätä riskiä." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Kohtalainen pahkahomeen riski: Odota pidempään ennen kuin viljelet uudelleen rapsia, sinappia, auringonkukkaa, soijapapua, hernettä, papua, maapähkinää, perunaa tai porkkanaa; sade voi lisätä riskiä." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Kohtalainen ankeroisriski: Odota pidempään ennen kuin viljelet uudelleen juurikkaita, rapsia, sinappia tai pinaattia." />
 
         <!-- Advice card, history-based rotation memo -->

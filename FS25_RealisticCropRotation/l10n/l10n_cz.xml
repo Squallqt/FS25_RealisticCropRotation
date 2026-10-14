@@ -40,7 +40,7 @@
         <e k="rcr_disease_header_active" v="Choroba (%s)" />
         <e k="rcr_treatment_hud_label"  v="Ošetření" />
         <e k="rcr_treatment_nematicide_remaining" v="%s (zbývá měsíců: %d)" />
-        <e k="rcr_advice_nematicide_duration" v="Ochrana půdy trvá na každém poli 3 měsíce; nová aplikace dobu obnoví." />
+        <e k="rcr_advice_nematicide_duration" v="Ochrana trvá na poli 3 měsíce; nová aplikace ji obnoví." />
 
         <!-- Treatment gauge -->
         <e k="rcr_treatment_absent"   v="chybí" />
@@ -105,6 +105,8 @@
         <e k="rcr_family_root"          v="Okopanina" />
         <e k="rcr_family_vegetable"     v="Zelenina" />
         <e k="rcr_family_forage"        v="Pícnina" />
+        <e k="rcr_family_pseudocereal"  v="Pseudoobilnina" />
+        <e k="rcr_family_aromatic"      v="Aromatická plodina" />
         <e k="rcr_cover_crop"           v="Meziplodina" />
         <e k="rcr_fallow"              v="Úhor" />
 
@@ -124,7 +126,7 @@
         <e k="rcr_soil_value_unmeasured" v="Hodnota nezměřena" />
         <e k="rcr_n_crop_need_unavailable" v="Potřeba plodiny: --" />
         <e k="rcr_lime_status_unavailable" v="Vápno: --" />
-        <e k="rcr_advice_soil_analysis_required_body" v="Hodnoty dusíku a pH nejsou dostupné. Pro přesné agronomické doporučení proveďte rozbor půdy." />
+        <e k="rcr_advice_soil_analysis_required_body" v="Hodnoty dusíku a pH chybí: pro přesná doporučení proveďte rozbor půdy." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Po obilnině zasej luskovinu pro doplnění dusíku nebo přerušovací plodinu proti chorobám pat stébel a ponech dva roky mezi obilninami." />
@@ -133,9 +135,11 @@
         <e k="rcr_advice_afterRoot" v="Po okopanině počkej čtyři roky, než se okopaniny vrátí, a poté obilninu pro obnovení struktury po pozdní sklizni." />
         <e k="rcr_advice_afterVegetable" v="Po zelenině počkej tři roky, než ji zopakuješ, s obilninou jako čistým přerušením." />
         <e k="rcr_advice_afterForage" v="Po dočasném travním porostu obilnina zhodnotí úrodnost a strukturu nahromaděnou pod drnem." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Vysoké riziko sklerotinie: mezi řepkou, hořčicí, slunečnicí, sójou, hrachem, fazolem, bramborami a mrkví dodržte odstup alespoň 3 let; fungicid omezuje škody na ošetřených plochách, ale chorobu z pole neodstraní." />
+        <e k="rcr_advice_afterPseudocereal" v="Po pseudoobilnině počítej s výdrolem v následné plodině, protože semena vypadávají před sklizní; řídké strniště navíc zanechává půdu kyprou a náchylnou k erozi." />
+        <e k="rcr_advice_afterAromatic" v="Po aromatické plodině ji drž pět let mimo pole kvůli verticiliovému vadnutí, s kukuřicí nebo vojtěškou mezitím k ozdravení půdy." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Vysoké riziko sklerotinie: mezi řepkou, hořčicí, slunečnicí, sójou, hrachem, fazolem, arašídy, bramborami a mrkví dodržte odstup alespoň 3 let; fungicid omezuje škody na ošetřených plochách, ale chorobu z pole neodstraní." />
         <e k="rcr_advice_pressure_high_bcn"           v="Vysoké riziko háďátka: mezi cukrovkou, červenou řepou, řepkou, hořčicí a špenátem dodržte odstup alespoň 3 let; nematicid chrání ošetřené plochy, ale háďátka neodstraní." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Střední riziko sklerotinie: prodlužte odstup řepky, hořčice, slunečnice, sóji, hrachu, fazolu, brambor a mrkve; déšť riziko zvyšuje." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Střední riziko sklerotinie: prodlužte odstup řepky, hořčice, slunečnice, sóji, hrachu, fazolu, arašídů, brambor a mrkve; déšť riziko zvyšuje." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Střední riziko háďátka: prodlužte odstup cukrovky, červené řepy, řepky, hořčice a špenátu." />
 
         <!-- Advice card, history-based rotation memo -->

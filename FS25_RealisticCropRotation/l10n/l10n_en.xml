@@ -105,6 +105,8 @@
         <e k="rcr_family_root"          v="Root vegetable" />
         <e k="rcr_family_vegetable"     v="Vegetable" />
         <e k="rcr_family_forage"        v="Forage" />
+        <e k="rcr_family_pseudocereal"  v="Pseudocereal" />
+        <e k="rcr_family_aromatic"      v="Aromatic plant" />
         <e k="rcr_cover_crop"           v="Intercrop" />
         <e k="rcr_fallow"              v="Fallow" />
 
@@ -133,9 +135,11 @@
         <e k="rcr_advice_afterRoot"      v="After a root crop, allow four years before roots come back, and follow with a cereal to rebuild structure after the late lifting." />
         <e k="rcr_advice_afterVegetable" v="After a vegetable, wait three years before repeating it, with a cereal as a clean break." />
         <e k="rcr_advice_afterForage"    v="After a grass ley, a cereal cashes in the fertility and structure built up under the sward." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="High sclerotinia risk: wait at least 3 years before bringing canola, mustard, sunflower, soybean, pea, bean, potato or carrot back; fungicide limits damage on sprayed ground but does not clean the field." />
+        <e k="rcr_advice_afterPseudocereal" v="After a pseudocereal, expect volunteers in the next crop, as the seed sheds before harvest; the thin stubble also leaves the soil loose and prone to erosion." />
+        <e k="rcr_advice_afterAromatic"  v="After an aromatic plant, keep it off the field for five years against verticillium wilt, with maize or alfalfa in between to help clean the soil." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="High sclerotinia risk: wait at least 3 years before bringing canola, mustard, sunflower, soybean, pea, bean, peanut, potato or carrot back; fungicide limits damage on sprayed ground but does not clean the field." />
         <e k="rcr_advice_pressure_high_bcn"           v="High nematode risk: wait at least 3 years before bringing sugar beet, beetroot, canola, mustard or spinach back; nematicide protects sprayed ground but does not remove nematodes." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderate sclerotinia risk: leave more time before bringing canola, mustard, sunflower, soybean, pea, bean, potato or carrot back; rain can raise the risk." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Moderate sclerotinia risk: leave more time before bringing canola, mustard, sunflower, soybean, pea, bean, peanut, potato or carrot back; rain can raise the risk." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Moderate nematode risk: leave more time before bringing beets, canola, mustard or spinach back." />
 
         <!-- Advice card, history-based rotation memo -->

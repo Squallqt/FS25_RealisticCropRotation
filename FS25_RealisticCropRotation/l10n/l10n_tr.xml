@@ -105,6 +105,8 @@
         <e k="rcr_family_root"          v="Kök sebze" />
         <e k="rcr_family_vegetable"     v="Sebze" />
         <e k="rcr_family_forage"        v="Yem bitkisi" />
+        <e k="rcr_family_pseudocereal"  v="Yalancı tahıl" />
+        <e k="rcr_family_aromatic"      v="Aromatik bitki" />
         <e k="rcr_cover_crop"           v="Ara ekin" />
         <e k="rcr_fallow"              v="Nadas" />
 
@@ -133,9 +135,11 @@
         <e k="rcr_advice_afterRoot" v="Bir kök bitkisinden sonra köklerin dönmesinden önce dört yıl bekle, ardından geç hasattan sonra yapıyı yeniden kurmak için bir tahıl." />
         <e k="rcr_advice_afterVegetable" v="Bir sebzeden sonra tekrarlamadan önce üç yıl bekle, temiz bir ara olarak bir tahıl ile." />
         <e k="rcr_advice_afterForage" v="Geçici bir çayırdan sonra tahıl, çim örtüsü altında biriken verimlilik ve yapıyı değerlendirir." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Sklerotinya riski yüksek: kanola, hardal, ayçiçeği, soya, bezelye, fasulye, patates ve havuç arasında en az 3 yıl bırakın; fungisit ilaçlanan yerdeki zararı sınırlar, ancak hastalığı tarladan temizlemez." />
+        <e k="rcr_advice_afterPseudocereal" v="Yalancı tahıldan sonra bir sonraki üründe kendiliğinden çıkan bitkiler bekle, çünkü tohum hasattan önce dökülür; seyrek anız ayrıca toprağı gevşek ve erozyona açık bırakır." />
+        <e k="rcr_advice_afterAromatic" v="Aromatik bir bitkiden sonra Verticillium solgunluğuna karşı onu beş yıl tarladan uzak tut; arada mısır veya yonca toprağın temizlenmesine yardımcı olur." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Sklerotinya riski yüksek: kanola, hardal, ayçiçeği, soya, bezelye, fasulye, yer fıstığı, patates ve havuç arasında en az 3 yıl bırakın; fungisit ilaçlanan yerdeki zararı sınırlar, ancak hastalığı tarladan temizlemez." />
         <e k="rcr_advice_pressure_high_bcn"           v="Nematod riski yüksek: şeker pancarı, kırmızı pancar, kanola, hardal ve ıspanak arasında en az 3 yıl bırakın; nematisit ilaçlanan alanı korur ancak nematodları ortadan kaldırmaz." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Sklerotinya riski orta: kanola, hardal, ayçiçeği, soya, bezelye, fasulye, patates ve havuç arasındaki süreyi uzatın; yağmur riski artırır." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Sklerotinya riski orta: kanola, hardal, ayçiçeği, soya, bezelye, fasulye, yer fıstığı, patates ve havuç arasındaki süreyi uzatın; yağmur riski artırır." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Nematod riski orta: şeker pancarı, kırmızı pancar, kanola, hardal ve ıspanak arasındaki süreyi uzatın." />
 
         <!-- Advice card, history-based rotation memo -->

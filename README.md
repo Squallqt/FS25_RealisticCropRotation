@@ -2,7 +2,7 @@
 
 Crop rotation planning and disease simulation for Farming Simulator 25.
 
-[![Version](https://img.shields.io/badge/version-1.0.1.0-blue.svg)](https://github.com/Squallqt/FS25_RealisticCropRotation/releases)
+[![Version](https://img.shields.io/badge/version-1.1.0.0-blue.svg)](https://github.com/Squallqt/FS25_RealisticCropRotation/releases)
 [![FS25](https://img.shields.io/badge/FS25-compatible-green.svg)](https://farming-simulator.com/)
 ![Multiplayer](https://img.shields.io/badge/multiplayer-supported-success.svg)
 ![Languages](https://img.shields.io/badge/languages-27-blue.svg)
@@ -64,6 +64,7 @@ Legumes destroyed by tillage (disc harrow / cultivator, not simple harvest) retu
 | Soybean | 40 kg N/ha | 10 kg N/ha |
 | Pea | 40 kg N/ha | 10 kg N/ha |
 | Green bean | 20 kg N/ha | 5 kg N/ha |
+| Peanut | 20 kg N/ha | 0 kg N/ha |
 
 Cover crops (oilseed radish, flowering catch crop) add an estimated flat +25 kg N/ha instead, reflected as an estimate in the planner. With Precision Farming, the residue is added directly to the nitrogen map; without it, the mod adds one vanilla fertilizer level regardless of the crop.
 
@@ -123,9 +124,11 @@ Valid `<group>` values: `SCLEROTINIA`, `PHOMA`, `TAKEALL`, `SEPTORIA`, `RUST`, `
 
 ## Changelog
 
-### v1.0.1.0
+### v1.1.0.0
 
+- Added buckwheat, peanut, sesame and mint to crop rotation
 - Fixed long freezes and low frame rates in the crop rotation menu on some maps and savegames
+- Fixed advice text cut short in some languages
 - Fixed an unnecessary warning when loading a singleplayer game
 - Fixed the current-date marker in the crop rotation calendar
 - Fixed incorrect crop detection on fields with missing boundaries

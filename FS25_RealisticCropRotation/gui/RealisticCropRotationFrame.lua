@@ -28,6 +28,8 @@ RealisticCropRotationFrame.ADVICE_KEY = {
     ROOT      = "rcr_advice_afterRoot",
     VEGETABLE = "rcr_advice_afterVegetable",
     FORAGE    = "rcr_advice_afterForage",
+    PSEUDOCEREAL = "rcr_advice_afterPseudocereal",
+    AROMATIC  = "rcr_advice_afterAromatic",
 }
 
 -- Family badge RGBA — Lua-only (XML constraint does not apply)
@@ -38,6 +40,8 @@ RealisticCropRotationFrame.FAMILY_RGBA = {
     ROOT      = {0.600, 0.180, 0.100, 1.0},  -- dark red
     VEGETABLE = {0.180, 0.580, 0.380, 1.0},  -- teal green
     FORAGE    = {0.200, 0.480, 0.280, 1.0},  -- grass green
+    PSEUDOCEREAL = {0.545, 0.353, 0.431, 1.0},  -- mauve
+    AROMATIC  = {0.420, 0.310, 0.600, 1.0},  -- violet
     COVER     = {0.420, 0.300, 0.100, 1.0},  -- earthy brown
     FALLOW    = {0.20, 0.20, 0.20, 0.60},    -- neutral, no crop/cover implication
 }
@@ -48,6 +52,7 @@ RealisticCropRotationFrame.FAMILY_MIN_INTERVAL = {
     LEGUME    = 3,
     VEGETABLE = 3,
     ROOT      = 4,
+    AROMATIC  = 5,
 }
 
 RealisticCropRotationFrame.SCORE_BASE_FULL    = 85  -- 3+ crops: a real rotation pattern

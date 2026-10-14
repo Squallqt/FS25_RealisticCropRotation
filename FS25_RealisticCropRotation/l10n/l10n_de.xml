@@ -40,7 +40,7 @@
         <e k="rcr_disease_header_active" v="Krankheit (%s)" />
         <e k="rcr_treatment_hud_label"  v="Behandlung" />
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d Monate verbleibend)" />
-        <e k="rcr_advice_nematicide_duration" v="Der Bodenschutz hält je Feld 3 Monate; eine erneute Anwendung verlängert die Dauer." />
+        <e k="rcr_advice_nematicide_duration" v="Der Schutz hält je Feld 3 Monate; erneutes Ausbringen verlängert ihn." />
 
         <!-- Treatment gauge -->
         <e k="rcr_treatment_absent"   v="fehlt" />
@@ -105,6 +105,8 @@
         <e k="rcr_family_root"          v="Wurzelgemüse" />
         <e k="rcr_family_vegetable"     v="Gemüse" />
         <e k="rcr_family_forage"        v="Futter" />
+        <e k="rcr_family_pseudocereal"  v="Pseudogetreide" />
+        <e k="rcr_family_aromatic"      v="Aromapflanze" />
         <e k="rcr_cover_crop"           v="Zwischenkultur" />
         <e k="rcr_fallow"              v="Brache" />
 
@@ -124,7 +126,7 @@
         <e k="rcr_soil_value_unmeasured" v="Wert nicht gemessen" />
         <e k="rcr_n_crop_need_unavailable" v="Pflanzenbedarf: --" />
         <e k="rcr_lime_status_unavailable" v="Kalk: --" />
-        <e k="rcr_advice_soil_analysis_required_body" v="Stickstoff- und pH-Werte sind nicht verfügbar. Analysiere den Boden, um genaue agronomische Empfehlungen zu erhalten." />
+        <e k="rcr_advice_soil_analysis_required_body" v="Keine Stickstoff- und pH-Werte: Analysiere den Boden für genaue Empfehlungen." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal"    v="Nach Getreide eine Hülsenfrucht zur Stickstoffrückführung oder eine Blattfrucht gegen Fußkrankheiten säen, und zwei Jahre zwischen zwei Getreidekulturen lassen." />
@@ -133,9 +135,11 @@
         <e k="rcr_advice_afterRoot"      v="Nach einer Hackfrucht vier Jahre bis zur Wiederkehr lassen, dann Getreide, um die Struktur nach der späten Ernte wieder aufzubauen." />
         <e k="rcr_advice_afterVegetable" v="Nach Gemüse drei Jahre bis zur Wiederholung warten, mit Getreide als saubere Anbaupause." />
         <e k="rcr_advice_afterForage"    v="Nach einer Grasphase verwertet Getreide die unter der Grasnarbe aufgebaute Fruchtbarkeit und Struktur." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Hohes Sclerotinia-Risiko: Mindestens 3 Jahre warten, bevor Raps, Senf, Sonnenblume, Soja, Erbse, Bohne, Kartoffel oder Möhre erneut angebaut werden; Fungizid begrenzt Schäden auf behandelten Flächen, beseitigt die Krankheit aber nicht aus dem Feld." />
+        <e k="rcr_advice_afterPseudocereal" v="Nach Pseudogetreide mit Durchwuchs in der Folgekultur rechnen, da die Körner vor der Ernte ausfallen; die dünne Stoppel hinterlässt zudem lockeren, erosionsanfälligen Boden." />
+        <e k="rcr_advice_afterAromatic"  v="Nach einer Aromapflanze fünf Jahre Anbaupause gegen die Verticillium-Welke einhalten, mit Mais oder Luzerne dazwischen, um den Boden zu sanieren." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Hohes Sclerotinia-Risiko: Mindestens 3 Jahre warten, bevor Raps, Senf, Sonnenblume, Soja, Erbse, Bohne, Erdnuss, Kartoffel oder Möhre zurückkehren; Fungizid begrenzt Schäden auf behandelten Flächen, beseitigt die Krankheit aber nicht aus dem Feld." />
         <e k="rcr_advice_pressure_high_bcn"           v="Hohes Nematodenrisiko: Mindestens 3 Jahre warten, bevor Zuckerrübe, Rote Bete, Raps, Senf oder Spinat erneut angebaut werden; Nematizid schützt behandelte Flächen, beseitigt die Nematoden aber nicht." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Mäßiges Sclerotinia-Risiko: Mehr Zeit lassen, bevor Raps, Senf, Sonnenblume, Soja, Erbse, Bohne, Kartoffel oder Möhre erneut angebaut werden; Regen kann das Risiko erhöhen." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Mäßiges Sclerotinia-Risiko: Mehr Zeit lassen, bevor Raps, Senf, Sonnenblume, Soja, Erbse, Bohne, Erdnuss, Kartoffel oder Möhre zurückkehren; Regen kann das Risiko erhöhen." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Mäßiges Nematodenrisiko: Mehr Zeit lassen, bevor Rüben, Raps, Senf oder Spinat erneut angebaut werden." />
 
         <!-- Advice card, history-based rotation memo -->
@@ -156,11 +160,11 @@
         <e k="rcr_advice_title_outbreak" v="Aktive Infektion" />
         <e k="rcr_advice_outbreak" v="%s ist auf diesem Feld aktiv. Befallsstärke: %d %%. Empfohlene Behandlung: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s geplant für %s: Fruchtfolgekonflikt, gleiche Familie (%s) wie die aktuelle Kultur, noch %d Jahr(e) von %d nötig, bevor eine sichere Rückkehr möglich ist." />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s geplant für %s: Diese und die aktuelle Kultur können beide von %s befallen werden. Noch %d Jahr(e) warten; der empfohlene Abstand beträgt %d Jahr(e)." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s geplant für %s: %s befällt sie wie die aktuelle Kultur. Noch %d von %d empfohlenen Jahr(en) warten." />
         <e k="rcr_advice_plan_next_ok" v="%s geplant für %s: gute Wahl, kein Fruchtfolgekonflikt festgestellt." />
         <e k="rcr_advice_title_fallow" v="Anbaupause" />
         <e k="rcr_advice_fallow_current" v="Brache im Gange: In diesem Jahr wird keine Hauptkultur angebaut. Dadurch vergeht mehr Zeit bis zur nächsten empfindlichen Kultur, die Krankheit verschwindet aber nicht sofort." />
-        <e k="rcr_advice_plan_next_fallow" v="Brache für %s geplant: Ein Jahr lang wird keine Hauptkultur angebaut. Dadurch vergeht mehr Zeit bis zur nächsten empfindlichen Kultur, es ist aber nicht garantiert, dass alle Krankheiten verschwunden sind." />
+        <e k="rcr_advice_plan_next_fallow" v="Brache für %s geplant: ein Jahr ohne Hauptkultur. Das verlängert die Pause bis zur nächsten empfindlichen Kultur, garantiert aber nicht, dass alle Krankheiten verschwunden sind." />
 
         <!-- Advice card, disease pressure list -->
 

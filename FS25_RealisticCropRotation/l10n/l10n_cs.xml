@@ -105,6 +105,8 @@
         <e k="rcr_family_root"          v="根茎类" />
         <e k="rcr_family_vegetable"     v="蔬菜" />
         <e k="rcr_family_forage"        v="饲草" />
+        <e k="rcr_family_pseudocereal"  v="假谷物" />
+        <e k="rcr_family_aromatic"      v="芳香作物" />
         <e k="rcr_cover_crop"           v="间作作物" />
         <e k="rcr_fallow"              v="休耕" />
 
@@ -133,9 +135,11 @@
         <e k="rcr_advice_afterRoot" v="种植块根作物后，需间隔四年再种块根，随后种谷物以在晚收后重建土壤结构。" />
         <e k="rcr_advice_afterVegetable" v="种植蔬菜后，需间隔三年再重复，以谷物作为干净的轮换间隔。" />
         <e k="rcr_advice_afterForage" v="短期草地之后，谷物可利用草皮下积累的肥力与结构。" />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病风险高：油菜、芥菜、向日葵、大豆、豌豆、菜豆、马铃薯和胡萝卜至少间隔3年；杀菌剂可限制已喷施区域的损失，但不会清除地块中的病害。" />
+        <e k="rcr_advice_afterPseudocereal" v="种植假谷物后，种子在收获前脱落，下茬作物中会出现自生苗；稀疏的残茬还会使土壤松散、易受侵蚀。" />
+        <e k="rcr_advice_afterAromatic" v="种植芳香作物后，为防黄萎病，应五年内不再种回该地块，期间种植玉米或苜蓿以净化土壤。" />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="菌核病风险高：油菜、芥菜、向日葵、大豆、豌豆、菜豆、花生、马铃薯和胡萝卜至少间隔3年；杀菌剂可限制已喷施区域的损失，但不会清除地块中的病害。" />
         <e k="rcr_advice_pressure_high_bcn"           v="线虫风险高：甜菜、红甜菜、油菜、芥菜和菠菜至少间隔3年；杀线虫剂可保护已喷施区域，但不会清除线虫。" />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病风险中等：拉开油菜、芥菜、向日葵、大豆、豌豆、菜豆、马铃薯和胡萝卜的种植间隔；降雨会提高风险。" />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="菌核病风险中等：拉开油菜、芥菜、向日葵、大豆、豌豆、菜豆、花生、马铃薯和胡萝卜的种植间隔；降雨会提高风险。" />
         <e k="rcr_advice_pressure_moderate_bcn"         v="线虫风险中等：拉开甜菜、红甜菜、油菜、芥菜和菠菜的种植间隔。" />
 
         <!-- Advice card, history-based rotation memo -->

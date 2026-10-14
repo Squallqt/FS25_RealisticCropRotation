@@ -40,7 +40,7 @@
         <e k="rcr_disease_header_active" v="Doença (%s)" />
         <e k="rcr_treatment_hud_label"  v="Tratamento" />
         <e k="rcr_treatment_nematicide_remaining" v="%s (%d meses restantes)" />
-        <e k="rcr_advice_nematicide_duration" v="A proteção do solo dura 3 meses por campo; uma nova aplicação renova a duração." />
+        <e k="rcr_advice_nematicide_duration" v="A proteção dura 3 meses por campo; uma nova aplicação renova-a." />
 
         <!-- Treatment gauge -->
         <e k="rcr_treatment_absent"   v="ausente" />
@@ -105,6 +105,8 @@
         <e k="rcr_family_root"          v="Raízes" />
         <e k="rcr_family_vegetable"     v="Hortícola" />
         <e k="rcr_family_forage"        v="Forragem" />
+        <e k="rcr_family_pseudocereal"  v="Pseudocereal" />
+        <e k="rcr_family_aromatic"      v="Aromática" />
         <e k="rcr_cover_crop"           v="Cultura intercalar" />
         <e k="rcr_fallow"              v="Pousio" />
 
@@ -124,7 +126,7 @@
         <e k="rcr_soil_value_unmeasured" v="Valor não medido" />
         <e k="rcr_n_crop_need_unavailable" v="Necessidade da cultura: --" />
         <e k="rcr_lime_status_unavailable" v="Cal: --" />
-        <e k="rcr_advice_soil_analysis_required_body" v="Os valores de azoto e pH não estão disponíveis. Analise o solo para obter recomendações agronómicas precisas." />
+        <e k="rcr_advice_soil_analysis_required_body" v="Sem valores de azoto e pH: analise o solo para obter recomendações precisas." />
 
         <!-- Agronomic advice -->
         <e k="rcr_advice_afterCereal" v="Depois de um cereal, semeie uma leguminosa para repor azoto ou uma cultura de corte contra as doenças do pé, e deixe dois anos entre cereais." />
@@ -133,9 +135,11 @@
         <e k="rcr_advice_afterRoot" v="Depois de uma cultura de raiz, espere quatro anos antes de as raízes voltarem, seguindo com um cereal para refazer a estrutura após o arranque tardio." />
         <e k="rcr_advice_afterVegetable" v="Depois de um produto hortícola, espere três anos antes de o repetir, com um cereal como corte limpo." />
         <e k="rcr_advice_afterForage" v="Depois de uma pastagem temporária, um cereal valoriza a fertilidade e a estrutura acumuladas sob o relvado." />
-        <e k="rcr_advice_pressure_high_sclerotinia"   v="Risco elevado de esclerotínia: espere pelo menos 3 anos antes de voltar a cultivar colza, mostarda, girassol, soja, ervilha, feijão, batata ou cenoura; o fungicida limita os danos nas zonas tratadas, mas não elimina a doença do campo." />
+        <e k="rcr_advice_afterPseudocereal" v="Depois de um pseudocereal, conte com plantas espontâneas na cultura seguinte, pois o grão cai antes da colheita; o restolho escasso deixa ainda o solo solto e sujeito à erosão." />
+        <e k="rcr_advice_afterAromatic" v="Depois de uma planta aromática, mantenha-a cinco anos fora do campo contra a verticiliose, com milho ou luzerna entretanto para sanear o solo." />
+        <e k="rcr_advice_pressure_high_sclerotinia"   v="Risco elevado de esclerotínia: espere pelo menos 3 anos antes de voltar a cultivar colza, mostarda, girassol, soja, ervilha, feijão, amendoim, batata ou cenoura; o fungicida limita os danos nas zonas tratadas, mas não elimina a doença do campo." />
         <e k="rcr_advice_pressure_high_bcn"           v="Risco elevado de nemátodes: espere pelo menos 3 anos antes de voltar a cultivar beterraba sacarina, beterraba de mesa, colza, mostarda ou espinafre; o nematicida protege as zonas tratadas, mas não elimina os nemátodes." />
-        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Risco moderado de esclerotínia: espere mais tempo antes de voltar a cultivar colza, mostarda, girassol, soja, ervilha, feijão, batata ou cenoura; a chuva pode aumentar o risco." />
+        <e k="rcr_advice_pressure_moderate_sclerotinia" v="Risco moderado de esclerotínia: espere mais tempo antes de voltar a cultivar colza, mostarda, girassol, soja, ervilha, feijão, amendoim, batata ou cenoura; a chuva pode aumentar o risco." />
         <e k="rcr_advice_pressure_moderate_bcn"         v="Risco moderado de nemátodes: espere mais tempo antes de voltar a cultivar beterrabas, colza, mostarda ou espinafre." />
 
         <!-- Advice card, history-based rotation memo -->
@@ -156,11 +160,11 @@
         <e k="rcr_advice_title_outbreak" v="Infeção ativa" />
         <e k="rcr_advice_outbreak" v="%s está ativa neste campo. Nível de ataque: %d %%. Tratamento recomendado: %s." />
         <e k="rcr_advice_plan_next_conflict_family" v="%s previsto para %s: conflito de rotação, mesma família (%s) da cultura atual, faltam %d ano(s) de %d antes de um regresso seguro." />
-        <e k="rcr_advice_plan_next_conflict_disease" v="%s prevista para %s: tanto esta cultura como a atual podem ser afetadas por %s. Espere mais %d ano(s); o intervalo recomendado é de %d ano(s)." />
+        <e k="rcr_advice_plan_next_conflict_disease" v="%s prevista para %s: %s pode afetá-la tal como a cultura atual. Faltam %d ano(s) dos %d recomendados." />
         <e k="rcr_advice_plan_next_ok" v="%s previsto para %s: boa escolha, nenhum conflito de rotação detetado." />
         <e k="rcr_advice_title_fallow" v="Ano de pausa" />
         <e k="rcr_advice_fallow_current" v="Pousio em curso: este ano não é cultivada nenhuma cultura principal. Isto acrescenta tempo antes da próxima cultura sensível, mas não elimina a doença de imediato." />
-        <e k="rcr_advice_plan_next_fallow" v="Pousio previsto para %s: não será cultivada nenhuma cultura principal durante um ano. Isto acrescenta tempo antes da próxima cultura sensível, mas não garante que todas as doenças tenham desaparecido." />
+        <e k="rcr_advice_plan_next_fallow" v="Pousio previsto para %s: um ano sem cultura principal. Isto acrescenta tempo antes da próxima cultura sensível, mas não garante o fim de todas as doenças." />
 
         <!-- Advice card, disease pressure list -->
 
