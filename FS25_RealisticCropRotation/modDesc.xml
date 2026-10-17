@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <modDesc descVersion="113">
     <author>Squallqt</author>
-    <version>1.1.0.0</version>
+    <version>1.1.0.1</version>
     <title>
         <en>Realistic Crop Rotation</en>
         <de>Realistische Fruchtfolge</de>
@@ -63,6 +63,10 @@ Singleplayer and multiplayer, with or without Precision Farming. 27 languages.
 Issues & suggestions: https://github.com/Squallqt/FS25_RealisticCropRotation
 
 Changelog:
+
+1.1.0.1:
+- Fixed disease damaging roads and other plants around an infected crop
+- Fixed disease destroying an entire crop on land without a defined field
 
 1.1.0.0:
 - Added buckwheat, peanut, sesame and mint to crop rotation
@@ -133,6 +137,10 @@ Issues & Vorschläge: https://github.com/Squallqt/FS25_RealisticCropRotation
 
 Changelog:
 
+1.1.0.1:
+- Schäden durch Krankheiten an Straßen und anderen Pflanzen rund um eine befallene Kultur behoben
+- Vollständige Zerstörung einer Kultur durch Krankheiten auf Land ohne festgelegtes Feld behoben
+
 1.1.0.0:
 - Buchweizen, Erdnuss, Sesam und Minze in die Fruchtfolge aufgenommen
 - Lange Hänger und niedrige Bildraten im Fruchtfolgemenü auf manchen Karten und Spielständen behoben
@@ -201,6 +209,10 @@ Solo et multijoueur, avec ou sans Precision Farming. 27 langues.
 Issues & suggestions : https://github.com/Squallqt/FS25_RealisticCropRotation
 
 Changelog :
+
+1.1.0.1 :
+- Correction des dégâts de maladie sur les routes et les autres plantes autour d'une culture infectée
+- Correction de la destruction totale d'une culture malade sur un terrain sans champ défini
 
 1.1.0.0 :
 - Ajout du sarrasin, de l'arachide, du sésame et de la menthe dans la rotation
