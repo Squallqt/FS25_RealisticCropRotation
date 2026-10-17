@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
 <modDesc descVersion="113">
     <author>Squallqt</author>
-    <version>1.1.0.0</version>
+    <version>1.1.0.1</version>
     <title>
         <en>Realistic Crop Rotation</en>
         <de>Realistische Fruchtfolge</de>
@@ -42,7 +42,7 @@ Protection is measured from the share of the field you spray. Fungicide lowers t
 NITROGEN RESIDUE
 A legume destroyed by tillage, not merely harvested, returns real nitrogen, split between the next crop and the one after. With Precision Farming it lands on the nitrogen map; without it the mod adds one fertilizer level.
 
-In kg N/ha, next crop then the one after: alfalfa 80 then 50, vetch-rye 60 then 20, clover 50 then 20, soybean 40 then 10, pea 40 then 10, green bean 20 then 5. Cover crops count as an estimated +25 in the planner.
+In kg N/ha, next crop then the one after: alfalfa 80 then 50, vetch-rye 60 then 20, clover 50 then 20, soybean 40 then 10, pea 40 then 10, green bean 20 then 5, peanut 20 then 0. Cover crops count as an estimated +25 in the planner.
 
 IN GAME
 - A dedicated "Crop Rotation" tab in the menu (ESC)
@@ -63,6 +63,10 @@ Singleplayer and multiplayer, with or without Precision Farming. 27 languages.
 Issues & suggestions: https://github.com/Squallqt/FS25_RealisticCropRotation
 
 Changelog:
+
+1.1.0.1:
+- Fixed disease damaging roads and other plants around an infected crop
+- Fixed disease destroying an entire crop on land without a defined field
 
 1.1.0.0:
 - Added buckwheat, peanut, sesame and mint to crop rotation
@@ -111,7 +115,7 @@ Der Schutz richtet sich nach dem besprühten Anteil des Feldes. Fungizid senkt d
 STICKSTOFFRÜCKSTAND
 Eine durch Bodenbearbeitung zerstörte Leguminose, nicht bloß geerntet, gibt echten Stickstoff zurück, aufgeteilt auf die nächste und die übernächste Kultur. Mit Precision Farming landet er auf der Stickstoffkarte, ohne PF fügt der Mod eine Düngestufe hinzu.
 
-In kg N/ha, nächste Kultur und danach: Luzerne 80 dann 50, Wicke-Roggen 60 dann 20, Klee 50 dann 20, Sojabohne 40 dann 10, Erbse 40 dann 10, Grüne Bohne 20 dann 5. Zwischenfrüchte zählen im Planer als geschätzte +25.
+In kg N/ha, nächste Kultur und danach: Luzerne 80 dann 50, Wicke-Roggen 60 dann 20, Klee 50 dann 20, Sojabohne 40 dann 10, Erbse 40 dann 10, Grüne Bohne 20 dann 5, Erdnuss 20 dann 0. Zwischenfrüchte zählen im Planer als geschätzte +25.
 
 IM SPIEL
 - Ein eigener Reiter "Fruchtfolge" im Menü (ESC)
@@ -132,6 +136,10 @@ Einzelspieler und Mehrspieler, mit oder ohne Precision Farming. 27 Sprachen.
 Issues & Vorschläge: https://github.com/Squallqt/FS25_RealisticCropRotation
 
 Changelog:
+
+1.1.0.1:
+- Schäden durch Krankheiten an Straßen und anderen Pflanzen rund um eine befallene Kultur behoben
+- Vollständige Zerstörung einer Kultur durch Krankheiten auf Land ohne festgelegtes Feld behoben
 
 1.1.0.0:
 - Buchweizen, Erdnuss, Sesam und Minze in die Fruchtfolge aufgenommen
@@ -180,7 +188,7 @@ La protection dépend de la part de la parcelle pulvérisée. Le fongicide rédu
 RELIQUAT D'AZOTE
 Une légumineuse détruite au travail du sol, pas simplement récoltée, restitue un vrai reliquat d'azote, réparti entre la culture suivante et celle d'après. Avec Precision Farming il est déposé sur la carte d'azote, sans PF le mod ajoute un niveau d'engrais.
 
-En kg N/ha, culture suivante puis la suivante : luzerne 80 puis 50, vesce-seigle 60 puis 20, trèfle 50 puis 20, soja 40 puis 10, pois 40 puis 10, haricot vert 20 puis 5. Les couverts comptent pour +25 estimés dans le planificateur.
+En kg N/ha, culture suivante puis la suivante : luzerne 80 puis 50, vesce-seigle 60 puis 20, trèfle 50 puis 20, soja 40 puis 10, pois 40 puis 10, haricot vert 20 puis 5, arachide 20 puis 0. Les couverts comptent pour +25 estimés dans le planificateur.
 
 DANS LE JEU
 - Un onglet dédié « Assolement » dans le menu (ÉCHAP)
@@ -202,6 +210,10 @@ Issues & suggestions : https://github.com/Squallqt/FS25_RealisticCropRotation
 
 Changelog :
 
+1.1.0.1 :
+- Correction des dégâts de maladie sur les routes et les autres plantes autour d'une culture infectée
+- Correction de la destruction totale d'une culture malade sur un terrain sans champ défini
+
 1.1.0.0 :
 - Ajout du sarrasin, de l'arachide, du sésame et de la menthe dans la rotation
 - Correction des longs blocages et des chutes d'images dans le menu de rotation sur certaines cartes et sauvegardes
@@ -216,7 +228,7 @@ Changelog :
 
 Merci de télécharger ce mod uniquement depuis le ModHub officiel de Farming Simulator et de conserver le lien original. La remise en ligne, la redistribution, la modification ou la copie de ce mod ou de l'un de ses fichiers, en tout ou partie, ne sont pas autorisées sans l'accord écrit de l'auteur.]]></fr>
     </description>
-    <iconFilename>icon_RealCropRotation.dds</iconFilename>
+    <iconFilename>icon_RealCropRotation.png</iconFilename>
     <multiplayer supported="true" />
 
     <fillTypes filename="fillTypes.xml" />
@@ -229,8 +241,8 @@ Merci de télécharger ce mod uniquement depuis le ModHub officiel de Farming Si
     </storeItems>
 
     <brands>
-        <brand name="SYNGENTA" title="Syngenta" image="brands/brand_amistar.dds" />
-        <brand name="BAYER" title="Bayer" image="brands/brand_velumPrime.dds" />
+        <brand name="SYNGENTA" title="Syngenta" image="brands/brand_amistar.png" />
+        <brand name="BAYER" title="Bayer" image="brands/brand_velumPrime.png" />
     </brands>
 
     <extraSourceFiles>

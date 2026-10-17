@@ -555,14 +555,21 @@ local function makeDestructionContext(region, grid)
         return nil
     end
 
+    -- Areas are counted on the ground map: Perlin, ground and farmland filters on the mask exceed the engine's three slots.
+    local groundMapId, groundFirstChannel, groundNumChannels =
+        g_currentMission.fieldGroundSystem:getDensityMapData(FieldDensityMap.GROUND_TYPE)
+    local counter = DensityMapModifier.new(groundMapId, groundFirstChannel, groundNumChannels, g_terrainNode)
+    if not RealisticCropRotationManager.applyRegionToModifier(region, counter) then return nil end
+
     local groundFilter = RealisticCropRotationManager.makeFieldGroundFilter()
     if groundFilter == nil then return nil end
-    local _, groundPixels = modifier:executeGet(groundFilter, region.filter)
+    local _, groundPixels = counter:executeGet(groundFilter, region.filter)
     groundPixels = tonumber(groundPixels)
     if groundPixels == nil or groundPixels <= 0 then return nil end
 
     return {
         modifier = modifier,
+        counter = counter,
         groundFilter = groundFilter,
         groundPixels = groundPixels,
         regionFilter = region.filter,
@@ -577,7 +584,7 @@ end
 local function perlinAreaFraction(context, perlin, threshold)
     if context == nil or perlin == nil or DensityValueCompareType == nil then return 0 end
     perlin:setValueCompareParams(DensityValueCompareType.GREATER, threshold)
-    local _, hits = context.modifier:executeGet(
+    local _, hits = context.counter:executeGet(
         perlin, context.groundFilter, context.regionFilter)
     return (tonumber(hits) or 0) / context.groundPixels
 end
@@ -733,21 +740,20 @@ local function applyDestructionPass(desc, region, context, shapePerlin, threshol
     clearModifier:executeSet(0)
 
     local maskModifier = context.modifier
-    local protectionFilter = nil
-    if protectionMapId ~= nil then
-        protectionFilter = DensityMapFilter.new(protectionMapId, 0, 1)
-        protectionFilter:setValueCompareParams(DensityValueCompareType.EQUAL, 0)
-    end
-
+    -- Keep only cells that still contain this crop: other plants share its foliage layer.
+    local cropFilter = DensityMapFilter.new(desc.terrainDataPlaneId, firstChannel, numChannels)
+    cropFilter:setValueCompareParams(DensityValueCompareType.GREATER, 0)
     shapePerlin:setValueCompareParams(DensityValueCompareType.GREATER, threshold)
-    if protectionFilter ~= nil then
-        maskModifier:executeSet(1, shapePerlin, protectionFilter)
-    else
-        maskModifier:executeSet(1, shapePerlin)
-    end
+    maskModifier:executeSet(1, shapePerlin, cropFilter)
 
     local eligibleFilter = DensityMapFilter.new(grid.destructionMaskMapId, 0, 1)
     eligibleFilter:setValueCompareParams(DensityValueCompareType.EQUAL, 1)
+
+    if protectionMapId ~= nil then
+        local protectedFilter = DensityMapFilter.new(protectionMapId, 0, 1)
+        protectedFilter:setValueCompareParams(DensityValueCompareType.EQUAL, 1)
+        maskModifier:executeSet(0, eligibleFilter, protectedFilter)
+    end
 
     if specklePerlin ~= nil and speckleThreshold ~= nil then
         specklePerlin:setValueCompareParams(
@@ -766,12 +772,6 @@ local function applyDestructionPass(desc, region, context, shapePerlin, threshol
         terminalFilter:setValueCompareParams(DensityValueCompareType.EQUAL, state)
         maskModifier:executeSet(0, eligibleFilter, terminalFilter)
     end
-
-    -- Keep only cells that still contain this crop.
-    local emptyFilter = DensityMapFilter.new(
-        desc.terrainDataPlaneId, firstChannel, numChannels)
-    emptyFilter:setValueCompareParams(DensityValueCompareType.EQUAL, 0)
-    maskModifier:executeSet(0, eligibleFilter, emptyFilter)
 
     local writeModifier = DensityMapModifier.new(
         desc.terrainDataPlaneId, firstChannel, numChannels, g_terrainNode)
