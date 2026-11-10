@@ -1493,6 +1493,8 @@ end
 local TOUCH_BLOCK_SIZE = 8
 local TOUCH_STEP = 1
 local TOUCH_MARGIN = 0.5
+-- Shortest shared border, in fine squares, so a farmyard or a corner touching two fields does not link them.
+local TOUCH_MIN_SQUARES = 10
 
 ---Tiles (terrain PARCEL_TILE_SIZE grid) where a parcel scan found field ground.
 -- @param table parcel Finished scan
@@ -1522,7 +1524,7 @@ local function countGroundInRect(modifier, groundFilter, farmlandFilter, minX, m
     return tonumber(pixels) or 0
 end
 
----True when the field ground of two parcels touches (less than about one metre apart).
+---True when the field ground of two parcels touches (less than about one metre apart) along at least TOUCH_MIN_SQUARES metres.
 -- @param table parcelA
 -- @param table parcelB
 -- @return boolean touching
@@ -1553,6 +1555,7 @@ local function areParcelsTouching(parcelA, parcelB)
     local filterB = makeFarmlandFilter(parcelB.farmlandId)
     if modifier == nil or groundFilter == nil or filterA == nil or filterB == nil then return false end
 
+    local touchingSquares = 0
     local blocksPerTile = PARCEL_TILE_SIZE / TOUCH_BLOCK_SIZE
     local stepsPerBlock = TOUCH_BLOCK_SIZE / TOUCH_STEP
     for _, tile in ipairs(candidates) do
@@ -1569,7 +1572,8 @@ local function areParcelsTouching(parcelA, parcelB)
                             if countGroundInRect(modifier, groundFilter, filterA, x, z, x + TOUCH_STEP, z + TOUCH_STEP) > 0
                                 and countGroundInRect(modifier, groundFilter, filterB, x - TOUCH_MARGIN, z - TOUCH_MARGIN,
                                     x + TOUCH_STEP + TOUCH_MARGIN, z + TOUCH_STEP + TOUCH_MARGIN) > 0 then
-                                return true
+                                touchingSquares = touchingSquares + 1
+                                if touchingSquares >= TOUCH_MIN_SQUARES then return true end
                             end
                         end
                     end
