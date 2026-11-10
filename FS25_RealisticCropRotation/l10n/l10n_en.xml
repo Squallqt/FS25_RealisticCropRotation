@@ -87,6 +87,8 @@
         <e k="rcr_section_lime"         v="Lime / pH Status" />
         <e k="rcr_section_plan"         v="Rotation Plan" />
         <e k="rcr_clear_plan_button"    v="Clear plan" />
+        <e k="rcr_group_fields_on"      v="Group fields: On" />
+        <e k="rcr_group_fields_off"     v="Group fields: Off" />
         <e k="rcr_clear_plan_confirm"   v="Clear the rotation plan for %s?" />
         <e k="rcr_section_score"        v="Rotation Quality" />
         <e k="rcr_section_overview"     v="Global Overview" />

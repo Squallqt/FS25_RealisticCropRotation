@@ -87,6 +87,8 @@
         <e k="rcr_section_lime"         v="pH / Chaulage" />
         <e k="rcr_section_plan"         v="Plan de Rotation" />
         <e k="rcr_clear_plan_button"    v="Effacer le plan" />
+        <e k="rcr_group_fields_on"      v="Regrouper les champs : Oui" />
+        <e k="rcr_group_fields_off"     v="Regrouper les champs : Non" />
         <e k="rcr_clear_plan_confirm"   v="Effacer le plan de rotation de %s ?" />
         <e k="rcr_section_score"        v="Qualité de Rotation" />
         <e k="rcr_section_overview"     v="Aperçu Global" />

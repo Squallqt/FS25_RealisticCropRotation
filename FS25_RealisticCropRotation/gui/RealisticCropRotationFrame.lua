@@ -327,7 +327,7 @@ function RealisticCropRotationFrame:inputEvent(action, value, eventUsed)
     return RealisticCropRotationFrame:superClass().inputEvent(self, action, value, eventUsed)
 end
 
----Returns the menu button info: back + page nav always, plus "Clear plan" while Planning is active.
+---Returns the menu button info: back + page nav + field grouping always, plus "Clear plan" while Planning is active.
 -- @return table buttons
 function RealisticCropRotationFrame:getMenuButtonInfo()
     local buttons = {
@@ -335,6 +335,11 @@ function RealisticCropRotationFrame:getMenuButtonInfo()
         { inputAction = InputAction.MENU_PAGE_PREV },
         { inputAction = InputAction.MENU_PAGE_NEXT },
     }
+    table.insert(buttons, {
+        text = self:getFieldGroupingButtonText(),
+        inputAction = InputAction.MENU_EXTRA_1,
+        callback = function() self:onClickToggleFieldGrouping() end,
+    })
     if not self:isHistoryTab() and self.selectedId ~= nil then
         table.insert(buttons, {
             text = self.i18n:getText("rcr_clear_plan_button"),
@@ -520,6 +525,7 @@ end
 -- @return table rows
 function RealisticCropRotationFrame:buildFarmlandList()
     local rows = self:getManager():getOwnedFarmlands() or {}
+    if not self:isFieldGroupingEnabled() then return rows end
     -- One row per field: touching farmlands with the same crop or the same soil state
     return self:getManager():groupTouchingFarmlands(rows, function(farmlandId)
         local state = self:resolveCurrentFieldState(farmlandId, false)
@@ -528,6 +534,60 @@ function RealisticCropRotationFrame:buildFarmlandList()
         if state.kind == "NONE" then return "NONE" end
         return nil
     end)
+end
+
+---Path of the local file keeping the sidebar preferences of this player.
+-- @return string path, or nil
+local function getPreferencesPath()
+    if g_modSettingsDirectory == nil then return nil end
+    return g_modSettingsDirectory .. "FS25_RealisticCropRotation.xml"
+end
+
+---True when touching farmlands with the same state are shown as one field (on by default).
+-- @return boolean enabled
+function RealisticCropRotationFrame:isFieldGroupingEnabled()
+    if self.fieldGroupingEnabled == nil then
+        self.fieldGroupingEnabled = true
+        local path = getPreferencesPath()
+        if path ~= nil and fileExists(path) then
+            local xmlFile = loadXMLFile("rcrPreferences", path)
+            if xmlFile ~= nil and xmlFile ~= 0 then
+                local value = getXMLBool(xmlFile, "realisticCropRotation.groupTouchingFields")
+                if value ~= nil then self.fieldGroupingEnabled = value end
+                delete(xmlFile)
+            end
+        end
+    end
+    return self.fieldGroupingEnabled
+end
+
+---Switches field grouping on or off, keeps the choice and rebuilds the sidebar.
+function RealisticCropRotationFrame:onClickToggleFieldGrouping()
+    self.fieldGroupingEnabled = not self:isFieldGroupingEnabled()
+    local path = getPreferencesPath()
+    if path ~= nil then
+        createFolder(g_modSettingsDirectory)
+        local xmlFile = createXMLFile("rcrPreferences", path, "realisticCropRotation")
+        if xmlFile ~= nil and xmlFile ~= 0 then
+            setXMLBool(xmlFile, "realisticCropRotation.groupTouchingFields", self.fieldGroupingEnabled)
+            saveXMLFile(xmlFile)
+            delete(xmlFile)
+        end
+    end
+    self:populateSidebar()
+    self:setMenuButtonInfoDirty()
+    RealisticCropRotation.requestMenuReconcile(
+        self.selectedId, false, self:getSidebarFarmlandIds())
+end
+
+---Text of the field grouping button, in English when the language has no translation yet.
+-- @return string text
+function RealisticCropRotationFrame:getFieldGroupingButtonText()
+    local key = self:isFieldGroupingEnabled() and "rcr_group_fields_on" or "rcr_group_fields_off"
+    if type(self.i18n.hasText) == "function" and not self.i18n:hasText(key) then
+        return self:isFieldGroupingEnabled() and "Group fields: On" or "Group fields: Off"
+    end
+    return self.i18n:getText(key)
 end
 
 ---Returns the farmland ids behind a sidebar row (just itself when the row is not a grouped field).

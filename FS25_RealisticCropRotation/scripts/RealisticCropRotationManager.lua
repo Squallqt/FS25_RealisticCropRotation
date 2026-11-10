@@ -1489,8 +1489,10 @@ end
 -- Farmlands of the same field: field ground continuous from one farmland to the other.
 
 -- Side in metres of the coarse contact search blocks, then of the fine squares.
+-- The other parcel must have field ground within TOUCH_MARGIN of the square, so a grass strip or a track keeps fields apart.
 local TOUCH_BLOCK_SIZE = 8
-local TOUCH_STEP = 2
+local TOUCH_STEP = 1
+local TOUCH_MARGIN = 0.5
 
 ---Tiles (terrain PARCEL_TILE_SIZE grid) where a parcel scan found field ground.
 -- @param table parcel Finished scan
@@ -1520,7 +1522,7 @@ local function countGroundInRect(modifier, groundFilter, farmlandFilter, minX, m
     return tonumber(pixels) or 0
 end
 
----True when the field ground of two parcels touches (less than TOUCH_STEP apart).
+---True when the field ground of two parcels touches (less than about one metre apart).
 -- @param table parcelA
 -- @param table parcelB
 -- @return boolean touching
@@ -1558,15 +1560,15 @@ local function areParcelsTouching(parcelA, parcelB)
             for bj = 0, blocksPerTile - 1 do
                 local bx, bz = tile.minX + bi * TOUCH_BLOCK_SIZE, tile.minZ + bj * TOUCH_BLOCK_SIZE
                 if countGroundInRect(modifier, groundFilter, filterA, bx, bz, bx + TOUCH_BLOCK_SIZE, bz + TOUCH_BLOCK_SIZE) > 0
-                    and countGroundInRect(modifier, groundFilter, filterB, bx - TOUCH_STEP, bz - TOUCH_STEP,
-                        bx + TOUCH_BLOCK_SIZE + TOUCH_STEP, bz + TOUCH_BLOCK_SIZE + TOUCH_STEP) > 0 then
+                    and countGroundInRect(modifier, groundFilter, filterB, bx - TOUCH_MARGIN, bz - TOUCH_MARGIN,
+                        bx + TOUCH_BLOCK_SIZE + TOUCH_MARGIN, bz + TOUCH_BLOCK_SIZE + TOUCH_MARGIN) > 0 then
                     -- Shared block: fine search square by square
                     for si = 0, stepsPerBlock - 1 do
                         for sj = 0, stepsPerBlock - 1 do
                             local x, z = bx + si * TOUCH_STEP, bz + sj * TOUCH_STEP
                             if countGroundInRect(modifier, groundFilter, filterA, x, z, x + TOUCH_STEP, z + TOUCH_STEP) > 0
-                                and countGroundInRect(modifier, groundFilter, filterB, x - TOUCH_STEP, z - TOUCH_STEP,
-                                    x + 2 * TOUCH_STEP, z + 2 * TOUCH_STEP) > 0 then
+                                and countGroundInRect(modifier, groundFilter, filterB, x - TOUCH_MARGIN, z - TOUCH_MARGIN,
+                                    x + TOUCH_STEP + TOUCH_MARGIN, z + TOUCH_STEP + TOUCH_MARGIN) > 0 then
                                 return true
                             end
                         end
