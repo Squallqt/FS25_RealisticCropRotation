@@ -21,6 +21,7 @@
 
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Parcelle" />
+        <e k="rcr_field_group_prefix"   v="Champ" />
         <e k="rcr_sidebar_no_active_crop"  v="Aucune culture" />
 
         <!-- Tabs -->

@@ -1486,6 +1486,202 @@ function RealisticCropRotationManager:getOwnedFarmlands()
     return result
 end
 
+-- Farmlands of the same field: field ground continuous from one farmland to the other.
+
+-- Side in metres of the coarse contact search blocks, then of the fine squares.
+local TOUCH_BLOCK_SIZE = 8
+local TOUCH_STEP = 2
+
+---Tiles (terrain PARCEL_TILE_SIZE grid) where a parcel scan found field ground.
+-- @param table parcel Finished scan
+-- @return table set "col:row" -> { minX, minZ }
+local function getParcelTileSet(parcel)
+    if parcel.tileSet ~= nil then return parcel.tileSet end
+    local origin = -g_currentMission.terrainSize / 2
+    local set = {}
+    for _, strip in ipairs(parcel.strips or {}) do
+        local row = math.floor((strip.minZ - origin) / PARCEL_TILE_SIZE + 0.5)
+        local firstColumn = math.floor((strip.minX - origin) / PARCEL_TILE_SIZE + 0.5)
+        local lastColumn = math.floor((strip.maxX - origin) / PARCEL_TILE_SIZE + 0.5) - 1
+        for column = firstColumn, lastColumn do
+            set[column .. ":" .. row] = {
+                column = column, row = row,
+                minX = origin + column * PARCEL_TILE_SIZE, minZ = origin + row * PARCEL_TILE_SIZE }
+        end
+    end
+    parcel.tileSet = set
+    return set
+end
+
+---Field ground pixels of a farmland inside a world rectangle.
+local function countGroundInRect(modifier, groundFilter, farmlandFilter, minX, minZ, maxX, maxZ)
+    modifier:setParallelogramWorldCoords(minX, minZ, maxX, minZ, minX, maxZ, DensityCoordType.POINT_POINT_POINT)
+    local _, pixels = modifier:executeGet(groundFilter, farmlandFilter)
+    return tonumber(pixels) or 0
+end
+
+---True when the field ground of two parcels touches (less than TOUCH_STEP apart).
+-- @param table parcelA
+-- @param table parcelB
+-- @return boolean touching
+local function areParcelsTouching(parcelA, parcelB)
+    if parcelA == nil or parcelB == nil or #(parcelA.strips or {}) == 0 or #(parcelB.strips or {}) == 0 then
+        return false
+    end
+    local tilesA, tilesB = getParcelTileSet(parcelA), getParcelTileSet(parcelB)
+
+    -- Tiles of A that have ground of B in the same or a neighbouring tile
+    local candidates = {}
+    for _, tile in pairs(tilesA) do
+        local near = false
+        for dc = -1, 1 do
+            for dr = -1, 1 do
+                if tilesB[(tile.column + dc) .. ":" .. (tile.row + dr)] ~= nil then near = true end
+            end
+        end
+        if near then candidates[#candidates + 1] = tile end
+    end
+    if #candidates == 0 then return false end
+
+    local mapId, firstChannel, numChannels = getFieldGroundLayer(FieldDensityMap.GROUND_TYPE)
+    if mapId == nil or DensityMapModifier == nil or DensityCoordType == nil then return false end
+    local modifier = DensityMapModifier.new(mapId, firstChannel, numChannels, g_terrainNode)
+    local groundFilter = RealisticCropRotationManager.makeFieldGroundFilter()
+    local filterA = makeFarmlandFilter(parcelA.farmlandId)
+    local filterB = makeFarmlandFilter(parcelB.farmlandId)
+    if modifier == nil or groundFilter == nil or filterA == nil or filterB == nil then return false end
+
+    local blocksPerTile = PARCEL_TILE_SIZE / TOUCH_BLOCK_SIZE
+    local stepsPerBlock = TOUCH_BLOCK_SIZE / TOUCH_STEP
+    for _, tile in ipairs(candidates) do
+        for bi = 0, blocksPerTile - 1 do
+            for bj = 0, blocksPerTile - 1 do
+                local bx, bz = tile.minX + bi * TOUCH_BLOCK_SIZE, tile.minZ + bj * TOUCH_BLOCK_SIZE
+                if countGroundInRect(modifier, groundFilter, filterA, bx, bz, bx + TOUCH_BLOCK_SIZE, bz + TOUCH_BLOCK_SIZE) > 0
+                    and countGroundInRect(modifier, groundFilter, filterB, bx - TOUCH_STEP, bz - TOUCH_STEP,
+                        bx + TOUCH_BLOCK_SIZE + TOUCH_STEP, bz + TOUCH_BLOCK_SIZE + TOUCH_STEP) > 0 then
+                    -- Shared block: fine search square by square
+                    for si = 0, stepsPerBlock - 1 do
+                        for sj = 0, stepsPerBlock - 1 do
+                            local x, z = bx + si * TOUCH_STEP, bz + sj * TOUCH_STEP
+                            if countGroundInRect(modifier, groundFilter, filterA, x, z, x + TOUCH_STEP, z + TOUCH_STEP) > 0
+                                and countGroundInRect(modifier, groundFilter, filterB, x - TOUCH_STEP, z - TOUCH_STEP,
+                                    x + 2 * TOUCH_STEP, z + 2 * TOUCH_STEP) > 0 then
+                                return true
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return false
+end
+
+---True when two farmlands form one field (continuous ground); cached while their scans do not change.
+-- @param integer farmlandIdA
+-- @param integer farmlandIdB
+-- @return boolean touching
+function RealisticCropRotationManager:areFarmlandsTouching(farmlandIdA, farmlandIdB)
+    local a, b = tonumber(farmlandIdA), tonumber(farmlandIdB)
+    if a == nil or b == nil or a == b then return false end
+    if a > b then a, b = b, a end
+    local parcelA, parcelB = self:getParcel(a), self:getParcel(b)
+    if parcelA == nil or parcelB == nil then return false end
+
+    self.touchCache = self.touchCache or {}
+    local key = a .. ":" .. b
+    local cached = self.touchCache[key]
+    if cached ~= nil and cached.parcelA == parcelA and cached.parcelB == parcelB then return cached.touching end
+
+    local touching = areParcelsTouching(parcelA, parcelB)
+    self.touchCache[key] = { parcelA = parcelA, parcelB = parcelB, touching = touching }
+    return touching
+end
+
+---Groups farmland rows into fields: touching farmlands with the same state (crop or soil).
+-- @param table rows sorted { farmlandId, name, areaHa }
+-- @param function getStateKey farmlandId -> state key, nil to never group
+-- @return table rows { farmlandId, memberIds, name, areaHa }
+function RealisticCropRotationManager:groupTouchingFarmlands(rows, getStateKey)
+    local parent = {}
+    local function find(i)
+        while parent[i] ~= i do
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        end
+        return i
+    end
+
+    local keys = {}
+    for i, row in ipairs(rows) do
+        parent[i] = i
+        keys[i] = getStateKey(row.farmlandId)
+    end
+
+    for i = 1, #rows do
+        for j = i + 1, #rows do
+            if keys[i] ~= nil and keys[i] == keys[j] and find(i) ~= find(j)
+                and self:areFarmlandsTouching(rows[i].farmlandId, rows[j].farmlandId) then
+                parent[find(j)] = find(i)
+            end
+        end
+    end
+
+    local result, byRoot = {}, {}
+    for i, row in ipairs(rows) do
+        local root = find(i)
+        local group = byRoot[root]
+        if group == nil then
+            group = { members = {} }
+            byRoot[root] = group
+            result[#result + 1] = group
+        end
+        table.insert(group.members, row)
+    end
+
+    local prefix = "Field"
+    if g_i18n ~= nil and type(g_i18n.getText) == "function" then
+        if type(g_i18n.hasText) == "function" and g_i18n:hasText("rcr_field_group_prefix") then
+            prefix = g_i18n:getText("rcr_field_group_prefix")
+        else
+            prefix = g_i18n:getText("rcr_field_prefix") or prefix
+        end
+    end
+
+    local grouped = {}
+    for _, group in ipairs(result) do
+        local members = group.members
+        if #members == 1 then
+            local row = members[1]
+            grouped[#grouped + 1] = { farmlandId = row.farmlandId, memberIds = { row.farmlandId },
+                name = row.name, areaHa = row.areaHa }
+        else
+            -- Representative = largest farmland (disease, soil and history panels)
+            local main, areaHa, memberIds, labels, allNumeric = members[1], 0, {}, {}, true
+            for _, row in ipairs(members) do
+                areaHa = areaHa + (tonumber(row.areaHa) or 0)
+                memberIds[#memberIds + 1] = row.farmlandId
+                local label = self:getFarmlandLabel(row.farmlandId)
+                if tonumber(label) == nil then allNumeric = false end
+                labels[#labels + 1] = label
+                if (tonumber(row.areaHa) or 0) > (tonumber(main.areaHa) or 0) then main = row end
+            end
+            local name
+            if allNumeric then
+                name = prefix .. " " .. table.concat(labels, " + ")
+            else
+                local names = {}
+                for _, row in ipairs(members) do names[#names + 1] = tostring(row.name) end
+                name = table.concat(names, " + ")
+            end
+            grouped[#grouped + 1] = { farmlandId = main.farmlandId, memberIds = memberIds,
+                name = name, areaHa = areaHa }
+        end
+    end
+    return grouped
+end
+
 ---Fresh client-safe FieldState sampled at the region's representative point.
 -- @param integer farmlandId
 -- @return table fieldState, or nil

@@ -519,7 +519,25 @@ end
 ---Returns the owned-farmland rows from the manager.
 -- @return table rows
 function RealisticCropRotationFrame:buildFarmlandList()
-    return self:getManager():getOwnedFarmlands() or {}
+    local rows = self:getManager():getOwnedFarmlands() or {}
+    -- One row per field: touching farmlands with the same crop or the same soil state
+    return self:getManager():groupTouchingFarmlands(rows, function(farmlandId)
+        local state = self:resolveCurrentFieldState(farmlandId, false)
+        if state.kind == "CROP" then return "CROP|" .. tostring(state.cropName) end
+        if state.kind == "STATUS" then return "STATUS|" .. tostring(state.label) end
+        if state.kind == "NONE" then return "NONE" end
+        return nil
+    end)
+end
+
+---Returns the farmland ids behind a sidebar row (just itself when the row is not a grouped field).
+-- @param integer farmlandId Farmland representing the row
+-- @return table farmlandIds
+function RealisticCropRotationFrame:getMemberFarmlandIds(farmlandId)
+    for _, entry in ipairs(self.farmlandList or {}) do
+        if entry.farmlandId == farmlandId then return entry.memberIds or { farmlandId } end
+    end
+    return { farmlandId }
 end
 
 ---Returns the exact farmland ids currently represented by the sidebar.
@@ -527,8 +545,10 @@ end
 function RealisticCropRotationFrame:getSidebarFarmlandIds()
     local result = {}
     for _, entry in ipairs(self.farmlandList or {}) do
-        local farmlandId = tonumber(entry.farmlandId)
-        if farmlandId ~= nil and farmlandId > 0 then result[#result + 1] = farmlandId end
+        for _, memberId in ipairs(entry.memberIds or { entry.farmlandId }) do
+            local farmlandId = tonumber(memberId)
+            if farmlandId ~= nil and farmlandId > 0 then result[#result + 1] = farmlandId end
+        end
     end
     return result
 end
@@ -2520,10 +2540,10 @@ function RealisticCropRotationFrame:onPlanUpdateReceived(farmlandId)
     local numericFarmlandId = tonumber(farmlandId)
     local isVisible = false
     for _, entry in ipairs(self.farmlandList or {}) do
-        if tonumber(entry.farmlandId) == numericFarmlandId then
-            isVisible = true
-            break
+        for _, memberId in ipairs(entry.memberIds or { entry.farmlandId }) do
+            if tonumber(memberId) == numericFarmlandId then isVisible = true end
         end
+        if isVisible then break end
     end
     if not isVisible then return end
 
@@ -2648,19 +2668,38 @@ function RealisticCropRotationFrame:handleCalendarPlanChange(slotIdx, isCover)
     local cropName = cropList[selector:getState()] or ""
     self[localPlanField] = self:copyFourSlotPlan(self[localPlanField])
     self[localPlanField][slotIdx] = cropName
-    if isClientOnly then
-        connection:sendEvent(RCRPlanUpdateEvent.new(self.selectedId, slotIdx, cropName, isCover))
-    else
-        local mgr = self:getManager()
-        local changed
-        if isCover then
-            changed = mgr:setRotationCoverPlanYear(self.selectedId, slotIdx, cropName)
+
+    local function writeSlot(farmlandId, slot, slotCrop)
+        if isClientOnly then
+            connection:sendEvent(RCRPlanUpdateEvent.new(farmlandId, slot, slotCrop, isCover))
         else
-            changed = mgr:setRotationPlanYear(self.selectedId, slotIdx, cropName)
+            local mgr = self:getManager()
+            local changed
+            if isCover then
+                changed = mgr:setRotationCoverPlanYear(farmlandId, slot, slotCrop)
+            else
+                changed = mgr:setRotationPlanYear(farmlandId, slot, slotCrop)
+            end
+            if changed and g_server ~= nil then
+                g_server:broadcastEvent(
+                    RCRPlanUpdateEvent.new(farmlandId, slot, slotCrop, isCover), false)
+            end
         end
-        if changed and g_server ~= nil then
-            g_server:broadcastEvent(
-                RCRPlanUpdateEvent.new(self.selectedId, slotIdx, cropName, isCover), false)
+    end
+
+    writeSlot(self.selectedId, slotIdx, cropName)
+    -- Grouped field: every member farmland gets the full plan
+    local fullPlan = self[localPlanField]
+    for _, memberId in ipairs(self:getMemberFarmlandIds(self.selectedId)) do
+        if memberId ~= self.selectedId then
+            local memberPlan = isCover and self:getCoverPlanForFarmland(memberId)
+                or self:getPlanForFarmland(memberId)
+            for slot = 1, 4 do
+                local wanted = fullPlan[slot] or ""
+                if slot == slotIdx or (memberPlan ~= nil and (memberPlan[slot] or "") ~= wanted) then
+                    writeSlot(memberId, slot, wanted)
+                end
+            end
         end
     end
 
@@ -2680,8 +2719,14 @@ function RealisticCropRotationFrame:onClickClearPlan()
     end
 
     local farmlandId = self.selectedId
+    local memberIds = self:getMemberFarmlandIds(farmlandId)
     YesNoDialog.show(function(yes)
-        if yes then self:clearPlanForFarmland(farmlandId) end
+        if yes then
+            for _, memberId in ipairs(memberIds) do
+                if memberId ~= farmlandId then self:clearPlanForFarmland(memberId) end
+            end
+            self:clearPlanForFarmland(farmlandId)
+        end
     end, self, string.format(self.i18n:getText("rcr_clear_plan_confirm"), farmlandName))
 end
 

@@ -21,6 +21,7 @@
 
         <!-- Sidebar -->
         <e k="rcr_field_prefix"         v="Field" />
+        <e k="rcr_field_group_prefix"   v="Field" />
         <e k="rcr_sidebar_no_active_crop"  v="No active crop" />
 
         <!-- Tabs -->
